@@ -48,7 +48,7 @@ Follow the instructions at https://wiki.jenkins-ci.org/display/JENKINS/Plugins#P
 ### Job configuration
 The plugin provides several new build steps:
 
-![Build steps](https://github.com/tracetronic/ecutest-plugin/doc/build_steps.png)
+![Build steps](/doc/build_steps.png)
 
 **Note:**
 - All build steps have an "Advanced" button through which more options can be accessed
@@ -57,7 +57,7 @@ The plugin provides several new build steps:
   
 The post-build actions are extended by these test report related post-build steps:
 
-![Build steps](https://github.com/tracetronic/ecutest-plugin/doc/post_build_steps.png)
+![Build steps](/doc/post_build_steps.png)
 
 ## Job execution
 
