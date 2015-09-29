@@ -1,0 +1,102 @@
+<!--
+    Copyright (c) 2015 TraceTronic GmbH
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification,
+    are permitted provided that the following conditions are met:
+
+      1. Redistributions of source code must retain the above copyright notice, this
+         list of conditions and the following disclaimer.
+
+      2. Redistributions in binary form must reproduce the above copyright notice, this
+         list of conditions and the following disclaimer in the documentation and/or
+         other materials provided with the distribution.
+
+      3. Neither the name of TraceTronic GmbH nor the names of its
+         contributors may be used to endorse or promote products derived from
+         this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+    ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+    ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <f:section title="${%atx.title}">
+        <f:entry title="${%atx.settings(descriptor.getATXVersion())}" description="${%atx.description}">
+            <f:repeatable var="inst" items="${descriptor.installations}" add="${%atx.add}">
+                <table width="100%">
+                    <f:section title="${%atx.title}">
+                        <f:entry title="${%Name}" field="name">
+                            <f:textbox value="${inst.getName()}" />
+                        </f:entry>
+                        <f:entry title="${%tool.title}" description="${%tool.description}" field="toolName">
+                            <select class="setting-input" name="atxInstallation.toolName">
+                                <j:forEach var="etInst" items="${descriptor.toolDescriptor.installations}">
+                                    <f:option selected="${etInst.name==inst.toolName}">${etInst.name}</f:option>
+                                </j:forEach>
+                            </select>
+                        </f:entry>
+                    </f:section>
+                    <j:set var="defaultConfig" value="${descriptor.getDefaultConfig()}" />
+                    <j:set var="currentConfig" value="${inst.getConfig()}"/>
+                    <j:choose>
+                        <j:when test="${empty(currentConfig)}">
+                            <j:set var="config" value="${defaultConfig}" />
+                        </j:when>
+                        <j:otherwise>
+                            <j:set var="config" value="${currentConfig}" />
+                        </j:otherwise>
+                    </j:choose>
+                    <f:section title="${%atx.uploadConfig.title}" name="uploadConfig">
+                        <j:set var="settings" value="${config.getConfigByName('uploadConfig')}" />
+                        <st:include class="${descriptor.clazz}" page="setting.jelly"/>
+                        <f:entry title="">
+                            <div align="right">
+                               <f:validateButton title="${%testConnection.title}" progress="${%testConnection.progress}" method="testConnection" with="serverURL,serverPort,serverContextPath,useHttpsConnection"/>
+                            </div>
+                        </f:entry>
+                    </f:section>
+                    <f:advanced>
+                        <f:section title="${%atx.archiveConfig.title}" name="archiveConfig">
+                            <j:set var="settings" value="${config.getConfigByName('archiveConfig')}" />
+                            <st:include class="${descriptor.clazz}" page="setting.jelly" />
+                        </f:section>
+                        <f:section title="${%atx.attributeConfig.title}" name="attributeConfig">
+                            <j:set var="settings" value="${config.getConfigByName('attributeConfig')}" />
+                            <st:include class="${descriptor.clazz}" page="setting.jelly" />
+                        </f:section>
+                        <f:section title="${%atx.tcfConstantConfig.title}" name="tcfConstantConfig">
+                            <j:set var="settings" value="${config.getConfigByName('tcfConstantConfig')}" />
+                            <st:include class="${descriptor.clazz}" page="setting.jelly" />
+                        </f:section>
+                        <f:section title="${%atx.specialConfig.title}" name="specialConfig">
+                            <j:set var="settings" value="${config.getConfigByName('specialConfig')}" />
+                            <st:include class="${descriptor.clazz}" page="setting.jelly" />
+                        </f:section>
+                        <f:section title="${%atx.customConfig.title}">
+                            <f:entry title="${%atx.customSettings.title}" description="${%atx.customSettings.description}">
+                                <f:hetero-list name="customSettings" targetType="${descriptor.getTargetType()}"
+                                   descriptors="${descriptor.getApplicableCustomSettings()}" items="${instance.getCustomSettings(inst)}"
+                                   addCaption="${%atx.customSetting.add}" deleteCaption="${%atx.customSetting.delete}" hasHeader="true"/>
+                            </f:entry>
+                        </f:section>
+                    </f:advanced>
+                    <f:entry title="">
+                        <div align="right">
+                            <f:repeatableDeleteButton value="${%atx.delete}" />
+                        </div>
+                    </f:entry>
+                </table>
+            </f:repeatable>
+        </f:entry>
+    </f:section>
+</j:jelly>

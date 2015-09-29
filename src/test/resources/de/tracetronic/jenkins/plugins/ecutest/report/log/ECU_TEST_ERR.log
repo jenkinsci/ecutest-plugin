@@ -1,0 +1,36 @@
+LOG: ECU_TEST_ERR.log
+----------------------------------------------------------------
+Systeminfo:
+CPU:
+Number of CPUs:
+RAM:
+Diskinfo:
+Operating system:
+----------------------------------------------------------------
+
+
+
+
+= 01.09.2015 18:00:00 === ECU-TEST BMW 6.3.0-ALPHAlatest 47714 (2015/09/01 06:00:00) ===
+
+
+
+
+2015-09-01 18:00:00.000 7416 MainThread ERROR:
+                        Traceback (within worker thread):
+                          File "lib\common\workerThreads\ManagedWorker.pyo", line 60, in __ExecuteTask
+                          File "lib\common\workerThreads\WTCommon.pyo", line 314, in _Execute
+                          File "lib\SystemFcts\Windows.pyo", line 311, in ExecuteSilent
+                          File "lib\common\workerThreads\WTCommon.pyo", line 306, in Run
+                          File "application\gui\command\CmdRun.pyo", line 70, in __Run
+                          File "application\regression\PackageEngine.pyo", line 418, in Run
+                          File "application\regression\PackageEngine.pyo", line 618, in __InitVariables
+                          File "application\regression\PackageEngine.pyo", line 802, in _InitVariableContainer
+2015-09-01 18:00:00.000 7416 MainThread ERROR:
+                        Traceback (most recent call last):
+                          File "wx\_core.pyo", line 16766, in <lambda>
+                          File "lib\common\workerThreads\SystemAbstraction\WxBase.pyo", line 19, in _CallAndSet
+                          File "lib\common\workerThreads\WTCommon.pyo", line 244, in __OnResult
+                          File "lib\common\workerThreads\WTCommon.pyo", line 222, in GetResult
+                        ParamError: Ungültiger Parametername: result
+

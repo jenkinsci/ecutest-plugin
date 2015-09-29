@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (c) 2015 TraceTronic GmbH
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification,
+    are permitted provided that the following conditions are met:
+
+      1. Redistributions of source code must retain the above copyright notice, this
+         list of conditions and the following disclaimer.
+
+      2. Redistributions in binary form must reproduce the above copyright notice, this
+         list of conditions and the following disclaimer in the documentation and/or
+         other materials provided with the distribution.
+
+      3. Neither the name of TraceTronic GmbH nor the names of its
+         contributors may be used to endorse or promote products derived from
+         this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+    ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+    ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.jenkins-ci.plugins</groupId>
+        <artifactId>plugin</artifactId>
+        <version>1.565.3</version>
+        <relativePath />
+    </parent>
+
+    <groupId>de.tracetronic.jenkins.plugins</groupId>
+    <artifactId>ecutest</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>hpi</packaging>
+
+    <name>TraceTronic ECU-TEST Plug-in</name>
+    <description>
+        <![CDATA[<div>This plug-in integrates Jenkins with <a href="https://www.tracetronic.com/products/ecu-test/">ECU-TEST</a> and generates reports on automated test execution.</div>]]>
+    </description>
+    <!-- <url>https://wiki.jenkins-ci.org/display/JENKINS/TraceTronic+ECU-TEST+Plug-in</url> -->
+    <inceptionYear>2015</inceptionYear>
+
+    <scm>
+        <connection>scm:git:git://github.com/tracetronic/${project.artifactId}-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:tracetronic/${project.artifactId}-plugin.git</developerConnection>
+        <url>http://github.com/tracetronic/${project.artifactId}-plugin</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>cpoenisch</id>
+            <name>Christian Pönisch</name>
+            <email>christian.poenisch@tracetronic.de</email>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>TraceTronic GmbH</name>
+        <url>https://www.tracetronic.de</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>The BSD 3-Clause License</name>
+            <url>http://opensource.org/licenses/BSD-3-Clause</url>
+            <comments>All source code is under the BSD license.</comments>
+        </license>
+    </licenses>
+
+    <properties>
+        <!-- Global project settings -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <local.repo.path>${basedir}/lib</local.repo.path>
+
+        <!-- Compiler settings -->
+        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+        <java-source.version>1.7</java-source.version>
+        <java-target.version>1.7</java-target.version>
+
+        <!-- Eclipse m2e -->
+        <lifecycle-mapping-plugin.version>1.0.0</lifecycle-mapping-plugin.version>
+
+        <!-- JUnit -->
+        <junit.version>4.12</junit.version>
+        <mockito-core.version>1.10.19</mockito-core.version>
+        <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
+
+        <!-- JavaDoc -->
+        <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
+
+        <!-- Maven release & deployment -->
+        <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
+        <maven-scm-provider-gitexe.version>1.9.4</maven-scm-provider-gitexe.version>
+
+        <!-- Static code analysis -->
+        <maven-checkstyle-plugin.version>2.16</maven-checkstyle-plugin.version>
+        <maven-findbugs-plugin.version>3.0.2</maven-findbugs-plugin.version>
+        <maven-pmd-plugin.version>3.5</maven-pmd-plugin.version>
+
+        <!-- ANTLR -->
+        <antlr4-maven-plugin.version>4.5.1-1</antlr4-maven-plugin.version>
+        <antlr4-runtime.version>4.5.1-1</antlr4-runtime.version>
+
+        <!-- Other dependencies -->
+        <jacob.version>1.18</jacob.version>
+        <matrix-project.version>1.4</matrix-project.version>
+        <commons-validator.version>1.4.1</commons-validator.version>
+        <equalsverifier.version>1.7.4</equalsverifier.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+                <configuration>
+                    <source>${java-source.version}</source>
+                    <target>${java-target.version}</target>
+                    <testSource>${java-source.version}</testSource>
+                    <testTarget>${java-target.version}</testTarget>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-provider-gitexe</artifactId>
+                        <version>${maven-scm-provider-gitexe.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.jenkins-ci.tools</groupId>
+                <artifactId>maven-hpi-plugin</artifactId>
+                <configuration>
+                    <disabledTestInjection>true</disabledTestInjection>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+                <configuration>
+                    <includes>
+                        <!-- Includes system tests ending with ST -->
+                        <include>**/*Test.java</include>
+                        <include>**/*ST.java</include>
+                    </includes>
+                    <systemPropertyVariables>
+                        <java.awt.headless>true</java.awt.headless>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+                <configuration>
+                    <sourceFileExcludes>
+                        <exclude>**/Messages.java</exclude>
+                        <exclude>**/RefFilter*.java</exclude>
+                    </sourceFileExcludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+                <configuration>
+                    <configLocation>${basedir}/config/checkstyle-config.xml</configLocation>
+                    <suppressionsLocation>${basedir}/config/checkstyle-exclude.xml</suppressionsLocation>
+                    <propertyExpansion>config_loc=config</propertyExpansion>
+                    <consoleOutput>true</consoleOutput>
+                    <failOnViolation>false</failOnViolation>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${maven-findbugs-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+                <configuration>
+                    <excludeFilterFile>${basedir}/config/findbugs-exclude.xml</excludeFilterFile>
+                    <effort>Max</effort>
+                    <threshold>Medium</threshold>
+                    <findbugsXmlOutput>true</findbugsXmlOutput>
+                    <failOnError>false</failOnError>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${maven-pmd-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+                <configuration>
+                    <rulesets>
+                        <ruleset>${basedir}/config/pmd-config.xml</ruleset>
+                    </rulesets>
+                    <excludeRoots>
+                        <excludeRoot>target/generated-sources/localizer</excludeRoot>
+                        <excludeRoot>target/generated-sources/antlr4</excludeRoot>
+                    </excludeRoots>
+                    <minimumTokens>120</minimumTokens>
+                    <targetJdk>${java-target.version}</targetJdk>
+                    <failOnViolation>false</failOnViolation>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <version>${antlr4-maven-plugin.version}</version>
+                <configuration>
+                    <listener>false</listener>
+                    <visitor>false</visitor>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>antlr</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.m2e</groupId>
+                <artifactId>lifecycle-mapping</artifactId>
+                <version>${lifecycle-mapping-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+                <configuration>
+                    <lifecycleMappingMetadata>
+                        <pluginExecutions>
+                            <pluginExecution>
+                                <pluginExecutionFilter>
+                                    <groupId>
+                                        org.apache.maven.plugins
+                                    </groupId>
+                                    <artifactId>
+                                        maven-dependency-plugin
+                                    </artifactId>
+                                    <versionRange>
+                                        [2.3,)
+                                    </versionRange>
+                                    <goals>
+                                        <goal>
+                                            copy-dependencies
+                                        </goal>
+                                    </goals>
+                                </pluginExecutionFilter>
+                                <action>
+                                    <ignore />
+                                </action>
+                            </pluginExecution>
+                        </pluginExecutions>
+                    </lifecycleMappingMetadata>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <excludeTransitive>true</excludeTransitive>
+                            <includeArtifactIds>jacob</includeArtifactIds>
+                            <includeTypes>dll</includeTypes>
+                            <outputDirectory>target/${project.artifactId}/WEB-INF/lib</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.sf.jacob-project</groupId>
+            <artifactId>jacob</artifactId>
+            <version>${jacob.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jacob-project</groupId>
+            <artifactId>jacob</artifactId>
+            <version>${jacob.version}</version>
+            <classifier>x86</classifier>
+            <type>dll</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jacob-project</groupId>
+            <artifactId>jacob</artifactId>
+            <version>${jacob.version}</version>
+            <classifier>x64</classifier>
+            <type>dll</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>${antlr4-runtime.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>matrix-project</artifactId>
+            <version>${matrix-project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockito-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>nl.jqno.equalsverifier</groupId>
+            <artifactId>equalsverifier</artifactId>
+            <version>${equalsverifier.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>lib</id>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
+        <repository>
+            <id>repo.jenkins-ci.org</id>
+            <url>http://repo.jenkins-ci.org/public/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>repo.jenkins-ci.org</id>
+            <url>http://repo.jenkins-ci.org/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>
