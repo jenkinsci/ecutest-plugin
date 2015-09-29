@@ -36,12 +36,12 @@ Follow the instructions at https://wiki.jenkins-ci.org/display/JENKINS/Plugins#P
 ## Configuration
 
 ### ECU-TEST configuration
-- Available ECU-TEST installations are administrated in the Jenkins system configuration at section "ECU-TEST"
-- An ECU-TEST installation entry is specified by an arbitrary name and the path to the installation directory
+- ECU-TEST installations are administrated in Jenkins system configuration at section "ECU-TEST"
+- An installation entry is specified by an arbitrary name and path to the installation directory
 - The execution on a Jenkins slave requires the adaption of the ECU-TEST installation directory on the slave configuration page
 
 ### TEST-GUIDE configuration
-- The configuration of TEST-GUIDE is also available in the Jenkins system configuration at section "TEST-GUIDE"
+- TEST-GUIDE is also configured in the Jenkins system configuration at section "TEST-GUIDE"
 - A new entry requires both an arbitrary name and the selection of a previously configured ECU-TEST installation
 - Further settings like the server or ATX specific configuration can be found in the advanced block
 
@@ -52,7 +52,8 @@ The plugin provides several new build steps:
 
 **Note:**
 - All build steps have an "Advanced" button through which more options can be accessed
-- All text fields can be parameterized which are resolved at build execution. Syntax: *$parameter* or *${parameter}*
+- All text fields can be parameterized which are resolved at build execution
+  - Syntax: *$parameter* or *${parameter}*
   
 The post-build actions are extended by these test report related post-build steps:
 
@@ -62,7 +63,7 @@ The post-build actions are extended by these test report related post-build step
 
 - After job configuration is done a new build can be triggerd by clicking on "Build now" button
 - The console log contains detailed information per build step execution
-- The test results are published both on the build page and the job page based on the latest build, respectively
+- The test results are published both on the build page and the job page based on the latest build
 
 ## Screencasts
 For more information about installation and configuration of the plug-in as well as using the plug-in in a slave based setup see our [Screencasts](https://www.tracetronic.com/products/ecu-test/jenkins/).
