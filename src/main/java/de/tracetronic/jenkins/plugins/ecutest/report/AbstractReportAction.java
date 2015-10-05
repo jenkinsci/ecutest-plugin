@@ -132,7 +132,7 @@ public abstract class AbstractReportAction implements Action {
     protected abstract AbstractBuild<?, ?> getLastReportBuild(final AbstractProject<?, ?> project);
 
     /**
-     * Gets the icon path inside of this plug-in.
+     * Gets the icon path inside of this plugin.
      *
      * @param icon
      *            the icon to search

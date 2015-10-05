@@ -42,7 +42,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ToolValidator;
 
 /**
- * Common base descriptor class for all test-related task build descriptors implemented in this plug-in.
+ * Common base descriptor class for all test-related task build descriptors implemented in this plugin.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */

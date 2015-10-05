@@ -44,7 +44,7 @@ import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 
 /**
- * Common base class for all tool-related task builders implemented in this plug-in.
+ * Common base class for all tool-related task builders implemented in this plugin.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */

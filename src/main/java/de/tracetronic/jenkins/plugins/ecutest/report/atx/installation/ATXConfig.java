@@ -117,7 +117,7 @@ public class ATXConfig implements Serializable, Cloneable {
     }
 
     /**
-     * Parses the default ATX configuration from the ATX template configuration file provided with this plug-in.
+     * Parses the default ATX configuration from the ATX template configuration file provided with this plugin.
      *
      * @return the default ATX settings map
      */

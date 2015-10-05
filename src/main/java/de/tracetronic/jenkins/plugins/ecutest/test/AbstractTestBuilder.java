@@ -55,7 +55,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 
 /**
- * Common base class for all test-related task builders implemented in this plug-in.
+ * Common base class for all test-related task builders implemented in this plugin.
  */
 public abstract class AbstractTestBuilder extends Builder {
 

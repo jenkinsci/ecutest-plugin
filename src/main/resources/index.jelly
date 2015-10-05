@@ -28,5 +28,5 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<div>This plug-in integrates Jenkins with <a href="http://www.tracetronic.de/produkte/ecu-test/">ECU-TEST</a>
+<div>This plugin integrates Jenkins with <a href="http://www.tracetronic.de/produkte/ecu-test/">ECU-TEST</a>
 and generates reports on automated test execution.</div>

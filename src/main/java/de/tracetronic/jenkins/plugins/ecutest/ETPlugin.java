@@ -39,14 +39,14 @@ import jenkins.model.Jenkins;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * Main entry point to this plug-in for the {@link Jenkins} instance.
+ * Main entry point to this plugin for the {@link Jenkins} instance.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETPlugin extends Plugin {
 
     /**
-     * Defines the minimum required ECU-TEST version supported by this plug-in.
+     * Defines the minimum required ECU-TEST version supported by this plugin.
      */
     public static final ToolVersion ET_MIN_VERSION = new ToolVersion(6, 3, 0, 0);
 
@@ -57,7 +57,7 @@ public class ETPlugin extends Plugin {
 
     /**
      * Helper class to easily compare tool versions defined by major, minor, micro and qualifier version. Mainly used to
-     * enable or disable plug-in features by comparing {@link ETPlugin#ET_MIN_VERSION} with the configured ECU-TEST
+     * enable or disable plugin features by comparing {@link ETPlugin#ET_MIN_VERSION} with the configured ECU-TEST
      * version.
      */
     public static final class ToolVersion implements Comparable<ToolVersion> {

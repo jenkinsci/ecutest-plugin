@@ -39,7 +39,7 @@ import org.kohsuke.stapler.QueryParameter;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 
 /**
- * Common base descriptor class for all test-related task build descriptors implemented in this plug-in.
+ * Common base descriptor class for all test-related task build descriptors implemented in this plugin.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */

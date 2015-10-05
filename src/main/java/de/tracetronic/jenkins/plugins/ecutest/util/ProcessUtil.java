@@ -156,7 +156,7 @@ public final class ProcessUtil {
     /**
      * Checks the operating system of a launcher.
      * <p>
-     * Most of the builders and publishers implemented by this plug-in require to run on Windows.
+     * Most of the builders and publishers implemented by this plugin require to run on Windows.
      *
      * @param launcher
      *            the launcher

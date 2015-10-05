@@ -153,10 +153,10 @@ public class ETClient extends AbstractToolClient {
         // Check ECU-TEST version
         final ToolVersion comToolVersion = ToolVersion.parse(comVersion);
         if (comToolVersion.compareWithoutQualifierTo(ETPlugin.ET_MIN_VERSION) > 0) {
-            logger.logWarn("Perhaps using plug-in incompatible ECU-TEST version!");
+            logger.logWarn("Perhaps using plugin incompatible ECU-TEST version!");
         } else if (comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
             logger.logError(String.format(
-                    "The configured ECU-TEST version %s is not compatible with this plug-in. "
+                    "The configured ECU-TEST version %s is not compatible with this plugin. "
                             + "Please use at least ECU-TEST %s!", comVersion,
                             ETPlugin.ET_MIN_VERSION.toString()));
             // Close ECU-TEST
