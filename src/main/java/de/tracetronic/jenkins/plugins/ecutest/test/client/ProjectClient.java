@@ -218,7 +218,7 @@ public class ProjectClient extends AbstractTestClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Running project...");
             try (ETComClient comClient = new ETComClient();
-                    TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
+                    TestEnvironment testEnv = (TestEnvironment) comClient.start();
                     TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.executeProject(projectFile,
                             jobExecutionMode)) {
                 int tickCounter = 0;
