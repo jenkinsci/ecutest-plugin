@@ -94,8 +94,7 @@ public class ETInstallation extends AbstractToolInstallation {
      *            the ECU-TEST properties
      */
     @DataBoundConstructor
-    public ETInstallation(final String name, final String home,
-            final List<? extends ToolProperty<?>> properties) {
+    public ETInstallation(final String name, final String home, final List<? extends ToolProperty<?>> properties) {
         super(name, home, properties);
     }
 
@@ -120,8 +119,7 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     @Override
-    public ETInstallation forNode(final Node node, final TaskListener log) throws IOException,
-            InterruptedException {
+    public ETInstallation forNode(final Node node, final TaskListener log) throws IOException, InterruptedException {
         return new ETInstallation(this, translateFor(node, log), getProperties().toList());
     }
 
@@ -209,16 +207,11 @@ public class ETInstallation extends AbstractToolInstallation {
             final Jenkins instance = Jenkins.getInstance();
             if (instance != null) {
                 // Set installations to all descriptors
-                instance.getDescriptorByType(StartETBuilder.DescriptorImpl.class).setInstallations(
-                        installations);
-                instance.getDescriptorByType(StopETBuilder.DescriptorImpl.class).setInstallations(
-                        installations);
-                instance.getDescriptorByType(StartTSBuilder.DescriptorImpl.class).setInstallations(
-                        installations);
-                instance.getDescriptorByType(StopTSBuilder.DescriptorImpl.class).setInstallations(
-                        installations);
-                instance.getDescriptorByType(JUnitPublisher.DescriptorImpl.class).setInstallations(
-                        installations);
+                instance.getDescriptorByType(StartETBuilder.DescriptorImpl.class).setInstallations(installations);
+                instance.getDescriptorByType(StopETBuilder.DescriptorImpl.class).setInstallations(installations);
+                instance.getDescriptorByType(StartTSBuilder.DescriptorImpl.class).setInstallations(installations);
+                instance.getDescriptorByType(StopTSBuilder.DescriptorImpl.class).setInstallations(installations);
+                instance.getDescriptorByType(JUnitPublisher.DescriptorImpl.class).setInstallations(installations);
             }
         }
 
@@ -234,18 +227,20 @@ public class ETInstallation extends AbstractToolInstallation {
 
         @Override
         public FormValidation doCheckHome(@QueryParameter final File value) {
-            FormValidation returnValue = FormValidation.validateRequired(value.toString());
+            FormValidation returnValue = FormValidation.ok();
             if (!Functions.isWindows()) {
                 returnValue = FormValidation.warning(Messages.ET_IsUnixSystem());
             } else if (StringUtils.isNotEmpty(value.toString())) {
-                if (!value.isDirectory()) {
-                    returnValue = FormValidation.error(Messages.ET_NotADirectory(value));
-                } else {
+                if (value.isDirectory()) {
                     final File etExe = getExeFile(value);
                     if (etExe == null || !etExe.exists()) {
                         returnValue = FormValidation.error(Messages.ET_NotHomeDirectory(value));
                     }
+                } else {
+                    returnValue = FormValidation.error(Messages.ET_NotADirectory(value));
                 }
+            } else {
+                returnValue = FormValidation.warning(Messages.ET_NotRequired());
             }
             return returnValue;
         }
