@@ -127,8 +127,8 @@ public abstract class AbstractTestBuilder extends Builder {
     }
 
     @Override
-    public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-            final BuildListener listener) throws InterruptedException, IOException {
+    public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
+            throws InterruptedException, IOException {
         // Check OS running this build
         if (!ProcessUtil.checkOS(launcher, listener)) {
             return false;
@@ -163,8 +163,8 @@ public abstract class AbstractTestBuilder extends Builder {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private boolean performTest(final AbstractBuild<?, ?> build, final Launcher launcher,
-            final BuildListener listener) throws IOException, InterruptedException {
+    private boolean performTest(final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Check for running ECU-TEST and Tool-Server instances
@@ -216,11 +216,12 @@ public abstract class AbstractTestBuilder extends Builder {
         }
 
         // Configure test bench configuration file
-        final String expTbcFilePath = getConfigFilePath(expTestConfig.getTbcFile(), expTbcConfigDir,
-                launcher, listener);
+        final String expTbcFilePath = getConfigFilePath(expTestConfig.getTbcFile(),
+                expTbcConfigDir, launcher, listener);
+
         // Configure test configuration file
-        final String expTcfFilePath = getConfigFilePath(expTestConfig.getTcfFile(), expTcfConfigDir,
-                launcher, listener);
+        final String expTcfFilePath = getConfigFilePath(expTestConfig.getTcfFile(),
+                expTcfConfigDir, launcher, listener);
 
         // Check configuration file existence
         if (expTbcFilePath == null || expTcfFilePath == null) {
@@ -255,9 +256,9 @@ public abstract class AbstractTestBuilder extends Builder {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    protected abstract boolean runTest(String testFile, TestConfig testConfig,
-            ExecutionConfig executionConfig, AbstractBuild<?, ?> build, Launcher launcher,
-            BuildListener listener) throws IOException, InterruptedException;
+    protected abstract boolean runTest(String testFile, TestConfig testConfig, ExecutionConfig executionConfig,
+            AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException,
+            InterruptedException;
 
     /**
      * Checks already opened ECU-TEST instances.
@@ -361,8 +362,8 @@ public abstract class AbstractTestBuilder extends Builder {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private String getConfigFilePath(final String configFile, final String configDir,
-            final Launcher launcher, final BuildListener listener) throws IOException, InterruptedException {
+    private String getConfigFilePath(final String configFile, final String configDir, final Launcher launcher,
+            final BuildListener listener) throws IOException, InterruptedException {
         String configFilePath = null;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (configFile.isEmpty()) {
@@ -390,8 +391,7 @@ public abstract class AbstractTestBuilder extends Builder {
      * @throws InterruptedException
      *             if the current thread is interrupted while waiting for the completion
      */
-    protected String getConfigDir(final Launcher launcher, final BuildListener listener)
-            throws InterruptedException {
+    protected String getConfigDir(final Launcher launcher, final BuildListener listener) throws InterruptedException {
         String configDir;
         try {
             configDir = launcher.getChannel().call(new GetSettingCallable("configPath"));
@@ -414,8 +414,7 @@ public abstract class AbstractTestBuilder extends Builder {
      * @throws InterruptedException
      *             if the current thread is interrupted while waiting for the completion
      */
-    protected String getPackagesDir(final Launcher launcher, final BuildListener listener)
-            throws InterruptedException {
+    protected String getPackagesDir(final Launcher launcher, final BuildListener listener) throws InterruptedException {
         String packagesDir;
         try {
             packagesDir = launcher.getChannel().call(new GetSettingCallable("packagePath"));

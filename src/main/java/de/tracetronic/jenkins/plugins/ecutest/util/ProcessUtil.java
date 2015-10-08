@@ -56,8 +56,7 @@ public final class ProcessUtil {
     /**
      * Defines ECU-TEST related process names.
      */
-    private static final List<String> ET_PROCS = Arrays.asList("ECU-TEST.exe", "ECU-TEST_COM.exe",
-            "ECU-TE~1.EXE");
+    private static final List<String> ET_PROCS = Arrays.asList("ECU-TEST.exe", "ECU-TEST_COM.exe", "ECU-TE~1.EXE");
 
     /**
      * Defines Tool-Server related process names.
@@ -106,17 +105,18 @@ public final class ProcessUtil {
      * @return the list of found or killed processes
      * @throws IOException
      *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the current thread is interrupted while waiting for the completion
      */
-    private static List<String> checkProcesses(final List<String> processes, final boolean kill)
-            throws IOException {
+    private static List<String> checkProcesses(final List<String> processes, final boolean kill) throws IOException {
         final List<String> found = new ArrayList<String>();
         for (final String process : processes) {
             BufferedReader reader = null;
             try {
                 final String cmd = String.format("tasklist /fi \"IMAGENAME eq %s\" /fo table /nh", process);
                 final Process p = Runtime.getRuntime().exec(cmd);
-                reader = new BufferedReader(new InputStreamReader(p.getInputStream(),
-                        Charset.forName("UTF-8")));
+                p.waitFor();
+                reader = new BufferedReader(new InputStreamReader(p.getInputStream(), Charset.forName("UTF-8")));
                 String line;
                 while ((line = reader.readLine()) != null) {
                     if (line.startsWith(process)) {
@@ -126,9 +126,9 @@ public final class ProcessUtil {
                         }
                     }
                 }
-            } catch (final IOException e) {
+            } catch (final IOException | InterruptedException e) {
                 LOGGER.log(Level.SEVERE, e.getMessage());
-                throw e;
+                throw new IOException(e);
             } finally {
                 if (reader != null) {
                     reader.close();
@@ -143,14 +143,14 @@ public final class ProcessUtil {
      *
      * @param process
      *            the process name
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the current thread is interrupted while waiting for the completion
      */
-    private static void killProcess(final String process) {
-        try {
-            final String cmd = String.format("taskkill /f /im %s", process);
-            Runtime.getRuntime().exec(cmd);
-        } catch (final IOException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
-        }
+    private static void killProcess(final String process) throws IOException, InterruptedException {
+        final String cmd = String.format("taskkill /f /im %s", process);
+        Runtime.getRuntime().exec(cmd).waitFor();
     }
 
     /**
@@ -162,7 +162,7 @@ public final class ProcessUtil {
      *            the launcher
      * @param listener
      *            the listener
-     * @return {@code true} if Windows launcher, {@code false} if Unix-based launcher.
+     * @return {@code true} if Windows launcher, {@code false} if Unix-based launcher
      */
     public static boolean checkOS(final Launcher launcher, final BuildListener listener) {
         if (launcher.isUnix()) {

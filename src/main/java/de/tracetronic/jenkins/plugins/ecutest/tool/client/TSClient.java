@@ -73,8 +73,8 @@ public class TSClient extends AbstractToolClient {
      * @param tcpPort
      *            the alternative TCP port
      */
-    public TSClient(final String toolName, final String installPath, final int timeout,
-            final String toolLibsIniPath, final int tcpPort) {
+    public TSClient(final String toolName, final String installPath, final int timeout, final String toolLibsIniPath,
+            final int tcpPort) {
         super(toolName, installPath, timeout);
         this.toolLibsIniPath = StringUtils.trimToEmpty(toolLibsIniPath);
         this.tcpPort = tcpPort == 0 ? DEFAULT_TCP_PORT : tcpPort;
@@ -142,7 +142,6 @@ public class TSClient extends AbstractToolClient {
         if (stop(checkProcesses, launcher, listener) && start(checkProcesses, launcher, listener)) {
             return true;
         }
-
         return false;
     }
 
@@ -173,8 +172,8 @@ public class TSClient extends AbstractToolClient {
      * @throws InterruptedException
      *             if the current thread is interrupted while waiting for the completion
      */
-    public static List<String> checkProcesses(final Launcher launcher, final boolean kill)
-            throws IOException, InterruptedException {
+    public static List<String> checkProcesses(final Launcher launcher, final boolean kill) throws IOException,
+        InterruptedException {
         return launcher.getChannel().call(new CheckProcessCallable(kill));
     }
 
@@ -254,5 +253,4 @@ public class TSClient extends AbstractToolClient {
             return ProcessUtil.checkTSProcess(kill);
         }
     }
-
 }
