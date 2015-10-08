@@ -375,7 +375,7 @@ public class TestValidatorTest extends TestCase {
 
     @Test
     public void testValidParameterName() {
-        final FormValidation validation = testValidator.validateParameterName("param");
+        final FormValidation validation = testValidator.validateParameterName("param_123");
         assertEquals("Valid parameter name starts with a letter char", FormValidation.Kind.OK, validation.kind);
     }
 
@@ -436,7 +436,7 @@ public class TestValidatorTest extends TestCase {
 
     @Test
     public void testValidConstantName() {
-        final FormValidation validation = testValidator.validateGlobalConstantName("constant");
+        final FormValidation validation = testValidator.validateGlobalConstantName("constant_123");
         assertEquals("Valid global constant name starts with a letter char", FormValidation.Kind.OK, validation.kind);
     }
 

@@ -72,7 +72,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     /**
      * Defines the modes to scan the test folder.
      */
-    public static enum ScanMode {
+    public enum ScanMode {
         /**
          * Scan packages only.
          */
@@ -117,8 +117,8 @@ public class TestFolderBuilder extends AbstractTestBuilder {
      */
     @DataBoundConstructor
     public TestFolderBuilder(final String testFile, final ScanMode scanMode, final boolean recursiveScan,
-            final TestConfig testConfig, final PackageConfig packageConfig,
-            final ProjectConfig projectConfig, final ExecutionConfig executionConfig) {
+            final TestConfig testConfig, final PackageConfig packageConfig, final ProjectConfig projectConfig,
+            final ExecutionConfig executionConfig) {
         super(testFile, testConfig, executionConfig);
         this.scanMode = scanMode;
         this.recursiveScan = recursiveScan;
@@ -197,8 +197,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
 
         // Run packages
         for (final String pkgFile : pkgFiles) {
-            final PackageClient testClient = new PackageClient(pkgFile, testConfig, packageConfig,
-                    executionConfig);
+            final PackageClient testClient = new PackageClient(pkgFile, testConfig, packageConfig, executionConfig);
             logger.logInfo(String.format("Executing package %s...", pkgFile));
             if (testClient.runTestCase(launcher, listener)) {
                 logger.logInfo("Package executed successfully.");
@@ -218,8 +217,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
 
         // Run projects
         for (final String prjFile : prjFiles) {
-            final ProjectClient testClient = new ProjectClient(prjFile, testConfig, projectConfig,
-                    executionConfig);
+            final ProjectClient testClient = new ProjectClient(prjFile, testConfig, projectConfig, executionConfig);
             logger.logInfo(String.format("Executing project %s...", prjFile));
             if (testClient.runTestCase(launcher, listener)) {
                 logger.logInfo("Project executed successfully.");
@@ -252,8 +250,8 @@ public class TestFolderBuilder extends AbstractTestBuilder {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private List<String> scanPackages(final String testFolder, final Launcher launcher,
-            final BuildListener listener) throws IOException, InterruptedException {
+    private List<String> scanPackages(final String testFolder, final Launcher launcher, final BuildListener listener)
+            throws IOException, InterruptedException {
         List<String> pkgFiles = new ArrayList<String>();
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (scanMode.equals(ScanMode.PACKAGES_ONLY) || scanMode.equals(ScanMode.PACKAGES_AND_PROJECTS)) {
@@ -283,13 +281,12 @@ public class TestFolderBuilder extends AbstractTestBuilder {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private List<String> scanProjects(final String testFolder, final Launcher launcher,
-            final BuildListener listener) throws IOException, InterruptedException {
+    private List<String> scanProjects(final String testFolder, final Launcher launcher, final BuildListener listener)
+            throws IOException, InterruptedException {
         List<String> prjFiles = new ArrayList<String>();
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (scanMode.equals(ScanMode.PROJECTS_ONLY) || scanMode.equals(ScanMode.PACKAGES_AND_PROJECTS)) {
-            final TestProjectScanner prjScanner = new TestProjectScanner(testFolder, isRecursiveScan(),
-                    launcher);
+            final TestProjectScanner prjScanner = new TestProjectScanner(testFolder, isRecursiveScan(), launcher);
             prjFiles = prjScanner.scanTestFiles();
             if (prjFiles.isEmpty()) {
                 logger.logInfo("-> No projects found!");

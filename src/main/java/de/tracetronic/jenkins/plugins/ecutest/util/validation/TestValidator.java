@@ -31,6 +31,9 @@ package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
 import hudson.util.FormValidation;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -155,8 +158,8 @@ public class TestValidator extends AbstractValidator {
             returnValue = FormValidation.validateRequired(name);
         } else if (name.contains(PARAMETER)) {
             returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
-        } else if (!StringUtils.isAlpha(StringUtils.left(name, 1)) || !StringUtils.isAlphanumeric(name)) {
-            returnValue = FormValidation.error(Messages.PackageParameter_FirstAlphaNumeric());
+        } else if (!isValidVariableName(name)) {
+            returnValue = FormValidation.error(Messages.PackageParameter_InvalidName());
         }
         return returnValue;
     }
@@ -191,8 +194,8 @@ public class TestValidator extends AbstractValidator {
             returnValue = FormValidation.validateRequired(name);
         } else if (name.contains(PARAMETER)) {
             returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
-        } else if (!StringUtils.isAlpha(StringUtils.left(name, 1)) || !StringUtils.isAlphanumeric(name)) {
-            returnValue = FormValidation.error(Messages.GlobalConstant_FirstAlphaNumeric());
+        } else if (!isValidVariableName(name)) {
+            returnValue = FormValidation.error(Messages.GlobalConstant_InvalidName());
         }
         return returnValue;
     }
@@ -227,17 +230,29 @@ public class TestValidator extends AbstractValidator {
             if (filterExpression.contains(PARAMETER)) {
                 returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
             } else {
-                final String trimmedExpression = StringUtils.trimToEmpty(filterExpression)
-                        .replaceAll("^\\(\\s*", "(").replaceAll("\\s*\\)", ")");
+                final String trimmedExpression = StringUtils.trimToEmpty(filterExpression).replaceAll("^\\(\\s*", "(")
+                        .replaceAll("\\s*\\)", ")");
                 final FilterExpressionValidator validator = new FilterExpressionValidator(trimmedExpression);
                 validator.validate();
                 if (!validator.isValid()) {
-                    returnValue = FormValidation.warning(Messages
-                            .TestProjectBuilder_InvalidFilterExpression());
+                    returnValue = FormValidation.warning(Messages.TestProjectBuilder_InvalidFilterExpression());
                 }
             }
         }
         return returnValue;
+    }
+
+    /**
+     * Checks if the variable name contains valid characters only.
+     *
+     * @param name
+     *            the variable name
+     * @return {@code true} if variable name is valid, {@code false} otherwise
+     */
+    private boolean isValidVariableName(final String name) {
+        final Pattern pattern = Pattern.compile("^[a-zA-Z_][\\w]+$");
+        final Matcher matcher = pattern.matcher(name);
+        return matcher.matches();
     }
 
     /**
@@ -272,8 +287,7 @@ public class TestValidator extends AbstractValidator {
 
                 @Override
                 public void syntaxError(final Recognizer<?, ?> recognizer, final Object offendingSymbol,
-                        final int line, final int charPositionInLine, final String msg,
-                        final RecognitionException e) {
+                        final int line, final int charPositionInLine, final String msg, final RecognitionException e) {
                     isValid = false;
                 }
             });
@@ -283,8 +297,7 @@ public class TestValidator extends AbstractValidator {
 
                 @Override
                 public void syntaxError(final Recognizer<?, ?> recognizer, final Object offendingSymbol,
-                        final int line, final int charPositionInLine, final String msg,
-                        final RecognitionException e) {
+                        final int line, final int charPositionInLine, final String msg, final RecognitionException e) {
                     isValid = false;
                 }
             });
