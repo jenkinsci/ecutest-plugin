@@ -1,8 +1,0 @@
-<?xml version="1.0" ?>
-<testsuites>
-    <testsuite errors="0" failures="0" name="TestCase001" skipped="1" tests="0" time="0">
-        <testcase name="TestCase001">
-            <skipped />
-        </testcase>
-    </testsuite>
-</testsuites>

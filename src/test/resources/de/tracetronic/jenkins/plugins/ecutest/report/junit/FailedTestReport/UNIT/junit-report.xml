@@ -1,8 +1,0 @@
-<?xml version="1.0" ?>
-<testsuites>
-    <testsuite errors="0" failures="1" name="TestCase001" skipped="0" tests="1" time="0.195000171661">
-        <testcase name="TestCase001" time="0.195000">
-            <failure message="FAILED" type="failure">FAILED: Action, UTILITY</failure>
-        </testcase>
-    </testsuite>
-</testsuites>
