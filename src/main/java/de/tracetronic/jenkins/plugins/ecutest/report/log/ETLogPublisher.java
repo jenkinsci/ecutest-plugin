@@ -207,8 +207,8 @@ public class ETLogPublisher extends AbstractReportPublisher {
         int totalWarnings = 0;
         int totalErrors = 0;
         for (final ETLogReport logReport : logReports) {
-            totalWarnings += logReport.getWarningLogs().size();
-            totalErrors += logReport.getErrorLogs().size();
+            totalWarnings += logReport.getWarningLogCount();
+            totalErrors += logReport.getErrorLogCount();
         }
         logger.logInfo("- Parsing log files...");
         if (totalErrors > 0 && isFailedOnError()) {
@@ -296,7 +296,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
 
         @Override
         public List<String> invoke(final File baseDir, final VirtualChannel channel) throws IOException,
-                InterruptedException {
+        InterruptedException {
             final List<String> files = new ArrayList<String>();
             for (final String includedFile : Util.createFileSet(baseDir, includes, excludes)
                     .getDirectoryScanner().getIncludedFiles()) {
