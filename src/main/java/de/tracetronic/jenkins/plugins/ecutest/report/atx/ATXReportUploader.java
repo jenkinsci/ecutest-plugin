@@ -109,7 +109,7 @@ public class ATXReportUploader {
     @SuppressWarnings({ "checkstyle:cyclomaticcomplexity", "checkstyle:npathcomplexity" })
     public boolean upload(final boolean allowMissing, final ATXInstallation installation,
             final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<ATXReport> atxReports = new ArrayList<ATXReport>();
         final Map<String, Map<String, FilePath>> reportFiles = getReportFiles(build, launcher);
@@ -317,6 +317,7 @@ public class ATXReportUploader {
             this.listener = listener;
         }
 
+        @SuppressWarnings("rawtypes")
         @Override
         public Boolean call() throws IOException {
             boolean isUploaded = true;
@@ -325,7 +326,14 @@ public class ATXReportUploader {
             try (ETComClient comClient = new ETComClient()) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                 for (final File uploadFile : uploadFiles) {
-                    logger.logInfo(String.format("-> Uploading ATX report: %s", uploadFile.getPath()));
+                    final List<ATXSetting> uploadSettings = config.getConfigByName("uploadConfig");
+                    final Object uploadToServer = config.getSettingValueByName("uploadToServer", uploadSettings);
+                    if (uploadToServer != null && (boolean) uploadToServer) {
+                        logger.logInfo(String.format("-> Generating and uploading ATX report: %s",
+                                uploadFile.getPath()));
+                    } else {
+                        logger.logInfo(String.format("-> Generating ATX report: %s", uploadFile.getPath()));
+                    }
                     final File outDir = new File(uploadFile.getParentFile(), ATX_TEMPLATE_NAME);
                     testEnv.generateTestReportDocumentFromDB(uploadFile.getAbsolutePath(),
                             outDir.getAbsolutePath(), ATX_TEMPLATE_NAME, true, configMap);
