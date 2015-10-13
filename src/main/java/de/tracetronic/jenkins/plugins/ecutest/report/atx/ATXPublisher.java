@@ -138,37 +138,70 @@ public class ATXPublisher extends AbstractReportPublisher {
         final AbstractToolInstallation etInstallation = configureToolInstallation(toolName, listener,
                 build.getEnvironment(listener));
 
-        // Start ECU-TEST and upload reports to TEST-GUIDE
-        if (etInstallation instanceof ETInstallation) {
-            final String installPath = etInstallation.getExecutable(launcher);
-            final String workspace = getWorkspace(build);
-            final ETClient etClient = new ETClient(toolName, installPath, workspace,
-                    StartETBuilder.DEFAULT_TIMEOUT, false);
-            logger.logInfo(String.format("Starting %s...", toolName));
-            if (etClient.start(false, launcher, listener)) {
-                logger.logInfo(String.format("%s started successfully.", toolName));
-                logger.logInfo("- Uploading ATX reports...");
-                final ATXReportUploader uploader = new ATXReportUploader();
-                if (!uploader.upload(isAllowMissing(), installation, build, launcher, listener)) {
-                    logger.logError("-> Uploading ATX reports failed!");
-                    build.setResult(Result.FAILURE);
+        boolean isUploaded = false;
+        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
+        final boolean isETRunning = !foundProcesses.isEmpty();
+
+        // Start ECU-TEST if necessary and publish the ATX reports
+        if (isETRunning) {
+            isUploaded = uploadReports(installation, build, launcher, listener);
+        } else {
+            if (etInstallation instanceof ETInstallation) {
+                final String installPath = etInstallation.getExecutable(launcher);
+                final String workspace = getWorkspace(build);
+                final ETClient etClient = new ETClient(toolName, installPath, workspace,
+                        StartETBuilder.DEFAULT_TIMEOUT, false);
+                logger.logInfo(String.format("Starting %s...", toolName));
+                if (etClient.start(false, launcher, listener)) {
+                    logger.logInfo(String.format("%s started successfully.", toolName));
+                    isUploaded = uploadReports(installation, build, launcher, listener);
+                } else {
+                    logger.logError(String.format("Starting %s failed.", toolName));
+                }
+                logger.logInfo(String.format("Stopping %s...", toolName));
+                if (etClient.stop(true, launcher, listener)) {
+                    logger.logInfo(String.format("%s stopped successfully.", toolName));
+                } else {
+                    logger.logError(String.format("Stopping %s failed.", toolName));
                 }
             } else {
-                logger.logError(String.format("Starting %s failed.", toolName));
+                throw new AbortException(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
             }
-            logger.logInfo(String.format("Stopping %s...", toolName));
-            if (etClient.stop(true, launcher, listener)) {
-                logger.logInfo(String.format("%s stopped successfully.", toolName));
-            } else {
-                logger.logError(String.format("Stopping %s failed.", toolName));
-                return false;
-            }
-        } else {
-            throw new AbortException(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
         }
 
-        logger.logInfo("ATX reports published successfully.");
+        if (isUploaded) {
+            logger.logInfo("ATX reports published successfully.");
+        } else {
+            logger.logError("-> Publishing ATX reports failed!");
+            build.setResult(Result.FAILURE);
+        }
         return true;
+    }
+
+    /**
+     * Generates the ATX reports and uploads them if enabled.
+     *
+     * @param installation
+     *            the installation
+     * @param build
+     *            the build
+     * @param launcher
+     *            the launcher
+     * @param listener
+     *            the listener
+     * @return {@code true} if ATX processing is successful, {@code false} otherwise
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the build gets interrupted
+     */
+    private boolean uploadReports(final ATXInstallation installation, final AbstractBuild<?, ?> build,
+            final Launcher launcher, final BuildListener listener)
+            throws IOException, InterruptedException {
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        logger.logInfo("- Processing ATX reports...");
+        final ATXReportUploader uploader = new ATXReportUploader();
+        return uploader.upload(isAllowMissing(), installation, build, launcher, listener);
     }
 
     /**

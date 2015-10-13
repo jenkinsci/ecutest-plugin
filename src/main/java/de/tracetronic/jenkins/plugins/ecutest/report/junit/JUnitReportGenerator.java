@@ -70,7 +70,8 @@ public class JUnitReportGenerator {
     private static final String TRF_NAME = "report.trf";
 
     /**
-     * Generates UNIT reports.
+     * Generates UNIT reports by invoking the startup of ECU-TEST if not already running, otherwise using the current
+     * instance without closing when finished.
      *
      * @param installation
      *            the installation
@@ -88,36 +89,64 @@ public class JUnitReportGenerator {
      */
     public boolean generate(final AbstractToolInstallation installation, final AbstractBuild<?, ?> build,
             final Launcher launcher, final BuildListener listener) throws IOException, InterruptedException {
-        boolean isGenerated = true;
+        boolean isGenerated = false;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
-        if (installation instanceof ETInstallation) {
-            final String toolName = installation.getName();
-            final String installPath = installation.getExecutable(launcher);
-            final String workspace = getWorkspace(build);
-            final ETClient etClient = new ETClient(toolName, installPath, workspace,
-                    StartETBuilder.DEFAULT_TIMEOUT, false);
-            logger.logInfo(String.format("Starting %s...", toolName));
-            if (etClient.start(false, launcher, listener)) {
-                logger.logInfo(String.format("%s started successfully.", toolName));
-                final List<FilePath> reportFiles = getReportFiles(build, launcher);
-                logger.logInfo("- Generating UNIT test reports...");
-                isGenerated = launcher.getChannel().call(
-                        new GenerateUnitReportCallable(reportFiles, listener));
-            } else {
-                logger.logError(String.format("Starting %s failed.", toolName));
-                isGenerated = false;
-            }
-            logger.logInfo(String.format("Stopping %s...", toolName));
-            if (etClient.stop(true, launcher, listener)) {
-                logger.logInfo(String.format("%s stopped successfully.", toolName));
-            } else {
-                logger.logError(String.format("Stopping %s failed.", toolName));
-                isGenerated = false;
-            }
+        final List<FilePath> reportFiles = getReportFiles(build, launcher);
+        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
+        final boolean isETRunning = !foundProcesses.isEmpty();
+
+        // Start ECU-TEST if necessary and generate the UNIT reports
+        if (isETRunning) {
+            isGenerated = generateReports(reportFiles, launcher, listener);
         } else {
-            throw new AbortException(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+            if (installation instanceof ETInstallation) {
+                final String toolName = installation.getName();
+                final String installPath = installation.getExecutable(launcher);
+                final String workspace = getWorkspace(build);
+                final ETClient etClient = new ETClient(toolName, installPath, workspace,
+                        StartETBuilder.DEFAULT_TIMEOUT, false);
+                logger.logInfo(String.format("Starting %s...", toolName));
+                if (etClient.start(false, launcher, listener)) {
+                    logger.logInfo(String.format("%s started successfully.", toolName));
+                    isGenerated = generateReports(reportFiles, launcher, listener);
+                } else {
+                    logger.logError(String.format("Starting %s failed.", toolName));
+                }
+                logger.logInfo(String.format("Stopping %s...", toolName));
+                if (etClient.stop(true, launcher, listener)) {
+                    logger.logInfo(String.format("%s stopped successfully.", toolName));
+                } else {
+                    logger.logError(String.format("Stopping %s failed.", toolName));
+                }
+            } else {
+                throw new AbortException(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+            }
         }
+
         return isGenerated;
+    }
+
+    /**
+     * Generate UNIT reports by calling the {@link GenerateUnitReportCallable}.
+     *
+     * @param reportFiles
+     *            the report files
+     * @param launcher
+     *            the launcher
+     * @param listener
+     *            the listener
+     * @return {@code true} if generation succeeded, {@code false} otherwise
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the build gets interrupted
+     */
+    private boolean generateReports(final List<FilePath> reportFiles, final Launcher launcher,
+            final BuildListener listener) throws IOException, InterruptedException {
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        logger.logInfo("- Generating UNIT test reports...");
+        return launcher.getChannel().call(
+                new GenerateUnitReportCallable(reportFiles, listener));
     }
 
     /**
@@ -193,7 +222,7 @@ public class JUnitReportGenerator {
             try (ETComClient comClient = new ETComClient()) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                 for (final FilePath dbFile : dbFiles) {
-                    logger.logInfo(String.format("-> Generating UNIT report for: %s", dbFile.getRemote()));
+                    logger.logInfo(String.format("-> Generating UNIT report: %s", dbFile.getRemote()));
                     final File outDir = new File(dbFile.getParent().getRemote(), UNIT_TEMPLATE_NAME);
                     if (!testEnv.generateTestReportDocumentFromDB(dbFile.getRemote(),
                             outDir.getAbsolutePath(), UNIT_TEMPLATE_NAME, true)) {
