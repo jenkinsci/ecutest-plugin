@@ -60,7 +60,7 @@
     <developers>
         <developer>
             <id>cpoenisch</id>
-            <name>Christian Pönisch</name>
+            <name><![CDATA[Christian P&ouml;nisch]]></name>
             <email>christian.poenisch@tracetronic.de</email>
             <timezone>+1</timezone>
         </developer>
