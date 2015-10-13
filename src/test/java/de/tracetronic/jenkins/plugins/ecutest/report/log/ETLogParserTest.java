@@ -75,7 +75,7 @@ public class ETLogParserTest {
         assertThat(warning.getTimestamp(), is("2015-09-01 18:00:00.000"));
         assertThat(warning.getContext(), is("MainThread"));
         assertThat(warning.getSeverity(), is(Severity.WARNING));
-        assertThat(warning.getMessage(), is("Test warning message"));
+        assertThat(warning.getMessage(), containsString("Test warning message"));
     }
 
     @Test
@@ -91,12 +91,30 @@ public class ETLogParserTest {
         assertThat(warning.getMessage(), containsString("ParamError: Ungültiger Parametername: result"));
     }
 
-    private List<ETLogAnnotation> parseResults(final String filename) throws InvocationTargetException {
-        final ETLogParser parser = new ETLogParser();
-        final URL url = this.getClass().getResource(filename);
+    @Test
+    public void testWarningLogCount() throws Exception {
+        final ETLogParser parser = getLogParser("ECU_TEST_OUT.log");
+        final int warningLogCount = parser.parseLogCount(Severity.WARNING);
+        assertEquals(1, warningLogCount);
+    }
+
+    @Test
+    public void testErrorLogCount() throws Exception {
+        final ETLogParser parser = getLogParser("ECU_TEST_ERR.log");
+        final int warningLogCount = parser.parseLogCount(Severity.ERROR);
+        assertEquals(2, warningLogCount);
+    }
+
+    private ETLogParser getLogParser(final String fileName) {
+        final URL url = this.getClass().getResource(fileName);
         final FilePath logFile = new FilePath(new File(url.getFile()));
+        return new ETLogParser(logFile);
+    }
+
+    private List<ETLogAnnotation> parseResults(final String fileName) throws InvocationTargetException {
+        final ETLogParser parser = getLogParser(fileName);
         final List<ETLogAnnotation> list = new ArrayList<ETLogAnnotation>();
-        for (final ETLogAnnotation annotation : parser.parse(logFile)) {
+        for (final ETLogAnnotation annotation : parser.parse()) {
             list.add(annotation);
         }
         return list;

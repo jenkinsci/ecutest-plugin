@@ -47,7 +47,7 @@ public abstract class AbstractETLogAction extends AbstractReportAction {
      *
      * @return the max log size
      */
-    public int getMaxLogSize() {
+    public static int getMaxLogSize() {
         return MAX_LOG_SIZE;
     }
 

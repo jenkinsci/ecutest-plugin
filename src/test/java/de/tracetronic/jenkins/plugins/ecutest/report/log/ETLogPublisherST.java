@@ -84,6 +84,7 @@ public class ETLogPublisherST extends SystemTestBase {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final ETLogPublisher publisher = new ETLogPublisher(false, true, true, true);
         project.getPublishersList().add(publisher);
+
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
     }
@@ -99,8 +100,10 @@ public class ETLogPublisherST extends SystemTestBase {
                 return false;
             }
         });
+
         final ETLogPublisher publisher = new ETLogPublisher(true, false, true, true);
         project.getPublishersList().add(publisher);
+
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
         assertThat("Skip message should be present in console log", build.getLog(100).toString(),
@@ -113,8 +116,10 @@ public class ETLogPublisherST extends SystemTestBase {
         final URL url = this.getClass().getResource("ECU_TEST_OUT.log");
         final FilePath logFile = new FilePath(new File(url.getFile()));
         project.setCustomWorkspace(logFile.getParent().getRemote());
+
         final ETLogPublisher publisher = new ETLogPublisher(true, true, true, false);
         project.getPublishersList().add(publisher);
+
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.UNSTABLE, build);
     }
@@ -125,8 +130,10 @@ public class ETLogPublisherST extends SystemTestBase {
         final URL url = this.getClass().getResource("ECU_TEST_ERR.log");
         final FilePath logFile = new FilePath(new File(url.getFile()));
         project.setCustomWorkspace(logFile.getParent().getRemote());
+
         final ETLogPublisher publisher = new ETLogPublisher(true, true, false, true);
         project.getPublishersList().add(publisher);
+
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
     }

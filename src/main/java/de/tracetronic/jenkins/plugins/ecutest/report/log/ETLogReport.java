@@ -46,6 +46,8 @@ import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogAnnotation.Severit
 public class ETLogReport extends AbstractArchiveFileReport {
 
     private final List<ETLogAnnotation> logs;
+    private final int warningLogCount;
+    private final int errorLogCount;
 
     /**
      * Instantiates a new {@link ETLogReport}.
@@ -60,11 +62,17 @@ public class ETLogReport extends AbstractArchiveFileReport {
      *            the log file size
      * @param logs
      *            the list of annotated logs
+     * @param warningLogCount
+     *            the total count of warning logs
+     * @param errorLogCount
+     *            the total count of error logs
      */
     public ETLogReport(final String id, final String title, final String fileName, final long fileSize,
-            final List<ETLogAnnotation> logs) {
+            final List<ETLogAnnotation> logs, final int warningLogCount, final int errorLogCount) {
         super(id, title, fileName, fileSize);
         this.logs = logs == null ? new ArrayList<ETLogAnnotation>() : logs;
+        this.warningLogCount = warningLogCount;
+        this.errorLogCount = errorLogCount;
     }
 
     /**
@@ -107,6 +115,24 @@ public class ETLogReport extends AbstractArchiveFileReport {
             }
         }
         return logs;
+    }
+
+    /**
+     * Gets the total count of warning logs.
+     *
+     * @return the warningLogCount
+     */
+    public int getWarningLogCount() {
+        return warningLogCount;
+    }
+
+    /**
+     * Gets the total count of error logs.
+     *
+     * @return the errorLogCount
+     */
+    public int getErrorLogCount() {
+        return errorLogCount;
     }
 
     @Override

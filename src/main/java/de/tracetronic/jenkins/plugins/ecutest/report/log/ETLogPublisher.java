@@ -54,6 +54,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogAnnotation.Severity;
 
 /**
  * Publisher parsing the ECU-TEST log files and providing links to saved {@link ETLogReport}s.
@@ -154,12 +155,14 @@ public class ETLogPublisher extends AbstractReportPublisher {
             }
 
             // Parse the log file
-            final ETLogParser logParser = new ETLogParser();
-            final List<ETLogAnnotation> logs = logParser.parse(logFile);
+            final ETLogParser logParser = new ETLogParser(logFile);
+            final List<ETLogAnnotation> logs = logParser.parse();
+            final int warningLogCount = logParser.parseLogCount(Severity.WARNING);
+            final int errorLogCount = logParser.parseLogCount(Severity.ERROR);
 
             // Add the log report
             final ETLogReport logReport = new ETLogReport(String.format("%d", logReports.size() + 1),
-                    logFile.getName(), logFile.getName(), logFile.length(), logs);
+                    logFile.getName(), logFile.getName(), logFile.length(), logs, warningLogCount, errorLogCount);
             logReports.add(logReport);
         }
 
