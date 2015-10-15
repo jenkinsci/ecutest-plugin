@@ -43,6 +43,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
@@ -92,6 +94,7 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
 
     /**
      * Builds a list of report files for parsing the test results.
+     * Includes the test results generated during separate sub-project execution.
      *
      * @param junitDir
      *            the UNIT directory
@@ -110,13 +113,11 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
         final List<FilePath> reportFiles = new ArrayList<FilePath>();
         final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-            final File fullJUnitDir = new File(testEnvAction.getTestReportDir(), junitDir);
-            final FilePath junitFilePath = new FilePath(launcher.getChannel(), new File(fullJUnitDir,
-                    JUNIT_REPORT_FILE).getPath());
-            if (junitFilePath.exists()) {
-                reportFiles.add(junitFilePath);
-            }
+            final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
+            reportFiles.addAll(Arrays.asList(testReportDir.list(
+                    String.format("**/%s/%s", junitDir, JUNIT_REPORT_FILE))));
         }
+        Collections.reverse(reportFiles);
         return reportFiles;
     }
 

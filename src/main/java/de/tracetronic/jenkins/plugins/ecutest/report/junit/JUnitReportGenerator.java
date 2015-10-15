@@ -39,6 +39,8 @@ import hudson.remoting.Callable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
@@ -151,6 +153,7 @@ public class JUnitReportGenerator {
 
     /**
      * Builds a list of report files for UNIT report generation.
+     * Includes the report files generated during separate sub-project execution.
      *
      * @param build
      *            the build
@@ -167,12 +170,10 @@ public class JUnitReportGenerator {
         final List<FilePath> reportFiles = new ArrayList<FilePath>();
         final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-            final FilePath reportFilePath = new FilePath(launcher.getChannel(), new File(
-                    testEnvAction.getTestReportDir(), TRF_NAME).getPath());
-            if (reportFilePath.exists()) {
-                reportFiles.add(reportFilePath);
-            }
+            final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
+            reportFiles.addAll(Arrays.asList(testReportDir.list("**/" + TRF_NAME)));
         }
+        Collections.reverse(reportFiles);
         return reportFiles;
     }
 

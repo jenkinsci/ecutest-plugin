@@ -94,7 +94,7 @@ public class TRFBuildAction extends AbstractTRFAction {
     }
 
     /**
-     * Traverses the sub reports recursively and searches
+     * Traverses the sub-reports recursively and searches
      * for the {@link TRFReport} matching the given token id.
      *
      * @param token

@@ -82,7 +82,7 @@ public abstract class AbstractTestReport implements ModelObject {
     }
 
     /**
-     * Gets the sub reports.
+     * Gets the sub-reports.
      *
      * @return the subReports
      */
@@ -91,7 +91,7 @@ public abstract class AbstractTestReport implements ModelObject {
     }
 
     /**
-     * Adds a sub report.
+     * Adds a sub-report.
      *
      * @param subReport
      *            the subReport to add
@@ -101,7 +101,7 @@ public abstract class AbstractTestReport implements ModelObject {
     }
 
     /**
-     * Adds a bundle of sub reports.
+     * Adds a bundle of sub-reports.
      *
      * @param subReports
      *            the subReports to add

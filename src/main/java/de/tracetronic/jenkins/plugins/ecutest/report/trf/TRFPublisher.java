@@ -104,7 +104,7 @@ public class TRFPublisher extends AbstractReportPublisher {
                 try {
                     logger.logInfo(String.format("- Archiving %s", reportFile));
                     final int copiedFiles = testReportDir.copyRecursiveTo("**/" + TRF_FILE_NAME, archiveTargetDir);
-                    logger.logInfo(String.format("-> Archived %d sub reports", copiedFiles - 1));
+                    logger.logInfo(String.format("-> Archived %d sub-reports", copiedFiles - 1));
                 } catch (final IOException e) {
                     Util.displayIOException(e, listener);
                     logger.logError("Failed publishing TRF reports.");
@@ -116,7 +116,7 @@ public class TRFPublisher extends AbstractReportPublisher {
                         reportFile.getParent().getName(), reportFile.getName(), reportFile.length());
                 trfReports.add(trfReport);
 
-                // Search for sub reports
+                // Search for sub-reports
                 traverseSubReports(trfReport, testReportDir, testReportDir, trfReports.size());
             } else {
                 if (isAllowMissing()) {
@@ -148,7 +148,7 @@ public class TRFPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Traverses the sub report directories recursively and searches for TRF reports.
+     * Traverses the sub-report directories recursively and searches for TRF reports.
      *
      * @param trfReport
      *            the TRF report
@@ -166,7 +166,7 @@ public class TRFPublisher extends AbstractReportPublisher {
      */
     private int traverseSubReports(final TRFReport trfReport, final FilePath testReportDir,
             final FilePath subTestReportDir, int id)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
             final FilePath reportFile = subDir.child(TRF_FILE_NAME);
             if (reportFile.exists()) {
