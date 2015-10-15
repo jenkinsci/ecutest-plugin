@@ -69,7 +69,7 @@ public class JUnitReportGenerator {
     /**
      * File name of the TRF file.
      */
-    private static final String TRF_NAME = "report.trf";
+    private static final String TRF_FILE_NAME = "report.trf";
 
     /**
      * Generates UNIT reports by invoking the startup of ECU-TEST if not already running, otherwise using the current
@@ -172,7 +172,7 @@ public class JUnitReportGenerator {
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
             if (testReportDir.exists()) {
-                reportFiles.addAll(Arrays.asList(testReportDir.list("**/" + TRF_NAME)));
+                reportFiles.addAll(Arrays.asList(testReportDir.list("**/" + TRF_FILE_NAME)));
             }
         }
         Collections.reverse(reportFiles);

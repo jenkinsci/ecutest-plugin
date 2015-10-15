@@ -94,12 +94,13 @@ public class TRFPublisher extends AbstractReportPublisher {
             return true;
         }
 
+        int index = 0;
         final List<TRFReport> trfReports = new ArrayList<TRFReport>();
         final FilePath archiveTargetDir = getArchiveTarget(build);
         final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-            final FilePath reportFile = testReportDir.child("report.trf");
+            final FilePath reportFile = testReportDir.child(TRF_FILE_NAME);
             if (reportFile.exists()) {
                 try {
                     logger.logInfo(String.format("- Archiving %s", reportFile));
@@ -112,12 +113,12 @@ public class TRFPublisher extends AbstractReportPublisher {
                     return true;
                 }
 
-                final TRFReport trfReport = new TRFReport(String.format("%d", trfReports.size() + 1),
+                final TRFReport trfReport = new TRFReport(String.format("%d", ++index),
                         reportFile.getParent().getName(), reportFile.getName(), reportFile.length());
                 trfReports.add(trfReport);
 
                 // Search for sub-reports
-                traverseSubReports(trfReport, testReportDir, testReportDir, trfReports.size());
+                index = traverseSubReports(trfReport, testReportDir, testReportDir, index);
             } else {
                 if (isAllowMissing()) {
                     continue;
@@ -149,6 +150,7 @@ public class TRFPublisher extends AbstractReportPublisher {
 
     /**
      * Traverses the sub-report directories recursively and searches for TRF reports.
+     * Includes the report files generated during separate sub-project execution.
      *
      * @param trfReport
      *            the TRF report
@@ -166,13 +168,13 @@ public class TRFPublisher extends AbstractReportPublisher {
      */
     private int traverseSubReports(final TRFReport trfReport, final FilePath testReportDir,
             final FilePath subTestReportDir, int id)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
             final FilePath reportFile = subDir.child(TRF_FILE_NAME);
             if (reportFile.exists()) {
                 final String relFilePath = testReportDir.toURI().relativize(reportFile.toURI()).getPath();
                 final TRFReport subReport = new TRFReport(String.format("%d", ++id), reportFile.getParent()
-                        .getName(), relFilePath, reportFile.length());
+                        .getName().replaceFirst("^Report\\s", ""), relFilePath, reportFile.length());
                 trfReport.addSubReport(subReport);
                 id = traverseSubReports(subReport, testReportDir, subDir, id);
             }

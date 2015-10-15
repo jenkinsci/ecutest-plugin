@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
+
 /**
  * Action to show a link to {@link ATXReport}s at the build page.
  *
@@ -84,6 +86,35 @@ public class ATXBuildAction extends AbstractATXAction {
         for (final ATXReport report : getATXReports()) {
             if (token.equals(report.getId())) {
                 return report;
+            } else {
+                final ATXReport potentialReport = traverseSubReports(token, report);
+                if (potentialReport != null) {
+                    return potentialReport;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Traverses the sub-reports recursively and searches
+     * for the {@link ATXReport} matching the given token id.
+     *
+     * @param token
+     *            the token id
+     * @param report
+     *            the report
+     * @return the {@link ATXReport} or null if no proper report exists
+     */
+    private ATXReport traverseSubReports(final String token, final ATXReport report) {
+        for (final AbstractTestReport subReport : report.getSubReports()) {
+            if (token.equals(subReport.getId())) {
+                return (ATXReport) subReport;
+            } else {
+                final ATXReport potentialReport = traverseSubReports(token, (ATXReport) subReport);
+                if (potentialReport != null) {
+                    return potentialReport;
+                }
             }
         }
         return null;

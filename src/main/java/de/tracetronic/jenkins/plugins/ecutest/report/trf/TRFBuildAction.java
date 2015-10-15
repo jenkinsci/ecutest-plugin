@@ -87,7 +87,10 @@ public class TRFBuildAction extends AbstractTRFAction {
             if (token.equals(report.getId())) {
                 return report;
             } else {
-                return traverseSubReports(token, report);
+                final TRFReport potentialReport = traverseSubReports(token, report);
+                if (potentialReport != null) {
+                    return potentialReport;
+                }
             }
         }
         return null;

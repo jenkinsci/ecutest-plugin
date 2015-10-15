@@ -32,6 +32,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.BuildListener;
+import hudson.model.Result;
 import hudson.model.AbstractBuild;
 import hudson.remoting.Callable;
 
@@ -42,7 +43,6 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.annotation.CheckForNull;
 
@@ -85,7 +85,7 @@ public class ATXReportUploader {
     /**
      * File name of the TRF file.
      */
-    private static final String TRF_NAME = "report.trf";
+    private static final String TRF_FILE_NAME = "report.trf";
 
     /**
      * Generates and uploads {@link ATXReport}s.
@@ -106,23 +106,60 @@ public class ATXReportUploader {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    @SuppressWarnings({ "checkstyle:cyclomaticcomplexity", "checkstyle:npathcomplexity" })
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     public boolean upload(final boolean allowMissing, final ATXInstallation installation,
             final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<ATXReport> atxReports = new ArrayList<ATXReport>();
-        final Map<String, Map<String, FilePath>> reportFiles = getReportFiles(build, launcher);
         final List<File> uploadFiles = new ArrayList<File>();
 
-        // Iterate all report files to upload
-        for (final Entry<String, Map<String, FilePath>> entry : reportFiles.entrySet()) {
-            final String testName = entry.getKey();
-            final Map<String, FilePath> reportMap = entry.getValue();
-            final Entry<String, FilePath> testType = reportMap.entrySet().iterator().next();
-            final FilePath reportFile = testType.getValue();
+        int index = 0;
+        final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
+        for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
+            final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
+            final FilePath reportFile = testReportDir.child(TRF_FILE_NAME);
             if (reportFile.exists()) {
                 uploadFiles.add(new File(reportFile.getRemote()));
+
+                // Prepare ATX report information
+                String reportUrl = null;
+                String trendReportUrl = null;
+                final String titel = reportFile.getParent().getName();
+                final String testName = testEnvAction.getTestName();
+                final String atxTestName = ATXUtil.getValidATXName(testName);
+                final String from = String.valueOf(build.getStartTimeInMillis());
+                final String to = String.valueOf(Calendar.getInstance().getTimeInMillis());
+                final String baseUrl = getBaseUrl(installation);
+                if (baseUrl == null) {
+                    logger.logError(String.format(
+                            "Error getting base URL for selected TEST-GUIDE installation: %s",
+                            installation.getName()));
+                    return false;
+                }
+
+                final String testType = testEnvAction.getTestType().name();
+                if (testType.equals(TestEnvInvisibleAction.TestType.PACKAGE.name())) {
+                    reportUrl = getPkgReportUrl(baseUrl, atxTestName, from, to);
+                    trendReportUrl = getPkgTrendReportUrl(baseUrl, atxTestName);
+                } else if (testType.equals(TestEnvInvisibleAction.TestType.PROJECT.name())) {
+                    reportUrl = getPrjReportUrl(baseUrl, atxTestName, from, to);
+                }
+
+                // Add ATX reports
+                if (reportUrl != null) {
+                    final ATXReport atxReport = new ATXReport(String.format("%d", ++index), titel, reportUrl);
+
+                    // Add trend report
+                    if (trendReportUrl != null) {
+                        atxReport
+                        .addSubReport(new ATXReport(String.format("%d", ++index), titel, trendReportUrl, true));
+                    }
+                    atxReports.add(atxReport);
+
+                    // Search for sub-reports
+                    index = traverseSubReports(atxReport, testReportDir, index, from, to, baseUrl, uploadFiles);
+                }
             } else {
                 if (allowMissing) {
                     continue;
@@ -131,36 +168,12 @@ public class ATXReportUploader {
                     return false;
                 }
             }
+        }
 
-            // Prepare ATX report information
-            String reportUrl = null;
-            String trendReportUrl = null;
-            final String atxTestName = ATXUtil.getValidATXName(testName);
-            final String title = String.format("%s/%s", reportFile.getParent().getName(), atxTestName);
-            final String from = String.valueOf(build.getStartTimeInMillis());
-            final String to = String.valueOf(Calendar.getInstance().getTimeInMillis());
-            final String baseUrl = getBaseUrl(installation);
-            if (baseUrl == null) {
-                logger.logError(String.format(
-                        "Error getting base URL for selected TEST-GUIDE installation: %s",
-                        installation.getName()));
-                return false;
-            }
-            if (testType.getKey().equals(TestEnvInvisibleAction.TestType.PACKAGE.name())) {
-                reportUrl = getPkgReportUrl(baseUrl, atxTestName, from, to);
-                trendReportUrl = getPkgTrendReportUrl(baseUrl, atxTestName);
-            } else if (testType.getKey().equals(TestEnvInvisibleAction.TestType.PROJECT.name())) {
-                reportUrl = getPrjReportUrl(baseUrl, atxTestName, from, to);
-            }
-
-            // Add ATX reports
-            if (reportUrl != null) {
-                atxReports.add(new ATXReport(String.format("%d", atxReports.size() + 1), title, reportUrl));
-            }
-            if (trendReportUrl != null) {
-                atxReports.add(new ATXReport(String.format("%d", atxReports.size() + 1), title,
-                        trendReportUrl, true));
-            }
+        if (atxReports.isEmpty() && !allowMissing) {
+            logger.logError("Empty test results are not allowed, setting build status to FAILURE!");
+            build.setResult(Result.FAILURE);
+            return true;
         }
 
         // Upload ATX reports
@@ -181,32 +194,48 @@ public class ATXReportUploader {
     }
 
     /**
-     * Builds a map containing the test name as key and a test type to test file path map as values.
+     * Builds a list of report files for ATX report generation.
+     * Includes the report files generated during separate sub-project execution.
      *
-     * @param build
-     *            the build
-     * @param launcher
-     *            the launcher
-     * @return the test map
+     * @param atxReport
+     *            the ATX report
+     * @param testReportDir
+     *            the main test report directory
+     * @param id
+     *            the id increment
+     * @param from
+     *            the from date
+     * @param to
+     *            the to date
+     * @param baseUrl
+     *            the base URL
+     * @param uploadFiles
+     *            the upload files
+     * @return the current id increment
      * @throws IOException
      *             signals that an I/O exception has occurred
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private Map<String, Map<String, FilePath>> getReportFiles(final AbstractBuild<?, ?> build,
-            final Launcher launcher) throws IOException, InterruptedException {
-        final Map<String, Map<String, FilePath>> reportFiles = new LinkedHashMap<String, Map<String, FilePath>>();
-        final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
-        for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-            final String testName = testEnvAction.getTestName();
-            final String testType = testEnvAction.getTestType().name();
-            final FilePath reportFilePath = new FilePath(launcher.getChannel(), new File(
-                    testEnvAction.getTestReportDir(), TRF_NAME).getPath());
-            final Map<String, FilePath> reportFileMap = new LinkedHashMap<String, FilePath>();
-            reportFileMap.put(testType, reportFilePath);
-            reportFiles.put(testName, reportFileMap);
+    private int traverseSubReports(final ATXReport atxReport, final FilePath testReportDir, int id, final String from,
+            final String to, final String baseUrl, final List<File> uploadFiles)
+            throws IOException, InterruptedException {
+        for (final FilePath subDir : testReportDir.listDirectories()) {
+            final FilePath reportFile = subDir.child(TRF_FILE_NAME);
+            if (reportFile.exists()) {
+                // Prepare ATX report information for sub-report
+                final String testName = reportFile.getParent().getName().replaceFirst("^Report\\s", "");
+                final String atxTestName = ATXUtil.getValidATXName(testName);
+                final String reportUrl = getPrjReportUrl(baseUrl, atxTestName, from, to);
+
+                final ATXReport subReport = new ATXReport(String.format("%d", ++id), testName, reportUrl);
+                atxReport.addSubReport(subReport);
+
+                uploadFiles.add(new File(reportFile.getRemote()));
+                id = traverseSubReports(subReport, subDir, id, from, to, baseUrl, uploadFiles);
+            }
         }
-        return reportFiles;
+        return id;
     }
 
     /**
