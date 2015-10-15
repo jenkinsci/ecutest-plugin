@@ -34,6 +34,9 @@ import hudson.model.ModelObject;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.CheckForNull;
 
 import org.kohsuke.stapler.StaplerRequest;
@@ -47,6 +50,7 @@ public abstract class AbstractTestReport implements ModelObject {
 
     private final String id;
     private final String title;
+    private final List<AbstractTestReport> subReports;
 
     /**
      * Instantiates a new {@link AbstractTestReport}.
@@ -60,6 +64,7 @@ public abstract class AbstractTestReport implements ModelObject {
         super();
         this.id = id;
         this.title = title;
+        subReports = new ArrayList<AbstractTestReport>();
     }
 
     /**
@@ -74,6 +79,35 @@ public abstract class AbstractTestReport implements ModelObject {
      */
     public String getTitle() {
         return title;
+    }
+
+    /**
+     * Gets the sub reports.
+     *
+     * @return the subReports
+     */
+    public List<AbstractTestReport> getSubReports() {
+        return subReports;
+    }
+
+    /**
+     * Adds a sub report.
+     *
+     * @param subReport
+     *            the subReport to add
+     */
+    public void addSubReport(final AbstractTestReport subReport) {
+        subReports.add(subReport);
+    }
+
+    /**
+     * Adds a bundle of sub reports.
+     *
+     * @param subReports
+     *            the subReports to add
+     */
+    public void addSubReports(final List<AbstractTestReport> subReports) {
+        this.subReports.addAll(subReports);
     }
 
     @Override

@@ -30,28 +30,25 @@
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-    <j:set var="owner" value="${it.getOwner(request)}" />
-    <j:set var="build" value="${it.getBuild(request)}" />
-    <l:layout title="${it.displayName}" norefresh="true">
-        <st:include page="sidepanel.jelly" it="${it.getOwner(request)}" />
-        <l:main-panel>
-            <h1>
-                <img src="${resURL}${it.iconFileName}" alt="TRF reports" height="48" width="48" />
-                ${it.displayName}
-            </h1>
-            <j:if test="${owner != null}">
-                <j:if test="${owner != build}">
-                    <div>
-                        ${%build.on} <a href="${rootURL}/${build.url}">${build.fullDisplayName}</a>
-                    </div>
+    <tr>
+        <td>
+            <div style="text-indent: ${indent}px;">
+                <img src="${resURL}${it.iconFileName}" alt="TRF report" height="16" width="16" />
+                <st:nbsp />
+                <j:if test="${owner == build}">
+                    <a href="${report.url}">${report.title}</a>
                 </j:if>
-                <table class="fileList">
-                    <j:set var="indent" value="0" />
-                    <j:forEach var="report" items="${it.getTRFReports()}">
-                        <st:include page="report.jelly" />
-                    </j:forEach>
-                </table>
-            </j:if>
-        </l:main-panel>
-    </l:layout>
+                <j:if test="${owner != build}">
+                    <a href="${rootURL}/${build.url}${it.urlName}/${report.id}">${report.title}</a>
+                </j:if>
+            </div>
+        </td>
+        <td class="fileSize">
+            ${h.humanReadableByteSize(report.fileSize)}
+        </td>
+        <j:set var="indent" value="${indent+20}" />
+        <j:forEach var="report" items="${report.getSubReports()}">
+            <st:include page="report.jelly" />
+        </j:forEach>
+    </tr>
 </j:jelly>

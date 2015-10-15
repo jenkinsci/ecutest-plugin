@@ -71,7 +71,7 @@ public class TRFProjectAction extends AbstractTRFAction {
      */
     public TRFReport getDynamic(final String token, final StaplerRequest req) {
         final TRFBuildAction buildAction = getLastBuildAction(req);
-        return buildAction != null ? buildAction.getDynamic(token) : null;
+        return (TRFReport) (buildAction != null ? buildAction.getDynamic(token) : null);
     }
 
     @Override

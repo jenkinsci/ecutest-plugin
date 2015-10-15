@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
+
 /**
  * Action to show a link to {@link TRFReport}s at the build page.
  *
@@ -43,6 +45,8 @@ public class TRFBuildAction extends AbstractTRFAction {
     private final List<TRFReport> trfReports = new ArrayList<TRFReport>();
 
     /**
+     * Gets the TRF reports.
+     *
      * @return the TRF reports
      */
     public List<TRFReport> getTRFReports() {
@@ -78,10 +82,36 @@ public class TRFBuildAction extends AbstractTRFAction {
      *            the URL token
      * @return the {@link TRFReport} or null if no proper report exists
      */
-    public TRFReport getDynamic(final String token) {
+    public AbstractTestReport getDynamic(final String token) {
         for (final TRFReport report : getTRFReports()) {
             if (token.equals(report.getId())) {
                 return report;
+            } else {
+                return traverseSubReports(token, report);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Traverses the sub reports recursively and searches
+     * for the {@link TRFReport} matching the given token id.
+     *
+     * @param token
+     *            the token id
+     * @param report
+     *            the report
+     * @return the {@link TRFReport} or null if no proper report exists
+     */
+    private TRFReport traverseSubReports(final String token, final TRFReport report) {
+        for (final AbstractTestReport subReport : report.getSubReports()) {
+            if (token.equals(subReport.getId())) {
+                return (TRFReport) subReport;
+            } else {
+                final TRFReport potentialReport = traverseSubReports(token, (TRFReport) subReport);
+                if (potentialReport != null) {
+                    return potentialReport;
+                }
             }
         }
         return null;

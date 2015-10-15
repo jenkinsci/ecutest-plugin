@@ -95,36 +95,38 @@ public class TRFPublisher extends AbstractReportPublisher {
         }
 
         final List<TRFReport> trfReports = new ArrayList<TRFReport>();
-        final List<FilePath> archiveFiles = getArchiveFiles(build, launcher);
         final FilePath archiveTargetDir = getArchiveTarget(build);
-
-        for (final FilePath archiveFile : archiveFiles) {
-            final String relArchivePath = archiveFile.getParent().getName() + File.separator
-                    + archiveFile.getName();
-            final FilePath targetFile = archiveTargetDir.child(relArchivePath);
-
-            try {
-                if (archiveFile.exists()) {
-                    logger.logInfo(String.format("- Archiving %s", archiveFile));
-                    archiveFile.copyTo(targetFile);
-                } else {
-                    if (isAllowMissing()) {
-                        continue;
-                    } else {
-                        logger.logError(String.format("Specified TRF file '%s' does not exist.", archiveFile));
-                        build.setResult(Result.FAILURE);
-                        return true;
-                    }
+        final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
+        for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
+            final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
+            final FilePath reportFile = testReportDir.child("report.trf");
+            if (reportFile.exists()) {
+                try {
+                    logger.logInfo(String.format("- Archiving %s", reportFile));
+                    final int copiedFiles = testReportDir.copyRecursiveTo("**/" + TRF_FILE_NAME, archiveTargetDir);
+                    logger.logInfo(String.format("-> Archived %d sub reports", copiedFiles - 1));
+                } catch (final IOException e) {
+                    Util.displayIOException(e, listener);
+                    logger.logError("Failed publishing TRF reports.");
+                    build.setResult(Result.FAILURE);
+                    return true;
                 }
-            } catch (final IOException e) {
-                Util.displayIOException(e, listener);
-                logger.logError("Failed publishing TRF reports.");
-                build.setResult(Result.FAILURE);
-                return true;
-            }
 
-            trfReports.add(new TRFReport(String.format("%d", trfReports.size() + 1), archiveFile.getParent()
-                    .getName(), relArchivePath, archiveFile.length()));
+                final TRFReport trfReport = new TRFReport(String.format("%d", trfReports.size() + 1),
+                        reportFile.getParent().getName(), reportFile.getName(), reportFile.length());
+                trfReports.add(trfReport);
+
+                // Search for sub reports
+                traverseSubReports(trfReport, testReportDir, testReportDir, trfReports.size());
+            } else {
+                if (isAllowMissing()) {
+                    continue;
+                } else {
+                    logger.logError(String.format("Specified TRF file '%s' does not exist.", reportFile));
+                    build.setResult(Result.FAILURE);
+                    return true;
+                }
+            }
         }
 
         if (trfReports.isEmpty() && !isAllowMissing()) {
@@ -146,6 +148,39 @@ public class TRFPublisher extends AbstractReportPublisher {
     }
 
     /**
+     * Traverses the sub report directories recursively and searches for TRF reports.
+     *
+     * @param trfReport
+     *            the TRF report
+     * @param testReportDir
+     *            the main test report directory
+     * @param subTestReportDir
+     *            the sub test report directory
+     * @param id
+     *            the id increment
+     * @return the current id increment
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the build gets interrupted
+     */
+    private int traverseSubReports(final TRFReport trfReport, final FilePath testReportDir,
+            final FilePath subTestReportDir, int id)
+            throws IOException, InterruptedException {
+        for (final FilePath subDir : subTestReportDir.listDirectories()) {
+            final FilePath reportFile = subDir.child(TRF_FILE_NAME);
+            if (reportFile.exists()) {
+                final String relFilePath = testReportDir.toURI().relativize(reportFile.toURI()).getPath();
+                final TRFReport subReport = new TRFReport(String.format("%d", ++id), reportFile.getParent()
+                        .getName(), relFilePath, reportFile.length());
+                trfReport.addSubReport(subReport);
+                id = traverseSubReports(subReport, testReportDir, subDir, id);
+            }
+        }
+        return id;
+    }
+
+    /**
      * Gets the archive target.
      *
      * @param build
@@ -154,31 +189,6 @@ public class TRFPublisher extends AbstractReportPublisher {
      */
     private FilePath getArchiveTarget(final AbstractBuild<?, ?> build) {
         return new FilePath(new File(build.getRootDir(), URL_NAME));
-    }
-
-    /**
-     * Builds a list of TRF files for archiving.
-     *
-     * @param build
-     *            the build
-     * @param launcher
-     *            the launcher
-     * @return the list of TRF files
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
-     */
-    private List<FilePath> getArchiveFiles(final AbstractBuild<?, ?> build, final Launcher launcher)
-            throws IOException, InterruptedException {
-        final List<FilePath> archiveFiles = new ArrayList<FilePath>();
-        final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
-        for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-            final FilePath trfFile = new FilePath(launcher.getChannel(), new File(
-                    testEnvAction.getTestReportDir(), TRF_FILE_NAME).getPath());
-            archiveFiles.add(trfFile);
-        }
-        return archiveFiles;
     }
 
     @Override
