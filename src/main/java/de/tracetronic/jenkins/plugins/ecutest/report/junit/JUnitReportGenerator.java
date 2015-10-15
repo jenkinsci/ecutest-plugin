@@ -171,7 +171,9 @@ public class JUnitReportGenerator {
         final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-            reportFiles.addAll(Arrays.asList(testReportDir.list("**/" + TRF_NAME)));
+            if (testReportDir.exists()) {
+                reportFiles.addAll(Arrays.asList(testReportDir.list("**/" + TRF_NAME)));
+            }
         }
         Collections.reverse(reportFiles);
         return reportFiles;

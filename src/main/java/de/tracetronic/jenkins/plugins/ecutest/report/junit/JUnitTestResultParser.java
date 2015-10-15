@@ -114,8 +114,10 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
         final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-            reportFiles.addAll(Arrays.asList(testReportDir.list(
-                    String.format("**/%s/%s", junitDir, JUNIT_REPORT_FILE))));
+            if (testReportDir.exists()) {
+                reportFiles.addAll(Arrays.asList(testReportDir.list(
+                        String.format("**/%s/%s", junitDir, JUNIT_REPORT_FILE))));
+            }
         }
         Collections.reverse(reportFiles);
         return reportFiles;
@@ -142,7 +144,7 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
 
         @Override
         public TestResult invoke(final File file, final VirtualChannel channel) throws IOException,
-        InterruptedException {
+                InterruptedException {
             testResult.parse(file);
             return testResult;
         }
