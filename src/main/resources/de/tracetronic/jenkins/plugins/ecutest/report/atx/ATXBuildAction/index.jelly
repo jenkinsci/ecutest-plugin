@@ -50,31 +50,30 @@
                         <tr>
                         <j:choose>
                             <j:when test="${report.hasTrendReport()}">
-                                <td/>
                                 <td>
-                                    <j:if test="${owner == build}">
-                                        <img src="${resURL}${it.trendIconFileName}" alt="ATX report" height="16" width="16" />
-                                        <st:nbsp /><a href="${report.url}" target="_blank">${%trend.view}</a>
-                                    </j:if>
-                                    <j:if test="${owner != build}">
-                                        <img src="${resURL}${it.trendIconFileName}" alt="ATX trend report" height="16" width="16" />
-                                        <st:nbsp /><a href="${rootURL}/${build.url}${it.urlName}/${report.id}" target="_blank">${%trend.view}</a>
-                                    </j:if>
+                                    <div style="text-indent: 20px;">
+                                        <j:if test="${owner == build}">
+                                            <img src="${resURL}${it.trendIconFileName}" alt="ATX report" height="16" width="16" />
+                                            <st:nbsp /><a href="${report.url}" target="_blank">${%trend.view}</a>
+                                        </j:if>
+                                        <j:if test="${owner != build}">
+                                            <img src="${resURL}${it.trendIconFileName}" alt="ATX trend report" height="16" width="16" />
+                                            <st:nbsp /><a href="${rootURL}/${build.url}${it.urlName}/${report.id}" target="_blank">${%trend.view}</a>
+                                        </j:if>
+                                    </div>
                                 </td>
                             </j:when>
                             <j:otherwise>
-                                    <td>
-                                        <img src="${resURL}${it.reportIconFileName}" alt="ATX report" height="16" width="16" />
-                                        <st:nbsp />
-                                    </td>
-                                    <td>
-                                        <j:if test="${owner == build}">
-                                            <a href="${report.url}" target="_blank">${h.escape(report.title)}</a>
-                                        </j:if>
-                                        <j:if test="${owner != build}">
-                                            <a href="${rootURL}/${build.url}${it.urlName}/${report.id}" target="_blank">${h.escape(report.title)}</a>
-                                        </j:if>
-                                    </td>
+                                <td>
+                                    <img src="${resURL}${it.reportIconFileName}" alt="ATX report" height="16" width="16" />
+                                    <st:nbsp />
+                                    <j:if test="${owner == build}">
+                                        <a href="${report.url}" target="_blank">${report.title}</a>
+                                    </j:if>
+                                    <j:if test="${owner != build}">
+                                        <a href="${rootURL}/${build.url}${it.urlName}/${report.id}" target="_blank">${report.title}</a>
+                                    </j:if>
+                                </td>
                             </j:otherwise>
                         </j:choose>
                         </tr>

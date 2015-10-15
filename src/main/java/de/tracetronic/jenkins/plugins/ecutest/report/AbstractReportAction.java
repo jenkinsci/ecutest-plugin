@@ -28,6 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.tracetronic.jenkins.plugins.ecutest.report;
+
 import hudson.PluginWrapper;
 import hudson.model.Action;
 import hudson.model.AbstractBuild;
@@ -47,7 +48,6 @@ import org.kohsuke.stapler.StaplerRequest;
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.AbstractATXAction;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.AbstractTRFAction;
-
 
 /**
  * Common base class for {@link AbstractATXAction} and {@link AbstractTRFAction}.

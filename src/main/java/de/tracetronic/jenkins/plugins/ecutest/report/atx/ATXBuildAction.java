@@ -43,6 +43,8 @@ public class ATXBuildAction extends AbstractATXAction {
     private final List<ATXReport> atxReports = new ArrayList<ATXReport>();
 
     /**
+     * Gets the ATX reports.
+     *
      * @return the ATX reports
      */
     public List<ATXReport> getATXReports() {

@@ -47,7 +47,7 @@
                         </f:entry>
                     </f:section>
                     <j:set var="defaultConfig" value="${descriptor.getDefaultConfig()}" />
-                    <j:set var="currentConfig" value="${inst.getConfig()}"/>
+                    <j:set var="currentConfig" value="${inst.getConfig()}" />
                     <j:choose>
                         <j:when test="${empty(currentConfig)}">
                             <j:set var="config" value="${defaultConfig}" />
@@ -58,10 +58,11 @@
                     </j:choose>
                     <f:section title="${%atx.uploadConfig.title}" name="uploadConfig">
                         <j:set var="settings" value="${config.getConfigByName('uploadConfig')}" />
-                        <st:include class="${descriptor.clazz}" page="setting.jelly"/>
+                        <st:include class="${descriptor.clazz}" page="setting.jelly" />
                         <f:entry title="">
                             <div align="right">
-                               <f:validateButton title="${%testConnection.title}" progress="${%testConnection.progress}" method="testConnection" with="serverURL,serverPort,serverContextPath,useHttpsConnection"/>
+                                <f:validateButton title="${%testConnection.title}" progress="${%testConnection.progress}"
+                                    method="testConnection" with="serverURL,serverPort,serverContextPath,useHttpsConnection" />
                             </div>
                         </f:entry>
                     </f:section>
@@ -86,7 +87,7 @@
                             <f:entry title="${%atx.customSettings.title}" description="${%atx.customSettings.description}">
                                 <f:hetero-list name="customSettings" targetType="${descriptor.getTargetType()}"
                                    descriptors="${descriptor.getApplicableCustomSettings()}" items="${instance.getCustomSettings(inst)}"
-                                   addCaption="${%atx.customSetting.add}" deleteCaption="${%atx.customSetting.delete}" hasHeader="true"/>
+                                   addCaption="${%atx.customSetting.add}" deleteCaption="${%atx.customSetting.delete}" hasHeader="true" />
                             </f:entry>
                         </f:section>
                     </f:advanced>

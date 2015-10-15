@@ -43,6 +43,8 @@ public class ETLogBuildAction extends AbstractETLogAction {
     private final List<ETLogReport> logReports = new ArrayList<ETLogReport>();
 
     /**
+     * Gets the ECU-TEST log reports.
+     *
      * @return the log reports
      */
     public List<ETLogReport> getLogReports() {

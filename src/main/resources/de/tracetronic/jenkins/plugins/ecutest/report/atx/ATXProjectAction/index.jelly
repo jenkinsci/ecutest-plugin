@@ -32,6 +32,6 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <j:set var="lastBuildAction" value="${it.getLastBuildAction(request)}" />
     <j:if test="${lastBuildAction != null}">
-        <st:include page="index.jelly" it="${lastBuildAction}"/>
+        <st:include page="index.jelly" it="${lastBuildAction}" />
     </j:if>
 </j:jelly>

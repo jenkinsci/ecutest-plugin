@@ -167,7 +167,7 @@ public abstract class AbstractTestBuilder extends Builder {
             throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
-        // Check for running ECU-TEST and Tool-Server instances
+        // Check for running ECU-TEST instance
         if (!checkETInstance(launcher, false)) {
             logger.logError("No running ECU-TEST instance found, please configure one at first!");
             return false;

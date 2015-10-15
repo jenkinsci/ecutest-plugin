@@ -56,10 +56,10 @@
                             </td>
                             <td>
                                 <j:if test="${owner == build}">
-                                    <a href="${report.url}">${h.escape(report.fileName)}</a>
+                                    <a href="${report.url}">${report.fileName}</a>
                                 </j:if>
                                 <j:if test="${owner != build}">
-                                    <a href="${rootURL}/${build.url}${it.urlName}/${report.id}">${h.escape(report.fileName)}</a>
+                                    <a href="${rootURL}/${build.url}${it.urlName}/${report.id}">${report.fileName}</a>
                                 </j:if>
                             </td>
                             <td class="fileSize">
