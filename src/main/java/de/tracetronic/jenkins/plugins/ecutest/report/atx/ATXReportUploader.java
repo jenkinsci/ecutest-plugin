@@ -133,10 +133,10 @@ public class ATXReportUploader {
             }
 
             // Prepare ATX report information
-            final String title = String.format("%s/%s", reportFile.getParent().getName(), testName);
             String reportUrl = null;
             String trendReportUrl = null;
             final String atxTestName = ATXUtil.getValidATXName(testName);
+            final String title = String.format("%s/%s", reportFile.getParent().getName(), atxTestName);
             final String from = String.valueOf(build.getStartTimeInMillis());
             final String to = String.valueOf(Calendar.getInstance().getTimeInMillis());
             final String baseUrl = getBaseUrl(installation);
