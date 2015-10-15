@@ -113,16 +113,18 @@ public final class ProcessUtil {
         for (final String process : processes) {
             BufferedReader reader = null;
             try {
-                final String cmd = String.format("tasklist /fi \"IMAGENAME eq %s\" /fo table /nh", process);
+                final String cmd = String.format(System.getenv("windir")
+                        + "\\system32\\tasklist.exe /fi \"IMAGENAME eq %s\" /fo table /nh", process);
                 final Process p = Runtime.getRuntime().exec(cmd);
-                p.waitFor();
-                reader = new BufferedReader(new InputStreamReader(p.getInputStream(), Charset.forName("UTF-8")));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (line.startsWith(process)) {
-                        found.add(process);
-                        if (kill) {
-                            killProcess(process);
+                if (p.waitFor() == 0) {
+                    reader = new BufferedReader(new InputStreamReader(p.getInputStream(), Charset.forName("UTF-8")));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        if (line.startsWith(process)) {
+                            found.add(process);
+                            if (kill) {
+                                killProcess(process);
+                            }
                         }
                     }
                 }
@@ -149,7 +151,7 @@ public final class ProcessUtil {
      *             if the current thread is interrupted while waiting for the completion
      */
     private static void killProcess(final String process) throws IOException, InterruptedException {
-        final String cmd = String.format("taskkill /f /im %s", process);
+        final String cmd = String.format(System.getenv("windir") + "\\system32\\taskkill.exe /f /im %s", process);
         Runtime.getRuntime().exec(cmd).waitFor();
     }
 
