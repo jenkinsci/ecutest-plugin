@@ -36,12 +36,17 @@ import javax.annotation.CheckForNull;
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
+
 /**
  * Action to show a link to {@link ATXReport}s in side menu of projects.
+ * 
+ * @param <T>
+ *            the report type, either {@link ATXReport} or {@link ATXZipReport}
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ATXProjectAction extends AbstractATXAction {
+public class ATXProjectAction<T extends AbstractTestReport> extends AbstractATXAction {
 
     /**
      * Returns the {@link ATXBuildAction} in the last build that have artifact documents.
@@ -52,8 +57,9 @@ public class ATXProjectAction extends AbstractATXAction {
      *            the {@link StaplerRequest} used for access this action
      * @return the last {@link ATXBuildAction} or null if no proper build exists
      */
+    @SuppressWarnings("unchecked")
     @CheckForNull
-    public ATXBuildAction getLastBuildAction(final StaplerRequest req) {
+    public ATXBuildAction<T> getLastBuildAction(final StaplerRequest req) {
         final AbstractBuild<?, ?> build = getBuild(req);
         return build != null ? build.getAction(ATXBuildAction.class) : null;
     }
@@ -69,8 +75,8 @@ public class ATXProjectAction extends AbstractATXAction {
      *            the {@link StaplerRequest} used for access this action
      * @return the requested {@link ATXReport} or null if no proper report exists
      */
-    public ATXReport getDynamic(final String token, final StaplerRequest req) {
-        final ATXBuildAction buildAction = getLastBuildAction(req);
+    public T getDynamic(final String token, final StaplerRequest req) {
+        final ATXBuildAction<T> buildAction = getLastBuildAction(req);
         return buildAction != null ? buildAction.getDynamic(token) : null;
     }
 

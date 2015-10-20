@@ -36,20 +36,23 @@ import java.util.List;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 
 /**
- * Action to show a link to {@link ATXReport}s at the build page.
+ * Action to show a link to {@link ATXReport}s or {@link ATXZipReport}s at the build page.
+ *
+ * @param <T>
+ *            the report type, either {@link ATXReport} or {@link ATXZipReport}
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ATXBuildAction extends AbstractATXAction {
+public class ATXBuildAction<T extends AbstractTestReport> extends AbstractATXAction {
 
-    private final List<ATXReport> atxReports = new ArrayList<ATXReport>();
+    private final List<T> atxReports = new ArrayList<T>();
 
     /**
      * Gets the ATX reports.
      *
      * @return the ATX reports
      */
-    public List<ATXReport> getATXReports() {
+    public List<T> getATXReports() {
         return atxReports;
     }
 
@@ -60,7 +63,7 @@ public class ATXBuildAction extends AbstractATXAction {
      *            the ATX report to add
      * @return {@code true} if successful, {@code false} otherwise
      */
-    public boolean add(final ATXReport report) {
+    public boolean add(final T report) {
         return getATXReports().add(report);
     }
 
@@ -71,7 +74,7 @@ public class ATXBuildAction extends AbstractATXAction {
      *            the collection of ATX reports
      * @return {@code true} if successful, {@code false} otherwise
      */
-    public boolean addAll(final Collection<ATXReport> reports) {
+    public boolean addAll(final Collection<T> reports) {
         return getATXReports().addAll(reports);
     }
 
@@ -82,12 +85,12 @@ public class ATXBuildAction extends AbstractATXAction {
      *            the URL token
      * @return the {@link ATXReport} or null if no proper report exists
      */
-    public ATXReport getDynamic(final String token) {
-        for (final ATXReport report : getATXReports()) {
+    public T getDynamic(final String token) {
+        for (final T report : getATXReports()) {
             if (token.equals(report.getId())) {
                 return report;
             } else {
-                final ATXReport potentialReport = traverseSubReports(token, report);
+                final T potentialReport = traverseSubReports(token, report);
                 if (potentialReport != null) {
                     return potentialReport;
                 }
@@ -106,12 +109,13 @@ public class ATXBuildAction extends AbstractATXAction {
      *            the report
      * @return the {@link ATXReport} or null if no proper report exists
      */
-    private ATXReport traverseSubReports(final String token, final ATXReport report) {
+    @SuppressWarnings("unchecked")
+    private T traverseSubReports(final String token, final T report) {
         for (final AbstractTestReport subReport : report.getSubReports()) {
             if (token.equals(subReport.getId())) {
-                return (ATXReport) subReport;
+                return (T) subReport;
             } else {
-                final ATXReport potentialReport = traverseSubReports(token, (ATXReport) subReport);
+                final T potentialReport = traverseSubReports(token, (T) subReport);
                 if (potentialReport != null) {
                     return potentialReport;
                 }

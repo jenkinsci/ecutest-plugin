@@ -86,6 +86,11 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
  */
 public class ATXPublisher extends AbstractReportPublisher {
 
+    /**
+     * The URL name to {@link ATXTZipReport}s holding by {@link AbstractATXAction}.
+     */
+    protected static final String URL_NAME = "atx-reports";
+
     private final String atxName;
 
     /**
@@ -195,13 +200,22 @@ public class ATXPublisher extends AbstractReportPublisher {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
+    @SuppressWarnings("rawtypes")
     private boolean uploadReports(final ATXInstallation installation, final AbstractBuild<?, ?> build,
             final Launcher launcher, final BuildListener listener)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
-        logger.logInfo("- Processing ATX reports...");
         final ATXReportUploader uploader = new ATXReportUploader();
-        return uploader.upload(isAllowMissing(), installation, build, launcher, listener);
+        final ATXConfig config = installation.getConfig();
+        final List<ATXSetting> uploadSettings = config.getConfigByName("uploadConfig");
+        final Object uploadToServer = config.getSettingValueByName("uploadToServer", uploadSettings);
+        if (uploadToServer != null && (boolean) uploadToServer) {
+            logger.logInfo("- Generating and uploading ATX reports...");
+            return uploader.upload(isAllowMissing(), installation, build, launcher, listener);
+        } else {
+            logger.logInfo("- Generating ATX reports...");
+            return uploader.generate(isAllowMissing(), installation, build, launcher, listener);
+        }
     }
 
     /**
@@ -251,6 +265,7 @@ public class ATXPublisher extends AbstractReportPublisher {
         return null;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public Action getProjectAction(final AbstractProject<?, ?> project) {
         return new ATXProjectAction();

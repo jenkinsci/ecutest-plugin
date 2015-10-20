@@ -48,7 +48,7 @@
                 <table class="fileList">
                     <j:set var="indent" value="0" />
                     <j:forEach var="report" items="${it.getATXReports()}">
-                        <st:include page="report.jelly" />
+                         <st:include page="report.jelly" />
                     </j:forEach>
                 </table>
             </j:if>
