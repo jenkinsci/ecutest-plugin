@@ -96,10 +96,10 @@ public class TRFPublisher extends AbstractReportPublisher {
 
         int index = 0;
         final List<TRFReport> trfReports = new ArrayList<TRFReport>();
-        final FilePath archiveTargetDir = getArchiveTarget(build);
         final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
+            final FilePath archiveTargetDir = getArchiveTarget(build).child(testReportDir.getName());
             final FilePath reportFile = testReportDir.child(TRF_FILE_NAME);
             if (reportFile.exists()) {
                 try {
@@ -113,12 +113,14 @@ public class TRFPublisher extends AbstractReportPublisher {
                     return true;
                 }
 
+                final FilePath trfFile = archiveTargetDir.child(TRF_FILE_NAME);
+                final String relFilePath = archiveTargetDir.getParent().toURI().relativize(trfFile.toURI()).getPath();
                 final TRFReport trfReport = new TRFReport(String.format("%d", ++index),
-                        reportFile.getParent().getName(), reportFile.getName(), reportFile.length());
+                        trfFile.getParent().getName(), relFilePath, trfFile.length());
                 trfReports.add(trfReport);
 
                 // Search for sub-reports
-                index = traverseSubReports(trfReport, testReportDir, testReportDir, index);
+                index = traverseSubReports(trfReport, archiveTargetDir.getParent(), archiveTargetDir, index);
             } else {
                 if (isAllowMissing()) {
                     continue;
