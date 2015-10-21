@@ -205,12 +205,17 @@ public class ATXPublisher extends AbstractReportPublisher {
             final Launcher launcher, final BuildListener listener)
             throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
-        if (isUploadEnabled(installation)) {
+        final boolean isUploadEnabled = isUploadEnabled(installation);
+        final boolean isServerReachable = isServerReachable(installation);
+        if (isUploadEnabled && isServerReachable) {
             logger.logInfo("- Generating and uploading ATX reports...");
             final ATXReportUploader uploader = new ATXReportUploader();
             return uploader.upload(isAllowMissing(), installation, build, launcher, listener);
         } else {
             logger.logInfo("- Generating ATX reports...");
+            if (isUploadEnabled && !isServerReachable) {
+                logger.logWarn("-> Generating ATX reports only because TEST-GUIDE server is not reachable!");
+            }
             final ATXReportGenerator generator = new ATXReportGenerator();
             return generator.generate(isAllowMissing(), installation, build, launcher, listener);
         }
@@ -229,6 +234,28 @@ public class ATXPublisher extends AbstractReportPublisher {
         final List<ATXSetting> uploadSettings = config.getConfigByName("uploadConfig");
         final Object uploadToServer = config.getSettingValueByName("uploadToServer", uploadSettings);
         return uploadToServer != null && (boolean) uploadToServer;
+    }
+
+    /**
+     * Checks whether the selected TEST-GUIDE server is reachable.
+     *
+     * @param installation
+     *            the ATX installation
+     * @return {@code true} if server is reachable, {@code false} otherwise
+     */
+    @SuppressWarnings("rawtypes")
+    private boolean isServerReachable(final ATXInstallation installation) {
+        final ATXConfig uploadConfig = installation.getConfig();
+        final List<ATXSetting> uploadSettings = uploadConfig.getConfigByName("uploadConfig");
+        final Object useHttpsConnection = uploadConfig.getSettingValueByName("useHttpsConnection", uploadSettings);
+        final String serverUrl = (String) uploadConfig.getSettingValueByName("serverURL", uploadSettings);
+        final String serverPort = (String) uploadConfig.getSettingValueByName("serverPort", uploadSettings);
+        final String contextPath = (String) uploadConfig.getSettingValueByName("serverContextPath", uploadSettings);
+
+        final ATXValidator validator = new ATXValidator();
+        final FormValidation validation = validator.testConnection(serverUrl, serverPort, contextPath,
+                useHttpsConnection != null ? (boolean) useHttpsConnection : false);
+        return validation.kind.equals(FormValidation.Kind.OK);
     }
 
     /**

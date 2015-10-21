@@ -269,13 +269,11 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     private String getBaseUrl(final ATXInstallation installation) {
         final ATXConfig uploadConfig = installation.getConfig();
         final List<ATXSetting> uploadSettings = uploadConfig.getConfigByName("uploadConfig");
-        final Object useHttpsConnection = uploadConfig.getSettingValueByName("useHttpsConnection",
-                uploadSettings);
+        final Object useHttpsConnection = uploadConfig.getSettingValueByName("useHttpsConnection", uploadSettings);
         final String protocol = useHttpsConnection != null && (boolean) useHttpsConnection ? "https" : "http";
         final String serverUrl = (String) uploadConfig.getSettingValueByName("serverURL", uploadSettings);
         final String serverPort = (String) uploadConfig.getSettingValueByName("serverPort", uploadSettings);
-        final String contextPath = (String) uploadConfig.getSettingValueByName("serverContextPath",
-                uploadSettings);
+        final String contextPath = (String) uploadConfig.getSettingValueByName("serverContextPath", uploadSettings);
         if (serverUrl != null && serverPort != null && contextPath != null) {
             return contextPath.isEmpty() ? String.format("%s://%s:%s", protocol, serverUrl, serverPort)
                     : String.format("%s://%s:%s/%s", protocol, serverUrl, serverPort, contextPath);
@@ -361,7 +359,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         public Boolean call() throws IOException {
             boolean isUploaded = true;
             final TTConsoleLogger logger = new TTConsoleLogger(getListener());
-            final Map<String, String> configMap = getConfigMap();
+            final Map<String, String> configMap = getConfigMap(true);
             try (ETComClient comClient = new ETComClient()) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                 for (final FilePath uploadFile : getReportFiles()) {

@@ -39,7 +39,17 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.regex.Pattern;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -78,7 +88,7 @@ public class ATXValidator extends AbstractValidator {
             if (serverUrl.startsWith("http://") || serverUrl.startsWith("https://")) {
                 returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrlProtocol());
             } else if (isValidURL(serverUrl)) {
-                returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrl());
+                returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(serverUrl));
             }
         }
         return returnValue;
@@ -211,7 +221,51 @@ public class ATXValidator extends AbstractValidator {
                 Messages.ATXPublisher_ValidConnection(serverUrl)));
         try {
             final URL url = new URL(fullServerUrl);
-            final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            final HttpURLConnection connection;
+
+            // Handle SSL connection
+            if (useHttpsConnection) {
+                // Create a trust manager that does not validate certificate chains
+                final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+
+                    @Override
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+
+                    @Override
+                    public void checkClientTrusted(final X509Certificate[] certs, final String authType) {
+                    }
+
+                    @Override
+                    public void checkServerTrusted(final X509Certificate[] certs, final String authType) {
+                    }
+                }, };
+
+                // Install the all-trusting trust manager
+                final SSLContext sslContext = SSLContext.getInstance("SSL");
+                sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+                HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+
+                // Create all-trusting host name verifier
+                final HostnameVerifier allHostsValid = new HostnameVerifier() {
+
+                    @Override
+                    public boolean verify(final String hostname, final SSLSession session) {
+                        return true;
+                    }
+                };
+
+                // Install the all-trusting host verifier
+                HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+                connection = (HttpsURLConnection) url.openConnection();
+            } else {
+                connection = (HttpURLConnection) url.openConnection();
+            }
+
+            // Check URL connection
+            connection.setConnectTimeout(30000);
+            connection.setReadTimeout(30000);
             connection.setRequestMethod("GET");
             connection.connect();
             final int httpResponse = connection.getResponseCode();
@@ -223,13 +277,13 @@ public class ATXValidator extends AbstractValidator {
                         Charset.forName("UTF-8")))) {
                     final String inputLine = in.readLine();
                     if (inputLine == null || !inputLine.contains("TraceTronic")) {
-                        returnValue = FormValidation.warning(Messages.ATXPublisher_InvalidServer());
+                        returnValue = FormValidation.warning(Messages.ATXPublisher_InvalidServer(serverUrl));
                     }
                 }
             }
         } catch (final MalformedURLException e) {
-            returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrl());
-        } catch (final IOException e) {
+            returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(serverUrl));
+        } catch (final IOException | NoSuchAlgorithmException | KeyManagementException e) {
             returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(serverUrl));
         }
         return returnValue;

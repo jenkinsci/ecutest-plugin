@@ -106,13 +106,17 @@ public abstract class AbstractATXReportHandler {
          * @return the configuration map
          */
         @SuppressWarnings("rawtypes")
-        protected Map<String, String> getConfigMap() {
+        protected Map<String, String> getConfigMap(final boolean uploadToServer) {
             final Map<String, String> configMap = new LinkedHashMap<String, String>();
             for (final List<ATXSetting> settings : config.getConfigMap().values()) {
                 for (final ATXSetting setting : settings) {
                     if (setting instanceof ATXBooleanSetting) {
-                        configMap.put(setting.getName(),
-                                ATXSetting.toString(((ATXBooleanSetting) setting).getCurrentValue()));
+                        if ("uploadToServer".equals(setting.getName())) {
+                            configMap.put(setting.getName(), ATXSetting.toString(uploadToServer));
+                        } else {
+                            configMap.put(setting.getName(),
+                                    ATXSetting.toString(((ATXBooleanSetting) setting).getCurrentValue()));
+                        }
                     } else {
                         configMap.put(setting.getName(), ((ATXTextSetting) setting).getCurrentValue());
                     }

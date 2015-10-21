@@ -80,7 +80,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      */
     public boolean generate(final boolean allowMissing, final ATXInstallation installation,
             final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<FilePath> reportFiles = new ArrayList<FilePath>();
         final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
@@ -256,7 +256,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
         public Boolean call() throws IOException {
             boolean isGenerated = true;
             final TTConsoleLogger logger = new TTConsoleLogger(getListener());
-            final Map<String, String> configMap = getConfigMap();
+            final Map<String, String> configMap = getConfigMap(false);
             try (ETComClient comClient = new ETComClient()) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                 for (final FilePath reportFile : getReportFiles()) {
