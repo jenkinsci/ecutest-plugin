@@ -51,12 +51,13 @@ import java.util.logging.Logger;
 import jenkins.model.Jenkins;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 
 /**
- * Common base class for {@link ATXPublisher}, {@link JUnitPublisher} and {@link TRFPublisher}.
+ * Common base class for {@link ATXPublisher}, {@link ETLogPublisher}, {@link JUnitPublisher} and {@link TRFPublisher}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */

@@ -128,9 +128,8 @@ public class ETLogPublisher extends AbstractReportPublisher {
         }
 
         final List<ETLogReport> logReports = new ArrayList<ETLogReport>();
-        final List<FilePath> logFiles = getLogFiles(build, launcher);
         final FilePath archiveTargetDir = getArchiveTarget(build);
-
+        final List<FilePath> logFiles = getLogFiles(build, launcher);
         for (final FilePath logFile : logFiles) {
             final FilePath targetFile = archiveTargetDir.child(logFile.getName());
             try {
@@ -154,19 +153,10 @@ public class ETLogPublisher extends AbstractReportPublisher {
                 return true;
             }
 
-            // Parse the log file
-            final ETLogParser logParser = new ETLogParser(logFile);
-            final List<ETLogAnnotation> logs = logParser.parse();
-            final int warningLogCount = logParser.parseLogCount(Severity.WARNING);
-            final int errorLogCount = logParser.parseLogCount(Severity.ERROR);
-
-            // Add the log report
-            final ETLogReport logReport = new ETLogReport(String.format("%d", logReports.size() + 1),
-                    logFile.getName(), logFile.getName(), logFile.length(), logs, warningLogCount, errorLogCount);
+            final ETLogReport logReport = parseLogFile(logFile, logReports.size() + 1);
             logReports.add(logReport);
         }
 
-        // Check parsed log reports
         if (logReports.isEmpty()) {
             logger.logInfo("No log results found.");
             if (!isAllowMissing()) {
@@ -175,20 +165,53 @@ public class ETLogPublisher extends AbstractReportPublisher {
                 return true;
             }
         } else {
-            // Add action for publishing ECU-TEST logs
-            ETLogBuildAction action = build.getAction(ETLogBuildAction.class);
-            if (action == null) {
-                action = new ETLogBuildAction();
-                build.addAction(action);
-            }
-            action.addAll(logReports);
-
-            // Change build result if errors or warnings found
+            addBuildAction(build, logReports);
             setBuildResult(build, listener, logReports);
         }
 
         logger.logInfo("ECU-TEST logs published successfully.");
         return true;
+    }
+
+    /**
+     * Parses the ECU-TEST log file.
+     *
+     * @param logFile
+     *            the log file
+     * @param id
+     *            the report id
+     * @return the parsed {@link ETLogReport}
+     * @throws IOException
+     *             signals that an I/O exception has occurred.
+     * @throws InterruptedException
+     *             if the build gets interrupted
+     */
+    private ETLogReport parseLogFile(final FilePath logFile, final int id) throws IOException, InterruptedException {
+        final ETLogParser logParser = new ETLogParser(logFile);
+        final List<ETLogAnnotation> logs = logParser.parse();
+        final int warningLogCount = logParser.parseLogCount(Severity.WARNING);
+        final int errorLogCount = logParser.parseLogCount(Severity.ERROR);
+
+        final ETLogReport logReport = new ETLogReport(String.format("%d", id), logFile.getName(), logFile.getName(),
+                logFile.length(), logs, warningLogCount, errorLogCount);
+        return logReport;
+    }
+
+    /**
+     * Adds the {@link ETLogBuildAction} to the build holding the found {@link ETLogReport}s.
+     *
+     * @param build
+     *            the build
+     * @param logReports
+     *            the list of {@link ETLogReport}s to add
+     */
+    private void addBuildAction(final AbstractBuild<?, ?> build, final List<ETLogReport> logReports) {
+        ETLogBuildAction action = build.getAction(ETLogBuildAction.class);
+        if (action == null) {
+            action = new ETLogBuildAction();
+            build.addAction(action);
+        }
+        action.addAll(logReports);
     }
 
     /**

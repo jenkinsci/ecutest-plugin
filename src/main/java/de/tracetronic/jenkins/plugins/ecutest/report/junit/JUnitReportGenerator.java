@@ -46,6 +46,7 @@ import java.util.List;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
@@ -65,11 +66,6 @@ public class JUnitReportGenerator {
      * Defines the path name containing the UNIT reports inside of the test report directory.
      */
     protected static final String UNIT_TEMPLATE_NAME = "UNIT";
-
-    /**
-     * File name of the TRF file.
-     */
-    private static final String TRF_FILE_NAME = "report.trf";
 
     /**
      * Generates UNIT reports by invoking the startup of ECU-TEST if not already running, otherwise using the current
@@ -172,7 +168,7 @@ public class JUnitReportGenerator {
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
             if (testReportDir.exists()) {
-                reportFiles.addAll(Arrays.asList(testReportDir.list("**/" + TRF_FILE_NAME)));
+                reportFiles.addAll(Arrays.asList(testReportDir.list("**/" + TRFPublisher.TRF_FILE_NAME)));
             }
         }
         Collections.reverse(reportFiles);

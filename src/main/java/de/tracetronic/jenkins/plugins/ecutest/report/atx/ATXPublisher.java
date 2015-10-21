@@ -143,13 +143,13 @@ public class ATXPublisher extends AbstractReportPublisher {
         final AbstractToolInstallation etInstallation = configureToolInstallation(toolName, listener,
                 build.getEnvironment(listener));
 
-        boolean isUploaded = false;
+        boolean isPublished = false;
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
         final boolean isETRunning = !foundProcesses.isEmpty();
 
         // Start ECU-TEST if necessary and publish the ATX reports
         if (isETRunning) {
-            isUploaded = uploadReports(installation, build, launcher, listener);
+            isPublished = publishReports(installation, build, launcher, listener);
         } else {
             if (etInstallation instanceof ETInstallation) {
                 final String installPath = etInstallation.getExecutable(launcher);
@@ -159,7 +159,7 @@ public class ATXPublisher extends AbstractReportPublisher {
                 logger.logInfo(String.format("Starting %s...", toolName));
                 if (etClient.start(false, launcher, listener)) {
                     logger.logInfo(String.format("%s started successfully.", toolName));
-                    isUploaded = uploadReports(installation, build, launcher, listener);
+                    isPublished = publishReports(installation, build, launcher, listener);
                 } else {
                     logger.logError(String.format("Starting %s failed.", toolName));
                 }
@@ -174,7 +174,7 @@ public class ATXPublisher extends AbstractReportPublisher {
             }
         }
 
-        if (isUploaded) {
+        if (isPublished) {
             logger.logInfo("ATX reports published successfully.");
         } else {
             logger.logError("-> Publishing ATX reports failed!");
@@ -184,7 +184,8 @@ public class ATXPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Generates the ATX reports and uploads them if enabled.
+     * Publishes the ATX reports by first generating them and depending
+     * on whether ATX upload is enabled also starting the upload.
      *
      * @param installation
      *            the installation
@@ -200,22 +201,34 @@ public class ATXPublisher extends AbstractReportPublisher {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    @SuppressWarnings("rawtypes")
-    private boolean uploadReports(final ATXInstallation installation, final AbstractBuild<?, ?> build,
+    private boolean publishReports(final ATXInstallation installation, final AbstractBuild<?, ?> build,
             final Launcher launcher, final BuildListener listener)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
-        final ATXReportUploader uploader = new ATXReportUploader();
-        final ATXConfig config = installation.getConfig();
-        final List<ATXSetting> uploadSettings = config.getConfigByName("uploadConfig");
-        final Object uploadToServer = config.getSettingValueByName("uploadToServer", uploadSettings);
-        if (uploadToServer != null && (boolean) uploadToServer) {
+        if (isUploadEnabled(installation)) {
             logger.logInfo("- Generating and uploading ATX reports...");
+            final ATXReportUploader uploader = new ATXReportUploader();
             return uploader.upload(isAllowMissing(), installation, build, launcher, listener);
         } else {
             logger.logInfo("- Generating ATX reports...");
-            return uploader.generate(isAllowMissing(), installation, build, launcher, listener);
+            final ATXReportGenerator generator = new ATXReportGenerator();
+            return generator.generate(isAllowMissing(), installation, build, launcher, listener);
         }
+    }
+
+    /**
+     * Checks whether the ATX upload setting is enabled.
+     *
+     * @param installation
+     *            the ATX installation
+     * @return {@code true} if upload is possible, {@code false} otherwise
+     */
+    @SuppressWarnings("rawtypes")
+    private boolean isUploadEnabled(final ATXInstallation installation) {
+        final ATXConfig config = installation.getConfig();
+        final List<ATXSetting> uploadSettings = config.getConfigByName("uploadConfig");
+        final Object uploadToServer = config.getSettingValueByName("uploadToServer", uploadSettings);
+        return uploadToServer != null && (boolean) uploadToServer;
     }
 
     /**

@@ -46,7 +46,7 @@ import org.jvnet.localizer.LocaleProvider;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-@SuppressWarnings({ "rawtypes" })
+@SuppressWarnings("rawtypes")
 public class ATXSettingTest {
 
     @Test

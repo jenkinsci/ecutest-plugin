@@ -130,7 +130,7 @@ public class JUnitPublisher extends AbstractReportPublisher {
         return (DescriptorImpl) super.getDescriptor();
     }
 
-    @SuppressWarnings({ "deprecation" })
+    @SuppressWarnings("deprecation")
     @Override
     public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
             final BuildListener listener) throws InterruptedException, IOException {
@@ -203,7 +203,7 @@ public class JUnitPublisher extends AbstractReportPublisher {
             }
         } else {
             logger.logInfo(String.format(
-                    "-> Found %d test results in total: #Passed: %d, #Failed: %d, #Skipped: %d",
+                    "-> Found %d test result(s) in total: #Passed: %d, #Failed: %d, #Skipped: %d",
                     testResult.getTotalCount(), testResult.getPassCount(), testResult.getFailCount(),
                     testResult.getSkipCount()));
         }

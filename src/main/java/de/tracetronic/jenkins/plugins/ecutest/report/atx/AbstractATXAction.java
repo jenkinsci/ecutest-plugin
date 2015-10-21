@@ -40,11 +40,6 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportAction;
  */
 public abstract class AbstractATXAction extends AbstractReportAction {
 
-    /**
-     * The URL name to {@link ATXReport}s holding by this action.
-     */
-    protected static final String URL_NAME = "atx-reports";
-
     @Override
     public AbstractBuild<?, ?> getLastReportBuild(final AbstractProject<?, ?> project) {
         for (AbstractBuild<?, ?> build = project.getLastBuild(); build != null; build = build
@@ -58,7 +53,7 @@ public abstract class AbstractATXAction extends AbstractReportAction {
 
     @Override
     public String getUrlName() {
-        return URL_NAME;
+        return ATXPublisher.URL_NAME;
     }
 
     @Override
