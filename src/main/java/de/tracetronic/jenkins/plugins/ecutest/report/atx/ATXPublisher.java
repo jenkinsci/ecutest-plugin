@@ -203,7 +203,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean publishReports(final ATXInstallation installation, final AbstractBuild<?, ?> build,
             final Launcher launcher, final BuildListener listener)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final boolean isUploadEnabled = isUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, launcher);
@@ -250,7 +250,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      *             if the build gets interrupted
      */
     private boolean isServerReachable(final ATXInstallation installation, final Launcher launcher) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final ATXConfig config = installation.getConfig();
         return launcher.getChannel().call(new TestConnectionCallable(config));
     }
@@ -283,10 +283,13 @@ public class ATXPublisher extends AbstractReportPublisher {
             final String serverPort = (String) config.getSettingValueByName("serverPort", uploadSettings);
             final String contextPath = (String) config.getSettingValueByName("serverContextPath", uploadSettings);
 
-            final ATXValidator validator = new ATXValidator();
-            final FormValidation validation = validator.testConnection(serverUrl, serverPort, contextPath,
-                    useHttpsConnection != null ? (boolean) useHttpsConnection : false);
-            return validation.kind.equals(FormValidation.Kind.OK);
+            if (serverUrl != null && serverPort != null && contextPath != null) {
+                final ATXValidator validator = new ATXValidator();
+                final FormValidation validation = validator.testConnection(serverUrl, serverPort, contextPath,
+                        useHttpsConnection != null ? (boolean) useHttpsConnection : false);
+                return validation.kind.equals(FormValidation.Kind.OK);
+            }
+            return false;
         }
     }
 
