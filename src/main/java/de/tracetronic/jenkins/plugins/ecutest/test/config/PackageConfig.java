@@ -126,7 +126,7 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
             return false;
         }
         final PackageConfig other = (PackageConfig) that;
-        if (parameters == null ? other.parameters != null : !parameters.equals(other.parameters)
+        if ((parameters == null ? other.parameters != null : !parameters.equals(other.parameters))
                 || runTest != other.runTest || runTraceAnalysis != other.runTraceAnalysis) {
             return false;
         }

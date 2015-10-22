@@ -131,9 +131,9 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
             return false;
         }
         final TestConfig other = (TestConfig) that;
-        if (constants == null ? other.constants != null : !constants.equals(other.constants)
-                || tbcFile == null ? other.tbcFile != null : !tbcFile.equals(other.tbcFile)
-                || tcfFile == null ? other.tcfFile != null : !tcfFile.equals(other.tcfFile)) {
+        if ((constants == null ? other.constants != null : !constants.equals(other.constants))
+                || (tbcFile == null ? other.tbcFile != null : !tbcFile.equals(other.tbcFile))
+                || (tcfFile == null ? other.tcfFile != null : !tcfFile.equals(other.tcfFile))) {
             return false;
         }
         return true;

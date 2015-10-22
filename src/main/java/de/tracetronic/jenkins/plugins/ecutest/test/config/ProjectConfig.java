@@ -50,7 +50,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
  * Class holding the project configuration.
  */
 public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implements Serializable,
-ExpandableConfig {
+        ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 
@@ -113,8 +113,8 @@ ExpandableConfig {
             return false;
         }
         final ProjectConfig other = (ProjectConfig) that;
-        if (filterExpression == null ? other.filterExpression != null : !filterExpression
-                .equals(other.filterExpression)
+        if ((filterExpression == null ? other.filterExpression != null : !filterExpression
+                .equals(other.filterExpression))
                 || execInCurrentPkgDir != other.execInCurrentPkgDir
                 || jobExecutionMode != other.jobExecutionMode) {
             return false;

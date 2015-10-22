@@ -153,7 +153,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig> im
             return false;
         }
         final ExecutionConfig other = (ExecutionConfig) that;
-        if (timeout == null ? other.timeout != null : !timeout.equals(other.timeout)
+        if ((timeout == null ? other.timeout != null : !timeout.equals(other.timeout))
                 || stopOnError != other.stopOnError) {
             return false;
         }
