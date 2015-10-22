@@ -109,7 +109,7 @@ public class TestEnvironment extends ETComDispatch implements ComTestEnvironment
     }
 
     /**
-     * Same as {@link #executeProject(String, int)} but with default parameters.
+     * Same as {@link #executeProject(String, boolean, int)} but with default parameters.
      *
      * @param path
      *            the full path name of the project file
@@ -118,14 +118,16 @@ public class TestEnvironment extends ETComDispatch implements ComTestEnvironment
      *             if the project was not opened before
      */
     public ComTestExecutionInfo executeProject(final String path) throws ETComException {
-        return executeProject(path, 1);
+        return executeProject(path, true, 1);
     }
 
     @Override
-    public ComTestExecutionInfo executeProject(final String path, final int jobExecutionMode)
+    public ComTestExecutionInfo executeProject(final String path, final boolean closeProgressDialog,
+            final int jobExecutionMode)
             throws ETComException {
-        return new TestExecutionInfo(performRequest("ExecuteProject", new Variant(path), new Variant(false),
-                new Variant(jobExecutionMode)).toDispatch());
+        return new TestExecutionInfo(performRequest("ExecuteProject", new Variant(path),
+                new Variant(closeProgressDialog), new Variant(closeProgressDialog), new Variant(jobExecutionMode))
+                .toDispatch());
     }
 
     /**

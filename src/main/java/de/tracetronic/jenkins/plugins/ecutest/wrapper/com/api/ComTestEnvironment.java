@@ -74,6 +74,8 @@ public interface ComTestEnvironment {
      *
      * @param path
      *            the full path name of the project file
+     * @param closeProgressDialog
+     *            determines whether the progress dialog will be closed when finished
      * @param jobExecutionMode
      *            specifies whether and how the analysis jobs should be executed:
      *
@@ -88,7 +90,8 @@ public interface ComTestEnvironment {
      * @throws ETComException
      *             if the project was not opened before
      */
-    ComTestExecutionInfo executeProject(String path, int jobExecutionMode) throws ETComException;
+    ComTestExecutionInfo executeProject(String path, boolean closeProgressDialog, int jobExecutionMode)
+            throws ETComException;
 
     /**
      * Generates a handler based test report on the file system.
