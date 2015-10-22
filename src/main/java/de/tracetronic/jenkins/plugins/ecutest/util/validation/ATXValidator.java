@@ -219,9 +219,10 @@ public class ATXValidator extends AbstractValidator {
         FormValidation returnValue = FormValidation.okWithMarkup(String.format(
                 "<span style=\"font-weight: bold; color: #208CA3\">%s</span>",
                 Messages.ATXPublisher_ValidConnection(serverUrl)));
+
+        HttpURLConnection connection = null;
         try {
             final URL url = new URL(fullServerUrl);
-            final HttpURLConnection connection;
 
             // Handle SSL connection
             if (useHttpsConnection) {
@@ -229,7 +230,7 @@ public class ATXValidator extends AbstractValidator {
                 final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
 
                     @Override
-                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    public X509Certificate[] getAcceptedIssuers() {
                         return null;
                     }
 
@@ -266,15 +267,16 @@ public class ATXValidator extends AbstractValidator {
             // Check URL connection
             connection.setConnectTimeout(30000);
             connection.setReadTimeout(30000);
+            connection.setUseCaches(false);
             connection.setRequestMethod("GET");
             connection.connect();
+
             final int httpResponse = connection.getResponseCode();
-            connection.disconnect();
             if (httpResponse != HttpURLConnection.HTTP_OK) {
                 returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(serverUrl));
             } else {
-                try (final BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream(),
-                        Charset.forName("UTF-8")))) {
+                try (final BufferedReader in = new BufferedReader(new InputStreamReader(
+                        connection.getInputStream(), Charset.forName("UTF-8")))) {
                     final String inputLine = in.readLine();
                     if (inputLine == null || !inputLine.contains("TraceTronic")) {
                         returnValue = FormValidation.warning(Messages.ATXPublisher_InvalidServer(serverUrl));
@@ -285,6 +287,10 @@ public class ATXValidator extends AbstractValidator {
             returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(serverUrl));
         } catch (final IOException | NoSuchAlgorithmException | KeyManagementException e) {
             returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(serverUrl));
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
         return returnValue;
     }

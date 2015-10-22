@@ -103,6 +103,8 @@ public abstract class AbstractATXReportHandler {
         /**
          * Converts the ATX configuration to a map containing all setting names and their current value.
          *
+         * @param uploadToServer
+         *            specifies whether ATX upload is enabled or not
          * @return the configuration map
          */
         @SuppressWarnings("rawtypes")

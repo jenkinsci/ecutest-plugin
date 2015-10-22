@@ -40,6 +40,7 @@ import hudson.model.Result;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Descriptor;
+import hudson.remoting.Callable;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 import hudson.tools.ToolInstallation;
@@ -177,7 +178,6 @@ public class ATXPublisher extends AbstractReportPublisher {
         if (isPublished) {
             logger.logInfo("ATX reports published successfully.");
         } else {
-            logger.logError("-> Publishing ATX reports failed!");
             build.setResult(Result.FAILURE);
         }
         return true;
@@ -203,10 +203,10 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean publishReports(final ATXInstallation installation, final AbstractBuild<?, ?> build,
             final Launcher launcher, final BuildListener listener)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final boolean isUploadEnabled = isUploadEnabled(installation);
-        final boolean isServerReachable = isServerReachable(installation);
+        final boolean isServerReachable = isServerReachable(installation, launcher);
         if (isUploadEnabled && isServerReachable) {
             logger.logInfo("- Generating and uploading ATX reports...");
             final ATXReportUploader uploader = new ATXReportUploader();
@@ -214,7 +214,7 @@ public class ATXPublisher extends AbstractReportPublisher {
         } else {
             logger.logInfo("- Generating ATX reports...");
             if (isUploadEnabled && !isServerReachable) {
-                logger.logWarn("-> Generating ATX reports only because TEST-GUIDE server is not reachable!");
+                logger.logWarn("-> ATX upload will be skipped because selected TEST-GUIDE server is not reachable!");
             }
             final ATXReportGenerator generator = new ATXReportGenerator();
             return generator.generate(isAllowMissing(), installation, build, launcher, listener);
@@ -241,21 +241,53 @@ public class ATXPublisher extends AbstractReportPublisher {
      *
      * @param installation
      *            the ATX installation
+     * @param launcher
+     *            the launcher
      * @return {@code true} if server is reachable, {@code false} otherwise
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the build gets interrupted
      */
-    @SuppressWarnings("rawtypes")
-    private boolean isServerReachable(final ATXInstallation installation) {
-        final ATXConfig uploadConfig = installation.getConfig();
-        final List<ATXSetting> uploadSettings = uploadConfig.getConfigByName("uploadConfig");
-        final Object useHttpsConnection = uploadConfig.getSettingValueByName("useHttpsConnection", uploadSettings);
-        final String serverUrl = (String) uploadConfig.getSettingValueByName("serverURL", uploadSettings);
-        final String serverPort = (String) uploadConfig.getSettingValueByName("serverPort", uploadSettings);
-        final String contextPath = (String) uploadConfig.getSettingValueByName("serverContextPath", uploadSettings);
+    private boolean isServerReachable(final ATXInstallation installation, final Launcher launcher) throws IOException,
+    InterruptedException {
+        final ATXConfig config = installation.getConfig();
+        return launcher.getChannel().call(new TestConnectionCallable(config));
+    }
 
-        final ATXValidator validator = new ATXValidator();
-        final FormValidation validation = validator.testConnection(serverUrl, serverPort, contextPath,
-                useHttpsConnection != null ? (boolean) useHttpsConnection : false);
-        return validation.kind.equals(FormValidation.Kind.OK);
+    /**
+     * {@link Callable} providing remote access to test the TEST-GUIDE server availability.
+     */
+    private static final class TestConnectionCallable implements Callable<Boolean, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final ATXConfig config;
+
+        /**
+         * Instantiates a new {@link TestConnectionCallable}.
+         *
+         * @param config
+         *            the ATX configuration
+         */
+        public TestConnectionCallable(final ATXConfig config) {
+            this.config = config;
+        }
+
+        @SuppressWarnings("rawtypes")
+        @Override
+        public Boolean call() throws IOException {
+            final List<ATXSetting> uploadSettings = config.getConfigByName("uploadConfig");
+            final Object useHttpsConnection = config.getSettingValueByName("useHttpsConnection", uploadSettings);
+            final String serverUrl = (String) config.getSettingValueByName("serverURL", uploadSettings);
+            final String serverPort = (String) config.getSettingValueByName("serverPort", uploadSettings);
+            final String contextPath = (String) config.getSettingValueByName("serverContextPath", uploadSettings);
+
+            final ATXValidator validator = new ATXValidator();
+            final FormValidation validation = validator.testConnection(serverUrl, serverPort, contextPath,
+                    useHttpsConnection != null ? (boolean) useHttpsConnection : false);
+            return validation.kind.equals(FormValidation.Kind.OK);
+        }
     }
 
     /**
