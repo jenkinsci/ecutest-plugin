@@ -103,7 +103,7 @@ public class TRFPublisher extends AbstractReportPublisher {
             final FilePath reportFile = testReportDir.child(TRF_FILE_NAME);
             if (reportFile.exists()) {
                 try {
-                    logger.logInfo(String.format("- Archiving %s", reportFile));
+                    logger.logInfo(String.format("- Archiving TRF report: %s", reportFile));
                     final int copiedFiles = testReportDir.copyRecursiveTo("**/" + TRF_FILE_NAME, archiveTargetDir);
                     if (copiedFiles > 1) {
                         logger.logInfo(String.format("-> Archived %d sub-report(s).", copiedFiles - 1));
@@ -185,7 +185,7 @@ public class TRFPublisher extends AbstractReportPublisher {
      */
     private int traverseSubReports(final TRFReport trfReport, final FilePath testReportDir,
             final FilePath subTestReportDir, int id)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
             final FilePath reportFile = subDir.child(TRF_FILE_NAME);
             if (reportFile.exists()) {

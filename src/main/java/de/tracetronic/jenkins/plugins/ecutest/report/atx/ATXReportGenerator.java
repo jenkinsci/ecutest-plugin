@@ -80,7 +80,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      */
     public boolean generate(final boolean allowMissing, final ATXInstallation installation,
             final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<FilePath> reportFiles = new ArrayList<FilePath>();
         final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
@@ -107,7 +107,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
         // Generate ATX reports
         final boolean isGenerated = launcher.getChannel().call(
                 new GenerateReportCallable(installation.getConfig(), reportFiles, listener));
-        if (isGenerated) {
+        if (isGenerated && !reportFiles.isEmpty()) {
             final List<ATXZipReport> atxReports = new ArrayList<ATXZipReport>();
             logger.logInfo("- Archiving generated ATX reports...");
             int index = 0;
@@ -259,12 +259,17 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
             final Map<String, String> configMap = getConfigMap(false);
             try (ETComClient comClient = new ETComClient()) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
-                for (final FilePath reportFile : getReportFiles()) {
-                    logger.logInfo(String.format("-> Generating ATX report: %s", reportFile.getRemote()));
-                    final FilePath outDir = reportFile.getParent().child(ATX_TEMPLATE_NAME);
-                    testEnv.generateTestReportDocumentFromDB(reportFile.getRemote(),
-                            outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
-                    comClient.waitForIdle(0);
+                final List<FilePath> reportFiles = getReportFiles();
+                if (reportFiles.isEmpty()) {
+                    logger.logInfo("-> No report files found to generate!");
+                } else {
+                    for (final FilePath reportFile : reportFiles) {
+                        logger.logInfo(String.format("-> Generating ATX report: %s", reportFile.getRemote()));
+                        final FilePath outDir = reportFile.getParent().child(ATX_TEMPLATE_NAME);
+                        testEnv.generateTestReportDocumentFromDB(reportFile.getRemote(),
+                                outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
+                        comClient.waitForIdle(0);
+                    }
                 }
             } catch (final ETComException e) {
                 isGenerated = false;

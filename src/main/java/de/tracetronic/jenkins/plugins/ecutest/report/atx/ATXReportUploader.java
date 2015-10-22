@@ -94,7 +94,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      */
     public boolean upload(final boolean allowMissing, final ATXInstallation installation,
             final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<ATXReport> atxReports = new ArrayList<ATXReport>();
         final List<FilePath> uploadFiles = new ArrayList<FilePath>();
@@ -175,7 +175,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     private int traverseReports(final List<ATXReport> atxReports, final FilePath testReportDir, int id,
             final String title, final String baseUrl, final String from, final String to, final String testName,
             final TestType testType)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         // Prepare ATX report information
         String reportUrl = null;
         String trendReportUrl = null;
@@ -222,7 +222,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      */
     private int traverseSubReports(final ATXReport atxReport, final FilePath testReportDir, int id,
             final String baseUrl, final String from, final String to)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         for (final FilePath subDir : testReportDir.listDirectories()) {
             final FilePath reportFile = subDir.child(TRFPublisher.TRF_FILE_NAME);
             if (reportFile.exists()) {
@@ -267,13 +267,13 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     @CheckForNull
     @SuppressWarnings("rawtypes")
     private String getBaseUrl(final ATXInstallation installation) {
-        final ATXConfig uploadConfig = installation.getConfig();
-        final List<ATXSetting> uploadSettings = uploadConfig.getConfigByName("uploadConfig");
-        final Object useHttpsConnection = uploadConfig.getSettingValueByName("useHttpsConnection", uploadSettings);
+        final ATXConfig config = installation.getConfig();
+        final List<ATXSetting> uploadSettings = config.getConfigByName("uploadConfig");
+        final Object useHttpsConnection = config.getSettingValueByName("useHttpsConnection", uploadSettings);
         final String protocol = useHttpsConnection != null && (boolean) useHttpsConnection ? "https" : "http";
-        final String serverUrl = (String) uploadConfig.getSettingValueByName("serverURL", uploadSettings);
-        final String serverPort = (String) uploadConfig.getSettingValueByName("serverPort", uploadSettings);
-        final String contextPath = (String) uploadConfig.getSettingValueByName("serverContextPath", uploadSettings);
+        final String serverUrl = (String) config.getSettingValueByName("serverURL", uploadSettings);
+        final String serverPort = (String) config.getSettingValueByName("serverPort", uploadSettings);
+        final String contextPath = (String) config.getSettingValueByName("serverContextPath", uploadSettings);
         if (serverUrl != null && serverPort != null && contextPath != null) {
             return contextPath.isEmpty() ? String.format("%s://%s:%s", protocol, serverUrl, serverPort)
                     : String.format("%s://%s:%s/%s", protocol, serverUrl, serverPort, contextPath);
@@ -362,30 +362,35 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             final Map<String, String> configMap = getConfigMap(true);
             try (ETComClient comClient = new ETComClient()) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
-                for (final FilePath uploadFile : getReportFiles()) {
-                    logger.logInfo(String.format("-> Generating and uploading ATX report: %s",
-                            uploadFile.getRemote()));
-                    final FilePath outDir = uploadFile.getParent().child(ATX_TEMPLATE_NAME);
-                    testEnv.generateTestReportDocumentFromDB(uploadFile.getRemote(),
-                            outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
-                    comClient.waitForIdle(0);
+                final List<FilePath> uploadFiles = getReportFiles();
+                if (uploadFiles.isEmpty()) {
+                    logger.logInfo("-> No report files found to upload!");
+                } else {
+                    for (final FilePath uploadFile : uploadFiles) {
+                        logger.logInfo(String.format("-> Generating and uploading ATX report: %s",
+                                uploadFile.getRemote()));
+                        final FilePath outDir = uploadFile.getParent().child(ATX_TEMPLATE_NAME);
+                        testEnv.generateTestReportDocumentFromDB(uploadFile.getRemote(),
+                                outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
+                        comClient.waitForIdle(0);
 
-                    // Check error log file and abort the upload if any
-                    final File errorFile = new File(outDir.getRemote(), ERROR_FILE_NAME);
-                    if (errorFile.exists()) {
-                        isUploaded = false;
-                        logger.logError("Error uploading ATX report:");
-                        final JSONObject jsonObject = (JSONObject) new JsonSlurper().parse(errorFile);
-                        final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
-                        if (jsonArray != null) {
-                            for (int i = 0; i < jsonArray.size(); i++) {
-                                final String file = jsonArray.getJSONObject(i).getString("FILE");
-                                final String status = jsonArray.getJSONObject(i).getString("STATUS");
-                                final String text = jsonArray.getJSONObject(i).getString("TEXT");
-                                logger.logError(String.format("%s: %s - %s", status, file, text));
+                        // Check error log file and abort the upload if any
+                        final File errorFile = new File(outDir.getRemote(), ERROR_FILE_NAME);
+                        if (errorFile.exists()) {
+                            isUploaded = false;
+                            logger.logError("Error during uploading ATX report:");
+                            final JSONObject jsonObject = (JSONObject) new JsonSlurper().parse(errorFile);
+                            final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
+                            if (jsonArray != null) {
+                                for (int i = 0; i < jsonArray.size(); i++) {
+                                    final String file = jsonArray.getJSONObject(i).getString("FILE");
+                                    final String status = jsonArray.getJSONObject(i).getString("STATUS");
+                                    final String text = jsonArray.getJSONObject(i).getString("TEXT");
+                                    logger.logError(String.format("%s: %s - %s", status, file, text));
+                                }
                             }
+                            break;
                         }
-                        break;
                     }
                 }
             } catch (final ETComException e) {

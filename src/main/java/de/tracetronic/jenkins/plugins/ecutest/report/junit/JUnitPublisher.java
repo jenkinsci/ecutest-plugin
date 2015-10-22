@@ -176,9 +176,9 @@ public class JUnitPublisher extends AbstractReportPublisher {
         build.addAction(action);
 
         // Change build result if thresholds exceeded
-        setBuildResult(build, listener, testResult);
-
-        logger.logInfo("UNIT reports published successfully.");
+        if (setBuildResult(build, listener, testResult)) {
+            logger.logInfo("UNIT reports published successfully.");
+        }
         return true;
     }
 
@@ -191,15 +191,17 @@ public class JUnitPublisher extends AbstractReportPublisher {
      *            the listener
      * @param testResult
      *            the test result
+     * @return {@code true} if test results exist and could be published
      */
-    private void setBuildResult(final AbstractBuild<?, ?> build, final BuildListener listener,
+    private boolean setBuildResult(final AbstractBuild<?, ?> build, final BuildListener listener,
             final TestResult testResult) {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (testResult.getPassCount() == 0 && testResult.getFailCount() == 0) {
-            logger.logInfo("No UNIT test results found.");
+            logger.logInfo("-> No UNIT test results found.");
             if (!isAllowMissing()) {
                 logger.logError("Empty test results are not allowed, setting build status to FAILURE!");
                 build.setResult(Result.FAILURE);
+                return false;
             }
         } else {
             logger.logInfo(String.format(
@@ -221,6 +223,7 @@ public class JUnitPublisher extends AbstractReportPublisher {
                             + "setting build status to UNSTABLE!", failedPercentage, unstableThreshold));
             build.setResult(Result.UNSTABLE);
         }
+        return true;
     }
 
     /**
