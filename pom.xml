@@ -95,17 +95,17 @@
         <!-- JUnit -->
         <junit.version>4.12</junit.version>
         <mockito-core.version>1.10.19</mockito-core.version>
-        <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>2.19</maven-surefire-plugin.version>
 
         <!-- JavaDoc -->
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
 
         <!-- Maven release & deployment -->
-        <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-scm-provider-gitexe.version>1.9.4</maven-scm-provider-gitexe.version>
 
         <!-- Static code analysis -->
-        <maven-checkstyle-plugin.version>2.16</maven-checkstyle-plugin.version>
+        <maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
         <maven-findbugs-plugin.version>3.0.2</maven-findbugs-plugin.version>
         <maven-pmd-plugin.version>3.5</maven-pmd-plugin.version>
 
@@ -117,7 +117,7 @@
         <jacob.version>1.18</jacob.version>
         <matrix-project.version>1.4</matrix-project.version>
         <commons-validator.version>1.4.1</commons-validator.version>
-        <equalsverifier.version>1.7.4</equalsverifier.version>
+        <equalsverifier.version>1.7.5</equalsverifier.version>
     </properties>
 
     <build>
