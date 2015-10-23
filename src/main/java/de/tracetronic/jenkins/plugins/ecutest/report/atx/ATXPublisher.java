@@ -203,7 +203,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean publishReports(final ATXInstallation installation, final AbstractBuild<?, ?> build,
             final Launcher launcher, final BuildListener listener)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final boolean isUploadEnabled = isUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, launcher);
@@ -250,7 +250,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      *             if the build gets interrupted
      */
     private boolean isServerReachable(final ATXInstallation installation, final Launcher launcher) throws IOException,
-            InterruptedException {
+    InterruptedException {
         final ATXConfig config = installation.getConfig();
         return launcher.getChannel().call(new TestConnectionCallable(config));
     }
@@ -270,7 +270,7 @@ public class ATXPublisher extends AbstractReportPublisher {
          * @param config
          *            the ATX configuration
          */
-        public TestConnectionCallable(final ATXConfig config) {
+        TestConnectionCallable(final ATXConfig config) {
             this.config = config;
         }
 

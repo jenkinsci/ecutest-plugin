@@ -88,7 +88,7 @@ public class PackageClient extends AbstractTestClient {
 
     @Override
     public boolean runTestCase(final Launcher launcher, final BuildListener listener) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -153,7 +153,7 @@ public class PackageClient extends AbstractTestClient {
          * @param listener
          *            the listener
          */
-        public OpenPackageCallable(final String packageFile, final BuildListener listener) {
+        OpenPackageCallable(final String packageFile, final BuildListener listener) {
             this.packageFile = packageFile;
             this.listener = listener;
         }
@@ -199,7 +199,7 @@ public class PackageClient extends AbstractTestClient {
          * @param listener
          *            the listener
          */
-        public RunPackageCallable(final String packageFile, final PackageConfig packageConfig,
+        RunPackageCallable(final String packageFile, final PackageConfig packageConfig,
                 final ExecutionConfig executionConfig, final BuildListener listener) {
             this.packageFile = packageFile;
             this.packageConfig = packageConfig;
@@ -286,7 +286,7 @@ public class PackageClient extends AbstractTestClient {
          * @param listener
          *            the listener
          */
-        public ClosePackageCallable(final String packageFile, final BuildListener listener) {
+        ClosePackageCallable(final String packageFile, final BuildListener listener) {
             this.packageFile = packageFile;
             this.listener = listener;
         }
@@ -328,7 +328,7 @@ public class PackageClient extends AbstractTestClient {
          * @param testDescription
          *            the test description
          */
-        public PackageInfoHolder(final String testName, final String testDescription) {
+        PackageInfoHolder(final String testName, final String testDescription) {
             this.testName = testName;
             this.testDescription = testDescription;
         }

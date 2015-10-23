@@ -202,7 +202,7 @@ public final class DllUtil {
         /**
          * Instantiates a new {@link LoadLibraryCallable}.
          */
-        public LoadLibraryCallable() {
+        LoadLibraryCallable() {
         }
 
         @Override

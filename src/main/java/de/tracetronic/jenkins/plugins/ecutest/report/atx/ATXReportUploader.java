@@ -94,7 +94,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      */
     public boolean upload(final boolean allowMissing, final ATXInstallation installation,
             final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<ATXReport> atxReports = new ArrayList<ATXReport>();
         final List<FilePath> uploadFiles = new ArrayList<FilePath>();
@@ -175,7 +175,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     private int traverseReports(final List<ATXReport> atxReports, final FilePath testReportDir, int id,
             final String title, final String baseUrl, final String from, final String to, final String testName,
             final TestType testType)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         // Prepare ATX report information
         String reportUrl = null;
         String trendReportUrl = null;
@@ -222,7 +222,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      */
     private int traverseSubReports(final ATXReport atxReport, final FilePath testReportDir, int id,
             final String baseUrl, final String from, final String to)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         for (final FilePath subDir : testReportDir.listDirectories()) {
             final FilePath reportFile = subDir.child(TRFPublisher.TRF_FILE_NAME);
             if (reportFile.exists()) {
@@ -350,7 +350,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          * @param listener
          *            the listener
          */
-        public UploadReportCallable(final ATXConfig config, final List<FilePath> reportFiles,
+        UploadReportCallable(final ATXConfig config, final List<FilePath> reportFiles,
                 final BuildListener listener) {
             super(config, reportFiles, listener);
         }

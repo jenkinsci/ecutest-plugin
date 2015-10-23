@@ -80,7 +80,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      */
     public boolean generate(final boolean allowMissing, final ATXInstallation installation,
             final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<FilePath> reportFiles = new ArrayList<FilePath>();
         final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
@@ -247,7 +247,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
          * @param listener
          *            the listener
          */
-        public GenerateReportCallable(final ATXConfig config, final List<FilePath> reportFiles,
+        GenerateReportCallable(final ATXConfig config, final List<FilePath> reportFiles,
                 final BuildListener listener) {
             super(config, reportFiles, listener);
         }

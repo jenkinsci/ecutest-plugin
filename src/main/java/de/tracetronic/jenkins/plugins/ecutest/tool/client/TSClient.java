@@ -173,7 +173,7 @@ public class TSClient extends AbstractToolClient {
      *             if the current thread is interrupted while waiting for the completion
      */
     public static List<String> checkProcesses(final Launcher launcher, final boolean kill) throws IOException,
-        InterruptedException {
+    InterruptedException {
         return launcher.getChannel().call(new CheckProcessCallable(kill));
     }
 
@@ -195,7 +195,7 @@ public class TSClient extends AbstractToolClient {
          * @param listener
          *            the listener
          */
-        public StopCallable(final int timeout, final BuildListener listener) {
+        StopCallable(final int timeout, final BuildListener listener) {
             this.timeout = timeout;
             this.listener = listener;
         }
@@ -244,7 +244,7 @@ public class TSClient extends AbstractToolClient {
          * @param kill
          *            specifies whether to task-kill running processes
          */
-        public CheckProcessCallable(final boolean kill) {
+        CheckProcessCallable(final boolean kill) {
             this.kill = kill;
         }
 

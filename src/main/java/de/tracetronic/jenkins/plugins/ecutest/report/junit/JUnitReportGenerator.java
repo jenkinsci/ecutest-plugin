@@ -209,7 +209,7 @@ public class JUnitReportGenerator {
          * @param listener
          *            the listener
          */
-        public GenerateUnitReportCallable(final List<FilePath> dbFiles, final BuildListener listener) {
+        GenerateUnitReportCallable(final List<FilePath> dbFiles, final BuildListener listener) {
             this.dbFiles = dbFiles;
             this.listener = listener;
         }

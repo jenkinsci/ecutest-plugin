@@ -274,7 +274,7 @@ public abstract class AbstractTestBuilder extends Builder {
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean checkETInstance(final Launcher launcher, final boolean kill) throws IOException,
-            InterruptedException {
+    InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }
@@ -293,7 +293,7 @@ public abstract class AbstractTestBuilder extends Builder {
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean checkTSInstance(final Launcher launcher, final boolean kill) throws IOException,
-            InterruptedException {
+    InterruptedException {
         final List<String> foundProcesses = TSClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }
@@ -441,7 +441,7 @@ public abstract class AbstractTestBuilder extends Builder {
          * @param settingName
          *            the setting name to request
          */
-        public GetSettingCallable(final String settingName) {
+        GetSettingCallable(final String settingName) {
             this.settingName = settingName;
         }
 

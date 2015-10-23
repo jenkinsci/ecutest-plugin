@@ -254,7 +254,7 @@ public class ETClient extends AbstractToolClient {
          * @param listener
          *            the listener
          */
-        public StartCallable(final int timeout, final BuildListener listener) {
+        StartCallable(final int timeout, final BuildListener listener) {
             this.timeout = timeout;
             this.listener = listener;
         }
@@ -295,7 +295,7 @@ public class ETClient extends AbstractToolClient {
          * @param listener
          *            the listener
          */
-        public StopCallable(final int timeout, final boolean checkProcesses, final BuildListener listener) {
+        StopCallable(final int timeout, final boolean checkProcesses, final BuildListener listener) {
             this.timeout = timeout;
             this.checkProcesses = checkProcesses;
             this.listener = listener;
@@ -337,7 +337,7 @@ public class ETClient extends AbstractToolClient {
          * @param kill
          *            specifies whether to task-kill running processes
          */
-        public CheckProcessCallable(final boolean kill) {
+        CheckProcessCallable(final boolean kill) {
             this.kill = kill;
         }
 

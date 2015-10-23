@@ -138,13 +138,13 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
          * @param testResult
          *            the test result
          */
-        public ParseTestResultCallable(final TestResult testResult) {
+        ParseTestResultCallable(final TestResult testResult) {
             this.testResult = testResult;
         }
 
         @Override
         public TestResult invoke(final File file, final VirtualChannel channel) throws IOException,
-                InterruptedException {
+        InterruptedException {
             testResult.parse(file);
             return testResult;
         }

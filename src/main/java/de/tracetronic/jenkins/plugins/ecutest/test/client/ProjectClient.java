@@ -151,7 +151,7 @@ public class ProjectClient extends AbstractTestClient {
          * @param listener
          *            the listener
          */
-        public OpenProjectCallable(final String projectFile, final ProjectConfig projectConfig,
+        OpenProjectCallable(final String projectFile, final ProjectConfig projectConfig,
                 final BuildListener listener) {
             this.projectFile = projectFile;
             this.projectConfig = projectConfig;
@@ -202,7 +202,7 @@ public class ProjectClient extends AbstractTestClient {
          * @param listener
          *            the listener
          */
-        public RunProjectCallable(final String projectFile, final ProjectConfig projectConfig,
+        RunProjectCallable(final String projectFile, final ProjectConfig projectConfig,
                 final ExecutionConfig executionConfig, final BuildListener listener) {
             this.projectFile = projectFile;
             this.projectConfig = projectConfig;
@@ -270,7 +270,7 @@ public class ProjectClient extends AbstractTestClient {
          * @param listener
          *            the listener
          */
-        public CloseProjectCallable(final String projectFile, final BuildListener listener) {
+        CloseProjectCallable(final String projectFile, final BuildListener listener) {
             this.projectFile = projectFile;
             this.listener = listener;
         }

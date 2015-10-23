@@ -134,7 +134,7 @@ public abstract class AbstractTestScanner {
          * @param filePattern
          *            the file pattern
          */
-        public ScanTestCallable(final String inputDir, final String[] filePattern) {
+        ScanTestCallable(final String inputDir, final String[] filePattern) {
             this.inputDir = inputDir;
             this.filePattern = filePattern;
         }
