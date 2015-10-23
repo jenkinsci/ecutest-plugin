@@ -124,10 +124,9 @@ public class TestEnvironment extends ETComDispatch implements ComTestEnvironment
     @Override
     public ComTestExecutionInfo executeProject(final String path, final boolean closeProgressDialog,
             final int jobExecutionMode)
-            throws ETComException {
+                    throws ETComException {
         return new TestExecutionInfo(performRequest("ExecuteProject", new Variant(path),
-                new Variant(closeProgressDialog), new Variant(closeProgressDialog), new Variant(jobExecutionMode))
-                .toDispatch());
+                new Variant(closeProgressDialog), new Variant(jobExecutionMode)).toDispatch());
     }
 
     /**
@@ -177,7 +176,7 @@ public class TestEnvironment extends ETComDispatch implements ComTestEnvironment
     @Override
     public boolean generateTestReportDocumentFromDB(final String dbFile, final String reportDir,
             final String reportFormat, final boolean waitUntilFinished, final Map<String, String> parameters)
-            throws ETComException {
+                    throws ETComException {
         final Object[][] settings = getArrayFromMap(parameters, false);
         return performRequest("GenerateTestReportDocumentFromDB", new Variant(dbFile),
                 new Variant(reportDir), new Variant(reportFormat), new Variant(waitUntilFinished), settings)
