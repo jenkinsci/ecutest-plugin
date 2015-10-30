@@ -116,7 +116,7 @@
         <!-- Other dependencies -->
         <jacob.version>1.18</jacob.version>
         <matrix-project.version>1.4</matrix-project.version>
-        <job-dsl.version>1.35</job-dsl.version>
+        <job-dsl.version>1.37</job-dsl.version>
         <commons-validator.version>1.4.1</commons-validator.version>
         <equalsverifier.version>1.7.5</equalsverifier.version>
     </properties>
