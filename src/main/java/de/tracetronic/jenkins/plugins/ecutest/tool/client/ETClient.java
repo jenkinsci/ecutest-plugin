@@ -68,7 +68,7 @@ public class ETClient extends AbstractToolClient {
      * @param installPath
      *            the ECU-TEST install path
      * @param workspaceDir
-     *            the ECU-TEST workspace
+     *            the ECU-TEST workspace directory
      * @param timeout
      *            the timeout to start ECU-TEST
      * @param debug
@@ -158,7 +158,7 @@ public class ETClient extends AbstractToolClient {
             logger.logError(String.format(
                     "The configured ECU-TEST version %s is not compatible with this plugin. "
                             + "Please use at least ECU-TEST %s!", comVersion,
-                            ETPlugin.ET_MIN_VERSION.toString()));
+                    ETPlugin.ET_MIN_VERSION.toString()));
             // Close ECU-TEST
             stop(checkProcesses, launcher, listener);
             return false;

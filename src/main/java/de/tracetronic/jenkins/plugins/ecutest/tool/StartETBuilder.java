@@ -73,7 +73,7 @@ public class StartETBuilder extends AbstractToolBuilder {
      * @param toolName
      *            the tool name identifying the {@link ETInstallation} to be used
      * @param workspaceDir
-     *            the workspace directory
+     *            the ECU-TEST workspace directory
      * @param timeout
      *            the timeout
      * @param debugMode

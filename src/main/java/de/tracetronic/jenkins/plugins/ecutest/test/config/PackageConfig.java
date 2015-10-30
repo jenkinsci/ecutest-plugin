@@ -140,6 +140,13 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
     }
 
     /**
+     * @return the instance of a {@link PackageConfig}.
+     */
+    public static PackageConfig newInstance() {
+        return new PackageConfig(true, true, null);
+    }
+
+    /**
      * DescriptorImpl for {@link PackageConfig}.
      */
     @Extension

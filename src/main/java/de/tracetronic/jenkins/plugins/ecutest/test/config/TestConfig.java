@@ -145,6 +145,13 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
     }
 
     /**
+     * @return the instance of a {@link TestConfig}.
+     */
+    public static TestConfig newInstance() {
+        return new TestConfig(null, null, null);
+    }
+
+    /**
      * DescriptorImpl for {@link TestConfig}.
      */
     @Extension

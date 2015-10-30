@@ -49,7 +49,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
  * Class holding the test execution settings.
  */
 public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig> implements Serializable,
-        ExpandableConfig {
+ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 
@@ -163,6 +163,13 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig> im
     @Override
     public final int hashCode() {
         return new HashCodeBuilder(17, 31).append(timeout).append(stopOnError).toHashCode();
+    }
+
+    /**
+     * @return the instance of a {@link ExecutionConfig}.
+     */
+    public static ExecutionConfig newInstance() {
+        return new ExecutionConfig(null, true);
     }
 
     /**

@@ -50,7 +50,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
  * Class holding the project configuration.
  */
 public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implements Serializable,
-        ExpandableConfig {
+ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 
@@ -126,6 +126,13 @@ public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implem
     public final int hashCode() {
         return new HashCodeBuilder(17, 31).append(execInCurrentPkgDir).append(filterExpression)
                 .append(jobExecutionMode).toHashCode();
+    }
+
+    /**
+     * @return the instance of a {@link ProjectConfig}.
+     */
+    public static ProjectConfig newInstance() {
+        return new ProjectConfig(false, null, 1);
     }
 
     /**

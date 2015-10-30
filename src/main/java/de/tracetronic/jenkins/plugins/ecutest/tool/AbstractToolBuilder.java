@@ -123,7 +123,7 @@ public abstract class AbstractToolBuilder extends Builder {
      * @return the tool installation
      */
     @CheckForNull
-    protected AbstractToolInstallation getToolInstallation() {
+    public AbstractToolInstallation getToolInstallation() {
         for (final AbstractToolInstallation installation : getDescriptor().getInstallations()) {
             if (toolName != null && toolName.equals(installation.getName())) {
                 return installation;
