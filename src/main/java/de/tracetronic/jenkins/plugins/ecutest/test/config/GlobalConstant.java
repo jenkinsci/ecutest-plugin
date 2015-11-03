@@ -46,9 +46,11 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 
 /**
  * Class holding a global constant.
+ *
+ * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class GlobalConstant extends AbstractDescribableImpl<GlobalConstant> implements Serializable,
-ExpandableConfig {
+        ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 
@@ -102,7 +104,7 @@ ExpandableConfig {
         final GlobalConstant other = (GlobalConstant) that;
         if (name == null ? other.name != null
                 : !name.equals(other.name) || value == null ? other.value != null : !value
-                .equals(other.value)) {
+                        .equals(other.value)) {
             return false;
         }
         return true;

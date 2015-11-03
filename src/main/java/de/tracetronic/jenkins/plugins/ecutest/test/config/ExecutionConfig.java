@@ -47,9 +47,11 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 
 /**
  * Class holding the test execution settings.
+ *
+ * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig> implements Serializable,
-ExpandableConfig {
+        ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 

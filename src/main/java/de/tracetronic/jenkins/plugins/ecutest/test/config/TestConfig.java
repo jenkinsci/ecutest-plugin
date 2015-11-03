@@ -48,6 +48,8 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 
 /**
  * Class holding the test configurations (e.g. TBC, TCF).
+ *
+ * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestConfig extends AbstractDescribableImpl<TestConfig> implements Serializable, ExpandableConfig {
 

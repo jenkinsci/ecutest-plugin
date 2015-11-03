@@ -43,9 +43,11 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
  * Class holding the package configuration.
+ *
+ * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implements Serializable,
-        ExpandableConfig {
+ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 

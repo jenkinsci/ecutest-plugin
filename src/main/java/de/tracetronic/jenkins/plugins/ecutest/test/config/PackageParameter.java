@@ -46,9 +46,11 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 
 /**
  * Class holding a package parameter.
+ *
+ * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class PackageParameter extends AbstractDescribableImpl<PackageParameter> implements Serializable,
-        ExpandableConfig {
+ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 
