@@ -237,22 +237,6 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="mapRevaluationAsAttribute" default="True"
-			xsi:type="reportConfigItem">
-			<DESCRIPTION xsi:type="I18NItem">
-				<MULTILANGDATA>
-					<ELEMENT dkey="de_DE">
-						<DVALUE xsi:type="unicode">True, wenn nachbewertete Testfälle mit dem
-							ATX-Attribut 'Revaluation' erfasst werden sollen, sonst False.</DVALUE>
-					</ELEMENT>
-					<ELEMENT dkey="en_US">
-						<DVALUE xsi:type="unicode">True if map revaluated testcase to ATX
-							attribute 'Revaluation', otherwise False.</DVALUE>
-					</ELEMENT>
-				</MULTILANGDATA>
-				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
-			</DESCRIPTION>
-		</SETTING>
 		<SETTING name="mapRootPrjAttrToPkgAttr" default="True"
 			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
