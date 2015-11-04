@@ -38,6 +38,7 @@ import org.junit.Test;
 
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 
 /**
@@ -50,7 +51,7 @@ public class TestProjectBuilderTest {
     @Test
     public void testBlankConfigShouldReturnDefaults() {
         final TestConfig testConfig = new TestConfig("", "");
-        final ProjectConfig projectConfig = new ProjectConfig(false, "", 1);
+        final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig("", true);
         final TestProjectBuilder builder = new TestProjectBuilder("", testConfig, projectConfig, executionConfig);
         assertEquals("Check default timeout", ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig()
@@ -60,7 +61,7 @@ public class TestProjectBuilderTest {
     @Test
     public void testNull() {
         final TestConfig testConfig = new TestConfig(null, null, null);
-        final ProjectConfig projectConfig = new ProjectConfig(false, null, 1);
+        final ProjectConfig projectConfig = new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(null, false);
         final TestProjectBuilder builder = new TestProjectBuilder("", testConfig, projectConfig, executionConfig);
         assertNotNull(builder);
@@ -74,7 +75,7 @@ public class TestProjectBuilderTest {
         assertFalse(builder.getProjectConfig().isExecInCurrentPkgDir());
         assertNotNull(builder.getProjectConfig().getFilterExpression());
         assertTrue(builder.getProjectConfig().getFilterExpression().isEmpty());
-        assertEquals(1, builder.getProjectConfig().getJobExecutionMode());
+        assertEquals(JobExecutionMode.SEQUENTIAL_EXECUTION, builder.getProjectConfig().getJobExecMode());
         assertNotNull(builder.getExecutionConfig().getTimeout());
         assertEquals("Check default timeout", ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig()
                 .getTimeout());

@@ -48,15 +48,124 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 
 /**
  * Class holding the project configuration.
+ *
+ * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implements Serializable,
-ExpandableConfig {
+        ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Defines the analysis job execution modes.
+     *
+     * @since 1.2
+     */
+    public enum JobExecutionMode {
+
+        /**
+         * No analysis job execution.
+         */
+        NO_EXECUTION(0),
+
+        /**
+         * Sequential analysis job execution (default).
+         */
+        SEQUENTIAL_EXECUTION(1),
+
+        /**
+         * Parallel analysis job execution.
+         */
+        PARALLEL_EXECUTION(2),
+
+        /**
+         * Sequential analysis job execution with separate test report.
+         */
+        SEPARATE_SEQUENTIAL_EXECUTION(5),
+
+        /**
+         * Parallel analysis job execution with separate test report.
+         */
+        SEPARATE_PARALLEL_EXECUTION(6),
+
+        /**
+         * Analysis job execution without running the test case part.
+         */
+        NO_TESTCASE_EXECUTION(9);
+
+        private final int value;
+
+        /**
+         * Instantiates a new {@link JobExecutionMode} by value.
+         *
+         * @param value
+         *            the value
+         */
+        JobExecutionMode(final int value) {
+            this.value = value;
+        }
+
+        /**
+         * @return the value
+         */
+        public int getValue() {
+            return value;
+        }
+
+        /**
+         * Gets the job execution mode by Integer value.
+         *
+         * @param value
+         *            the value
+         * @return the related {@code JobExecutionMode}
+         */
+        public static JobExecutionMode fromValue(final Integer value) {
+            JobExecutionMode execMode = JobExecutionMode.SEQUENTIAL_EXECUTION;
+            for (final JobExecutionMode mode : JobExecutionMode.values()) {
+                if (mode.getValue() == value) {
+                    execMode = mode;
+                    break;
+                }
+            }
+            return execMode;
+        }
+    }
+
     private final boolean execInCurrentPkgDir;
     private final String filterExpression;
-    private final int jobExecutionMode;
+
+    /**
+     * Holds the analysis job execution mode.<br/>
+     * Backward compatibility will be retained by {@link #readResolve()}.
+     *
+     * @since 1.2
+     */
+    private final JobExecutionMode jobExecMode;
+
+    /**
+     * @deprecated since 1.2
+     */
+    @Deprecated
+    private transient int jobExecutionMode;
+
+    /**
+     * Instantiates a new {@link ProjectConfig}.
+     *
+     * @param execInCurrentPkgDir
+     *            specifies whether to search the references in the current package directory
+     * @param filterExpression
+     *            the filter expression to filter the package and project references
+     * @param jobExecMode
+     *            the analysis job execution mode
+     */
+    @DataBoundConstructor
+    public ProjectConfig(final boolean execInCurrentPkgDir, final String filterExpression,
+            final JobExecutionMode jobExecMode) {
+        super();
+        this.execInCurrentPkgDir = execInCurrentPkgDir;
+        this.filterExpression = StringUtils.defaultIfBlank(filterExpression, "");
+        this.jobExecMode = jobExecMode;
+    }
 
     /**
      * Instantiates a new {@link ProjectConfig}.
@@ -67,14 +176,25 @@ ExpandableConfig {
      *            the filter expression to filter the package and project references
      * @param jobExecutionMode
      *            the analysis job execution mode
+     * @deprecated since 1.2
      */
-    @DataBoundConstructor
+    @Deprecated
     public ProjectConfig(final boolean execInCurrentPkgDir, final String filterExpression,
             final int jobExecutionMode) {
-        super();
-        this.execInCurrentPkgDir = execInCurrentPkgDir;
-        this.filterExpression = StringUtils.defaultIfBlank(filterExpression, "");
-        this.jobExecutionMode = jobExecutionMode;
+        this(execInCurrentPkgDir, filterExpression, JobExecutionMode.fromValue(jobExecutionMode));
+    }
+
+    /**
+     * Convert legacy configuration into the new class structure.
+     *
+     * @return an instance of this class with all the new fields transferred from the old structure to the new one
+     */
+    public final Object readResolve() {
+        if (jobExecMode == null) {
+            return new ProjectConfig(execInCurrentPkgDir, filterExpression,
+                    JobExecutionMode.fromValue(jobExecutionMode));
+        }
+        return this;
     }
 
     /**
@@ -94,14 +214,14 @@ ExpandableConfig {
     /**
      * @return the jobExecutionMode
      */
-    public int getJobExecutionMode() {
-        return jobExecutionMode;
+    public JobExecutionMode getJobExecMode() {
+        return jobExecMode;
     }
 
     @Override
     public ProjectConfig expand(final EnvVars envVars) {
         final String expFilterExpression = envVars.expand(getFilterExpression());
-        return new ProjectConfig(isExecInCurrentPkgDir(), expFilterExpression, getJobExecutionMode());
+        return new ProjectConfig(isExecInCurrentPkgDir(), expFilterExpression, getJobExecMode());
     }
 
     @Override
@@ -116,7 +236,7 @@ ExpandableConfig {
         if ((filterExpression == null ? other.filterExpression != null : !filterExpression
                 .equals(other.filterExpression))
                 || execInCurrentPkgDir != other.execInCurrentPkgDir
-                || jobExecutionMode != other.jobExecutionMode) {
+                || jobExecMode != other.jobExecMode) {
             return false;
         }
         return true;
@@ -125,14 +245,14 @@ ExpandableConfig {
     @Override
     public final int hashCode() {
         return new HashCodeBuilder(17, 31).append(execInCurrentPkgDir).append(filterExpression)
-                .append(jobExecutionMode).toHashCode();
+                .append(jobExecMode).toHashCode();
     }
 
     /**
      * @return the instance of a {@link ProjectConfig}.
      */
     public static ProjectConfig newInstance() {
-        return new ProjectConfig(false, null, 1);
+        return new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
     }
 
     /**
@@ -149,17 +269,31 @@ ExpandableConfig {
         }
 
         /**
+         * @return the default scan mode
+         */
+        public JobExecutionMode getDefaultJobExecMode() {
+            return JobExecutionMode.SEQUENTIAL_EXECUTION;
+        }
+
+        /**
          * Fills the jobExecutionMode drop-down menu.
          *
          * @return the jobExecutionMode items
          */
-        public ListBoxModel doFillJobExecutionModeItems() {
+        public ListBoxModel doFillJobExecModeItems() {
             final ListBoxModel items = new ListBoxModel();
-            items.add(Messages.TestProjectBuilder_JobExecutionMode_0(), "0");
-            items.add(Messages.TestProjectBuilder_JobExecutionMode_1(), "1");
-            items.add(Messages.TestProjectBuilder_JobExecutionMode_2(), "2");
-            items.add(Messages.TestProjectBuilder_JobExecutionMode_5(), "5");
-            items.add(Messages.TestProjectBuilder_JobExecutionMode_6(), "6");
+            items.add(Messages.TestProjectBuilder_JobExecutionMode_0(),
+                    JobExecutionMode.NO_EXECUTION.toString());
+            items.add(Messages.TestProjectBuilder_JobExecutionMode_1(),
+                    JobExecutionMode.SEQUENTIAL_EXECUTION.toString());
+            items.add(Messages.TestProjectBuilder_JobExecutionMode_2(),
+                    JobExecutionMode.PARALLEL_EXECUTION.toString());
+            items.add(Messages.TestProjectBuilder_JobExecutionMode_5(),
+                    JobExecutionMode.SEPARATE_SEQUENTIAL_EXECUTION.toString());
+            items.add(Messages.TestProjectBuilder_JobExecutionMode_6(),
+                    JobExecutionMode.SEPARATE_PARALLEL_EXECUTION.toString());
+            items.add(Messages.TestProjectBuilder_JobExecutionMode_9(),
+                    JobExecutionMode.NO_TESTCASE_EXECUTION.toString());
             return items;
         }
 

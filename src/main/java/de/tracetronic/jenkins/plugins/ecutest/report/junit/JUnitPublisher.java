@@ -49,6 +49,8 @@ import hudson.util.FormValidation;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+import javax.annotation.CheckForNull;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -113,6 +115,21 @@ public class JUnitPublisher extends AbstractReportPublisher {
      */
     public double getFailedThreshold() {
         return failedThreshold;
+    }
+
+    /**
+     * Gets the tool installation by descriptor and tool name.
+     *
+     * @return the tool installation
+     */
+    @CheckForNull
+    public AbstractToolInstallation getToolInstallation() {
+        for (final AbstractToolInstallation installation : getDescriptor().getInstallations()) {
+            if (toolName != null && toolName.equals(installation.getName())) {
+                return installation;
+            }
+        }
+        return null;
     }
 
     @Override

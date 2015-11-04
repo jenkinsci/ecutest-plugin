@@ -43,6 +43,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.SystemTestBase;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 
 /**
@@ -55,7 +56,7 @@ public class TestProjectBuilderST extends SystemTestBase {
     @Test
     public void testRoundTripConfig() throws Exception {
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
-        final ProjectConfig projectConfig = new ProjectConfig(false, "", 1);
+        final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
         final TestProjectBuilder before = new TestProjectBuilder("", testConfig, projectConfig, executionConfig);
         final TestProjectBuilder after = jenkins.configRoundtrip(before);
@@ -66,7 +67,7 @@ public class TestProjectBuilderST extends SystemTestBase {
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
-        final ProjectConfig projectConfig = new ProjectConfig(true, "filter", 1);
+        final ProjectConfig projectConfig = new ProjectConfig(true, "filter", JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
         final TestProjectBuilder builder = new TestProjectBuilder("test.prj", testConfig, projectConfig,
                 executionConfig);
@@ -94,7 +95,7 @@ public class TestProjectBuilderST extends SystemTestBase {
     public void testTestId() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
-        final ProjectConfig projectConfig = new ProjectConfig(false, "", 1);
+        final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(600, false);
         final TestProjectBuilder builder = new TestProjectBuilder("test.prj", testConfig, projectConfig,
                 executionConfig);

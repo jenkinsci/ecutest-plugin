@@ -38,6 +38,7 @@ import org.junit.Test;
 
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 
 /**
@@ -50,7 +51,7 @@ public class ProjectClientTest {
     @Test
     public void testBlankConstructor() {
         final TestConfig testConfig = new TestConfig("", "");
-        final ProjectConfig projectConfig = new ProjectConfig(false, "", 1);
+        final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(0, true);
         final ProjectClient client = new ProjectClient("", testConfig, projectConfig, executionConfig);
         assertEquals("", client.getTestFile());
@@ -59,13 +60,13 @@ public class ProjectClientTest {
         assertTrue(client.getTestConfig().getConstants().isEmpty());
         assertFalse(client.getProjectConfig().isExecInCurrentPkgDir());
         assertEquals("", client.getProjectConfig().getFilterExpression());
-        assertEquals(1, client.getProjectConfig().getJobExecutionMode());
+        assertEquals(JobExecutionMode.SEQUENTIAL_EXECUTION, client.getProjectConfig().getJobExecMode());
     }
 
     @Test
     public void testNullConstructor() {
         final TestConfig testConfig = new TestConfig(null, null, null);
-        final ProjectConfig projectConfig = new ProjectConfig(false, null, 1);
+        final ProjectConfig projectConfig = new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(30, true);
         final ProjectClient client = new ProjectClient(null, testConfig, projectConfig, executionConfig);
         assertNotNull(client);
@@ -79,7 +80,7 @@ public class ProjectClientTest {
         assertEquals("", client.getTestResult());
         assertFalse(client.getProjectConfig().isExecInCurrentPkgDir());
         assertEquals("", client.getProjectConfig().getFilterExpression());
-        assertEquals(1, client.getProjectConfig().getJobExecutionMode());
+        assertEquals(JobExecutionMode.SEQUENTIAL_EXECUTION, client.getProjectConfig().getJobExecMode());
         assertNotNull(client.getExecutionConfig().getTimeout());
         assertEquals("Check timeout", 30, client.getExecutionConfig().getTimeout());
         assertTrue("Check stop mode", client.getExecutionConfig().isStopOnError());

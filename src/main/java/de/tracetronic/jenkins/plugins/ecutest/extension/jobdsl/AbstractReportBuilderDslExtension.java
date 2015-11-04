@@ -27,43 +27,56 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.tracetronic.jenkins.plugins.ecutest.test.config;
+package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import hudson.EnvVars;
-import nl.jqno.equalsverifier.EqualsVerifier;
-
-import org.junit.Test;
-
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
+import javaposse.jobdsl.dsl.Context;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
 
 /**
- * Unit tests for {@link ProjectConfig}.
+ * Common base class providing report-related DSL extensions.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ProjectConfigTest {
+public abstract class AbstractReportBuilderDslExtension extends AbstractDslExtension {
 
-    @Test
-    public void testNullConstructor() {
-        final ProjectConfig config = new ProjectConfig(true, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
-        assertTrue(config.isExecInCurrentPkgDir());
-        assertThat(config.getFilterExpression(), is(""));
-        assertThat(config.getJobExecMode(), is(JobExecutionMode.SEQUENTIAL_EXECUTION));
-    }
+    /**
+     * Validator to check UNIT-related DSL options.
+     */
+    protected final JUnitValidator validator = new JUnitValidator();
 
-    @Test
-    public void testExpand() {
-        final ProjectConfig config = new ProjectConfig(true, "${FILTER}", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final EnvVars envVars = new EnvVars();
-        envVars.put("FILTER", "filter");
-        assertThat(config.expand(envVars).getFilterExpression(), is("filter"));
-    }
+    /**
+     * {@link Context} class providing common report-related methods for the nested DSL context.
+     */
+    public abstract class AbstractReportContext implements Context {
 
-    @Test
-    public void testHashCodeAndEquals() {
-        EqualsVerifier.forClass(ProjectConfig.class).verify();
+        /**
+         * The allow missing reports setting.
+         */
+        protected boolean allowMissing;
+
+        /**
+         * The run on failed setting.
+         */
+        protected boolean runOnFailed;
+
+        /**
+         * Option defining whether missing reports are allowed.
+         *
+         * @param value
+         *            the value
+         */
+        public void allowMissing(final boolean value) {
+            allowMissing = value;
+        }
+
+        /**
+         * Option defining whether this publisher even runs on a failed build.
+         *
+         * @param value
+         *            the value
+         */
+        public void runOnFailed(final boolean value) {
+            runOnFailed = value;
+        }
     }
 }

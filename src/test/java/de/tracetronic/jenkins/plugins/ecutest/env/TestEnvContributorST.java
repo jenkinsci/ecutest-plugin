@@ -44,6 +44,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.client.ProjectClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 
 /**
@@ -108,7 +109,7 @@ public class TestEnvContributorST extends SystemTestBase {
         final int testId = 0;
         final EnvVars envVars = new EnvVars();
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
-        final ProjectConfig projectConfig = new ProjectConfig(false, "filter", 1);
+        final ProjectConfig projectConfig = new ProjectConfig(false, "filter", JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
         final ProjectClient projectClient = new ProjectClient("test.prj", testConfig, projectConfig, executionConfig);
         final TestEnvInvisibleAction testEnvAction = new TestEnvInvisibleAction(testId, projectClient);

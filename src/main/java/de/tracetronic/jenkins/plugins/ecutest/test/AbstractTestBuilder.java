@@ -56,6 +56,8 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 
 /**
  * Common base class for all test-related task builders implemented in this plugin.
+ *
+ * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTestBuilder extends Builder {
 
@@ -87,8 +89,8 @@ public abstract class AbstractTestBuilder extends Builder {
             final ExecutionConfig executionConfig) {
         super();
         this.testFile = StringUtils.trimToEmpty(testFile);
-        this.testConfig = testConfig;
-        this.executionConfig = executionConfig;
+        this.testConfig = testConfig == null ? TestConfig.newInstance() : testConfig;
+        this.executionConfig = executionConfig == null ? ExecutionConfig.newInstance() : executionConfig;
     }
 
     /**
@@ -274,7 +276,7 @@ public abstract class AbstractTestBuilder extends Builder {
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean checkETInstance(final Launcher launcher, final boolean kill) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }
@@ -293,7 +295,7 @@ public abstract class AbstractTestBuilder extends Builder {
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean checkTSInstance(final Launcher launcher, final boolean kill) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final List<String> foundProcesses = TSClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }

@@ -42,7 +42,6 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopTSBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.ToolValidator;
 
 /**
  * Class providing tool-related DSL extensions.
@@ -50,61 +49,28 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.ToolValidator;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 @Extension(optional = true)
-public class ToolBuilderDslExtension extends AbstractDslExtension {
+public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
 
-    /**
-     * Validator to check tool-related DSL options.
-     */
-    private final ToolValidator validator = new ToolValidator();
+    private static final String OPT_WORKSPACE_DIR = "workspaceDir";
 
     /**
      * {@link DslExtensionMethod} providing the start up of ECU-TEST.
      *
      * @param toolName
      *            the tool name identifying the {@link ETInstallation} to be used
-     * @param workspaceDir
-     *            the ECU-TEST workspace directory
-     * @return the instance of a {@link StartETBuilder}
-     * @see StartETBuilder#StartETBuilder(String, String, String, boolean)
-     */
-    @DslExtensionMethod(context = StepContext.class)
-    public Object startET(final String toolName, final String workspaceDir) {
-        Preconditions.checkNotNull(toolName, NOT_NULL_MSG, OPT_TOOL_NAME);
-        Preconditions.checkNotNull(workspaceDir, NOT_NULL_MSG, "workspaceDir");
-
-        final StartETBuilder builder = new StartETBuilder(toolName, workspaceDir, null, false);
-        Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
-        return builder;
-    }
-
-    /**
-     * {@link DslExtensionMethod} providing the start up of ECU-TEST.
-     *
      * @param closure
      *            the nested Groovy closure
      * @return the instance of a {@link StartETBuilder}
-     * @see StartETBuilder#StartETBuilder(String, String, String, boolean)
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object startET(final Runnable closure) {
+    public Object startET(final String toolName, final Runnable closure) {
+        Preconditions.checkNotNull(toolName, NOT_NULL_MSG, OPT_TOOL_NAME);
+
         final StartETContext context = new StartETContext();
         executeInContext(closure, context);
-        return new StartETBuilder(context.toolName, context.workspaceDir, context.timeout, context.debugMode);
-    }
 
-    /**
-     * {@link DslExtensionMethod} providing the shut down of ECU-TEST.
-     *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @return the instance of a {@link StopETBuilder}
-     * @see StopETBuilder#StopETBuilder(String, String)
-     */
-    @DslExtensionMethod(context = StepContext.class)
-    public Object stopET(final String toolName) {
-        Preconditions.checkNotNull(toolName, NOT_NULL_MSG, OPT_TOOL_NAME);
-
-        final StopETBuilder builder = new StopETBuilder(toolName, null);
+        final StartETBuilder builder = new StartETBuilder(toolName, context.workspaceDir, context.timeout,
+                context.debugMode);
         Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
         return builder;
     }
@@ -112,31 +78,20 @@ public class ToolBuilderDslExtension extends AbstractDslExtension {
     /**
      * {@link DslExtensionMethod} providing the shut down of ECU-TEST.
      *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
      * @param closure
      *            the nested Groovy closure
      * @return the instance of a {@link StopETBuilder}
-     * @see StopETBuilder#StopETBuilder(String, String)
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object stopET(final Runnable closure) {
+    public Object stopET(final String toolName, final Runnable closure) {
+        Preconditions.checkNotNull(toolName, NOT_NULL_MSG, OPT_TOOL_NAME);
+
         final StopETContext context = new StopETContext();
         executeInContext(closure, context);
-        return new StopETBuilder(context.toolName, context.timeout);
-    }
 
-    /**
-     * {@link DslExtensionMethod} providing the start up of the Tool-Server.
-     *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @return the instance of a {@link StartTSBuilder}
-     * @see StartTSBuilder#StartTSBuilder(String, String, String, String)
-     */
-    @DslExtensionMethod(context = StepContext.class)
-    public Object startTS(final String toolName) {
-        Preconditions.checkNotNull(toolName, NOT_NULL_MSG, toolName);
-
-        final StartTSBuilder builder = new StartTSBuilder(toolName, null, null, null);
+        final StopETBuilder builder = new StopETBuilder(toolName, context.timeout);
         Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
         return builder;
     }
@@ -144,31 +99,21 @@ public class ToolBuilderDslExtension extends AbstractDslExtension {
     /**
      * {@link DslExtensionMethod} providing the start up of the Tool-Server.
      *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
      * @param closure
      *            the nested Groovy closure
      * @return the instance of a {@link StartTSBuilder}
-     * @see StartTSBuilder#StartTSBuilder(String, String, String, String)
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object startTS(final Runnable closure) {
-        final StartTSContext context = new StartTSContext();
-        executeInContext(closure, context);
-        return new StartTSBuilder(context.toolName, context.timeout, context.toolLibsIni, context.tcpPort);
-    }
-
-    /**
-     * {@link DslExtensionMethod} providing the shut down of the Tool-Server.
-     *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @return the instance of a {@link StopTSBuilder}
-     * @see StopTSBuilder#StopTSBuilder(String, String)
-     */
-    @DslExtensionMethod(context = StepContext.class)
-    public Object stopTS(final String toolName) {
+    public Object startTS(final String toolName, final Runnable closure) {
         Preconditions.checkNotNull(toolName, NOT_NULL_MSG, OPT_TOOL_NAME);
 
-        final StopTSBuilder builder = new StopTSBuilder(toolName, null);
+        final StartTSContext context = new StartTSContext();
+        executeInContext(closure, context);
+
+        final StartTSBuilder builder = new StartTSBuilder(toolName, context.timeout, context.toolLibsIni,
+                context.tcpPort);
         Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
         return builder;
     }
@@ -176,39 +121,35 @@ public class ToolBuilderDslExtension extends AbstractDslExtension {
     /**
      * {@link DslExtensionMethod} providing the shut down of the Tool-Server.
      *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
      * @param closure
      *            the nested Groovy closure
      * @return the instance of a {@link StopTSBuilder}
-     * @see StopTSBuilder#StopTSBuilder(String, String)
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object stopTS(final Runnable closure) {
+    public Object stopTS(final String toolName, final Runnable closure) {
+        Preconditions.checkNotNull(toolName, NOT_NULL_MSG, OPT_TOOL_NAME);
+
         final StopTSContext context = new StopTSContext();
         executeInContext(closure, context);
-        return new StopTSBuilder(context.toolName, context.timeout);
+
+        final StopTSBuilder builder = new StopTSBuilder(toolName, context.timeout);
+        Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
+        return builder;
     }
 
     /**
      * {@link Context} class providing ECU-TEST start up methods for the nested DSL context.
-     *
-     * @author Christian Pönisch <christian.poenisch@tracetronic.de>
      */
-    public class StartETContext implements Context {
+    public class StartETContext extends AbstractToolContext {
 
-        private String toolName;
         private String workspaceDir;
-        private String timeout = String.valueOf(StartETBuilder.DEFAULT_TIMEOUT);
-        private boolean debugMode = false;
+        private boolean debugMode;
 
-        /**
-         * Option identifying the {@link ETInstallation} to be used.
-         *
-         * @param value
-         *            the value
-         */
-        public void toolName(final String value) {
-            Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TOOL_NAME);
-            toolName = value;
+        @Override
+        protected int getDefaultTimeout() {
+            return StartETBuilder.DEFAULT_TIMEOUT;
         }
 
         /**
@@ -218,23 +159,10 @@ public class ToolBuilderDslExtension extends AbstractDslExtension {
          *            the value
          */
         public void workspaceDir(final String value) {
-            Preconditions.checkNotNull(value, NOT_NULL_MSG, "workspaceDir");
+            Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_WORKSPACE_DIR);
             final FormValidation validation = validator.validateWorkspaceDir(value);
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
             workspaceDir = value;
-        }
-
-        /**
-         * Option defining the timeout.
-         *
-         * @param value
-         *            the value
-         */
-        public void timeout(final String value) {
-            Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TIMEOUT);
-            final FormValidation validation = validator.validateTimeout(value, StartETBuilder.DEFAULT_TIMEOUT);
-            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            timeout = value;
         }
 
         /**
@@ -250,60 +178,29 @@ public class ToolBuilderDslExtension extends AbstractDslExtension {
 
     /**
      * {@link Context} class providing ECU-TEST shut down methods for the nested DSL context.
-     *
-     * @author Christian Pönisch <christian.poenisch@tracetronic.de>
      */
-    public class StopETContext implements Context {
+    public class StopETContext extends AbstractToolContext {
 
-        private String toolName;
-        private String timeout = String.valueOf(StartETBuilder.DEFAULT_TIMEOUT);
-
-        /**
-         * Option identifying the {@link ETInstallation} to be used.
-         *
-         * @param value
-         *            the value
-         */
-        public void toolName(final String value) {
-            Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TOOL_NAME);
-            toolName = value;
-        }
-
-        /**
-         * Option defining the timeout.
-         *
-         * @param value
-         *            the value
-         */
-        public void timeout(final String value) {
-            Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TIMEOUT);
-            final FormValidation validation = validator.validateTimeout(value, StopETBuilder.DEFAULT_TIMEOUT);
-            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            timeout = value;
+        @Override
+        protected int getDefaultTimeout() {
+            return StopETBuilder.DEFAULT_TIMEOUT;
         }
     }
 
     /**
      * {@link Context} class providing Tool-Server start up methods for the nested DSL context.
-     *
-     * @author Christian Pönisch <christian.poenisch@tracetronic.de>
      */
-    public class StartTSContext implements Context {
+    public class StartTSContext extends AbstractToolContext {
 
-        private String toolName;
+        private static final String OPT_TOOLLIBS_INI = "toolLibsIni";
+        private static final String OPT_TCP_PORT = "tcpPort";
+
         private String toolLibsIni = "";
         private String tcpPort = "";
-        private String timeout = String.valueOf(StartTSBuilder.DEFAULT_TIMEOUT);
 
-        /**
-         * Option identifying the {@link ETInstallation} to be used.
-         *
-         * @param value
-         *            the value
-         */
-        public void toolName(final String value) {
-            Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TOOL_NAME);
-            toolName = value;
+        @Override
+        protected int getDefaultTimeout() {
+            return StartTSBuilder.DEFAULT_TIMEOUT;
         }
 
         /**
@@ -313,7 +210,7 @@ public class ToolBuilderDslExtension extends AbstractDslExtension {
          *            the value
          */
         public void toolLibsIni(final String value) {
-            Preconditions.checkNotNull(value, NOT_NULL_MSG, "toolLibsIni");
+            Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TOOLLIBS_INI);
             final FormValidation validation = validator.validateToolLibsIni(value);
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
             toolLibsIni = value;
@@ -326,58 +223,21 @@ public class ToolBuilderDslExtension extends AbstractDslExtension {
          *            the value
          */
         public void tcpPort(final String value) {
-            Preconditions.checkNotNull(value, NOT_NULL_MSG, "tcpPort");
+            Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TCP_PORT);
             final FormValidation validation = validator.validateTcpPort(value);
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
             tcpPort = value;
-        }
-
-        /**
-         * Option defining the timeout.
-         *
-         * @param value
-         *            the value
-         */
-        public void timeout(final String value) {
-            Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TIMEOUT);
-            final FormValidation validation = validator.validateTimeout(value, StartTSBuilder.DEFAULT_TIMEOUT);
-            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            timeout = value;
         }
     }
 
     /**
      * {@link Context} class providing Tool-Server shut down methods for the nested DSL context.
-     *
-     * @author Christian Pönisch <christian.poenisch@tracetronic.de>
      */
-    public class StopTSContext implements Context {
+    public class StopTSContext extends AbstractToolContext {
 
-        private String toolName;
-        private String timeout = String.valueOf(StartTSBuilder.DEFAULT_TIMEOUT);
-
-        /**
-         * Option identifying the {@link ETInstallation} to be used.
-         *
-         * @param value
-         *            the value
-         */
-        public void toolName(final String value) {
-            Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TOOL_NAME);
-            toolName = value;
-        }
-
-        /**
-         * Option defining the timeout.
-         *
-         * @param value
-         *            the value
-         */
-        public void timeout(final String value) {
-            Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TIMEOUT);
-            final FormValidation validation = validator.validateTimeout(value, StartTSBuilder.DEFAULT_TIMEOUT);
-            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            timeout = value;
+        @Override
+        protected int getDefaultTimeout() {
+            return StopTSBuilder.DEFAULT_TIMEOUT;
         }
     }
 }

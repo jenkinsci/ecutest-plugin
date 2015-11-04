@@ -44,6 +44,7 @@ import de.tracetronic.jenkins.plugins.ecutest.SystemTestBase;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 
 /**
@@ -57,7 +58,7 @@ public class TestFolderBuilderST extends SystemTestBase {
     public void testRoundTripConfig() throws Exception {
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ProjectConfig projectConfig = new ProjectConfig(false, "", 1);
+        final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(600, false);
         final TestFolderBuilder before = new TestFolderBuilder("tests", TestFolderBuilder.DEFAULT_SCANMODE, false,
                 testConfig, packageConfig, projectConfig, executionConfig);
@@ -71,7 +72,7 @@ public class TestFolderBuilderST extends SystemTestBase {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ProjectConfig projectConfig = new ProjectConfig(true, "filter", 1);
+        final ProjectConfig projectConfig = new ProjectConfig(true, "filter", JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
         final TestFolderBuilder builder = new TestFolderBuilder("tests", TestFolderBuilder.DEFAULT_SCANMODE, true,
                 testConfig, packageConfig, projectConfig, executionConfig);
@@ -101,7 +102,7 @@ public class TestFolderBuilderST extends SystemTestBase {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ProjectConfig projectConfig = new ProjectConfig(false, "", 1);
+        final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(600, false);
         final TestFolderBuilder builder = new TestFolderBuilder("tests", TestFolderBuilder.DEFAULT_SCANMODE, false,
                 testConfig, packageConfig, projectConfig, executionConfig);

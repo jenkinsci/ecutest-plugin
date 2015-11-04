@@ -122,15 +122,8 @@ public class TestFolderBuilder extends AbstractTestBuilder {
         super(testFile, testConfig, executionConfig);
         this.scanMode = scanMode;
         this.recursiveScan = recursiveScan;
-        this.packageConfig = packageConfig;
-        this.projectConfig = projectConfig;
-    }
-
-    /**
-     * @return the default scan mode
-     */
-    public ScanMode getDefaultScanMode() {
-        return ScanMode.PACKAGES_AND_PROJECTS;
+        this.packageConfig = packageConfig == null ? PackageConfig.newInstance() : packageConfig;
+        this.projectConfig = projectConfig == null ? ProjectConfig.newInstance() : projectConfig;
     }
 
     /**

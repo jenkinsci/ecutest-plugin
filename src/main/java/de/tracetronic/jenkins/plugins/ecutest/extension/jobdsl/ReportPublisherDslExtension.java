@@ -43,7 +43,6 @@ import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
 
 /**
  * Class providing report-related DSL extensions.
@@ -51,48 +50,29 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 @Extension(optional = true)
-public class ReportPublisherDslExtension extends AbstractDslExtension {
+public class ReportPublisherDslExtension extends AbstractReportBuilderDslExtension {
 
-    /**
-     * Option name for the ATX installation name.
-     */
-    protected static final String OPT_ATX_NAME = "atxName";
-
-    /**
-     * Validator to check UNIT-related DSL options.
-     */
-    private final JUnitValidator validator = new JUnitValidator();
+    private static final String OPT_ATX_NAME = "atxName";
 
     /**
      * {@link DslExtensionMethod} for publishing ATX reports.
      *
      * @param atxName
      *            the tool name identifying the {@link ATXInstallation} to be used
-     * @return the instance of a {@link ATXPublisher}
-     * @see ATXPublisher#ATXPublisher(String, boolean, boolean)
-     */
-    @DslExtensionMethod(context = StepContext.class)
-    public Object publishATX(final String atxName) {
-        Preconditions.checkNotNull(atxName, NOT_NULL_MSG, OPT_TOOL_NAME);
-
-        final ATXPublisher publisher = new ATXPublisher(atxName, false, false);
-        Preconditions.checkNotNull(publisher.getInstallation(), NO_INSTALL_MSG, atxName);
-        return publisher;
-    }
-
-    /**
-     * {@link DslExtensionMethod} for publishing ATX reports.
-     *
      * @param closure
      *            the nested Groovy closure
      * @return the instance of a {@link ATXPublisher}
-     * @see ATXPublisher#ATXPublisher(String, boolean, boolean)
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object publishATX(final Runnable closure) {
+    public Object publishATX(final String atxName, final Runnable closure) {
+        Preconditions.checkNotNull(atxName, NOT_NULL_MSG, OPT_ATX_NAME);
+
         final PublishATXContext context = new PublishATXContext();
         executeInContext(closure, context);
-        return new ATXPublisher(context.atxName, context.allowMissing, context.runOnFailed);
+
+        final ATXPublisher publisher = new ATXPublisher(atxName, context.allowMissing, context.runOnFailed);
+        Preconditions.checkNotNull(publisher.getInstallation(), NO_INSTALL_MSG, atxName);
+        return publisher;
     }
 
     /**
@@ -100,51 +80,21 @@ public class ReportPublisherDslExtension extends AbstractDslExtension {
      *
      * @param toolName
      *            the tool name identifying the {@link ETInstallation} to be used
-     * @param unstableThreshold
-     *            the unstable threshold
-     * @param failedThreshold
-     *            the failed threshold
-     * @return the instance of a {@link JUnitPublisher}
-     * @see JUnitPublisher#JUnitPublisher(String, double, double, boolean, boolean)
-     */
-    @DslExtensionMethod(context = StepContext.class)
-    public Object publishUNIT(final String toolName, final double unstableThreshold, final double failedThreshold) {
-        Preconditions.checkNotNull(toolName, NOT_NULL_MSG, OPT_TOOL_NAME);
-        FormValidation validation = validator.validateUnstableThreshold(String.valueOf(unstableThreshold));
-        Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-        validation = validator.validateFailedThreshold(String.valueOf(failedThreshold));
-        Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-
-        final JUnitPublisher publisher = new JUnitPublisher(toolName, unstableThreshold, failedThreshold, false, false);
-        // TODO: validate installation
-        return publisher;
-    }
-
-    /**
-     * {@link DslExtensionMethod} for publishing UNIT reports.
-     *
      * @param closure
      *            the nested Groovy closure
      * @return the instance of a {@link JUnitPublisher}
-     * @see JUnitPublisher#JUnitPublisher(String, double, double, boolean, boolean)
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object publishUNIT(final Runnable closure) {
+    public Object publishUNIT(final String toolName, final Runnable closure) {
+        Preconditions.checkNotNull(toolName, NOT_NULL_MSG, OPT_TOOL_NAME);
+
         final JUnitPublisherContext context = new JUnitPublisherContext();
         executeInContext(closure, context);
-        return new JUnitPublisher(context.toolName, context.unstableThreshold, context.failedThreshold,
-                context.allowMissing, context.runOnFailed);
-    }
 
-    /**
-     * {@link DslExtensionMethod} for publishing TRF reports.
-     *
-     * @return the instance of a {@link TRFPublisher}
-     * @see TRFPublisher#TRFPublisher(boolean, boolean)
-     */
-    @DslExtensionMethod(context = StepContext.class)
-    public Object publishTRF() {
-        return new TRFPublisher(false, false);
+        final JUnitPublisher publisher = new JUnitPublisher(toolName, context.unstableThreshold,
+                context.failedThreshold, context.allowMissing, context.runOnFailed);
+        Preconditions.checkNotNull(publisher.getToolInstallation(), NO_INSTALL_MSG, toolName);
+        return publisher;
     }
 
     /**
@@ -153,7 +103,6 @@ public class ReportPublisherDslExtension extends AbstractDslExtension {
      * @param closure
      *            the nested Groovy closure
      * @return the instance of a {@link TRFPublisher}
-     * @see TRFPublisher#TRFPublisher(boolean, boolean)
      */
     @DslExtensionMethod(context = StepContext.class)
     public Object publishTRF(final Runnable closure) {
@@ -165,25 +114,9 @@ public class ReportPublisherDslExtension extends AbstractDslExtension {
     /**
      * {@link DslExtensionMethod} for publishing ECU-TEST logs.
      *
-     * @param unstableOnWarning
-     *            specifies whether to mark the build as unstable if warnings found
-     * @param failedOnError
-     *            specifies whether to mark the build as failed if errors found
-     * @return the instance of a {@link ETLogPublisher}
-     * @see ETLogPublisher#ETLogPublisher(boolean, boolean, boolean, boolean)
-     */
-    @DslExtensionMethod(context = StepContext.class)
-    public Object publishLogs(final boolean unstableOnWarning, final boolean failedOnError) {
-        return new ETLogPublisher(unstableOnWarning, failedOnError, false, false);
-    }
-
-    /**
-     * {@link DslExtensionMethod} for publishing ECU-TEST logs.
-     *
      * @param closure
      *            the nested Groovy closure
      * @return the instance of a {@link ETLogPublisher}
-     * @see ETLogPublisher#ETLogPublisher(boolean, boolean, boolean, boolean)
      */
     @DslExtensionMethod(context = StepContext.class)
     public Object publishLogs(final Runnable closure) {
@@ -194,85 +127,18 @@ public class ReportPublisherDslExtension extends AbstractDslExtension {
     }
 
     /**
-     * Common base class providing report-related DSL extensions.
-     *
-     * @author Christian Pönisch <christian.poenisch@tracetronic.de>
-     */
-    public abstract class AbstractReportContext implements Context {
-
-        /**
-         * The allow missing reports setting.
-         */
-        protected boolean allowMissing = false;
-
-        /**
-         * The run on failed setting.
-         */
-        protected boolean runOnFailed = false;
-
-        /**
-         * Option defining whether missing reports are allowed.
-         *
-         * @param value
-         *            the value
-         */
-        public void allowMissing(final boolean value) {
-            allowMissing = value;
-        }
-
-        /**
-         * Option defining whether this publisher even runs on a failed build.
-         *
-         * @param value
-         *            the value
-         */
-        public void runOnFailed(final boolean value) {
-            runOnFailed = value;
-        }
-    }
-
-    /**
      * {@link Context} class providing ATX publisher methods for the nested DSL context.
-     *
-     * @author Christian Pönisch <christian.poenisch@tracetronic.de>
      */
     public class PublishATXContext extends AbstractReportContext {
-
-        private String atxName;
-
-        /**
-         * Option identifying the {@link ATXInstallation} to be used.
-         *
-         * @param value
-         *            the value
-         */
-        public void atxName(final String value) {
-            Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_ATX_NAME);
-            atxName = value;
-        }
     }
 
     /**
      * {@link Context} class providing UNIT publisher methods for the nested DSL context.
-     *
-     * @author Christian Pönisch <christian.poenisch@tracetronic.de>
      */
     public class JUnitPublisherContext extends AbstractReportContext {
 
-        private String toolName;
         private double unstableThreshold;
         private double failedThreshold;
-
-        /**
-         * Option identifying the {@link ETInstallation} to be used.
-         *
-         * @param value
-         *            the value
-         */
-        public void toolName(final String value) {
-            Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TOOL_NAME);
-            toolName = value;
-        }
 
         /**
          * Option defining the unstable threshold.
@@ -301,16 +167,12 @@ public class ReportPublisherDslExtension extends AbstractDslExtension {
 
     /**
      * {@link Context} class providing TRF publisher methods for the nested DSL context.
-     *
-     * @author Christian Pönisch <christian.poenisch@tracetronic.de>
      */
     public class PublishTRFContext extends AbstractReportContext {
     }
 
     /**
      * {@link Context} class providing ECU-TEST log publisher methods for the nested DSL context.
-     *
-     * @author Christian Pönisch <christian.poenisch@tracetronic.de>
      */
     public class PublishLogContext extends AbstractReportContext {
 

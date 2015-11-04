@@ -39,6 +39,7 @@ import org.junit.Test;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 
 /**
@@ -52,7 +53,7 @@ public class TestFolderBuilderTest {
     public void testBlankConfigShouldReturnDefaults() {
         final TestConfig testConfig = new TestConfig("", "");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ProjectConfig projectConfig = new ProjectConfig(false, "", 1);
+        final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig("", false);
         final TestFolderBuilder builder = new TestFolderBuilder("", TestFolderBuilder.DEFAULT_SCANMODE, false,
                 testConfig, packageConfig, projectConfig, executionConfig);
@@ -64,7 +65,7 @@ public class TestFolderBuilderTest {
     public void testNull() {
         final TestConfig testConfig = new TestConfig(null, null, null);
         final PackageConfig packageConfig = new PackageConfig(true, true, null);
-        final ProjectConfig projectConfig = new ProjectConfig(false, null, 1);
+        final ProjectConfig projectConfig = new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(null, false);
         final TestFolderBuilder builder = new TestFolderBuilder(null, TestFolderBuilder.DEFAULT_SCANMODE, false,
                 testConfig, packageConfig, projectConfig, executionConfig);
@@ -82,7 +83,7 @@ public class TestFolderBuilderTest {
         assertFalse(builder.getProjectConfig().isExecInCurrentPkgDir());
         assertNotNull(builder.getProjectConfig().getFilterExpression());
         assertTrue(builder.getProjectConfig().getFilterExpression().isEmpty());
-        assertEquals(1, builder.getProjectConfig().getJobExecutionMode());
+        assertEquals(JobExecutionMode.SEQUENTIAL_EXECUTION, builder.getProjectConfig().getJobExecMode());
         assertNotNull(builder.getExecutionConfig().getTimeout());
         assertEquals("Check default timeout", ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig()
                 .getTimeout());

@@ -54,10 +54,6 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
      * Option name for the test file.
      */
     protected static final String OPT_TEST_FILE = "testFile";
-    private static final String OPT_TBC_FILE = "tbcFile";
-    private static final String OPT_TCF_FILE = "tcfFile";
-    private static final String OPT_CONSTANT_NAME = "constant name";
-    private static final String OPT_CONSTANT_VALUE = "constant value";
 
     /**
      * Validator to check test-related DSL options.
@@ -66,15 +62,8 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
 
     /**
      * {@link Context} class providing common test-related methods for the nested DSL context.
-     *
-     * @author Christian Pönisch <christian.poenisch@tracetronic.de>
      */
     public abstract class AbstractTestContext implements Context {
-
-        /**
-         * The test file to be executed.
-         */
-        protected String testFile;
 
         /**
          * The test configuration settings.
@@ -85,17 +74,6 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
          * The test execution settings.
          */
         protected ExecutionConfig executionConfig;
-
-        /**
-         * Option defining the test file.
-         *
-         * @param value
-         *            the value
-         */
-        public void testFile(final String value) {
-            Preconditions.checkNotNull(testFile, NOT_NULL_MSG, OPT_TEST_FILE);
-            testFile = value;
-        }
 
         /**
          * Option defining the test configuration.
@@ -123,10 +101,13 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
 
         /**
          * {@link Context} class providing test configuration methods for the nested DSL context.
-         *
-         * @author Christian Pönisch <christian.poenisch@tracetronic.de>
          */
         public class TestConfigContext implements Context {
+
+            private static final String OPT_TBC_FILE = "tbcFile";
+            private static final String OPT_TCF_FILE = "tcfFile";
+            private static final String OPT_CONSTANT_NAME = "constant name";
+            private static final String OPT_CONSTANT_VALUE = "constant value";
 
             private String tbcFile;
             private String tcfFile;
@@ -172,8 +153,6 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
 
             /**
              * {@link Context} class providing global constants methods for the nested DSL context.
-             *
-             * @author Christian Pönisch <christian.poenisch@tracetronic.de>
              */
             public class GlobalConstantsContext implements Context {
 
@@ -213,8 +192,6 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
 
                 /**
                  * {@link Context} class providing single global constant methods for the nested DSL context.
-                 *
-                 * @author Christian Pönisch <christian.poenisch@tracetronic.de>
                  */
                 public class GlobalConstantContext implements Context {
 
@@ -254,25 +231,33 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
 
         /**
          * {@link Context} class providing test execution methods for the nested DSL context.
-         *
-         * @author Christian Pönisch <christian.poenisch@tracetronic.de>
          */
         public class ExecutionConfigContext implements Context {
 
             private String timeout;
-            private boolean stopOnError;
+            private boolean stopOnError = true;
 
             /**
              * Option defining the timeout.
              *
              * @param value
-             *            the value
+             *            the value as String
              */
             public void timeout(final String value) {
                 Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TIMEOUT);
                 final FormValidation validation = validator.validateTimeout(value, ExecutionConfig.getDefaultTimeout());
                 Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
                 timeout = value;
+            }
+
+            /**
+             * Option defining the timeout.
+             *
+             * @param value
+             *            the value as Integer
+             */
+            public void timeout(final int value) {
+                timeout(String.valueOf((Object) value));
             }
 
             /**

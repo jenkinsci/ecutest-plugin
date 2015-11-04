@@ -73,7 +73,7 @@ public class TestProjectBuilder extends AbstractTestBuilder {
     public TestProjectBuilder(final String testFile, final TestConfig testConfig,
             final ProjectConfig projectConfig, final ExecutionConfig executionConfig) {
         super(testFile, testConfig, executionConfig);
-        this.projectConfig = projectConfig;
+        this.projectConfig = projectConfig == null ? ProjectConfig.newInstance() : projectConfig;
     }
 
     /**

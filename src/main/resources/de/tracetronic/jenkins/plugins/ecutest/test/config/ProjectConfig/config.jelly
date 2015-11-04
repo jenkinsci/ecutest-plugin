@@ -37,8 +37,8 @@
         <f:entry title="${%filterExpression.title}" description="${%filterExpression.description}" field="filterExpression">
             <f:textbox />
         </f:entry>
-        <f:entry title="${%jobExecutionMode.title}" description="${%jobExecutionMode.description}" field="jobExecutionMode" >
-           <f:select default="1" />
+        <f:entry title="${%jobExecutionMode.title}" description="${%jobExecutionMode.description}" field="jobExecMode">
+           <f:select default="${descriptor.defaultJobExecMode}" />
         </f:entry>
     </f:section>
 </j:jelly>

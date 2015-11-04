@@ -29,32 +29,63 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
-import javaposse.jobdsl.plugin.ContextExtensionPoint;
+import hudson.util.FormValidation;
+import javaposse.jobdsl.dsl.Context;
+
+import com.google.common.base.Preconditions;
+
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.ToolValidator;
 
 /**
- * Common base class providing plugin specific DSL extensions.
+ * Common base class providing tool-related DSL extensions.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class AbstractDslExtension extends ContextExtensionPoint {
+public abstract class AbstractToolBuilderDslExtension extends AbstractDslExtension {
 
     /**
-     * Option name for the tool installation name.
+     * Validator to check tool-related DSL options.
      */
-    protected static final String OPT_TOOL_NAME = "toolName";
+    protected final ToolValidator validator = new ToolValidator();
 
     /**
-     * Option name for the timeout.
+     * {@link Context} class providing common test-related methods for the nested DSL context.
      */
-    protected static final String OPT_TIMEOUT = "timeout";
+    public abstract class AbstractToolContext implements Context {
 
-    /**
-     * Exception message for invalid options.
-     */
-    protected static final String NOT_NULL_MSG = "Setting '%s' cannot be null!";
+        /**
+         * The timeout for tool interaction.
+         */
+        protected String timeout = String.valueOf(getDefaultTimeout());
 
-    /**
-     * Exception message for invalid tool installation option.
-     */
-    protected static final String NO_INSTALL_MSG = "'%s' is not in the list of configured ECU-TEST installations!";
+        /**
+         * Defines the default timeout.
+         *
+         * @return the default timeout
+         */
+        protected abstract int getDefaultTimeout();
+
+        /**
+         * Option defining the timeout.
+         *
+         * @param value
+         *            the value as String
+         */
+        public void timeout(final String value) {
+            Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TIMEOUT);
+            final FormValidation validation = validator.validateTimeout(value, getDefaultTimeout());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            timeout = value;
+        }
+
+        /**
+         * Option defining the timeout.
+         *
+         * @param value
+         *            the value as Integer
+         */
+        public void timeout(final int value) {
+            timeout(String.valueOf((Object) value));
+        }
+    }
 }

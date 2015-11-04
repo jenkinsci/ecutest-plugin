@@ -212,7 +212,7 @@ public class ProjectClient extends AbstractTestClient {
 
         @Override
         public TestInfoHolder call() throws IOException {
-            final int jobExecutionMode = projectConfig.getJobExecutionMode();
+            final int jobExecutionMode = projectConfig.getJobExecMode().getValue();
             final int timeout = executionConfig.getTimeout();
             TestInfoHolder testInfo = null;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);

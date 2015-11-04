@@ -40,6 +40,8 @@ import org.jvnet.hudson.test.TestPluginManager;
  * Cleanup the temporary directory created by {@link org.jvnet.hudson.test.TestPluginManager}.
  * <p>
  * Call {@link #registerCleanup()} at least once from anywhere.
+ *
+ * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestPluginManagerCleanUp {
 

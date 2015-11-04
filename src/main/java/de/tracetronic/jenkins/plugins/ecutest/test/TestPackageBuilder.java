@@ -73,7 +73,7 @@ public class TestPackageBuilder extends AbstractTestBuilder {
     public TestPackageBuilder(final String testFile, final TestConfig testConfig,
             final PackageConfig packageConfig, final ExecutionConfig executionConfig) {
         super(testFile, testConfig, executionConfig);
-        this.packageConfig = packageConfig;
+        this.packageConfig = packageConfig == null ? PackageConfig.newInstance() : packageConfig;
     }
 
     /**
