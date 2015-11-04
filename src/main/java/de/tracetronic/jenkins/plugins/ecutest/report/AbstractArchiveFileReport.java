@@ -102,44 +102,44 @@ public abstract class AbstractArchiveFileReport extends AbstractTestReport {
      *
      * @param req
      *            the {@link StaplerRequest} used for access this report
-     * @param resp
+     * @param rsp
      *            the {@link StaplerResponse} used for serving the file
      * @throws IOException
      *             signals that an I/O exception has occurred
      * @throws ServletException
      *             if serving the file failed
      */
-    public void doDynamic(final StaplerRequest req, final StaplerResponse resp) throws IOException,
-            ServletException {
+    public void doDynamic(final StaplerRequest req, final StaplerResponse rsp) throws IOException,
+    ServletException {
         final AbstractBuild<?, ?> build = getBuild(req);
         if (build == null) {
             LOGGER.warning(String.format("No build found for url %s", req.getRequestURI()));
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
-        final File logFile = new File(new File(build.getRootDir(), getArchiveDir()), getFileName());
-        if (!logFile.exists()) {
+        final File archiveFile = new File(new File(build.getRootDir(), getArchiveDir()), getFileName());
+        if (!archiveFile.exists()) {
             LOGGER.warning(String.format("Archive file does not exists: %s for %s", getFileName(),
                     build.getFullDisplayName()));
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        if (!logFile.isFile()) {
+        if (!archiveFile.isFile()) {
             LOGGER.warning(String.format("Archive file is not a file: %s for %s", getFileName(),
                     build.getFullDisplayName()));
-            resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+            rsp.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
 
         if (req.getDateHeader("If-Modified-Since") >= 0
-                && req.getDateHeader("If-Modified-Since") >= logFile.lastModified()) {
-            resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                && req.getDateHeader("If-Modified-Since") >= archiveFile.lastModified()) {
+            rsp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
             return;
         }
 
         // Download the archive file
-        resp.setHeader("Content-Disposition", "attachment;filename=\"" + logFile.getName() + "\"");
-        resp.serveFile(req, logFile.toURI().toURL());
+        rsp.setHeader("Content-Disposition", "attachment;filename=\"" + archiveFile.getName() + "\"");
+        rsp.serveFile(req, archiveFile.toURI().toURL());
     }
 }

@@ -110,21 +110,21 @@ public class ATXReport extends AbstractTestReport {
      *
      * @param req
      *            the {@link StaplerRequest} used for access this report
-     * @param resp
+     * @param rsp
      *            the {@link StaplerResponse} used for redirecting to the report
      * @throws IOException
      *             signals that an I/O exception has occurred
      */
-    public void doDynamic(final StaplerRequest req, final StaplerResponse resp) throws IOException {
+    public void doDynamic(final StaplerRequest req, final StaplerResponse rsp) throws IOException {
         final AbstractBuild<?, ?> build = getBuild(req);
         if (build == null) {
             LOGGER.warning(String.format("No build found for url %s", req.getRequestURI()));
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
         // Redirect to ATX URL
         final URL url = new URL(getReportUrl());
-        resp.sendRedirect(url.toString());
+        rsp.sendRedirect(url.toString());
     }
 }

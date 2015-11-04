@@ -124,6 +124,15 @@ public class ATXBuildAction<T extends AbstractTestReport> extends AbstractATXAct
         return null;
     }
 
+    /**
+     * Specifies whether this action holds archived {@link ATXZipReport}s.
+     *
+     * @return {@code true} if has archived reports, {@code false} otherwise
+     */
+    public boolean hasArchivedReports() {
+        return !getATXReports().isEmpty() && getATXReports().get(0) instanceof ATXZipReport;
+    }
+
     @Override
     public String getDisplayName() {
         return Messages.ATXBuildAction_DisplayName();

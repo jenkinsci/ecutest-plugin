@@ -50,6 +50,16 @@
                     <j:forEach var="report" items="${it.getTRFReports()}">
                         <st:include page="report.jelly" />
                     </j:forEach>
+                    <tr>
+                        <td style="text-align:right;" colspan="2">
+                            <div style="margin-top: 1em;">
+                                <img src="${resURL}/images/16x16/package.png" /><st:nbsp />
+                                <a href="${rootURL}/${build.url}${it.urlName}/zipDownload">
+                                    ${%download.zip}
+                                </a>
+                            </div>
+                        </td>
+                     </tr>
                 </table>
             </j:if>
         </l:main-panel>
