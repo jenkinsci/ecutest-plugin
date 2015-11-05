@@ -33,6 +33,9 @@ import hudson.AbortException;
 import hudson.CopyOnWrite;
 import hudson.Extension;
 import hudson.Launcher;
+import hudson.matrix.MatrixAggregatable;
+import hudson.matrix.MatrixAggregator;
+import hudson.matrix.MatrixBuild;
 import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.Result;
@@ -42,6 +45,7 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 import hudson.tasks.junit.TestResult;
 import hudson.tasks.junit.TestResultAction;
+import hudson.tasks.test.TestResultAggregator;
 import hudson.tasks.test.TestResultProjectAction;
 import hudson.tools.ToolInstallation;
 import hudson.util.FormValidation;
@@ -67,7 +71,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class JUnitPublisher extends AbstractReportPublisher {
+public class JUnitPublisher extends AbstractReportPublisher implements MatrixAggregatable {
 
     private final String toolName;
     private final double unstableThreshold;
@@ -145,6 +149,12 @@ public class JUnitPublisher extends AbstractReportPublisher {
     @Override
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl) super.getDescriptor();
+    }
+
+    @Override
+    public MatrixAggregator createAggregator(final MatrixBuild build, final Launcher launcher,
+            final BuildListener listener) {
+        return new TestResultAggregator(build, launcher, listener);
     }
 
     @SuppressWarnings("deprecation")

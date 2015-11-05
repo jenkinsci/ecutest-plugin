@@ -112,7 +112,7 @@ public abstract class AbstractReportPublisher extends Recorder {
                 try {
                     mc.onLoad(mc.getParent(), mc.getName());
                 } catch (final IOException e) {
-                    LOGGER.log(Level.SEVERE, "Could not reload final the configuration");
+                    LOGGER.log(Level.SEVERE, "Could not reload the matrix configuration");
                 }
             }
         }
