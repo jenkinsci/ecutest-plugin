@@ -36,7 +36,7 @@ import org.apache.commons.lang.StringUtils;
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.Messages;
 
 /**
- * Validator to check JUnit-related form fields.
+ * Validator to check UNIT related form fields.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */

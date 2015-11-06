@@ -51,7 +51,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
 
 /**
- * Class providing test-related DSL extensions.
+ * Class providing test related DSL extensions.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
@@ -98,7 +98,8 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
     }
 
     /**
-     * {@link DslExtensionMethod} providing the execution of ECU-TEST packages and projects inside of a test folder.
+     * {@link DslExtensionMethod} providing the execution of ECU-TEST
+     * packages and projects inside of a test folder.
      *
      * @param testFolder
      *            the test folder

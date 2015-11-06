@@ -46,7 +46,7 @@ import de.tracetronic.jenkins.plugins.ecutest.filter.RefFilterParser;
 import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
 
 /**
- * Validator to check test-related form fields.
+ * Validator to check test related form fields.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */

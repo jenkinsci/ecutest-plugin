@@ -44,12 +44,12 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.ToolValidator;
 public abstract class AbstractToolBuilderDslExtension extends AbstractDslExtension {
 
     /**
-     * Validator to check tool-related DSL options.
+     * Validator to check tool related DSL options.
      */
     protected final ToolValidator validator = new ToolValidator();
 
     /**
-     * {@link Context} class providing common test-related methods for the nested DSL context.
+     * {@link Context} class providing common test related methods for the nested DSL context.
      */
     public abstract class AbstractToolContext implements Context {
 

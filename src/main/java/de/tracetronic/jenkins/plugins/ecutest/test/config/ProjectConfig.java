@@ -176,7 +176,7 @@ public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implem
      *            the filter expression to filter the package and project references
      * @param jobExecutionMode
      *            the analysis job execution mode
-     * @deprecated since 1.2
+     * @deprecated since 1.2, use {@link #ProjectConfig(boolean, String, JobExecutionMode)}
      */
     @Deprecated
     public ProjectConfig(final boolean execInCurrentPkgDir, final String filterExpression,

@@ -56,12 +56,12 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
     protected static final String OPT_TEST_FILE = "testFile";
 
     /**
-     * Validator to check test-related DSL options.
+     * Validator to check test related DSL options.
      */
     protected final TestValidator validator = new TestValidator();
 
     /**
-     * {@link Context} class providing common test-related methods for the nested DSL context.
+     * {@link Context} class providing common test related methods for the nested DSL context.
      */
     public abstract class AbstractTestContext implements Context {
 

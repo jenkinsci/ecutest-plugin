@@ -39,7 +39,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.Messages;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
 
 /**
- * Validator to check tool-related form fields.
+ * Validator to check tool related form fields.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */

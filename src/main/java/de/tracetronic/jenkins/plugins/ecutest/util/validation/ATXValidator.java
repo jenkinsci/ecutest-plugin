@@ -58,7 +58,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 
 /**
- * Validator to check ATX-related form fields.
+ * Validator to check ATX related form fields.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */

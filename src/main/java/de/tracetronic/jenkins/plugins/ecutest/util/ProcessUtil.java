@@ -169,7 +169,7 @@ public final class ProcessUtil {
     public static boolean checkOS(final Launcher launcher, final BuildListener listener) {
         if (launcher.isUnix()) {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            logger.logError("Trying to build Windows-related configuration on an Unix-based system! "
+            logger.logError("Trying to build Windows related configuration on an Unix-based system! "
                     + "Restrict the project to be built on a particular Windows slave or master.");
             return false;
         }
