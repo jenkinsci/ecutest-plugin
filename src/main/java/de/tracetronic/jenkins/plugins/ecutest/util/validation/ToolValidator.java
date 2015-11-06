@@ -30,9 +30,9 @@
 package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
 import hudson.util.FormValidation;
+import hudson.util.IOUtils;
 
-import java.io.File;
-
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 
 import de.tracetronic.jenkins.plugins.ecutest.tool.Messages;
@@ -73,13 +73,11 @@ public class ToolValidator extends AbstractValidator {
             if (toolLibsIni.contains(PARAMETER)) {
                 returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
             } else {
-                final File file = new File(toolLibsIni);
-                if (!file.isAbsolute() || file.isDirectory()) {
+                if (!IOUtils.isAbsolute(toolLibsIni) || FilenameUtils.getExtension(toolLibsIni).isEmpty()) {
                     returnValue = FormValidation.error(Messages.StartTSBuilder_NoAbsolutePath());
                 }
             }
         }
-
         return returnValue;
     }
 
