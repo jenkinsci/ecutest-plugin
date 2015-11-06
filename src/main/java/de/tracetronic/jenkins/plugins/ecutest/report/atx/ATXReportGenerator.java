@@ -78,6 +78,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     public boolean generate(final boolean allowMissing, final ATXInstallation installation,
             final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
             throws IOException, InterruptedException {
@@ -119,6 +120,9 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
                             String.format("**/%s/*.zip", ATX_TEMPLATE_NAME), archiveTargetDir);
                     logger.logInfo(String.format("-> Archived %d report(s) for %s.", copiedFiles,
                             testEnvAction.getTestName()));
+                    if (copiedFiles == 0) {
+                        continue;
+                    }
                 } catch (final IOException e) {
                     Util.displayIOException(e, listener);
                     logger.logError("Failed archiving generated ATX reports.");

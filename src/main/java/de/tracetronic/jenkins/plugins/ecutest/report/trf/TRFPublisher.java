@@ -82,6 +82,7 @@ public class TRFPublisher extends AbstractReportPublisher {
         super(allowMissing, runOnFailed);
     }
 
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
     public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
             final BuildListener listener) throws InterruptedException, IOException {
@@ -105,7 +106,9 @@ public class TRFPublisher extends AbstractReportPublisher {
                 try {
                     logger.logInfo(String.format("- Archiving TRF report: %s", reportFile));
                     final int copiedFiles = testReportDir.copyRecursiveTo("**/" + TRF_FILE_NAME, archiveTargetDir);
-                    if (copiedFiles > 1) {
+                    if (copiedFiles == 0) {
+                        continue;
+                    } else {
                         logger.logInfo(String.format("-> Archived %d sub-report(s).", copiedFiles - 1));
                     }
                 } catch (final IOException e) {
