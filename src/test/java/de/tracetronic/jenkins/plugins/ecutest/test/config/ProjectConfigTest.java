@@ -62,6 +62,13 @@ public class ProjectConfigTest {
         assertThat(config.expand(envVars).getFilterExpression(), is("filter"));
     }
 
+    @SuppressWarnings("deprecation")
+    @Test
+    public void testCompatibility() {
+        final ProjectConfig config = new ProjectConfig(true, null, 0);
+        assertThat(config.getJobExecMode(), is(JobExecutionMode.NO_EXECUTION));
+    }
+
     @Test
     public void testHashCodeAndEquals() {
         EqualsVerifier.forClass(ProjectConfig.class).verify();
