@@ -32,7 +32,7 @@ package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 import hudson.Extension;
 import hudson.util.FormValidation;
 import javaposse.jobdsl.dsl.Context;
-import javaposse.jobdsl.dsl.helpers.step.StepContext;
+import javaposse.jobdsl.dsl.helpers.publisher.PublisherContext;
 import javaposse.jobdsl.plugin.DslExtensionMethod;
 
 import com.google.common.base.Preconditions;
@@ -45,12 +45,12 @@ import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 
 /**
- * Class providing report-related DSL extensions.
+ * Class providing report related DSL extensions.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 @Extension(optional = true)
-public class ReportPublisherDslExtension extends AbstractReportBuilderDslExtension {
+public class ReportPublisherDslExtension extends AbstractReportPublisherDslExtension {
 
     private static final String OPT_ATX_NAME = "atxName";
 
@@ -63,7 +63,7 @@ public class ReportPublisherDslExtension extends AbstractReportBuilderDslExtensi
      *            the nested Groovy closure
      * @return the instance of a {@link ATXPublisher}
      */
-    @DslExtensionMethod(context = StepContext.class)
+    @DslExtensionMethod(context = PublisherContext.class)
     public Object publishATX(final String atxName, final Runnable closure) {
         Preconditions.checkNotNull(atxName, NOT_NULL_MSG, OPT_ATX_NAME);
 
@@ -84,7 +84,7 @@ public class ReportPublisherDslExtension extends AbstractReportBuilderDslExtensi
      *            the nested Groovy closure
      * @return the instance of a {@link JUnitPublisher}
      */
-    @DslExtensionMethod(context = StepContext.class)
+    @DslExtensionMethod(context = PublisherContext.class)
     public Object publishUNIT(final String toolName, final Runnable closure) {
         Preconditions.checkNotNull(toolName, NOT_NULL_MSG, OPT_TOOL_NAME);
 
@@ -98,13 +98,13 @@ public class ReportPublisherDslExtension extends AbstractReportBuilderDslExtensi
     }
 
     /**
-     * {@link DslExtensionMethod} for publishing ATX reports.
+     * {@link DslExtensionMethod} for publishing TRF reports.
      *
      * @param closure
      *            the nested Groovy closure
      * @return the instance of a {@link TRFPublisher}
      */
-    @DslExtensionMethod(context = StepContext.class)
+    @DslExtensionMethod(context = PublisherContext.class)
     public Object publishTRF(final Runnable closure) {
         final PublishTRFContext context = new PublishTRFContext();
         executeInContext(closure, context);
@@ -118,9 +118,9 @@ public class ReportPublisherDslExtension extends AbstractReportBuilderDslExtensi
      *            the nested Groovy closure
      * @return the instance of a {@link ETLogPublisher}
      */
-    @DslExtensionMethod(context = StepContext.class)
-    public Object publishLogs(final Runnable closure) {
-        final PublishLogContext context = new PublishLogContext();
+    @DslExtensionMethod(context = PublisherContext.class)
+    public Object publishETLogs(final Runnable closure) {
+        final PublishETLogContext context = new PublishETLogContext();
         executeInContext(closure, context);
         return new ETLogPublisher(context.allowMissing, context.runOnFailed, context.unstableOnWarning,
                 context.failedOnError);
@@ -174,7 +174,7 @@ public class ReportPublisherDslExtension extends AbstractReportBuilderDslExtensi
     /**
      * {@link Context} class providing ECU-TEST log publisher methods for the nested DSL context.
      */
-    public class PublishLogContext extends AbstractReportContext {
+    public class PublishETLogContext extends AbstractReportContext {
 
         private boolean unstableOnWarning;
         private boolean failedOnError;

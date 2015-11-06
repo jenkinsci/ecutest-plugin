@@ -44,7 +44,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.StopTSBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 
 /**
- * Class providing tool-related DSL extensions.
+ * Class providing tool related DSL extensions.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
@@ -220,13 +220,23 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
          * Option defining the custom TCP port.
          *
          * @param value
-         *            the value
+         *            the value as String
          */
         public void tcpPort(final String value) {
             Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TCP_PORT);
             final FormValidation validation = validator.validateTcpPort(value);
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
             tcpPort = value;
+        }
+
+        /**
+         * Option defining the custom TCP port.
+         *
+         * @param value
+         *            the value as Integer
+         */
+        public void tcpPort(final int value) {
+            tcpPort(String.valueOf((Object) value));
         }
     }
 

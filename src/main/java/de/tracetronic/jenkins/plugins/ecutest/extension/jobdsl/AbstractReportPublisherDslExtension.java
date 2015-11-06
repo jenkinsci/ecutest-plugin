@@ -37,15 +37,15 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class AbstractReportBuilderDslExtension extends AbstractDslExtension {
+public abstract class AbstractReportPublisherDslExtension extends AbstractDslExtension {
 
     /**
-     * Validator to check UNIT-related DSL options.
+     * Validator to check UNIT report related DSL options.
      */
     protected final JUnitValidator validator = new JUnitValidator();
 
     /**
-     * {@link Context} class providing common report-related methods for the nested DSL context.
+     * {@link Context} class providing common report related methods for the nested DSL context.
      */
     public abstract class AbstractReportContext implements Context {
 
