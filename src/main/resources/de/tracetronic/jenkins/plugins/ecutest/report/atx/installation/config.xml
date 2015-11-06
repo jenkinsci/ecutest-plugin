@@ -360,5 +360,23 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
+		<SETTING name="mapSubPackageAsTestCaseLevel" default="0"
+			xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">Legt die Tiefe fest, bis in welche SubPackages als Testfälle
+						erfasst werden sollen. Bei 0 (Standardwert) werden keine SubPackages erfasst.
+						</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">Depth to which sub packages will be recorded
+						as testcases. For 0 (default value) no sub packages are recorded.
+						</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
 	</SETTINGS>
 </REPORT-CONFIG>
