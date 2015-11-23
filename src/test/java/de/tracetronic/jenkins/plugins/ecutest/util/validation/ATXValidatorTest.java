@@ -169,19 +169,19 @@ public class ATXValidatorTest extends TestCase {
     @Test
     public void testValidSingleArchiveExpression() {
         final FormValidation validation = atxValidator.validateArchiveMiscFiles("myFile*.asc");
-        assertEquals("Valid single expression ", FormValidation.Kind.OK, validation.kind);
+        assertEquals("Valid single expression", FormValidation.Kind.OK, validation.kind);
     }
 
     @Test
     public void testValidMultiArchiveExpression() {
-        final FormValidation validation = atxValidator.validateArchiveMiscFiles("myFile*.asc;asc/**/myDirFile.*;");
-        assertEquals("Valid multiple expression ", FormValidation.Kind.OK, validation.kind);
+        final FormValidation validation = atxValidator.validateArchiveMiscFiles("myFile*.asc;asc/**/myDirFile.*;*;**");
+        assertEquals("Valid multiple expression", FormValidation.Kind.OK, validation.kind);
     }
 
     @Test
     public void testInvalidArchiveExpression() {
-        final FormValidation validation = atxValidator.validateArchiveMiscFiles("invalid");
-        assertEquals("Invalid archive expression ", FormValidation.Kind.ERROR, validation.kind);
+        final FormValidation validation = atxValidator.validateArchiveMiscFiles("-");
+        assertEquals("Invalid archive expression", FormValidation.Kind.ERROR, validation.kind);
     }
 
     // Validation of covered attributes
@@ -200,20 +200,26 @@ public class ATXValidatorTest extends TestCase {
     @Test
     public void testValidSingleAttributesExpression() {
         final FormValidation validation = atxValidator.validateCoveredAttributes("Testlevel");
-        assertEquals("Valid single expression ", FormValidation.Kind.OK, validation.kind);
+        assertEquals("Valid single expression", FormValidation.Kind.OK, validation.kind);
     }
 
     @Test
     public void testValidMultiAttributesExpression() {
         final FormValidation validation = atxValidator
                 .validateCoveredAttributes("Testlevel;Designer;Execution Priority;Estimated Duration [min];");
-        assertEquals("Valid multiple expression ", FormValidation.Kind.OK, validation.kind);
+        assertEquals("Valid multiple expression", FormValidation.Kind.OK, validation.kind);
+    }
+
+    @Test
+    public void testCustomAttributesExpression() {
+        final FormValidation validation = atxValidator.validateCoveredAttributes("Requirements IDs; Custom Attribute");
+        assertEquals("Custom archive expression", FormValidation.Kind.WARNING, validation.kind);
     }
 
     @Test
     public void testInvalidAttributesExpression() {
-        final FormValidation validation = atxValidator.validateCoveredAttributes("invalid");
-        assertEquals("Invalid archive expression ", FormValidation.Kind.ERROR, validation.kind);
+        final FormValidation validation = atxValidator.validateCoveredAttributes("-");
+        assertEquals("Invalid archive expression", FormValidation.Kind.WARNING, validation.kind);
     }
 
     // Validation of settings switch

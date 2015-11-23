@@ -29,6 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
+import hudson.Util;
 import hudson.util.FormValidation;
 
 import java.io.BufferedReader;
@@ -141,9 +142,14 @@ public class ATXValidator extends AbstractValidator {
      */
     public FormValidation validateArchiveMiscFiles(final String expression) {
         FormValidation returnValue = FormValidation.ok();
-        final String pattern = "([A-Za-z0-9/\\*]+\\.[A-Za-z0-9\\*]+(\\;|$))+";
-        if (!StringUtils.isEmpty(expression) && !Pattern.matches(pattern, expression)) {
-            returnValue = FormValidation.error(Messages.ATXPublisher_InvalidFileExpression());
+        final String pattern = "[A-Za-z0-9./\\*]+";
+        if (!StringUtils.isEmpty(expression)) {
+            for (final String token : Util.tokenize(expression, ";")) {
+                if (!Pattern.matches(pattern, token)) {
+                    returnValue = FormValidation.error(Messages.ATXPublisher_InvalidFileExpression());
+                    break;
+                }
+            }
         }
         return returnValue;
     }
@@ -157,11 +163,16 @@ public class ATXValidator extends AbstractValidator {
      */
     public FormValidation validateCoveredAttributes(final String expression) {
         FormValidation returnValue = FormValidation.ok();
-        final String pattern = "((Designer|Name|Status|Testlevel|Tools|VersionCounter|"
+        final String pattern = "(Designer|Name|Status|Testlevel|Tools|VersionCounter|"
                 + "Design Contact|Design Department|Estimated Duration \\[min\\]|"
-                + "Execution Priority|Test Comment)(\\;|$))+";
-        if (!StringUtils.isEmpty(expression) && !Pattern.matches(pattern, expression)) {
-            returnValue = FormValidation.error(Messages.ATXPublisher_InvalidAttributeExpression());
+                + "Execution Priority|Test Comment)";
+        if (!StringUtils.isEmpty(expression)) {
+            for (final String token : Util.tokenize(expression, ";")) {
+                if (!Pattern.matches(pattern, token)) {
+                    returnValue = FormValidation.warning(Messages.ATXPublisher_CustomAttributeExpression());
+                    break;
+                }
+            }
         }
         return returnValue;
     }
