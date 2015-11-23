@@ -106,7 +106,7 @@
 
         <!-- Static code analysis -->
         <maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
-        <maven-findbugs-plugin.version>3.0.2</maven-findbugs-plugin.version>
+        <maven-findbugs-plugin.version>3.0.3</maven-findbugs-plugin.version>
         <maven-pmd-plugin.version>3.5</maven-pmd-plugin.version>
 
         <!-- ANTLR -->
