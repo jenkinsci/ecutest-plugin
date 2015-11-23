@@ -76,6 +76,18 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     }
 
     /**
+     * {@link DslExtensionMethod} providing the start up of ECU-TEST with default settings.
+     *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
+     * @return the instance of a {@link StartETBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object startET(final String toolName) {
+        return startET(toolName, null);
+    }
+
+    /**
      * {@link DslExtensionMethod} providing the shut down of ECU-TEST.
      *
      * @param toolName
@@ -94,6 +106,18 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         final StopETBuilder builder = new StopETBuilder(toolName, context.timeout);
         Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
         return builder;
+    }
+
+    /**
+     * {@link DslExtensionMethod} providing the shut down of ECU-TEST with default settings.
+     *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
+     * @return the instance of a {@link StopETBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object stopET(final String toolName) {
+        return stopET(toolName, null);
     }
 
     /**
@@ -119,6 +143,18 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     }
 
     /**
+     * {@link DslExtensionMethod} providing the start up of the Tool-Server with default settings.
+     *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
+     * @return the instance of a {@link StartTSBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object startTS(final String toolName) {
+        return startTS(toolName, null);
+    }
+
+    /**
      * {@link DslExtensionMethod} providing the shut down of the Tool-Server.
      *
      * @param toolName
@@ -137,6 +173,18 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         final StopTSBuilder builder = new StopTSBuilder(toolName, context.timeout);
         Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
         return builder;
+    }
+
+    /**
+     * {@link DslExtensionMethod} providing the shut down of the Tool-Server with default settings.
+     *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
+     * @return the instance of a {@link StopTSBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object stopTS(final String toolName) {
+        return stopTS(toolName, null);
     }
 
     /**

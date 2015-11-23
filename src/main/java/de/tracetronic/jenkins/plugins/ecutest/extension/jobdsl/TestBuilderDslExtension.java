@@ -78,6 +78,18 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
     }
 
     /**
+     * {@link DslExtensionMethod} providing the execution of an ECU-TEST package with default settings.
+     *
+     * @param pkgFile
+     *            the package file
+     * @return the instance of a {@link TestPackageBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object testPackage(final String pkgFile) {
+        return testPackage(pkgFile, null);
+    }
+
+    /**
      * {@link DslExtensionMethod} providing the execution of an ECU-TEST project.
      *
      * @param prjFile
@@ -95,6 +107,18 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
 
         return new TestProjectBuilder(prjFile, context.testConfig, context.projectConfig,
                 context.executionConfig);
+    }
+
+    /**
+     * {@link DslExtensionMethod} providing the execution of an ECU-TEST project with default settings.
+     *
+     * @param prjFile
+     *            the project file
+     * @return the instance of a {@link TestProjectBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object testProject(final String prjFile) {
+        return testProject(prjFile, null);
     }
 
     /**
@@ -116,6 +140,19 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
 
         return new TestFolderBuilder(testFolder, context.scanMode, context.recursiveScan, context.testConfig,
                 context.packageConfig, context.projectConfig, context.executionConfig);
+    }
+
+    /**
+     * {@link DslExtensionMethod} providing the execution of ECU-TEST
+     * packages and projects inside of a test folder with default settings.
+     *
+     * @param testFolder
+     *            the test folder
+     * @return the instance of a {@link TestFolderBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object testFolder(final String testFolder) {
+        return testFolder(testFolder, null);
     }
 
     /**

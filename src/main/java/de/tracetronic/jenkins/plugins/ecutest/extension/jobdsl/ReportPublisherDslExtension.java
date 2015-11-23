@@ -76,6 +76,18 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     }
 
     /**
+     * {@link DslExtensionMethod} for publishing ATX reports with default settings.
+     *
+     * @param atxName
+     *            the tool name identifying the {@link ATXInstallation} to be used
+     * @return the instance of a {@link ATXPublisher}
+     */
+    @DslExtensionMethod(context = PublisherContext.class)
+    public Object publishATX(final String atxName) {
+        return publishATX(atxName, null);
+    }
+
+    /**
      * {@link DslExtensionMethod} for publishing UNIT reports.
      *
      * @param toolName
@@ -98,6 +110,18 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     }
 
     /**
+     * {@link DslExtensionMethod} for publishing UNIT reports with default settings.
+     *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
+     * @return the instance of a {@link JUnitPublisher}
+     */
+    @DslExtensionMethod(context = PublisherContext.class)
+    public Object publishUNIT(final String toolName) {
+        return publishUNIT(toolName, null);
+    }
+
+    /**
      * {@link DslExtensionMethod} for publishing TRF reports.
      *
      * @param closure
@@ -109,6 +133,16 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         final PublishTRFContext context = new PublishTRFContext();
         executeInContext(closure, context);
         return new TRFPublisher(context.allowMissing, context.runOnFailed);
+    }
+
+    /**
+     * {@link DslExtensionMethod} for publishing TRF reports with default settings.
+     *
+     * @return the instance of a {@link TRFPublisher}
+     */
+    @DslExtensionMethod(context = PublisherContext.class)
+    public Object publishTRF() {
+        return publishTRF(null);
     }
 
     /**
@@ -124,6 +158,16 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         executeInContext(closure, context);
         return new ETLogPublisher(context.allowMissing, context.runOnFailed, context.unstableOnWarning,
                 context.failedOnError);
+    }
+
+    /**
+     * {@link DslExtensionMethod} for publishing ECU-TEST logs with default settings.
+     *
+     * @return the instance of a {@link ETLogPublisher}
+     */
+    @DslExtensionMethod(context = PublisherContext.class)
+    public Object publishETLogs() {
+        return publishETLogs(null);
     }
 
     /**
