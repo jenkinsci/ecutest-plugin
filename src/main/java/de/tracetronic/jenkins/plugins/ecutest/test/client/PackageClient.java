@@ -88,7 +88,7 @@ public class PackageClient extends AbstractTestClient {
 
     @Override
     public boolean runTestCase(final Launcher launcher, final BuildListener listener) throws IOException,
-            InterruptedException {
+    InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -244,6 +244,10 @@ public class PackageClient extends AbstractTestClient {
                         .getAbsolutePath();
                 logger.logInfo(String.format("-> Test report directory: %s", testReportDir));
                 testInfo = new TestInfoHolder(testResult, testReportDir);
+
+                if (!comClient.waitForIdle(timeout)) {
+                    throw new TimeoutException("Post-execution timeout reached!");
+                }
             } catch (final ETComException e) {
                 logger.logError("Caught ComException: " + e.getMessage());
             } catch (final InterruptedException e) {

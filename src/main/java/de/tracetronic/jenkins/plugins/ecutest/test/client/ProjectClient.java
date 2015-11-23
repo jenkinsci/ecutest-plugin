@@ -241,6 +241,10 @@ public class ProjectClient extends AbstractTestClient {
                         .getAbsolutePath();
                 logger.logInfo(String.format("-> Test report directory: %s", testReportDir));
                 testInfo = new TestInfoHolder(testResult, testReportDir);
+
+                if (!comClient.waitForIdle(timeout)) {
+                    throw new TimeoutException("Post-execution timeout reached!");
+                }
             } catch (final ETComException e) {
                 logger.logError("Caught ComException: " + e.getMessage());
             } catch (final TimeoutException e) {
