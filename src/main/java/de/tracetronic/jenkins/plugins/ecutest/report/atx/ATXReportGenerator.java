@@ -153,7 +153,8 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      */
     private int traverseReports(final List<ATXZipReport> atxReports, final FilePath archiveTargetDir, int id)
             throws IOException, InterruptedException {
-        final FilePath[] zipFiles = archiveTargetDir.list(ATX_TEMPLATE_NAME + "/*.zip");
+        final FilePath[] zipFiles = archiveTargetDir.list(String.format("%s/%s.zip", ATX_TEMPLATE_NAME,
+                archiveTargetDir.getName()));
         if (zipFiles.length == 1) {
             final FilePath zipFile = zipFiles[0];
             final String relFilePath = archiveTargetDir.getParent().toURI().relativize(zipFile.toURI())
@@ -189,7 +190,8 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
     private int traverseSubReports(final ATXZipReport atxReport, final FilePath testReportDir,
             final FilePath subTestReportDir, int id) throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
-            final FilePath[] reportFiles = subDir.list(ATX_TEMPLATE_NAME + "/*.zip");
+            final FilePath[] reportFiles = subDir.list(String.format("%s/%s.zip", ATX_TEMPLATE_NAME,
+                    subDir.getName()));
             if (reportFiles.length == 1) {
                 // Prepare ATX report information for sub-report
                 final FilePath reportFile = reportFiles[0];
@@ -197,8 +199,9 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
                 final String relFilePath = testReportDir.toURI().relativize(reportFile.toURI()).getPath();
                 final ATXZipReport subReport = new ATXZipReport(String.format("%d", ++id), fileName, relFilePath,
                         reportFile.length());
-
                 atxReport.addSubReport(subReport);
+
+                // Search for sub-reports
                 id = traverseSubReports(subReport, testReportDir, subDir, id);
             }
         }
