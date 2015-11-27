@@ -36,6 +36,8 @@ import hudson.console.ConsoleAnnotator;
 import hudson.console.ConsoleNote;
 import hudson.model.Run;
 
+import java.util.Arrays;
+
 /**
  * Annotator which adds color highlighting. There are currently three message categories: error, staring with
  * <i>ERROR:</i> prefix, warning starting with <i>WARN:</i>and info, which starts with <i>INFO:</i> prefix.
@@ -49,16 +51,49 @@ public class TTConsoleNote extends ConsoleNote<Run<?, ?>> {
     @Override
     public ConsoleAnnotator<Run<?, ?>> annotate(final Run<?, ?> context, final MarkupText text,
             final int charPos) {
-        if (text.getText().contains("ERROR:")) {
-            text.addMarkup(0, text.length(), "<span style=\"font-weight: bold; color:red\">", "</span>");
+        final String plainText = text.getText();
+        if (plainText.contains("ERROR:")) {
+            text.addMarkup(0, text.length(), "<span style=\"font-weight: bold; color:#FF0000\">", "</span>");
         }
-        if (text.getText().contains("WARN:")) {
+        if (plainText.contains("WARN:")) {
             text.addMarkup(0, text.length(), "<span style=\"color:#ED8B00\">", "</span>");
         }
-        if (text.getText().contains("INFO:")) {
+        if (plainText.contains("INFO:")) {
             text.addMarkup(0, text.length(), "<span style=\"color:#208CA3\">", "</span>");
         }
+        addResultMarkup(text);
         return null;
+    }
+
+    /**
+     * Adds markup for the test result part of the console log.
+     *
+     * @param text
+     *            the text
+     */
+    private void addResultMarkup(final MarkupText text) {
+        final String plainText = text.getText();
+        for (final String result : Arrays.asList("NONE", "INCONCLUSIVE", "SUCCESS", "FAILED", "ERROR")) {
+            if (plainText.contains(result)) {
+                final int startPos = plainText.indexOf(result);
+                final int endPos = startPos + result.length();
+                String color;
+                if ("NONE".equals(result)) {
+                    color = "#63666A";
+                } else if ("INCONCLUSIVE".equals(result)) {
+                    color = "#ED8B00";
+                } else if ("SUCCESS".equals(result)) {
+                    color = "#A1C057";
+                } else if ("FAILED".equals(result)) {
+                    color = "#F25757";
+                } else if ("ERROR".equals(result)) {
+                    color = "#B40000";
+                } else {
+                    color = "#208CA3";
+                }
+                text.addMarkup(startPos, endPos, "<span style=\"color:" + color + "\">", "</span>");
+            }
+        }
     }
 
     /**
