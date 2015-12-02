@@ -220,6 +220,10 @@ public abstract class AbstractTestClient implements TestClient {
                     tcfName = new File(tcfFile).getName();
                 }
                 logger.logInfo(String.format("- Loading test configuration: TBC=%s TCF=%s", tbcName, tcfName));
+                if (testConfig.isForceReload()) {
+                    logger.logInfo("-> Forcing reload...");
+                    comClient.stop();
+                }
                 if (comClient.openTestConfiguration(tcfFile)) {
                     if (tcfFile != null && !constants.isEmpty()) {
                         comClient.start();
@@ -232,6 +236,7 @@ public abstract class AbstractTestClient implements TestClient {
                         }
                         // Reload test configuration
                         comClient.openTestConfiguration(tcfFile);
+                        comClient.stop();
                     }
                 } else {
                     logger.logError(String.format("-> Loading TCF=%s failed!", tcfName));

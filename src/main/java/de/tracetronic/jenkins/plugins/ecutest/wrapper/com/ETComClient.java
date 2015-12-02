@@ -192,6 +192,11 @@ public class ETComClient implements ComApplication, AutoCloseable {
     }
 
     @Override
+    public ComTestEnvironment stop() throws ETComException {
+        return new TestEnvironment(dispatch.performRequest("Stop").toDispatch());
+    }
+
+    @Override
     public ComTestEnvironment getTestEnvironment() throws ETComException {
         return new TestEnvironment(dispatch.performRequest("GetTestEnvironment").toDispatch());
     }

@@ -231,7 +231,8 @@ public abstract class AbstractTestBuilder extends Builder {
         }
 
         // Set expanded test configuration
-        expTestConfig = new TestConfig(expTbcFilePath, expTcfFilePath, expTestConfig.getConstants());
+        expTestConfig = new TestConfig(expTbcFilePath, expTcfFilePath, expTestConfig.isForceReload(),
+                expTestConfig.getConstants());
 
         // Run tests
         return runTest(expTestFilePath, expTestConfig, expExecConfig, build, launcher, listener);
@@ -276,7 +277,7 @@ public abstract class AbstractTestBuilder extends Builder {
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean checkETInstance(final Launcher launcher, final boolean kill) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }
@@ -295,7 +296,7 @@ public abstract class AbstractTestBuilder extends Builder {
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean checkTSInstance(final Launcher launcher, final boolean kill) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final List<String> foundProcesses = TSClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }

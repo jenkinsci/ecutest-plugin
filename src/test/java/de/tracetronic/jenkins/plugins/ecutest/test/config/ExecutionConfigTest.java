@@ -72,6 +72,13 @@ public class ExecutionConfigTest {
         assertThat(config.expand(envVars).getTimeout(), is(60));
     }
 
+    @SuppressWarnings("deprecation")
+    @Test
+    public void testCompatibility() {
+        final ExecutionConfig config = new ExecutionConfig(60, true);
+        assertTrue(config.isCheckTestFile());
+    }
+
     @Test
     public void testHashCodeAndEquals() {
         EqualsVerifier.forClass(ExecutionConfig.class).verify();

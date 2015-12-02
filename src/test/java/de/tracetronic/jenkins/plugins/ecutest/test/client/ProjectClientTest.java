@@ -65,7 +65,7 @@ public class ProjectClientTest {
 
     @Test
     public void testNullConstructor() {
-        final TestConfig testConfig = new TestConfig(null, null, null);
+        final TestConfig testConfig = new TestConfig(null, null, false, null);
         final ProjectConfig projectConfig = new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(30, true, true);
         final ProjectClient client = new ProjectClient(null, testConfig, projectConfig, executionConfig);
@@ -73,6 +73,7 @@ public class ProjectClientTest {
         assertEquals("", client.getTestFile());
         assertEquals("", client.getTestConfig().getTbcFile());
         assertEquals("", client.getTestConfig().getTcfFile());
+        assertFalse(client.getTestConfig().isForceReload());
         assertTrue(client.getTestConfig().getConstants().isEmpty());
         assertEquals("", client.getTestName());
         assertEquals("", client.getTestDescription());

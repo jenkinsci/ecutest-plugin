@@ -84,7 +84,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
         public void testConfig(final Runnable closure) {
             final TestConfigContext context = new TestConfigContext();
             executeInContext(closure, context);
-            testConfig = new TestConfig(context.tbcFile, context.tcfFile, context.constants);
+            testConfig = new TestConfig(context.tbcFile, context.tcfFile, context.forceReload, context.constants);
         }
 
         /**
@@ -111,6 +111,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
 
             private String tbcFile;
             private String tcfFile;
+            private boolean forceReload;
             private List<GlobalConstant> constants;
 
             /**
@@ -137,6 +138,16 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
                 final FormValidation validation = validator.validateTcfFile(value);
                 Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
                 tcfFile = value;
+            }
+
+            /**
+             * Option defining whether to force reloading the current test configuration.
+             *
+             * @param value
+             *            the value
+             */
+            public void forceReload(final boolean value) {
+                forceReload = value;
             }
 
             /**

@@ -37,8 +37,10 @@
         <f:entry title="${%runTraceAnalysis.title}" description="${%runTraceAnalysis.description}" field="runTraceAnalysis">
             <f:checkbox default="true" />
         </f:entry>
-        <f:entry title="${%parameters.title}" description="${%parameters.description}" field="parameters">
-            <f:repeatableProperty field="parameters" add="${%parameters.add}" minimum="0" />
-        </f:entry>
+        <f:advanced title="${%parameters.advanced}">
+            <f:entry title="${%parameters.title}" description="${%parameters.description}" field="parameters">
+                <f:repeatableProperty field="parameters" add="${%parameters.add}" minimum="0" />
+            </f:entry>
+        </f:advanced>
     </f:section>
 </j:jelly>

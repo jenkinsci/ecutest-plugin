@@ -30,6 +30,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import hudson.EnvVars;
@@ -50,9 +51,10 @@ public class TestConfigTest {
 
     @Test
     public void testNullConstructor() {
-        final TestConfig config = new TestConfig(null, null, null);
+        final TestConfig config = new TestConfig(null, null, false, null);
         assertThat(config.getTbcFile(), is(""));
         assertThat(config.getTcfFile(), is(""));
+        assertFalse(config.isForceReload());
         assertTrue(config.getConstants().isEmpty());
     }
 
@@ -60,7 +62,7 @@ public class TestConfigTest {
     public void testExpand() {
         final List<GlobalConstant> constants = new ArrayList<GlobalConstant>();
         constants.add(new GlobalConstant("${NAME}", "${VALUE}"));
-        final TestConfig config = new TestConfig("${TBC}", "${TCF}", constants);
+        final TestConfig config = new TestConfig("${TBC}", "${TCF}", false, constants);
         final EnvVars envVars = new EnvVars();
         envVars.put("TBC", "test.tbc");
         envVars.put("TCF", "test.tcf");
@@ -69,8 +71,16 @@ public class TestConfigTest {
         final TestConfig expConfig = config.expand(envVars);
         assertThat(expConfig.getTbcFile(), is("test.tbc"));
         assertThat(expConfig.getTcfFile(), is("test.tcf"));
+        assertFalse(config.isForceReload());
         assertThat(expConfig.getConstants().get(0).getName(), is("name"));
         assertThat(expConfig.getConstants().get(0).getValue(), is("value"));
+    }
+
+    @SuppressWarnings("deprecation")
+    @Test
+    public void testCompatibility() {
+        final TestConfig config = new TestConfig(null, null, null);
+        assertFalse(config.isForceReload());
     }
 
     @Test

@@ -30,6 +30,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -63,7 +64,7 @@ public class PackageClientTest {
 
     @Test
     public void testNullConstructor() {
-        final TestConfig testConfig = new TestConfig(null, null, null);
+        final TestConfig testConfig = new TestConfig(null, null, false, null);
         final PackageConfig packageConfig = new PackageConfig(true, true, null);
         final ExecutionConfig executionConfig = new ExecutionConfig(30, true, true);
         final PackageClient client = new PackageClient(null, testConfig, packageConfig, executionConfig);
@@ -71,6 +72,7 @@ public class PackageClientTest {
         assertEquals("", client.getTestFile());
         assertEquals("", client.getTestConfig().getTbcFile());
         assertEquals("", client.getTestConfig().getTcfFile());
+        assertFalse(client.getTestConfig().isForceReload());
         assertTrue(client.getTestConfig().getConstants().isEmpty());
         assertEquals("", client.getTestName());
         assertEquals("", client.getTestDescription());

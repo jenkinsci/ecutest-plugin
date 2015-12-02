@@ -34,6 +34,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import hudson.model.Descriptor;
 import hudson.model.FreeStyleProject;
 import hudson.tasks.Builder;
@@ -126,6 +127,7 @@ public class TestBuilderDslExtensionST extends AbstractDslExtensionST {
         assertNotNull("Test configuration should exist", config);
         assertThat(config.getTbcFile(), is("test.tbc"));
         assertThat(config.getTcfFile(), is("test.tcf"));
+        assertTrue(config.isForceReload());
         testGlobalConstantsWithDsl(config.getConstants());
     }
 

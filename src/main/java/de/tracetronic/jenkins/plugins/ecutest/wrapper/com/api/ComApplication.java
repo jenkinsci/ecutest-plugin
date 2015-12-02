@@ -48,6 +48,15 @@ public interface ComApplication {
     ComTestEnvironment start() throws ETComException;
 
     /**
+     * Stops the currently loaded test configuration and testbench configuration files.
+     *
+     * @return the {@link ComTestEnvironment} dispatch
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    ComTestEnvironment stop() throws ETComException;
+
+    /**
      * Returns the test environment.
      *
      * @return the {@link ComTestEnvironment} dispatch

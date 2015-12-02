@@ -66,7 +66,7 @@ public class TestProjectBuilderST extends SystemTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
+        final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true);
         final ProjectConfig projectConfig = new ProjectConfig(true, "filter", JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final TestProjectBuilder builder = new TestProjectBuilder("test.prj", testConfig, projectConfig,
@@ -83,6 +83,7 @@ public class TestProjectBuilderST extends SystemTestBase {
         WebAssert.assertInputContainsValue(page, "_.tcfFile", "test.tcf");
         WebAssert.assertInputPresent(page, "_.tcfFile");
         WebAssert.assertInputContainsValue(page, "_.tcfFile", "test.tcf");
+        jenkins.assertXPath(page, "//input[@name='_.forceReload' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.execInCurrentPkgDir' and @checked='true']");
         WebAssert.assertInputPresent(page, "_.filterExpression");
         WebAssert.assertInputContainsValue(page, "_.filterExpression", "filter");
