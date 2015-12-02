@@ -52,7 +52,7 @@ public class TestProjectBuilderTest {
     public void testBlankConfigShouldReturnDefaults() {
         final TestConfig testConfig = new TestConfig("", "");
         final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig("", true);
+        final ExecutionConfig executionConfig = new ExecutionConfig("", true, true);
         final TestProjectBuilder builder = new TestProjectBuilder("", testConfig, projectConfig, executionConfig);
         assertEquals("Check default timeout", ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig()
                 .getTimeout());
@@ -62,7 +62,7 @@ public class TestProjectBuilderTest {
     public void testNull() {
         final TestConfig testConfig = new TestConfig(null, null, null);
         final ProjectConfig projectConfig = new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(null, false);
+        final ExecutionConfig executionConfig = new ExecutionConfig(null, false, false);
         final TestProjectBuilder builder = new TestProjectBuilder("", testConfig, projectConfig, executionConfig);
         assertNotNull(builder);
         assertNotNull(builder.getTestFile());
@@ -80,5 +80,6 @@ public class TestProjectBuilderTest {
         assertEquals("Check default timeout", ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig()
                 .getTimeout());
         assertFalse(builder.getExecutionConfig().isStopOnError());
+        assertFalse(builder.getExecutionConfig().isCheckTestFile());
     }
 }

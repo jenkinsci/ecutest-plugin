@@ -51,7 +51,7 @@ public class TestPackageBuilderTest {
     public void testBlankConfigShouldReturnDefaults() {
         final TestConfig testConfig = new TestConfig("", "");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig("", true);
+        final ExecutionConfig executionConfig = new ExecutionConfig("", true, true);
         final TestPackageBuilder builder = new TestPackageBuilder("", testConfig, packageConfig, executionConfig);
         assertEquals("Check default timeout", ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig()
                 .getTimeout());
@@ -61,7 +61,7 @@ public class TestPackageBuilderTest {
     public void testNull() {
         final TestConfig testConfig = new TestConfig(null, null, null);
         final PackageConfig packageConfig = new PackageConfig(true, true, null);
-        final ExecutionConfig executionConfig = new ExecutionConfig(null, false);
+        final ExecutionConfig executionConfig = new ExecutionConfig(null, false, false);
         final TestPackageBuilder builder = new TestPackageBuilder(null, testConfig, packageConfig, executionConfig);
         assertNotNull(builder);
         assertNotNull(builder.getTestFile());
@@ -75,9 +75,9 @@ public class TestPackageBuilderTest {
         assertTrue(builder.getPackageConfig().isRunTraceAnalysis());
         assertNotNull(builder.getPackageConfig().getParameters());
         assertNotNull(builder.getExecutionConfig().getTimeout());
-        builder.getExecutionConfig();
         assertEquals("Check default timeout", ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig()
                 .getTimeout());
         assertFalse(builder.getExecutionConfig().isStopOnError());
+        assertFalse(builder.getExecutionConfig().isCheckTestFile());
     }
 }

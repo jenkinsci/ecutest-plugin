@@ -65,7 +65,7 @@ public class TestEnvActionViewST extends SystemTestBase {
         final int testId = 0;
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final PackageClient packageClient = new PackageClient("test.pkg", testConfig, packageConfig, executionConfig);
         final TestEnvInvisibleAction testEnvAction = new TestEnvInvisibleAction(testId, packageClient);
         final FreeStyleBuild build = jenkins.createFreeStyleProject()

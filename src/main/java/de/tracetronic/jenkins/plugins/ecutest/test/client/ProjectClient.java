@@ -35,11 +35,13 @@ import hudson.remoting.Callable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.io.FilenameUtils;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder.Seriousness;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
@@ -86,7 +88,7 @@ public class ProjectClient extends AbstractTestClient {
 
     @Override
     public boolean runTestCase(final Launcher launcher, final BuildListener listener) throws IOException,
-            InterruptedException {
+    InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -101,8 +103,10 @@ public class ProjectClient extends AbstractTestClient {
             return false;
         }
 
-        // Open project
-        if (!launcher.getChannel().call(new OpenProjectCallable(getTestFile(), getProjectConfig(), listener))) {
+        // Open and check project
+        if (!launcher.getChannel().call(
+                new OpenProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig().isCheckTestFile(),
+                        listener))) {
             return false;
         }
 
@@ -139,6 +143,7 @@ public class ProjectClient extends AbstractTestClient {
 
         private final String projectFile;
         private final ProjectConfig projectConfig;
+        private final boolean checkTestFile;
         private final BuildListener listener;
 
         /**
@@ -148,13 +153,16 @@ public class ProjectClient extends AbstractTestClient {
          *            the project file
          * @param projectConfig
          *            the project configuration
+         * @param checkTestFile
+         *            specifies whether to check the project file
          * @param listener
          *            the listener
          */
         OpenProjectCallable(final String projectFile, final ProjectConfig projectConfig,
-                final BuildListener listener) {
+                final boolean checkTestFile, final BuildListener listener) {
             this.projectFile = projectFile;
             this.projectConfig = projectConfig;
+            this.checkTestFile = checkTestFile;
             this.listener = listener;
         }
 
@@ -169,6 +177,32 @@ public class ProjectClient extends AbstractTestClient {
                     Project project = (Project) comClient.openProject(projectFile, execInCurrentPkgDir,
                             filterExpression)) {
                 logger.logInfo("-> Project opened successfully.");
+                if (checkTestFile) {
+                    logger.logInfo("- Checking project...");
+                    final List<CheckInfoHolder> checks = project.check();
+                    for (final CheckInfoHolder check : checks) {
+                        final String logMessage = String.format("%s (line %s): %s", check.getFilePath(),
+                                check.getLineNumber(), check.getErrorMessage());
+                        final Seriousness seriousness = check.getSeriousness();
+                        switch (seriousness) {
+                            case NOTE:
+                                logger.logInfo(logMessage);
+                                break;
+                            case WARNING:
+                                logger.logWarn(logMessage);
+                                break;
+                            case ERROR:
+                                logger.logError(logMessage);
+                                isOpened = false;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    if (checks.isEmpty()) {
+                        logger.logInfo("-> Project validated successfully!");
+                    }
+                }
             } catch (final ETComException e) {
                 isOpened = false;
                 logger.logError("-> Opening project failed!");

@@ -33,7 +33,7 @@
     <f:entry title="${%testFile.title}" description="${%testFile.description}" field="testFile">
         <f:textbox />
     </f:entry>
-    <f:entry title="${%scanMode.title}" description="${%scanMode.description}" field="scanMode" >
+    <f:entry title="${%scanMode.title}" description="${%scanMode.description}" field="scanMode">
        <f:select default="${descriptor.defaultScanMode}" />
     </f:entry>
     <f:entry title="${%recursiveScan.title}" description="${%recursiveScan.description}" field="recursiveScan">

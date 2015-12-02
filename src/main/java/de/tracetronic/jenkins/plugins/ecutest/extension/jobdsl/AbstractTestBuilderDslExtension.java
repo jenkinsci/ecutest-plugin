@@ -96,7 +96,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
         public void executionConfig(final Runnable closure) {
             final ExecutionConfigContext context = new ExecutionConfigContext();
             executeInContext(closure, context);
-            executionConfig = new ExecutionConfig(context.timeout, context.stopOnError);
+            executionConfig = new ExecutionConfig(context.timeout, context.stopOnError, context.checkTestFile);
         }
 
         /**
@@ -236,6 +236,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
 
             private String timeout;
             private boolean stopOnError = true;
+            private boolean checkTestFile = true;
 
             /**
              * Option defining the timeout.
@@ -268,6 +269,16 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
              */
             public void stopOnError(final boolean value) {
                 stopOnError = value;
+            }
+
+            /**
+             * Option defining whether to pre-check the package and project files.
+             *
+             * @param value
+             *            the value
+             */
+            public void checkTestFile(final boolean value) {
+                checkTestFile = value;
             }
         }
     }

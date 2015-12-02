@@ -26,6 +26,7 @@ freeStyleJob("testBuilder") {
             executionConfig {
                 timeout("600")
                 stopOnError(false)
+                checkTestFile(false)
             }
         }
         testProject("test.prj") {
@@ -48,6 +49,7 @@ freeStyleJob("testBuilder") {
             executionConfig {
                 timeout(600)
                 stopOnError(false)
+                checkTestFile(false)
             }
         }
         testFolder("test") {
@@ -83,6 +85,7 @@ freeStyleJob("testBuilder") {
             executionConfig {
                 timeout("600")
                 stopOnError(false)
+                checkTestFile(false)
             }
         }
     }

@@ -59,7 +59,7 @@ public class TestFolderBuilderST extends SystemTestBase {
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
         final PackageConfig packageConfig = new PackageConfig(true, true);
         final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, false);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final TestFolderBuilder before = new TestFolderBuilder("tests", TestFolderBuilder.DEFAULT_SCANMODE, false,
                 testConfig, packageConfig, projectConfig, executionConfig);
         final TestFolderBuilder after = jenkins.configRoundtrip(before);
@@ -73,7 +73,7 @@ public class TestFolderBuilderST extends SystemTestBase {
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
         final PackageConfig packageConfig = new PackageConfig(true, true);
         final ProjectConfig projectConfig = new ProjectConfig(true, "filter", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final TestFolderBuilder builder = new TestFolderBuilder("tests", TestFolderBuilder.DEFAULT_SCANMODE, true,
                 testConfig, packageConfig, projectConfig, executionConfig);
         project.getBuildersList().add(builder);
@@ -95,6 +95,7 @@ public class TestFolderBuilderST extends SystemTestBase {
         WebAssert.assertInputPresent(page, "_.timeout");
         WebAssert.assertInputContainsValue(page, "_.timeout", "600");
         jenkins.assertXPath(page, "//input[@name='_.stopOnError' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.checkTestFile' and @checked='true']");
     }
 
     @Test
@@ -103,7 +104,7 @@ public class TestFolderBuilderST extends SystemTestBase {
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
         final PackageConfig packageConfig = new PackageConfig(true, true);
         final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, false);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final TestFolderBuilder builder = new TestFolderBuilder("tests", TestFolderBuilder.DEFAULT_SCANMODE, false,
                 testConfig, packageConfig, projectConfig, executionConfig);
         project.getBuildersList().add(builder);

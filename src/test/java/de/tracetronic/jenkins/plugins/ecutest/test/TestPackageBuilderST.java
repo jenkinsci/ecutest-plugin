@@ -56,7 +56,7 @@ public class TestPackageBuilderST extends SystemTestBase {
     public void testRoundTripConfig() throws Exception {
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final TestPackageBuilder before = new TestPackageBuilder("test.pkg", testConfig, packageConfig, executionConfig);
         final TestPackageBuilder after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after, "testFile,testConfig,packageConfig,executionConfig");
@@ -67,7 +67,7 @@ public class TestPackageBuilderST extends SystemTestBase {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final TestPackageBuilder builder = new TestPackageBuilder("test.pkg", testConfig, packageConfig,
                 executionConfig);
         project.getBuildersList().add(builder);
@@ -85,6 +85,7 @@ public class TestPackageBuilderST extends SystemTestBase {
         WebAssert.assertInputPresent(page, "_.timeout");
         WebAssert.assertInputContainsValue(page, "_.timeout", "600");
         jenkins.assertXPath(page, "//input[@name='_.stopOnError' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.checkTestFile' and @checked='true']");
     }
 
     @Test
@@ -92,7 +93,7 @@ public class TestPackageBuilderST extends SystemTestBase {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final TestPackageBuilder builder = new TestPackageBuilder("test.pkg", testConfig, packageConfig,
                 executionConfig);
         project.getBuildersList().add(builder);

@@ -79,7 +79,7 @@ public class JUnitTestResultParserST extends SystemTestBase {
 
         final TestConfig testConfig = new TestConfig("", "");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final PackageClient packageClient = new PackageClient("test.pkg", testConfig, packageConfig, executionConfig);
         packageClient.setTestReportDir("notfound");
         final TestEnvInvisibleAction testEnvAction = new TestEnvInvisibleAction(0, packageClient);
@@ -104,7 +104,7 @@ public class JUnitTestResultParserST extends SystemTestBase {
 
         final TestConfig testConfig = new TestConfig("", "");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final PackageClient packageClient = new PackageClient("", testConfig, packageConfig, executionConfig);
         packageClient.setTestReportDir(testReportDir.getAbsolutePath());
         final TestEnvInvisibleAction testEnvAction = new TestEnvInvisibleAction(0, packageClient);
@@ -129,7 +129,7 @@ public class JUnitTestResultParserST extends SystemTestBase {
 
         final TestConfig testConfig = new TestConfig("", "");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final PackageClient packageClient = new PackageClient("", testConfig, packageConfig, executionConfig);
         packageClient.setTestReportDir(testReportDir.getAbsolutePath());
         final TestEnvInvisibleAction testEnvAction = new TestEnvInvisibleAction(0, packageClient);
@@ -154,7 +154,7 @@ public class JUnitTestResultParserST extends SystemTestBase {
 
         final TestConfig testConfig = new TestConfig("", "");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final PackageClient packageClient = new PackageClient("", testConfig, packageConfig, executionConfig);
         packageClient.setTestReportDir(testReportDir.getAbsolutePath());
         final TestEnvInvisibleAction testEnvAction = new TestEnvInvisibleAction(0, packageClient);

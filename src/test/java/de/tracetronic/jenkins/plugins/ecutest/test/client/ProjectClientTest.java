@@ -52,7 +52,7 @@ public class ProjectClientTest {
     public void testBlankConstructor() {
         final TestConfig testConfig = new TestConfig("", "");
         final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(0, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(0, true, true);
         final ProjectClient client = new ProjectClient("", testConfig, projectConfig, executionConfig);
         assertEquals("", client.getTestFile());
         assertEquals("", client.getTestConfig().getTbcFile());
@@ -67,7 +67,7 @@ public class ProjectClientTest {
     public void testNullConstructor() {
         final TestConfig testConfig = new TestConfig(null, null, null);
         final ProjectConfig projectConfig = new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(30, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(30, true, true);
         final ProjectClient client = new ProjectClient(null, testConfig, projectConfig, executionConfig);
         assertNotNull(client);
         assertEquals("", client.getTestFile());
@@ -81,8 +81,8 @@ public class ProjectClientTest {
         assertFalse(client.getProjectConfig().isExecInCurrentPkgDir());
         assertEquals("", client.getProjectConfig().getFilterExpression());
         assertEquals(JobExecutionMode.SEQUENTIAL_EXECUTION, client.getProjectConfig().getJobExecMode());
-        assertNotNull(client.getExecutionConfig().getTimeout());
         assertEquals("Check timeout", 30, client.getExecutionConfig().getTimeout());
         assertTrue("Check stop mode", client.getExecutionConfig().isStopOnError());
+        assertTrue(client.getExecutionConfig().isCheckTestFile());
     }
 }

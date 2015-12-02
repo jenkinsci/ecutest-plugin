@@ -29,19 +29,24 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
-import com.jacob.com.Dispatch;
+import java.util.ArrayList;
+import java.util.List;
 
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComProject;
+import com.jacob.com.Dispatch;
+import com.jacob.com.SafeArray;
+
+import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder;
+import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder.Seriousness;
 
 /**
- * COM object giving access to the properties of an opened project.
+ * Common base class for {@link Package} and {@link Project} giving access to their properties.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class Project extends AbstractTestObject implements ComProject {
+public abstract class AbstractTestObject extends ETComDispatch {
 
     /**
-     * Instantiates a new {@link Project}.
+     * Instantiates a new {@link AbstractTestObject}.
      *
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
@@ -49,12 +54,41 @@ public class Project extends AbstractTestObject implements ComProject {
      * @param dispatch
      *            the dispatch
      */
-    public Project(final Dispatch dispatch) {
+    public AbstractTestObject(final Dispatch dispatch) {
         super(dispatch);
     }
 
-    @Override
-    public String getPackages() throws ETComException {
-        return performRequest("GetPackages").getString();
+    /**
+     * Queries the package name.
+     *
+     * @return the name of this package
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    public String getName() throws ETComException {
+        return performRequest("GetName").getString();
+    }
+
+    /**
+     * Returns a list of the errors of the project.
+     *
+     * @return the error list
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    public List<CheckInfoHolder> check() throws ETComException {
+        final List<CheckInfoHolder> errorList = new ArrayList<CheckInfoHolder>();
+        final SafeArray array = performRequest("Check").toSafeArray();
+        if (array.getNumDim() == 2) {
+            final int lBound = array.getLBound(1);
+            final int uBound = array.getUBound(1);
+            if (array.getUBound(2) == 3) {
+                for (int i = lBound; i <= uBound; i++) {
+                    errorList.add(new CheckInfoHolder(array.getString(i, 0), Seriousness.valueOf(array.getString(i, 1)
+                            .toUpperCase()), array.getString(i, 2), array.getString(i, 3)));
+                }
+            }
+        }
+        return errorList;
     }
 }

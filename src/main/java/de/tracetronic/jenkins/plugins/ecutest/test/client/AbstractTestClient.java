@@ -300,4 +300,84 @@ public abstract class AbstractTestClient implements TestClient {
             return testReportDir;
         }
     }
+
+    /**
+     * Helper class storing information about the errors returned by checking packages and projects.
+     */
+    public static final class CheckInfoHolder {
+
+        /**
+         * Defines the seriousness types for checks.
+         */
+        public enum Seriousness {
+            /**
+             * Seriousness indicating the check is informational only.
+             */
+            NOTE,
+
+            /**
+             * Seriousness indicating the check represents a warning.
+             */
+            WARNING,
+
+            /**
+             * Seriousness indicating the check represents an error.
+             */
+            ERROR;
+        }
+
+        private final String filePath;
+        private final Seriousness seriousness;
+        private final String errorMessage;
+        private final String lineNumber;
+
+        /**
+         * Instantiates a new {@link CheckInfoHolder}.
+         *
+         * @param filePath
+         *            the file path
+         * @param seriousness
+         *            the seriousness
+         * @param errorMessage
+         *            the error message
+         * @param lineNumber
+         *            the line number
+         */
+        public CheckInfoHolder(final String filePath, final Seriousness seriousness, final String errorMessage,
+                final String lineNumber) {
+            super();
+            this.filePath = filePath;
+            this.seriousness = seriousness;
+            this.errorMessage = errorMessage;
+            this.lineNumber = lineNumber;
+        }
+
+        /**
+         * @return the file path
+         */
+        public String getFilePath() {
+            return filePath;
+        }
+
+        /**
+         * @return the seriousness
+         */
+        public Seriousness getSeriousness() {
+            return seriousness;
+        }
+
+        /**
+         * @return the error message
+         */
+        public String getErrorMessage() {
+            return errorMessage;
+        }
+
+        /**
+         * @return the line number
+         */
+        public String getLineNumber() {
+            return lineNumber;
+        }
+    }
 }

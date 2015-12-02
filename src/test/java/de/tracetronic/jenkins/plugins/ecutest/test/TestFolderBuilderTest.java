@@ -54,7 +54,7 @@ public class TestFolderBuilderTest {
         final TestConfig testConfig = new TestConfig("", "");
         final PackageConfig packageConfig = new PackageConfig(true, true);
         final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig("", false);
+        final ExecutionConfig executionConfig = new ExecutionConfig("", true, true);
         final TestFolderBuilder builder = new TestFolderBuilder("", TestFolderBuilder.DEFAULT_SCANMODE, false,
                 testConfig, packageConfig, projectConfig, executionConfig);
         assertEquals("Check default timeout", ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig()
@@ -66,7 +66,7 @@ public class TestFolderBuilderTest {
         final TestConfig testConfig = new TestConfig(null, null, null);
         final PackageConfig packageConfig = new PackageConfig(true, true, null);
         final ProjectConfig projectConfig = new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(null, false);
+        final ExecutionConfig executionConfig = new ExecutionConfig(null, false, false);
         final TestFolderBuilder builder = new TestFolderBuilder(null, TestFolderBuilder.DEFAULT_SCANMODE, false,
                 testConfig, packageConfig, projectConfig, executionConfig);
         assertNotNull(builder);
@@ -88,5 +88,6 @@ public class TestFolderBuilderTest {
         assertEquals("Check default timeout", ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig()
                 .getTimeout());
         assertFalse(builder.getExecutionConfig().isStopOnError());
+        assertFalse(builder.getExecutionConfig().isCheckTestFile());
     }
 }

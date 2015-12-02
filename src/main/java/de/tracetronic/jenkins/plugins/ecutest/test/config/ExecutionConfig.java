@@ -62,6 +62,10 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig> im
 
     private final String timeout;
     private final boolean stopOnError;
+    /**
+     * @since 1.4
+     */
+    private final boolean checkTestFile;
 
     /**
      * Instantiates a new {@link ExecutionConfig}.
@@ -71,12 +75,15 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig> im
      * @param stopOnError
      *            specifies whether to stop ECU-TEST and
      *            Tool-Server instances if an error occurred
+     * @param checkTestFile
+     *            specifies whether to check the test file
      */
     @DataBoundConstructor
-    public ExecutionConfig(final String timeout, final boolean stopOnError) {
+    public ExecutionConfig(final String timeout, final boolean stopOnError, final boolean checkTestFile) {
         super();
         this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(DEFAULT_TIMEOUT));
         this.stopOnError = stopOnError;
+        this.checkTestFile = checkTestFile;
     }
 
     /**
@@ -87,11 +94,41 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig> im
      * @param stopOnError
      *            specifies whether to stop ECU-TEST and
      *            Tool-Server instances if an error occurred
+     * @param checkTestFile
+     *            specifies whether to check the test file
      */
+    public ExecutionConfig(final int timeout, final boolean stopOnError, final boolean checkTestFile) {
+        this(String.valueOf(timeout), stopOnError, checkTestFile);
+    }
+
+    /**
+     * Instantiates a new {@link ExecutionConfig}.
+     *
+     * @param timeout
+     *            the timeout to run the test
+     * @param stopOnError
+     *            specifies whether to stop ECU-TEST and
+     *            Tool-Server instances if an error occurred
+     * @deprecated since 1.4, use {@link #ExecutionConfig(String, boolean, boolean)}
+     */
+    @Deprecated
+    public ExecutionConfig(final String timeout, final boolean stopOnError) {
+        this(timeout, stopOnError, true);
+    }
+
+    /**
+     * Instantiates a new {@link ExecutionConfig}.
+     *
+     * @param timeout
+     *            the timeout to run the test
+     * @param stopOnError
+     *            specifies whether to stop ECU-TEST and
+     *            Tool-Server instances if an error occurred
+     * @deprecated since 1.4, use {@link #ExecutionConfig(int, boolean, boolean)}
+     */
+    @Deprecated
     public ExecutionConfig(final int timeout, final boolean stopOnError) {
-        super();
-        this.timeout = String.valueOf(timeout);
-        this.stopOnError = stopOnError;
+        this(timeout, stopOnError, true);
     }
 
     /**
@@ -139,11 +176,18 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig> im
         return stopOnError;
     }
 
+    /**
+     * @return specifies whether to check the test file
+     */
+    public boolean isCheckTestFile() {
+        return checkTestFile;
+    }
+
     @Override
     public ExecutionConfig expand(final EnvVars envVars) {
         final String expTimeout = EnvUtil.expandEnvVar(getStringTimeout(), envVars,
                 String.valueOf(DEFAULT_TIMEOUT));
-        return new ExecutionConfig(expTimeout, isStopOnError());
+        return new ExecutionConfig(expTimeout, isStopOnError(), isCheckTestFile());
     }
 
     @Override
@@ -156,7 +200,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig> im
         }
         final ExecutionConfig other = (ExecutionConfig) that;
         if ((timeout == null ? other.timeout != null : !timeout.equals(other.timeout))
-                || stopOnError != other.stopOnError) {
+                || stopOnError != other.stopOnError || checkTestFile != other.checkTestFile) {
             return false;
         }
         return true;
@@ -164,14 +208,15 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig> im
 
     @Override
     public final int hashCode() {
-        return new HashCodeBuilder(17, 31).append(timeout).append(stopOnError).toHashCode();
+        return new HashCodeBuilder(17, 31).append(checkTestFile).append(timeout).append(stopOnError)
+                .toHashCode();
     }
 
     /**
      * @return the instance of a {@link ExecutionConfig}.
      */
     public static ExecutionConfig newInstance() {
-        return new ExecutionConfig(null, true);
+        return new ExecutionConfig(null, true, false);
     }
 
     /**

@@ -50,7 +50,7 @@ public class PackageClientTest {
     public void testBlankConstructor() {
         final TestConfig testConfig = new TestConfig("", "");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final PackageClient client = new PackageClient("", testConfig, packageConfig, executionConfig);
         assertEquals("", client.getTestFile());
         assertEquals("", client.getTestConfig().getTbcFile());
@@ -65,7 +65,7 @@ public class PackageClientTest {
     public void testNullConstructor() {
         final TestConfig testConfig = new TestConfig(null, null, null);
         final PackageConfig packageConfig = new PackageConfig(true, true, null);
-        final ExecutionConfig executionConfig = new ExecutionConfig(30, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(30, true, true);
         final PackageClient client = new PackageClient(null, testConfig, packageConfig, executionConfig);
         assertNotNull(client);
         assertEquals("", client.getTestFile());
@@ -81,5 +81,6 @@ public class PackageClientTest {
         assertTrue(client.getPackageConfig().getParameters().isEmpty());
         assertEquals("Check timeout", 30, client.getExecutionConfig().getTimeout());
         assertTrue("Check stop mode", client.getExecutionConfig().isStopOnError());
+        assertTrue(client.getExecutionConfig().isCheckTestFile());
     }
 }

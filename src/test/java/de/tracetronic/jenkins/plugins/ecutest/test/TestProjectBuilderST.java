@@ -57,7 +57,7 @@ public class TestProjectBuilderST extends SystemTestBase {
     public void testRoundTripConfig() throws Exception {
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
         final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final TestProjectBuilder before = new TestProjectBuilder("", testConfig, projectConfig, executionConfig);
         final TestProjectBuilder after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after, "testFile,testConfig,projectConfig,executionConfig");
@@ -68,7 +68,7 @@ public class TestProjectBuilderST extends SystemTestBase {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
         final ProjectConfig projectConfig = new ProjectConfig(true, "filter", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final TestProjectBuilder builder = new TestProjectBuilder("test.prj", testConfig, projectConfig,
                 executionConfig);
         project.getBuildersList().add(builder);
@@ -89,6 +89,7 @@ public class TestProjectBuilderST extends SystemTestBase {
         WebAssert.assertInputPresent(page, "_.timeout");
         WebAssert.assertInputContainsValue(page, "_.timeout", "600");
         jenkins.assertXPath(page, "//input[@name='_.stopOnError' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.checkTestFile' and @checked='true']");
     }
 
     @Test
@@ -96,7 +97,7 @@ public class TestProjectBuilderST extends SystemTestBase {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
         final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, false);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final TestProjectBuilder builder = new TestProjectBuilder("test.prj", testConfig, projectConfig,
                 executionConfig);
         project.getBuildersList().add(builder);

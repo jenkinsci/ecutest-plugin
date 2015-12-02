@@ -37,10 +37,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder.Seriousness;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageParameter;
@@ -88,7 +90,7 @@ public class PackageClient extends AbstractTestClient {
 
     @Override
     public boolean runTestCase(final Launcher launcher, final BuildListener listener) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -105,7 +107,7 @@ public class PackageClient extends AbstractTestClient {
 
         // Open package
         final PackageInfoHolder pkgInfo = launcher.getChannel().call(
-                new OpenPackageCallable(getTestFile(), listener));
+                new OpenPackageCallable(getTestFile(), getExecutionConfig().isCheckTestFile(), listener));
 
         // Set package information
         if (pkgInfo != null) {
@@ -143,6 +145,7 @@ public class PackageClient extends AbstractTestClient {
         private static final long serialVersionUID = 1L;
 
         private final String packageFile;
+        private final boolean checkTestFile;
         private final BuildListener listener;
 
         /**
@@ -150,11 +153,14 @@ public class PackageClient extends AbstractTestClient {
          *
          * @param packageFile
          *            the package file
+         * @param checkTestFile
+         *            specifies whether to check the package file
          * @param listener
          *            the listener
          */
-        OpenPackageCallable(final String packageFile, final BuildListener listener) {
+        OpenPackageCallable(final String packageFile, final boolean checkTestFile, final BuildListener listener) {
             this.packageFile = packageFile;
+            this.checkTestFile = checkTestFile;
             this.listener = listener;
         }
 
@@ -167,6 +173,32 @@ public class PackageClient extends AbstractTestClient {
                     Package pkg = (Package) comClient.openPackage(packageFile)) {
                 logger.logInfo("-> Package opened successfully.");
                 pkgInfo = new PackageInfoHolder(pkg.getName(), pkg.getDescription());
+                if (checkTestFile) {
+                    logger.logInfo("- Checking package...");
+                    final List<CheckInfoHolder> checks = pkg.check();
+                    for (final CheckInfoHolder check : checks) {
+                        final String logMessage = String.format("%s (line %s): %s", check.getFilePath(),
+                                check.getLineNumber(), check.getErrorMessage());
+                        final Seriousness seriousness = check.getSeriousness();
+                        switch (seriousness) {
+                            case NOTE:
+                                logger.logInfo(logMessage);
+                                break;
+                            case WARNING:
+                                logger.logWarn(logMessage);
+                                break;
+                            case ERROR:
+                                logger.logError(logMessage);
+                                pkgInfo = null;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    if (checks.isEmpty()) {
+                        logger.logInfo("-> Package validated successfully!");
+                    }
+                }
             } catch (final ETComException e) {
                 logger.logError("-> Opening package failed!");
                 logger.logError("Caught ComException: " + e.getMessage());

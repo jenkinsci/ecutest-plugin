@@ -38,7 +38,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComPackage;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class Package extends ETComDispatch implements ComPackage {
+public class Package extends AbstractTestObject implements ComPackage {
 
     /**
      * Instantiates a new {@link Package}.
@@ -51,11 +51,6 @@ public class Package extends ETComDispatch implements ComPackage {
      */
     public Package(final Dispatch dispatch) {
         super(dispatch);
-    }
-
-    @Override
-    public String getName() throws ETComException {
-        return performRequest("GetName").getString();
     }
 
     @Override

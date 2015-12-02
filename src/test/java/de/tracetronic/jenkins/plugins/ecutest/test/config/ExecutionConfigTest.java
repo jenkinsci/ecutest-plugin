@@ -46,26 +46,27 @@ public class ExecutionConfigTest {
 
     @Test
     public void testIntConstructor() {
-        final ExecutionConfig config = new ExecutionConfig(60, true);
+        final ExecutionConfig config = new ExecutionConfig(60, true, true);
         assertThat(config.getTimeout(), is(60));
         assertTrue(config.isStopOnError());
+        assertTrue(config.isCheckTestFile());
     }
 
     @Test
     public void testStringConstructor() {
-        final ExecutionConfig config = new ExecutionConfig("60", true);
+        final ExecutionConfig config = new ExecutionConfig("60", true, true);
         assertThat(config.getTimeout(), is(60));
     }
 
     @Test
     public void testInvalidConstructor() {
-        final ExecutionConfig config = new ExecutionConfig("abc", true);
+        final ExecutionConfig config = new ExecutionConfig("abc", true, true);
         assertThat(config.getTimeout(), is(ExecutionConfig.getDefaultTimeout()));
     }
 
     @Test
     public void testExpand() {
-        final ExecutionConfig config = new ExecutionConfig("${TIMEOUT}", true);
+        final ExecutionConfig config = new ExecutionConfig("${TIMEOUT}", true, true);
         final EnvVars envVars = new EnvVars();
         envVars.put("TIMEOUT", "60");
         assertThat(config.expand(envVars).getTimeout(), is(60));
