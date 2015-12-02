@@ -60,8 +60,8 @@ public class TTConsoleNote extends ConsoleNote<Run<?, ?>> {
         }
         if (plainText.contains("INFO:")) {
             text.addMarkup(0, text.length(), "<span style=\"color:#208CA3\">", "</span>");
+            addResultMarkup(text);
         }
-        addResultMarkup(text);
         return null;
     }
 
