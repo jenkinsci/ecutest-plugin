@@ -42,7 +42,7 @@
             <j:if test="${owner != null}">
                 <j:if test="${owner != build}">
                     <div>
-                        ${%build.on} <a href="${rootURL}/${build.url}">${build.fullDisplayName}</a>
+                        ${%built.on} <a href="${rootURL}/${build.url}">${build.fullDisplayName}</a>
                     </div>
                 </j:if>
                 <table class="fileList">
