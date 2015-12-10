@@ -64,15 +64,14 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
      * @return the instance of a {@link StartETBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object startET(final String toolName, final Runnable closure) {
+    public Object startET(final CharSequence toolName, final Runnable closure) {
         Preconditions.checkNotNull(toolName, NOT_NULL_MSG, OPT_TOOL_NAME);
 
         final StartETContext context = new StartETContext();
         executeInContext(closure, context);
 
-        final StartETBuilder builder = new StartETBuilder(toolName, context.workspaceDir, context.settingsDir,
-                context.timeout,
-                context.debugMode);
+        final StartETBuilder builder = new StartETBuilder(toolName.toString(), context.workspaceDir,
+                context.settingsDir, context.timeout, context.debugMode);
         Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
         return builder;
     }
@@ -85,7 +84,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
      * @return the instance of a {@link StartETBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object startET(final String toolName) {
+    public Object startET(final CharSequence toolName) {
         return startET(toolName, null);
     }
 
@@ -99,13 +98,13 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
      * @return the instance of a {@link StopETBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object stopET(final String toolName, final Runnable closure) {
+    public Object stopET(final CharSequence toolName, final Runnable closure) {
         Preconditions.checkNotNull(toolName, NOT_NULL_MSG, OPT_TOOL_NAME);
 
         final StopETContext context = new StopETContext();
         executeInContext(closure, context);
 
-        final StopETBuilder builder = new StopETBuilder(toolName, context.timeout);
+        final StopETBuilder builder = new StopETBuilder(toolName.toString(), context.timeout);
         Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
         return builder;
     }
@@ -118,7 +117,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
      * @return the instance of a {@link StopETBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object stopET(final String toolName) {
+    public Object stopET(final CharSequence toolName) {
         return stopET(toolName, null);
     }
 
@@ -132,14 +131,14 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
      * @return the instance of a {@link StartTSBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object startTS(final String toolName, final Runnable closure) {
+    public Object startTS(final CharSequence toolName, final Runnable closure) {
         Preconditions.checkNotNull(toolName, NOT_NULL_MSG, OPT_TOOL_NAME);
 
         final StartTSContext context = new StartTSContext();
         executeInContext(closure, context);
 
-        final StartTSBuilder builder = new StartTSBuilder(toolName, context.timeout, context.toolLibsIni,
-                context.tcpPort);
+        final StartTSBuilder builder = new StartTSBuilder(toolName.toString(), context.timeout,
+                context.toolLibsIni, context.tcpPort);
         Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
         return builder;
     }
@@ -152,7 +151,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
      * @return the instance of a {@link StartTSBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object startTS(final String toolName) {
+    public Object startTS(final CharSequence toolName) {
         return startTS(toolName, null);
     }
 
@@ -166,13 +165,13 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
      * @return the instance of a {@link StopTSBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object stopTS(final String toolName, final Runnable closure) {
+    public Object stopTS(final CharSequence toolName, final Runnable closure) {
         Preconditions.checkNotNull(toolName, NOT_NULL_MSG, OPT_TOOL_NAME);
 
         final StopTSContext context = new StopTSContext();
         executeInContext(closure, context);
 
-        final StopTSBuilder builder = new StopTSBuilder(toolName, context.timeout);
+        final StopTSBuilder builder = new StopTSBuilder(toolName.toString(), context.timeout);
         Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
         return builder;
     }
@@ -185,7 +184,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
      * @return the instance of a {@link StopTSBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object stopTS(final String toolName) {
+    public Object stopTS(final CharSequence toolName) {
         return stopTS(toolName, null);
     }
 
@@ -209,11 +208,11 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
          * @param value
          *            the value
          */
-        public void workspaceDir(final String value) {
+        public void workspaceDir(final CharSequence value) {
             Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_WORKSPACE_DIR);
-            final FormValidation validation = validator.validateWorkspaceDir(value);
+            final FormValidation validation = validator.validateWorkspaceDir(value.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            workspaceDir = value;
+            workspaceDir = value.toString();
         }
 
         /**
@@ -222,11 +221,11 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
          * @param value
          *            the value
          */
-        public void settingsDir(final String value) {
+        public void settingsDir(final CharSequence value) {
             Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_SETTINGS_DIR);
-            final FormValidation validation = validator.validateSettingsDir(value);
+            final FormValidation validation = validator.validateSettingsDir(value.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            settingsDir = value;
+            settingsDir = value.toString();
         }
 
         /**
@@ -259,8 +258,8 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         private static final String OPT_TOOLLIBS_INI = "toolLibsIni";
         private static final String OPT_TCP_PORT = "tcpPort";
 
-        private String toolLibsIni = "";
-        private String tcpPort = "";
+        private String toolLibsIni;
+        private String tcpPort;
 
         @Override
         protected int getDefaultTimeout() {
@@ -273,11 +272,11 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
          * @param value
          *            the value
          */
-        public void toolLibsIni(final String value) {
+        public void toolLibsIni(final CharSequence value) {
             Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TOOLLIBS_INI);
-            final FormValidation validation = validator.validateToolLibsIni(value);
+            final FormValidation validation = validator.validateToolLibsIni(value.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            toolLibsIni = value;
+            toolLibsIni = value.toString();
         }
 
         /**
@@ -286,11 +285,11 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
          * @param value
          *            the value as String
          */
-        public void tcpPort(final String value) {
+        public void tcpPort(final CharSequence value) {
             Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TCP_PORT);
-            final FormValidation validation = validator.validateTcpPort(value);
+            final FormValidation validation = validator.validateTcpPort(value.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            tcpPort = value;
+            tcpPort = value.toString();
         }
 
         /**

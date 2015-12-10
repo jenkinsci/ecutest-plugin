@@ -68,13 +68,14 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
      * @return the instance of a {@link TestPackageBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object testPackage(final String pkgFile, final Runnable closure) {
+    public Object testPackage(final CharSequence pkgFile, final Runnable closure) {
         Preconditions.checkNotNull(pkgFile, NOT_NULL_MSG, OPT_TEST_FILE);
 
         final TestPackageContext context = new TestPackageContext();
         executeInContext(closure, context);
 
-        return new TestPackageBuilder(pkgFile, context.testConfig, context.packageConfig, context.executionConfig);
+        return new TestPackageBuilder(pkgFile.toString(), context.testConfig, context.packageConfig,
+                context.executionConfig);
     }
 
     /**
@@ -85,7 +86,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
      * @return the instance of a {@link TestPackageBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object testPackage(final String pkgFile) {
+    public Object testPackage(final CharSequence pkgFile) {
         return testPackage(pkgFile, null);
     }
 
@@ -99,13 +100,13 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
      * @return the instance of a {@link TestProjectBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object testProject(final String prjFile, final Runnable closure) {
+    public Object testProject(final CharSequence prjFile, final Runnable closure) {
         Preconditions.checkNotNull(prjFile, NOT_NULL_MSG, OPT_TEST_FILE);
 
         final TestProjectContext context = new TestProjectContext();
         executeInContext(closure, context);
 
-        return new TestProjectBuilder(prjFile, context.testConfig, context.projectConfig,
+        return new TestProjectBuilder(prjFile.toString(), context.testConfig, context.projectConfig,
                 context.executionConfig);
     }
 
@@ -117,7 +118,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
      * @return the instance of a {@link TestProjectBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object testProject(final String prjFile) {
+    public Object testProject(final CharSequence prjFile) {
         return testProject(prjFile, null);
     }
 
@@ -132,14 +133,14 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
      * @return the instance of a {@link TestFolderBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object testFolder(final String testFolder, final Runnable closure) {
+    public Object testFolder(final CharSequence testFolder, final Runnable closure) {
         Preconditions.checkNotNull(testFolder, NOT_NULL_MSG, OPT_TEST_FILE);
 
         final TestFolderContext context = new TestFolderContext();
         executeInContext(closure, context);
 
-        return new TestFolderBuilder(testFolder, context.scanMode, context.recursiveScan, context.testConfig,
-                context.packageConfig, context.projectConfig, context.executionConfig);
+        return new TestFolderBuilder(testFolder.toString(), context.scanMode, context.recursiveScan,
+                context.testConfig, context.packageConfig, context.projectConfig, context.executionConfig);
     }
 
     /**
@@ -151,7 +152,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
      * @return the instance of a {@link TestFolderBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
-    public Object testFolder(final String testFolder) {
+    public Object testFolder(final CharSequence testFolder) {
         return testFolder(testFolder, null);
     }
 
@@ -234,16 +235,16 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
              * @param value
              *            the parameter value
              */
-            public void parameter(final String name, final String value) {
+            public void parameter(final CharSequence name, final CharSequence value) {
                 Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_PARAM_NAME);
                 Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_PARAM_VALUE);
 
-                FormValidation validation = validator.validateParameterName(name);
+                FormValidation validation = validator.validateParameterName(name.toString());
                 Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-                validation = validator.validateParameterValue(value);
+                validation = validator.validateParameterValue(value.toString());
                 Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
 
-                parameters.add(new PackageParameter(name, value));
+                parameters.add(new PackageParameter(name.toString(), value.toString()));
             }
 
             /**
@@ -272,12 +273,12 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
                  * @param value
                  *            the value
                  */
-                public void name(final String value) {
+                public void name(final CharSequence value) {
                     Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_PARAM_NAME);
-                    final FormValidation validation = validator.validateParameterName(value);
+                    final FormValidation validation = validator.validateParameterName(value.toString());
                     Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR,
                             validation.getMessage());
-                    name = value;
+                    name = value.toString();
                 }
 
                 /**
@@ -286,12 +287,12 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
                  * @param value
                  *            the value
                  */
-                public void value(final String value) {
+                public void value(final CharSequence value) {
                     Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_PARAM_VALUE);
-                    final FormValidation validation = validator.validateParameterValue(value);
+                    final FormValidation validation = validator.validateParameterValue(value.toString());
                     Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR,
                             validation.getMessage());
-                    this.value = value;
+                    this.value = value.toString();
                 }
             }
         }
@@ -346,11 +347,11 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          * @param value
          *            the value
          */
-        public void filterExpression(final String value) {
+        public void filterExpression(final CharSequence value) {
             Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_FILTER_EXPR);
-            final FormValidation validation = validator.validateFilterExpression(value);
+            final FormValidation validation = validator.validateFilterExpression(value.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            filterExpression = value;
+            filterExpression = value.toString();
         }
 
         /**
@@ -359,9 +360,9 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          * @param value
          *            the value as String
          */
-        public void jobExecutionMode(final String value) {
+        public void jobExecutionMode(final CharSequence value) {
             Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_JOB_EXEC_MODE);
-            jobExecutionMode = JobExecutionMode.valueOf(value);
+            jobExecutionMode = JobExecutionMode.valueOf(value.toString());
         }
 
         /**
@@ -391,8 +392,8 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          * @param value
          *            the value
          */
-        public void scanMode(final String value) {
-            scanMode = ScanMode.valueOf(value);
+        public void scanMode(final CharSequence value) {
+            scanMode = ScanMode.valueOf(value.toString());
         }
 
         /**

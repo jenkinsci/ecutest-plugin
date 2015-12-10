@@ -120,11 +120,11 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
              * @param value
              *            the value
              */
-            public void tbcFile(final String value) {
+            public void tbcFile(final CharSequence value) {
                 Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TBC_FILE);
-                final FormValidation validation = validator.validateTbcFile(value);
+                final FormValidation validation = validator.validateTbcFile(value.toString());
                 Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-                tbcFile = value;
+                tbcFile = value.toString();
             }
 
             /**
@@ -133,11 +133,11 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
              * @param value
              *            the value
              */
-            public void tcfFile(final String value) {
+            public void tcfFile(final CharSequence value) {
                 Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TCF_FILE);
-                final FormValidation validation = validator.validateTcfFile(value);
+                final FormValidation validation = validator.validateTcfFile(value.toString());
                 Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-                tcfFile = value;
+                tcfFile = value.toString();
             }
 
             /**
@@ -177,16 +177,16 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
                  * @param value
                  *            the global constant value
                  */
-                public void constant(final String name, final String value) {
+                public void constant(final CharSequence name, final CharSequence value) {
                     Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_CONSTANT_NAME);
                     Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_CONSTANT_VALUE);
 
-                    FormValidation validation = validator.validateGlobalConstantName(name);
+                    FormValidation validation = validator.validateGlobalConstantName(name.toString());
                     Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-                    validation = validator.validateGlobalConstantValue(value);
+                    validation = validator.validateGlobalConstantValue(value.toString());
                     Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
 
-                    constants.add(new GlobalConstant(name, value));
+                    constants.add(new GlobalConstant(name.toString(), value.toString()));
                 }
 
                 /**
@@ -215,12 +215,12 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
                      * @param value
                      *            the value
                      */
-                    public void name(final String value) {
+                    public void name(final CharSequence value) {
                         Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_CONSTANT_NAME);
-                        final FormValidation validation = validator.validateGlobalConstantName(value);
+                        final FormValidation validation = validator.validateGlobalConstantName(value.toString());
                         Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR,
                                 validation.getMessage());
-                        name = value;
+                        name = value.toString();
                     }
 
                     /**
@@ -229,12 +229,12 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
                      * @param value
                      *            the value
                      */
-                    public void value(final String value) {
+                    public void value(final CharSequence value) {
                         Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_CONSTANT_VALUE);
-                        final FormValidation validation = validator.validateGlobalConstantValue(value);
+                        final FormValidation validation = validator.validateGlobalConstantValue(value.toString());
                         Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR,
                                 validation.getMessage());
-                        this.value = value;
+                        this.value = value.toString();
                     }
                 }
             }
@@ -255,11 +255,12 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
              * @param value
              *            the value as String
              */
-            public void timeout(final String value) {
+            public void timeout(final CharSequence value) {
                 Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TIMEOUT);
-                final FormValidation validation = validator.validateTimeout(value, ExecutionConfig.getDefaultTimeout());
+                final FormValidation validation = validator.validateTimeout(value.toString(),
+                        ExecutionConfig.getDefaultTimeout());
                 Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-                timeout = value;
+                timeout = value.toString();
             }
 
             /**

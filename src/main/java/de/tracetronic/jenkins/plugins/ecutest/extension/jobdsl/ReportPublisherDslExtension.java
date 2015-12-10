@@ -64,13 +64,13 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
      * @return the instance of a {@link ATXPublisher}
      */
     @DslExtensionMethod(context = PublisherContext.class)
-    public Object publishATX(final String atxName, final Runnable closure) {
+    public Object publishATX(final CharSequence atxName, final Runnable closure) {
         Preconditions.checkNotNull(atxName, NOT_NULL_MSG, OPT_ATX_NAME);
 
         final PublishATXContext context = new PublishATXContext();
         executeInContext(closure, context);
 
-        final ATXPublisher publisher = new ATXPublisher(atxName, context.allowMissing, context.runOnFailed);
+        final ATXPublisher publisher = new ATXPublisher(atxName.toString(), context.allowMissing, context.runOnFailed);
         Preconditions.checkNotNull(publisher.getInstallation(), NO_INSTALL_MSG, atxName);
         return publisher;
     }
@@ -83,7 +83,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
      * @return the instance of a {@link ATXPublisher}
      */
     @DslExtensionMethod(context = PublisherContext.class)
-    public Object publishATX(final String atxName) {
+    public Object publishATX(final CharSequence atxName) {
         return publishATX(atxName, null);
     }
 
@@ -97,13 +97,13 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
      * @return the instance of a {@link JUnitPublisher}
      */
     @DslExtensionMethod(context = PublisherContext.class)
-    public Object publishUNIT(final String toolName, final Runnable closure) {
+    public Object publishUNIT(final CharSequence toolName, final Runnable closure) {
         Preconditions.checkNotNull(toolName, NOT_NULL_MSG, OPT_TOOL_NAME);
 
         final JUnitPublisherContext context = new JUnitPublisherContext();
         executeInContext(closure, context);
 
-        final JUnitPublisher publisher = new JUnitPublisher(toolName, context.unstableThreshold,
+        final JUnitPublisher publisher = new JUnitPublisher(toolName.toString(), context.unstableThreshold,
                 context.failedThreshold, context.allowMissing, context.runOnFailed);
         Preconditions.checkNotNull(publisher.getToolInstallation(), NO_INSTALL_MSG, toolName);
         return publisher;
@@ -117,7 +117,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
      * @return the instance of a {@link JUnitPublisher}
      */
     @DslExtensionMethod(context = PublisherContext.class)
-    public Object publishUNIT(final String toolName) {
+    public Object publishUNIT(final CharSequence toolName) {
         return publishUNIT(toolName, null);
     }
 

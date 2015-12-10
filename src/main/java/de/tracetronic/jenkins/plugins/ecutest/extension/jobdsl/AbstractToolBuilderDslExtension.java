@@ -71,11 +71,11 @@ public abstract class AbstractToolBuilderDslExtension extends AbstractDslExtensi
          * @param value
          *            the value as String
          */
-        public void timeout(final String value) {
+        public void timeout(final CharSequence value) {
             Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TIMEOUT);
-            final FormValidation validation = validator.validateTimeout(value, getDefaultTimeout());
+            final FormValidation validation = validator.validateTimeout(value.toString(), getDefaultTimeout());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            timeout = value;
+            timeout = value.toString();
         }
 
         /**
