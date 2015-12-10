@@ -66,6 +66,14 @@ public class PackageConfigTest {
     }
 
     @Test
+    public void testEmptyParameters() {
+        final List<PackageParameter> parameters = new ArrayList<PackageParameter>();
+        parameters.add(new PackageParameter(" ", " "));
+        final PackageConfig config = new PackageConfig(true, true, parameters);
+        assertTrue(config.getParameters().isEmpty());
+    }
+
+    @Test
     public void testExpand() {
         final List<PackageParameter> params = new ArrayList<PackageParameter>();
         params.add(new PackageParameter("${NAME}", "${VALUE}"));

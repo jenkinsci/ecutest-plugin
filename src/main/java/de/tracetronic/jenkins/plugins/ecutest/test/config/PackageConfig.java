@@ -38,6 +38,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -47,7 +48,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implements Serializable,
-ExpandableConfig {
+        ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 
@@ -71,7 +72,7 @@ ExpandableConfig {
         super();
         this.runTest = runTest;
         this.runTraceAnalysis = runTraceAnalysis;
-        this.parameters = parameters == null ? new ArrayList<PackageParameter>() : parameters;
+        this.parameters = parameters == null ? new ArrayList<PackageParameter>() : removeEmptyParameters(parameters);
     }
 
     /**
@@ -108,6 +109,23 @@ ExpandableConfig {
      */
     public List<PackageParameter> getParameters() {
         return parameters;
+    }
+
+    /**
+     * Removes empty package parameters.
+     *
+     * @param parameters
+     *            the parameters
+     * @return the list of valid package parameters
+     */
+    private static List<PackageParameter> removeEmptyParameters(final List<PackageParameter> parameters) {
+        final List<PackageParameter> validParameters = new ArrayList<PackageParameter>();
+        for (final PackageParameter parameter : parameters) {
+            if (StringUtils.isNotBlank(parameter.getName())) {
+                validParameters.add(parameter);
+            }
+        }
+        return validParameters;
     }
 
     @Override

@@ -82,7 +82,7 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
         this.tbcFile = StringUtils.trimToEmpty(tbcFile);
         this.tcfFile = StringUtils.trimToEmpty(tcfFile);
         this.forceReload = forceReload;
-        this.constants = constants == null ? new ArrayList<GlobalConstant>() : constants;
+        this.constants = constants == null ? new ArrayList<GlobalConstant>() : removeEmptyConstants(constants);
     }
 
     /**
@@ -124,11 +124,7 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
      */
     @Deprecated
     public TestConfig(final String tbcFile, final String tcfFile, final List<GlobalConstant> constants) {
-        super();
-        this.tbcFile = StringUtils.trimToEmpty(tbcFile);
-        this.tcfFile = StringUtils.trimToEmpty(tcfFile);
-        forceReload = false;
-        this.constants = constants == null ? new ArrayList<GlobalConstant>() : constants;
+        this(tbcFile, tcfFile, false, constants);
     }
 
     /**
@@ -157,6 +153,23 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
      */
     public List<GlobalConstant> getConstants() {
         return constants;
+    }
+
+    /**
+     * Removes empty global constants.
+     *
+     * @param constants
+     *            the constants
+     * @return the list of valid global constants
+     */
+    private static List<GlobalConstant> removeEmptyConstants(final List<GlobalConstant> constants) {
+        final List<GlobalConstant> validConstants = new ArrayList<GlobalConstant>();
+        for (final GlobalConstant constant : constants) {
+            if (StringUtils.isNotBlank(constant.getName())) {
+                validConstants.add(constant);
+            }
+        }
+        return validConstants;
     }
 
     @Override

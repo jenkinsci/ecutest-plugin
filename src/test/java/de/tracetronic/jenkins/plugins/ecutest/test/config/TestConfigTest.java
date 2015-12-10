@@ -31,6 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import hudson.EnvVars;
@@ -55,6 +56,23 @@ public class TestConfigTest {
         assertThat(config.getTbcFile(), is(""));
         assertThat(config.getTcfFile(), is(""));
         assertFalse(config.isForceReload());
+        assertNotNull(config.getConstants());
+    }
+
+    @Test
+    public void testEmptyConstructor() {
+        final TestConfig config = new TestConfig(null, null, false);
+        assertThat(config.getTbcFile(), is(""));
+        assertThat(config.getTcfFile(), is(""));
+        assertFalse(config.isForceReload());
+        assertTrue(config.getConstants().isEmpty());
+    }
+
+    @Test
+    public void testEmptyConstants() {
+        final List<GlobalConstant> constants = new ArrayList<GlobalConstant>();
+        constants.add(new GlobalConstant(" ", " "));
+        final TestConfig config = new TestConfig(null, null, false, constants);
         assertTrue(config.getConstants().isEmpty());
     }
 
