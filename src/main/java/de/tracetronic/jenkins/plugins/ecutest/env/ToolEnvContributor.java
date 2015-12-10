@@ -72,6 +72,11 @@ public class ToolEnvContributor extends EnvironmentContributor {
     public static final String TOOL_WS = "TOOL_WS_";
 
     /**
+     * Build environment variable part for the settings used by the tool.
+     */
+    public static final String TOOL_SETTINGS = "TOOL_SETTINGS_";
+
+    /**
      * Build environment variable part for the timeout connection to the tool.
      */
     public static final String TOOL_TIMEOUT = "TOOL_TIMEOUT_";
@@ -97,6 +102,7 @@ public class ToolEnvContributor extends EnvironmentContributor {
             envs.put(PREFIX + TOOL_VERSION + id, action.getToolVersion());
             envs.put(PREFIX + TOOL_INSTALL + id, action.getToolInstallation());
             envs.put(PREFIX + TOOL_WS + id, action.getToolWorkspace());
+            envs.put(PREFIX + TOOL_SETTINGS + id, action.getToolSettings());
             envs.put(PREFIX + TOOL_TIMEOUT + id, String.valueOf(action.getTimeout()));
             envs.put(PREFIX + TOOL_DEBUG + id, action.isDebug() ? "true" : "false");
         }

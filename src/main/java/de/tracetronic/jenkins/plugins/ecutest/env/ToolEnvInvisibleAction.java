@@ -45,6 +45,7 @@ public class ToolEnvInvisibleAction extends InvisibleAction {
     private final String toolVersion;
     private final String toolInstallation;
     private final String toolWorkspace;
+    private final String toolSettings;
     private final int timeout;
     private final boolean debug;
 
@@ -64,6 +65,7 @@ public class ToolEnvInvisibleAction extends InvisibleAction {
         toolVersion = toolClient.getVersion();
         toolInstallation = toolClient.getInstallPath();
         toolWorkspace = toolClient.getWorkspaceDir();
+        toolSettings = toolClient.getSettingsDir();
         timeout = toolClient.getTimeout();
         debug = toolClient.isDebug();
     }
@@ -101,6 +103,13 @@ public class ToolEnvInvisibleAction extends InvisibleAction {
      */
     public String getToolWorkspace() {
         return toolWorkspace;
+    }
+
+    /**
+     * @return the tool settings
+     */
+    public String getToolSettings() {
+        return toolSettings;
     }
 
     /**

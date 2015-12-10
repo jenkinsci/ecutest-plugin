@@ -65,7 +65,34 @@ public class StartETBuilder extends AbstractToolBuilder {
     public static final int DEFAULT_TIMEOUT = 120;
 
     private final String workspaceDir;
+    /**
+     * @since 1.5
+     */
+    private final String settingsDir;
     private final boolean debugMode;
+
+    /**
+     * Instantiates a new {@link StartETBuilder}.
+     *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param workspaceDir
+     *            the ECU-TEST workspace directory
+     * @param settingsDir
+     *            the ECU-TEST settings directory
+     * @param timeout
+     *            the timeout
+     * @param debugMode
+     *            the debug mode
+     */
+    @DataBoundConstructor
+    public StartETBuilder(final String toolName, final String workspaceDir, final String settingsDir,
+            final String timeout, final boolean debugMode) {
+        super(toolName, StringUtils.defaultIfEmpty(timeout, String.valueOf(DEFAULT_TIMEOUT)));
+        this.workspaceDir = StringUtils.trimToEmpty(workspaceDir);
+        this.settingsDir = StringUtils.trimToEmpty(settingsDir);
+        this.debugMode = debugMode;
+    }
 
     /**
      * Instantiates a new {@link StartETBuilder}.
@@ -78,13 +105,24 @@ public class StartETBuilder extends AbstractToolBuilder {
      *            the timeout
      * @param debugMode
      *            the debug mode
+     * @deprecated since 1.5 use {@link #StartETBuilder(String, String, String, String, boolean)}
      */
-    @DataBoundConstructor
+    @Deprecated
     public StartETBuilder(final String toolName, final String workspaceDir, final String timeout,
             final boolean debugMode) {
-        super(toolName, StringUtils.defaultIfEmpty(timeout, String.valueOf(DEFAULT_TIMEOUT)));
-        this.workspaceDir = StringUtils.trimToEmpty(workspaceDir);
-        this.debugMode = debugMode;
+        this(toolName, workspaceDir, null, timeout, debugMode);
+    }
+
+    /**
+     * Convert legacy configuration into the new class structure.
+     *
+     * @return an instance of this class with all the new fields transferred from the old structure to the new one
+     */
+    public final Object readResolve() {
+        if (settingsDir == null) {
+            return new StartETBuilder(getToolName(), workspaceDir, null, getTimeout(), debugMode);
+        }
+        return this;
     }
 
     /**
@@ -99,6 +137,13 @@ public class StartETBuilder extends AbstractToolBuilder {
      */
     public String getWorkspaceDir() {
         return workspaceDir;
+    }
+
+    /**
+     * @return the settings directory
+     */
+    public String getSettingsDir() {
+        return settingsDir;
     }
 
     /**
@@ -122,23 +167,27 @@ public class StartETBuilder extends AbstractToolBuilder {
                 String.valueOf(DEFAULT_TIMEOUT)));
 
         // Absolutize ECU-TEST workspace directory, if not absolute assume relative to build workspace
-        String expandedWsDir = buildEnvVars.expand(workspaceDir);
-        FilePath buildWs = build.getWorkspace();
-        if (buildWs != null) {
-            buildWs = buildWs.absolutize();
-            expandedWsDir = EnvUtil.expandEnvVar(workspaceDir, buildEnvVars, buildWs.getRemote());
-            expandedWsDir = PathUtil.makeAbsolutePath(expandedWsDir, buildWs);
+        String expandedWorkspaceDir = buildEnvVars.expand(workspaceDir);
+        String expandedSettingsDir = buildEnvVars.expand(settingsDir);
+        FilePath buildWorkspace = build.getWorkspace();
+        if (buildWorkspace != null) {
+            buildWorkspace = buildWorkspace.absolutize();
+            expandedWorkspaceDir = EnvUtil.expandEnvVar(workspaceDir, buildEnvVars, buildWorkspace.getRemote());
+            expandedWorkspaceDir = PathUtil.makeAbsolutePath(expandedWorkspaceDir, buildWorkspace);
+            expandedSettingsDir = EnvUtil.expandEnvVar(settingsDir, buildEnvVars, buildWorkspace.getRemote());
+            expandedSettingsDir = PathUtil.makeAbsolutePath(expandedSettingsDir, buildWorkspace);
         }
 
         // Check workspace validity
-        final FilePath expandedWsPath = new FilePath(launcher.getChannel(), expandedWsDir);
-        if (!checkWorkspace(expandedWsPath, listener)) {
+        final FilePath expandedWorkspacePath = new FilePath(launcher.getChannel(), expandedWorkspaceDir);
+        final FilePath expandedSettingsPath = new FilePath(launcher.getChannel(), expandedSettingsDir);
+        if (!checkWorkspace(expandedWorkspacePath, expandedSettingsPath, listener)) {
             return false;
         }
 
         // Delete logs if log publisher is present
         if (build.getProject().getPublishersList().get(ETLogPublisher.class) != null) {
-            ETLogPublisher.RunListenerImpl.onStarted(expandedWsPath, listener);
+            ETLogPublisher.RunListenerImpl.onStarted(expandedSettingsPath, listener);
         }
 
         // Get selected ECU-TEST installation
@@ -150,8 +199,8 @@ public class StartETBuilder extends AbstractToolBuilder {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo(String.format("Starting %s...", getToolName()));
             final String installPath = installation.getExecutable(launcher);
-            final ETClient etClient = new ETClient(getToolName(), installPath, expandedWsDir,
-                    expandedTimeout, debugMode);
+            final ETClient etClient = new ETClient(getToolName(), installPath, expandedWorkspaceDir,
+                    expandedSettingsDir, expandedTimeout, debugMode);
             if (etClient.start(true, launcher, listener)) {
                 logger.logInfo(String.format("%s started successfully.", getToolName()));
             } else {
@@ -173,8 +222,10 @@ public class StartETBuilder extends AbstractToolBuilder {
     /**
      * Verifying the ECU-TEST workspace indicated by the existence of a ".workspace" directory.
      *
-     * @param expandedWsPath
-     *            the expanded workspace path
+     * @param workspacePath
+     *            the workspace path
+     * @param settingsPath
+     *            the settings path
      * @param listener
      *            the listener
      * @return {@code true} if valid workspace, {@code false} otherwise
@@ -183,19 +234,23 @@ public class StartETBuilder extends AbstractToolBuilder {
      * @throws InterruptedException
      *             the interrupted exception
      */
-    private boolean checkWorkspace(final FilePath expandedWsPath, final BuildListener listener)
-            throws IOException, InterruptedException {
+    private boolean checkWorkspace(final FilePath workspacePath, final FilePath settingsPath,
+            final BuildListener listener) throws IOException, InterruptedException {
+        boolean isValid = false;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
-        if (!expandedWsPath.exists()) {
+        if (!workspacePath.exists()) {
             logger.logError(String.format("ECU-TEST workspace at %s does not exist!",
-                    expandedWsPath.getRemote()));
-            return false;
-        } else if (!expandedWsPath.child(".workspace").exists()) {
+                    workspacePath.getRemote()));
+        } else if (!workspacePath.child(".workspace").exists()) {
             logger.logError(String.format("%s seems not to be a valid ECU-TEST workspace!",
-                    expandedWsPath.getRemote()));
-            return false;
+                    workspacePath.getRemote()));
+        } else if (!settingsPath.exists()) {
+            logger.logError(String.format("ECU-TEST settings directory at %s does not exist!",
+                    settingsPath.getRemote()));
+        } else {
+            isValid = true;
         }
-        return true;
+        return isValid;
     }
 
     /**

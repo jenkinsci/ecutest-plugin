@@ -96,6 +96,7 @@ public class ToolBuilderDslExtensionST extends AbstractDslExtensionST {
         assertNotNull("Start ECU-TEST builder should exist", builder);
         assertThat(builder.getToolName(), is("ECU-TEST"));
         assertThat(builder.getWorkspaceDir(), is("test"));
+        assertThat(builder.getSettingsDir(), is("settings"));
         assertThat(builder.getTimeout(), is("60"));
         assertThat(builder.isDebugMode(), is(true));
     }

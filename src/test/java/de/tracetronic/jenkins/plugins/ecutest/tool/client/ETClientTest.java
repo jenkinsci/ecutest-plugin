@@ -49,14 +49,16 @@ public class ETClientTest {
     private List<String> expectedArgs;
     private final String exe = "C:\\ECU-TEST\\ECU-TEST.exe";
     private final String ws = "C:\\Daten\\ECU-TEST";
+    private final String settings = "C:\\Daten\\ECU-TEST\\settings";
 
     @Test
     public void testNullConstructor() {
-        final ETClient client = new ETClient(null, null, null, 30, false);
+        final ETClient client = new ETClient(null, null, null, null, 30, false);
         assertNotNull(client);
         assertEquals("", client.getToolName());
         assertEquals("", client.getInstallPath());
         assertEquals("", client.getWorkspaceDir());
+        assertEquals("", client.getSettingsDir());
         assertNotNull(client.getTimeout());
         assertEquals("Check timeout", 30, client.getTimeout());
         assertFalse("Check debug mode", client.isDebug());
@@ -78,15 +80,15 @@ public class ETClientTest {
 
     @Test
     public void testTypicalCmdLineArgs() {
-        final ETClient etClient = new ETClient("ECU-TEST", exe, ws, 120, false);
-        expectedArgs = Arrays.asList(exe, "--workspaceDir", ws, "-s", ws, "--startupAutomated=CreateDirs");
+        final ETClient etClient = new ETClient("ECU-TEST", exe, ws, settings, 120, false);
+        expectedArgs = Arrays.asList(exe, "--workspaceDir", ws, "-s", settings, "--startupAutomated=CreateDirs");
         ensureCreateCmdLineArgs(etClient, expectedArgs);
     }
 
     @Test
     public void testDebugCmdLineArgs() {
-        final ETClient etClient = new ETClient("ECU-TEST", exe, ws, 120, true);
-        expectedArgs = Arrays.asList(exe, "--workspaceDir", ws, "-s", ws, "-d", "--startupAutomated=CreateDirs");
+        final ETClient etClient = new ETClient("ECU-TEST", exe, ws, settings, 120, true);
+        expectedArgs = Arrays.asList(exe, "--workspaceDir", ws, "-s", settings, "-d", "--startupAutomated=CreateDirs");
         ensureCreateCmdLineArgs(etClient, expectedArgs);
     }
 

@@ -52,6 +52,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
 
     private static final String OPT_WORKSPACE_DIR = "workspaceDir";
+    private static final String OPT_SETTINGS_DIR = "settingsDir";
 
     /**
      * {@link DslExtensionMethod} providing the start up of ECU-TEST.
@@ -69,7 +70,8 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         final StartETContext context = new StartETContext();
         executeInContext(closure, context);
 
-        final StartETBuilder builder = new StartETBuilder(toolName, context.workspaceDir, context.timeout,
+        final StartETBuilder builder = new StartETBuilder(toolName, context.workspaceDir, context.settingsDir,
+                context.timeout,
                 context.debugMode);
         Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
         return builder;
@@ -193,6 +195,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     public class StartETContext extends AbstractToolContext {
 
         private String workspaceDir;
+        private String settingsDir;
         private boolean debugMode;
 
         @Override
@@ -211,6 +214,19 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
             final FormValidation validation = validator.validateWorkspaceDir(value);
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
             workspaceDir = value;
+        }
+
+        /**
+         * Option defining the ECU-TEST settings directory.
+         *
+         * @param value
+         *            the value
+         */
+        public void settingsDir(final String value) {
+            Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_SETTINGS_DIR);
+            final FormValidation validation = validator.validateSettingsDir(value);
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            settingsDir = value;
         }
 
         /**

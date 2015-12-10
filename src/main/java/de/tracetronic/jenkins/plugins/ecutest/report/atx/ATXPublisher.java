@@ -154,8 +154,9 @@ public class ATXPublisher extends AbstractReportPublisher {
         } else {
             if (etInstallation instanceof ETInstallation) {
                 final String installPath = etInstallation.getExecutable(launcher);
-                final String workspace = getWorkspace(build);
-                final ETClient etClient = new ETClient(toolName, installPath, workspace,
+                final String workspaceDir = getWorkspaceDir(build);
+                final String settingsDir = getSettingsDir(build);
+                final ETClient etClient = new ETClient(toolName, installPath, workspaceDir, settingsDir,
                         StartETBuilder.DEFAULT_TIMEOUT, false);
                 logger.logInfo(String.format("Starting %s...", toolName));
                 if (etClient.start(false, launcher, listener)) {
@@ -203,7 +204,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean publishReports(final ATXInstallation installation, final AbstractBuild<?, ?> build,
             final Launcher launcher, final BuildListener listener)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final boolean isUploadEnabled = isUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, launcher);
@@ -250,7 +251,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      *             if the build gets interrupted
      */
     private boolean isServerReachable(final ATXInstallation installation, final Launcher launcher) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final ATXConfig config = installation.getConfig();
         return launcher.getChannel().call(new TestConnectionCallable(config));
     }
@@ -294,19 +295,35 @@ public class ATXPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Gets the workspace, either previous ECU-TEST workspace or default one.
+     * Gets the workspace directory, either previous ECU-TEST workspace or default one.
      *
      * @param build
      *            the build
-     * @return the workspace
+     * @return the workspace directory
      */
-    private String getWorkspace(final AbstractBuild<?, ?> build) {
-        String workspace = "";
+    private String getWorkspaceDir(final AbstractBuild<?, ?> build) {
+        String workspaceDir = "";
         final ToolEnvInvisibleAction toolEnvAction = build.getAction(ToolEnvInvisibleAction.class);
         if (toolEnvAction != null) {
-            workspace = toolEnvAction.getToolWorkspace();
+            workspaceDir = toolEnvAction.getToolWorkspace();
         }
-        return workspace;
+        return workspaceDir;
+    }
+
+    /**
+     * Gets the settings directory, either previous ECU-TEST settings or default one.
+     *
+     * @param build
+     *            the build
+     * @return the settings directory
+     */
+    private String getSettingsDir(final AbstractBuild<?, ?> build) {
+        String settingsDir = "";
+        final ToolEnvInvisibleAction toolEnvAction = build.getAction(ToolEnvInvisibleAction.class);
+        if (toolEnvAction != null) {
+            settingsDir = toolEnvAction.getToolSettings();
+        }
+        return settingsDir;
     }
 
     /**

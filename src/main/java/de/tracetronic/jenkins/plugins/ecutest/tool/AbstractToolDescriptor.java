@@ -115,6 +115,17 @@ public abstract class AbstractToolDescriptor extends BuildStepDescriptor<Builder
     }
 
     /**
+     * Validates the settings directory.
+     *
+     * @param value
+     *            the settings directory
+     * @return the form validation
+     */
+    public FormValidation doCheckSettingsDir(@QueryParameter final String value) {
+        return toolValidator.validateSettingsDir(value);
+    }
+
+    /**
      * Validates the timeout.
      *
      * @param value

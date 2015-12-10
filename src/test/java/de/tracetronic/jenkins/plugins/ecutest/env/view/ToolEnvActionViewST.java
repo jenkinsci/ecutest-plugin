@@ -28,6 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.tracetronic.jenkins.plugins.ecutest.env.view;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import hudson.model.FreeStyleBuild;
@@ -39,7 +40,6 @@ import org.junit.Test;
 import de.tracetronic.jenkins.plugins.ecutest.SystemTestBase;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
-
 
 /**
  * System tests for {@link ToolEnvActionView}.
@@ -60,7 +60,7 @@ public class ToolEnvActionViewST extends SystemTestBase {
     @Test
     public void testWithToolEnvInvisibleAction() throws Exception {
         final int toolId = 0;
-        final ETClient etClient = new ETClient("ECU-TEST", "ECU-TEST", "workspace", 0, false);
+        final ETClient etClient = new ETClient("ECU-TEST", "ECU-TEST", "workspace", "settings", 0, false);
         final ToolEnvInvisibleAction toolEnvAction = new ToolEnvInvisibleAction(toolId, etClient);
         final FreeStyleBuild build = jenkins.createFreeStyleProject()
                 .scheduleBuild2(0, null, Collections.singletonList(toolEnvAction)).get();

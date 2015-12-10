@@ -64,7 +64,7 @@ public class ToolEnvContributorST extends SystemTestBase {
         final FreeStyleBuild build = jenkins.createFreeStyleProject().scheduleBuild2(0).get();
         final int toolId = 0;
         final EnvVars envVars = new EnvVars();
-        final ETClient etClient = new ETClient("ECU-TEST", "ECU-TEST", "workspace", 0, false);
+        final ETClient etClient = new ETClient("ECU-TEST", "ECU-TEST", "workspace", "settings", 0, false);
         final ToolEnvInvisibleAction toolEnvAction = new ToolEnvInvisibleAction(toolId, etClient);
         build.addAction(toolEnvAction);
 
@@ -81,6 +81,8 @@ public class ToolEnvContributorST extends SystemTestBase {
                 envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_INSTALL + toolId));
         assertEquals("TT_TOOL_WS_0 should match env action", toolEnvAction.getToolWorkspace(),
                 envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_WS + toolId));
+        assertEquals("TT_TOOL_SETTINGS_0 should match env action", toolEnvAction.getToolSettings(),
+                envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_SETTINGS + toolId));
         assertEquals("TT_TOOL_TIMEOUT_0 should match env action", String.valueOf(toolEnvAction.getTimeout()),
                 envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_TIMEOUT + toolId));
         assertEquals("TT_TOOL_DEBUG_0 should match env action", toolEnvAction.isDebug() ? "true" : "false",

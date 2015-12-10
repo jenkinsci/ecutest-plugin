@@ -61,6 +61,21 @@ public class ToolValidator extends AbstractValidator {
     }
 
     /**
+     * Validates the settings directory.
+     *
+     * @param settingsDir
+     *            the settings directory.
+     * @return the form validation
+     */
+    public FormValidation validateSettingsDir(final String settingsDir) {
+        FormValidation returnValue = FormValidation.ok();
+        if (!StringUtils.isBlank(settingsDir) && settingsDir.contains(PARAMETER)) {
+            returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
+        }
+        return returnValue;
+    }
+
+    /**
      * Validates the ToolLibs.ini path.
      *
      * @param toolLibsIni

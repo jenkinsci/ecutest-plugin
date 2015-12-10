@@ -37,7 +37,6 @@
             </j:forEach>
         </select>
     </f:entry>
-
     <f:advanced>
         <f:entry title="${%toolLibsIni.title}" description="${%toolLibsIni.description}" field="toolLibsIni">
             <f:textbox />

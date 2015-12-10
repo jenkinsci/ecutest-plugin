@@ -2,6 +2,7 @@ freeStyleJob("toolBuilder") {
     steps {
         startET("ECU-TEST") {
             workspaceDir("test")
+            settingsDir("settings")
             timeout("60")
             debugMode(true)
         }

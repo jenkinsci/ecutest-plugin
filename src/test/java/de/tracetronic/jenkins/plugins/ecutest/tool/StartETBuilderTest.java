@@ -46,19 +46,28 @@ public class StartETBuilderTest {
 
     @Test
     public void testBlankConfigShouldReturnDefaults() {
-        final StartETBuilder builder = new StartETBuilder("", "", "", false);
+        final StartETBuilder builder = new StartETBuilder("", "", "", "", false);
         assertEquals("Check default timeout", String.valueOf(StartETBuilder.DEFAULT_TIMEOUT), builder.getTimeout());
     }
 
     @Test
     public void testNull() {
-        final StartETBuilder builder = new StartETBuilder(null, null, null, false);
+        final StartETBuilder builder = new StartETBuilder(null, null, null, null, false);
         assertNotNull(builder);
         assertNull(builder.getToolName());
         assertNotNull(builder.getWorkspaceDir());
         assertTrue(builder.getWorkspaceDir().isEmpty());
+        assertTrue(builder.getSettingsDir().isEmpty());
         assertNotNull(builder.getTimeout());
         assertEquals("Check default timeout", String.valueOf(builder.getDefaultTimeout()), builder.getTimeout());
         assertFalse(builder.isDebugMode());
+    }
+
+    @SuppressWarnings("deprecation")
+    @Test
+    public void testCompatibility() {
+        final StartETBuilder builder = new StartETBuilder("", "", "", false);
+        assertNotNull(builder.getSettingsDir());
+        assertTrue(builder.getSettingsDir().isEmpty());
     }
 }

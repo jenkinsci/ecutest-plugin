@@ -68,9 +68,9 @@ public class ETLogPublisherTest {
         folder.create();
         final File infoLog = folder.newFile(ETLogPublisher.INFO_LOG_NAME);
         final File errorLog = folder.newFile(ETLogPublisher.ERROR_LOG_NAME);
-        final FilePath workspace = new FilePath(folder.getRoot());
+        final FilePath settingsDir = new FilePath(folder.getRoot());
         final TaskListener listener = mock(TaskListener.class);
-        ETLogPublisher.RunListenerImpl.onStarted(workspace, listener);
+        ETLogPublisher.RunListenerImpl.onStarted(settingsDir, listener);
 
         assertFalse("Standard log should be deleted", infoLog.exists());
         assertFalse("Errot log should be deleted", errorLog.exists());

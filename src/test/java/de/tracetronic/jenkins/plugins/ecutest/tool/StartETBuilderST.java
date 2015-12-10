@@ -63,15 +63,15 @@ public class StartETBuilderST extends SystemTestBase {
 
     @Test
     public void testRoundTripConfig() throws Exception {
-        final StartETBuilder before = new StartETBuilder("ECU-TEST", "workspace", "120", false);
+        final StartETBuilder before = new StartETBuilder("ECU-TEST", "workspace", "settings", "120", false);
         final StartETBuilder after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "workspaceDir,timeout,debugMode");
+        jenkins.assertEqualBeans(before, after, "workspaceDir,settingsDir,timeout,debugMode");
     }
 
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final StartETBuilder builder = new StartETBuilder("ECU-TEST", "workspace", "120", true);
+        final StartETBuilder builder = new StartETBuilder("ECU-TEST", "workspace", "settings", "120", true);
         project.getBuildersList().add(builder);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
@@ -80,6 +80,8 @@ public class StartETBuilderST extends SystemTestBase {
         jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
         WebAssert.assertInputPresent(page, "_.workspaceDir");
         WebAssert.assertInputContainsValue(page, "_.workspaceDir", "workspace");
+        WebAssert.assertInputPresent(page, "_.settingsDir");
+        WebAssert.assertInputContainsValue(page, "_.settingsDir", "settings");
         WebAssert.assertInputPresent(page, "_.timeout");
         WebAssert.assertInputContainsValue(page, "_.timeout", "120");
         jenkins.assertXPath(page, "//input[@name='_.debugMode' and @checked='true']");
@@ -88,7 +90,7 @@ public class StartETBuilderST extends SystemTestBase {
     @Test
     public void testToolId() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final StartETBuilder builder = new StartETBuilder("ECU-TEST", "workspace", "120", false);
+        final StartETBuilder builder = new StartETBuilder("ECU-TEST", "workspace", "settings", "120", false);
         project.getBuildersList().add(builder);
 
         final FreeStyleBuild build = mock(FreeStyleBuild.class);

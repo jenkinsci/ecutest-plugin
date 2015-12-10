@@ -57,6 +57,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 public class ETClient extends AbstractToolClient {
 
     private final String workspaceDir;
+    private final String settingsDir;
     private final boolean debug;
     private String version;
 
@@ -69,15 +70,18 @@ public class ETClient extends AbstractToolClient {
      *            the ECU-TEST install path
      * @param workspaceDir
      *            the ECU-TEST workspace directory
+     * @param settingsDir
+     *            the ECU-TEST settings directory
      * @param timeout
      *            the timeout to start ECU-TEST
      * @param debug
      *            the debug mode
      */
     public ETClient(final String toolName, final String installPath, final String workspaceDir,
-            final int timeout, final boolean debug) {
+            final String settingsDir, final int timeout, final boolean debug) {
         super(toolName, installPath, timeout);
         this.workspaceDir = StringUtils.trimToEmpty(workspaceDir);
+        this.settingsDir = StringUtils.trimToEmpty(settingsDir);
         this.debug = debug;
         version = "";
     }
@@ -93,6 +97,7 @@ public class ETClient extends AbstractToolClient {
     public ETClient(final String toolName, final int timeout) {
         super(toolName, timeout);
         workspaceDir = "";
+        settingsDir = "";
         debug = false;
         version = "";
     }
@@ -102,6 +107,13 @@ public class ETClient extends AbstractToolClient {
      */
     public String getWorkspaceDir() {
         return workspaceDir;
+    }
+
+    /**
+     * @return the settings directory
+     */
+    public String getSettingsDir() {
+        return settingsDir;
     }
 
     /**
@@ -158,7 +170,7 @@ public class ETClient extends AbstractToolClient {
             logger.logError(String.format(
                     "The configured ECU-TEST version %s is not compatible with this plugin. "
                             + "Please use at least ECU-TEST %s!", comVersion,
-                    ETPlugin.ET_MIN_VERSION.toString()));
+                            ETPlugin.ET_MIN_VERSION.toString()));
             // Close ECU-TEST
             stop(checkProcesses, launcher, listener);
             return false;
@@ -205,7 +217,7 @@ public class ETClient extends AbstractToolClient {
 
         if (!getWorkspaceDir().isEmpty()) {
             args.add("--workspaceDir", getWorkspaceDir());
-            args.add("-s", getWorkspaceDir());
+            args.add("-s", getSettingsDir());
         }
 
         if (isDebug()) {

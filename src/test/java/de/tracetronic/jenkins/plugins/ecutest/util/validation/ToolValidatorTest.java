@@ -60,7 +60,7 @@ public class ToolValidatorTest extends TestCase {
         folder.create();
     }
 
-    // Validation of workspace dir
+    // Validation of workspace directory
     @Test
     public void testEmptyWorkspaceDir() {
         final FormValidation validation = toolValidator.validateWorkspaceDir("");
@@ -83,6 +83,31 @@ public class ToolValidatorTest extends TestCase {
     public void testValidWorkspaceDir() {
         final FormValidation validation = toolValidator.validateWorkspaceDir("workspace");
         assertEquals("Valid workspace dir", FormValidation.Kind.OK, validation.kind);
+    }
+
+    // Validation of settings directory
+    @Test
+    public void testEmptySettingsDir() {
+        final FormValidation validation = toolValidator.validateSettingsDir("");
+        assertEquals("Valid if empty settings dir", FormValidation.Kind.OK, validation.kind);
+    }
+
+    @Test
+    public void testNullSettingsDir() {
+        final FormValidation validation = toolValidator.validateSettingsDir(null);
+        assertEquals("Valid if null settings dir", FormValidation.Kind.OK, validation.kind);
+    }
+
+    @Test
+    public void testParameterizedSettingsDir() {
+        final FormValidation validation = toolValidator.validateSettingsDir("${WS}");
+        assertEquals("Warning if parameterized settings dir", FormValidation.Kind.WARNING, validation.kind);
+    }
+
+    @Test
+    public void testValidSettingsDir() {
+        final FormValidation validation = toolValidator.validateSettingsDir("workspace");
+        assertEquals("Valid settings dir", FormValidation.Kind.OK, validation.kind);
     }
 
     // Validation of ToolLibs.ini
