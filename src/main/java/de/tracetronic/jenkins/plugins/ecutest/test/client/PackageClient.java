@@ -242,7 +242,7 @@ public class PackageClient extends AbstractTestClient {
         @Override
         public TestInfoHolder call() throws IOException {
             final boolean runTest = packageConfig.isRunTest();
-            final boolean runTraceAnalysis = packageConfig.isRunTest();
+            final boolean runTraceAnalysis = packageConfig.isRunTraceAnalysis();
             final int timeout = executionConfig.getTimeout();
             TestInfoHolder testInfo = null;
 
