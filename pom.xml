@@ -95,7 +95,7 @@
         <!-- JUnit -->
         <junit.version>4.12</junit.version>
         <mockito-core.version>1.10.19</mockito-core.version>
-        <maven-surefire-plugin.version>2.19</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
 
         <!-- JavaDoc -->
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
@@ -118,7 +118,7 @@
         <matrix-project.version>1.4</matrix-project.version>
         <job-dsl.version>1.37</job-dsl.version>
         <commons-validator.version>1.4.1</commons-validator.version>
-        <equalsverifier.version>1.7.5</equalsverifier.version>
+        <equalsverifier.version>1.7.6</equalsverifier.version>
     </properties>
 
     <build>
