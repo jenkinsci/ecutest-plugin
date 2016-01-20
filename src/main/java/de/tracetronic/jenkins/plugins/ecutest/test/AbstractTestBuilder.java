@@ -232,7 +232,7 @@ public abstract class AbstractTestBuilder extends Builder {
 
         // Set expanded test configuration
         expTestConfig = new TestConfig(expTbcFilePath, expTcfFilePath, expTestConfig.isForceReload(),
-                expTestConfig.getConstants());
+                expTestConfig.isLoadOnly(), expTestConfig.getConstants());
 
         // Run tests
         return runTest(expTestFilePath, expTestConfig, expExecConfig, build, launcher, listener);

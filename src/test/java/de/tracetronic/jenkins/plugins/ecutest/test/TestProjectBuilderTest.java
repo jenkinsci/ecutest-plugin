@@ -60,7 +60,7 @@ public class TestProjectBuilderTest {
 
     @Test
     public void testNull() {
-        final TestConfig testConfig = new TestConfig(null, null, false, null);
+        final TestConfig testConfig = new TestConfig(null, null, false, false, null);
         final ProjectConfig projectConfig = new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(null, false, false);
         final TestProjectBuilder builder = new TestProjectBuilder("", testConfig, projectConfig, executionConfig);
@@ -72,6 +72,7 @@ public class TestProjectBuilderTest {
         assertNotNull(builder.getTestConfig().getTcfFile());
         assertTrue(builder.getTestConfig().getTcfFile().isEmpty());
         assertFalse(builder.getTestConfig().isForceReload());
+        assertFalse(builder.getTestConfig().isLoadOnly());
         assertTrue(builder.getTestConfig().getConstants().isEmpty());
         assertFalse(builder.getProjectConfig().isExecInCurrentPkgDir());
         assertNotNull(builder.getProjectConfig().getFilterExpression());

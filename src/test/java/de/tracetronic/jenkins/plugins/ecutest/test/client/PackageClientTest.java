@@ -64,7 +64,7 @@ public class PackageClientTest {
 
     @Test
     public void testNullConstructor() {
-        final TestConfig testConfig = new TestConfig(null, null, false, null);
+        final TestConfig testConfig = new TestConfig(null, null, false, false, null);
         final PackageConfig packageConfig = new PackageConfig(true, true, null);
         final ExecutionConfig executionConfig = new ExecutionConfig(30, true, true);
         final PackageClient client = new PackageClient(null, testConfig, packageConfig, executionConfig);
@@ -73,6 +73,7 @@ public class PackageClientTest {
         assertEquals("", client.getTestConfig().getTbcFile());
         assertEquals("", client.getTestConfig().getTcfFile());
         assertFalse(client.getTestConfig().isForceReload());
+        assertFalse(client.getTestConfig().isLoadOnly());
         assertTrue(client.getTestConfig().getConstants().isEmpty());
         assertEquals("", client.getTestName());
         assertEquals("", client.getTestDescription());

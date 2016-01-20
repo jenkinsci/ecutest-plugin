@@ -70,7 +70,7 @@ public class TestFolderBuilderST extends SystemTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true);
+        final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true, true);
         final PackageConfig packageConfig = new PackageConfig(true, true);
         final ProjectConfig projectConfig = new ProjectConfig(true, "filter", JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
@@ -88,6 +88,7 @@ public class TestFolderBuilderST extends SystemTestBase {
         WebAssert.assertInputPresent(page, "_.tcfFile");
         WebAssert.assertInputContainsValue(page, "_.tcfFile", "test.tcf");
         jenkins.assertXPath(page, "//input[@name='_.forceReload' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.loadOnly' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runTest' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runTraceAnalysis' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.execInCurrentPkgDir' and @checked='true']");

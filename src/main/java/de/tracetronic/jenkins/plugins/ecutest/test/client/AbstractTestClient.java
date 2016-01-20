@@ -197,34 +197,22 @@ public abstract class AbstractTestClient implements TestClient {
 
         @Override
         public Boolean call() throws IOException {
-            String tbcFile = testConfig.getTbcFile();
-            String tcfFile = testConfig.getTcfFile();
+            final String tbcFile = testConfig.getTbcFile();
+            final String tcfFile = testConfig.getTcfFile();
             final List<GlobalConstant> constants = testConfig.getConstants();
             final int timeout = executionConfig.getTimeout();
             boolean isLoaded = false;
 
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             try (ETComClient comClient = new ETComClient()) {
-                final String tbcName;
-                final String tcfName;
-                if (tbcFile.isEmpty()) {
-                    tbcName = "None";
-                    tbcFile = null;
-                } else {
-                    tbcName = new File(tbcFile).getName();
-                }
-                if (tcfFile.isEmpty()) {
-                    tcfName = "None";
-                    tcfFile = null;
-                } else {
-                    tcfName = new File(tcfFile).getName();
-                }
-                logger.logInfo(String.format("- Loading test configuration: TBC=%s TCF=%s", tbcName, tcfName));
+                final String tbcName = getConfigName(tbcFile);
+                final String tcfName = getConfigName(tcfFile);
+                logger.logInfo(String.format("- Loading configurations: TBC=%s TCF=%s", tbcName, tcfName));
                 if (testConfig.isForceReload()) {
-                    logger.logInfo("-> Forcing reload...");
+                    logger.logInfo("-> Forcing reload configurations...");
                     comClient.stop();
                 }
-                if (comClient.openTestConfiguration(tcfFile)) {
+                if (comClient.openTestConfiguration(StringUtils.defaultIfBlank(tcfFile, null))) {
                     if (tcfFile != null && !constants.isEmpty()) {
                         comClient.start();
                         final TestConfiguration testConfig = (TestConfiguration) comClient
@@ -238,20 +226,47 @@ public abstract class AbstractTestClient implements TestClient {
                         comClient.openTestConfiguration(tcfFile);
                         comClient.stop();
                     }
+                    logger.logInfo("-> Test configuration loaded successfully.");
                 } else {
                     logger.logError(String.format("-> Loading TCF=%s failed!", tcfName));
                 }
-                if (comClient.openTestbenchConfiguration(tbcFile)) {
+                if (comClient.openTestbenchConfiguration(StringUtils.defaultIfBlank(tbcFile, null))) {
                     comClient.waitForIdle(timeout);
                     isLoaded = true;
-                    logger.logInfo("-> Test configuration loaded successfully.");
+                    logger.logInfo("-> Test bench configuration loaded successfully.");
                 } else {
                     logger.logError(String.format("-> Loading TBC=%s failed!", tbcName));
+                }
+                if (isLoaded) {
+                    if (testConfig.isLoadOnly()) {
+                        logger.logInfo("-> Starting configurations will be skipped.");
+                    } else {
+                        logger.logInfo("- Starting configurations...");
+                        comClient.start();
+                        logger.logInfo("-> Configurations started successfully.");
+                    }
                 }
             } catch (final ETComException e) {
                 logger.logError("Caught ComException: " + e.getMessage());
             }
             return isLoaded;
+        }
+
+        /**
+         * Gets the name of the given configuration file.
+         *
+         * @param configFile
+         *            the configuration file
+         * @return the configuration name
+         */
+        private String getConfigName(final String configFile) {
+            String configName;
+            if (StringUtils.isBlank(configFile)) {
+                configName = "None";
+            } else {
+                configName = new File(configFile).getName();
+            }
+            return configName;
         }
 
         /**

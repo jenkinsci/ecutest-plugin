@@ -40,6 +40,9 @@
         <f:entry title="${%forceReload.title}" description="${%forceReload.description}" field="forceReload">
             <f:checkbox default="false" />
         </f:entry>
+        <f:entry title="${%loadOnly.title}" description="${%loadOnly.description}" field="loadOnly">
+            <f:checkbox default="false" />
+        </f:entry>
         <f:advanced title="${%constants.title}">
             <f:entry title="${%constants.title}" description="${%constants.description}" field="constants">
                 <f:repeatableProperty field="constants" add="${%constants.add}" minimum="0" />

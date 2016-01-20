@@ -84,7 +84,8 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
         public void testConfig(final Runnable closure) {
             final TestConfigContext context = new TestConfigContext();
             executeInContext(closure, context);
-            testConfig = new TestConfig(context.tbcFile, context.tcfFile, context.forceReload, context.constants);
+            testConfig = new TestConfig(context.tbcFile, context.tcfFile, context.forceReload, context.loadOnly,
+                    context.constants);
         }
 
         /**
@@ -112,6 +113,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             private String tbcFile;
             private String tcfFile;
             private boolean forceReload;
+            private boolean loadOnly;
             private List<GlobalConstant> constants;
 
             /**
@@ -148,6 +150,16 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
              */
             public void forceReload(final boolean value) {
                 forceReload = value;
+            }
+
+            /**
+             * Option defining whether to load the test configuration only.
+             *
+             * @param value
+             *            the value
+             */
+            public void loadOnly(final boolean value) {
+                loadOnly = value;
             }
 
             /**

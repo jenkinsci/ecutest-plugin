@@ -5,6 +5,7 @@ freeStyleJob("testBuilder") {
                 tbcFile("test.tbc")
                 tcfFile("test.tcf")
                 forceReload(true)
+                loadOnly(true)
                 constants {
                     constant("test", "123")
                     constant {
@@ -35,6 +36,7 @@ freeStyleJob("testBuilder") {
                 tbcFile("test.tbc")
                 tcfFile("test.tcf")
                 forceReload(true)
+                loadOnly(true)
                 constants {
                     constant("test", "123")
                     constant {
@@ -61,6 +63,7 @@ freeStyleJob("testBuilder") {
                 tbcFile("test.tbc")
                 tcfFile("test.tcf")
                 forceReload(true)
+                loadOnly(true)
                 constants {
                     constant {
                         name("test")

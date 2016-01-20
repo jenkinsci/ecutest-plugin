@@ -63,7 +63,7 @@ public class TestFolderBuilderTest {
 
     @Test
     public void testNull() {
-        final TestConfig testConfig = new TestConfig(null, null, false, null);
+        final TestConfig testConfig = new TestConfig(null, null, false, false, null);
         final PackageConfig packageConfig = new PackageConfig(true, true, null);
         final ProjectConfig projectConfig = new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(null, false, false);
@@ -77,6 +77,7 @@ public class TestFolderBuilderTest {
         assertNotNull(builder.getTestConfig().getTcfFile());
         assertTrue(builder.getTestConfig().getTcfFile().isEmpty());
         assertFalse(builder.getTestConfig().isForceReload());
+        assertFalse(builder.getTestConfig().isLoadOnly());
         assertTrue(builder.getTestConfig().getConstants().isEmpty());
         assertTrue(builder.getPackageConfig().isRunTest());
         assertTrue(builder.getPackageConfig().isRunTraceAnalysis());

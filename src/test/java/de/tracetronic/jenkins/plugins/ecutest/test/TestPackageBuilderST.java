@@ -65,7 +65,7 @@ public class TestPackageBuilderST extends SystemTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true);
+        final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true, true);
         final PackageConfig packageConfig = new PackageConfig(true, true);
         final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final TestPackageBuilder builder = new TestPackageBuilder("test.pkg", testConfig, packageConfig,
@@ -81,6 +81,7 @@ public class TestPackageBuilderST extends SystemTestBase {
         WebAssert.assertInputPresent(page, "_.tcfFile");
         WebAssert.assertInputContainsValue(page, "_.tcfFile", "test.tcf");
         jenkins.assertXPath(page, "//input[@name='_.forceReload' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.loadOnly' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runTest' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runTraceAnalysis' and @checked='true']");
         WebAssert.assertInputPresent(page, "_.timeout");

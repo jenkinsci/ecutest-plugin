@@ -61,6 +61,10 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
      * @since 1.4
      */
     private final boolean forceReload;
+    /**
+     * @since 1.6
+     */
+    private final boolean loadOnly;
     private final List<GlobalConstant> constants;
 
     /**
@@ -72,16 +76,19 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
      *            the test configuration file
      * @param forceReload
      *            specifies whether to reload the configuration
+     * @param loadOnly
+     *            specifies whether to load the configuration only
      * @param constants
      *            the list of global constants
      */
     @DataBoundConstructor
-    public TestConfig(final String tbcFile, final String tcfFile, final boolean forceReload,
+    public TestConfig(final String tbcFile, final String tcfFile, final boolean forceReload, final boolean loadOnly,
             final List<GlobalConstant> constants) {
         super();
         this.tbcFile = StringUtils.trimToEmpty(tbcFile);
         this.tcfFile = StringUtils.trimToEmpty(tcfFile);
         this.forceReload = forceReload;
+        this.loadOnly = loadOnly;
         this.constants = constants == null ? new ArrayList<GlobalConstant>() : removeEmptyConstants(constants);
     }
 
@@ -94,7 +101,7 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
      *            the test configuration file
      */
     public TestConfig(final String tbcFile, final String tcfFile) {
-        this(tbcFile, tcfFile, false, null);
+        this(tbcFile, tcfFile, false, false, null);
     }
 
     /**
@@ -106,9 +113,11 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
      *            the test configuration file
      * @param forceReload
      *            specifies whether to reload the configuration
+     * @param loadOnly
+     *            specifies whether to load the configuration only
      */
-    public TestConfig(final String tbcFile, final String tcfFile, final boolean forceReload) {
-        this(tbcFile, tcfFile, forceReload, null);
+    public TestConfig(final String tbcFile, final String tcfFile, final boolean forceReload, final boolean loadOnly) {
+        this(tbcFile, tcfFile, forceReload, loadOnly, null);
     }
 
     /**
@@ -120,11 +129,11 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
      *            the test configuration file
      * @param constants
      *            the list of global constants
-     * @deprecated since 1.4, use {@link #TestConfig(String, String, boolean, List)}
+     * @deprecated since 1.4, use {@link #TestConfig(String, String, boolean, boolean, List)}
      */
     @Deprecated
     public TestConfig(final String tbcFile, final String tcfFile, final List<GlobalConstant> constants) {
-        this(tbcFile, tcfFile, false, constants);
+        this(tbcFile, tcfFile, false, false, constants);
     }
 
     /**
@@ -146,6 +155,13 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
      */
     public boolean isForceReload() {
         return forceReload;
+    }
+
+    /**
+     * @return specifies whether to load the configuration only
+     */
+    public boolean isLoadOnly() {
+        return loadOnly;
     }
 
     /**
@@ -180,9 +196,10 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
         for (final GlobalConstant constant : getConstants()) {
             constants.add(constant.expand(envVars));
         }
-        return new TestConfig(expTbcFile, expTcfFile, isForceReload(), constants);
+        return new TestConfig(expTbcFile, expTcfFile, isForceReload(), isLoadOnly(), constants);
     }
 
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
     public final boolean equals(final Object that) {
         if (this == that) {
@@ -195,7 +212,7 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
         if ((constants == null ? other.constants != null : !constants.equals(other.constants))
                 || (tbcFile == null ? other.tbcFile != null : !tbcFile.equals(other.tbcFile))
                 || (tcfFile == null ? other.tcfFile != null : !tcfFile.equals(other.tcfFile))
-                || forceReload != other.forceReload) {
+                || forceReload != other.forceReload || loadOnly != other.loadOnly) {
             return false;
         }
         return true;
@@ -203,15 +220,15 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
 
     @Override
     public final int hashCode() {
-        return new HashCodeBuilder(17, 31).append(tbcFile).append(tcfFile).append(forceReload).append(constants)
-                .toHashCode();
+        return new HashCodeBuilder(17, 31).append(tbcFile).append(tcfFile).append(forceReload).append(loadOnly)
+                .append(constants).toHashCode();
     }
 
     /**
      * @return the instance of a {@link TestConfig}.
      */
     public static TestConfig newInstance() {
-        return new TestConfig(null, null, false, null);
+        return new TestConfig(null, null, false, false, null);
     }
 
     /**

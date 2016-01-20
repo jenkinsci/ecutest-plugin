@@ -52,19 +52,21 @@ public class TestConfigTest {
 
     @Test
     public void testNullConstructor() {
-        final TestConfig config = new TestConfig(null, null, false, null);
+        final TestConfig config = new TestConfig(null, null, false, false, null);
         assertThat(config.getTbcFile(), is(""));
         assertThat(config.getTcfFile(), is(""));
         assertFalse(config.isForceReload());
+        assertFalse(config.isLoadOnly());
         assertNotNull(config.getConstants());
     }
 
     @Test
     public void testEmptyConstructor() {
-        final TestConfig config = new TestConfig(null, null, false);
+        final TestConfig config = new TestConfig(null, null, false, false);
         assertThat(config.getTbcFile(), is(""));
         assertThat(config.getTcfFile(), is(""));
         assertFalse(config.isForceReload());
+        assertFalse(config.isLoadOnly());
         assertTrue(config.getConstants().isEmpty());
     }
 
@@ -72,7 +74,7 @@ public class TestConfigTest {
     public void testEmptyConstants() {
         final List<GlobalConstant> constants = new ArrayList<GlobalConstant>();
         constants.add(new GlobalConstant(" ", " "));
-        final TestConfig config = new TestConfig(null, null, false, constants);
+        final TestConfig config = new TestConfig(null, null, false, false, constants);
         assertTrue(config.getConstants().isEmpty());
     }
 
@@ -80,7 +82,7 @@ public class TestConfigTest {
     public void testExpand() {
         final List<GlobalConstant> constants = new ArrayList<GlobalConstant>();
         constants.add(new GlobalConstant("${NAME}", "${VALUE}"));
-        final TestConfig config = new TestConfig("${TBC}", "${TCF}", false, constants);
+        final TestConfig config = new TestConfig("${TBC}", "${TCF}", false, false, constants);
         final EnvVars envVars = new EnvVars();
         envVars.put("TBC", "test.tbc");
         envVars.put("TCF", "test.tcf");
@@ -90,6 +92,7 @@ public class TestConfigTest {
         assertThat(expConfig.getTbcFile(), is("test.tbc"));
         assertThat(expConfig.getTcfFile(), is("test.tcf"));
         assertFalse(config.isForceReload());
+        assertFalse(config.isLoadOnly());
         assertThat(expConfig.getConstants().get(0).getName(), is("name"));
         assertThat(expConfig.getConstants().get(0).getValue(), is("value"));
     }
@@ -99,6 +102,7 @@ public class TestConfigTest {
     public void testCompatibility() {
         final TestConfig config = new TestConfig(null, null, null);
         assertFalse(config.isForceReload());
+        assertFalse(config.isLoadOnly());
     }
 
     @Test

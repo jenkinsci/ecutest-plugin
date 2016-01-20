@@ -88,7 +88,7 @@ public class ProjectClient extends AbstractTestClient {
 
     @Override
     public boolean runTestCase(final Launcher launcher, final BuildListener listener) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -252,7 +252,7 @@ public class ProjectClient extends AbstractTestClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Running project...");
             try (ETComClient comClient = new ETComClient();
-                    TestEnvironment testEnv = (TestEnvironment) comClient.start();
+                    TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                     TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.executeProject(projectFile, true,
                             jobExecutionMode)) {
                 int tickCounter = 0;

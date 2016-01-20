@@ -253,7 +253,7 @@ public class PackageClient extends AbstractTestClient {
                 logger.logInfo("-> With parameters: " + paramMap.toString());
             }
             try (ETComClient comClient = new ETComClient();
-                    TestEnvironment testEnv = (TestEnvironment) comClient.start();
+                    TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                     TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.executePackage(packageFile,
                             runTraceAnalysis, runTest, paramMap)) {
                 int tickCounter = 0;
