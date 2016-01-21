@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -51,4 +51,14 @@ public interface ComTestConfiguration {
      *             in case of a COM exception
      */
     void setGlobalConstant(String name, String value) throws ETComException;
+
+    /**
+     * Queries all global constants of the currently loaded test configuration.
+     *
+     * @return the global constants
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    ComConstants getGlobalConstants() throws ETComException;
+
 }

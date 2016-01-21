@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -35,6 +35,7 @@ import hudson.remoting.Callable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,9 +47,11 @@ import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.GlobalConstant;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Constant;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestConfiguration;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComConstants;
 
 /**
  * Common base class for {@link PackageClient} and {@link ProjectClient}.
@@ -201,9 +204,9 @@ public abstract class AbstractTestClient implements TestClient {
             final String tcfFile = testConfig.getTcfFile();
             final List<GlobalConstant> constants = testConfig.getConstants();
             final int timeout = executionConfig.getTimeout();
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
             boolean isLoaded = false;
 
-            final TTConsoleLogger logger = new TTConsoleLogger(listener);
             try (ETComClient comClient = new ETComClient()) {
                 final String tbcName = getConfigName(tbcFile);
                 final String tcfName = getConfigName(tcfFile);
@@ -214,26 +217,19 @@ public abstract class AbstractTestClient implements TestClient {
                 }
                 if (comClient.openTestConfiguration(StringUtils.defaultIfBlank(tcfFile, null))) {
                     if (tcfFile != null && !constants.isEmpty()) {
-                        comClient.start();
-                        final TestConfiguration testConfig = (TestConfiguration) comClient
-                                .getCurrentTestConfiguration();
                         final Map<String, String> constantMap = getGlobalConstantMap();
                         logger.logInfo("-> With global constants: " + constantMap.toString());
-                        for (final Entry<String, String> constant : constantMap.entrySet()) {
-                            testConfig.setGlobalConstant(constant.getKey(), constant.getValue());
-                        }
-                        // Reload test configuration
-                        comClient.openTestConfiguration(tcfFile);
-                        comClient.stop();
+                        setGlobalConstants(comClient, constantMap, tcfFile);
                     }
+                    comClient.waitForIdle(timeout);
                     logger.logInfo("-> Test configuration loaded successfully.");
                 } else {
                     logger.logError(String.format("-> Loading TCF=%s failed!", tcfName));
                 }
                 if (comClient.openTestbenchConfiguration(StringUtils.defaultIfBlank(tbcFile, null))) {
                     comClient.waitForIdle(timeout);
-                    isLoaded = true;
                     logger.logInfo("-> Test bench configuration loaded successfully.");
+                    isLoaded = true;
                 } else {
                     logger.logError(String.format("-> Loading TBC=%s failed!", tbcName));
                 }
@@ -248,6 +244,7 @@ public abstract class AbstractTestClient implements TestClient {
                 }
             } catch (final ETComException e) {
                 logger.logError("Caught ComException: " + e.getMessage());
+                isLoaded = false;
             }
             return isLoaded;
         }
@@ -270,11 +267,71 @@ public abstract class AbstractTestClient implements TestClient {
         }
 
         /**
+         * Sets the constants that are not already present in the currently loaded test configuration.
+         * Identical global constants means both having the same name and the same value.
+         * This requires to start the configuration, add the constants and reload the configuration.
+         *
+         * @param comClient
+         *            the COM client
+         * @param constantMap
+         *            the constant map to set
+         * @param tcfFile
+         *            the test configuration file
+         * @throws ETComException
+         *             in case of a COM exception
+         */
+        private void setGlobalConstants(final ETComClient comClient, final Map<String, String> constantMap,
+                final String tcfFile) throws ETComException {
+            comClient.start();
+            boolean reloadConfig = false;
+            final TestConfiguration testConfig = (TestConfiguration) comClient.getCurrentTestConfiguration();
+            final List<Constant> currentConstants = getCurrentConstants(testConfig.getGlobalConstants());
+            for (final Entry<String, String> constant : constantMap.entrySet()) {
+                boolean newConstant = true;
+                for (final Constant currentConstant : currentConstants) {
+                    if (currentConstant.getName().equals(constant.getKey())
+                            && currentConstant.getValue().equals(constant.getValue())) {
+                        newConstant = false;
+                        break;
+                    }
+                }
+                if (newConstant) {
+                    testConfig.setGlobalConstant(constant.getKey(), constant.getValue());
+                    reloadConfig = true;
+                }
+            }
+            if (reloadConfig) {
+                comClient.openTestConfiguration(tcfFile);
+                comClient.stop();
+            }
+        }
+
+        /**
+         * Gets the global constants of the currently loaded test configuration.
+         *
+         * @param globalConstants
+         *            the global constants
+         * @return the current constants
+         * @throws ETComException
+         *             in case of a COM exception
+         */
+        private List<Constant> getCurrentConstants(final ComConstants globalConstants) throws ETComException {
+            final List<Constant> constants = new ArrayList<Constant>();
+            for (int i = 0; i < globalConstants.getCount(); i++) {
+                final Constant constant = (Constant) globalConstants.item(i);
+                constants.add(constant);
+            }
+            return constants;
+        }
+
+        /**
          * Converts the global constant list to a map.
          *
          * @return the global constant map
+         * @throws ETComException
+         *             in case of a COM exception
          */
-        private Map<String, String> getGlobalConstantMap() {
+        private Map<String, String> getGlobalConstantMap() throws ETComException {
             final Map<String, String> constantMap = new LinkedHashMap<String, String>();
             for (final GlobalConstant constant : testConfig.getConstants()) {
                 constantMap.put(constant.getName(), constant.getValue());

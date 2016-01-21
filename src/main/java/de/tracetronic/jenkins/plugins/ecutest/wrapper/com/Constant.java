@@ -29,24 +29,19 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.jacob.com.Dispatch;
-import com.jacob.com.Variant;
 
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComConstants;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestConfiguration;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComConstant;
 
 /**
- * COM object representing the currently loaded test configuration file and
- * provides methods for accessing the contained settings.
+ * COM object giving access to the properties of a constant.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class TestConfiguration extends ETComDispatch implements ComTestConfiguration {
+public class Constant extends AbstractTestObject implements ComConstant {
 
     /**
-     * Instantiates a new {@link TestConfiguration}.
+     * Instantiates a new {@link Constant}.
      *
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
@@ -54,25 +49,22 @@ public class TestConfiguration extends ETComDispatch implements ComTestConfigura
      * @param dispatch
      *            the dispatch
      */
-    public TestConfiguration(final Dispatch dispatch) {
+    public Constant(final Dispatch dispatch) {
         super(dispatch);
     }
 
     @Override
-    public void setGlobalConstant(final String name, final String value) throws ETComException {
-        Object objValue;
-        if (StringUtils.isNotEmpty(value) && StringUtils.isNumeric(value)) {
-            // Assume Python integer literal
-            objValue = value;
-        } else {
-            // Convert to Python string literal
-            objValue = String.format("'%s'", value);
-        }
-        performRequest("SetGlobalConstant", new Variant(name), new Variant(objValue));
+    public String getName() throws ETComException {
+        return performRequest("GetName").getString();
     }
 
     @Override
-    public ComConstants getGlobalConstants() throws ETComException {
-        return new Constants(performRequest("GetGlobalConstants").toDispatch());
+    public String getDescription() throws ETComException {
+        return performRequest("GetDescription").getString();
+    }
+
+    @Override
+    public String getValue() throws ETComException {
+        return performRequest("GetValue").getString();
     }
 }

@@ -27,52 +27,48 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
+package de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api;
 
-import org.apache.commons.lang.StringUtils;
-
-import com.jacob.com.Dispatch;
-import com.jacob.com.Variant;
-
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComConstants;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestConfiguration;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 
 /**
- * COM object representing the currently loaded test configuration file and
- * provides methods for accessing the contained settings.
+ * Represents the ECU-TEST specific COMConstants API.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class TestConfiguration extends ETComDispatch implements ComTestConfiguration {
+public interface ComConstants {
 
     /**
-     * Instantiates a new {@link TestConfiguration}.
+     * Queries the number of constants.
      *
-     * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
-     * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
-     *
-     * @param dispatch
-     *            the dispatch
+     * @return the number of constants
+     * @throws ETComException
+     *             in case of a COM exception
      */
-    public TestConfiguration(final Dispatch dispatch) {
-        super(dispatch);
-    }
+    int getCount() throws ETComException;
 
-    @Override
-    public void setGlobalConstant(final String name, final String value) throws ETComException {
-        Object objValue;
-        if (StringUtils.isNotEmpty(value) && StringUtils.isNumeric(value)) {
-            // Assume Python integer literal
-            objValue = value;
-        } else {
-            // Convert to Python string literal
-            objValue = String.format("'%s'", value);
-        }
-        performRequest("SetGlobalConstant", new Variant(name), new Variant(objValue));
-    }
+    /**
+     * Returns a specified constant by index.
+     * The index should be larger than 0 and lesser than the number of constants.
+     * The count of constants can be determined with {@link #getCount()}.
+     *
+     * @param id
+     *            the id of the constant
+     * @return the specified constant
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    ComConstant item(int id) throws ETComException;
 
-    @Override
-    public ComConstants getGlobalConstants() throws ETComException {
-        return new Constants(performRequest("GetGlobalConstants").toDispatch());
-    }
+    /**
+     * Returns a specified constant by name.
+     *
+     * @param name
+     *            the name of the constant
+     * @return the specified constant
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    ComConstant item(String name) throws ETComException;
+
 }

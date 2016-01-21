@@ -27,52 +27,42 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
+package de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api;
 
-import org.apache.commons.lang.StringUtils;
-
-import com.jacob.com.Dispatch;
-import com.jacob.com.Variant;
-
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComConstants;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestConfiguration;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 
 /**
- * COM object representing the currently loaded test configuration file and
- * provides methods for accessing the contained settings.
+ * Represents the ECU-TEST specific COMConstant API.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class TestConfiguration extends ETComDispatch implements ComTestConfiguration {
+public interface ComConstant {
 
     /**
-     * Instantiates a new {@link TestConfiguration}.
+     * Queries the constant name.
      *
-     * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
-     * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
-     *
-     * @param dispatch
-     *            the dispatch
+     * @return the name of this constant
+     * @throws ETComException
+     *             in case of a COM exception
      */
-    public TestConfiguration(final Dispatch dispatch) {
-        super(dispatch);
-    }
+    String getName() throws ETComException;
 
-    @Override
-    public void setGlobalConstant(final String name, final String value) throws ETComException {
-        Object objValue;
-        if (StringUtils.isNotEmpty(value) && StringUtils.isNumeric(value)) {
-            // Assume Python integer literal
-            objValue = value;
-        } else {
-            // Convert to Python string literal
-            objValue = String.format("'%s'", value);
-        }
-        performRequest("SetGlobalConstant", new Variant(name), new Variant(objValue));
-    }
+    /**
+     * Queries the constant description.
+     *
+     * @return the description of this constant
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    String getDescription() throws ETComException;
 
-    @Override
-    public ComConstants getGlobalConstants() throws ETComException {
-        return new Constants(performRequest("GetGlobalConstants").toDispatch());
-    }
+    /**
+     * Queries the constant value.
+     *
+     * @return the value of this constant
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    String getValue() throws ETComException;
+
 }
