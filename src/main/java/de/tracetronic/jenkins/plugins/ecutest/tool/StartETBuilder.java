@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -36,11 +36,13 @@ import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
+import hudson.util.FormValidation;
 
 import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
@@ -270,6 +272,28 @@ public class StartETBuilder extends AbstractToolBuilder {
         @Override
         public int getDefaultTimeout() {
             return DEFAULT_TIMEOUT;
+        }
+
+        /**
+         * Validates the workspace directory.
+         *
+         * @param value
+         *            the workspace directory
+         * @return the form validation
+         */
+        public FormValidation doCheckWorkspaceDir(@QueryParameter final String value) {
+            return toolValidator.validateWorkspaceDir(value);
+        }
+
+        /**
+         * Validates the settings directory.
+         *
+         * @param value
+         *            the settings directory
+         * @return the form validation
+         */
+        public FormValidation doCheckSettingsDir(@QueryParameter final String value) {
+            return toolValidator.validateSettingsDir(value);
         }
 
         @Override

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -102,28 +102,6 @@ public abstract class AbstractToolDescriptor extends BuildStepDescriptor<Builder
      * @return the default timeout
      */
     public abstract int getDefaultTimeout();
-
-    /**
-     * Validates the workspace directory.
-     *
-     * @param value
-     *            the workspace directory
-     * @return the form validation
-     */
-    public FormValidation doCheckWorkspaceDir(@QueryParameter final String value) {
-        return toolValidator.validateWorkspaceDir(value);
-    }
-
-    /**
-     * Validates the settings directory.
-     *
-     * @param value
-     *            the settings directory
-     * @return the form validation
-     */
-    public FormValidation doCheckSettingsDir(@QueryParameter final String value) {
-        return toolValidator.validateSettingsDir(value);
-    }
 
     /**
      * Validates the timeout.
