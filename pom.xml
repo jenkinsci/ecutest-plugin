@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Copyright (c) 2015 TraceTronic GmbH
+    Copyright (c) 2015-2016 TraceTronic GmbH
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification,
@@ -85,7 +85,7 @@
         <local.repo.path>${basedir}/lib</local.repo.path>
 
         <!-- Compiler settings -->
-        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.5</maven-compiler-plugin.version>
         <java-source.version>1.7</java-source.version>
         <java-target.version>1.7</java-target.version>
 
@@ -118,7 +118,7 @@
         <matrix-project.version>1.4</matrix-project.version>
         <job-dsl.version>1.37</job-dsl.version>
         <commons-validator.version>1.4.1</commons-validator.version>
-        <equalsverifier.version>1.7.6</equalsverifier.version>
+        <equalsverifier.version>1.7.7</equalsverifier.version>
     </properties>
 
     <build>
