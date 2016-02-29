@@ -85,7 +85,7 @@
         <local.repo.path>${basedir}/lib</local.repo.path>
 
         <!-- Compiler settings -->
-        <maven-compiler-plugin.version>3.5</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
         <java-source.version>1.7</java-source.version>
         <java-target.version>1.7</java-target.version>
 
@@ -110,8 +110,8 @@
         <maven-pmd-plugin.version>3.6</maven-pmd-plugin.version>
 
         <!-- ANTLR -->
-        <antlr4-maven-plugin.version>4.5.1-1</antlr4-maven-plugin.version>
-        <antlr4-runtime.version>4.5.1-1</antlr4-runtime.version>
+        <antlr4-maven-plugin.version>4.5.2-1</antlr4-maven-plugin.version>
+        <antlr4-runtime.version>4.5.2-1</antlr4-runtime.version>
 
         <!-- Other dependencies -->
         <jacob.version>1.18</jacob.version>
