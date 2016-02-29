@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -280,11 +280,11 @@ public class ETLogPublisher extends AbstractReportPublisher {
         FilePath workspace;
         final ToolEnvInvisibleAction toolEnvAction = build.getAction(ToolEnvInvisibleAction.class);
         if (toolEnvAction != null) {
-            workspace = new FilePath(launcher.getChannel(), toolEnvAction.getToolWorkspace());
+            workspace = new FilePath(launcher.getChannel(), toolEnvAction.getToolSettings());
         } else {
             workspace = build.getWorkspace();
         }
-        if (workspace != null) {
+        if (workspace != null && workspace.exists()) {
             final String includes = String.format("%s,%s", INFO_LOG_NAME, ERROR_LOG_NAME);
             for (final String includeFile : workspace.act(new ListFilesCallable(includes, ""))) {
                 final FilePath archiveFile = new FilePath(launcher.getChannel(), includeFile);
@@ -319,7 +319,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
 
         @Override
         public List<String> invoke(final File baseDir, final VirtualChannel channel) throws IOException,
-        InterruptedException {
+                InterruptedException {
             final List<String> files = new ArrayList<String>();
             for (final String includedFile : Util.createFileSet(baseDir, includes, excludes)
                     .getDirectoryScanner().getIncludedFiles()) {
