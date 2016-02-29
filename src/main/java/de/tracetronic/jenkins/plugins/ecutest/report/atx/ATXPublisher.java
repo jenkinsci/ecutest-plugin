@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
-import hudson.AbortException;
 import hudson.CopyOnWrite;
 import hudson.DescriptorExtensionList;
 import hudson.Extension;
@@ -136,11 +135,12 @@ public class ATXPublisher extends AbstractReportPublisher {
 
         final ATXInstallation installation = getATXInstallation(atxName);
         if (installation == null) {
-            throw new AbortException(Messages.ATXPublisher_NoInstallation());
+            logger.logError(Messages.ATXPublisher_NoInstallation());
+            return false;
         }
 
         // Get selected ECU-TEST installation
-        final String toolName = installation.getToolName();
+        String toolName = installation.getToolName();
         final AbstractToolInstallation etInstallation = configureToolInstallation(toolName, listener,
                 build.getEnvironment(listener));
 
@@ -156,6 +156,7 @@ public class ATXPublisher extends AbstractReportPublisher {
                 final String installPath = etInstallation.getExecutable(launcher);
                 final String workspaceDir = getWorkspaceDir(build);
                 final String settingsDir = getSettingsDir(build);
+                toolName = build.getEnvironment(listener).expand(etInstallation.getName());
                 final ETClient etClient = new ETClient(toolName, installPath, workspaceDir, settingsDir,
                         StartETBuilder.DEFAULT_TIMEOUT, false);
                 logger.logInfo(String.format("Starting %s...", toolName));
@@ -172,7 +173,8 @@ public class ATXPublisher extends AbstractReportPublisher {
                     logger.logError(String.format("Stopping %s failed.", toolName));
                 }
             } else {
-                throw new AbortException(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+                logger.logError(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+                return false;
             }
         }
 
@@ -204,7 +206,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean publishReports(final ATXInstallation installation, final AbstractBuild<?, ?> build,
             final Launcher launcher, final BuildListener listener)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final boolean isUploadEnabled = isUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, launcher);
@@ -251,7 +253,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      *             if the build gets interrupted
      */
     private boolean isServerReachable(final ATXInstallation installation, final Launcher launcher) throws IOException,
-            InterruptedException {
+    InterruptedException {
         final ATXConfig config = installation.getConfig();
         return launcher.getChannel().call(new TestConnectionCallable(config));
     }

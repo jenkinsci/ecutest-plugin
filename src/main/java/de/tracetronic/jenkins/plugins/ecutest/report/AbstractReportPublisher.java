@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -164,7 +164,7 @@ public abstract class AbstractReportPublisher extends Recorder {
      */
     protected AbstractToolInstallation configureToolInstallation(final String toolName,
             final BuildListener listener, final EnvVars env) throws IOException, InterruptedException {
-        AbstractToolInstallation installation = getToolInstallation(toolName);
+        AbstractToolInstallation installation = getToolInstallation(toolName, env);
         if (installation != null) {
             installation = installation.forNode(Computer.currentComputer().getNode(), listener);
             installation = installation.forEnvironment(env);
@@ -177,15 +177,18 @@ public abstract class AbstractReportPublisher extends Recorder {
      *
      * @param toolName
      *            the tool name identifying the specific tool
+     * @param env
+     *            the environment
      * @return the tool installation
      */
-    private ETInstallation getToolInstallation(final String toolName) {
+    public ETInstallation getToolInstallation(final String toolName, final EnvVars env) {
         final Jenkins instance = Jenkins.getInstance();
         if (instance != null) {
             final ETInstallation[] installations = instance.getDescriptorByType(
                     ETInstallation.DescriptorImpl.class).getInstallations();
+            final String expToolName = env.expand(toolName);
             for (final ETInstallation installation : installations) {
-                if (toolName != null && toolName.equals(installation.getName())) {
+                if (expToolName != null && expToolName.equals(installation.getName())) {
                     return installation;
                 }
             }

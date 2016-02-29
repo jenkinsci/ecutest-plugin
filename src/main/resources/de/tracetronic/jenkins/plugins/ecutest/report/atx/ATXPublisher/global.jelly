@@ -1,5 +1,5 @@
 <!--
-    Copyright (c) 2015 TraceTronic GmbH
+    Copyright (c) 2015-2016 TraceTronic GmbH
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification,
@@ -38,13 +38,7 @@
                         <f:entry title="${%Name}" field="name">
                             <f:textbox value="${inst.getName()}" />
                         </f:entry>
-                        <f:entry title="${%tool.title}" description="${%tool.description}" field="toolName">
-                            <select class="setting-input" name="atxInstallation.toolName">
-                                <j:forEach var="etInst" items="${descriptor.toolDescriptor.installations}">
-                                    <f:option selected="${etInst.name==inst.toolName}">${etInst.name}</f:option>
-                                </j:forEach>
-                            </select>
-                        </f:entry>
+                        <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation" page="select.jelly" />
                     </f:section>
                     <j:set var="defaultConfig" value="${descriptor.getDefaultConfig()}" />
                     <j:set var="currentConfig" value="${inst.getConfig()}" />

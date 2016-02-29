@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool;
 
-import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
@@ -163,6 +162,9 @@ public class StartETBuilder extends AbstractToolBuilder {
             return false;
         }
 
+        // Initialize logger
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+
         // Expand build parameters
         final EnvVars buildEnvVars = build.getEnvironment(listener);
         final int expandedTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
@@ -198,15 +200,15 @@ public class StartETBuilder extends AbstractToolBuilder {
 
         // Start selected ECU-TEST
         if (installation instanceof ETInstallation) {
-            final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            logger.logInfo(String.format("Starting %s...", getToolName()));
+            final String toolName = build.getEnvironment(listener).expand(installation.getName());
+            logger.logInfo(String.format("Starting %s...", toolName));
             final String installPath = installation.getExecutable(launcher);
-            final ETClient etClient = new ETClient(getToolName(), installPath, expandedWorkspaceDir,
+            final ETClient etClient = new ETClient(toolName, installPath, expandedWorkspaceDir,
                     expandedSettingsDir, expandedTimeout, debugMode);
             if (etClient.start(true, launcher, listener)) {
-                logger.logInfo(String.format("%s started successfully.", getToolName()));
+                logger.logInfo(String.format("%s started successfully.", toolName));
             } else {
-                logger.logError(String.format("Starting %s failed!", getToolName()));
+                logger.logError(String.format("Starting %s failed!", toolName));
                 return false;
             }
 
@@ -215,7 +217,8 @@ public class StartETBuilder extends AbstractToolBuilder {
             final ToolEnvInvisibleAction envAction = new ToolEnvInvisibleAction(toolId, etClient);
             build.addAction(envAction);
         } else {
-            throw new AbortException(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+            logger.logError(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+            return false;
         }
 
         return true;

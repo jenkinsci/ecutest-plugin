@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool;
 
-import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Launcher;
@@ -88,6 +87,9 @@ public class StopETBuilder extends AbstractToolBuilder {
             return false;
         }
 
+        // Initialize logger
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+
         // Expand build parameters
         final EnvVars buildEnvVars = build.getEnvironment(listener);
         final int expandedTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
@@ -99,17 +101,18 @@ public class StopETBuilder extends AbstractToolBuilder {
 
         // Stop selected ECU-TEST
         if (installation instanceof ETInstallation) {
-            final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            logger.logInfo(String.format("Stopping %s...", getToolName()));
-            final ETClient etClient = new ETClient(getToolName(), expandedTimeout);
+            final String toolName = build.getEnvironment(listener).expand(installation.getName());
+            logger.logInfo(String.format("Stopping %s...", toolName));
+            final ETClient etClient = new ETClient(toolName, expandedTimeout);
             if (etClient.stop(true, launcher, listener)) {
-                logger.logInfo(String.format("%s stopped successfully.", getToolName()));
+                logger.logInfo(String.format("%s stopped successfully.", toolName));
             } else {
-                logger.logError(String.format("Stopping %s failed.", getToolName()));
+                logger.logError(String.format("Stopping %s failed.", toolName));
                 return false;
             }
         } else {
-            throw new AbortException(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+            logger.logError(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+            return false;
         }
 
         return true;

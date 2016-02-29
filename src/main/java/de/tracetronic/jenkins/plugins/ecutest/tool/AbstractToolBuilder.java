@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -109,7 +109,7 @@ public abstract class AbstractToolBuilder extends Builder {
     @CheckForNull
     protected AbstractToolInstallation configureToolInstallation(final BuildListener listener,
             final EnvVars env) throws IOException, InterruptedException {
-        AbstractToolInstallation installation = getToolInstallation();
+        AbstractToolInstallation installation = getToolInstallation(env);
         if (installation != null) {
             installation = installation.forNode(Computer.currentComputer().getNode(), listener);
             installation = installation.forEnvironment(env);
@@ -120,12 +120,15 @@ public abstract class AbstractToolBuilder extends Builder {
     /**
      * Gets the tool installation by descriptor and tool name.
      *
+     * @param env
+     *            the environment
      * @return the tool installation
      */
     @CheckForNull
-    public AbstractToolInstallation getToolInstallation() {
+    public AbstractToolInstallation getToolInstallation(final EnvVars env) {
+        final String expToolName = env.expand(toolName);
         for (final AbstractToolInstallation installation : getDescriptor().getInstallations()) {
-            if (toolName != null && toolName.equals(installation.getName())) {
+            if (expToolName != null && expToolName.equals(installation.getName())) {
                 return installation;
             }
         }

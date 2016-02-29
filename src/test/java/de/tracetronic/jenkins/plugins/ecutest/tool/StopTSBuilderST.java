@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,8 +32,12 @@ package de.tracetronic.jenkins.plugins.ecutest.tool;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import hudson.EnvVars;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
+
+import java.util.Collections;
+import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -63,7 +67,7 @@ public class StopTSBuilderST extends SystemTestBase {
 
     @Test
     public void testRoundTripConfig() throws Exception {
-        final StopTSBuilder before = new StopTSBuilder("ECU-TEST", "120");
+        final StopTSBuilder before = new StopTSBuilder("ECU-TEST", "30");
         final StopTSBuilder after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after, "timeout");
     }
@@ -85,12 +89,30 @@ public class StopTSBuilderST extends SystemTestBase {
     @Test
     public void testToolId() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final StopTSBuilder builder = new StopTSBuilder("ECU-TEST", "120");
+        final StopTSBuilder builder = new StopTSBuilder("ECU-TEST", "30");
         project.getBuildersList().add(builder);
 
         final FreeStyleBuild build = mock(FreeStyleBuild.class);
         when(build.getProject()).thenReturn(project);
 
         assertEquals("Tool id should be 0", 0, builder.getToolId(build));
+    }
+
+    @Test
+    public void testParameterizedToolName() throws Exception {
+        final FreeStyleProject project = jenkins.createFreeStyleProject();
+        final StopTSBuilder builder = new StopTSBuilder("${ECUTEST}", "30");
+        project.getBuildersList().add(builder);
+
+        final EnvVars env = new EnvVars(
+                Collections.unmodifiableMap(new HashMap<String, String>() {
+
+                    private static final long serialVersionUID = 1L;
+                    {
+                        put("ECUTEST", "ECU-TEST");
+                    }
+                }));
+
+        assertEquals("Tool name should be resolved", "ECU-TEST", builder.getToolInstallation(env).getName());
     }
 }

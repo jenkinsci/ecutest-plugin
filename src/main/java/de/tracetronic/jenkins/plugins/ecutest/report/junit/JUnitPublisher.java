@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,8 +29,8 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 
-import hudson.AbortException;
 import hudson.CopyOnWrite;
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.matrix.MatrixAggregatable;
@@ -124,12 +124,15 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     /**
      * Gets the tool installation by descriptor and tool name.
      *
+     * @param env
+     *            the environment
      * @return the tool installation
      */
     @CheckForNull
-    public AbstractToolInstallation getToolInstallation() {
+    public AbstractToolInstallation getToolInstallation(final EnvVars env) {
+        final String expToolName = env.expand(toolName);
         for (final AbstractToolInstallation installation : getDescriptor().getInstallations()) {
-            if (toolName != null && toolName.equals(installation.getName())) {
+            if (expToolName != null && expToolName.equals(installation.getName())) {
                 return installation;
             }
         }
@@ -197,7 +200,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
             action = new TestResultAction(build, testResult, listener);
         } catch (final NullPointerException npe) {
             logger.logError(String.format("Parsing UNIT test results failed: %s", npe.getMessage()));
-            throw new AbortException("Parsing failure!");
+            return false;
         }
         testResult.freeze(action);
         build.addAction(action);

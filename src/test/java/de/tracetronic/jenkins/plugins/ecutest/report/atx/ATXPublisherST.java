@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,6 +34,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assume.assumeFalse;
+import hudson.EnvVars;
 import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
@@ -44,9 +45,12 @@ import hudson.slaves.DumbSlave;
 import hudson.slaves.SlaveComputer;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.TestBuilder;
 import org.jvnet.hudson.test.recipes.LocalData;
 
@@ -56,6 +60,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.SystemTestBase;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 
 /**
  * System tests for {@link ATXPublisher}.
@@ -167,5 +172,28 @@ public class ATXPublisherST extends SystemTestBase {
         jenkins.assertBuildStatus(Result.FAILURE, build);
         assertThat("Skip message should be present in console log", build.getLog(100).toString(),
                 containsString("Skipping publisher"));
+    }
+
+    @Test
+    public void testParameterizedToolName() throws Exception {
+        final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
+                .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+
+        final FreeStyleProject project = jenkins.createFreeStyleProject();
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, false);
+        project.getPublishersList().add(publisher);
+
+        final EnvVars env = new EnvVars(
+                Collections.unmodifiableMap(new HashMap<String, String>() {
+
+                    private static final long serialVersionUID = 1L;
+                    {
+                        put("ECUTEST", "ECU-TEST");
+                    }
+                }));
+
+        assertEquals("Tool name should be resolved", "ECU-TEST",
+                publisher.getToolInstallation(publisher.getInstallation().getToolName(), env).getName());
     }
 }

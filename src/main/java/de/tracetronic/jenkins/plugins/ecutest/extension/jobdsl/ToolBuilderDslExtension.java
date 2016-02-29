@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,6 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.util.FormValidation;
 import javaposse.jobdsl.dsl.Context;
@@ -72,7 +73,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
 
         final StartETBuilder builder = new StartETBuilder(toolName.toString(), context.workspaceDir,
                 context.settingsDir, context.timeout, context.debugMode);
-        Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
+        Preconditions.checkNotNull(builder.getToolInstallation(new EnvVars()), NO_INSTALL_MSG, toolName);
         return builder;
     }
 
@@ -105,7 +106,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         executeInContext(closure, context);
 
         final StopETBuilder builder = new StopETBuilder(toolName.toString(), context.timeout);
-        Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
+        Preconditions.checkNotNull(builder.getToolInstallation(new EnvVars()), NO_INSTALL_MSG, toolName);
         return builder;
     }
 
@@ -139,7 +140,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
 
         final StartTSBuilder builder = new StartTSBuilder(toolName.toString(), context.timeout,
                 context.toolLibsIni, context.tcpPort);
-        Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
+        Preconditions.checkNotNull(builder.getToolInstallation(new EnvVars()), NO_INSTALL_MSG, toolName);
         return builder;
     }
 
@@ -172,7 +173,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         executeInContext(closure, context);
 
         final StopTSBuilder builder = new StopTSBuilder(toolName.toString(), context.timeout);
-        Preconditions.checkNotNull(builder.getToolInstallation(), NO_INSTALL_MSG, toolName);
+        Preconditions.checkNotNull(builder.getToolInstallation(new EnvVars()), NO_INSTALL_MSG, toolName);
         return builder;
     }
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool;
 
-import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
@@ -127,6 +126,7 @@ public class StartTSBuilder extends AbstractToolBuilder {
             return false;
         }
 
+        // Initialize logger
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Expand build parameters
@@ -165,7 +165,8 @@ public class StartTSBuilder extends AbstractToolBuilder {
                 return false;
             }
         } else {
-            throw new AbortException(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+            logger.logError(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+            return false;
         }
 
         return true;

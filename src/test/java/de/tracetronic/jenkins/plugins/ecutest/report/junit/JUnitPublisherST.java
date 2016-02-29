@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,8 +30,10 @@
 package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assume.assumeFalse;
+import hudson.EnvVars;
 import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
@@ -42,6 +44,8 @@ import hudson.slaves.DumbSlave;
 import hudson.slaves.SlaveComputer;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -133,5 +137,23 @@ public class JUnitPublisherST extends SystemTestBase {
         jenkins.assertBuildStatus(Result.FAILURE, build);
         assertThat("Skip message should be present in console log", build.getLog(100).toString(),
                 containsString("Skipping publisher"));
+    }
+
+    @Test
+    public void testParameterizedToolName() throws Exception {
+        final FreeStyleProject project = jenkins.createFreeStyleProject();
+        final JUnitPublisher publisher = new JUnitPublisher("${ECUTEST}", 0, 0, true, false);
+        project.getPublishersList().add(publisher);
+
+        final EnvVars env = new EnvVars(
+                Collections.unmodifiableMap(new HashMap<String, String>() {
+
+                    private static final long serialVersionUID = 1L;
+                    {
+                        put("ECUTEST", "ECU-TEST");
+                    }
+                }));
+
+        assertEquals("Tool name should be resolved", "ECU-TEST", publisher.getToolInstallation(env).getName());
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,6 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.util.FormValidation;
 import javaposse.jobdsl.dsl.Context;
@@ -105,7 +106,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
 
         final JUnitPublisher publisher = new JUnitPublisher(toolName.toString(), context.unstableThreshold,
                 context.failedThreshold, context.allowMissing, context.runOnFailed);
-        Preconditions.checkNotNull(publisher.getToolInstallation(), NO_INSTALL_MSG, toolName);
+        Preconditions.checkNotNull(publisher.getToolInstallation(new EnvVars()), NO_INSTALL_MSG, toolName);
         return publisher;
     }
 

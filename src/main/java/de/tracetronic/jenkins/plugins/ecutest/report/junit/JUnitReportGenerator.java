@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 
-import hudson.AbortException;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.BuildListener;
@@ -98,7 +97,7 @@ public class JUnitReportGenerator {
             isGenerated = generateReports(reportFiles, launcher, listener);
         } else {
             if (installation instanceof ETInstallation) {
-                final String toolName = installation.getName();
+                final String toolName = build.getEnvironment(listener).expand(installation.getName());
                 final String installPath = installation.getExecutable(launcher);
                 final String workspaceDir = getWorkspaceDir(build);
                 final String settingsDir = getSettingsDir(build);
@@ -118,7 +117,8 @@ public class JUnitReportGenerator {
                     logger.logError(String.format("Stopping %s failed.", toolName));
                 }
             } else {
-                throw new AbortException(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+                logger.logError(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+                isGenerated = false;
             }
         }
 
