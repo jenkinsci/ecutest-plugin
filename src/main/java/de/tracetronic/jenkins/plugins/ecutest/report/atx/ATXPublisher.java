@@ -31,6 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
 import hudson.CopyOnWrite;
 import hudson.DescriptorExtensionList;
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.Action;
@@ -56,7 +57,6 @@ import java.util.Map.Entry;
 
 import javax.annotation.CheckForNull;
 
-import jenkins.model.Jenkins;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -124,6 +124,7 @@ public class ATXPublisher extends AbstractReportPublisher {
             return false;
         }
 
+        // Initialize logger
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing ATX reports...");
 
@@ -133,7 +134,8 @@ public class ATXPublisher extends AbstractReportPublisher {
             return true;
         }
 
-        final ATXInstallation installation = getATXInstallation(atxName);
+        // Get selected TEST-GUIDE installation
+        final ATXInstallation installation = getInstallation(build.getEnvironment(listener));
         if (installation == null) {
             logger.logError(Messages.ATXPublisher_NoInstallation());
             return false;
@@ -206,7 +208,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean publishReports(final ATXInstallation installation, final AbstractBuild<?, ?> build,
             final Launcher launcher, final BuildListener listener)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final boolean isUploadEnabled = isUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, launcher);
@@ -253,7 +255,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      *             if the build gets interrupted
      */
     private boolean isServerReachable(final ATXInstallation installation, final Launcher launcher) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final ATXConfig config = installation.getConfig();
         return launcher.getChannel().call(new TestConnectionCallable(config));
     }
@@ -329,34 +331,26 @@ public class ATXPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Gets the {@link ATXInstallation} by name.
-     *
-     * @return the {@link ATXInstallation}
-     */
-    public ATXInstallation getInstallation() {
-        return ATXInstallation.get(getATXName());
-    }
-
-    /**
      * Gets the {@link ATXInstallation} by descriptor and name.
      *
-     * @param atxName
-     *            the name identifying the {@link ATXInstallation}
      * @return the {@link ATXInstallation}
      */
     @CheckForNull
-    private ATXInstallation getATXInstallation(final String atxName) {
-        final Jenkins instance = Jenkins.getInstance();
-        if (instance != null) {
-            final ATXInstallation[] installations = instance.getDescriptorByType(DescriptorImpl.class)
-                    .getInstallations();
-            for (final ATXInstallation installation : installations) {
-                if (atxName != null && atxName.equals(installation.getName())) {
-                    return installation;
-                }
-            }
-        }
-        return null;
+    public ATXInstallation getInstallation() {
+        return getInstallation(new EnvVars());
+    }
+
+    /**
+     * Gets the {@link ATXInstallation} by descriptor and expanded name.
+     *
+     * @param env
+     *            the environment
+     * @return the {@link ATXInstallation}
+     */
+    @CheckForNull
+    public ATXInstallation getInstallation(final EnvVars env) {
+        final String expandedName = env.expand(atxName);
+        return ATXInstallation.get(expandedName);
     }
 
     @SuppressWarnings("rawtypes")

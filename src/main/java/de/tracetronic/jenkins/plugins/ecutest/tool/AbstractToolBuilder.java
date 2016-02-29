@@ -40,6 +40,8 @@ import java.util.List;
 
 import javax.annotation.CheckForNull;
 
+import org.apache.commons.lang.StringUtils;
+
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 
@@ -128,7 +130,7 @@ public abstract class AbstractToolBuilder extends Builder {
     public AbstractToolInstallation getToolInstallation(final EnvVars env) {
         final String expToolName = env.expand(toolName);
         for (final AbstractToolInstallation installation : getDescriptor().getInstallations()) {
-            if (expToolName != null && expToolName.equals(installation.getName())) {
+            if (StringUtils.equals(expToolName, installation.getName())) {
                 return installation;
             }
         }

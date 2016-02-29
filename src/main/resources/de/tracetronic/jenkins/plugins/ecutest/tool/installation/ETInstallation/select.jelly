@@ -33,7 +33,7 @@
     <f:entry title="${%tool.title}" description="${%tool.description}">
         <select class="setting-input" name="toolName" autocomplete="off">
             <j:forEach var="inst" items="${descriptor.toolDescriptor.installations}">
-                <f:option selected="${inst.name==instance.toolName}">${inst.name}</f:option>
+                <f:option selected="${inst.name == instance.toolName}">${inst.name}</f:option>
             </j:forEach>
             <f:option value="$${ECUTEST}" selected="${instance.toolName eq '${ECUTEST}'}">${%tool.parameter}</f:option>
         </select>

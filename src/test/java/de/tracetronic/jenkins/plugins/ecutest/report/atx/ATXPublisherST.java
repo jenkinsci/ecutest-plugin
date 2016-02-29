@@ -94,7 +94,7 @@ public class ATXPublisherST extends SystemTestBase {
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.ATXPublisher_DisplayName());
-        jenkins.assertXPath(page, "//select[@name='atxPublisher.atxName']");
+        jenkins.assertXPath(page, "//select[@name='atxName']");
         jenkins.assertXPath(page, "//option[@value='TEST-GUIDE']");
         jenkins.assertXPath(page, "//input[@name='_.allowMissing' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runOnFailed' and @checked='true']");
@@ -175,6 +175,28 @@ public class ATXPublisherST extends SystemTestBase {
     }
 
     @Test
+    public void testParameterizedATXName() throws Exception {
+        final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
+                .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+
+        final FreeStyleProject project = jenkins.createFreeStyleProject();
+        final ATXPublisher publisher = new ATXPublisher("${TESTGUIDE}", true, false);
+        project.getPublishersList().add(publisher);
+
+        final EnvVars env = new EnvVars(
+                Collections.unmodifiableMap(new HashMap<String, String>() {
+
+                    private static final long serialVersionUID = 1L;
+                    {
+                        put("TESTGUIDE", "TEST-GUIDE");
+                    }
+                }));
+
+        assertEquals("ATX name should be resolved", "TEST-GUIDE", publisher.getInstallation(env).getName());
+    }
+
+    @Test
     public void testParameterizedToolName() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
                 .getDescriptorByType(ETInstallation.DescriptorImpl.class);
@@ -193,7 +215,9 @@ public class ATXPublisherST extends SystemTestBase {
                     }
                 }));
 
+        final ATXInstallation installation = publisher.getInstallation();
+        assertNotNull(installation);
         assertEquals("Tool name should be resolved", "ECU-TEST",
-                publisher.getToolInstallation(publisher.getInstallation().getToolName(), env).getName());
+                publisher.getToolInstallation(installation.getToolName(), env).getName());
     }
 }

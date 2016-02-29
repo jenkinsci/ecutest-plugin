@@ -1,5 +1,5 @@
 <!--
-    Copyright (c) 2015 TraceTronic GmbH
+    Copyright (c) 2015-2016 TraceTronic GmbH
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification,
@@ -31,10 +31,11 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <f:entry title="${%atxName.title}" description="${%atxName.description}">
-        <select class="setting-input" name="atxPublisher.atxName">
+        <select class="setting-input" name="atxName" autocomplete="off">
             <j:forEach var="inst" items="${descriptor.installations}">
-                <f:option value="${inst.name}" selected="${inst.name==instance.installation.name}">${inst.name}</f:option>
+                <f:option value="${inst.name}" selected="${inst.name == instance.installation.name}">${inst.name}</f:option>
             </j:forEach>
+            <f:option value="$${TESTGUIDE}" selected="${instance.getATXName() eq '${TESTGUIDE}'}">${%atxName.parameter}</f:option>
         </select>
     </f:entry>
     <f:entry title="${%allowMissing.title}" description="${%allowMissing.description}" field="allowMissing">

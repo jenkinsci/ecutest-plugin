@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -110,7 +110,7 @@ public class ATXInstallation implements Serializable {
     }
 
     /**
-     * Gets the ATXInstallation by name.
+     * Gets the ATX installation by name.
      *
      * @param name
      *            the name
@@ -119,9 +119,6 @@ public class ATXInstallation implements Serializable {
     @CheckForNull
     public static final ATXInstallation get(final String name) {
         final ATXInstallation[] installations = all();
-        if (StringUtils.isEmpty(name) && installations.length > 0) {
-            return installations[0];
-        }
         for (final ATXInstallation installation : installations) {
             if (StringUtils.equals(name, installation.getName())) {
                 return installation;

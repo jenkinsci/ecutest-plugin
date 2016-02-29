@@ -49,6 +49,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jenkins.model.Jenkins;
+
+import org.apache.commons.lang.StringUtils;
+
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
@@ -188,7 +191,7 @@ public abstract class AbstractReportPublisher extends Recorder {
                     ETInstallation.DescriptorImpl.class).getInstallations();
             final String expToolName = env.expand(toolName);
             for (final ETInstallation installation : installations) {
-                if (expToolName != null && expToolName.equals(installation.getName())) {
+                if (StringUtils.equals(expToolName, installation.getName())) {
                     return installation;
                 }
             }

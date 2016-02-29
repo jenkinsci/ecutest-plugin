@@ -55,6 +55,7 @@ import java.math.BigDecimal;
 
 import javax.annotation.CheckForNull;
 
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -132,7 +133,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     public AbstractToolInstallation getToolInstallation(final EnvVars env) {
         final String expToolName = env.expand(toolName);
         for (final AbstractToolInstallation installation : getDescriptor().getInstallations()) {
-            if (expToolName != null && expToolName.equals(installation.getName())) {
+            if (StringUtils.equals(expToolName, installation.getName())) {
                 return installation;
             }
         }
