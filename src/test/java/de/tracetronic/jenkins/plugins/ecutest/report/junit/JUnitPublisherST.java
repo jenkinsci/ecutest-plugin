@@ -89,7 +89,7 @@ public class JUnitPublisherST extends SystemTestBase {
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.JUnitPublisher_DisplayName());
-        jenkins.assertXPath(page, "//select[@name='jUnitPublisher.toolName']");
+        jenkins.assertXPath(page, "//select[@name='toolName']");
         jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
         WebAssert.assertInputPresent(page, "_.unstableThreshold");
         WebAssert.assertInputContainsValue(page, "_.unstableThreshold", "0.0");

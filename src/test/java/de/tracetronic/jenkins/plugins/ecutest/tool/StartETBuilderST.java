@@ -80,7 +80,7 @@ public class StartETBuilderST extends SystemTestBase {
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.StartETBuilder_DisplayName());
-        jenkins.assertXPath(page, "//select[@name='startETBuilder.toolName']");
+        jenkins.assertXPath(page, "//select[@name='toolName']");
         jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
         WebAssert.assertInputPresent(page, "_.workspaceDir");
         WebAssert.assertInputContainsValue(page, "_.workspaceDir", "workspace");

@@ -80,7 +80,7 @@ public class StopTSBuilderST extends SystemTestBase {
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.StopTSBuilder_DisplayName());
-        jenkins.assertXPath(page, "//select[@name='stopTSBuilder.toolName']");
+        jenkins.assertXPath(page, "//select[@name='toolName']");
         jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
         WebAssert.assertInputPresent(page, "_.timeout");
         WebAssert.assertInputContainsValue(page, "_.timeout", "30");

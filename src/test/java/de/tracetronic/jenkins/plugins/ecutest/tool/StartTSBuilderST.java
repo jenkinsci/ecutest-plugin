@@ -80,7 +80,7 @@ public class StartTSBuilderST extends SystemTestBase {
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.StartTSBuilder_DisplayName());
-        jenkins.assertXPath(page, "//select[@name='startTSBuilder.toolName']");
+        jenkins.assertXPath(page, "//select[@name='toolName']");
         jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
         WebAssert.assertInputPresent(page, "_.timeout");
         WebAssert.assertInputContainsValue(page, "_.timeout", "120");
