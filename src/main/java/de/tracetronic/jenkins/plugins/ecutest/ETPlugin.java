@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -49,6 +49,11 @@ public class ETPlugin extends Plugin {
      * Defines the minimum required ECU-TEST version supported by this plugin.
      */
     public static final ToolVersion ET_MIN_VERSION = new ToolVersion(6, 3, 0, 0);
+
+    /**
+     * Defines the maximum allowed ECU-TEST version supported by this plugin.
+     */
+    public static final ToolVersion ET_MAX_VERSION = new ToolVersion(6, 3, 2, 0);
 
     /**
      * Defines the TEST-GUIDE version that the provided ATX configuration is based on.
