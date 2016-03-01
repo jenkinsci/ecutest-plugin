@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -104,6 +104,12 @@ public class ATXValidatorTest extends TestCase {
         assertEquals("Error if protocol added to server URL", FormValidation.Kind.ERROR, validation.kind);
     }
 
+    @Test
+    public void testParameterizedServerUrl() {
+        final FormValidation validation = atxValidator.validateServerUrl("${SERVER_URL}");
+        assertEquals("Warning if parameterized server URL", FormValidation.Kind.WARNING, validation.kind);
+    }
+
     // Validation of server port
     @Test
     public void testEmptyServerPort() {
@@ -153,7 +159,44 @@ public class ATXValidatorTest extends TestCase {
         assertEquals("Server port need root privileges on Unix", FormValidation.Kind.WARNING, validation.kind);
     }
 
-    // Validation of archive misc files
+    @Test
+    public void testParameterizedServerPort() {
+        final FormValidation validation = atxValidator.validateServerPort("${SERVER_PORT}");
+        assertEquals("Warning if parameterized server port", FormValidation.Kind.WARNING, validation.kind);
+    }
+
+    // Validation of server context path
+    @Test
+    public void testEmptyServerContextPath() {
+        final FormValidation validation = atxValidator.validateServerContextPath("");
+        assertEquals("Valid if empty server context path", FormValidation.Kind.OK, validation.kind);
+    }
+
+    @Test
+    public void testNullServerContextPath() {
+        final FormValidation validation = atxValidator.validateServerContextPath(null);
+        assertEquals("Valid if null server context path", FormValidation.Kind.OK, validation.kind);
+    }
+
+    @Test
+    public void testValidServerContextPath() throws IOException {
+        final FormValidation validation = atxValidator.validateServerContextPath("context-abc_123");
+        assertEquals("Valid formatted server context path", FormValidation.Kind.OK, validation.kind);
+    }
+
+    @Test
+    public void testInvalidServerContextPath() throws IOException {
+        final FormValidation validation = atxValidator.validateServerContextPath("*%context/#+");
+        assertEquals("Error if invalid server context path", FormValidation.Kind.ERROR, validation.kind);
+    }
+
+    @Test
+    public void testParameterizedServerContextPath() {
+        final FormValidation validation = atxValidator.validateServerContextPath("${CONTEXT_PATH}");
+        assertEquals("Warning if parameterized server context path", FormValidation.Kind.WARNING, validation.kind);
+    }
+
+    // Validation of archive miscellaneous files
     @Test
     public void testEmptyArchiveExpression() {
         final FormValidation validation = atxValidator.validateArchiveMiscFiles("");
@@ -182,6 +225,12 @@ public class ATXValidatorTest extends TestCase {
     public void testInvalidArchiveExpression() {
         final FormValidation validation = atxValidator.validateArchiveMiscFiles("-");
         assertEquals("Invalid archive expression", FormValidation.Kind.ERROR, validation.kind);
+    }
+
+    @Test
+    public void testParameterizedArchiveExpression() {
+        final FormValidation validation = atxValidator.validateArchiveMiscFiles("${ARCHIVES}");
+        assertEquals("Warning if parameterized archive expression", FormValidation.Kind.WARNING, validation.kind);
     }
 
     // Validation of covered attributes
@@ -222,6 +271,12 @@ public class ATXValidatorTest extends TestCase {
         assertEquals("Invalid archive expression", FormValidation.Kind.WARNING, validation.kind);
     }
 
+    @Test
+    public void testParameterizedAttributesExpression() {
+        final FormValidation validation = atxValidator.validateCoveredAttributes("${ATTRIBUTES}");
+        assertEquals("Warning if parameterized archive expression", FormValidation.Kind.WARNING, validation.kind);
+    }
+
     // Validation of settings switch
     @Test
     public void testEmptySetting() {
@@ -248,6 +303,12 @@ public class ATXValidatorTest extends TestCase {
     }
 
     @Test
+    public void testServerContextPath() {
+        final FormValidation validation = atxValidator.validateSetting("serverContextPath", "context");
+        assertEquals("Valid server port context path", FormValidation.Kind.OK, validation.kind);
+    }
+
+    @Test
     public void testArchiveExpressionSetting() {
         final FormValidation validation = atxValidator.validateSetting("archiveMiscFiles", "myFile*.asc;");
         assertEquals("Valid archive misc files setting", FormValidation.Kind.OK, validation.kind);
@@ -265,28 +326,113 @@ public class ATXValidatorTest extends TestCase {
         assertEquals("Invalid setting name will be ignored", FormValidation.Kind.OK, validation.kind);
     }
 
+    @Test
+    public void testDefaultParameterizedSetting() {
+        final FormValidation validation = atxValidator.validateSetting("default", "${VALUE}");
+        assertEquals("Warning if parameterized custom setting value", FormValidation.Kind.WARNING, validation.kind);
+    }
+
     // Validation of custom settings
     @Test
-    public void testEmptyCustomSetting() {
+    public void testEmptyCustomSettingName() {
         final FormValidation validation = atxValidator.validateCustomSettingName("");
         assertEquals("Error if custom setting name is empty", FormValidation.Kind.ERROR, validation.kind);
     }
 
     @Test
-    public void testNullCustomSetting() {
+    public void testNullCustomSettingName() {
         final FormValidation validation = atxValidator.validateCustomSettingName(null);
         assertEquals("Error if custom setting name is null", FormValidation.Kind.ERROR, validation.kind);
     }
 
     @Test
-    public void testValidCustomSetting() {
+    public void testValidCustomSettingName() {
         final FormValidation validation = atxValidator.validateCustomSettingName("missingSetting");
         assertEquals("Valid name for custom setting", FormValidation.Kind.OK, validation.kind);
     }
 
     @Test
-    public void testInvalidCustomSetting() {
+    public void testInvalidCustomSettingName() {
         final FormValidation validation = atxValidator.validateCustomSettingName("!invalid123");
         assertEquals("Error if name of custom setting is not alpha", FormValidation.Kind.ERROR, validation.kind);
+    }
+
+    @Test
+    public void testParameterizedCustomSettingName() {
+        final FormValidation validation = atxValidator.validateCustomSettingName("${CUSTOM_NAME}");
+        assertEquals("Error if parameterized custom setting name", FormValidation.Kind.ERROR, validation.kind);
+    }
+
+    @Test
+    public void testEmptyCustomSettingValue() {
+        final FormValidation validation = atxValidator.validateCustomSettingValue("");
+        assertEquals("Valid if custom setting name is empty", FormValidation.Kind.OK, validation.kind);
+    }
+
+    @Test
+    public void testNullCustomSettingValue() {
+        final FormValidation validation = atxValidator.validateCustomSettingValue(null);
+        assertEquals("Valid if custom setting name is null", FormValidation.Kind.OK, validation.kind);
+    }
+
+    @Test
+    public void testValidCustomSettingValue() {
+        final FormValidation validation = atxValidator.validateCustomSettingValue("valid");
+        assertEquals("Valid value for custom setting", FormValidation.Kind.OK, validation.kind);
+    }
+
+    @Test
+    public void testParameterizedCustomSettingValue() {
+        final FormValidation validation = atxValidator.validateCustomSettingValue("${CUSTOM_VALUE}");
+        assertEquals("Warning if parameterized custom setting value", FormValidation.Kind.WARNING, validation.kind);
+    }
+
+    // Validation of test connection
+    @Test
+    public void testEmptyConnection() {
+        final FormValidation validation = atxValidator.testConnection("");
+        assertEquals("Error if connection URL is empty", FormValidation.Kind.ERROR, validation.kind);
+    }
+
+    @Test
+    public void testNullConnection() {
+        final FormValidation validation = atxValidator.testConnection(null);
+        assertEquals("Error if connection URL is null", FormValidation.Kind.ERROR, validation.kind);
+    }
+
+    @Test
+    public void testMalformedConnection() {
+        final FormValidation validation = atxValidator.testConnection("null");
+        assertEquals("Error if connection URL is invalid", FormValidation.Kind.ERROR, validation.kind);
+    }
+
+    @Test
+    public void testNotReachableUnsecuredConnection() {
+        final FormValidation validation = atxValidator.testConnection("http://localhost:0");
+        assertEquals("Warning if connection URL is not reachable", FormValidation.Kind.WARNING, validation.kind);
+    }
+
+    @Test
+    public void testNotReachableSecuredConnection() {
+        final FormValidation validation = atxValidator.testConnection("https://localhost:0");
+        assertEquals("Warning if secured connection URL is not reachable", FormValidation.Kind.WARNING, validation.kind);
+    }
+
+    @Test
+    public void testParameterizedConnection() {
+        final FormValidation validation = atxValidator.testConnection("${URL}");
+        assertEquals("Warning if parameterized connection URL", FormValidation.Kind.WARNING, validation.kind);
+    }
+
+    @Test
+    public void testValidConnectionBySettings() {
+        final FormValidation validation = atxValidator.testConnection("localhost", "0", "", false);
+        assertEquals("Warning if connection URL is not reachable", FormValidation.Kind.WARNING, validation.kind);
+    }
+
+    @Test
+    public void testInvalidConnectionBySettings() {
+        final FormValidation validation = atxValidator.testConnection(null, null, null, false);
+        assertEquals("Error if connection URL is invalid", FormValidation.Kind.ERROR, validation.kind);
     }
 }

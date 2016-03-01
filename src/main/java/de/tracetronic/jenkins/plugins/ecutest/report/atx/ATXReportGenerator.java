@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,6 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
+import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
@@ -81,7 +82,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     public boolean generate(final boolean allowMissing, final ATXInstallation installation,
             final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<FilePath> reportFiles = new ArrayList<FilePath>();
         final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
@@ -107,7 +108,8 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
 
         // Generate ATX reports
         final boolean isGenerated = launcher.getChannel().call(
-                new GenerateReportCallable(installation.getConfig(), reportFiles, listener));
+                new GenerateReportCallable(installation.getConfig(), reportFiles, build.getEnvironment(listener),
+                        listener));
         if (isGenerated && !reportFiles.isEmpty()) {
             final List<ATXZipReport> atxReports = new ArrayList<ATXZipReport>();
             logger.logInfo("- Archiving generated ATX reports...");
@@ -251,12 +253,14 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
          *            the ATX configuration
          * @param reportFiles
          *            the list of TRF files
+         * @param envVars
+         *            the environment variables
          * @param listener
          *            the listener
          */
-        GenerateReportCallable(final ATXConfig config, final List<FilePath> reportFiles,
+        GenerateReportCallable(final ATXConfig config, final List<FilePath> reportFiles, final EnvVars envVars,
                 final BuildListener listener) {
-            super(config, reportFiles, listener);
+            super(config, reportFiles, envVars, listener);
         }
 
         @Override

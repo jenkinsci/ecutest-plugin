@@ -184,7 +184,7 @@ public class ATXPublisherST extends SystemTestBase {
         final ATXPublisher publisher = new ATXPublisher("${TESTGUIDE}", true, false);
         project.getPublishersList().add(publisher);
 
-        final EnvVars env = new EnvVars(
+        final EnvVars envVars = new EnvVars(
                 Collections.unmodifiableMap(new HashMap<String, String>() {
 
                     private static final long serialVersionUID = 1L;
@@ -193,7 +193,7 @@ public class ATXPublisherST extends SystemTestBase {
                     }
                 }));
 
-        assertEquals("ATX name should be resolved", "TEST-GUIDE", publisher.getInstallation(env).getName());
+        assertEquals("ATX name should be resolved", "TEST-GUIDE", publisher.getInstallation(envVars).getName());
     }
 
     @Test
@@ -206,7 +206,7 @@ public class ATXPublisherST extends SystemTestBase {
         final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, false);
         project.getPublishersList().add(publisher);
 
-        final EnvVars env = new EnvVars(
+        final EnvVars envVars = new EnvVars(
                 Collections.unmodifiableMap(new HashMap<String, String>() {
 
                     private static final long serialVersionUID = 1L;
@@ -218,6 +218,6 @@ public class ATXPublisherST extends SystemTestBase {
         final ATXInstallation installation = publisher.getInstallation();
         assertNotNull(installation);
         assertEquals("Tool name should be resolved", "ECU-TEST",
-                publisher.getToolInstallation(installation.getToolName(), env).getName());
+                publisher.getToolInstallation(installation.getToolName(), envVars).getName());
     }
 }

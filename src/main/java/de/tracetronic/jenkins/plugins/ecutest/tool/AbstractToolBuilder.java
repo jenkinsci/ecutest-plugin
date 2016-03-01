@@ -100,8 +100,8 @@ public abstract class AbstractToolBuilder extends Builder {
      *
      * @param listener
      *            the listener
-     * @param env
-     *            the environment
+     * @param envVars
+     *            the environment variables
      * @return the tool installation
      * @throws IOException
      *             signals that an I/O exception has occurred
@@ -110,11 +110,11 @@ public abstract class AbstractToolBuilder extends Builder {
      */
     @CheckForNull
     protected AbstractToolInstallation configureToolInstallation(final BuildListener listener,
-            final EnvVars env) throws IOException, InterruptedException {
-        AbstractToolInstallation installation = getToolInstallation(env);
+            final EnvVars envVars) throws IOException, InterruptedException {
+        AbstractToolInstallation installation = getToolInstallation(envVars);
         if (installation != null) {
             installation = installation.forNode(Computer.currentComputer().getNode(), listener);
-            installation = installation.forEnvironment(env);
+            installation = installation.forEnvironment(envVars);
         }
         return installation;
     }
@@ -122,13 +122,13 @@ public abstract class AbstractToolBuilder extends Builder {
     /**
      * Gets the tool installation by descriptor and tool name.
      *
-     * @param env
-     *            the environment
+     * @param envVars
+     *            the environment variables
      * @return the tool installation
      */
     @CheckForNull
-    public AbstractToolInstallation getToolInstallation(final EnvVars env) {
-        final String expToolName = env.expand(toolName);
+    public AbstractToolInstallation getToolInstallation(final EnvVars envVars) {
+        final String expToolName = envVars.expand(toolName);
         for (final AbstractToolInstallation installation : getDescriptor().getInstallations()) {
             if (StringUtils.equals(expToolName, installation.getName())) {
                 return installation;

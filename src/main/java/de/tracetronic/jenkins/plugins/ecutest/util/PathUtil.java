@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -49,6 +49,7 @@ public final class PathUtil {
      * Instantiates a new {@link PathUtil}.
      */
     private PathUtil() {
+        throw new UnsupportedOperationException("Utility class");
     }
 
     /**
@@ -83,7 +84,7 @@ public final class PathUtil {
      *             if the current thread is interrupted while waiting for the completion
      */
     public static boolean copyRemoteFile(final FilePath src, final FilePath dest) throws IOException,
-    InterruptedException {
+            InterruptedException {
         if (dest != null && !dest.exists()) {
             if (src != null && src.exists()) {
                 try {

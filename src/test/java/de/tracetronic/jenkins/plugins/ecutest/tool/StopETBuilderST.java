@@ -104,7 +104,7 @@ public class StopETBuilderST extends SystemTestBase {
         final StopETBuilder builder = new StopETBuilder("${ECUTEST}", "30");
         project.getBuildersList().add(builder);
 
-        final EnvVars env = new EnvVars(
+        final EnvVars envVars = new EnvVars(
                 Collections.unmodifiableMap(new HashMap<String, String>() {
 
                     private static final long serialVersionUID = 1L;
@@ -113,6 +113,6 @@ public class StopETBuilderST extends SystemTestBase {
                     }
                 }));
 
-        assertEquals("Tool name should be resolved", "ECU-TEST", builder.getToolInstallation(env).getName());
+        assertEquals("Tool name should be resolved", "ECU-TEST", builder.getToolInstallation(envVars).getName());
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -141,14 +141,14 @@ public abstract class ATXCustomSetting implements Serializable, Cloneable, Descr
         /**
          * Validator to check form fields.
          */
-        private final ATXValidator atxValidator = new ATXValidator();
+        protected final ATXValidator atxValidator = new ATXValidator();
 
         /**
          * Validates the setting name.
          *
          * @param value
          *            the value
-         * @return FormValidation
+         * @return the form validation
          */
         public FormValidation doCheckName(@QueryParameter final String value) {
             return atxValidator.validateCustomSettingName(value);

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,6 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
+import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.model.BuildListener;
 import hudson.remoting.Callable;
@@ -67,6 +68,7 @@ public abstract class AbstractATXReportHandler {
 
         private final ATXConfig config;
         private final List<FilePath> reportFiles;
+        private final EnvVars envVars;
         private final BuildListener listener;
 
         /**
@@ -76,13 +78,16 @@ public abstract class AbstractATXReportHandler {
          *            the ATX configuration
          * @param reportFiles
          *            the list of TRF files
+         * @param envVars
+         *            the environment variables
          * @param listener
          *            the listener
          */
-        public AbstractReportCallable(final ATXConfig config, final List<FilePath> reportFiles,
+        public AbstractReportCallable(final ATXConfig config, final List<FilePath> reportFiles, final EnvVars envVars,
                 final BuildListener listener) {
             this.config = config;
             this.reportFiles = reportFiles;
+            this.envVars = envVars;
             this.listener = listener;
         }
 
@@ -102,6 +107,7 @@ public abstract class AbstractATXReportHandler {
 
         /**
          * Converts the ATX configuration to a map containing all setting names and their current value.
+         * Parameterized values are expanded by given environment variables.
          *
          * @param uploadToServer
          *            specifies whether ATX upload is enabled or not
@@ -120,7 +126,7 @@ public abstract class AbstractATXReportHandler {
                                     ATXSetting.toString(((ATXBooleanSetting) setting).getCurrentValue()));
                         }
                     } else {
-                        configMap.put(setting.getName(), ((ATXTextSetting) setting).getCurrentValue());
+                        configMap.put(setting.getName(), envVars.expand(((ATXTextSetting) setting).getCurrentValue()));
                     }
                 }
             }
@@ -129,7 +135,7 @@ public abstract class AbstractATXReportHandler {
                     configMap.put(setting.getName(),
                             ATXSetting.toString(((ATXCustomBooleanSetting) setting).isChecked()));
                 } else if (setting instanceof ATXCustomTextSetting) {
-                    configMap.put(setting.getName(), ((ATXCustomTextSetting) setting).getValue());
+                    configMap.put(setting.getName(), envVars.expand(((ATXCustomTextSetting) setting).getValue()));
                 }
             }
             return configMap;

@@ -125,13 +125,13 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     /**
      * Gets the tool installation by descriptor and tool name.
      *
-     * @param env
-     *            the environment
+     * @param envVars
+     *            the environment variables
      * @return the tool installation
      */
     @CheckForNull
-    public AbstractToolInstallation getToolInstallation(final EnvVars env) {
-        final String expToolName = env.expand(toolName);
+    public AbstractToolInstallation getToolInstallation(final EnvVars envVars) {
+        final String expToolName = envVars.expand(toolName);
         for (final AbstractToolInstallation installation : getDescriptor().getInstallations()) {
             if (StringUtils.equals(expToolName, installation.getName())) {
                 return installation;

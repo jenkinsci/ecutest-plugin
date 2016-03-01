@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -57,6 +57,7 @@ import org.apache.commons.lang.StringUtils;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.Messages;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 
 /**
  * Validator to check ATX related form fields.
@@ -85,8 +86,10 @@ public class ATXValidator extends AbstractValidator {
      */
     public FormValidation validateServerUrl(final String serverUrl) {
         FormValidation returnValue = FormValidation.validateRequired(serverUrl);
-        if (!StringUtils.isEmpty(serverUrl)) {
-            if (serverUrl.startsWith("http://") || serverUrl.startsWith("https://")) {
+        if (returnValue == FormValidation.ok()) {
+            if (serverUrl.contains(PARAMETER)) {
+                returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedValue());
+            } else if (serverUrl.startsWith("http://") || serverUrl.startsWith("https://")) {
                 returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrlProtocol());
             } else if (isValidURL(serverUrl)) {
                 returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(serverUrl));
@@ -121,13 +124,42 @@ public class ATXValidator extends AbstractValidator {
      * @return the form validation
      */
     public FormValidation validateServerPort(final String serverPort) {
-        FormValidation returnValue = FormValidation.validatePositiveInteger(serverPort);
+        FormValidation returnValue = FormValidation.validateRequired(serverPort);
         if (returnValue == FormValidation.ok()) {
-            final int port = Integer.parseInt(serverPort);
-            if (port > 65535) {
-                returnValue = FormValidation.error(Messages.ATXPublisher_InvalidPort());
-            } else if (port <= 1024) {
-                returnValue = FormValidation.warning(Messages.ATXPublisher_NeedsAdmin());
+            if (serverPort.contains(PARAMETER)) {
+                returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedValue());
+            } else {
+                returnValue = FormValidation.validatePositiveInteger(serverPort);
+                if (returnValue == FormValidation.ok()) {
+                    final int port = Integer.parseInt(serverPort);
+                    if (port > 65535) {
+                        returnValue = FormValidation.error(Messages.ATXPublisher_InvalidPort());
+                    } else if (port <= 1024) {
+                        returnValue = FormValidation.warning(Messages.ATXPublisher_NeedsAdmin());
+                    }
+                }
+            }
+        }
+        return returnValue;
+    }
+
+    /**
+     * Validates the server context path.
+     *
+     * @param contextPath
+     *            the context path
+     * @return the form validation
+     */
+    public FormValidation validateServerContextPath(final String contextPath) {
+        FormValidation returnValue = FormValidation.ok();
+        if (!StringUtils.isEmpty(contextPath)) {
+            if (contextPath.contains(PARAMETER)) {
+                returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedValue());
+            } else {
+                final String pattern = "^[A-Za-z0-9./\\-_]+";
+                if (!Pattern.matches(pattern, contextPath)) {
+                    returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerContextPath());
+                }
             }
         }
         return returnValue;
@@ -142,12 +174,16 @@ public class ATXValidator extends AbstractValidator {
      */
     public FormValidation validateArchiveMiscFiles(final String expression) {
         FormValidation returnValue = FormValidation.ok();
-        final String pattern = "[A-Za-z0-9./\\*]+";
         if (!StringUtils.isEmpty(expression)) {
-            for (final String token : Util.tokenize(expression, ";")) {
-                if (!Pattern.matches(pattern, token)) {
-                    returnValue = FormValidation.error(Messages.ATXPublisher_InvalidFileExpression());
-                    break;
+            if (expression.contains(PARAMETER)) {
+                returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedValue());
+            } else {
+                final String pattern = "[A-Za-z0-9./\\*]+";
+                for (final String token : Util.tokenize(expression, ";")) {
+                    if (!Pattern.matches(pattern, token)) {
+                        returnValue = FormValidation.error(Messages.ATXPublisher_InvalidFileExpression());
+                        break;
+                    }
                 }
             }
         }
@@ -163,14 +199,18 @@ public class ATXValidator extends AbstractValidator {
      */
     public FormValidation validateCoveredAttributes(final String expression) {
         FormValidation returnValue = FormValidation.ok();
-        final String pattern = "(Designer|Name|Status|Testlevel|Tools|VersionCounter|"
-                + "Design Contact|Design Department|Estimated Duration \\[min\\]|"
-                + "Execution Priority|Test Comment)";
         if (!StringUtils.isEmpty(expression)) {
-            for (final String token : Util.tokenize(expression, ";")) {
-                if (!Pattern.matches(pattern, token)) {
-                    returnValue = FormValidation.warning(Messages.ATXPublisher_CustomAttributeExpression());
-                    break;
+            if (expression.contains(PARAMETER)) {
+                returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedValue());
+            } else {
+                final String pattern = "(Designer|Name|Status|Testlevel|Tools|VersionCounter|"
+                        + "Design Contact|Design Department|Estimated Duration \\[min\\]|"
+                        + "Execution Priority|Test Comment)";
+                for (final String token : Util.tokenize(expression, ";")) {
+                    if (!Pattern.matches(pattern, token)) {
+                        returnValue = FormValidation.warning(Messages.ATXPublisher_CustomAttributeExpression());
+                        break;
+                    }
                 }
             }
         }
@@ -196,6 +236,9 @@ public class ATXValidator extends AbstractValidator {
                 case "serverPort":
                     returnValue = validateServerPort(value);
                     break;
+                case "serverContextPath":
+                    returnValue = validateServerContextPath(value);
+                    break;
                 case "archiveMiscFiles":
                     returnValue = validateArchiveMiscFiles(value);
                     break;
@@ -203,6 +246,7 @@ public class ATXValidator extends AbstractValidator {
                     returnValue = validateCoveredAttributes(value);
                     break;
                 default:
+                    returnValue = validateParameterizedValue(value);
                     break;
             }
         }
@@ -210,9 +254,43 @@ public class ATXValidator extends AbstractValidator {
     }
 
     /**
-     * Tests the server connection.
+     * Validates the custom setting name and checks for duplicate entries.
      *
-     * @param serverURL
+     * @param name
+     *            the setting name
+     * @return the form validation
+     */
+    public FormValidation validateCustomSettingName(final String name) {
+        FormValidation returnValue = FormValidation.validateRequired(name);
+        if (!StringUtils.isAlpha(name)) {
+            returnValue = FormValidation.error(Messages.ATXPublisher_InvalidSettingName());
+        } else {
+            final ATXInstallation[] installations = ATXInstallation.all();
+            if (installations.length > 0) {
+                final ATXConfig config = installations[0].getConfig();
+                if (config != null && config.getSettingByName(name) != null) {
+                    returnValue = FormValidation.warning(Messages.ATXPublisher_DuplicateSetting());
+                }
+            }
+        }
+        return returnValue;
+    }
+
+    /**
+     * Validates the custom setting value.
+     *
+     * @param value
+     *            the setting value
+     * @return the form validation
+     */
+    public FormValidation validateCustomSettingValue(final String value) {
+        return validateParameterizedValue(value);
+    }
+
+    /**
+     * Tests the server connection by given server settings.
+     *
+     * @param serverUrl
      *            the server URL
      * @param serverPort
      *            the server port
@@ -222,110 +300,114 @@ public class ATXValidator extends AbstractValidator {
      *            if secure connection is used
      * @return the form validation
      */
-    public FormValidation testConnection(final String serverURL, final String serverPort,
+    public FormValidation testConnection(final String serverUrl, final String serverPort,
             final String serverContextPath, final boolean useHttpsConnection) {
-        final String serverUrl = String.format("%s://%s:%s%s", useHttpsConnection ? "https" : "http",
-                serverURL, serverPort, serverContextPath.isEmpty() ? "" : "/" + serverContextPath);
-        final String fullServerUrl = String.format("%s/app-version-info", serverUrl);
+        final String baseUrl = ATXUtil.getBaseUrl(serverUrl, serverPort, serverContextPath, useHttpsConnection);
+        return testConnection(baseUrl);
+    }
+
+    /**
+     * Tests the server connection by given base server URL.
+     *
+     * @param baseUrl
+     *            the base server URL
+     * @return the form validation
+     */
+    public FormValidation testConnection(final String baseUrl) {
+        if (StringUtils.isBlank(baseUrl)) {
+            return FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(null));
+        }
+        final String appVersionUrl = String.format("%s/app-version-info", baseUrl);
         FormValidation returnValue = FormValidation.okWithMarkup(String.format(
                 "<span style=\"font-weight: bold; color: #208CA3\">%s</span>",
-                Messages.ATXPublisher_ValidConnection(serverUrl)));
+                Messages.ATXPublisher_ValidConnection(baseUrl)));
+        if (appVersionUrl.contains(PARAMETER)) {
+            returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedConnection());
+        } else {
+            HttpURLConnection connection = null;
+            try {
+                final URL url = new URL(appVersionUrl);
+                // Handle SSL connection
+                if (appVersionUrl.startsWith("https://")) {
+                    initSSLConnection();
+                    connection = (HttpsURLConnection) url.openConnection();
+                } else {
+                    connection = (HttpURLConnection) url.openConnection();
+                }
 
-        HttpURLConnection connection = null;
-        try {
-            final URL url = new URL(fullServerUrl);
+                // Check URL connection
+                connection.setConnectTimeout(30000);
+                connection.setReadTimeout(30000);
+                connection.setUseCaches(false);
+                connection.setRequestMethod("GET");
+                connection.connect();
 
-            // Handle SSL connection
-            if (useHttpsConnection) {
-                // Create a trust manager that does not validate certificate chains
-                final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-
-                    @Override
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return null;
-                    }
-
-                    @Override
-                    public void checkClientTrusted(final X509Certificate[] certs, final String authType) {
-                    }
-
-                    @Override
-                    public void checkServerTrusted(final X509Certificate[] certs, final String authType) {
-                    }
-                }, };
-
-                // Install the all-trusting trust manager
-                final SSLContext sslContext = SSLContext.getInstance("SSL");
-                sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-                HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
-
-                // Create all-trusting host name verifier
-                final HostnameVerifier allHostsValid = new HostnameVerifier() {
-
-                    @Override
-                    public boolean verify(final String hostname, final SSLSession session) {
-                        return true;
-                    }
-                };
-
-                // Install the all-trusting host verifier
-                HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-                connection = (HttpsURLConnection) url.openConnection();
-            } else {
-                connection = (HttpURLConnection) url.openConnection();
-            }
-
-            // Check URL connection
-            connection.setConnectTimeout(30000);
-            connection.setReadTimeout(30000);
-            connection.setUseCaches(false);
-            connection.setRequestMethod("GET");
-            connection.connect();
-
-            final int httpResponse = connection.getResponseCode();
-            if (httpResponse != HttpURLConnection.HTTP_OK) {
-                returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(serverUrl));
-            } else {
-                try (final BufferedReader in = new BufferedReader(new InputStreamReader(
-                        connection.getInputStream(), Charset.forName("UTF-8")))) {
-                    final String inputLine = in.readLine();
-                    if (inputLine == null || !inputLine.contains("TraceTronic")) {
-                        returnValue = FormValidation.warning(Messages.ATXPublisher_InvalidServer(serverUrl));
+                final int httpResponse = connection.getResponseCode();
+                if (httpResponse != HttpURLConnection.HTTP_OK) {
+                    returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(baseUrl));
+                } else {
+                    try (final BufferedReader in = new BufferedReader(new InputStreamReader(
+                            connection.getInputStream(), Charset.forName("UTF-8")))) {
+                        final String inputLine = in.readLine();
+                        if (inputLine == null || !inputLine.contains("TraceTronic")) {
+                            returnValue = FormValidation.warning(Messages.ATXPublisher_InvalidServer(baseUrl));
+                        }
                     }
                 }
-            }
-        } catch (final MalformedURLException e) {
-            returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(serverUrl));
-        } catch (final IOException | NoSuchAlgorithmException | KeyManagementException e) {
-            returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(serverUrl));
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
+            } catch (final MalformedURLException e) {
+                returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(baseUrl));
+            } catch (final IOException | NoSuchAlgorithmException | KeyManagementException e) {
+                returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(baseUrl));
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
             }
         }
         return returnValue;
     }
 
     /**
-     * Validates the setting name and checks for duplicate entries.
+     * Initializes the SSL connection by trusting all certificates.
      *
-     * @param name
-     *            the setting name
-     * @return FormValidation
+     * @throws NoSuchAlgorithmException
+     *             the no such algorithm exception
+     * @throws KeyManagementException
+     *             the key management exception
      */
-    public FormValidation validateCustomSettingName(final String name) {
-        FormValidation validation = FormValidation.validateRequired(name);
-        if (!StringUtils.isAlpha(name)) {
-            validation = FormValidation.error(Messages.ATXPublisher_InvalidSettingName());
-        } else {
-            final ATXInstallation[] installations = ATXInstallation.all();
-            if (installations.length > 0) {
-                final ATXConfig config = installations[0].getConfig();
-                if (config != null && config.getSettingByName(name) != null) {
-                    validation = FormValidation.warning(Messages.ATXPublisher_DuplicateSetting());
-                }
+    private void initSSLConnection() throws NoSuchAlgorithmException, KeyManagementException {
+        // Create a trust manager that does not validate certificate chains
+        final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
             }
-        }
-        return validation;
+
+            @Override
+            public void checkClientTrusted(final X509Certificate[] certs, final String authType) {
+            }
+
+            @Override
+            public void checkServerTrusted(final X509Certificate[] certs, final String authType) {
+            }
+        }, };
+
+        // Install the all-trusting trust manager
+        final SSLContext sslContext = SSLContext.getInstance("SSL");
+        sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+
+        // Create all-trusting host name verifier
+        final HostnameVerifier allHostsValid = new HostnameVerifier() {
+
+            @Override
+            public boolean verify(final String hostname, final SSLSession session) {
+                return true;
+            }
+        };
+
+        // Install the all-trusting host verifier
+        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
     }
 }

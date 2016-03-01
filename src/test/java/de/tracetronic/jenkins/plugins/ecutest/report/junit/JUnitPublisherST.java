@@ -145,7 +145,7 @@ public class JUnitPublisherST extends SystemTestBase {
         final JUnitPublisher publisher = new JUnitPublisher("${ECUTEST}", 0, 0, true, false);
         project.getPublishersList().add(publisher);
 
-        final EnvVars env = new EnvVars(
+        final EnvVars envVars = new EnvVars(
                 Collections.unmodifiableMap(new HashMap<String, String>() {
 
                     private static final long serialVersionUID = 1L;
@@ -154,6 +154,6 @@ public class JUnitPublisherST extends SystemTestBase {
                     }
                 }));
 
-        assertEquals("Tool name should be resolved", "ECU-TEST", publisher.getToolInstallation(env).getName());
+        assertEquals("Tool name should be resolved", "ECU-TEST", publisher.getToolInstallation(envVars).getName());
     }
 }

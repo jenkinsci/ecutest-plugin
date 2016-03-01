@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,9 +30,23 @@
 package de.tracetronic.jenkins.plugins.ecutest.util;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import hudson.EnvVars;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
+
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting;
 
 /**
  * Unit tests for {@link ATXUtil}.
@@ -96,5 +110,82 @@ public class ATXUtilTest {
     @Test
     public void testValidATXNameForWhiteSpace() {
         assertThat(ATXUtil.getValidATXName("Test Name"), is("TestName"));
+    }
+
+    @Test
+    public void testInvalidBaseUrl() {
+        assertNull(ATXUtil.getBaseUrl(null, null, null, false));
+    }
+
+    @Test
+    public void testUnsecuredBaseUrl() {
+        assertThat(ATXUtil.getBaseUrl("localhost", "8085", "context", false), is("http://localhost:8085/context"));
+    }
+
+    @Test
+    public void testSecuredBaseUrl() {
+        assertThat(ATXUtil.getBaseUrl("localhost", "8085", "context", true), is("https://localhost:8085/context"));
+    }
+
+    @Test
+    public void testInvalidBaseUrlByConfig() {
+        assertNull(ATXUtil.getBaseUrl(null, null));
+    }
+
+    @Test
+    public void testBaseUrlByDefaultConfig() {
+        final ATXConfig atxConfig = new ATXConfig();
+        assertThat(ATXUtil.getBaseUrl(atxConfig, new EnvVars()), is("http://127.0.0.1:8085"));
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Test
+    public void testBaseUrlBySpecificConfig() {
+        final List<ATXSetting> uploadSettings = new ArrayList<ATXSetting>();
+        final ATXTextSetting serverUrl = new ATXTextSetting("serverURL", "", "", "localhost");
+        final ATXTextSetting serverPort = new ATXTextSetting("serverPort", "", "", "8086");
+        final ATXTextSetting serverContextPath = new ATXTextSetting("serverContextPath", "", "", "context");
+        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", "", "", true);
+        uploadSettings.add(serverUrl);
+        uploadSettings.add(serverPort);
+        uploadSettings.add(serverContextPath);
+        uploadSettings.add(useHttpsConnection);
+
+        final Map<String, List<ATXSetting>> configMap = new LinkedHashMap<String, List<ATXSetting>>();
+        configMap.put("uploadConfig", uploadSettings);
+        final ATXConfig atxConfig = new ATXConfig(configMap, null);
+
+        assertThat(ATXUtil.getBaseUrl(atxConfig, new EnvVars()), is("https://localhost:8086/context"));
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Test
+    public void testBaseUrlByExpandedConfig() {
+        final List<ATXSetting> uploadSettings = new ArrayList<ATXSetting>();
+        final ATXTextSetting serverUrl = new ATXTextSetting("serverURL", "", "", "${SERVER_URL}");
+        final ATXTextSetting serverPort = new ATXTextSetting("serverPort", "", "", "${SERVER_PORT}");
+        final ATXTextSetting serverContextPath = new ATXTextSetting("serverContextPath", "", "", "${SERVER_CONTEXT}");
+        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", "", "", true);
+        uploadSettings.add(serverUrl);
+        uploadSettings.add(serverPort);
+        uploadSettings.add(serverContextPath);
+        uploadSettings.add(useHttpsConnection);
+
+        final Map<String, List<ATXSetting>> configMap = new LinkedHashMap<String, List<ATXSetting>>();
+        configMap.put("uploadConfig", uploadSettings);
+        final ATXConfig atxConfig = new ATXConfig(configMap, null);
+
+        final EnvVars envVars = new EnvVars(
+                Collections.unmodifiableMap(new HashMap<String, String>() {
+
+                    private static final long serialVersionUID = 1L;
+                    {
+                        put("SERVER_URL", "localhost");
+                        put("SERVER_PORT", "8086");
+                        put("SERVER_CONTEXT", "context");
+                    }
+                }));
+
+        assertThat(ATXUtil.getBaseUrl(atxConfig, envVars), is("https://localhost:8086/context"));
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,6 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
+import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.BuildListener;
@@ -43,8 +44,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.CheckForNull;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.groovy.JsonSlurper;
@@ -53,7 +52,6 @@ import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction.TestTyp
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
@@ -108,7 +106,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 uploadFiles.addAll(Arrays.asList(testReportDir.list("**/" + TRFPublisher.TRF_FILE_NAME)));
 
                 // Prepare ATX report information
-                final String baseUrl = getBaseUrl(installation);
+                final String baseUrl = ATXUtil.getBaseUrl(installation.getConfig(), build.getEnvironment(listener));
                 if (baseUrl == null) {
                     logger.logError(String.format("Error getting base URL for selected TEST-GUIDE installation: %s",
                             installation.getName()));
@@ -137,7 +135,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
 
         // Upload ATX reports
         final boolean isUploaded = launcher.getChannel().call(
-                new UploadReportCallable(installation.getConfig(), uploadFiles, listener));
+                new UploadReportCallable(installation.getConfig(), uploadFiles, build.getEnvironment(listener),
+                        listener));
         if (isUploaded) {
             addBuildAction(build, atxReports);
         }
@@ -258,30 +257,6 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     }
 
     /**
-     * Gets the base URL of the ATX installation.
-     *
-     * @param installation
-     *            the installation
-     * @return the ATX base URL or {@code null} if invalid URL.
-     */
-    @CheckForNull
-    @SuppressWarnings("rawtypes")
-    private String getBaseUrl(final ATXInstallation installation) {
-        final ATXConfig config = installation.getConfig();
-        final List<ATXSetting> uploadSettings = config.getConfigByName("uploadConfig");
-        final Object useHttpsConnection = config.getSettingValueByName("useHttpsConnection", uploadSettings);
-        final String protocol = useHttpsConnection != null && (boolean) useHttpsConnection ? "https" : "http";
-        final String serverUrl = (String) config.getSettingValueByName("serverURL", uploadSettings);
-        final String serverPort = (String) config.getSettingValueByName("serverPort", uploadSettings);
-        final String contextPath = (String) config.getSettingValueByName("serverContextPath", uploadSettings);
-        if (serverUrl != null && serverPort != null && contextPath != null) {
-            return contextPath.isEmpty() ? String.format("%s://%s:%s", protocol, serverUrl, serverPort)
-                    : String.format("%s://%s:%s/%s", protocol, serverUrl, serverPort, contextPath);
-        }
-        return null;
-    }
-
-    /**
      * Gets the package trend report URL.
      *
      * @param baseUrl
@@ -347,12 +322,14 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          *            the ATX configuration
          * @param reportFiles
          *            the list of TRF files
+         * @param envVars
+         *            the environment variables
          * @param listener
          *            the listener
          */
-        UploadReportCallable(final ATXConfig config, final List<FilePath> reportFiles,
+        UploadReportCallable(final ATXConfig config, final List<FilePath> reportFiles, final EnvVars envVars,
                 final BuildListener listener) {
-            super(config, reportFiles, listener);
+            super(config, reportFiles, envVars, listener);
         }
 
         @Override

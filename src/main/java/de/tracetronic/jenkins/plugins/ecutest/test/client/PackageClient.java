@@ -196,7 +196,7 @@ public class PackageClient extends AbstractTestClient {
                         }
                     }
                     if (checks.isEmpty()) {
-                        logger.logInfo("-> Package validated successfully!");
+                        logger.logInfo("-> Package validated successfully.");
                     }
                 }
             } catch (final ETComException e) {

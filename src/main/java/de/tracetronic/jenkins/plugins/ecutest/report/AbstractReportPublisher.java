@@ -157,8 +157,8 @@ public abstract class AbstractReportPublisher extends Recorder {
      *            the tool name identifying the specific tool
      * @param listener
      *            the listener
-     * @param env
-     *            the environment
+     * @param envVars
+     *            the environment variables
      * @return the tool installation
      * @throws IOException
      *             signals that an I/O exception has occurred
@@ -166,11 +166,11 @@ public abstract class AbstractReportPublisher extends Recorder {
      *             if the build gets interrupted
      */
     protected AbstractToolInstallation configureToolInstallation(final String toolName,
-            final BuildListener listener, final EnvVars env) throws IOException, InterruptedException {
-        AbstractToolInstallation installation = getToolInstallation(toolName, env);
+            final BuildListener listener, final EnvVars envVars) throws IOException, InterruptedException {
+        AbstractToolInstallation installation = getToolInstallation(toolName, envVars);
         if (installation != null) {
             installation = installation.forNode(Computer.currentComputer().getNode(), listener);
-            installation = installation.forEnvironment(env);
+            installation = installation.forEnvironment(envVars);
         }
         return installation;
     }
@@ -180,16 +180,16 @@ public abstract class AbstractReportPublisher extends Recorder {
      *
      * @param toolName
      *            the tool name identifying the specific tool
-     * @param env
-     *            the environment
+     * @param envVars
+     *            the environment variables
      * @return the tool installation
      */
-    public ETInstallation getToolInstallation(final String toolName, final EnvVars env) {
+    public ETInstallation getToolInstallation(final String toolName, final EnvVars envVars) {
         final Jenkins instance = Jenkins.getInstance();
         if (instance != null) {
             final ETInstallation[] installations = instance.getDescriptorByType(
                     ETInstallation.DescriptorImpl.class).getInstallations();
-            final String expToolName = env.expand(toolName);
+            final String expToolName = envVars.expand(toolName);
             for (final ETInstallation installation : installations) {
                 if (StringUtils.equals(expToolName, installation.getName())) {
                     return installation;

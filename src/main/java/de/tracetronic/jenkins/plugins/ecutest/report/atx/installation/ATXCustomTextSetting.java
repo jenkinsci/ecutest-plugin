@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,8 +30,10 @@
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
 import hudson.Extension;
+import hudson.util.FormValidation;
 
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 
 /**
  * Class holding the information of an additional text ATX setting.
@@ -70,6 +72,17 @@ public class ATXCustomTextSetting extends ATXCustomSetting {
      */
     @Extension
     public static class DescriptorImpl extends ATXCustomSetting.DescriptorImpl {
+
+        /**
+         * Validates the setting value.
+         *
+         * @param value
+         *            the value
+         * @return the form validation
+         */
+        public FormValidation doCheckValue(@QueryParameter final String value) {
+            return atxValidator.validateCustomSettingValue(value);
+        }
 
         @Override
         public String getDisplayName() {

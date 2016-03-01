@@ -76,6 +76,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
 
@@ -211,7 +212,7 @@ public class ATXPublisher extends AbstractReportPublisher {
             throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final boolean isUploadEnabled = isUploadEnabled(installation);
-        final boolean isServerReachable = isServerReachable(installation, launcher);
+        final boolean isServerReachable = isServerReachable(installation, launcher, build.getEnvironment(listener));
         if (isUploadEnabled && isServerReachable) {
             logger.logInfo("- Generating and uploading ATX reports...");
             final ATXReportUploader uploader = new ATXReportUploader();
@@ -248,16 +249,19 @@ public class ATXPublisher extends AbstractReportPublisher {
      *            the ATX installation
      * @param launcher
      *            the launcher
+     * @param envVars
+     *            the the environment variables
      * @return {@code true} if server is reachable, {@code false} otherwise
      * @throws IOException
      *             signals that an I/O exception has occurred
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private boolean isServerReachable(final ATXInstallation installation, final Launcher launcher) throws IOException,
+    private boolean isServerReachable(final ATXInstallation installation, final Launcher launcher,
+            final EnvVars envVars) throws IOException,
             InterruptedException {
         final ATXConfig config = installation.getConfig();
-        return launcher.getChannel().call(new TestConnectionCallable(config));
+        return launcher.getChannel().call(new TestConnectionCallable(config, envVars));
     }
 
     /**
@@ -268,33 +272,27 @@ public class ATXPublisher extends AbstractReportPublisher {
         private static final long serialVersionUID = 1L;
 
         private final ATXConfig config;
+        private final EnvVars envVars;
 
         /**
          * Instantiates a new {@link TestConnectionCallable}.
          *
          * @param config
          *            the ATX configuration
+         * @param envVars
+         *            the environment variables
          */
-        TestConnectionCallable(final ATXConfig config) {
+        TestConnectionCallable(final ATXConfig config, final EnvVars envVars) {
             this.config = config;
+            this.envVars = envVars;
         }
 
-        @SuppressWarnings("rawtypes")
         @Override
         public Boolean call() throws IOException {
-            final List<ATXSetting> uploadSettings = config.getConfigByName("uploadConfig");
-            final Object useHttpsConnection = config.getSettingValueByName("useHttpsConnection", uploadSettings);
-            final String serverUrl = (String) config.getSettingValueByName("serverURL", uploadSettings);
-            final String serverPort = (String) config.getSettingValueByName("serverPort", uploadSettings);
-            final String contextPath = (String) config.getSettingValueByName("serverContextPath", uploadSettings);
-
-            if (serverUrl != null && serverPort != null && contextPath != null) {
-                final ATXValidator validator = new ATXValidator();
-                final FormValidation validation = validator.testConnection(serverUrl, serverPort, contextPath,
-                        useHttpsConnection != null ? (boolean) useHttpsConnection : false);
-                return validation.kind.equals(FormValidation.Kind.OK);
-            }
-            return false;
+            final String baseUrl = ATXUtil.getBaseUrl(config, envVars);
+            final ATXValidator validator = new ATXValidator();
+            final FormValidation validation = validator.testConnection(baseUrl);
+            return validation.kind.equals(FormValidation.Kind.OK);
         }
     }
 
@@ -343,13 +341,13 @@ public class ATXPublisher extends AbstractReportPublisher {
     /**
      * Gets the {@link ATXInstallation} by descriptor and expanded name.
      *
-     * @param env
-     *            the environment
+     * @param envVars
+     *            the environment variables
      * @return the {@link ATXInstallation}
      */
     @CheckForNull
-    public ATXInstallation getInstallation(final EnvVars env) {
-        final String expandedName = env.expand(atxName);
+    public ATXInstallation getInstallation(final EnvVars envVars) {
+        final String expandedName = envVars.expand(atxName);
         return ATXInstallation.get(expandedName);
     }
 

@@ -108,7 +108,7 @@ public class StartTSBuilderST extends SystemTestBase {
         final StartTSBuilder builder = new StartTSBuilder("${ECUTEST}", "120", "", "5017");
         project.getBuildersList().add(builder);
 
-        final EnvVars env = new EnvVars(
+        final EnvVars envVars = new EnvVars(
                 Collections.unmodifiableMap(new HashMap<String, String>() {
 
                     private static final long serialVersionUID = 1L;
@@ -117,6 +117,6 @@ public class StartTSBuilderST extends SystemTestBase {
                     }
                 }));
 
-        assertEquals("Tool name should be resolved", "ECU-TEST", builder.getToolInstallation(env).getName());
+        assertEquals("Tool name should be resolved", "ECU-TEST", builder.getToolInstallation(envVars).getName());
     }
 }
