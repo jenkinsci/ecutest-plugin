@@ -291,6 +291,39 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
+		<SETTING name="userDefinedReportDataConstantPrefix" default="REPORT_"
+			xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">Gibt das Präfix für die Erfassung der
+							benutzerdefinierten Report Informationen als ATX-Konstante an.</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">The prefix specified the ATX constant name
+							for the mapping of the user-defined report data as ATX constant.</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
+		<SETTING name="setConstants" default="" xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">Angabe zu setzender Konstanten für jeden
+							Testfall durch ';' getrennt. Beispiel: myConstant=NightlyTest;
+							Buildnumber=42
+						</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">Specifying special constants for each testcase
+							by ';'. Example: myConstant=NightlyTest; Buildnumber=42</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
 		<!-- Spezielle Einstellungen -->
 		<SETTING name="autoATXGeneratorUpdate" default="True"
 			xsi:type="reportConfigItem">
@@ -365,13 +398,18 @@
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
-						<DVALUE xsi:type="unicode">Legt die Tiefe fest, bis in welche SubPackages als Testfälle
-						erfasst werden sollen. Bei 0 (Standardwert) werden keine SubPackages erfasst.
+						<DVALUE xsi:type="unicode">Legt die Tiefe fest, bis in welche
+							SubPackages als Testfälle
+							erfasst werden sollen. Bei 0
+							(Standardwert) werden keine SubPackages
+							erfasst.
 						</DVALUE>
 					</ELEMENT>
 					<ELEMENT dkey="en_US">
-						<DVALUE xsi:type="unicode">Depth to which sub packages will be recorded
-						as testcases. For 0 (default value) no sub packages are recorded.
+						<DVALUE xsi:type="unicode">Depth to which sub packages will be
+							recorded
+							as testcases. For 0 (default value) no sub packages are
+							recorded.
 						</DVALUE>
 					</ELEMENT>
 				</MULTILANGDATA>
