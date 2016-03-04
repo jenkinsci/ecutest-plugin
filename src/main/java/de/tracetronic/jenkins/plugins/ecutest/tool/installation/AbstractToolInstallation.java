@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -42,13 +42,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import javax.annotation.CheckForNull;
+
 /**
  * Represents a base tool installation specified by name and home directory.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractToolInstallation extends ToolInstallation implements
-EnvironmentSpecific<AbstractToolInstallation>, NodeSpecific<AbstractToolInstallation> {
+        EnvironmentSpecific<AbstractToolInstallation>, NodeSpecific<AbstractToolInstallation> {
 
     private static final long serialVersionUID = 1L;
 
@@ -101,17 +103,23 @@ EnvironmentSpecific<AbstractToolInstallation>, NodeSpecific<AbstractToolInstalla
             @Override
             public String call() throws IOException {
                 final File exe = getExeFile();
-                return exe.exists() ? exe.getPath() : null;
+                return exe != null && exe.exists() ? exe.getPath() : null;
             }
         });
     }
 
     /**
-     * @return the executable file
+     * Gets the expanded executable file path.
+     *
+     * @return the executable file path or {@code null} if home directory is not set
      */
+    @CheckForNull
     private File getExeFile() {
-        final String home = Util.replaceMacro(getHome(), EnvVars.masterEnvVars);
-        return getExeFile(new File(home));
+        if (getHome() != null) {
+            final String home = Util.replaceMacro(getHome(), EnvVars.masterEnvVars);
+            return getExeFile(new File(home));
+        }
+        return null;
     }
 
     /**

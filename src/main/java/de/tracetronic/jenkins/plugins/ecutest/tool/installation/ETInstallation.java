@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -55,7 +55,6 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.Messages;
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
@@ -137,6 +136,17 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
+     * Gets the Tool-Server executable file relative to given home directory.
+     *
+     * @param home
+     *            the home directory of the tool
+     * @return the Tool-Server executable file
+     */
+    protected File getTSExeFile(final File home) {
+        return DescriptorImpl.getTSExeFile(home);
+    }
+
+    /**
      * Gets the executable path of the Tool-Server on the given target system.
      *
      * @param launcher
@@ -155,28 +165,23 @@ public class ETInstallation extends AbstractToolInstallation {
             @Override
             public String call() throws IOException {
                 final File exe = getTSExeFile();
-                return exe.exists() ? exe.getPath() : null;
+                return exe != null && exe.exists() ? exe.getPath() : null;
             }
         });
     }
 
     /**
-     * @return the Tool-Server executable file
-     */
-    private File getTSExeFile() {
-        final String home = Util.replaceMacro(getHome(), EnvVars.masterEnvVars);
-        return getTSExeFile(new File(home));
-    }
-
-    /**
-     * Gets the Tool-Server executable file relative to given home directory.
+     * Gets the expanded Tool-Server executable file path.
      *
-     * @param home
-     *            the home directory of the tool
-     * @return the Tool-Server executable file
+     * @return the Tool-Server executable file path or {@code null} if home directory is not set
      */
-    protected File getTSExeFile(final File home) {
-        return DescriptorImpl.getTSExeFile(home);
+    @CheckForNull
+    private File getTSExeFile() {
+        if (getHome() != null) {
+            final String home = Util.replaceMacro(getHome(), EnvVars.masterEnvVars);
+            return getTSExeFile(new File(home));
+        }
+        return null;
     }
 
     /**
@@ -250,11 +255,11 @@ public class ETInstallation extends AbstractToolInstallation {
          *
          * @param home
          *            the home directory of ECU-TEST
-         * @return the executable file or null if Unix-based system
+         * @return the executable file or {@code null} if Unix-based system
          */
         @CheckForNull
         private static File getExeFile(final File home) {
-            if (Functions.isWindows()) {
+            if (Functions.isWindows() && home != null) {
                 return new File(home, EXECUTABLE);
             }
             return null;
@@ -265,11 +270,11 @@ public class ETInstallation extends AbstractToolInstallation {
          *
          * @param home
          *            the home directory of ECU-TEST
-         * @return the executable file or null if Unix-based system
+         * @return the executable file or {@code null} if Unix-based system
          */
         @CheckForNull
         private static File getTSExeFile(final File home) {
-            if (Functions.isWindows()) {
+            if (Functions.isWindows() && home != null) {
                 return new File(home, TS_EXECUTABLE);
             }
             return null;

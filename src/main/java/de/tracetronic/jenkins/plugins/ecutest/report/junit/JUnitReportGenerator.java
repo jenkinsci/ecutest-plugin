@@ -117,7 +117,7 @@ public class JUnitReportGenerator {
                     logger.logError(String.format("Stopping %s failed.", toolName));
                 }
             } else {
-                logger.logError(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+                logger.logError("Selected ECU-TEST installation is not configured for this node!");
                 isGenerated = false;
             }
         }

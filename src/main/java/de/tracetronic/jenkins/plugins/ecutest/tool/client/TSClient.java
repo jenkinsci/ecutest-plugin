@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -39,7 +39,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import de.tracetronic.jenkins.plugins.ecutest.Messages;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
@@ -122,12 +121,7 @@ public class TSClient extends AbstractToolClient {
         }
 
         // Launch Tool-Server process
-        if (launchProcess(launcher, listener)) {
-            return true;
-        } else {
-            logger.logError(Messages.TS_ExecFailed());
-            return false;
-        }
+        return launchProcess(launcher, listener);
     }
 
     @Override

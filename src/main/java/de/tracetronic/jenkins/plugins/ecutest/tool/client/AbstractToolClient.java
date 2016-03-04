@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -119,32 +119,34 @@ public abstract class AbstractToolClient implements ToolClient {
      *            the listener
      * @return {@code true} if process invocation succeeded, {@code false} if launching process failed or timeout
      *         exceeded
-     * @throws IOException
-     *             signals that an I/O exception has occurred
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    protected boolean launchProcess(final Launcher launcher, final BuildListener listener)
-            throws IOException, InterruptedException {
+    protected boolean launchProcess(final Launcher launcher, final BuildListener listener) throws InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Create command line
         final ArgumentListBuilder args = createCmdLine();
         logger.logInfo(args.toString());
 
-        // Launch tool process
-        final Proc process = launcher.launch().stdout(listener.getLogger()).cmds(args).start();
+        try {
+            // Launch tool process
+            final Proc process = launcher.launch().stdout(listener.getLogger()).cmds(args).start();
 
-        // Wait for process start up
-        final long endTimeMillis = System.currentTimeMillis() + Long.valueOf(getTimeout()) * 1000L;
-        while (getTimeout() <= 0 || System.currentTimeMillis() < endTimeMillis) {
-            if (process.isAlive()) {
-                return true;
-            } else {
-                Thread.sleep(1000L);
+            // Wait for process start up
+            final long endTimeMillis = System.currentTimeMillis() + Long.valueOf(getTimeout()) * 1000L;
+            while (getTimeout() <= 0 || System.currentTimeMillis() < endTimeMillis) {
+                if (process.isAlive()) {
+                    break;
+                } else {
+                    Thread.sleep(1000L);
+                }
             }
+        } catch (final IOException e) {
+            logger.logError("-> Command line execution failed: " + e.getMessage());
+            return false;
         }
 
-        return false;
+        return true;
     }
 }

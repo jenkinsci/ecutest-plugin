@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -41,7 +41,6 @@ import org.apache.commons.lang.StringUtils;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
-import de.tracetronic.jenkins.plugins.ecutest.Messages;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
@@ -145,7 +144,6 @@ public class ETClient extends AbstractToolClient {
 
         // Launch ECU-TEST process
         if (!launchProcess(launcher, listener)) {
-            logger.logError(Messages.ET_ExecFailed());
             return false;
         }
 
@@ -165,12 +163,14 @@ public class ETClient extends AbstractToolClient {
         // Check ECU-TEST version
         final ToolVersion comToolVersion = ToolVersion.parse(comVersion);
         if (comToolVersion.compareWithoutQualifierTo(ETPlugin.ET_MAX_VERSION) > 0) {
-            logger.logWarn("Perhaps using plugin incompatible ECU-TEST version!");
+            logger.logWarn(String.format(
+                    "The configured ECU-TEST version %s might be incompatible with this plugin. "
+                            + "Currently supported versions: %s up to %s", comVersion,
+                            ETPlugin.ET_MIN_VERSION.toShortString(), ETPlugin.ET_MAX_VERSION.toShortString()));
         } else if (comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
             logger.logError(String.format(
                     "The configured ECU-TEST version %s is not compatible with this plugin. "
-                            + "Please use at least ECU-TEST %s!", comVersion,
-                            ETPlugin.ET_MIN_VERSION.toString()));
+                            + "Please use at least ECU-TEST %s!", comVersion, ETPlugin.ET_MIN_VERSION.toShortString()));
             // Close ECU-TEST
             stop(checkProcesses, launcher, listener);
             return false;

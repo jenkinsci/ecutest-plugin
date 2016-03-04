@@ -138,7 +138,7 @@ public class ATXPublisher extends AbstractReportPublisher {
         // Get selected TEST-GUIDE installation
         final ATXInstallation installation = getInstallation(build.getEnvironment(listener));
         if (installation == null) {
-            logger.logError(Messages.ATXPublisher_NoInstallation());
+            logger.logError("Selected TEST-GUIDE installation is not configured!");
             return false;
         }
 
@@ -176,7 +176,7 @@ public class ATXPublisher extends AbstractReportPublisher {
                     logger.logError(String.format("Stopping %s failed.", toolName));
                 }
             } else {
-                logger.logError(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+                logger.logError("Selected ECU-TEST installation is not configured for this node!");
                 return false;
             }
         }

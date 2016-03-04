@@ -217,7 +217,7 @@ public class StartETBuilder extends AbstractToolBuilder {
             final ToolEnvInvisibleAction envAction = new ToolEnvInvisibleAction(toolId, etClient);
             build.addAction(envAction);
         } else {
-            logger.logError(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+            logger.logError("The selected ECU-TEST installation is not configured for this node!");
             return false;
         }
 

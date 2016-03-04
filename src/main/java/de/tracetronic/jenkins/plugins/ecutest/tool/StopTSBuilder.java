@@ -111,7 +111,7 @@ public class StopTSBuilder extends AbstractToolBuilder {
                 return false;
             }
         } else {
-            logger.logError(de.tracetronic.jenkins.plugins.ecutest.Messages.ET_NoInstallation());
+            logger.logError("Selected ECU-TEST installation is not configured for this node!");
             return false;
         }
 
