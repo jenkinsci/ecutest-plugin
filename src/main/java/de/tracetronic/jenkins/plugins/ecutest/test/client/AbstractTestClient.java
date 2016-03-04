@@ -239,6 +239,7 @@ public abstract class AbstractTestClient implements TestClient {
                     } else {
                         logger.logInfo("- Starting configurations...");
                         comClient.start();
+                        comClient.waitForIdle(timeout);
                         logger.logInfo("-> Configurations started successfully.");
                     }
                 }

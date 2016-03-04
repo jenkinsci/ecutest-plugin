@@ -139,12 +139,16 @@ public abstract class AbstractTestBuilder extends Builder {
         final boolean performed = performTest(build, launcher, listener);
         if (!performed && getExecutionConfig().isStopOnError()) {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            logger.logInfo("- Closing running ECU-TEST and Tool-Server instances because StopOnError is enabled.");
-            if (!checkETInstance(launcher, true)) {
-                logger.logInfo("-> No running ECU-TEST instance found!");
+            logger.logInfo("- Closing running ECU-TEST and Tool-Server instances...");
+            if (checkETInstance(launcher, true)) {
+                logger.logInfo("-> No running ECU-TEST instance found.");
+            } else {
+                logger.logInfo("-> ECU-TEST closed successfully.");
             }
             if (!checkTSInstance(launcher, true)) {
-                logger.logInfo("-> No running Tool-Server instance found!");
+                logger.logInfo("-> No running Tool-Server instance found.");
+            } else {
+                logger.logInfo("-> Tool-Server closed successfully.");
             }
         }
         return performed;
@@ -277,7 +281,7 @@ public abstract class AbstractTestBuilder extends Builder {
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean checkETInstance(final Launcher launcher, final boolean kill) throws IOException,
-            InterruptedException {
+    InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }
@@ -296,7 +300,7 @@ public abstract class AbstractTestBuilder extends Builder {
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean checkTSInstance(final Launcher launcher, final boolean kill) throws IOException,
-            InterruptedException {
+    InterruptedException {
         final List<String> foundProcesses = TSClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }

@@ -327,7 +327,10 @@ public class ETClient extends AbstractToolClient {
                 logger.logError("Caught ComException: " + e.getMessage());
             } finally {
                 if (checkProcesses) {
-                    ProcessUtil.checkETProcesses(true);
+                    final List<String> foundProcesses = ProcessUtil.checkETProcesses(true);
+                    if (!foundProcesses.isEmpty()) {
+                        logger.logInfo(String.format("Terminated running processes: %s", foundProcesses));
+                    }
                 }
             }
             return isTerminated;
