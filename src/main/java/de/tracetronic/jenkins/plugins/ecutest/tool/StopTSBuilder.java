@@ -90,18 +90,17 @@ public class StopTSBuilder extends AbstractToolBuilder {
         // Initialize logger
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
-        // Expand build parameters
-        final EnvVars buildEnvVars = build.getEnvironment(listener);
-        final int expandedTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
-                String.valueOf(DEFAULT_TIMEOUT)));
-
         // Get selected ECU-TEST installation
         final AbstractToolInstallation installation = configureToolInstallation(listener,
                 build.getEnvironment(listener));
 
-        // Stop selected Tool-Server from inside of ECU-TEST installation
+        // Stop selected Tool-Server of related ECU-TEST installation
         if (installation instanceof ETInstallation) {
             final String tsName = "Tool-Server";
+            final EnvVars buildEnvVars = build.getEnvironment(listener);
+            final int expandedTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
+                    String.valueOf(DEFAULT_TIMEOUT)));
+
             logger.logInfo(String.format("Stopping %s...", tsName));
             final TSClient tsClient = new TSClient(getToolName(), expandedTimeout);
             if (tsClient.stop(true, launcher, listener)) {

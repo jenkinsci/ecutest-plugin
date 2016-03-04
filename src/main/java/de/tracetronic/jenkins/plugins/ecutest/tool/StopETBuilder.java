@@ -90,11 +90,6 @@ public class StopETBuilder extends AbstractToolBuilder {
         // Initialize logger
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
-        // Expand build parameters
-        final EnvVars buildEnvVars = build.getEnvironment(listener);
-        final int expandedTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
-                String.valueOf(DEFAULT_TIMEOUT)));
-
         // Get selected ECU-TEST installation
         final AbstractToolInstallation installation = configureToolInstallation(listener,
                 build.getEnvironment(listener));
@@ -102,6 +97,10 @@ public class StopETBuilder extends AbstractToolBuilder {
         // Stop selected ECU-TEST
         if (installation instanceof ETInstallation) {
             final String toolName = build.getEnvironment(listener).expand(installation.getName());
+            final EnvVars buildEnvVars = build.getEnvironment(listener);
+            final int expandedTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
+                    String.valueOf(DEFAULT_TIMEOUT)));
+
             logger.logInfo(String.format("Stopping %s...", toolName));
             final ETClient etClient = new ETClient(toolName, expandedTimeout);
             if (etClient.stop(true, launcher, listener)) {
