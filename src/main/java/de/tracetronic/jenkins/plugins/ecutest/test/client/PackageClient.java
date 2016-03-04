@@ -39,7 +39,6 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder.Seriousness;
@@ -90,7 +89,7 @@ public class PackageClient extends AbstractTestClient {
 
     @Override
     public boolean runTestCase(final Launcher launcher, final BuildListener listener) throws IOException,
-            InterruptedException {
+    InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -263,8 +262,10 @@ public class PackageClient extends AbstractTestClient {
                         logger.logInfo("-- tick...");
                     }
                     if (timeout > 0 && System.currentTimeMillis() > endTimeMillis) {
+                        logger.logWarn(String.format("-> Test execution timeout of %d seconds reached! "
+                                + "Aborting now...", timeout));
                         execInfo.abort();
-                        throw new TimeoutException("Test execution timeout reached! Aborting now...");
+                        break;
                     }
                     Thread.sleep(1000L);
                     tickCounter++;
@@ -278,14 +279,12 @@ public class PackageClient extends AbstractTestClient {
                 testInfo = new TestInfoHolder(testResult, testReportDir);
 
                 if (!comClient.waitForIdle(timeout)) {
-                    throw new TimeoutException("Post-execution timeout reached!");
+                    logger.logWarn(String.format("-> Post-execution timeout of %d seconds reached!", timeout));
                 }
             } catch (final ETComException e) {
                 logger.logError("Caught ComException: " + e.getMessage());
             } catch (final InterruptedException e) {
                 logger.logError("Caught InterruptedException: " + e.getMessage());
-            } catch (final TimeoutException e) {
-                logger.logError("Caught TimeoutException: " + e.getMessage());
             }
             return testInfo;
         }
