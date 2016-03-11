@@ -87,7 +87,7 @@ public class ProjectClient extends AbstractTestClient {
 
     @Override
     public boolean runTestCase(final Launcher launcher, final BuildListener listener) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -109,19 +109,24 @@ public class ProjectClient extends AbstractTestClient {
             return false;
         }
 
-        // Run project
-        final TestInfoHolder testInfo = launcher.getChannel().call(
-                new RunProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig(), listener));
-
         // Set default project information
         setTestDescription("");
         setTestName(FilenameUtils.getBaseName(new File(getTestFile()).getName()));
 
-        // Set project information
-        if (testInfo != null) {
-            setTestResult(testInfo.getTestResult());
-            setTestReportDir(testInfo.getTestReportDir());
-        } else {
+        try {
+            // Run project
+            final TestInfoHolder testInfo = launcher.getChannel().call(
+                    new RunProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig(), listener));
+
+            // Set project information
+            if (testInfo != null) {
+                setTestResult(testInfo.getTestResult());
+                setTestReportDir(testInfo.getTestReportDir());
+            } else {
+                return false;
+            }
+        } catch (final InterruptedException e) {
+            logger.logError("Test execution has been interrupted!");
             return false;
         }
 
@@ -214,7 +219,7 @@ public class ProjectClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to run a project via COM.
      */
-    private static final class RunProjectCallable implements Callable<TestInfoHolder, IOException> {
+    private static final class RunProjectCallable implements Callable<TestInfoHolder, InterruptedException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -244,7 +249,7 @@ public class ProjectClient extends AbstractTestClient {
         }
 
         @Override
-        public TestInfoHolder call() throws IOException {
+        public TestInfoHolder call() throws InterruptedException {
             final int jobExecutionMode = projectConfig.getJobExecMode().getValue();
             final int timeout = executionConfig.getTimeout();
             TestInfoHolder testInfo = null;
@@ -282,8 +287,6 @@ public class ProjectClient extends AbstractTestClient {
                 }
             } catch (final ETComException e) {
                 logger.logError("Caught ComException: " + e.getMessage());
-            } catch (final InterruptedException e) {
-                logger.logError("Caught InterruptedException: " + e.getMessage());
             }
             return testInfo;
         }

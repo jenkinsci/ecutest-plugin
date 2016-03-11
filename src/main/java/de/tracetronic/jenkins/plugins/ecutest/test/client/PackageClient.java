@@ -89,7 +89,7 @@ public class PackageClient extends AbstractTestClient {
 
     @Override
     public boolean runTestCase(final Launcher launcher, final BuildListener listener) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -116,15 +116,20 @@ public class PackageClient extends AbstractTestClient {
             return false;
         }
 
-        // Run package
-        final TestInfoHolder testInfo = launcher.getChannel().call(
-                new RunPackageCallable(getTestFile(), getPackageConfig(), getExecutionConfig(), listener));
+        try {
+            // Run package
+            final TestInfoHolder testInfo = launcher.getChannel().call(
+                    new RunPackageCallable(getTestFile(), getPackageConfig(), getExecutionConfig(), listener));
 
-        // Set test result information
-        if (testInfo != null) {
-            setTestResult(testInfo.getTestResult());
-            setTestReportDir(testInfo.getTestReportDir());
-        } else {
+            // Set test result information
+            if (testInfo != null) {
+                setTestResult(testInfo.getTestResult());
+                setTestReportDir(testInfo.getTestReportDir());
+            } else {
+                return false;
+            }
+        } catch (final InterruptedException e) {
+            logger.logError("Test execution has been interrupted!");
             return false;
         }
 
@@ -209,7 +214,7 @@ public class PackageClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to run a package via COM.
      */
-    private static final class RunPackageCallable implements Callable<TestInfoHolder, IOException> {
+    private static final class RunPackageCallable implements Callable<TestInfoHolder, InterruptedException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -239,7 +244,7 @@ public class PackageClient extends AbstractTestClient {
         }
 
         @Override
-        public TestInfoHolder call() throws IOException {
+        public TestInfoHolder call() throws InterruptedException {
             final boolean runTest = packageConfig.isRunTest();
             final boolean runTraceAnalysis = packageConfig.isRunTraceAnalysis();
             final int timeout = executionConfig.getTimeout();
@@ -283,8 +288,6 @@ public class PackageClient extends AbstractTestClient {
                 }
             } catch (final ETComException e) {
                 logger.logError("Caught ComException: " + e.getMessage());
-            } catch (final InterruptedException e) {
-                logger.logError("Caught InterruptedException: " + e.getMessage());
             }
             return testInfo;
         }

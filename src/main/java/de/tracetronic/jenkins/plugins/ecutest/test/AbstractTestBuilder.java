@@ -141,14 +141,14 @@ public abstract class AbstractTestBuilder extends Builder {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Closing running ECU-TEST and Tool-Server instances...");
             if (checkETInstance(launcher, true)) {
-                logger.logInfo("-> No running ECU-TEST instance found.");
-            } else {
                 logger.logInfo("-> ECU-TEST closed successfully.");
-            }
-            if (!checkTSInstance(launcher, true)) {
-                logger.logInfo("-> No running Tool-Server instance found.");
             } else {
+                logger.logInfo("-> No running ECU-TEST instance found.");
+            }
+            if (checkTSInstance(launcher, true)) {
                 logger.logInfo("-> Tool-Server closed successfully.");
+            } else {
+                logger.logInfo("-> No running Tool-Server instance found.");
             }
         }
         return performed;
