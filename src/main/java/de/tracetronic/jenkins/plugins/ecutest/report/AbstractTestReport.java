@@ -129,7 +129,7 @@ public abstract class AbstractTestReport implements ModelObject {
      *
      * @param req
      *            the {@link StaplerRequest} used for access this report
-     * @return the build with report artifacts to handle or null if no proper build exists
+     * @return the build with report artifacts to handle or {@code null} if no proper build exists
      */
     @CheckForNull
     protected AbstractBuild<?, ?> getBuild(final StaplerRequest req) {

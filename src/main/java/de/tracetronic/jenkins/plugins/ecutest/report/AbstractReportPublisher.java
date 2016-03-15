@@ -30,21 +30,25 @@
 package de.tracetronic.jenkins.plugins.ecutest.report;
 
 import hudson.EnvVars;
+import hudson.FilePath;
+import hudson.Launcher;
 import hudson.matrix.MatrixConfiguration;
 import hudson.matrix.MatrixProject;
 import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.Result;
+import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Computer;
-import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
-import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,6 +56,8 @@ import jenkins.model.Jenkins;
 
 import org.apache.commons.lang.StringUtils;
 
+import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
+import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
@@ -64,6 +70,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
+@SuppressWarnings("unchecked")
 public abstract class AbstractReportPublisher extends Recorder {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractReportPublisher.class.getName());
@@ -121,12 +128,6 @@ public abstract class AbstractReportPublisher extends Recorder {
         }
 
         return actions;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public BuildStepDescriptor<Publisher> getDescriptor() {
-        return super.getDescriptor();
     }
 
     @Override
@@ -197,5 +198,65 @@ public abstract class AbstractReportPublisher extends Recorder {
             }
         }
         return null;
+    }
+
+    /**
+     * Gets the workspace directory, either previous ECU-TEST workspace or default one.
+     *
+     * @param build
+     *            the build
+     * @return the workspace directory
+     */
+    protected String getWorkspaceDir(final AbstractBuild<?, ?> build) {
+        String workspaceDir = "";
+        final ToolEnvInvisibleAction toolEnvAction = build.getAction(ToolEnvInvisibleAction.class);
+        if (toolEnvAction != null) {
+            workspaceDir = toolEnvAction.getToolWorkspace();
+        }
+        return workspaceDir;
+    }
+
+    /**
+     * Gets the settings directory, either previous ECU-TEST settings or default one.
+     *
+     * @param build
+     *            the build
+     * @return the settings directory
+     */
+    protected String getSettingsDir(final AbstractBuild<?, ?> build) {
+        String settingsDir = "";
+        final ToolEnvInvisibleAction toolEnvAction = build.getAction(ToolEnvInvisibleAction.class);
+        if (toolEnvAction != null) {
+            settingsDir = toolEnvAction.getToolSettings();
+        }
+        return settingsDir;
+    }
+
+    /**
+     * Builds a list of report files for report generation.
+     * Includes the report files generated during separate sub-project execution.
+     *
+     * @param build
+     *            the build
+     * @param launcher
+     *            the launcher
+     * @return the list of report files
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the build gets interrupted
+     */
+    protected List<FilePath> getReportFiles(final AbstractBuild<?, ?> build, final Launcher launcher)
+            throws IOException, InterruptedException {
+        final List<FilePath> reportFiles = new ArrayList<FilePath>();
+        final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
+        for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
+            final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
+            if (testReportDir.exists()) {
+                reportFiles.addAll(Arrays.asList(testReportDir.list("**/" + TRFPublisher.TRF_FILE_NAME)));
+            }
+        }
+        Collections.reverse(reportFiles);
+        return reportFiles;
     }
 }

@@ -55,6 +55,7 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
@@ -217,6 +218,8 @@ public class ETInstallation extends AbstractToolInstallation {
                 instance.getDescriptorByType(StartTSBuilder.DescriptorImpl.class).setInstallations(installations);
                 instance.getDescriptorByType(StopTSBuilder.DescriptorImpl.class).setInstallations(installations);
                 instance.getDescriptorByType(JUnitPublisher.DescriptorImpl.class).setInstallations(installations);
+                instance.getDescriptorByType(ReportGeneratorPublisher.DescriptorImpl.class).setInstallations(
+                        installations);
             }
         }
 

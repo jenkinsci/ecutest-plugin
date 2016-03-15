@@ -83,7 +83,7 @@ public class ATXBuildAction<T extends AbstractTestReport> extends AbstractATXAct
      *
      * @param token
      *            the URL token
-     * @return the {@link ATXReport} or null if no proper report exists
+     * @return the {@link ATXReport} or {@code null} if no proper report exists
      */
     public T getDynamic(final String token) {
         for (final T report : getATXReports()) {
@@ -107,7 +107,7 @@ public class ATXBuildAction<T extends AbstractTestReport> extends AbstractATXAct
      *            the token id
      * @param report
      *            the report
-     * @return the {@link ATXReport} or null if no proper report exists
+     * @return the {@link ATXReport} or {@code null} if no proper report exists
      */
     @SuppressWarnings("unchecked")
     private T traverseSubReports(final String token, final T report) {

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -80,7 +80,7 @@ public class TRFBuildAction extends AbstractTRFAction {
      *
      * @param token
      *            the URL token
-     * @return the {@link TRFReport} or null if no proper report exists
+     * @return the {@link TRFReport} or {@code null} if no proper report exists
      */
     public AbstractTestReport getDynamic(final String token) {
         for (final TRFReport report : getTRFReports()) {
@@ -104,7 +104,7 @@ public class TRFBuildAction extends AbstractTRFAction {
      *            the token id
      * @param report
      *            the report
-     * @return the {@link TRFReport} or null if no proper report exists
+     * @return the {@link TRFReport} or {@code null} if no proper report exists
      */
     private TRFReport traverseSubReports(final String token, final TRFReport report) {
         for (final AbstractTestReport subReport : report.getSubReports()) {
@@ -122,6 +122,6 @@ public class TRFBuildAction extends AbstractTRFAction {
 
     @Override
     public String getDisplayName() {
-        return Messages.TRFAction_DisplayName();
+        return Messages.TRFBuildAction_DisplayName();
     }
 }

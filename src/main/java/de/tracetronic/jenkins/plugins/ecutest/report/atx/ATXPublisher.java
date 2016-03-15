@@ -65,7 +65,6 @@ import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
-import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
@@ -297,38 +296,6 @@ public class ATXPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Gets the workspace directory, either previous ECU-TEST workspace or default one.
-     *
-     * @param build
-     *            the build
-     * @return the workspace directory
-     */
-    private String getWorkspaceDir(final AbstractBuild<?, ?> build) {
-        String workspaceDir = "";
-        final ToolEnvInvisibleAction toolEnvAction = build.getAction(ToolEnvInvisibleAction.class);
-        if (toolEnvAction != null) {
-            workspaceDir = toolEnvAction.getToolWorkspace();
-        }
-        return workspaceDir;
-    }
-
-    /**
-     * Gets the settings directory, either previous ECU-TEST settings or default one.
-     *
-     * @param build
-     *            the build
-     * @return the settings directory
-     */
-    private String getSettingsDir(final AbstractBuild<?, ?> build) {
-        String settingsDir = "";
-        final ToolEnvInvisibleAction toolEnvAction = build.getAction(ToolEnvInvisibleAction.class);
-        if (toolEnvAction != null) {
-            settingsDir = toolEnvAction.getToolSettings();
-        }
-        return settingsDir;
-    }
-
-    /**
      * Gets the {@link ATXInstallation} by descriptor and name.
      *
      * @return the {@link ATXInstallation}
@@ -366,7 +333,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link ATXPublisher}.
      */
     @SuppressWarnings("rawtypes")
-    @Extension(ordinal = 1003)
+    @Extension(ordinal = 1004)
     public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
         @CopyOnWrite

@@ -37,15 +37,10 @@ import hudson.remoting.Callable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
@@ -72,6 +67,8 @@ public class JUnitReportGenerator {
      *
      * @param installation
      *            the installation
+     * @param reportFiles
+     *            the report files
      * @param build
      *            the build
      * @param launcher
@@ -84,11 +81,11 @@ public class JUnitReportGenerator {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    public boolean generate(final AbstractToolInstallation installation, final AbstractBuild<?, ?> build,
-            final Launcher launcher, final BuildListener listener) throws IOException, InterruptedException {
+    public boolean generate(final AbstractToolInstallation installation, final List<FilePath> reportFiles,
+            final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener) throws IOException,
+            InterruptedException {
         boolean isGenerated = false;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
-        final List<FilePath> reportFiles = getReportFiles(build, launcher);
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
         final boolean isETRunning = !foundProcesses.isEmpty();
 
@@ -146,34 +143,6 @@ public class JUnitReportGenerator {
         logger.logInfo("- Generating UNIT test reports...");
         return launcher.getChannel().call(
                 new GenerateUnitReportCallable(reportFiles, listener));
-    }
-
-    /**
-     * Builds a list of report files for UNIT report generation.
-     * Includes the report files generated during separate sub-project execution.
-     *
-     * @param build
-     *            the build
-     * @param launcher
-     *            the launcher
-     * @return the list of report files
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
-     */
-    private List<FilePath> getReportFiles(final AbstractBuild<?, ?> build, final Launcher launcher)
-            throws IOException, InterruptedException {
-        final List<FilePath> reportFiles = new ArrayList<FilePath>();
-        final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
-        for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-            final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-            if (testReportDir.exists()) {
-                reportFiles.addAll(Arrays.asList(testReportDir.list("**/" + TRFPublisher.TRF_FILE_NAME)));
-            }
-        }
-        Collections.reverse(reportFiles);
-        return reportFiles;
     }
 
     /**

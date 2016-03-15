@@ -50,7 +50,7 @@ public class ETLogProjectAction extends AbstractETLogAction {
      *
      * @param req
      *            the {@link StaplerRequest} used for access this action
-     * @return the last {@link ETLogBuildAction} or null if no proper build exists
+     * @return the last {@link ETLogBuildAction} or {@code null} if no proper build exists
      */
     @CheckForNull
     public ETLogBuildAction getLastBuildAction(final StaplerRequest req) {
@@ -67,7 +67,7 @@ public class ETLogProjectAction extends AbstractETLogAction {
      *            the URL token
      * @param req
      *            the {@link StaplerRequest} used for access this action
-     * @return the requested {@link ETLogReport} or null if no proper report exists
+     * @return the requested {@link ETLogReport} or {@code null} if no proper report exists
      */
     public ETLogReport getDynamic(final String token, final StaplerRequest req) {
         final ETLogBuildAction buildAction = getLastBuildAction(req);

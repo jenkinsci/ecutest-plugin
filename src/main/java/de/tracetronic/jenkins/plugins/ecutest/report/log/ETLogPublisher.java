@@ -319,7 +319,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
 
         @Override
         public List<String> invoke(final File baseDir, final VirtualChannel channel) throws IOException,
-                InterruptedException {
+        InterruptedException {
             final List<String> files = new ArrayList<String>();
             for (final String includedFile : Util.createFileSet(baseDir, includes, excludes)
                     .getDirectoryScanner().getIncludedFiles()) {
@@ -333,11 +333,6 @@ public class ETLogPublisher extends AbstractReportPublisher {
     @Override
     public Action getProjectAction(final AbstractProject<?, ?> project) {
         return new ETLogProjectAction();
-    }
-
-    @Override
-    public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl) super.getDescriptor();
     }
 
     /**

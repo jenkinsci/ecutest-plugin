@@ -50,7 +50,7 @@ public class TRFProjectAction extends AbstractTRFAction {
      *
      * @param req
      *            the {@link StaplerRequest} used for access this action
-     * @return the last {@link TRFBuildAction} or null if no proper build exists
+     * @return the last {@link TRFBuildAction} or {@code null} if no proper build exists
      */
     @CheckForNull
     public TRFBuildAction getLastBuildAction(final StaplerRequest req) {
@@ -67,7 +67,7 @@ public class TRFProjectAction extends AbstractTRFAction {
      *            the URL token
      * @param req
      *            the {@link StaplerRequest} used for access this action
-     * @return the requested {@link TRFReport} or null if no proper report exists
+     * @return the requested {@link TRFReport} or {@code null} if no proper report exists
      */
     public TRFReport getDynamic(final String token, final StaplerRequest req) {
         final TRFBuildAction buildAction = getLastBuildAction(req);

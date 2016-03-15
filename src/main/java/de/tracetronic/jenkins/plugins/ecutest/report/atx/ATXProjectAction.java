@@ -55,7 +55,7 @@ public class ATXProjectAction<T extends AbstractTestReport> extends AbstractATXA
      *
      * @param req
      *            the {@link StaplerRequest} used for access this action
-     * @return the last {@link ATXBuildAction} or null if no proper build exists
+     * @return the last {@link ATXBuildAction} or {@code null} if no proper build exists
      */
     @SuppressWarnings("unchecked")
     @CheckForNull
@@ -73,7 +73,7 @@ public class ATXProjectAction<T extends AbstractTestReport> extends AbstractATXA
      *            the URL token
      * @param req
      *            the {@link StaplerRequest} used for access this action
-     * @return the requested {@link ATXReport} or null if no proper report exists
+     * @return the requested {@link ATXReport} or {@code null} if no proper report exists
      */
     public T getDynamic(final String token, final StaplerRequest req) {
         final ATXBuildAction<T> buildAction = getLastBuildAction(req);

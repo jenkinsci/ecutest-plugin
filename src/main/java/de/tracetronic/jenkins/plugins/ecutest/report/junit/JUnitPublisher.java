@@ -32,6 +32,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 import hudson.CopyOnWrite;
 import hudson.EnvVars;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.matrix.MatrixAggregatable;
 import hudson.matrix.MatrixAggregator;
@@ -52,6 +53,7 @@ import hudson.util.FormValidation;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.annotation.CheckForNull;
 
@@ -179,13 +181,17 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
             return true;
         }
 
-        // Get selected ECU-TEST installation
-        final AbstractToolInstallation installation = configureToolInstallation(toolName, listener,
-                build.getEnvironment(listener));
+        final List<FilePath> reportFiles = getReportFiles(build, launcher);
+        if (reportFiles.isEmpty() && !isAllowMissing()) {
+            logger.logError("Empty test results are not allowed, setting build status to FAILURE!");
+            return false;
+        }
 
         // Generate JUnit reports
+        final AbstractToolInstallation installation = configureToolInstallation(toolName, listener,
+                build.getEnvironment(listener));
         final JUnitReportGenerator generator = new JUnitReportGenerator();
-        if (!generator.generate(installation, build, launcher, listener)) {
+        if (!generator.generate(installation, reportFiles, build, launcher, listener)) {
             build.setResult(Result.FAILURE);
             return true;
         }
@@ -310,7 +316,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     /**
      * DescriptorImpl for {@link JUnitPublisher}.
      */
-    @Extension(ordinal = 1001)
+    @Extension(ordinal = 1002)
     public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
         @CopyOnWrite

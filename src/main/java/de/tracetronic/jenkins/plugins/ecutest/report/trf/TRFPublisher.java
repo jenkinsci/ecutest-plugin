@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -235,15 +235,10 @@ public class TRFPublisher extends AbstractReportPublisher {
         return new TRFProjectAction();
     }
 
-    @Override
-    public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl) super.getDescriptor();
-    }
-
     /**
      * DescriptorImpl for {@link TRFPublisher}.
      */
-    @Extension(ordinal = 1002)
+    @Extension(ordinal = 1003)
     public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
         @SuppressWarnings("rawtypes")

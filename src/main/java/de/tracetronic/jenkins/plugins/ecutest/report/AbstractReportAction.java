@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -74,7 +74,7 @@ public abstract class AbstractReportAction implements Action {
      *
      * @param req
      *            the {@link StaplerRequest} used for access this action
-     * @return the {@link AbstractProject} or {@link AbstractBuild} or null if no proper owner exists
+     * @return the {@link AbstractProject} or {@link AbstractBuild} or {@code null} if no proper owner exists
      */
     @CheckForNull
     public Object getOwner(final StaplerRequest req) {
@@ -96,7 +96,7 @@ public abstract class AbstractReportAction implements Action {
      *
      * @param req
      *            the {@link StaplerRequest} used for access this action
-     * @return the project containing this action or null if no proper project exists
+     * @return the project containing this action or {@code null} if no proper project exists
      */
     @CheckForNull
     public AbstractProject<?, ?> getProject(final StaplerRequest req) {
@@ -115,7 +115,7 @@ public abstract class AbstractReportAction implements Action {
      *
      * @param req
      *            the {@link StaplerRequest} used for access this action
-     * @return the build with report artifacts to handle or null if no proper build exists
+     * @return the build with report artifacts to handle or {@code null} if no proper build exists
      */
     @CheckForNull
     public AbstractBuild<?, ?> getBuild(final StaplerRequest req) {
@@ -137,7 +137,7 @@ public abstract class AbstractReportAction implements Action {
      *
      * @param project
      *            the project
-     * @return the last build with report artifacts or null if no proper build exists
+     * @return the last build with report artifacts or {@code null} if no proper build exists
      */
     @CheckForNull
     protected abstract AbstractBuild<?, ?> getLastReportBuild(final AbstractProject<?, ?> project);
@@ -147,7 +147,7 @@ public abstract class AbstractReportAction implements Action {
      *
      * @param icon
      *            the icon to search
-     * @return the full icon path or null if the icon does not exist
+     * @return the full icon path or {@code null} if the icon does not exist
      */
     @CheckForNull
     protected String getIconPath(final String icon) {
@@ -234,7 +234,7 @@ public abstract class AbstractReportAction implements Action {
      * @throws IOException
      *             signals that an I/O exception has occurred
      */
-    private static void zip(final OutputStream outputStream, final VirtualFile archiveDir) throws IOException {
+    protected static void zip(final OutputStream outputStream, final VirtualFile archiveDir) throws IOException {
         final ZipOutputStream zos = new ZipOutputStream(outputStream);
         zos.setEncoding(System.getProperty("file.encoding"));
 
