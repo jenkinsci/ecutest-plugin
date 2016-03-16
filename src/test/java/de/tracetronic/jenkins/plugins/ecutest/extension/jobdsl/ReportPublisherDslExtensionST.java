@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -49,6 +49,9 @@ import org.jvnet.hudson.test.JenkinsRule;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorConfig;
+import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
@@ -94,7 +97,7 @@ public class ReportPublisherDslExtensionST extends AbstractDslExtensionST {
         final FreeStyleProject project = createTestJob();
 
         final List<Publisher> publishers = project.getPublishersList();
-        assertThat("Report related publisher steps should exist", publishers, hasSize(4));
+        assertThat("Report related publisher steps should exist", publishers, hasSize(5));
     }
 
     @Test
@@ -128,6 +131,7 @@ public class ReportPublisherDslExtensionST extends AbstractDslExtensionST {
         final DescribableList<Publisher, Descriptor<Publisher>> publishers = project.getPublishersList();
         final JUnitPublisher publisher = publishers.get(JUnitPublisher.class);
         assertNotNull("UNIT report publisher should exist", publisher);
+        assertThat(publisher.getToolName(), is("ECU-TEST"));
         assertEquals(0, Double.compare(15, publisher.getUnstableThreshold()));
         assertEquals(0, Double.compare(30, publisher.getFailedThreshold()));
         assertTrue(publisher.isAllowMissing());
@@ -145,5 +149,39 @@ public class ReportPublisherDslExtensionST extends AbstractDslExtensionST {
         assertTrue(publisher.isFailedOnError());
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
+    }
+
+    @Test
+    public void testGeneratorPublisherWithDsl() throws Exception {
+        final FreeStyleProject project = createTestJob();
+
+        final DescribableList<Publisher, Descriptor<Publisher>> publishers = project.getPublishersList();
+        final ReportGeneratorPublisher publisher = publishers.get(ReportGeneratorPublisher.class);
+        assertNotNull("Report generator publisher should exist", publisher);
+        assertThat(publisher.getToolName(), is("ECU-TEST"));
+        assertTrue(publisher.isAllowMissing());
+        assertTrue(publisher.isRunOnFailed());
+        testGeneratorConfigWithDsl(publisher.getGenerators());
+        testCustomGeneratorConfigWithDsl(publisher.getCustomGenerators());
+    }
+
+    private void testGeneratorConfigWithDsl(final List<ReportGeneratorConfig> list) throws Exception {
+        assertThat("Generator should exist", list, hasSize(1));
+        assertThat(list.get(0).getName(), is("HTML"));
+        testGeneratorSettingsWithDsl(list.get(0).getSettings());
+    }
+
+    private void testCustomGeneratorConfigWithDsl(final List<ReportGeneratorConfig> list) throws Exception {
+        assertThat("Custom generator should exist", list, hasSize(1));
+        assertThat(list.get(0).getName(), is("Custom"));
+        testGeneratorSettingsWithDsl(list.get(0).getSettings());
+    }
+
+    private void testGeneratorSettingsWithDsl(final List<ReportGeneratorSetting> list) throws Exception {
+        assertThat("Generator settings should exist", list, hasSize(2));
+        assertThat(list.get(0).getName(), is("param"));
+        assertThat(list.get(0).getValue(), is("123"));
+        assertThat(list.get(1).getName(), is("param2"));
+        assertThat(list.get(1).getValue(), is("456"));
     }
 }

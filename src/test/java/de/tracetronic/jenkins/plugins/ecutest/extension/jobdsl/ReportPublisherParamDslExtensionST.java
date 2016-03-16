@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -74,5 +74,10 @@ public class ReportPublisherParamDslExtensionST extends ReportPublisherDslExtens
     @Test
     public void testETLogPublisherWithParamDsl() throws Exception {
         testETLogPublisherWithDsl();
+    }
+
+    @Test
+    public void testGeneratorsPublisherWithParamDsl() throws Exception {
+        testGeneratorPublisherWithDsl();
     }
 }

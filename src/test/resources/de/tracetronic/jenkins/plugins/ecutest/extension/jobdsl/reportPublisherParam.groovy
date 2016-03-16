@@ -7,6 +7,12 @@ def dUnstableThreshold = 15
 def dFailedThreshold = 30
 def bUnstableOnWarning = true
 def bFailedOnError = true
+def strGeneratorName = 'HTML'
+def strCustomGeneratorName = 'Custom'
+def strSettingName = 'param'
+def strSettingValue = '123'
+def strSettingName2 = 'param2'
+def strSettingValue2 = '456'
 
 freeStyleJob("${strJobName}") {
     publishers {
@@ -27,6 +33,32 @@ freeStyleJob("${strJobName}") {
         publishETLogs() {
             unstableOnWarning(bUnstableOnWarning)
             failedOnError(bFailedOnError)
+            allowMissing(bAllowMissing)
+            runOnFailed(bRunOnFailed)
+        }
+        publishGenerators("${strETInstall}") {
+            generators {
+                generator("${strGeneratorName}") {
+                    settings {
+                        setting("${strSettingName}", "${strSettingValue}")
+                        setting {
+                            name("${strSettingName2}")
+                            value("${strSettingValue2}")
+                        }
+                    }
+                }
+            }
+            customGenerators {
+                customGenerator("${strCustomGeneratorName}") {
+                    settings {
+                        setting("${strSettingName}", "${strSettingValue}")
+                        setting {
+                            name("${strSettingName2}")
+                            value("${strSettingValue2}")
+                        }
+                    }
+                }
+            }
             allowMissing(bAllowMissing)
             runOnFailed(bRunOnFailed)
         }

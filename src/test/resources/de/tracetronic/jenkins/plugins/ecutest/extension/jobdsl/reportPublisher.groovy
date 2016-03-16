@@ -20,5 +20,31 @@ freeStyleJob("reportPublisher") {
             allowMissing(true)
             runOnFailed(true)
         }
+        publishGenerators("ECU-TEST") {
+            generators {
+                generator("HTML") {
+                    settings {
+                        setting("param", "123")
+                        setting {
+                            name("param2")
+                            value("456")
+                        }
+                    }
+                }
+            }
+            customGenerators {
+                customGenerator("Custom") {
+                    settings {
+                        setting("param", "123")
+                        setting {
+                            name("param2")
+                            value("456")
+                        }
+                    }
+                }
+            }
+            allowMissing(true)
+            runOnFailed(true)
+        }
     }
 }
