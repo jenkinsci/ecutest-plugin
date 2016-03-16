@@ -140,7 +140,7 @@ public abstract class AbstractTestBuilder extends Builder {
         if (!performed && getExecutionConfig().isStopOnError()) {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Closing running ECU-TEST and Tool-Server instances...");
-            if (checkETInstance(launcher, true)) {
+            if (closeETInstance(launcher, listener)) {
                 logger.logInfo("-> ECU-TEST closed successfully.");
             } else {
                 logger.logInfo("-> No running ECU-TEST instance found.");
@@ -284,6 +284,29 @@ public abstract class AbstractTestBuilder extends Builder {
     InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
+    }
+
+    /**
+     * Tries to close already opened ECU-TEST instances via COM first.
+     * If this is not successful tries to task-kill the running process.
+     *
+     * @param launcher
+     *            the launcher
+     * @param listener
+     *            the listener
+     * @return {@code true} if processes found, {@code false} otherwise
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the current thread is interrupted while waiting for the completion
+     */
+    private boolean closeETInstance(final Launcher launcher, final BuildListener listener) throws IOException,
+    InterruptedException {
+        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
+        if (foundProcesses.isEmpty()) {
+            return false;
+        }
+        return ETClient.stopProcesses(launcher, listener, true);
     }
 
     /**

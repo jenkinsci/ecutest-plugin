@@ -42,6 +42,7 @@ import org.apache.commons.lang.StringUtils;
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
@@ -246,6 +247,26 @@ public class ETClient extends AbstractToolClient {
     public static List<String> checkProcesses(final Launcher launcher, final boolean kill)
             throws IOException, InterruptedException {
         return launcher.getChannel().call(new CheckProcessCallable(kill));
+    }
+
+    /**
+     * Closes already opened ECU-TEST instances.
+     *
+     * @param kill
+     *            specifies whether to task-kill the running processes
+     * @param launcher
+     *            the launcher
+     * @param listener
+     *            the listener
+     * @return {@code true} if ECU-TEST instance has been stopped successfully
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the current thread is interrupted while waiting for the completion
+     */
+    public static boolean stopProcesses(final Launcher launcher, final BuildListener listener, final boolean kill)
+            throws IOException, InterruptedException {
+        return launcher.getChannel().call(new StopCallable(StartETBuilder.DEFAULT_TIMEOUT, kill, listener));
     }
 
     /**
