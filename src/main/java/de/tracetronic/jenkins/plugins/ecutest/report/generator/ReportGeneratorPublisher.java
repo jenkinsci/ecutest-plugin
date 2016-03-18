@@ -278,14 +278,16 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
                 }
 
                 // Collect reports
-                final GeneratorReport report = new GeneratorReport(String.format("%d", ++index), templateName,
-                        templateName, getFileSize(archiveTargetDir));
-                reports.add(report);
-                for (final FilePath testReportDir : archiveTargetDir.listDirectories()) {
-                    final GeneratorReport subReport = new GeneratorReport(String.format("%d", ++index),
-                            testReportDir.getBaseName(), String.format("%s/%s", templateName,
-                                    testReportDir.getBaseName()), getFileSize(testReportDir));
-                    report.addSubReport(subReport);
+                if (archiveTargetDir.exists()) {
+                    final GeneratorReport report = new GeneratorReport(String.format("%d", ++index), templateName,
+                            templateName, getFileSize(archiveTargetDir));
+                    reports.add(report);
+                    for (final FilePath testReportDir : archiveTargetDir.listDirectories()) {
+                        final GeneratorReport subReport = new GeneratorReport(String.format("%d", ++index),
+                                testReportDir.getBaseName(), String.format("%s/%s", templateName,
+                                        testReportDir.getBaseName()), getFileSize(testReportDir));
+                        report.addSubReport(subReport);
+                    }
                 }
             }
         }
