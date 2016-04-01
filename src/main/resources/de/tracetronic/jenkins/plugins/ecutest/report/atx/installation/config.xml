@@ -291,17 +291,21 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="userDefinedReportDataConstantPrefix" default="REPORT_"
+		<SETTING name="mapUserDefinedReportDataAsConstant" default="True"
 			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
-						<DVALUE xsi:type="unicode">Gibt das Präfix für die Erfassung der
-							benutzerdefinierten Report Informationen als ATX-Konstante an.</DVALUE>
+						<DVALUE xsi:type="unicode">True, wenn die TCF Informationen der
+							benutzerdefinierten Report Informationen als ATX-Konstante mit
+							Präfix TCF_ abgebildet werden soll, sonst
+							False.</DVALUE>
 					</ELEMENT>
 					<ELEMENT dkey="en_US">
-						<DVALUE xsi:type="unicode">The prefix specified the ATX constant name
-							for the mapping of the user-defined report data as ATX constant.</DVALUE>
+						<DVALUE xsi:type="unicode">True, if the TCF info of the user-defined
+							report data is mapped as ATX constant with TCF_ prefix ,
+							otherwise
+							False.</DVALUE>
 					</ELEMENT>
 				</MULTILANGDATA>
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
@@ -317,7 +321,8 @@
 						</DVALUE>
 					</ELEMENT>
 					<ELEMENT dkey="en_US">
-						<DVALUE xsi:type="unicode">Specifying special constants for each testcase
+						<DVALUE xsi:type="unicode">Specifying special constants for each
+							testcase
 							by ';'. Example: myConstant=NightlyTest; Buildnumber=42</DVALUE>
 					</ELEMENT>
 				</MULTILANGDATA>
