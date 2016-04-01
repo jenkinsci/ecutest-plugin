@@ -235,6 +235,11 @@ public class TRFPublisher extends AbstractReportPublisher {
         return new TRFProjectAction();
     }
 
+    @Override
+    public DescriptorImpl getDescriptor() {
+        return (DescriptorImpl) super.getDescriptor();
+    }
+
     /**
      * DescriptorImpl for {@link TRFPublisher}.
      */
