@@ -98,8 +98,8 @@ public class ATXPublisherST extends SystemTestBase {
         jenkins.assertXPath(page, "//option[@value='TEST-GUIDE']");
         jenkins.assertXPath(page, "//input[@name='_.allowMissing' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runOnFailed' and @checked='true']");
-        jenkins.assertXPath(page, "//input[@name='_.archiving' and @checked='true']");
-        jenkins.assertXPath(page, "//input[@name='_.keepAll' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.archiving']");
+        jenkins.assertXPath(page, "//input[@name='_.keepAll']");
     }
 
     @Test

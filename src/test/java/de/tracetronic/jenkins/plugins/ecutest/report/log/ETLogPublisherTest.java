@@ -61,8 +61,8 @@ public class ETLogPublisherTest {
         assertTrue(publisher.isFailedOnError());
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
-        assertFalse(publisher.isUnstableOnWarning());
-        assertFalse(publisher.isFailedOnError());
+        assertFalse(publisher.isArchiving());
+        assertFalse(publisher.isKeepAll());
     }
 
     @Test

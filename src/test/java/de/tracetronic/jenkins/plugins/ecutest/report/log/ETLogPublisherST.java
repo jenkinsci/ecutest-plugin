@@ -78,14 +78,14 @@ public class ETLogPublisherST extends SystemTestBase {
         jenkins.assertXPath(page, "//input[@name='_.failedOnError' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.allowMissing' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runOnFailed' and @checked='true']");
-        jenkins.assertXPath(page, "//input[@name='_.archiving' and @checked='true']");
-        jenkins.assertXPath(page, "//input[@name='_.keepAll' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.archiving']");
+        jenkins.assertXPath(page, "//input[@name='_.keepAll']");
     }
 
     @Test
     public void testAllowMissing() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ETLogPublisher publisher = new ETLogPublisher(true, true, false, true, false, false);
+        final ETLogPublisher publisher = new ETLogPublisher(true, true, false, true, true, true);
         project.getPublishersList().add(publisher);
 
         final FreeStyleBuild build = project.scheduleBuild2(0).get();

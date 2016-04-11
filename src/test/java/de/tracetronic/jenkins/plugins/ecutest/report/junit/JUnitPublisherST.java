@@ -79,7 +79,7 @@ public class JUnitPublisherST extends SystemTestBase {
         final JUnitPublisher before = new JUnitPublisher("ECU-TEST", 0, 0, false, false, true, true);
         final JUnitPublisher after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after,
-                "unstableThreshold,failedThreshold,allowMissing,runOnFailed,archiving,keepAll");
+                "unstableThreshold,failedThreshold,allowMissing,runOnFailed");
     }
 
     @Test
@@ -98,8 +98,6 @@ public class JUnitPublisherST extends SystemTestBase {
         WebAssert.assertInputContainsValue(page, "_.failedThreshold", "0.0");
         jenkins.assertXPath(page, "//input[@name='_.allowMissing' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runOnFailed' and @checked='true']");
-        jenkins.assertXPath(page, "//input[@name='_.archiving' and @checked='true']");
-        jenkins.assertXPath(page, "//input[@name='_.keepAll' and @checked='true']");
     }
 
     @Test
