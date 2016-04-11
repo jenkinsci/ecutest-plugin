@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -46,6 +46,16 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 public class ATXBuildAction<T extends AbstractTestReport> extends AbstractATXAction {
 
     private final List<T> atxReports = new ArrayList<T>();
+
+    /**
+     * Instantiates a new {@link ATXBuildAction}.
+     *
+     * @param projectLevel
+     *            specifies whether archiving is restricted to project level only
+     */
+    public ATXBuildAction(final boolean projectLevel) {
+        super(projectLevel);
+    }
 
     /**
      * Gets the ATX reports.

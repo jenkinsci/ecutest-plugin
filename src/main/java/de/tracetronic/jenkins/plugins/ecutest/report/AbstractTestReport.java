@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -144,5 +144,17 @@ public abstract class AbstractTestReport implements ModelObject {
         }
 
         return null;
+    }
+
+    /**
+     * Resolves the build action containing the report artifacts by {@link StaplerRequest#findAncestorObject(Class)}.
+     *
+     * @param req
+     *            the {@link StaplerRequest} used for access this report
+     * @return the build action with report artifacts to handle or {@code null} if no proper build action exists
+     */
+    @CheckForNull
+    protected AbstractReportAction getBuildAction(final StaplerRequest req) {
+        return req.findAncestorObject(AbstractReportAction.class);
     }
 }

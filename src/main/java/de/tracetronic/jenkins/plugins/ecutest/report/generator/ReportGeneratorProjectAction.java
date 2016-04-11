@@ -44,6 +44,16 @@ import org.kohsuke.stapler.StaplerRequest;
 public class ReportGeneratorProjectAction extends AbstractReportGeneratorAction {
 
     /**
+     * Instantiates a new {@link ReportGeneratorProjectAction}.
+     *
+     * @param projectLevel
+     *            specifies whether archiving is restricted to project level only
+     */
+    public ReportGeneratorProjectAction(final boolean projectLevel) {
+        super(projectLevel);
+    }
+
+    /**
      * Returns the {@link ReportGeneratorBuildAction} in the last build that have artifact documents.
      * <p>
      * Resolves the owner by {@link StaplerRequest#findAncestorObject(Class)}.

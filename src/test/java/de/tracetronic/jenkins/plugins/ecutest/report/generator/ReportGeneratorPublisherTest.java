@@ -32,6 +32,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -51,23 +52,29 @@ public class ReportGeneratorPublisherTest {
 
     @Test
     public void testNullConstructor() {
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher(null, null, null, true, true);
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher(null, null, null, true, true, false,
+                false);
         assertNotNull(publisher);
         assertNull(publisher.getToolName());
         assertNotNull(publisher.getGenerators());
         assertNotNull(publisher.getCustomGenerators());
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
+        assertFalse(publisher.isArchiving());
+        assertFalse(publisher.isKeepAll());
     }
 
     @Test
     public void testEmptyConstructor() {
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("", null, null, true, true);
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("", null, null, true, true, false,
+                false);
         assertTrue(publisher.getToolName().isEmpty());
         assertTrue(publisher.getGenerators().isEmpty());
         assertTrue(publisher.getCustomGenerators().isEmpty());
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
+        assertFalse(publisher.isArchiving());
+        assertFalse(publisher.isKeepAll());
     }
 
     @Test
@@ -77,7 +84,7 @@ public class ReportGeneratorPublisherTest {
         final List<ReportGeneratorConfig> customGenerators = new ArrayList<ReportGeneratorConfig>();
         customGenerators.add(new ReportGeneratorConfig("Custom", null));
         final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST", generators,
-                customGenerators, true, true);
+                customGenerators, true, true, false, false);
         assertNotNull(publisher);
         assertEquals("ECU-TEST", publisher.getToolName());
         assertThat(publisher.getGenerators(), hasSize(1));
@@ -88,6 +95,8 @@ public class ReportGeneratorPublisherTest {
         assertTrue(publisher.getCustomGenerators().get(0).getSettings().isEmpty());
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
+        assertFalse(publisher.isArchiving());
+        assertFalse(publisher.isKeepAll());
     }
 
     @Test
@@ -95,7 +104,7 @@ public class ReportGeneratorPublisherTest {
         final List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
         generators.add(new ReportGeneratorConfig(" ", null));
         final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST", generators,
-                null, true, true);
+                null, true, true, false, false);
         assertTrue(publisher.getGenerators().isEmpty());
     }
 
@@ -104,7 +113,7 @@ public class ReportGeneratorPublisherTest {
         final List<ReportGeneratorConfig> customGenerators = new ArrayList<ReportGeneratorConfig>();
         customGenerators.add(new ReportGeneratorConfig(" ", null));
         final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST", null,
-                customGenerators, true, true);
+                customGenerators, true, true, false, false);
         assertTrue(publisher.getCustomGenerators().isEmpty());
     }
 }

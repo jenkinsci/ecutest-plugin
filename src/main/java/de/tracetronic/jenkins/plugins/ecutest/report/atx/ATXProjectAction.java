@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -40,13 +40,23 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 
 /**
  * Action to show a link to {@link ATXReport}s in side menu of projects.
- * 
+ *
  * @param <T>
  *            the report type, either {@link ATXReport} or {@link ATXZipReport}
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXProjectAction<T extends AbstractTestReport> extends AbstractATXAction {
+
+    /**
+     * Instantiates a new {@link ATXProjectAction}.
+     *
+     * @param projectLevel
+     *            specifies whether archiving is restricted to project level only
+     */
+    public ATXProjectAction(final boolean projectLevel) {
+        super(projectLevel);
+    }
 
     /**
      * Returns the {@link ATXBuildAction} in the last build that have artifact documents.

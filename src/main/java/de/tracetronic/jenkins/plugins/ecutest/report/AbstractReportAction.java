@@ -69,6 +69,28 @@ public abstract class AbstractReportAction implements Action {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractReportAction.class.getName());
 
+    private final boolean projectLevel;
+
+    /**
+     * Instantiates a new {@link AbstractReportAction}.
+     *
+     * @param projectLevel
+     *            specifies whether archiving is restricted to project level only
+     */
+    public AbstractReportAction(final boolean projectLevel) {
+        super();
+        this.projectLevel = projectLevel;
+    }
+
+    /**
+     * Returns whether archiving is restricted to project level only.
+     *
+     * @return {@code true} if archiving is restricted to project level, {@code false} otherwise
+     */
+    public boolean isProjectLevel() {
+        return projectLevel;
+    }
+
     /**
      * Gets the owner of this action.
      *
@@ -133,6 +155,18 @@ public abstract class AbstractReportAction implements Action {
     }
 
     /**
+     * Resolves the build action containing the report artifacts by {@link StaplerRequest#findAncestorObject(Class)}.
+     *
+     * @param req
+     *            the {@link StaplerRequest} used for access this report
+     * @return the build action with report artifacts to handle or {@code null} if no proper build action exists
+     */
+    @CheckForNull
+    protected AbstractReportAction getBuildAction(final StaplerRequest req) {
+        return req.findAncestorObject(AbstractReportAction.class);
+    }
+
+    /**
      * Gets the last build with report artifacts in a project.
      *
      * @param project
@@ -188,7 +222,7 @@ public abstract class AbstractReportAction implements Action {
      *             if serving the file failed
      */
     public void doZipDownload(final StaplerRequest req, final StaplerResponse rsp) throws IOException,
-    ServletException {
+            ServletException {
         final AbstractBuild<?, ?> build = getBuild(req);
         if (build == null) {
             LOGGER.warning(String.format("No build found for url %s", req.getRequestURI()));
@@ -196,7 +230,16 @@ public abstract class AbstractReportAction implements Action {
             return;
         }
 
-        final VirtualFile archiveDir = VirtualFile.forFile(new File(build.getRootDir(), getUrlName()));
+        final AbstractReportAction action = getBuildAction(req);
+        if (action == null) {
+            LOGGER.warning(String.format("No build action found for url %s", req.getRequestURI()));
+            rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        final boolean isProjectLevel = action.isProjectLevel();
+        final File rootDir = isProjectLevel ? build.getProject().getRootDir() : build.getRootDir();
+
+        final VirtualFile archiveDir = VirtualFile.forFile(new File(rootDir, getUrlName()));
         if (!archiveDir.exists()) {
             LOGGER.warning(String.format("Archive directory does not exists: %s for %s", getUrlName(),
                     build.getFullDisplayName()));

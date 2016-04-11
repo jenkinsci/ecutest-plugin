@@ -44,7 +44,6 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 import hudson.tools.ToolInstallation;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,16 +91,54 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      *            specifies whether missing reports are allowed
      * @param runOnFailed
      *            specifies whether this publisher even runs on a failed build
+     * @param archiving
+     *            specifies whether archiving artifacts is enabled
+     * @param keepAll
+     *            specifies whether artifacts are archived for all successful builds,
+     *            otherwise only the most recent
      */
     @DataBoundConstructor
     public ReportGeneratorPublisher(final String toolName, final List<ReportGeneratorConfig> generators,
-            final List<ReportGeneratorConfig> customGenerators, final boolean allowMissing, final boolean runOnFailed) {
-        super(allowMissing, runOnFailed);
+            final List<ReportGeneratorConfig> customGenerators, final boolean allowMissing, final boolean runOnFailed,
+            final boolean archiving, final boolean keepAll) {
+        super(allowMissing, runOnFailed, archiving, keepAll);
         this.toolName = toolName;
         this.generators = generators == null ? new ArrayList<ReportGeneratorConfig>()
                 : removeEmptyGenerators(generators);
         this.customGenerators = customGenerators == null ? new ArrayList<ReportGeneratorConfig>()
                 : removeEmptyGenerators(customGenerators);
+    }
+
+    /**
+     * Instantiates a new {@link ReportGeneratorPublisher}.
+     *
+     * @param toolName
+     *            the tool name
+     * @param generators
+     *            the report generators
+     * @param customGenerators
+     *            the custom generators
+     * @param allowMissing
+     *            specifies whether missing reports are allowed
+     * @param runOnFailed
+     *            specifies whether this publisher even runs on a failed build
+     * @deprecated since 1.9, use
+     *             {@link #ReportGeneratorPublisher(String, List, List, boolean, boolean, boolean, boolean)}
+     */
+    @Deprecated
+    public ReportGeneratorPublisher(final String toolName, final List<ReportGeneratorConfig> generators,
+            final List<ReportGeneratorConfig> customGenerators, final boolean allowMissing, final boolean runOnFailed) {
+        this(toolName, generators, customGenerators, allowMissing, runOnFailed, true, true);
+    }
+
+    /**
+     * Convert legacy configuration into the new class structure.
+     *
+     * @return an instance of this class with all the new fields transferred from the old structure to the new one
+     */
+    public final Object readResolve() {
+        return new ReportGeneratorPublisher(toolName, generators, customGenerators, isAllowMissing(), isRunOnFailed(),
+                isArchiving() == null ? true : isArchiving(), isKeepAll() == null ? true : isKeepAll());
     }
 
     /**
@@ -160,6 +197,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
         return null;
     }
 
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
     public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
             final BuildListener listener) throws InterruptedException, IOException {
@@ -220,7 +258,12 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
             }
         }
 
-        addBuildAction(build, reports);
+        if (isArchiving()) {
+            addBuildAction(build, reports);
+        } else {
+            logger.logInfo("Archiving TRF reports is disabled.");
+        }
+
         logger.logInfo("Generator reports published successfully.");
         return true;
     }
@@ -242,14 +285,22 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      * @throws InterruptedException
      *             the interrupted exception
      */
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private List<GeneratorReport> generateReports(final List<FilePath> reportFiles, final AbstractBuild<?, ?> build,
             final Launcher launcher, final BuildListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<GeneratorReport> reports = new ArrayList<GeneratorReport>();
+        final FilePath archiveTarget = getArchiveTarget(build);
         final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
         final List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
         generators.addAll(getGenerators());
         generators.addAll(getCustomGenerators());
+
+        // Removing old artifacts at project level
+        if (!reportFiles.isEmpty() && !isKeepAll()) {
+            archiveTarget.deleteRecursive();
+            removePreviousReports(build, ReportGeneratorBuildAction.class);
+        }
 
         // Generate reports with all generators
         int index = 0;
@@ -258,11 +309,11 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
             final ReportGeneratorConfig expConfig = config.expand(envVars);
             final ReportGenerator generator = new ReportGenerator(expConfig);
             final boolean isGenerated = generator.generate(reportFiles, launcher, listener);
-            if (isGenerated && !reportFiles.isEmpty()) {
+            if (isArchiving() && isGenerated && !reportFiles.isEmpty()) {
                 // Archive generated reports
                 logger.logInfo("- Archiving generated reports...");
                 final String templateName = expConfig.getName();
-                final FilePath archiveTargetDir = getArchiveTarget(build).child(templateName);
+                final FilePath archiveTargetDir = archiveTarget.child(templateName);
                 for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
                     final FilePath testReportDir = new FilePath(launcher.getChannel(),
                             testEnvAction.getTestReportDir());
@@ -291,6 +342,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
                 }
             }
         }
+
         return reports;
     }
 
@@ -325,26 +377,20 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     private void addBuildAction(final AbstractBuild<?, ?> build, final List<GeneratorReport> reports) {
         ReportGeneratorBuildAction action = build.getAction(ReportGeneratorBuildAction.class);
         if (action == null) {
-            action = new ReportGeneratorBuildAction();
+            action = new ReportGeneratorBuildAction(!isKeepAll());
             build.addAction(action);
         }
         action.addAll(reports);
     }
 
-    /**
-     * Gets the archive target.
-     *
-     * @param build
-     *            the build
-     * @return the archive target
-     */
-    private FilePath getArchiveTarget(final AbstractBuild<?, ?> build) {
-        return new FilePath(new File(build.getRootDir(), URL_NAME));
+    @Override
+    protected String getUrlName() {
+        return URL_NAME;
     }
 
     @Override
     public Action getProjectAction(final AbstractProject<?, ?> project) {
-        return new ReportGeneratorProjectAction();
+        return new ReportGeneratorProjectAction(!isKeepAll());
     }
 
     @Override

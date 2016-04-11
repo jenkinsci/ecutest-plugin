@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,6 +30,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -45,25 +46,27 @@ public class JUnitPublisherTest {
 
     @Test
     public void testNull() {
-        final JUnitPublisher publisher = new JUnitPublisher(null, 0, 0, true, true);
+        final JUnitPublisher publisher = new JUnitPublisher(null, 0, 0, true, true, false, false);
         assertNotNull(publisher);
         assertNull(publisher.getToolName());
         assertEquals(0, Double.compare(0, publisher.getUnstableThreshold()));
         assertEquals(0, Double.compare(0, publisher.getFailedThreshold()));
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
+        assertFalse(publisher.isArchiving());
+        assertFalse(publisher.isKeepAll());
     }
 
     @Test
     public void testNegativeThresholds() {
-        final JUnitPublisher publisher = new JUnitPublisher(null, -1, -1, false, false);
+        final JUnitPublisher publisher = new JUnitPublisher(null, -1, -1, false, false, true, true);
         assertEquals(0, Double.compare(0, publisher.getUnstableThreshold()));
         assertEquals(0, Double.compare(0, publisher.getFailedThreshold()));
     }
 
     @Test
     public void testInvalidThresholds() {
-        final JUnitPublisher publisher = new JUnitPublisher(null, 101, 101, false, false);
+        final JUnitPublisher publisher = new JUnitPublisher(null, 101, 101, false, false, true, true);
         assertEquals(0, Double.compare(100, publisher.getUnstableThreshold()));
         assertEquals(0, Double.compare(100, publisher.getFailedThreshold()));
     }

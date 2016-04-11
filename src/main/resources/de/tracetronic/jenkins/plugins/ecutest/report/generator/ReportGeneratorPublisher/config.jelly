@@ -39,10 +39,5 @@
         <j:set var="customGenerator" value="true" />
         <f:repeatableProperty field="customGenerators" add="${%generator.add}" header="${%generator.header}" minimum="0" />
     </f:entry>
-    <f:entry title="${%allowMissing.title}" description="${%allowMissing.description}" field="allowMissing">
-        <f:checkbox />
-    </f:entry>
-    <f:entry title="${%runOnFailed.title}" description="${%runOnFailed.description}" field="runOnFailed">
-        <f:checkbox />
-    </f:entry>
+    <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly" />
 </j:jelly>

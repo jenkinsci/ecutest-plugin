@@ -40,6 +40,16 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportAction;
  */
 public abstract class AbstractReportGeneratorAction extends AbstractReportAction {
 
+    /**
+     * Instantiates a new {@link AbstractReportGeneratorAction}.
+     *
+     * @param projectLevel
+     *            specifies whether archiving is restricted to project level only
+     */
+    public AbstractReportGeneratorAction(final boolean projectLevel) {
+        super(projectLevel);
+    }
+
     @Override
     public AbstractBuild<?, ?> getLastReportBuild(final AbstractProject<?, ?> project) {
         for (AbstractBuild<?, ?> build = project.getLastBuild(); build != null; build = build

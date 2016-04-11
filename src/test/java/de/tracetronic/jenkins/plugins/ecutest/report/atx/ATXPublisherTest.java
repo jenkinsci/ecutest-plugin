@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,6 +30,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -44,10 +45,12 @@ public class ATXPublisherTest {
 
     @Test
     public void testConstructor() {
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, true);
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, true, false, false);
         assertNotNull(publisher);
         assertEquals("TEST-GUIDE", publisher.getATXName());
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
+        assertFalse(publisher.isArchiving());
+        assertFalse(publisher.isKeepAll());
     }
 }

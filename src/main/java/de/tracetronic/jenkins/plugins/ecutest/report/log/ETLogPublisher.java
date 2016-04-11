@@ -84,6 +84,31 @@ public class ETLogPublisher extends AbstractReportPublisher {
     /**
      * Instantiates a new {@link ETLogPublisher}.
      *
+     * @param unstableOnWarning
+     *            specifies whether to mark the build as unstable if warnings found
+     * @param failedOnError
+     *            specifies whether to mark the build as failed if errors found
+     * @param allowMissing
+     *            specifies whether missing reports are allowed
+     * @param runOnFailed
+     *            specifies whether this publisher even runs on a failed build
+     * @param archiving
+     *            specifies whether archiving artifacts is enabled
+     * @param keepAll
+     *            specifies whether artifacts are archived for all successful builds,
+     *            otherwise only the most recent
+     */
+    @DataBoundConstructor
+    public ETLogPublisher(final boolean unstableOnWarning, final boolean failedOnError, final boolean allowMissing,
+            final boolean runOnFailed, final boolean archiving, final boolean keepAll) {
+        super(allowMissing, runOnFailed, archiving, keepAll);
+        this.unstableOnWarning = unstableOnWarning;
+        this.failedOnError = failedOnError;
+    }
+
+    /**
+     * Instantiates a new {@link ETLogPublisher}.
+     *
      * @param allowMissing
      *            specifies whether missing reports are allowed
      * @param runOnFailed
@@ -92,13 +117,22 @@ public class ETLogPublisher extends AbstractReportPublisher {
      *            specifies whether to mark the build as unstable if warnings found
      * @param failedOnError
      *            specifies whether to mark the build as failed if errors found
+     * @deprecated since 1.9, use {@link #ETLogPublisher(boolean, boolean, boolean, boolean,boolean, boolean)}
      */
-    @DataBoundConstructor
-    public ETLogPublisher(final boolean allowMissing, final boolean runOnFailed,
-            final boolean unstableOnWarning, final boolean failedOnError) {
-        super(allowMissing, runOnFailed);
-        this.unstableOnWarning = unstableOnWarning;
-        this.failedOnError = failedOnError;
+    @Deprecated
+    public ETLogPublisher(final boolean unstableOnWarning, final boolean failedOnError, final boolean allowMissing,
+            final boolean runOnFailed) {
+        this(unstableOnWarning, failedOnError, allowMissing, runOnFailed, true, true);
+    }
+
+    /**
+     * Convert legacy configuration into the new class structure.
+     *
+     * @return an instance of this class with all the new fields transferred from the old structure to the new one
+     */
+    public final Object readResolve() {
+        return new ETLogPublisher(unstableOnWarning, failedOnError, isAllowMissing(), isRunOnFailed(),
+                isArchiving() == null ? true : isArchiving(), isKeepAll() == null ? true : isKeepAll());
     }
 
     /**
@@ -115,6 +149,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
         return failedOnError;
     }
 
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
     public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
             final BuildListener listener) throws InterruptedException, IOException {
@@ -127,46 +162,55 @@ public class ETLogPublisher extends AbstractReportPublisher {
             return true;
         }
 
-        final List<ETLogReport> logReports = new ArrayList<ETLogReport>();
-        final FilePath archiveTargetDir = getArchiveTarget(build);
-        final List<FilePath> logFiles = getLogFiles(build, launcher);
-        for (final FilePath logFile : logFiles) {
-            final FilePath targetFile = archiveTargetDir.child(logFile.getName());
-            try {
-                if (logFile.exists()) {
-                    logger.logInfo(String.format("- Archiving %s", logFile));
-                    logFile.copyTo(targetFile);
-                } else {
-                    if (isAllowMissing()) {
-                        continue;
-                    } else {
-                        logger.logError(String.format("Specified ECU-TEST log file '%s' does not exist.",
-                                logFile));
-                        build.setResult(Result.FAILURE);
-                        return true;
-                    }
-                }
-            } catch (final IOException e) {
-                Util.displayIOException(e, listener);
-                logger.logError("Failed publishing ECU-TEST logs.");
-                build.setResult(Result.FAILURE);
-                return true;
+        if (isArchiving()) {
+            final List<ETLogReport> logReports = new ArrayList<ETLogReport>();
+            final FilePath archiveTargetDir = getArchiveTarget(build);
+            final List<FilePath> logFiles = getLogFiles(build, launcher);
+
+            // Removing old artifacts at project level
+            if (!logFiles.isEmpty() && !isKeepAll()) {
+                archiveTargetDir.deleteRecursive();
+                removePreviousReports(build, ETLogBuildAction.class);
             }
+            for (final FilePath logFile : logFiles) {
+                final FilePath targetFile = archiveTargetDir.child(logFile.getName());
+                try {
+                    if (logFile.exists()) {
+                        logger.logInfo(String.format("- Archiving %s", logFile));
+                        logFile.copyTo(targetFile);
+                    } else {
+                        if (isAllowMissing()) {
+                            continue;
+                        } else {
+                            logger.logError(String.format("Specified ECU-TEST log file '%s' does not exist.",
+                                    logFile));
+                            build.setResult(Result.FAILURE);
+                            return true;
+                        }
+                    }
+                } catch (final IOException e) {
+                    Util.displayIOException(e, listener);
+                    logger.logError("Failed publishing ECU-TEST logs.");
+                    build.setResult(Result.FAILURE);
+                    return true;
+                }
 
-            final ETLogReport logReport = parseLogFile(logFile, logReports.size() + 1);
-            logReports.add(logReport);
-        }
-
-        if (logReports.isEmpty()) {
-            logger.logInfo("No log results found.");
-            if (!isAllowMissing()) {
-                logger.logError("Empty log results are not allowed, setting build status to FAILURE!");
-                build.setResult(Result.FAILURE);
-                return true;
+                final ETLogReport logReport = parseLogFile(logFile, logReports.size() + 1);
+                logReports.add(logReport);
+            }
+            if (logReports.isEmpty()) {
+                logger.logInfo("No log results found.");
+                if (!isAllowMissing()) {
+                    logger.logError("Empty log results are not allowed, setting build status to FAILURE!");
+                    build.setResult(Result.FAILURE);
+                    return true;
+                }
+            } else {
+                addBuildAction(build, logReports);
+                setBuildResult(build, listener, logReports);
             }
         } else {
-            addBuildAction(build, logReports);
-            setBuildResult(build, listener, logReports);
+            logger.logInfo("Archiving ECU-TEST logs is disabled.");
         }
 
         logger.logInfo("ECU-TEST logs published successfully.");
@@ -208,7 +252,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
     private void addBuildAction(final AbstractBuild<?, ?> build, final List<ETLogReport> logReports) {
         ETLogBuildAction action = build.getAction(ETLogBuildAction.class);
         if (action == null) {
-            action = new ETLogBuildAction();
+            action = new ETLogBuildAction(!isKeepAll());
             build.addAction(action);
         }
         action.addAll(logReports);
@@ -248,17 +292,6 @@ public class ETLogPublisher extends AbstractReportPublisher {
             logger.logInfo(String.format("-> %d warning(s) and %d error(s) found in the ECU-TEST logs.",
                     totalWarnings, totalErrors));
         }
-    }
-
-    /**
-     * Gets the archive target.
-     *
-     * @param build
-     *            the build
-     * @return the archive target
-     */
-    private FilePath getArchiveTarget(final AbstractBuild<?, ?> build) {
-        return new FilePath(new File(build.getRootDir(), URL_NAME));
     }
 
     /**
@@ -331,8 +364,18 @@ public class ETLogPublisher extends AbstractReportPublisher {
     }
 
     @Override
+    protected String getUrlName() {
+        return URL_NAME;
+    }
+
+    @Override
     public Action getProjectAction(final AbstractProject<?, ?> project) {
-        return new ETLogProjectAction();
+        return new ETLogProjectAction(!isKeepAll());
+    }
+
+    @Override
+    public DescriptorImpl getDescriptor() {
+        return (DescriptorImpl) super.getDescriptor();
     }
 
     /**

@@ -45,6 +45,16 @@ public class ReportGeneratorBuildAction extends AbstractReportGeneratorAction {
     private final List<GeneratorReport> generatorReports = new ArrayList<GeneratorReport>();
 
     /**
+     * Instantiates a new {@link ReportGeneratorBuildAction}.
+     *
+     * @param projectLevel
+     *            specifies whether archiving is restricted to project level only
+     */
+    public ReportGeneratorBuildAction(final boolean projectLevel) {
+        super(projectLevel);
+    }
+
+    /**
      * Gets the generator reports.
      *
      * @return the generator reports

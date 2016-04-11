@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -41,6 +41,16 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportAction;
 public abstract class AbstractETLogAction extends AbstractReportAction {
 
     private static final int MAX_LOG_SIZE = 10;
+
+    /**
+     * Instantiates a new {@link AbstractETLogAction}.
+     *
+     * @param projectLevel
+     *            specifies whether archiving is restricted to project level only
+     */
+    public AbstractETLogAction(final boolean projectLevel) {
+        super(projectLevel);
+    }
 
     /**
      * Gets the maximum size of logs to show.

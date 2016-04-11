@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -57,27 +57,29 @@ public class TRFPublisherST extends SystemTestBase {
 
     @Test
     public void testRoundTripConfig() throws Exception {
-        final TRFPublisher before = new TRFPublisher(false, false);
+        final TRFPublisher before = new TRFPublisher(false, false, true, true);
         final TRFPublisher after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "allowMissing,runOnFailed");
+        jenkins.assertEqualBeans(before, after, "allowMissing,runOnFailed,archiving,keepAll");
     }
 
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final TRFPublisher publisher = new TRFPublisher(true, true);
+        final TRFPublisher publisher = new TRFPublisher(true, true, true, true);
         project.getPublishersList().add(publisher);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.TRFPublisher_DisplayName());
         jenkins.assertXPath(page, "//input[@name='_.allowMissing' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runOnFailed' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.archiving' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.keepAll' and @checked='true']");
     }
 
     @Test
     public void testAllowMissing() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final TRFPublisher publisher = new TRFPublisher(false, true);
+        final TRFPublisher publisher = new TRFPublisher(false, true, true, true);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
@@ -94,7 +96,7 @@ public class TRFPublisherST extends SystemTestBase {
                 return false;
             }
         });
-        final TRFPublisher publisher = new TRFPublisher(true, false);
+        final TRFPublisher publisher = new TRFPublisher(true, false, true, true);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);

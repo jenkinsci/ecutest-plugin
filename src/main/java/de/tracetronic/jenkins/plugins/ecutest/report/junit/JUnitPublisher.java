@@ -57,6 +57,7 @@ import java.util.List;
 
 import javax.annotation.CheckForNull;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -93,14 +94,51 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
      *            specifies whether missing reports are allowed
      * @param runOnFailed
      *            specifies whether this publisher even runs on a failed build
+     * @param archiving
+     *            specifies whether archiving artifacts is enabled
+     * @param keepAll
+     *            specifies whether artifacts are archived for all successful builds,
+     *            otherwise only the most recent
      */
     @DataBoundConstructor
     public JUnitPublisher(final String toolName, final double unstableThreshold,
-            final double failedThreshold, final boolean allowMissing, final boolean runOnFailed) {
-        super(allowMissing, runOnFailed);
+            final double failedThreshold, final boolean allowMissing, final boolean runOnFailed,
+            final boolean archiving, final boolean keepAll) {
+        super(allowMissing, runOnFailed, archiving, keepAll);
         this.toolName = toolName;
         this.unstableThreshold = convertToPercentage(unstableThreshold);
         this.failedThreshold = convertToPercentage(failedThreshold);
+    }
+
+    /**
+     * Instantiates a new {@link JUnitPublisher}.
+     *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param unstableThreshold
+     *            the threshold which sets the build status to unstable if exceeded
+     * @param failedThreshold
+     *            the threshold which sets the build status to failed if exceeded
+     * @param allowMissing
+     *            specifies whether missing reports are allowed
+     * @param runOnFailed
+     *            specifies whether this publisher even runs on a failed build
+     * @deprecated since 1.9, use {@link #JUnitPublisher(String, double, double, boolean, boolean, boolean, boolean)}
+     */
+    @Deprecated
+    public JUnitPublisher(final String toolName, final double unstableThreshold,
+            final double failedThreshold, final boolean allowMissing, final boolean runOnFailed) {
+        this(toolName, unstableThreshold, failedThreshold, allowMissing, runOnFailed, true, true);
+    }
+
+    /**
+     * Convert legacy configuration into the new class structure.
+     *
+     * @return an instance of this class with all the new fields transferred from the old structure to the new one
+     */
+    public final Object readResolve() {
+        return new JUnitPublisher(toolName, unstableThreshold, failedThreshold, isAllowMissing(), isRunOnFailed(),
+                isArchiving() == null ? true : isArchiving(), isKeepAll() == null ? true : isKeepAll());
     }
 
     /**
@@ -311,6 +349,11 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
         } else {
             return value;
         }
+    }
+
+    @Override
+    protected String getUrlName() {
+        throw new NotImplementedException();
     }
 
     /**

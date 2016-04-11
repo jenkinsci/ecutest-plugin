@@ -37,7 +37,6 @@ import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.remoting.Callable;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +45,7 @@ import java.util.Map;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
@@ -63,8 +63,14 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
     /**
      * Generates {@link ATXReport}s without uploading them.
      *
+     * @param archiveTarget
+     *            the archive target directory
      * @param allowMissing
      *            specifies whether missing reports are allowed
+     * @param isArchiving
+     *            specifies whether archiving artifacts is enabled
+     * @param keepAll
+     *            specifies whether to keep all artifacts
      * @param installation
      *            the ATX installation
      * @param build
@@ -80,9 +86,9 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      *             if the build gets interrupted
      */
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
-    public boolean generate(final boolean allowMissing, final ATXInstallation installation,
-            final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
-                    throws IOException, InterruptedException {
+    public boolean generate(final FilePath archiveTarget, final boolean allowMissing, final boolean isArchiving,
+            final boolean keepAll, final ATXInstallation installation, final AbstractBuild<?, ?> build,
+            final Launcher launcher, final BuildListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<FilePath> reportFiles = new ArrayList<FilePath>();
         final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
@@ -110,29 +116,41 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
         final boolean isGenerated = launcher.getChannel().call(
                 new GenerateReportCallable(installation.getConfig(), reportFiles, build.getEnvironment(listener),
                         listener));
-        if (isGenerated && !reportFiles.isEmpty()) {
-            final List<ATXZipReport> atxReports = new ArrayList<ATXZipReport>();
-            logger.logInfo("- Archiving generated ATX reports...");
-            int index = 0;
-            for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-                final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-                final FilePath archiveTargetDir = getArchiveTarget(build).child(testReportDir.getName());
-                try {
-                    final int copiedFiles = testReportDir.copyRecursiveTo(
-                            String.format("**/%s/*.zip", ATX_TEMPLATE_NAME), archiveTargetDir);
-                    logger.logInfo(String.format("-> Archived %d report(s) for %s.", copiedFiles,
-                            testEnvAction.getTestName()));
-                    if (copiedFiles == 0) {
-                        continue;
-                    }
-                } catch (final IOException e) {
-                    Util.displayIOException(e, listener);
-                    logger.logError("Failed archiving generated ATX reports.");
-                    return false;
-                }
-                index = traverseReports(atxReports, archiveTargetDir, index);
+
+        if (isArchiving) {
+            // Removing old artifacts at project level
+            if (!reportFiles.isEmpty() && !keepAll) {
+                archiveTarget.deleteRecursive();
+                AbstractReportPublisher.removePreviousReports(build, ATXBuildAction.class);
             }
-            addBuildAction(build, atxReports);
+
+            if (isGenerated && !reportFiles.isEmpty()) {
+                final List<ATXZipReport> atxReports = new ArrayList<ATXZipReport>();
+                logger.logInfo("- Archiving generated ATX reports...");
+                int index = 0;
+                for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
+                    final FilePath testReportDir = new FilePath(launcher.getChannel(),
+                            testEnvAction.getTestReportDir());
+                    final FilePath archiveTargetDir = archiveTarget.child(testReportDir.getName());
+                    try {
+                        final int copiedFiles = testReportDir.copyRecursiveTo(
+                                String.format("**/%s/*.zip", ATX_TEMPLATE_NAME), archiveTargetDir);
+                        logger.logInfo(String.format("-> Archived %d report(s) for %s.", copiedFiles,
+                                testEnvAction.getTestName()));
+                        if (copiedFiles == 0) {
+                            continue;
+                        }
+                    } catch (final IOException e) {
+                        Util.displayIOException(e, listener);
+                        logger.logError("Failed archiving generated ATX reports.");
+                        return false;
+                    }
+                    index = traverseReports(atxReports, archiveTargetDir, index);
+                }
+                addBuildAction(build, atxReports, keepAll);
+            }
+        } else {
+            logger.logInfo("Archiving ATX reports is disabled.");
         }
 
         return isGenerated;
@@ -217,26 +235,18 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      *            the build
      * @param atxReports
      *            the list of {@link ATXZipReport}s to add
+     * @param keepAll
+     *            specifies whether to keep all artifacts
      */
     @SuppressWarnings("unchecked")
-    private void addBuildAction(final AbstractBuild<?, ?> build, final List<ATXZipReport> atxReports) {
+    private void addBuildAction(final AbstractBuild<?, ?> build, final List<ATXZipReport> atxReports,
+            final boolean keepAll) {
         ATXBuildAction<ATXZipReport> action = build.getAction(ATXBuildAction.class);
         if (action == null) {
-            action = new ATXBuildAction<ATXZipReport>();
+            action = new ATXBuildAction<ATXZipReport>(!keepAll);
             build.addAction(action);
         }
         action.addAll(atxReports);
-    }
-
-    /**
-     * Gets the archive target.
-     *
-     * @param build
-     *            the build
-     * @return the archive target
-     */
-    private FilePath getArchiveTarget(final AbstractBuild<?, ?> build) {
-        return new FilePath(new File(build.getRootDir(), ATXPublisher.URL_NAME));
     }
 
     /**

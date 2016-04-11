@@ -45,6 +45,16 @@ public class TRFBuildAction extends AbstractTRFAction {
     private final List<TRFReport> trfReports = new ArrayList<TRFReport>();
 
     /**
+     * Instantiates a new {@link TRFBuildAction}.
+     *
+     * @param projectLevel
+     *            specifies whether archiving is restricted to project level only
+     */
+    public TRFBuildAction(final boolean projectLevel) {
+        super(projectLevel);
+    }
+
+    /**
      * Gets the TRF reports.
      *
      * @return the TRF reports

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,6 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.trf;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -43,9 +44,11 @@ public class TRFPublisherTest {
 
     @Test
     public void testConstructor() {
-        final TRFPublisher publisher = new TRFPublisher(true, true);
+        final TRFPublisher publisher = new TRFPublisher(true, true, false, false);
         assertNotNull(publisher);
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
+        assertFalse(publisher.isArchiving());
+        assertFalse(publisher.isKeepAll());
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -39,6 +39,16 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportAction;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractATXAction extends AbstractReportAction {
+
+    /**
+     * Instantiates a new {@link AbstractATXAction}.
+     *
+     * @param projectLevel
+     *            specifies whether archiving is restricted to project level only
+     */
+    public AbstractATXAction(final boolean projectLevel) {
+        super(projectLevel);
+    }
 
     @Override
     public AbstractBuild<?, ?> getLastReportBuild(final AbstractProject<?, ?> project) {

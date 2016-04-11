@@ -120,7 +120,16 @@ public abstract class AbstractArchiveFileReport extends AbstractTestReport {
             return;
         }
 
-        final File archiveFile = new File(new File(build.getRootDir(), getArchiveDir()), getFileName());
+        final AbstractReportAction action = getBuildAction(req);
+        if (action == null) {
+            LOGGER.warning(String.format("No build action found for url %s", req.getRequestURI()));
+            rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        final boolean isProjectLevel = action.isProjectLevel();
+        final File rootDir = isProjectLevel ? build.getProject().getRootDir() : build.getRootDir();
+
+        final File archiveFile = new File(new File(rootDir, getArchiveDir()), getFileName());
         if (!archiveFile.exists()) {
             LOGGER.warning(String.format("Archive file does not exists: %s for %s", getFileName(),
                     build.getFullDisplayName()));
@@ -166,8 +175,16 @@ public abstract class AbstractArchiveFileReport extends AbstractTestReport {
             return;
         }
 
-        final VirtualFile archiveDir = VirtualFile.forFile(new File(new File(build.getRootDir(), getArchiveDir()),
-                getFileName()));
+        final AbstractReportAction action = getBuildAction(req);
+        if (action == null) {
+            LOGGER.warning(String.format("No build action found for url %s", req.getRequestURI()));
+            rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        final boolean isProjectLevel = action.isProjectLevel();
+        final File rootDir = isProjectLevel ? build.getProject().getRootDir() : build.getRootDir();
+
+        final VirtualFile archiveDir = VirtualFile.forFile(new File(new File(rootDir, getArchiveDir()), getFileName()));
         if (!archiveDir.exists()) {
             LOGGER.warning(String.format("Archive directory does not exists: %s for %s", getFileName(),
                     build.getFullDisplayName()));

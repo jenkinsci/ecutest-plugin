@@ -78,9 +78,10 @@ public class ReportGeneratorPublisherST extends SystemTestBase {
 
     @Test
     public void testRoundTripConfig() throws Exception {
-        final ReportGeneratorPublisher before = new ReportGeneratorPublisher("ECU-TEST", null, null, false, false);
+        final ReportGeneratorPublisher before = new ReportGeneratorPublisher("ECU-TEST", null, null, false, false,
+                true, true);
         final ReportGeneratorPublisher after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "allowMissing,runOnFailed");
+        jenkins.assertEqualBeans(before, after, "allowMissing,runOnFailed,archiving,keepAll");
     }
 
     @Test
@@ -93,7 +94,7 @@ public class ReportGeneratorPublisherST extends SystemTestBase {
         final List<ReportGeneratorConfig> customGenerators = new ArrayList<ReportGeneratorConfig>();
         customGenerators.add(new ReportGeneratorConfig("Custom", settings));
         final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST", generators,
-                customGenerators, true, true);
+                customGenerators, true, true, true, true);
         project.getPublishersList().add(publisher);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
@@ -106,6 +107,8 @@ public class ReportGeneratorPublisherST extends SystemTestBase {
         jenkins.assertXPath(page, "//input[@name='_.value' and @value='value']");
         jenkins.assertXPath(page, "//input[@name='_.allowMissing' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runOnFailed' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.archiving' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.keepAll' and @checked='true']");
     }
 
     @Test
@@ -117,7 +120,8 @@ public class ReportGeneratorPublisherST extends SystemTestBase {
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.setAssignedNode(slave);
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST", null, null, false, false);
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST", null, null, false, false,
+                true, true);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
@@ -140,7 +144,8 @@ public class ReportGeneratorPublisherST extends SystemTestBase {
                 return false;
             }
         });
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST", null, null, false, false);
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST", null, null, false, false,
+                true, true);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
@@ -151,7 +156,8 @@ public class ReportGeneratorPublisherST extends SystemTestBase {
     @Test
     public void testParameterizedToolName() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("${ECUTEST}", null, null, false, false);
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("${ECUTEST}", null, null, false, false,
+                true, true);
         project.getPublishersList().add(publisher);
 
         final EnvVars envVars = new EnvVars(

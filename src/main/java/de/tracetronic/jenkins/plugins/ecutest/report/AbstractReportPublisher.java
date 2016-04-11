@@ -38,11 +38,14 @@ import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.Result;
 import hudson.model.AbstractBuild;
+import hudson.model.AbstractItem;
 import hudson.model.AbstractProject;
 import hudson.model.Computer;
+import hudson.model.Run;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Recorder;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,6 +80,18 @@ public abstract class AbstractReportPublisher extends Recorder {
 
     private final boolean allowMissing;
     private final boolean runOnFailed;
+    /**
+     * {@code Boolean} type is required to retain backward compatibility with default value {@code true}.
+     *
+     * @since 1.9
+     */
+    private final Boolean archiving;
+    /**
+     * {@code Boolean} type is required to retain backward compatibility with default value {@code true}.
+     *
+     * @since 1.9
+     */
+    private final Boolean keepAll;
 
     /**
      * Instantiates a new {@link AbstractReportPublisher}.
@@ -85,11 +100,19 @@ public abstract class AbstractReportPublisher extends Recorder {
      *            specifies whether missing reports are allowed
      * @param runOnFailed
      *            specifies whether this publisher even runs on a failed build
+     * @param archiving
+     *            specifies whether archiving artifacts is enabled
+     * @param keepAll
+     *            specifies whether artifacts are archived for all successful builds,
+     *            otherwise only the most recent
      */
-    public AbstractReportPublisher(final boolean allowMissing, final boolean runOnFailed) {
+    public AbstractReportPublisher(final boolean allowMissing, final boolean runOnFailed, final boolean archiving,
+            final boolean keepAll) {
         super();
         this.allowMissing = allowMissing;
         this.runOnFailed = runOnFailed;
+        this.archiving = archiving;
+        this.keepAll = keepAll;
     }
 
     /**
@@ -108,6 +131,44 @@ public abstract class AbstractReportPublisher extends Recorder {
      */
     public boolean isRunOnFailed() {
         return runOnFailed;
+    }
+
+    /**
+     * Returns whether archiving artifacts is enabled.
+     *
+     * @return {@code true} if archiving artifacts is enabled, {@code false} otherwise
+     */
+    public Boolean isArchiving() {
+        return archiving;
+    }
+
+    /**
+     * Equivalent getter with {@code boolean} return type.
+     *
+     * @see #isArchiving()
+     * @return {@code true} if archiving artifacts is enabled, {@code false} otherwise
+     */
+    public boolean getArchiving() {
+        return archiving;
+    }
+
+    /**
+     * Returns whether artifacts are archived for all successful builds, otherwise only the most recent.
+     *
+     * @return {@code true} if artifacts should be archived for all successful builds, {@code false} otherwise
+     */
+    public Boolean isKeepAll() {
+        return keepAll;
+    }
+
+    /**
+     * Equivalent getter with {@code boolean} return type.
+     *
+     * @see #isKeepAll()
+     * @return {@code true} if artifacts should be archived for all successful builds, {@code false} otherwise
+     */
+    public boolean getKeepAll() {
+        return keepAll;
     }
 
     @Override
@@ -233,6 +294,46 @@ public abstract class AbstractReportPublisher extends Recorder {
     }
 
     /**
+     * Gets the archive target.
+     *
+     * @param build
+     *            the build
+     * @return the archive target
+     */
+    protected FilePath getArchiveTarget(final AbstractBuild<?, ?> build) {
+        return new FilePath(isKeepAll() ? getBuildArchiveDir(build) : getProjectArchiveDir(build.getParent()));
+    }
+
+    /**
+     * Gets the directory where the reports are stored for the given project.
+     *
+     * @param project
+     *            the project
+     * @return the project archive directory
+     */
+    private File getProjectArchiveDir(final AbstractItem project) {
+        return new File(project.getRootDir(), getUrlName());
+    }
+
+    /**
+     * Gets the directory where the reports are stored for the given build.
+     *
+     * @param run
+     *            the run
+     * @return the build archive directory
+     */
+    private File getBuildArchiveDir(final Run<?, ?> run) {
+        return new File(run.getRootDir(), getUrlName());
+    }
+
+    /**
+     * Gets the URL name that will be used for archiving and linking the reports.
+     *
+     * @return the URL name
+     */
+    protected abstract String getUrlName();
+
+    /**
      * Builds a list of report files for report generation.
      * Includes the report files generated during separate sub-project execution.
      *
@@ -258,5 +359,29 @@ public abstract class AbstractReportPublisher extends Recorder {
         }
         Collections.reverse(reportFiles);
         return reportFiles;
+    }
+
+    /**
+     * Removes the report actions from all previous builds which published at project level.
+     *
+     * @param build
+     *            the build
+     * @param clazz
+     *            the report action class to remove
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     */
+    @SuppressWarnings("deprecation")
+    public static void removePreviousReports(final AbstractBuild<?, ?> build,
+            final Class<? extends AbstractReportAction> clazz) throws IOException {
+        AbstractBuild<?, ?> prevBuild = build.getPreviousBuild();
+        while (prevBuild != null) {
+            final AbstractReportAction buildAction = prevBuild.getAction(clazz);
+            if (buildAction != null && buildAction.isProjectLevel()) {
+                prevBuild.getActions().remove(buildAction);
+                prevBuild.save();
+            }
+            prevBuild = prevBuild.getPreviousBuild();
+        }
     }
 }

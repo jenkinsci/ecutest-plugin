@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -40,11 +40,22 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportAction;
  */
 public abstract class AbstractTRFAction extends AbstractReportAction {
 
+    /**
+     * Instantiates a new {@link AbstractTRFAction}.
+     *
+     * @param projectLevel
+     *            specifies whether archiving is restricted to project level only
+     */
+    public AbstractTRFAction(final boolean projectLevel) {
+        super(projectLevel);
+    }
+
     @Override
     public AbstractBuild<?, ?> getLastReportBuild(final AbstractProject<?, ?> project) {
         for (AbstractBuild<?, ?> build = project.getLastBuild(); build != null; build = build
                 .getPreviousBuild()) {
-            if (build.getAction(TRFBuildAction.class) != null) {
+            final TRFBuildAction buildAction = build.getAction(TRFBuildAction.class);
+            if (buildAction != null) {
                 return build;
             }
         }

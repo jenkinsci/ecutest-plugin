@@ -43,6 +43,16 @@ public class ETLogBuildAction extends AbstractETLogAction {
     private final List<ETLogReport> logReports = new ArrayList<ETLogReport>();
 
     /**
+     * Instantiates a new {@link ETLogBuildAction}.
+     *
+     * @param projectLevel
+     *            specifies whether archiving is restricted to project level only
+     */
+    public ETLogBuildAction(final boolean projectLevel) {
+        super(projectLevel);
+    }
+
+    /**
      * Gets the ECU-TEST log reports.
      *
      * @return the log reports

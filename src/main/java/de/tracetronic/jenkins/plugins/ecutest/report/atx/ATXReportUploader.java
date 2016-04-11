@@ -250,7 +250,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     private void addBuildAction(final AbstractBuild<?, ?> build, final List<ATXReport> atxReports) {
         ATXBuildAction<ATXReport> action = build.getAction(ATXBuildAction.class);
         if (action == null) {
-            action = new ATXBuildAction<ATXReport>();
+            action = new ATXBuildAction<ATXReport>(false);
             build.addAction(action);
         }
         action.addAll(atxReports);

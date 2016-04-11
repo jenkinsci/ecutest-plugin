@@ -33,6 +33,7 @@ import hudson.CopyOnWrite;
 import hudson.DescriptorExtensionList;
 import hudson.EnvVars;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.Action;
 import hudson.model.BuildListener;
@@ -102,11 +103,43 @@ public class ATXPublisher extends AbstractReportPublisher {
      *            specifies whether missing reports are allowed
      * @param runOnFailed
      *            specifies whether this publisher even runs on a failed build
+     * @param archiving
+     *            specifies whether archiving artifacts is enabled
+     * @param keepAll
+     *            specifies whether artifacts are archived for all successful builds,
+     *            otherwise only the most recent
      */
     @DataBoundConstructor
-    public ATXPublisher(final String atxName, final boolean allowMissing, final boolean runOnFailed) {
-        super(allowMissing, runOnFailed);
+    public ATXPublisher(final String atxName, final boolean allowMissing, final boolean runOnFailed,
+            final boolean archiving, final boolean keepAll) {
+        super(allowMissing, runOnFailed, archiving, keepAll);
         this.atxName = atxName;
+    }
+
+    /**
+     * Instantiates a new {@link ATXPublisher}.
+     *
+     * @param atxName
+     *            the tool name identifying the {@link ATXInstallation} to be used
+     * @param allowMissing
+     *            specifies whether missing reports are allowed
+     * @param runOnFailed
+     *            specifies whether this publisher even runs on a failed build
+     * @deprecated since 1.9, use {@link #ATXPublisher(String, boolean, boolean, boolean, boolean)}
+     */
+    @Deprecated
+    public ATXPublisher(final String atxName, final boolean allowMissing, final boolean runOnFailed) {
+        this(atxName, allowMissing, runOnFailed, true, true);
+    }
+
+    /**
+     * Convert legacy configuration into the new class structure.
+     *
+     * @return an instance of this class with all the new fields transferred from the old structure to the new one
+     */
+    public final Object readResolve() {
+        return new ATXPublisher(atxName, isAllowMissing(), isRunOnFailed(), isArchiving() == null ? true
+                : isArchiving(), isKeepAll() == null ? true : isKeepAll());
     }
 
     /**
@@ -221,8 +254,10 @@ public class ATXPublisher extends AbstractReportPublisher {
             if (isUploadEnabled && !isServerReachable) {
                 logger.logWarn("-> ATX upload will be skipped because selected TEST-GUIDE server is not reachable!");
             }
+            final FilePath archiveTarget = getArchiveTarget(build);
             final ATXReportGenerator generator = new ATXReportGenerator();
-            return generator.generate(isAllowMissing(), installation, build, launcher, listener);
+            return generator.generate(archiveTarget, isAllowMissing(), isArchiving(), isKeepAll(), installation, build,
+                    launcher, listener);
         }
     }
 
@@ -318,10 +353,15 @@ public class ATXPublisher extends AbstractReportPublisher {
         return ATXInstallation.get(expandedName);
     }
 
+    @Override
+    protected String getUrlName() {
+        return URL_NAME;
+    }
+
     @SuppressWarnings("rawtypes")
     @Override
     public Action getProjectAction(final AbstractProject<?, ?> project) {
-        return new ATXProjectAction();
+        return new ATXProjectAction(!isKeepAll());
     }
 
     @Override

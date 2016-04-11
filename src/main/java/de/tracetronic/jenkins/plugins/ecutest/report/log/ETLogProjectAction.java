@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -42,6 +42,16 @@ import org.kohsuke.stapler.StaplerRequest;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETLogProjectAction extends AbstractETLogAction {
+
+    /**
+     * Instantiates a new {@link ETLogProjectAction}.
+     *
+     * @param projectLevel
+     *            specifies whether archiving is restricted to project level only
+     */
+    public ETLogProjectAction(final boolean projectLevel) {
+        super(projectLevel);
+    }
 
     /**
      * Returns the {@link ETLogBuildAction} in the last build that have artifact documents.

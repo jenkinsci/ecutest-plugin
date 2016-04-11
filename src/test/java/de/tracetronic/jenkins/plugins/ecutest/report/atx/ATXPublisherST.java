@@ -81,15 +81,15 @@ public class ATXPublisherST extends SystemTestBase {
 
     @Test
     public void testRoundTripConfig() throws Exception {
-        final ATXPublisher before = new ATXPublisher("TEST-GUIDE", false, false);
+        final ATXPublisher before = new ATXPublisher("TEST-GUIDE", false, false, true, true);
         final ATXPublisher after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "allowMissing,runOnFailed");
+        jenkins.assertEqualBeans(before, after, "allowMissing,runOnFailed,archiving,keepAll");
     }
 
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, true);
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, true, true, true);
         project.getPublishersList().add(publisher);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
@@ -98,6 +98,8 @@ public class ATXPublisherST extends SystemTestBase {
         jenkins.assertXPath(page, "//option[@value='TEST-GUIDE']");
         jenkins.assertXPath(page, "//input[@name='_.allowMissing' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runOnFailed' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.archiving' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.keepAll' and @checked='true']");
     }
 
     @Test
@@ -117,7 +119,7 @@ public class ATXPublisherST extends SystemTestBase {
     @Test
     @LocalData
     public void testCurrentInstallation() {
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", false, false);
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", false, false, true, true);
         assertNotNull(publisher.getInstallation());
     }
 
@@ -127,7 +129,7 @@ public class ATXPublisherST extends SystemTestBase {
                 .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
         assertEquals(1, atxImpl.getInstallations().length);
 
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", false, false);
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", false, false, true, true);
         final ATXInstallation installation = publisher.getInstallation();
         assertNotNull(installation);
         assertEquals(installation.getName(), "TEST-GUIDE");
@@ -143,7 +145,7 @@ public class ATXPublisherST extends SystemTestBase {
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.setAssignedNode(slave);
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, false);
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, false, true, true);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
@@ -166,7 +168,7 @@ public class ATXPublisherST extends SystemTestBase {
                 return false;
             }
         });
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, false);
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, false, true, true);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
@@ -181,7 +183,7 @@ public class ATXPublisherST extends SystemTestBase {
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ATXPublisher publisher = new ATXPublisher("${TESTGUIDE}", true, false);
+        final ATXPublisher publisher = new ATXPublisher("${TESTGUIDE}", true, false, true, true);
         project.getPublishersList().add(publisher);
 
         final EnvVars envVars = new EnvVars(
@@ -203,7 +205,7 @@ public class ATXPublisherST extends SystemTestBase {
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, false);
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, false, true, true);
         project.getPublishersList().add(publisher);
 
         final EnvVars envVars = new EnvVars(

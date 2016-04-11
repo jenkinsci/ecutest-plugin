@@ -41,7 +41,6 @@ import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,10 +75,40 @@ public class TRFPublisher extends AbstractReportPublisher {
      *            specifies whether missing reports are allowed
      * @param runOnFailed
      *            specifies whether this publisher even runs on a failed build
+     * @param archiving
+     *            specifies whether archiving artifacts is enabled
+     * @param keepAll
+     *            specifies whether artifacts are archived for all successful builds,
+     *            otherwise only the most recent
      */
     @DataBoundConstructor
+    public TRFPublisher(final boolean allowMissing, final boolean runOnFailed, final boolean archiving,
+            final boolean keepAll) {
+        super(allowMissing, runOnFailed, archiving, keepAll);
+    }
+
+    /**
+     * Instantiates a new {@link TRFPublisher}.
+     *
+     * @param allowMissing
+     *            specifies whether missing reports are allowed
+     * @param runOnFailed
+     *            specifies whether this publisher even runs on a failed build
+     * @deprecated since 1.9, use {@link #TRFPublisher(boolean, boolean, boolean, boolean)}
+     */
+    @Deprecated
     public TRFPublisher(final boolean allowMissing, final boolean runOnFailed) {
-        super(allowMissing, runOnFailed);
+        this(allowMissing, runOnFailed, true, true);
+    }
+
+    /**
+     * Convert legacy configuration into the new class structure.
+     *
+     * @return an instance of this class with all the new fields transferred from the old structure to the new one
+     */
+    public final Object readResolve() {
+        return new TRFPublisher(isAllowMissing(), isRunOnFailed(), isArchiving() == null ? true
+                : isArchiving(), isKeepAll() == null ? true : isKeepAll());
     }
 
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
@@ -95,48 +124,59 @@ public class TRFPublisher extends AbstractReportPublisher {
             return true;
         }
 
-        int index = 0;
-        final List<TRFReport> trfReports = new ArrayList<TRFReport>();
-        final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
-        for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-            final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-            final FilePath archiveTargetDir = getArchiveTarget(build).child(testReportDir.getName());
-            final FilePath reportFile = testReportDir.child(TRF_FILE_NAME);
-            if (reportFile.exists()) {
-                try {
-                    logger.logInfo(String.format("- Archiving TRF report: %s", reportFile));
-                    final int copiedFiles = testReportDir.copyRecursiveTo("**/" + TRF_FILE_NAME, archiveTargetDir);
-                    if (copiedFiles == 0) {
-                        continue;
-                    } else if (copiedFiles > 1) {
-                        logger.logInfo(String.format("-> Archived %d sub-report(s).", copiedFiles - 1));
+        if (isArchiving()) {
+            int index = 0;
+            final List<TRFReport> trfReports = new ArrayList<TRFReport>();
+            final FilePath archiveTarget = getArchiveTarget(build);
+            final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
+
+            // Removing old artifacts at project level
+            if (!testEnvActions.isEmpty() && !isKeepAll()) {
+                archiveTarget.deleteRecursive();
+                removePreviousReports(build, TRFBuildAction.class);
+            }
+            for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
+                final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
+                final FilePath archiveTargetDir = archiveTarget.child(testReportDir.getName());
+                final FilePath reportFile = testReportDir.child(TRF_FILE_NAME);
+                if (reportFile.exists()) {
+                    try {
+                        logger.logInfo(String.format("- Archiving TRF report: %s", reportFile));
+                        final int copiedFiles = testReportDir.copyRecursiveTo("**/" + TRF_FILE_NAME, archiveTargetDir);
+                        if (copiedFiles == 0) {
+                            continue;
+                        } else if (copiedFiles > 1) {
+                            logger.logInfo(String.format("-> Archived %d sub-report(s).", copiedFiles - 1));
+                        }
+                    } catch (final IOException e) {
+                        Util.displayIOException(e, listener);
+                        logger.logError("Failed publishing TRF reports.");
+                        build.setResult(Result.FAILURE);
+                        return true;
                     }
-                } catch (final IOException e) {
-                    Util.displayIOException(e, listener);
-                    logger.logError("Failed publishing TRF reports.");
-                    build.setResult(Result.FAILURE);
-                    return true;
-                }
-                index = traverseReports(trfReports, archiveTargetDir, index);
-            } else {
-                if (isAllowMissing()) {
-                    continue;
+                    index = traverseReports(trfReports, archiveTargetDir, index);
                 } else {
-                    logger.logError(String.format("Specified TRF file '%s' does not exist.", reportFile));
-                    build.setResult(Result.FAILURE);
-                    return true;
+                    if (isAllowMissing()) {
+                        continue;
+                    } else {
+                        logger.logError(String.format("Specified TRF file '%s' does not exist.", reportFile));
+                        build.setResult(Result.FAILURE);
+                        return true;
+                    }
                 }
             }
-        }
 
-        if (trfReports.isEmpty() && !isAllowMissing()) {
-            logger.logError("Empty test results are not allowed, setting build status to FAILURE!");
-            build.setResult(Result.FAILURE);
-            return true;
-        }
+            if (trfReports.isEmpty() && !isAllowMissing()) {
+                logger.logError("Empty test results are not allowed, setting build status to FAILURE!");
+                build.setResult(Result.FAILURE);
+                return true;
+            }
 
-        addBuildAction(build, trfReports);
-        logger.logInfo("TRF reports published successfully.");
+            addBuildAction(build, trfReports);
+            logger.logInfo("TRF reports published successfully.");
+        } else {
+            logger.logInfo("Archiving TRF reports is disabled.");
+        }
         return true;
     }
 
@@ -209,30 +249,26 @@ public class TRFPublisher extends AbstractReportPublisher {
      *            the build
      * @param trfReports
      *            the list of {@link TRFReport}s to add
+     * @throws IOException
+     *             signals that an I/O exception has occurred
      */
-    private void addBuildAction(final AbstractBuild<?, ?> build, final List<TRFReport> trfReports) {
+    private void addBuildAction(final AbstractBuild<?, ?> build, final List<TRFReport> trfReports) throws IOException {
         TRFBuildAction action = build.getAction(TRFBuildAction.class);
         if (action == null) {
-            action = new TRFBuildAction();
+            action = new TRFBuildAction(!isKeepAll());
             build.addAction(action);
         }
         action.addAll(trfReports);
     }
 
-    /**
-     * Gets the archive target.
-     *
-     * @param build
-     *            the build
-     * @return the archive target
-     */
-    private FilePath getArchiveTarget(final AbstractBuild<?, ?> build) {
-        return new FilePath(new File(build.getRootDir(), URL_NAME));
+    @Override
+    protected String getUrlName() {
+        return URL_NAME;
     }
 
     @Override
     public Action getProjectAction(final AbstractProject<?, ?> project) {
-        return new TRFProjectAction();
+        return new TRFProjectAction(!isKeepAll());
     }
 
     @Override
