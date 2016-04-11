@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -60,6 +60,16 @@ public abstract class AbstractReportPublisherDslExtension extends AbstractDslExt
         protected boolean runOnFailed;
 
         /**
+         * The archiving setting.
+         */
+        protected boolean archiving = true;
+
+        /**
+         * The keep all archives setting.
+         */
+        protected boolean keepAll = true;
+
+        /**
          * Option defining whether missing reports are allowed.
          *
          * @param value
@@ -77,6 +87,26 @@ public abstract class AbstractReportPublisherDslExtension extends AbstractDslExt
          */
         public void runOnFailed(final boolean value) {
             runOnFailed = value;
+        }
+
+        /**
+         * Option defining whether archiving artifacts is enabled.
+         *
+         * @param value
+         *            the value
+         */
+        public void archiving(final boolean value) {
+            archiving = value;
+        }
+
+        /**
+         * Option defining whether artifacts are archived for all successful builds.
+         *
+         * @param value
+         *            the value
+         */
+        public void keepAll(final boolean value) {
+            keepAll = value;
         }
     }
 }

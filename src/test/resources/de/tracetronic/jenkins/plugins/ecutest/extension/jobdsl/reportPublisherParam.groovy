@@ -3,6 +3,8 @@ def strETInstall = 'ECU-TEST'
 def strATXInstall = 'TEST-GUIDE'
 def bAllowMissing = true
 def bRunOnFailed = true
+def bArchiving = false
+def bKeepAll = false
 def dUnstableThreshold = 15
 def dFailedThreshold = 30
 def bUnstableOnWarning = true
@@ -19,22 +21,30 @@ freeStyleJob("${strJobName}") {
         publishATX("${strATXInstall}") {
             allowMissing(bAllowMissing)
             runOnFailed(bRunOnFailed)
+            archiving(bArchiving)
+            keepAll(bKeepAll)
         }
         publishTRF() {
             allowMissing(bAllowMissing)
             runOnFailed(bRunOnFailed)
+            archiving(bArchiving)
+            keepAll(bKeepAll)
         }
         publishUNIT("${strETInstall}") {
             unstableThreshold(dUnstableThreshold)
             failedThreshold(dFailedThreshold)
             allowMissing(bAllowMissing)
             runOnFailed(bRunOnFailed)
+            archiving(bArchiving)
+            keepAll(bKeepAll)
         }
         publishETLogs() {
             unstableOnWarning(bUnstableOnWarning)
             failedOnError(bFailedOnError)
             allowMissing(bAllowMissing)
             runOnFailed(bRunOnFailed)
+            archiving(bArchiving)
+            keepAll(bKeepAll)
         }
         publishGenerators("${strETInstall}") {
             generators {
@@ -61,6 +71,8 @@ freeStyleJob("${strJobName}") {
             }
             allowMissing(bAllowMissing)
             runOnFailed(bRunOnFailed)
+            archiving(bArchiving)
+            keepAll(bKeepAll)
         }
     }
 }

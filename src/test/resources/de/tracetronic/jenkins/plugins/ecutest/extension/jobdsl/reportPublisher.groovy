@@ -3,22 +3,30 @@ freeStyleJob("reportPublisher") {
         publishATX("TEST-GUIDE") {
             allowMissing(true)
             runOnFailed(true)
+            archiving(false)
+            keepAll(false)
         }
         publishTRF() {
             allowMissing(true)
             runOnFailed(true)
+            archiving(false)
+            keepAll(false)
         }
         publishUNIT("ECU-TEST") {
             unstableThreshold(15)
             failedThreshold(30)
             allowMissing(true)
             runOnFailed(true)
+            archiving(false)
+            keepAll(false)
         }
         publishETLogs() {
             unstableOnWarning(true)
             failedOnError(true)
             allowMissing(true)
             runOnFailed(true)
+            archiving(false)
+            keepAll(false)
         }
         publishGenerators("ECU-TEST") {
             generators {
@@ -45,6 +53,8 @@ freeStyleJob("reportPublisher") {
             }
             allowMissing(true)
             runOnFailed(true)
+            archiving(false)
+            keepAll(false)
         }
     }
 }

@@ -32,6 +32,7 @@ package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -111,6 +112,8 @@ public class ReportPublisherDslExtensionST extends AbstractDslExtensionST {
         assertThat(publisher.getInstallation().getToolName(), is("ECU-TEST"));
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
+        assertFalse(publisher.isArchiving());
+        assertFalse(publisher.isKeepAll());
     }
 
     @Test
@@ -122,6 +125,8 @@ public class ReportPublisherDslExtensionST extends AbstractDslExtensionST {
         assertNotNull("TRF report publisher should exist", publisher);
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
+        assertFalse(publisher.isArchiving());
+        assertFalse(publisher.isKeepAll());
     }
 
     @Test
@@ -136,6 +141,8 @@ public class ReportPublisherDslExtensionST extends AbstractDslExtensionST {
         assertEquals(0, Double.compare(30, publisher.getFailedThreshold()));
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
+        assertFalse(publisher.isArchiving());
+        assertFalse(publisher.isKeepAll());
     }
 
     @Test
@@ -149,6 +156,8 @@ public class ReportPublisherDslExtensionST extends AbstractDslExtensionST {
         assertTrue(publisher.isFailedOnError());
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
+        assertFalse(publisher.isArchiving());
+        assertFalse(publisher.isKeepAll());
     }
 
     @Test
@@ -161,6 +170,8 @@ public class ReportPublisherDslExtensionST extends AbstractDslExtensionST {
         assertThat(publisher.getToolName(), is("ECU-TEST"));
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
+        assertFalse(publisher.isArchiving());
+        assertFalse(publisher.isKeepAll());
         testGeneratorConfigWithDsl(publisher.getGenerators());
         testCustomGeneratorConfigWithDsl(publisher.getCustomGenerators());
     }

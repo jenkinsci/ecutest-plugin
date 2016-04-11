@@ -79,7 +79,8 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         final PublishATXContext context = new PublishATXContext();
         executeInContext(closure, context);
 
-        final ATXPublisher publisher = new ATXPublisher(atxName.toString(), context.allowMissing, context.runOnFailed);
+        final ATXPublisher publisher = new ATXPublisher(atxName.toString(), context.allowMissing, context.runOnFailed,
+                context.archiving, context.keepAll);
         Preconditions.checkNotNull(publisher.getInstallation(), NO_INSTALL_MSG, atxName);
         return publisher;
     }
@@ -113,7 +114,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         executeInContext(closure, context);
 
         final JUnitPublisher publisher = new JUnitPublisher(toolName.toString(), context.unstableThreshold,
-                context.failedThreshold, context.allowMissing, context.runOnFailed);
+                context.failedThreshold, context.allowMissing, context.runOnFailed, context.archiving, context.keepAll);
         Preconditions.checkNotNull(publisher.getToolInstallation(new EnvVars()), NO_INSTALL_MSG, toolName);
         return publisher;
     }
@@ -141,7 +142,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     public Object publishTRF(final Runnable closure) {
         final PublishTRFContext context = new PublishTRFContext();
         executeInContext(closure, context);
-        return new TRFPublisher(context.allowMissing, context.runOnFailed);
+        return new TRFPublisher(context.allowMissing, context.runOnFailed, context.archiving, context.keepAll);
     }
 
     /**
@@ -165,8 +166,8 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     public Object publishETLogs(final Runnable closure) {
         final PublishETLogContext context = new PublishETLogContext();
         executeInContext(closure, context);
-        return new ETLogPublisher(context.allowMissing, context.runOnFailed, context.unstableOnWarning,
-                context.failedOnError);
+        return new ETLogPublisher(context.unstableOnWarning, context.failedOnError, context.allowMissing,
+                context.runOnFailed, context.archiving, context.keepAll);
     }
 
     /**
@@ -196,7 +197,8 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         executeInContext(closure, context);
 
         final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher(toolName.toString(),
-                context.generators, context.customGenerators, context.allowMissing, context.runOnFailed);
+                context.generators, context.customGenerators, context.allowMissing, context.runOnFailed,
+                context.archiving, context.keepAll);
         Preconditions.checkNotNull(publisher.getToolInstallation(new EnvVars()), NO_INSTALL_MSG, toolName);
         return publisher;
     }
