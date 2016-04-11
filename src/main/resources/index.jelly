@@ -1,5 +1,5 @@
 <!--
-    Copyright (c) 2015 TraceTronic GmbH
+    Copyright (c) 2015-2016 TraceTronic GmbH
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification,
@@ -28,5 +28,5 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<div>This plugin integrates Jenkins with <a href="http://www.tracetronic.de/produkte/ecu-test/">ECU-TEST</a>
+<div>This plugin integrates Jenkins with <a href="https://www.tracetronic.com/products/ecu-test/">ECU-TEST</a>
 and generates reports on automated test execution.</div>
