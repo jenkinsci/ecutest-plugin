@@ -33,7 +33,7 @@
     <j:set var="owner" value="${it.getOwner(request)}" />
     <j:set var="build" value="${it.getBuild(request)}" />
     <l:layout title="${it.displayName}" norefresh="true">
-        <st:include page="sidepanel.jelly" it="${it.getOwner(request)}" />
+        <st:include page="sidepanel.jelly" it="${owner}" />
         <l:main-panel>
             <h1>
                 <img src="${resURL}${it.iconFileName}" alt="TRF reports" height="48" width="48" />

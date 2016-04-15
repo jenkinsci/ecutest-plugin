@@ -32,12 +32,9 @@ package de.tracetronic.jenkins.plugins.ecutest.report;
 import hudson.Util;
 import hudson.model.ModelObject;
 import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.CheckForNull;
 
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -46,7 +43,7 @@ import org.kohsuke.stapler.StaplerRequest;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class AbstractTestReport implements ModelObject {
+public abstract class AbstractTestReport extends AbstractRequestHandler implements ModelObject {
 
     private final String id;
     private final String title;
@@ -122,39 +119,8 @@ public abstract class AbstractTestReport implements ModelObject {
         return Util.rawEncode(getId());
     }
 
-    /**
-     * Resolves the build containing the report artifacts by {@link StaplerRequest#findAncestorObject(Class)}.
-     * <p>
-     * If called in a project context, returns the last build that contains report artifacts.
-     *
-     * @param req
-     *            the {@link StaplerRequest} used for access this report
-     * @return the build with report artifacts to handle or {@code null} if no proper build exists
-     */
-    @CheckForNull
-    protected AbstractBuild<?, ?> getBuild(final StaplerRequest req) {
-        final AbstractBuild<?, ?> build = req.findAncestorObject(AbstractBuild.class);
-        if (build != null) {
-            return build;
-        }
-
-        final AbstractProject<?, ?> project = req.findAncestorObject(AbstractProject.class);
-        if (project != null) {
-            return project.getLastSuccessfulBuild();
-        }
-
-        return null;
-    }
-
-    /**
-     * Resolves the build action containing the report artifacts by {@link StaplerRequest#findAncestorObject(Class)}.
-     *
-     * @param req
-     *            the {@link StaplerRequest} used for access this report
-     * @return the build action with report artifacts to handle or {@code null} if no proper build action exists
-     */
-    @CheckForNull
-    protected AbstractReportAction getBuildAction(final StaplerRequest req) {
-        return req.findAncestorObject(AbstractReportAction.class);
+    @Override
+    public AbstractBuild<?, ?> getBuild(final StaplerRequest req) {
+        return getAnchestorBuild(req);
     }
 }

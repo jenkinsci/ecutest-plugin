@@ -34,7 +34,7 @@
     <j:set var="build" value="${it.getBuild(request)}" />
     <l:layout title="${it.displayName}" norefresh="true">
         <link type="text/css" href="${resURL}/plugin/ecutest/css/style.css" rel="stylesheet" />
-        <st:include page="sidepanel.jelly" it="${it.getOwner(request)}" />
+        <st:include page="sidepanel.jelly" it="${owner}" />
         <l:main-panel>
             <h1>
                 <img src="${resURL}${it.iconFileName}" alt="ECU-TEST Logs" height="48" width="48" />

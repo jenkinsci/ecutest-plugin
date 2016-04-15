@@ -38,8 +38,6 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
-import jenkins.util.VirtualFile;
-
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -111,24 +109,17 @@ public abstract class AbstractArchiveFileReport extends AbstractTestReport {
      * @throws ServletException
      *             if serving the file failed
      */
-    public void doDynamic(final StaplerRequest req, final StaplerResponse rsp) throws IOException,
-            ServletException {
+    public void doDynamic(final StaplerRequest req, final StaplerResponse rsp) throws IOException, ServletException {
         final AbstractBuild<?, ?> build = getBuild(req);
-        if (build == null) {
-            LOGGER.warning(String.format("No build found for url %s", req.getRequestURI()));
+        final AbstractReportAction action = getBuildAction(req);
+        if (build == null || action == null) {
+            LOGGER.warning(String.format("No build or related action found for url %s", req.getRequestURI()));
             rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
-        final AbstractReportAction action = getBuildAction(req);
-        if (action == null) {
-            LOGGER.warning(String.format("No build action found for url %s", req.getRequestURI()));
-            rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
         final boolean isProjectLevel = action.isProjectLevel();
         final File rootDir = isProjectLevel ? build.getProject().getRootDir() : build.getRootDir();
-
         final File archiveFile = new File(new File(rootDir, getArchiveDir()), getFileName());
         if (!archiveFile.exists()) {
             LOGGER.warning(String.format("Archive file does not exists: %s for %s", getFileName(),
@@ -168,47 +159,12 @@ public abstract class AbstractArchiveFileReport extends AbstractTestReport {
      */
     public void doZipDownload(final StaplerRequest req, final StaplerResponse rsp) throws IOException,
     ServletException {
-        final AbstractBuild<?, ?> build = getBuild(req);
-        if (build == null) {
-            LOGGER.warning(String.format("No build found for url %s", req.getRequestURI()));
-            rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-
         final AbstractReportAction action = getBuildAction(req);
         if (action == null) {
             LOGGER.warning(String.format("No build action found for url %s", req.getRequestURI()));
             rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        final boolean isProjectLevel = action.isProjectLevel();
-        final File rootDir = isProjectLevel ? build.getProject().getRootDir() : build.getRootDir();
-
-        final VirtualFile archiveDir = VirtualFile.forFile(new File(new File(rootDir, getArchiveDir()), getFileName()));
-        if (!archiveDir.exists()) {
-            LOGGER.warning(String.format("Archive directory does not exists: %s for %s", getFileName(),
-                    build.getFullDisplayName()));
-            rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        if (!archiveDir.isDirectory()) {
-            LOGGER.warning(String.format("Archive is not a directory: %s for %s", getFileName(),
-                    build.getFullDisplayName()));
-            rsp.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return;
-        }
-
-        if (req.getDateHeader("If-Modified-Since") >= 0
-                && req.getDateHeader("If-Modified-Since") >= archiveDir.lastModified()) {
-            rsp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-            return;
-        }
-
-        // Compress and download the archive directory
-        final String zipFileName = String.format("%s_%s#%d", archiveDir.getName(), build.getProject().getName(),
-                build.getNumber());
-        rsp.setHeader("Content-Disposition", "attachment;filename=\"" + zipFileName + "\"");
-        rsp.setContentType("application/zip");
-        AbstractReportAction.zip(rsp.getOutputStream(), archiveDir);
+        action.doZipDownload(req, rsp);
     }
 }

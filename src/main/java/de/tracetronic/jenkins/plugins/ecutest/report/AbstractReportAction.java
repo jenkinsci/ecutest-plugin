@@ -65,7 +65,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.trf.AbstractTRFAction;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class AbstractReportAction implements Action {
+public abstract class AbstractReportAction extends AbstractRequestHandler implements Action {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractReportAction.class.getName());
 
@@ -91,79 +91,19 @@ public abstract class AbstractReportAction implements Action {
         return projectLevel;
     }
 
-    /**
-     * Gets the owner of this action.
-     *
-     * @param req
-     *            the {@link StaplerRequest} used for access this action
-     * @return the {@link AbstractProject} or {@link AbstractBuild} or {@code null} if no proper owner exists
-     */
-    @CheckForNull
-    public Object getOwner(final StaplerRequest req) {
-        final AbstractBuild<?, ?> build = req.findAncestorObject(AbstractBuild.class);
-        if (build != null) {
-            return build;
-        }
-
-        final AbstractProject<?, ?> project = req.findAncestorObject(AbstractProject.class);
-        if (project != null) {
-            return project;
-        }
-
-        return null;
-    }
-
-    /**
-     * Gets the project of this action.
-     *
-     * @param req
-     *            the {@link StaplerRequest} used for access this action
-     * @return the project containing this action or {@code null} if no proper project exists
-     */
-    @CheckForNull
-    public AbstractProject<?, ?> getProject(final StaplerRequest req) {
-        final AbstractProject<?, ?> project = req.findAncestorObject(AbstractProject.class);
-        if (project != null) {
-            return project;
-        }
-
-        return null;
-    }
-
-    /**
-     * Gets the build that have report artifacts this action handles.
-     * <p>
-     * If called in a project context, returns the last build that contains report artifacts.
-     *
-     * @param req
-     *            the {@link StaplerRequest} used for access this action
-     * @return the build with report artifacts to handle or {@code null} if no proper build exists
-     */
-    @CheckForNull
+    @Override
     public AbstractBuild<?, ?> getBuild(final StaplerRequest req) {
-        final AbstractBuild<?, ?> build = req.findAncestorObject(AbstractBuild.class);
+        final AbstractBuild<?, ?> build = getAnchestorBuild(req);
         if (build != null) {
             return build;
         }
 
-        final AbstractProject<?, ?> project = req.findAncestorObject(AbstractProject.class);
+        final AbstractProject<?, ?> project = getAnchestorProject(req);
         if (project != null) {
             return getLastReportBuild(project);
         }
 
         return null;
-    }
-
-    /**
-     * Resolves the build action containing the report artifacts by {@link StaplerRequest#findAncestorObject(Class)}.
-     *
-     * @param req
-     *            the {@link StaplerRequest} used for access this report
-     * @return the build action with report artifacts to handle or {@code null} if no proper build action exists
-     */
-    @CheckForNull
-    protected AbstractReportAction getBuildAction(final StaplerRequest req) {
-        return req.findAncestorObject(AbstractReportAction.class);
     }
 
     /**
@@ -224,21 +164,15 @@ public abstract class AbstractReportAction implements Action {
     public void doZipDownload(final StaplerRequest req, final StaplerResponse rsp) throws IOException,
             ServletException {
         final AbstractBuild<?, ?> build = getBuild(req);
-        if (build == null) {
-            LOGGER.warning(String.format("No build found for url %s", req.getRequestURI()));
+        final AbstractReportAction action = getBuildAction(req);
+        if (build == null || action == null) {
+            LOGGER.warning(String.format("No build or related action found for url %s", req.getRequestURI()));
             rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
-        final AbstractReportAction action = getBuildAction(req);
-        if (action == null) {
-            LOGGER.warning(String.format("No build action found for url %s", req.getRequestURI()));
-            rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
         final boolean isProjectLevel = action.isProjectLevel();
         final File rootDir = isProjectLevel ? build.getProject().getRootDir() : build.getRootDir();
-
         final VirtualFile archiveDir = VirtualFile.forFile(new File(rootDir, getUrlName()));
         if (!archiveDir.exists()) {
             LOGGER.warning(String.format("Archive directory does not exists: %s for %s", getUrlName(),
@@ -277,7 +211,7 @@ public abstract class AbstractReportAction implements Action {
      * @throws IOException
      *             signals that an I/O exception has occurred
      */
-    protected static void zip(final OutputStream outputStream, final VirtualFile archiveDir) throws IOException {
+    private void zip(final OutputStream outputStream, final VirtualFile archiveDir) throws IOException {
         final ZipOutputStream zos = new ZipOutputStream(outputStream);
         zos.setEncoding(System.getProperty("file.encoding"));
 
