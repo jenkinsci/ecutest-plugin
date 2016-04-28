@@ -29,7 +29,14 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
+import hudson.EnvVars;
 import javaposse.jobdsl.dsl.Context;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.google.common.base.Preconditions;
+
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
 
 /**
@@ -43,6 +50,21 @@ public abstract class AbstractReportPublisherDslExtension extends AbstractDslExt
      * Validator to check UNIT report related DSL options.
      */
     protected final JUnitValidator validator = new JUnitValidator();
+
+    /**
+     * Checks whether a tool installation identified by given name exists.
+     *
+     * @param toolName
+     *            the tool name
+     * @param publisher
+     *            the builder
+     */
+    protected void checkToolInstallation(final String toolName, final AbstractReportPublisher publisher) {
+        if (StringUtils.containsNone(toolName, "$")) {
+            Preconditions.checkNotNull(publisher.getToolInstallation(toolName, new EnvVars()),
+                    NO_INSTALL_MSG, toolName);
+        }
+    }
 
     /**
      * {@link Context} class providing common report related methods for the nested DSL context.

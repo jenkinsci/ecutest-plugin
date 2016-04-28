@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
-import hudson.EnvVars;
 import hudson.Extension;
 import hudson.util.FormValidation;
 
@@ -39,6 +38,8 @@ import java.util.List;
 import javaposse.jobdsl.dsl.Context;
 import javaposse.jobdsl.dsl.helpers.publisher.PublisherContext;
 import javaposse.jobdsl.plugin.DslExtensionMethod;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.google.common.base.Preconditions;
 
@@ -81,8 +82,22 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
 
         final ATXPublisher publisher = new ATXPublisher(atxName.toString(), context.allowMissing, context.runOnFailed,
                 context.archiving, context.keepAll);
-        Preconditions.checkNotNull(publisher.getInstallation(), NO_INSTALL_MSG, atxName);
+        checkATXInstallation(atxName.toString(), publisher);
         return publisher;
+    }
+
+    /**
+     * Checks whether the ATX installation identified by given name exists.
+     *
+     * @param atxName
+     *            the ATX tool name
+     * @param publisher
+     *            the publisher
+     */
+    private void checkATXInstallation(final String atxName, final ATXPublisher publisher) {
+        if (StringUtils.containsNone(atxName, "$")) {
+            Preconditions.checkNotNull(publisher.getInstallation(), NO_INSTALL_MSG, atxName);
+        }
     }
 
     /**
@@ -115,7 +130,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
 
         final JUnitPublisher publisher = new JUnitPublisher(toolName.toString(), context.unstableThreshold,
                 context.failedThreshold, context.allowMissing, context.runOnFailed, context.archiving, context.keepAll);
-        Preconditions.checkNotNull(publisher.getToolInstallation(new EnvVars()), NO_INSTALL_MSG, toolName);
+        checkToolInstallation(toolName.toString(), publisher);
         return publisher;
     }
 
@@ -199,7 +214,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher(toolName.toString(),
                 context.generators, context.customGenerators, context.allowMissing, context.runOnFailed,
                 context.archiving, context.keepAll);
-        Preconditions.checkNotNull(publisher.getToolInstallation(new EnvVars()), NO_INSTALL_MSG, toolName);
+        checkToolInstallation(toolName.toString(), publisher);
         return publisher;
     }
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,11 +29,13 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
+import hudson.EnvVars;
 import hudson.util.FormValidation;
 import javaposse.jobdsl.dsl.Context;
 
 import com.google.common.base.Preconditions;
 
+import de.tracetronic.jenkins.plugins.ecutest.tool.AbstractToolBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ToolValidator;
 
 /**
@@ -47,6 +49,20 @@ public abstract class AbstractToolBuilderDslExtension extends AbstractDslExtensi
      * Validator to check tool related DSL options.
      */
     protected final ToolValidator validator = new ToolValidator();
+
+    /**
+     * Checks whether a tool installation identified by given name exists.
+     *
+     * @param toolName
+     *            the tool name
+     * @param builder
+     *            the builder
+     */
+    protected void checkToolInstallation(final String toolName, final AbstractToolBuilder builder) {
+        if (!toolName.isEmpty() && !toolName.contains("$")) {
+            Preconditions.checkNotNull(builder.getToolInstallation(new EnvVars()), NO_INSTALL_MSG, toolName);
+        }
+    }
 
     /**
      * {@link Context} class providing common test related methods for the nested DSL context.
