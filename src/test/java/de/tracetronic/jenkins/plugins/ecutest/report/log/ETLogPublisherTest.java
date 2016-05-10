@@ -55,10 +55,11 @@ public class ETLogPublisherTest {
 
     @Test
     public void testConstructor() {
-        final ETLogPublisher publisher = new ETLogPublisher(true, true, true, true, false, false);
+        final ETLogPublisher publisher = new ETLogPublisher(true, true, true, true, true, false, false);
         assertNotNull(publisher);
         assertTrue(publisher.isUnstableOnWarning());
         assertTrue(publisher.isFailedOnError());
+        assertTrue(publisher.isTestSpecific());
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
         assertFalse(publisher.isArchiving());

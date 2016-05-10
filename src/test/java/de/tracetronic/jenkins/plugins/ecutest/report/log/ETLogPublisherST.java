@@ -60,22 +60,23 @@ public class ETLogPublisherST extends SystemTestBase {
 
     @Test
     public void testRoundTripConfig() throws Exception {
-        final ETLogPublisher before = new ETLogPublisher(false, false, false, false, true, true);
+        final ETLogPublisher before = new ETLogPublisher(false, false, false, false, false, true, true);
         final ETLogPublisher after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after,
-                "unstableOnWarning,failedOnError,allowMissing,runOnFailed,archiving,keepAll");
+                "unstableOnWarning,failedOnError,testSpecific,allowMissing,runOnFailed,archiving,keepAll");
     }
 
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ETLogPublisher publisher = new ETLogPublisher(true, true, true, true, true, true);
+        final ETLogPublisher publisher = new ETLogPublisher(true, true, true, true, true, true, true);
         project.getPublishersList().add(publisher);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.ETLogPublisher_DisplayName());
         jenkins.assertXPath(page, "//input[@name='_.unstableOnWarning' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.failedOnError' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.testSpecific' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.allowMissing' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runOnFailed' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.archiving']");
@@ -85,7 +86,7 @@ public class ETLogPublisherST extends SystemTestBase {
     @Test
     public void testAllowMissing() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ETLogPublisher publisher = new ETLogPublisher(true, true, false, true, true, true);
+        final ETLogPublisher publisher = new ETLogPublisher(true, true, false, false, true, true, true);
         project.getPublishersList().add(publisher);
 
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -104,7 +105,7 @@ public class ETLogPublisherST extends SystemTestBase {
             }
         });
 
-        final ETLogPublisher publisher = new ETLogPublisher(true, true, true, false, false, false);
+        final ETLogPublisher publisher = new ETLogPublisher(true, true, false, true, false, false, false);
         project.getPublishersList().add(publisher);
 
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -120,7 +121,7 @@ public class ETLogPublisherST extends SystemTestBase {
         final FilePath logFile = new FilePath(new File(url.getFile()));
         project.setCustomWorkspace(logFile.getParent().getRemote());
 
-        final ETLogPublisher publisher = new ETLogPublisher(true, false, true, true, true, true);
+        final ETLogPublisher publisher = new ETLogPublisher(true, false, false, true, true, true, true);
         project.getPublishersList().add(publisher);
 
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -134,7 +135,7 @@ public class ETLogPublisherST extends SystemTestBase {
         final FilePath logFile = new FilePath(new File(url.getFile()));
         project.setCustomWorkspace(logFile.getParent().getRemote());
 
-        final ETLogPublisher publisher = new ETLogPublisher(false, true, true, true, true, true);
+        final ETLogPublisher publisher = new ETLogPublisher(false, true, false, true, true, true, true);
         project.getPublishersList().add(publisher);
 
         final FreeStyleBuild build = project.scheduleBuild2(0).get();

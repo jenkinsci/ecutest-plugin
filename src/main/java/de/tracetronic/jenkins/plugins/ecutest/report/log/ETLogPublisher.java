@@ -47,10 +47,13 @@ import hudson.tasks.Publisher;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
+import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction.TestType;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
@@ -80,6 +83,38 @@ public class ETLogPublisher extends AbstractReportPublisher {
 
     private final boolean unstableOnWarning;
     private final boolean failedOnError;
+    /**
+     * @since 1.10
+     */
+    private final boolean testSpecific;
+
+    /**
+     * Instantiates a new {@link ETLogPublisher}.
+     *
+     * @param unstableOnWarning
+     *            specifies whether to mark the build as unstable if warnings found
+     * @param failedOnError
+     *            specifies whether to mark the build as failed if errors found
+     * @param testSpecific
+     *            specifies whether to parse the test specific log files
+     * @param allowMissing
+     *            specifies whether missing reports are allowed
+     * @param runOnFailed
+     *            specifies whether this publisher even runs on a failed build
+     * @param archiving
+     *            specifies whether archiving artifacts is enabled
+     * @param keepAll
+     *            specifies whether artifacts are archived for all successful builds,
+     *            otherwise only the most recent
+     */
+    @DataBoundConstructor
+    public ETLogPublisher(final boolean unstableOnWarning, final boolean failedOnError, final boolean testSpecific,
+            final boolean allowMissing, final boolean runOnFailed, final boolean archiving, final boolean keepAll) {
+        super(allowMissing, runOnFailed, archiving, keepAll);
+        this.unstableOnWarning = unstableOnWarning;
+        this.failedOnError = failedOnError;
+        this.testSpecific = testSpecific;
+    }
 
     /**
      * Instantiates a new {@link ETLogPublisher}.
@@ -97,13 +132,12 @@ public class ETLogPublisher extends AbstractReportPublisher {
      * @param keepAll
      *            specifies whether artifacts are archived for all successful builds,
      *            otherwise only the most recent
+     * @deprecated since 1.10, use {@link #ETLogPublisher(boolean, boolean, boolean, boolean, boolean,boolean, boolean)}
      */
-    @DataBoundConstructor
+    @Deprecated
     public ETLogPublisher(final boolean unstableOnWarning, final boolean failedOnError, final boolean allowMissing,
             final boolean runOnFailed, final boolean archiving, final boolean keepAll) {
-        super(allowMissing, runOnFailed, archiving, keepAll);
-        this.unstableOnWarning = unstableOnWarning;
-        this.failedOnError = failedOnError;
+        this(unstableOnWarning, failedOnError, false, allowMissing, runOnFailed, archiving, keepAll);
     }
 
     /**
@@ -131,22 +165,30 @@ public class ETLogPublisher extends AbstractReportPublisher {
      * @return an instance of this class with all the new fields transferred from the old structure to the new one
      */
     public final Object readResolve() {
-        return new ETLogPublisher(unstableOnWarning, failedOnError, isAllowMissing(), isRunOnFailed(),
+        return new ETLogPublisher(unstableOnWarning, failedOnError, isTestSpecific(), isAllowMissing(),
+                isRunOnFailed(),
                 isArchiving() == null ? true : isArchiving(), isKeepAll() == null ? true : isKeepAll());
     }
 
     /**
-     * @return the unstableOnWarning
+     * @return whether to mark the build as unstable if warnings found
      */
     public boolean isUnstableOnWarning() {
         return unstableOnWarning;
     }
 
     /**
-     * @return the failedOnError
+     * @return whether to mark the build as failed if errors found
      */
     public boolean isFailedOnError() {
         return failedOnError;
+    }
+
+    /**
+     * @return whether to parse the test specific log files
+     */
+    public boolean isTestSpecific() {
+        return testSpecific;
     }
 
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
@@ -164,40 +206,69 @@ public class ETLogPublisher extends AbstractReportPublisher {
 
         if (isArchiving()) {
             final List<ETLogReport> logReports = new ArrayList<ETLogReport>();
-            final FilePath archiveTargetDir = getArchiveTarget(build);
-            final List<FilePath> logFiles = getLogFiles(build, launcher);
+            final FilePath archiveTarget = getArchiveTarget(build);
 
             // Removing old artifacts at project level
-            if (!logFiles.isEmpty() && !isKeepAll()) {
-                archiveTargetDir.deleteRecursive();
+            if (!isKeepAll()) {
+                archiveTarget.deleteRecursive();
                 removePreviousReports(build, ETLogBuildAction.class);
             }
-            for (final FilePath logFile : logFiles) {
-                final FilePath targetFile = archiveTargetDir.child(logFile.getName());
-                try {
-                    if (logFile.exists()) {
-                        logger.logInfo(String.format("- Archiving %s", logFile));
-                        logFile.copyTo(targetFile);
-                    } else {
-                        if (isAllowMissing()) {
-                            continue;
-                        } else {
-                            logger.logError(String.format("Specified ECU-TEST log file '%s' does not exist.",
-                                    logFile));
+
+            if (isTestSpecific()) {
+                int index = 0;
+                final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
+                for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
+                    final FilePath testReportDir = new FilePath(launcher.getChannel(),
+                            testEnvAction.getTestReportDir());
+                    final FilePath archiveTargetDir = archiveTarget.child(testReportDir.getName());
+                    if (testReportDir.exists()) {
+                        try {
+                            logger.logInfo(String.format("- Archiving log files: %s", testReportDir));
+                            final int copiedFiles = testReportDir.copyRecursiveTo(
+                                    String.format("**/%s,**/%s", ERROR_LOG_NAME, INFO_LOG_NAME), archiveTargetDir);
+                            if (copiedFiles == 0) {
+                                continue;
+                            } else if (copiedFiles > 2) {
+                                logger.logInfo(String.format("-> Archived %d sub-report(s).", copiedFiles / 2 - 1));
+                            }
+                        } catch (final IOException e) {
+                            Util.displayIOException(e, listener);
+                            logger.logError("Failed publishing ECU-TEST logs.");
                             build.setResult(Result.FAILURE);
                             return true;
                         }
+                        index = traverseReports(logReports, archiveTargetDir, index);
                     }
-                } catch (final IOException e) {
-                    Util.displayIOException(e, listener);
-                    logger.logError("Failed publishing ECU-TEST logs.");
-                    build.setResult(Result.FAILURE);
-                    return true;
                 }
-
-                final ETLogReport logReport = parseLogFile(logFile, logReports.size() + 1);
-                logReports.add(logReport);
+            } else {
+                final List<FilePath> logFiles = getLogFiles(build, launcher);
+                for (final FilePath logFile : logFiles) {
+                    final FilePath targetFile = archiveTarget.child(logFile.getName());
+                    try {
+                        if (logFile.exists()) {
+                            logger.logInfo(String.format("- Archiving log file: %s", logFile));
+                            logFile.copyTo(targetFile);
+                        } else {
+                            if (isAllowMissing()) {
+                                continue;
+                            } else {
+                                logger.logError(String.format("Specified ECU-TEST log file '%s' does not exist.",
+                                        logFile));
+                                build.setResult(Result.FAILURE);
+                                return true;
+                            }
+                        }
+                    } catch (final IOException e) {
+                        Util.displayIOException(e, listener);
+                        logger.logError("Failed publishing ECU-TEST logs.");
+                        build.setResult(Result.FAILURE);
+                        return true;
+                    }
+                    final ETLogReport logReport = parseLogFile(logFile, logFile.getParent(), logReports.size() + 1);
+                    logReports.add(logReport);
+                }
             }
+
             if (logReports.isEmpty()) {
                 logger.logInfo("No log results found.");
                 if (!isAllowMissing()) {
@@ -222,6 +293,8 @@ public class ETLogPublisher extends AbstractReportPublisher {
      *
      * @param logFile
      *            the log file
+     * @param archiveTargetDir
+     *            the archive target directory
      * @param id
      *            the report id
      * @return the parsed {@link ETLogReport}
@@ -230,15 +303,117 @@ public class ETLogPublisher extends AbstractReportPublisher {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private ETLogReport parseLogFile(final FilePath logFile, final int id) throws IOException, InterruptedException {
+    private ETLogReport parseLogFile(final FilePath logFile, final FilePath archiveTargetDir, final int id)
+            throws IOException, InterruptedException {
         final ETLogParser logParser = new ETLogParser(logFile);
         final List<ETLogAnnotation> logs = logParser.parse();
         final int warningLogCount = logParser.parseLogCount(Severity.WARNING);
         final int errorLogCount = logParser.parseLogCount(Severity.ERROR);
 
-        final ETLogReport logReport = new ETLogReport(String.format("%d", id), logFile.getName(), logFile.getName(),
+        String logTitle;
+        final String relLogFile = archiveTargetDir.toURI().relativize(logFile.toURI()).getPath();
+        if (isTestSpecific() && !logFile.getParent().getParent().getName().equals(archiveTargetDir.getName())) {
+            logTitle = logFile.getParent().getName().replaceFirst("^Report\\s", "") + "/" + logFile.getName();
+        } else {
+            logTitle = logFile.getName();
+        }
+        final ETLogReport logReport = new ETLogReport(String.format("%d", id), logTitle, relLogFile,
                 logFile.length(), logs, warningLogCount, errorLogCount);
         return logReport;
+    }
+
+    /**
+     * Gets the total size of given directory recursively.
+     *
+     * @param directory
+     *            the directory
+     * @return the file size
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             the interrupted exception
+     */
+    private long getFileSize(final FilePath directory) throws IOException, InterruptedException {
+        long size = 0;
+        final FilePath[] files = directory.list("**");
+        for (final FilePath file : files) {
+            size += file.length();
+        }
+        return size;
+    }
+
+    /**
+     * Creates the main report and adds the sub-reports by traversing them recursively.
+     *
+     * @param logReports
+     *            the TRF reports
+     * @param archiveTargetDir
+     *            the archive target directory
+     * @param id
+     *            the report id
+     * @return the current report id
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the build gets interrupted
+     */
+    private int traverseReports(final List<ETLogReport> logReports, final FilePath archiveTargetDir, int id)
+            throws IOException, InterruptedException {
+        final ETLogReport logReport = new ETLogReport(String.format("%d", ++id),
+                archiveTargetDir.getName(), archiveTargetDir.getName(), getFileSize(archiveTargetDir),
+                Collections.<ETLogAnnotation> emptyList(), 0, 0);
+        logReports.add(logReport);
+
+        final FilePath errorLogFile = archiveTargetDir.child(ERROR_LOG_NAME);
+        final FilePath infoLogFile = archiveTargetDir.child(INFO_LOG_NAME);
+        if (errorLogFile.exists() && infoLogFile.exists()) {
+            final ETLogReport errorlogReport = parseLogFile(errorLogFile, archiveTargetDir.getParent(), ++id);
+            logReport.addSubReport(errorlogReport);
+            final ETLogReport infoLogReport = parseLogFile(infoLogFile, archiveTargetDir.getParent(), ++id);
+            logReport.addSubReport(infoLogReport);
+        }
+
+        // Search for sub-reports
+        id = traverseSubReports(logReport, archiveTargetDir.getParent(), archiveTargetDir, id);
+        return id;
+    }
+
+    /**
+     * Traverses the sub-report directories recursively and searches for TRF reports.
+     * Includes the report files generated during separate sub-project execution.
+     *
+     * @param logReport
+     *            the TRF report
+     * @param testReportDir
+     *            the main test report directory
+     * @param subTestReportDir
+     *            the sub test report directory
+     * @param id
+     *            the report id
+     * @return the current report id
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the build gets interrupted
+     */
+    private int traverseSubReports(final ETLogReport logReport, final FilePath testReportDir,
+            final FilePath subTestReportDir, int id)
+            throws IOException, InterruptedException {
+        for (final FilePath subDir : subTestReportDir.listDirectories()) {
+            FilePath logFile = subDir.child(ERROR_LOG_NAME);
+            if (logFile.exists()) {
+                final ETLogReport subReport = parseLogFile(logFile, testReportDir, ++id);
+                logReport.addSubReport(subReport);
+
+            }
+            logFile = subDir.child(INFO_LOG_NAME);
+            if (logFile.exists()) {
+                final ETLogReport subReport = parseLogFile(logFile, testReportDir, ++id);
+                logReport.addSubReport(subReport);
+                id = traverseSubReports(subReport, testReportDir, subDir, id);
+            }
+        }
+        return id;
     }
 
     /**
@@ -274,8 +449,8 @@ public class ETLogPublisher extends AbstractReportPublisher {
         int totalWarnings = 0;
         int totalErrors = 0;
         for (final ETLogReport logReport : logReports) {
-            totalWarnings += logReport.getWarningLogCount();
-            totalErrors += logReport.getErrorLogCount();
+            totalWarnings += logReport.getTotalWarningCount();
+            totalErrors += logReport.getTotalErrorCount();
         }
         logger.logInfo("- Parsing log files...");
         if (totalErrors > 0 && isFailedOnError()) {
@@ -295,7 +470,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Builds a list of ECU-TEST log files for archiving.
+     * Builds a list of ECU-TEST log files for archiving, either all test specific logs or the complete logs.
      *
      * @param build
      *            the build
@@ -310,6 +485,30 @@ public class ETLogPublisher extends AbstractReportPublisher {
     private List<FilePath> getLogFiles(final AbstractBuild<?, ?> build, final Launcher launcher)
             throws IOException, InterruptedException {
         final List<FilePath> archiveFiles = new ArrayList<FilePath>();
+        if (isTestSpecific()) {
+            archiveFiles.addAll(getTestSpecificLogFiles(build, launcher));
+        } else {
+            archiveFiles.addAll(getCompleteLogFiles(build, launcher));
+        }
+        return archiveFiles;
+    }
+
+    /**
+     * Builds a list of the entire ECU-TEST log files for archiving.
+     *
+     * @param build
+     *            the build
+     * @param launcher
+     *            the launcher
+     * @return the complete log files
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the build gets interrupted
+     */
+    private List<FilePath> getCompleteLogFiles(final AbstractBuild<?, ?> build, final Launcher launcher)
+            throws IOException, InterruptedException {
+        final List<FilePath> archiveFiles = new ArrayList<FilePath>();
         FilePath workspace;
         final ToolEnvInvisibleAction toolEnvAction = build.getAction(ToolEnvInvisibleAction.class);
         if (toolEnvAction != null) {
@@ -322,6 +521,42 @@ public class ETLogPublisher extends AbstractReportPublisher {
             for (final String includeFile : workspace.act(new ListFilesCallable(includes, ""))) {
                 final FilePath archiveFile = new FilePath(launcher.getChannel(), includeFile);
                 archiveFiles.add(archiveFile);
+            }
+        }
+        return archiveFiles;
+    }
+
+    /**
+     * Builds a list of all test specific ECU-TEST log files for archiving.
+     *
+     * @param build
+     *            the build
+     * @param launcher
+     *            the launcher
+     * @return the list of log files
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the build gets interrupted
+     */
+    private List<FilePath> getTestSpecificLogFiles(final AbstractBuild<?, ?> build, final Launcher launcher)
+            throws IOException, InterruptedException {
+        final List<FilePath> archiveFiles = new ArrayList<FilePath>();
+        final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
+        for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
+            final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
+            if (testReportDir.exists()) {
+                String includes;
+                if (testEnvAction.getTestType() == TestType.PACKAGE) {
+                    includes = String.format("%s/%s,%s/%s", testEnvAction.getTestName(), INFO_LOG_NAME,
+                            testEnvAction.getTestName(), ERROR_LOG_NAME);
+                } else {
+                    includes = String.format("%s,%s", INFO_LOG_NAME, ERROR_LOG_NAME);
+                }
+                for (final String includeFile : testReportDir.act(new ListFilesCallable(includes, ""))) {
+                    final FilePath archiveFile = new FilePath(launcher.getChannel(), includeFile);
+                    archiveFiles.add(archiveFile);
+                }
             }
         }
         return archiveFiles;
@@ -352,7 +587,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
 
         @Override
         public List<String> invoke(final File baseDir, final VirtualChannel channel) throws IOException,
-        InterruptedException {
+                InterruptedException {
             final List<String> files = new ArrayList<String>();
             for (final String includedFile : Util.createFileSet(baseDir, includes, excludes)
                     .getDirectoryScanner().getIncludedFiles()) {

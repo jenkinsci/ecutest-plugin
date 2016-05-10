@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -35,6 +35,7 @@ import java.util.List;
 import org.kohsuke.stapler.StaplerRequest;
 
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractArchiveFileReport;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogAnnotation.Severity;
 
 /**
@@ -132,6 +133,32 @@ public class ETLogReport extends AbstractArchiveFileReport {
      * @return the errorLogCount
      */
     public int getErrorLogCount() {
+        return errorLogCount;
+    }
+
+    /**
+     * Gets the total count of warning logs including all sub reports.
+     *
+     * @return the total warning log count
+     */
+    public int getTotalWarningCount() {
+        int warningLogCount = getWarningLogCount();
+        for (final AbstractTestReport subReport : getSubReports()) {
+            warningLogCount += ((ETLogReport) subReport).getTotalWarningCount();
+        }
+        return warningLogCount;
+    }
+
+    /**
+     * Gets the total count of warning logs including all sub reports.
+     *
+     * @return the total error log count
+     */
+    public int getTotalErrorCount() {
+        int errorLogCount = getErrorLogCount();
+        for (final AbstractTestReport subReport : getSubReports()) {
+            errorLogCount += ((ETLogReport) subReport).getTotalErrorCount();
+        }
         return errorLogCount;
     }
 

@@ -1,0 +1,123 @@
+<!--
+    Copyright (c) 2015-2016 TraceTronic GmbH
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification,
+    are permitted provided that the following conditions are met:
+
+      1. Redistributions of source code must retain the above copyright notice, this
+         list of conditions and the following disclaimer.
+
+      2. Redistributions in binary form must reproduce the above copyright notice, this
+         list of conditions and the following disclaimer in the documentation and/or
+         other materials provided with the distribution.
+
+      3. Neither the name of TraceTronic GmbH nor the names of its
+         contributors may be used to endorse or promote products derived from
+         this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+    ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+    ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <tr>
+        <td>
+            <div style="text-indent: ${indent}px;">
+                <img src="${resURL}${it.iconFileName}" alt="ECU-TEST Log" height="16" width="16" />
+                <st:nbsp />
+                <j:choose>
+                    <j:when test="${!report.fileName.endsWith('.log')}">
+                        <j:if test="${owner == build}">
+                            <a href="${report.url}/zipDownload">${report.title}</a>
+                        </j:if>
+                        <j:if test="${owner != build}">
+                            <a href="${rootURL}/${build.url}${it.urlName}/${report.id}/zipDownload">${report.title}</a>
+                        </j:if>
+                    </j:when>
+                    <j:otherwise>
+                        <j:if test="${owner == build}">
+                            <a href="${report.url}">${report.title}</a>
+                        </j:if>
+                        <j:if test="${owner != build}">
+                            <a href="${rootURL}/${build.url}${it.urlName}/${report.id}">${report.title}</a>
+                        </j:if>
+                    </j:otherwise>
+                </j:choose>
+            </div>
+        </td>
+        <td class="fileSize">
+            ${h.humanReadableByteSize(report.fileSize)}
+        </td>
+        <td />
+    </tr>
+    <j:set var="maxLogSize" value="${it.getMaxLogSize()}" />
+    <j:set var="warningLogs" value="${report.getWarningLogs()}" />
+    <j:set var="warningLogSize" value="${size(warningLogs)}" />
+    <j:set var="warningLogCount" value="${report.getWarningLogCount()}" />
+    <j:if test="${!empty(warningLogs)}">
+        <tr>
+            <td colspan="3" class="warningHeader">
+                <div style="text-indent: ${indent+20}px;">WARNING (${warningLogCount}):</div>
+            </td>
+        </tr>
+        <j:forEach var="log" items="${warningLogs}" begin="0" end="${maxLogSize - 1}">
+            <tr>
+                <td colspan="2" class="timestamp">
+                    <div style="text-indent: ${indent+20}px;">#${log.lineNumber} ${log.timestamp}</div>
+                </td>
+                <td class="warningLog">${log.context}: ${log.message}</td>
+            </tr>
+        </j:forEach>
+        <j:if test="${warningLogCount &gt; warningLogSize}">
+            <tr>
+                <td colspan="3" class="timestamp">
+                    ... (${warningLogCount - warningLogSize} ${%logs.more})
+                </td>
+            </tr>
+        </j:if>
+    </j:if>
+    <j:set var="errorLogs" value="${report.getErrorLogs()}" />
+    <j:set var="errorLogSize" value="${size(errorLogs)}" />
+    <j:set var="errorLogCount" value="${report.getErrorLogCount()}" />
+    <j:if test="${!empty(errorLogs)}">
+        <tr>
+            <td colspan="3" class="errorHeader">
+                <div style="text-indent: ${indent+20}px;">ERROR (${errorLogCount}):</div>
+            </td>
+        </tr>
+        <j:forEach var="log" items="${errorLogs}" begin="0" end="${maxLogSize - 1}">
+            <tr>
+                <td colspan="2" class="timestamp">
+                    <div style="text-indent: ${indent+20}px;">#${log.lineNumber} ${log.timestamp}</div>
+                </td>
+                <td class="errorLog">${log.context}: ${log.message}</td>
+            </tr>
+        </j:forEach>
+        <j:if test="${errorLogCount &gt; errorLogSize}">
+            <tr>
+                <td colspan="3" class="timestamp">
+                    ... (${errorLogCount - errorLogSize} ${%logs.more})
+                </td>
+            </tr>
+        </j:if>
+    </j:if>
+    <j:if test="${!empty(warningLogs) || !empty(errorLogs)}">
+        <tr>
+            <td colspan="3"><br /></td>
+        </tr>
+    </j:if>
+    <j:set var="indent" value="${indent+20}" />
+    <j:forEach var="report" items="${report.getSubReports()}">
+        <st:include page="report.jelly" />
+    </j:forEach>
+</j:jelly>

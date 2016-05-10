@@ -36,5 +36,8 @@
     <f:entry title="${%failedOnError.title}" description="${%failedOnError.description}" field="failedOnError">
         <f:checkbox />
     </f:entry>
+    <f:entry title="${%testSpecific.title}" description="${%testSpecific.description}" field="testSpecific">
+        <f:checkbox />
+    </f:entry>
     <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly" />
 </j:jelly>

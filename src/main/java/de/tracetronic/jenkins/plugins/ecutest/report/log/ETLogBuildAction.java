@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
+
 /**
  * Action to show a link to {@link ETLogReport}s at the build page.
  *
@@ -94,6 +96,35 @@ public class ETLogBuildAction extends AbstractETLogAction {
         for (final ETLogReport report : getLogReports()) {
             if (token.equals(report.getId())) {
                 return report;
+            } else {
+                final ETLogReport potentialReport = traverseSubReports(token, report);
+                if (potentialReport != null) {
+                    return potentialReport;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Traverses the sub-reports recursively and searches
+     * for the {@link ETLogReport} matching the given token id.
+     *
+     * @param token
+     *            the token id
+     * @param report
+     *            the report
+     * @return the {@link ETLogReport} or {@code null} if no proper report exists
+     */
+    private ETLogReport traverseSubReports(final String token, final ETLogReport report) {
+        for (final AbstractTestReport subReport : report.getSubReports()) {
+            if (token.equals(subReport.getId())) {
+                return (ETLogReport) subReport;
+            } else {
+                final ETLogReport potentialReport = traverseSubReports(token, (ETLogReport) subReport);
+                if (potentialReport != null) {
+                    return potentialReport;
+                }
             }
         }
         return null;

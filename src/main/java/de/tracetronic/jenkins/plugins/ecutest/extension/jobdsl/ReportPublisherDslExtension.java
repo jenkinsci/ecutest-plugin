@@ -181,8 +181,8 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     public Object publishETLogs(final Runnable closure) {
         final PublishETLogContext context = new PublishETLogContext();
         executeInContext(closure, context);
-        return new ETLogPublisher(context.unstableOnWarning, context.failedOnError, context.allowMissing,
-                context.runOnFailed, context.archiving, context.keepAll);
+        return new ETLogPublisher(context.unstableOnWarning, context.failedOnError, context.testSpecific,
+                context.allowMissing, context.runOnFailed, context.archiving, context.keepAll);
     }
 
     /**
@@ -282,6 +282,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
 
         private boolean unstableOnWarning;
         private boolean failedOnError;
+        private boolean testSpecific;
 
         /**
          * Option defining whether to mark the build as unstable if warnings found.
@@ -301,6 +302,16 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
          */
         public void failedOnError(final boolean value) {
             failedOnError = value;
+        }
+
+        /**
+         * Option defining whether to parse the test specific log files.
+         *
+         * @param value
+         *            the value
+         */
+        public void testSpecific(final boolean value) {
+            testSpecific = value;
         }
     }
 
