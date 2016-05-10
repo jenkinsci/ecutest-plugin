@@ -34,7 +34,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>1.565.3</version>
+        <version>2.8</version>
         <relativePath />
     </parent>
 
@@ -80,64 +80,38 @@
     </licenses>
 
     <properties>
-        <!-- Global project settings -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <local.repo.path>${basedir}/lib</local.repo.path>
+        <!-- Jenkins base -->
+        <jenkins.version>1.565.3</jenkins.version>
+        <jenkins-test-harness.version>1.565.3</jenkins-test-harness.version>
+        
+        <!-- Jenkins plugins -->
+        <matrix-project.version>1.4</matrix-project.version>
+        <job-dsl.version>1.37</job-dsl.version>
 
-        <!-- Compiler settings -->
-        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
-        <java-source.version>1.7</java-source.version>
-        <java-target.version>1.7</java-target.version>
-
-        <!-- Eclipse m2e -->
-        <lifecycle-mapping-plugin.version>1.0.0</lifecycle-mapping-plugin.version>
-
-        <!-- JUnit -->
-        <junit.version>4.12</junit.version>
-        <mockito-core.version>1.10.19</mockito-core.version>
-        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
-
-        <!-- JavaDoc -->
-        <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
-
-        <!-- Maven release & deployment -->
-        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <!-- Maven release -->
         <maven-scm-provider-gitexe.version>1.9.4</maven-scm-provider-gitexe.version>
 
         <!-- Static code analysis -->
         <maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
-        <maven-findbugs-plugin.version>3.0.3</maven-findbugs-plugin.version>
         <maven-pmd-plugin.version>3.6</maven-pmd-plugin.version>
+        
+        <!-- Test scope -->
+        <equalsverifier.version>1.7.8</equalsverifier.version>
+        <mockito-core.version>1.10.19</mockito-core.version>
+        
+        <!-- JACOB -->
+        <jacob.version>1.18</jacob.version>
 
         <!-- ANTLR -->
         <antlr4-maven-plugin.version>4.5.3</antlr4-maven-plugin.version>
         <antlr4-runtime.version>4.5.3</antlr4-runtime.version>
-
-        <!-- Other dependencies -->
-        <jacob.version>1.18</jacob.version>
-        <matrix-project.version>1.4</matrix-project.version>
-        <job-dsl.version>1.37</job-dsl.version>
-        <commons-validator.version>1.4.1</commons-validator.version>
-        <equalsverifier.version>1.7.8</equalsverifier.version>
     </properties>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
-                <configuration>
-                    <source>${java-source.version}</source>
-                    <target>${java-target.version}</target>
-                    <testSource>${java-source.version}</testSource>
-                    <testTarget>${java-target.version}</testTarget>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>${maven-release-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.maven.scm</groupId>
@@ -156,7 +130,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
                 <configuration>
                     <includes>
                         <!-- Includes system tests ending with ST -->
@@ -171,7 +144,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
                 <configuration>
                     <sourceFileExcludes>
                         <exclude>**/Messages.java</exclude>
@@ -182,7 +154,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${maven-checkstyle-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+                <version>${maven-checkstyle-plugin.version}</version>
                 <configuration>
                     <configLocation>${basedir}/config/checkstyle-config.xml</configLocation>
                     <suppressionsLocation>${basedir}/config/checkstyle-exclude.xml</suppressionsLocation>
@@ -194,7 +166,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${maven-findbugs-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
                 <configuration>
                     <excludeFilterFile>${basedir}/config/findbugs-exclude.xml</excludeFilterFile>
                     <effort>Max</effort>
@@ -206,7 +177,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>${maven-pmd-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+                <version>${maven-pmd-plugin.version}</version>
                 <configuration>
                     <rulesets>
                         <ruleset>${basedir}/config/pmd-config.xml</ruleset>
@@ -241,7 +212,6 @@
             <plugin>
                 <groupId>org.eclipse.m2e</groupId>
                 <artifactId>lifecycle-mapping</artifactId>
-                <version>${lifecycle-mapping-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
                 <configuration>
                     <lifecycleMappingMetadata>
                         <pluginExecutions>
@@ -292,6 +262,54 @@
                 </executions>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.apache.maven.plugins
+                                        </groupId>
+                                        <artifactId>
+                                            maven-javadoc-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [2.10.1,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>javadoc</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-enforcer-plugin</artifactId>
+                                        <versionRange>[1.0.0,)</versionRange>
+                                        <goals>
+                                            <goal>enforce</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                  </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <dependencies>
@@ -333,15 +351,15 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
+            <artifactId>mockito-core</artifactId>
             <version>${mockito-core.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>hamcrest-core</artifactId>
+                    <groupId>org.hamcrest</groupId>
+                </exclusion>
+            </exclusions>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -369,5 +387,4 @@
             <url>http://repo.jenkins-ci.org/public/</url>
         </pluginRepository>
     </pluginRepositories>
-
 </project>

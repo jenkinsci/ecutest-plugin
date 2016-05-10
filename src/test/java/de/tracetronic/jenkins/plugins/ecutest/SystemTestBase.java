@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -69,9 +69,6 @@ public class SystemTestBase {
         final WebClient webClient = jenkins.createWebClient();
         webClient.setIncorrectnessListener(new SilentIncorrectnessListener());
         webClient.setCssErrorHandler(new QuietCssErrorHandler());
-        webClient.setThrowExceptionOnFailingStatusCode(false);
-        webClient.setPrintContentOnFailingStatusCode(false);
-
         return webClient;
     }
 }
