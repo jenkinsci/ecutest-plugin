@@ -271,7 +271,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     private boolean setBuildResult(final AbstractBuild<?, ?> build, final BuildListener listener,
             final TestResult testResult) {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
-        if (testResult.getPassCount() == 0 && testResult.getFailCount() == 0) {
+        if (testResult.getTotalCount() == 0) {
             logger.logInfo("-> No UNIT test results found.");
             if (!isAllowMissing()) {
                 logger.logError("Empty test results are not allowed, setting build status to FAILURE!");
