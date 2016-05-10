@@ -38,7 +38,10 @@
                         <f:entry title="${%Name}" field="name">
                             <f:textbox value="${inst.getName()}" />
                         </f:entry>
+                        <j:set var="instanceCopy" value="${instance}" />
+                        <j:set var="instance" value="${inst}" />
                         <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation" page="select.jelly" />
+                        <j:set var="instance" value="${instanceCopy}" />
                     </f:section>
                     <j:set var="defaultConfig" value="${descriptor.getDefaultConfig()}" />
                     <j:set var="currentConfig" value="${inst.getConfig()}" />
