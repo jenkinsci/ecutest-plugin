@@ -29,12 +29,27 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report;
 
+import hudson.Util;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 
-import javax.annotation.CheckForNull;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.logging.Logger;
 
+import javax.annotation.CheckForNull;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
+
+import jenkins.util.VirtualFile;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipOutputStream;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
 /**
  * Common base class providing shared methods to handle {@link StaplerRequest}s.
@@ -42,6 +57,8 @@ import org.kohsuke.stapler.StaplerRequest;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractRequestHandler {
+
+    private static final Logger LOGGER = Logger.getLogger(AbstractRequestHandler.class.getName());
 
     /**
      * Gets the owner of this action.
@@ -78,6 +95,15 @@ public abstract class AbstractRequestHandler {
     public abstract AbstractBuild<?, ?> getBuild(final StaplerRequest req);
 
     /**
+     * Gets the archive target directory for use in {@link #doZipDownload}.
+     *
+     * @param rootDir
+     *            the root directory
+     * @return the archive target directory
+     */
+    protected abstract VirtualFile getArchiveTargetDir(File rootDir);
+
+    /**
      * Resolves the build action containing the report artifacts by {@link StaplerRequest#findAncestorObject(Class)}.
      *
      * @param req
@@ -111,5 +137,89 @@ public abstract class AbstractRequestHandler {
     @CheckForNull
     protected AbstractProject<?, ?> getAnchestorProject(final StaplerRequest req) {
         return req.findAncestorObject(AbstractProject.class);
+    }
+
+    /**
+     * Serves the compressed contents of the archive directory that is requested via HTTP.
+     *
+     * @param req
+     *            the {@link StaplerRequest} used for access this report
+     * @param rsp
+     *            the {@link StaplerResponse} used for serving the file
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws ServletException
+     *             if serving the file failed
+     */
+    public void doZipDownload(final StaplerRequest req, final StaplerResponse rsp)
+            throws IOException, ServletException {
+        final AbstractBuild<?, ?> build = getBuild(req);
+        final AbstractReportAction action = getBuildAction(req);
+        if (build == null || action == null) {
+            LOGGER.warning(String.format("No build or related action found for url %s", req.getRequestURI()));
+            rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        final boolean isProjectLevel = action.isProjectLevel();
+        final File rootDir = isProjectLevel ? build.getProject().getRootDir() : build.getRootDir();
+        final VirtualFile archiveDir = getArchiveTargetDir(rootDir);
+        if (!archiveDir.exists()) {
+            LOGGER.warning(String.format("Archive directory does not exists: %s for %s", archiveDir.getName(),
+                    build.getFullDisplayName()));
+            rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        if (!archiveDir.isDirectory()) {
+            LOGGER.warning(String.format("Archive is not a directory: %s for %s", archiveDir.getName(),
+                    build.getFullDisplayName()));
+            rsp.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+
+        if (req.getDateHeader("If-Modified-Since") >= 0
+                && req.getDateHeader("If-Modified-Since") >= archiveDir.lastModified()) {
+            rsp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+            return;
+        }
+
+        // Compress and download the archive directory
+        final String zipFileName = String.format("%s_%s#%d", archiveDir.getName(), build.getProject().getName(),
+                build.getNumber());
+        rsp.setHeader("Content-Disposition", "attachment;filename=\"" + zipFileName + "\"");
+        rsp.setContentType("application/zip");
+        zip(rsp.getOutputStream(), archiveDir);
+    }
+
+    /**
+     * Compresses the given archive directory and serves as download.
+     *
+     * @param outputStream
+     *            the output stream
+     * @param archiveDir
+     *            the archive directory
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     */
+    private void zip(final OutputStream outputStream, final VirtualFile archiveDir) throws IOException {
+        final ZipOutputStream zos = new ZipOutputStream(outputStream);
+        zos.setEncoding(System.getProperty("file.encoding"));
+
+        for (final String archiveFile : archiveDir.list("**/**")) {
+            // Convert all backslashes to forward slashes
+            final ZipEntry entry = new ZipEntry(archiveFile.replace('\\', '/'));
+            final VirtualFile file = archiveDir.child(archiveFile);
+            entry.setTime(file.lastModified());
+            zos.putNextEntry(entry);
+
+            final InputStream in = file.open();
+            try {
+                Util.copyStream(in, zos);
+            } finally {
+                IOUtils.closeQuietly(in);
+            }
+            zos.closeEntry();
+        }
+        zos.close();
     }
 }

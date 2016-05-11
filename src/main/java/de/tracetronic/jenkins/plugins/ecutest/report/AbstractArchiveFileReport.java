@@ -38,6 +38,8 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
+import jenkins.util.VirtualFile;
+
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -97,6 +99,11 @@ public abstract class AbstractArchiveFileReport extends AbstractTestReport {
      */
     public abstract String getArchiveDir();
 
+    @Override
+    protected VirtualFile getArchiveTargetDir(final File rootDir) {
+        return VirtualFile.forFile(new File(new File(rootDir, getArchiveDir()), getFileName()));
+    }
+
     /**
      * Send contents of the archive file that is requested via HTTP.
      *
@@ -143,28 +150,5 @@ public abstract class AbstractArchiveFileReport extends AbstractTestReport {
         // Download the archive file
         rsp.setHeader("Content-Disposition", "attachment;filename=\"" + archiveFile.getName() + "\"");
         rsp.serveFile(req, archiveFile.toURI().toURL());
-    }
-
-    /**
-     * Serves the compressed contents of the archive directory that is requested via HTTP.
-     *
-     * @param req
-     *            the {@link StaplerRequest} used for access this report
-     * @param rsp
-     *            the {@link StaplerResponse} used for serving the file
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws ServletException
-     *             if serving the file failed
-     */
-    public void doZipDownload(final StaplerRequest req, final StaplerResponse rsp) throws IOException,
-    ServletException {
-        final AbstractReportAction action = getBuildAction(req);
-        if (action == null) {
-            LOGGER.warning(String.format("No build action found for url %s", req.getRequestURI()));
-            rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        action.doZipDownload(req, rsp);
     }
 }

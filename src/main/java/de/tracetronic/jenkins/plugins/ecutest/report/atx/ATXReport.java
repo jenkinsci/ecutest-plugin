@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,12 +31,16 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
 import hudson.model.AbstractBuild;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 
+import jenkins.util.VirtualFile;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -126,5 +130,10 @@ public class ATXReport extends AbstractTestReport {
         // Redirect to ATX URL
         final URL url = new URL(getReportUrl());
         rsp.sendRedirect(url.toString());
+    }
+
+    @Override
+    protected VirtualFile getArchiveTargetDir(final File rootDir) {
+        throw new NotImplementedException();
     }
 }
