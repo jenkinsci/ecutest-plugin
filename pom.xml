@@ -189,6 +189,9 @@
                         <include>**/*Test.java</include>
                         <include>**/*ST.java</include>
                     </includes>
+                    <excludes>
+                        <exclude>InjectedTest.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
