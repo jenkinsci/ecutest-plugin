@@ -49,13 +49,17 @@
     </description>
     <url>https://wiki.jenkins-ci.org/display/JENKINS/TraceTronic+ECU-TEST+Plugin</url>
     <inceptionYear>2015</inceptionYear>
-
-    <scm>
-        <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
-        <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
-        <tag>HEAD</tag>
-    </scm>
+    <organization>
+        <name>TraceTronic GmbH</name>
+        <url>https://www.tracetronic.de</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>The BSD 3-Clause License</name>
+            <url>http://opensource.org/licenses/BSD-3-Clause</url>
+            <comments>All source code is under the BSD license.</comments>
+        </license>
+    </licenses>
 
     <developers>
         <developer>
@@ -66,18 +70,12 @@
         </developer>
     </developers>
 
-    <organization>
-        <name>TraceTronic GmbH</name>
-        <url>https://www.tracetronic.de</url>
-    </organization>
-
-    <licenses>
-        <license>
-            <name>The BSD 3-Clause License</name>
-            <url>http://opensource.org/licenses/BSD-3-Clause</url>
-            <comments>All source code is under the BSD license.</comments>
-        </license>
-    </licenses>
+    <scm>
+        <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
+        <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <!-- Jenkins base -->
@@ -87,9 +85,6 @@
         <!-- Jenkins plugins -->
         <matrix-project.version>1.4</matrix-project.version>
         <job-dsl.version>1.37</job-dsl.version>
-
-        <!-- Maven release -->
-        <maven-scm-provider-gitexe.version>1.9.4</maven-scm-provider-gitexe.version>
 
         <!-- Static code analysis -->
         <maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
@@ -108,26 +103,83 @@
         <antlr4-runtime.version>4.5.3</antlr4-runtime.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>lib</id>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
+        <repository>
+            <id>repo.jenkins-ci.org</id>
+            <url>http://repo.jenkins-ci.org/public/</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>repo.jenkins-ci.org</id>
+            <url>http://repo.jenkins-ci.org/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.sf.jacob-project</groupId>
+            <artifactId>jacob</artifactId>
+            <version>${jacob.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jacob-project</groupId>
+            <artifactId>jacob</artifactId>
+            <version>${jacob.version}</version>
+            <type>dll</type>
+            <classifier>x86</classifier>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jacob-project</groupId>
+            <artifactId>jacob</artifactId>
+            <version>${jacob.version}</version>
+            <type>dll</type>
+            <classifier>x64</classifier>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>${antlr4-runtime.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>matrix-project</artifactId>
+            <version>${matrix-project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>job-dsl</artifactId>
+            <version>${job-dsl.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito-core.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>nl.jqno.equalsverifier</groupId>
+            <artifactId>equalsverifier</artifactId>
+            <version>${equalsverifier.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>${maven-scm-provider-gitexe.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>org.jenkins-ci.tools</groupId>
-                <artifactId>maven-hpi-plugin</artifactId>
-                <configuration>
-                    <disabledTestInjection>true</disabledTestInjection>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -262,7 +314,6 @@
         </plugins>
         <pluginManagement>
             <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
@@ -301,7 +352,7 @@
                                     <action>
                                         <ignore />
                                     </action>
-                                  </pluginExecution>
+                                </pluginExecution>
                             </pluginExecutions>
                         </lifecycleMappingMetadata>
                     </configuration>
@@ -309,80 +360,4 @@
             </plugins>
         </pluginManagement>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>net.sf.jacob-project</groupId>
-            <artifactId>jacob</artifactId>
-            <version>${jacob.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.jacob-project</groupId>
-            <artifactId>jacob</artifactId>
-            <version>${jacob.version}</version>
-            <classifier>x86</classifier>
-            <type>dll</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.jacob-project</groupId>
-            <artifactId>jacob</artifactId>
-            <version>${jacob.version}</version>
-            <classifier>x64</classifier>
-            <type>dll</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-            <version>${antlr4-runtime.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>matrix-project</artifactId>
-            <version>${matrix-project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>job-dsl</artifactId>
-            <version>${job-dsl.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito-core.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>hamcrest-core</artifactId>
-                    <groupId>org.hamcrest</groupId>
-                </exclusion>
-            </exclusions>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>nl.jqno.equalsverifier</groupId>
-            <artifactId>equalsverifier</artifactId>
-            <version>${equalsverifier.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <repositories>
-        <repository>
-            <id>lib</id>
-            <url>file://${project.basedir}/lib</url>
-        </repository>
-        <repository>
-            <id>repo.jenkins-ci.org</id>
-            <url>http://repo.jenkins-ci.org/public/</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>repo.jenkins-ci.org</id>
-            <url>http://repo.jenkins-ci.org/public/</url>
-        </pluginRepository>
-    </pluginRepositories>
 </project>
