@@ -36,7 +36,6 @@ import hudson.Launcher;
 import hudson.Util;
 import hudson.model.TaskListener;
 import hudson.model.Node;
-import hudson.remoting.Callable;
 import hudson.tools.ToolInstaller;
 import hudson.tools.ToolProperty;
 import hudson.tools.ToolDescriptor;
@@ -50,6 +49,7 @@ import java.util.List;
 import javax.annotation.CheckForNull;
 
 import jenkins.model.Jenkins;
+import jenkins.security.MasterToSlaveCallable;
 
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -159,7 +159,7 @@ public class ETInstallation extends AbstractToolInstallation {
      *             if the current thread is interrupted while waiting for the completion
      */
     public String getTSExecutable(final Launcher launcher) throws IOException, InterruptedException {
-        return launcher.getChannel().call(new Callable<String, IOException>() {
+        return launcher.getChannel().call(new MasterToSlaveCallable<String, IOException>() {
 
             private static final long serialVersionUID = 1L;
 

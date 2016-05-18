@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -47,6 +47,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import jenkins.MasterToSlaveFileCallable;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 
@@ -126,7 +127,7 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
     /**
      * {@link FileCallable} enabling remote file access to parse the JUnit report.
      */
-    private static final class ParseTestResultCallable implements FileCallable<TestResult> {
+    private static final class ParseTestResultCallable extends MasterToSlaveFileCallable<TestResult> {
 
         private static final long serialVersionUID = 1L;
 
@@ -144,7 +145,7 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
 
         @Override
         public TestResult invoke(final File file, final VirtualChannel channel) throws IOException,
-        InterruptedException {
+                InterruptedException {
             testResult.parse(file);
             return testResult;
         }

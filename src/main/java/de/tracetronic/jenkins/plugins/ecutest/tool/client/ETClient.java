@@ -37,6 +37,8 @@ import hudson.util.ArgumentListBuilder;
 import java.io.IOException;
 import java.util.List;
 
+import jenkins.security.MasterToSlaveCallable;
+
 import org.apache.commons.lang.StringUtils;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
@@ -167,7 +169,7 @@ public class ETClient extends AbstractToolClient {
             logger.logWarn(String.format(
                     "The configured ECU-TEST version %s might be incompatible with this plugin. "
                             + "Currently supported versions: %s up to %s", comVersion,
-                            ETPlugin.ET_MIN_VERSION.toShortString(), ETPlugin.ET_MAX_VERSION.toShortString()));
+                    ETPlugin.ET_MIN_VERSION.toShortString(), ETPlugin.ET_MAX_VERSION.toShortString()));
         } else if (comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
             logger.logError(String.format(
                     "The configured ECU-TEST version %s is not compatible with this plugin. "
@@ -272,7 +274,7 @@ public class ETClient extends AbstractToolClient {
     /**
      * {@link Callable} providing remote access to establish a COM connection.
      */
-    private static final class StartCallable implements Callable<String, IOException> {
+    private static final class StartCallable extends MasterToSlaveCallable<String, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -310,7 +312,7 @@ public class ETClient extends AbstractToolClient {
     /**
      * {@link Callable} providing remote access to close ECU-TEST via COM.
      */
-    private static final class StopCallable implements Callable<Boolean, IOException> {
+    private static final class StopCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -361,7 +363,7 @@ public class ETClient extends AbstractToolClient {
     /**
      * {@link Callable} providing remote access to check open ECU-TEST processes.
      */
-    private static final class CheckProcessCallable implements Callable<List<String>, IOException> {
+    private static final class CheckProcessCallable extends MasterToSlaveCallable<List<String>, IOException> {
 
         private static final long serialVersionUID = 1L;
 

@@ -33,6 +33,7 @@ import hudson.EnvVars;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.Computer;
+import hudson.model.Node;
 import hudson.tasks.Builder;
 
 import java.io.IOException;
@@ -113,7 +114,10 @@ public abstract class AbstractToolBuilder extends Builder {
             final EnvVars envVars) throws IOException, InterruptedException {
         AbstractToolInstallation installation = getToolInstallation(envVars);
         if (installation != null) {
-            installation = installation.forNode(Computer.currentComputer().getNode(), listener);
+            final Node node = Computer.currentComputer().getNode();
+            if (node != null) {
+                installation = installation.forNode(node, listener);
+            }
             installation = installation.forEnvironment(envVars);
         }
         return installation;
