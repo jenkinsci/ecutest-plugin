@@ -37,6 +37,8 @@ import hudson.util.ArgumentListBuilder;
 import java.io.IOException;
 import java.util.List;
 
+import jenkins.security.MasterToSlaveCallable;
+
 import org.apache.commons.lang.StringUtils;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
@@ -167,14 +169,14 @@ public class TSClient extends AbstractToolClient {
      *             if the current thread is interrupted while waiting for the completion
      */
     public static List<String> checkProcesses(final Launcher launcher, final boolean kill) throws IOException,
-    InterruptedException {
+            InterruptedException {
         return launcher.getChannel().call(new CheckProcessCallable(kill));
     }
 
     /**
      * {@link Callable} providing remote access to close Tool-Server processes.
      */
-    private static final class StopCallable implements Callable<Boolean, IOException> {
+    private static final class StopCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -226,7 +228,7 @@ public class TSClient extends AbstractToolClient {
     /**
      * {@link Callable} providing remote access to check open Tool-Server processes.
      */
-    private static final class CheckProcessCallable implements Callable<List<String>, IOException> {
+    private static final class CheckProcessCallable extends MasterToSlaveCallable<List<String>, IOException> {
 
         private static final long serialVersionUID = 1L;
 

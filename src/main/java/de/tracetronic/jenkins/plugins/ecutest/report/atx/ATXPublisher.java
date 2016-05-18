@@ -58,6 +58,7 @@ import java.util.Map.Entry;
 
 import javax.annotation.CheckForNull;
 
+import jenkins.security.MasterToSlaveCallable;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -241,7 +242,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean publishReports(final ATXInstallation installation, final AbstractBuild<?, ?> build,
             final Launcher launcher, final BuildListener listener)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final boolean isUploadEnabled = isUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, launcher, build.getEnvironment(listener));
@@ -301,7 +302,7 @@ public class ATXPublisher extends AbstractReportPublisher {
     /**
      * {@link Callable} providing remote access to test the TEST-GUIDE server availability.
      */
-    private static final class TestConnectionCallable implements Callable<Boolean, IOException> {
+    private static final class TestConnectionCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 

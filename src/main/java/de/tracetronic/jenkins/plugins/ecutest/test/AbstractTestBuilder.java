@@ -41,6 +41,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import jenkins.security.MasterToSlaveCallable;
+
 import org.apache.commons.lang.StringUtils;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
@@ -281,7 +283,7 @@ public abstract class AbstractTestBuilder extends Builder {
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean checkETInstance(final Launcher launcher, final boolean kill) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }
@@ -301,7 +303,7 @@ public abstract class AbstractTestBuilder extends Builder {
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean closeETInstance(final Launcher launcher, final BuildListener listener) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
         if (foundProcesses.isEmpty()) {
             return false;
@@ -323,7 +325,7 @@ public abstract class AbstractTestBuilder extends Builder {
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean checkTSInstance(final Launcher launcher, final boolean kill) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final List<String> foundProcesses = TSClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }
@@ -459,7 +461,7 @@ public abstract class AbstractTestBuilder extends Builder {
     /**
      * {@link Callable} providing remote access to get a ECU-TEST workspace setting value via COM.
      */
-    private static final class GetSettingCallable implements Callable<String, IOException> {
+    private static final class GetSettingCallable extends MasterToSlaveCallable<String, IOException> {
 
         private static final long serialVersionUID = 1L;
 
