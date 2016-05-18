@@ -40,7 +40,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
@@ -96,7 +95,7 @@ public class ReportGenerator {
     /**
      * {@link Callable} enabling generation of reports with specific generator remotely.
      */
-    private static final class GenerateReportCallable extends MasterToSlaveCallable<Boolean, IOException> {
+    private static final class GenerateReportCallable implements Callable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 

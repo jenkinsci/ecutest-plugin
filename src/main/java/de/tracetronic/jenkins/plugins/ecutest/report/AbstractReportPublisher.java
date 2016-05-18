@@ -41,7 +41,6 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractItem;
 import hudson.model.AbstractProject;
 import hudson.model.Computer;
-import hudson.model.Node;
 import hudson.model.Run;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Recorder;
@@ -231,12 +230,8 @@ public abstract class AbstractReportPublisher extends Recorder {
     protected AbstractToolInstallation configureToolInstallation(final String toolName,
             final BuildListener listener, final EnvVars envVars) throws IOException, InterruptedException {
         AbstractToolInstallation installation = getToolInstallation(toolName, envVars);
-
         if (installation != null) {
-            final Node node = Computer.currentComputer().getNode();
-            if (node != null) {
-                installation = installation.forNode(node, listener);
-            }
+            installation = installation.forNode(Computer.currentComputer().getNode(), listener);
             installation = installation.forEnvironment(envVars);
         }
         return installation;

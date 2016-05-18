@@ -42,7 +42,6 @@ import hudson.model.BuildListener;
 import hudson.model.Result;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
-import hudson.model.Job;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 import hudson.tasks.junit.TestResult;
@@ -185,7 +184,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     public Action getProjectAction(final AbstractProject<?, ?> project) {
         final TestResultProjectAction action = project.getAction(TestResultProjectAction.class);
         if (action == null) {
-            return new TestResultProjectAction((Job<?, ?>) project);
+            return new TestResultProjectAction(project);
         } else {
             return action;
         }

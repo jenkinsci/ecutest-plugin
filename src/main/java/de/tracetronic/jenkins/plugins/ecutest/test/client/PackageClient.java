@@ -40,7 +40,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder.Seriousness;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
@@ -90,7 +89,7 @@ public class PackageClient extends AbstractTestClient {
 
     @Override
     public boolean runTestCase(final Launcher launcher, final BuildListener listener) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -145,7 +144,7 @@ public class PackageClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to open a package via COM.
      */
-    private static final class OpenPackageCallable extends MasterToSlaveCallable<PackageInfoHolder, IOException> {
+    private static final class OpenPackageCallable implements Callable<PackageInfoHolder, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -215,7 +214,7 @@ public class PackageClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to run a package via COM.
      */
-    private static final class RunPackageCallable extends MasterToSlaveCallable<TestInfoHolder, InterruptedException> {
+    private static final class RunPackageCallable implements Callable<TestInfoHolder, InterruptedException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -310,7 +309,7 @@ public class PackageClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to close a package via COM.
      */
-    private static final class ClosePackageCallable extends MasterToSlaveCallable<Boolean, IOException> {
+    private static final class ClosePackageCallable implements Callable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 

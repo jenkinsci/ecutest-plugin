@@ -41,7 +41,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jenkins.MasterToSlaveFileCallable;
 import jenkins.model.Jenkins;
 import jenkins.model.Jenkins.MasterComputer;
 
@@ -197,7 +196,7 @@ public final class DllUtil {
     /**
      * {@link FileCallable} providing remote file access to load a library.
      */
-    private static final class LoadLibraryCallable extends MasterToSlaveFileCallable<Boolean> {
+    private static final class LoadLibraryCallable implements FileCallable<Boolean> {
 
         private static final long serialVersionUID = 1L;
 

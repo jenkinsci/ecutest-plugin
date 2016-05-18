@@ -39,7 +39,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
@@ -181,7 +180,7 @@ public class JUnitReportGenerator {
     /**
      * {@link Callable} enabling generation of UNIT reports remotely.
      */
-    private static final class GenerateUnitReportCallable extends MasterToSlaveCallable<Boolean, IOException> {
+    private static final class GenerateUnitReportCallable implements Callable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 

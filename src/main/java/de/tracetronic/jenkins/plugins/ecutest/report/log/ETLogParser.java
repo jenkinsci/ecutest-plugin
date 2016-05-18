@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -102,7 +102,7 @@ public class ETLogParser {
                     }
                 }
             }
-        } catch (final IOException | InterruptedException e) {
+        } catch (final IOException e) {
             LOGGER.log(Level.SEVERE,
                     String.format("Failed parsing log file %s: %s", logFile.getRemote(), e.getMessage()));
         }
@@ -129,7 +129,7 @@ public class ETLogParser {
                     }
                 }
             }
-        } catch (final IOException | InterruptedException e) {
+        } catch (final IOException e) {
             LOGGER.log(Level.SEVERE,
                     String.format("Failed parsing log file %s: %s", logFile.getRemote(), e.getMessage()));
         }

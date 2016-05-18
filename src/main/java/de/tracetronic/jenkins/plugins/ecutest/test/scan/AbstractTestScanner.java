@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -36,8 +36,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import jenkins.security.MasterToSlaveCallable;
 
 import org.apache.tools.ant.DirectoryScanner;
 
@@ -121,7 +119,7 @@ public abstract class AbstractTestScanner {
     /**
      * {@link Callable} providing remote access to scan a directory with a include file pattern.
      */
-    private static final class ScanTestCallable extends MasterToSlaveCallable<List<String>, IOException> {
+    private static final class ScanTestCallable implements Callable<List<String>, IOException> {
 
         private static final long serialVersionUID = 1L;
 

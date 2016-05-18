@@ -39,7 +39,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomBooleanSetting;
@@ -63,7 +62,7 @@ public abstract class AbstractATXReportHandler {
     /**
      * Common {@link Callable} enabling generating and uploading ATX reports remotely.
      */
-    protected abstract static class AbstractReportCallable extends MasterToSlaveCallable<Boolean, IOException> {
+    protected abstract static class AbstractReportCallable implements Callable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 

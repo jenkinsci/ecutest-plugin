@@ -41,8 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import jenkins.security.MasterToSlaveCallable;
-
 import org.apache.commons.lang.StringUtils;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
@@ -175,7 +173,7 @@ public abstract class AbstractTestClient implements TestClient {
     /**
      * {@link Callable} providing remote access to load configurations via COM.
      */
-    protected static final class LoadConfigCallable extends MasterToSlaveCallable<Boolean, IOException> {
+    protected static final class LoadConfigCallable implements Callable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 

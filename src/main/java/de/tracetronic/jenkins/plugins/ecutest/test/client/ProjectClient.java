@@ -37,8 +37,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import jenkins.security.MasterToSlaveCallable;
-
 import org.apache.commons.io.FilenameUtils;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
@@ -89,7 +87,7 @@ public class ProjectClient extends AbstractTestClient {
 
     @Override
     public boolean runTestCase(final Launcher launcher, final BuildListener listener) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -143,7 +141,7 @@ public class ProjectClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to open a project via COM.
      */
-    private static final class OpenProjectCallable extends MasterToSlaveCallable<Boolean, IOException> {
+    private static final class OpenProjectCallable implements Callable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -221,7 +219,7 @@ public class ProjectClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to run a project via COM.
      */
-    private static final class RunProjectCallable extends MasterToSlaveCallable<TestInfoHolder, InterruptedException> {
+    private static final class RunProjectCallable implements Callable<TestInfoHolder, InterruptedException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -297,7 +295,7 @@ public class ProjectClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to close a project via COM.
      */
-    private static final class CloseProjectCallable extends MasterToSlaveCallable<Boolean, IOException> {
+    private static final class CloseProjectCallable implements Callable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 

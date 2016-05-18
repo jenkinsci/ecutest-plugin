@@ -33,6 +33,7 @@ import hudson.EnvVars;
 import hudson.Launcher;
 import hudson.Util;
 import hudson.model.EnvironmentSpecific;
+import hudson.remoting.Callable;
 import hudson.slaves.NodeSpecific;
 import hudson.tools.ToolProperty;
 import hudson.tools.ToolInstallation;
@@ -42,8 +43,6 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.CheckForNull;
-
-import jenkins.security.MasterToSlaveCallable;
 
 /**
  * Represents a base tool installation specified by name and home directory.
@@ -97,7 +96,7 @@ public abstract class AbstractToolInstallation extends ToolInstallation implemen
      *             if the current thread is interrupted while waiting for the completion
      */
     public String getExecutable(final Launcher launcher) throws IOException, InterruptedException {
-        return launcher.getChannel().call(new MasterToSlaveCallable<String, IOException>() {
+        return launcher.getChannel().call(new Callable<String, IOException>() {
 
             private static final long serialVersionUID = 1L;
 
