@@ -61,7 +61,7 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     @Nonnull
     private final String toolName;
     @Nonnull
-    private String timeout = String.valueOf(getDescriptor().getDefaultTimeout());
+    private String timeout = String.valueOf(getDefaultTimeout());
 
     /**
      * Instantiates a {@link AbstractToolBuilder}.
@@ -114,6 +114,13 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     public void setTimeout(@Nonnull final String timeout) {
         this.timeout = timeout;
     }
+
+    /**
+     * Gets the default timeout.
+     *
+     * @return the default timeout
+     */
+    public abstract int getDefaultTimeout();
 
     /**
      * Gets the test identifier by the size of {@link ToolEnvInvisibleAction}s already added to the build.

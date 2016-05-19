@@ -90,6 +90,7 @@ public class StopETBuilder extends AbstractToolBuilder {
     /**
      * @return the default timeout
      */
+    @Override
     public int getDefaultTimeout() {
         return DEFAULT_TIMEOUT;
     }

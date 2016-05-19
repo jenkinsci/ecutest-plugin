@@ -112,6 +112,7 @@ public class StartTSBuilder extends AbstractToolBuilder {
     /**
      * @return the default timeout
      */
+    @Override
     public int getDefaultTimeout() {
         return DEFAULT_TIMEOUT;
     }
