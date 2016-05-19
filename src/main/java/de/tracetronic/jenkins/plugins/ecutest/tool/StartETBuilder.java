@@ -33,14 +33,20 @@ import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
+import hudson.Util;
+import hudson.model.TaskListener;
+import hudson.model.Project;
+import hudson.model.Run;
 import hudson.util.FormValidation;
 
 import java.io.IOException;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
@@ -65,12 +71,25 @@ public class StartETBuilder extends AbstractToolBuilder {
      */
     public static final int DEFAULT_TIMEOUT = 120;
 
-    private final String workspaceDir;
+    @CheckForNull
+    private String workspaceDir;
     /**
      * @since 1.5
      */
-    private final String settingsDir;
-    private final boolean debugMode;
+    @CheckForNull
+    private String settingsDir;
+    private boolean debugMode;
+
+    /**
+     * Instantiates a new {@link StartETBuilder}.
+     *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
+     */
+    @DataBoundConstructor
+    public StartETBuilder(@Nonnull final String toolName) {
+        super(toolName);
+    }
 
     /**
      * Instantiates a new {@link StartETBuilder}.
@@ -85,8 +104,9 @@ public class StartETBuilder extends AbstractToolBuilder {
      *            the timeout
      * @param debugMode
      *            the debug mode
+     * @deprecated since 1.11 use {@link #StartETBuilder(String)}
      */
-    @DataBoundConstructor
+    @Deprecated
     public StartETBuilder(final String toolName, final String workspaceDir, final String settingsDir,
             final String timeout, final boolean debugMode) {
         super(toolName, StringUtils.defaultIfEmpty(timeout, String.valueOf(DEFAULT_TIMEOUT)));
@@ -136,15 +156,17 @@ public class StartETBuilder extends AbstractToolBuilder {
     /**
      * @return the workspace directory
      */
+    @Nonnull
     public String getWorkspaceDir() {
-        return workspaceDir;
+        return StringUtils.trimToEmpty(workspaceDir);
     }
 
     /**
      * @return the settings directory
      */
+    @Nonnull
     public String getSettingsDir() {
-        return settingsDir;
+        return StringUtils.trimToEmpty(settingsDir);
     }
 
     /**
@@ -154,74 +176,93 @@ public class StartETBuilder extends AbstractToolBuilder {
         return debugMode;
     }
 
+    /**
+     * @param workspaceDir
+     *            the workspace directory
+     */
+    @DataBoundSetter
+    public void setWorkspaceDir(@CheckForNull final String workspaceDir) {
+        this.workspaceDir = Util.fixNull(workspaceDir);
+    }
+
+    /**
+     * @param settingsDir
+     *            the settings directory
+     */
+    @DataBoundSetter
+    public void setSettingsDir(@CheckForNull final String settingsDir) {
+        this.settingsDir = Util.fixNull(settingsDir);
+    }
+
+    /**
+     * @param debugMode
+     *            the debug mode
+     */
+    @DataBoundSetter
+    public void setDebugMode(final boolean debugMode) {
+        this.debugMode = debugMode;
+    }
+
     @Override
-    public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-            final BuildListener listener) throws InterruptedException, IOException {
+    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException {
         // Check OS running this build
         if (!ProcessUtil.checkOS(launcher, listener)) {
-            return false;
+            return;
         }
 
         // Initialize logger
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Expand build parameters
-        final EnvVars buildEnvVars = build.getEnvironment(listener);
+        final EnvVars buildEnvVars = run.getEnvironment(listener);
         final int expandedTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
                 String.valueOf(DEFAULT_TIMEOUT)));
 
         // Absolutize ECU-TEST workspace directory, if not absolute assume relative to build workspace
-        String expandedWorkspaceDir = buildEnvVars.expand(workspaceDir);
-        String expandedSettingsDir = buildEnvVars.expand(settingsDir);
-        FilePath buildWorkspace = build.getWorkspace();
-        if (buildWorkspace != null) {
-            buildWorkspace = buildWorkspace.absolutize();
-            expandedWorkspaceDir = EnvUtil.expandEnvVar(workspaceDir, buildEnvVars, buildWorkspace.getRemote());
-            expandedWorkspaceDir = PathUtil.makeAbsolutePath(expandedWorkspaceDir, buildWorkspace);
-            expandedSettingsDir = EnvUtil.expandEnvVar(settingsDir, buildEnvVars, buildWorkspace.getRemote());
-            expandedSettingsDir = PathUtil.makeAbsolutePath(expandedSettingsDir, buildWorkspace);
-        }
+        String expandedWorkspaceDir = EnvUtil.expandEnvVar(getWorkspaceDir(), buildEnvVars, workspace.getRemote());
+        expandedWorkspaceDir = PathUtil.makeAbsolutePath(expandedWorkspaceDir, workspace);
+        String expandedSettingsDir = EnvUtil.expandEnvVar(getSettingsDir(), buildEnvVars, workspace.getRemote());
+        expandedSettingsDir = PathUtil.makeAbsolutePath(expandedSettingsDir, workspace);
 
         // Check workspace validity
         final FilePath expandedWorkspacePath = new FilePath(launcher.getChannel(), expandedWorkspaceDir);
         final FilePath expandedSettingsPath = new FilePath(launcher.getChannel(), expandedSettingsDir);
         if (!checkWorkspace(expandedWorkspacePath, expandedSettingsPath, listener)) {
-            return false;
+            return;
         }
 
         // Delete logs if log publisher is present
-        if (build.getProject().getPublishersList().get(ETLogPublisher.class) != null) {
+        final Object parent = run.getParent();
+        if (parent instanceof Project
+                && ((Project<?, ?>) run.getParent()).getPublishersList().get(ETLogPublisher.class) != null) {
             ETLogPublisher.RunListenerImpl.onStarted(expandedSettingsPath, listener);
         }
 
         // Get selected ECU-TEST installation
-        final AbstractToolInstallation installation = configureToolInstallation(listener,
-                build.getEnvironment(listener));
+        final AbstractToolInstallation installation = configureToolInstallation(listener, run.getEnvironment(listener));
 
         // Start selected ECU-TEST
         if (installation instanceof ETInstallation) {
-            final String toolName = build.getEnvironment(listener).expand(installation.getName());
+            final String toolName = run.getEnvironment(listener).expand(installation.getName());
             logger.logInfo(String.format("Starting %s...", toolName));
             final String installPath = installation.getExecutable(launcher);
             final ETClient etClient = new ETClient(toolName, installPath, expandedWorkspaceDir,
-                    expandedSettingsDir, expandedTimeout, debugMode);
+                    expandedSettingsDir, expandedTimeout, isDebugMode());
             if (etClient.start(true, launcher, listener)) {
                 logger.logInfo(String.format("%s started successfully.", toolName));
             } else {
                 logger.logError(String.format("Starting %s failed!", toolName));
-                return false;
+                return;
             }
 
             // Add action for injecting environment variables
-            final int toolId = getToolId(build);
+            final int toolId = getToolId(run);
             final ToolEnvInvisibleAction envAction = new ToolEnvInvisibleAction(toolId, etClient);
-            build.addAction(envAction);
+            run.addAction(envAction);
         } else {
             logger.logError("The selected ECU-TEST installation is not configured for this node!");
-            return false;
         }
-
-        return true;
     }
 
     /**
@@ -240,7 +281,7 @@ public class StartETBuilder extends AbstractToolBuilder {
      *             the interrupted exception
      */
     private boolean checkWorkspace(final FilePath workspacePath, final FilePath settingsPath,
-            final BuildListener listener) throws IOException, InterruptedException {
+            final TaskListener listener) throws IOException, InterruptedException {
         boolean isValid = false;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (!workspacePath.exists()) {

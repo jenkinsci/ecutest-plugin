@@ -30,18 +30,23 @@
 package de.tracetronic.jenkins.plugins.ecutest.tool;
 
 import hudson.EnvVars;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
 import hudson.model.Computer;
 import hudson.model.Node;
+import hudson.model.Run;
+import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Builder;
 
 import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+
+import jenkins.tasks.SimpleBuildStep;
 
 import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.DataBoundSetter;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
@@ -51,10 +56,23 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInst
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class AbstractToolBuilder extends Builder {
+public abstract class AbstractToolBuilder extends Builder implements SimpleBuildStep {
 
+    @Nonnull
     private final String toolName;
-    private final String timeout;
+    @Nonnull
+    private String timeout = String.valueOf(getDescriptor().getDefaultTimeout());
+
+    /**
+     * Instantiates a {@link AbstractToolBuilder}.
+     *
+     * @param toolName
+     *            the tool name
+     */
+    public AbstractToolBuilder(@Nonnull final String toolName) {
+        super();
+        this.toolName = toolName;
+    }
 
     /**
      * Instantiates a {@link AbstractToolBuilder}.
@@ -63,7 +81,9 @@ public abstract class AbstractToolBuilder extends Builder {
      *            the tool name
      * @param timeout
      *            the timeout
+     * @deprecated since 1.11 use {@link #AbstractToolBuilder(String)}
      */
+    @Deprecated
     public AbstractToolBuilder(final String toolName, final String timeout) {
         super();
         this.toolName = toolName;
@@ -73,6 +93,7 @@ public abstract class AbstractToolBuilder extends Builder {
     /**
      * @return the tool name
      */
+    @Nonnull
     public String getToolName() {
         return toolName;
     }
@@ -80,19 +101,29 @@ public abstract class AbstractToolBuilder extends Builder {
     /**
      * @return the timeout
      */
+    @Nonnull
     public String getTimeout() {
         return timeout;
     }
 
     /**
+     * @param timeout
+     *            the timeout
+     */
+    @DataBoundSetter
+    public void setTimeout(@Nonnull final String timeout) {
+        this.timeout = timeout;
+    }
+
+    /**
      * Gets the test identifier by the size of {@link ToolEnvInvisibleAction}s already added to the build.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @return the tool id
      */
-    protected int getToolId(final AbstractBuild<?, ?> build) {
-        final List<ToolEnvInvisibleAction> toolEnvActions = build.getActions(ToolEnvInvisibleAction.class);
+    protected int getToolId(final Run<?, ?> run) {
+        final List<ToolEnvInvisibleAction> toolEnvActions = run.getActions(ToolEnvInvisibleAction.class);
         return toolEnvActions.size();
     }
 
@@ -110,7 +141,7 @@ public abstract class AbstractToolBuilder extends Builder {
      *             if the build gets interrupted
      */
     @CheckForNull
-    protected AbstractToolInstallation configureToolInstallation(final BuildListener listener,
+    protected AbstractToolInstallation configureToolInstallation(final TaskListener listener,
             final EnvVars envVars) throws IOException, InterruptedException {
         AbstractToolInstallation installation = getToolInstallation(envVars);
         if (installation != null) {
@@ -132,13 +163,18 @@ public abstract class AbstractToolBuilder extends Builder {
      */
     @CheckForNull
     public AbstractToolInstallation getToolInstallation(final EnvVars envVars) {
-        final String expToolName = envVars.expand(toolName);
+        final String expToolName = envVars.expand(getToolName());
         for (final AbstractToolInstallation installation : getDescriptor().getInstallations()) {
             if (StringUtils.equals(expToolName, installation.getName())) {
                 return installation;
             }
         }
         return null;
+    }
+
+    @Override
+    public BuildStepMonitor getRequiredMonitorService() {
+        return BuildStepMonitor.NONE;
     }
 
     @Override

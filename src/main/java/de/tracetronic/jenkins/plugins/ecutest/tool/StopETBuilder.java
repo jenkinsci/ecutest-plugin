@@ -31,11 +31,14 @@ package de.tracetronic.jenkins.plugins.ecutest.tool;
 
 import hudson.EnvVars;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
+import hudson.model.Run;
 
 import java.io.IOException;
+
+import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -64,10 +67,22 @@ public class StopETBuilder extends AbstractToolBuilder {
      *
      * @param toolName
      *            the tool name identifying the {@link ETInstallation} to be used
-     * @param timeout
-     *            the timeout
      */
     @DataBoundConstructor
+    public StopETBuilder(@Nonnull final String toolName) {
+        super(toolName);
+    }
+
+    /**
+     * Instantiates a new {@link StopETBuilder}.
+     *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param timeout
+     *            the timeout
+     * @deprecated since 1.11 use {@link #StopETBuilder(String)}
+     */
+    @Deprecated
     public StopETBuilder(final String toolName, final String timeout) {
         super(toolName, StringUtils.defaultIfEmpty(timeout, String.valueOf(DEFAULT_TIMEOUT)));
     }
@@ -80,24 +95,23 @@ public class StopETBuilder extends AbstractToolBuilder {
     }
 
     @Override
-    public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-            final BuildListener listener) throws InterruptedException, IOException {
+    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException {
         // Check OS running this build
         if (!ProcessUtil.checkOS(launcher, listener)) {
-            return false;
+            return;
         }
 
         // Initialize logger
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Get selected ECU-TEST installation
-        final AbstractToolInstallation installation = configureToolInstallation(listener,
-                build.getEnvironment(listener));
+        final AbstractToolInstallation installation = configureToolInstallation(listener, run.getEnvironment(listener));
 
         // Stop selected ECU-TEST
         if (installation instanceof ETInstallation) {
-            final String toolName = build.getEnvironment(listener).expand(installation.getName());
-            final EnvVars buildEnvVars = build.getEnvironment(listener);
+            final String toolName = run.getEnvironment(listener).expand(installation.getName());
+            final EnvVars buildEnvVars = run.getEnvironment(listener);
             final int expandedTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
                     String.valueOf(DEFAULT_TIMEOUT)));
 
@@ -107,14 +121,10 @@ public class StopETBuilder extends AbstractToolBuilder {
                 logger.logInfo(String.format("%s stopped successfully.", toolName));
             } else {
                 logger.logError(String.format("Stopping %s failed.", toolName));
-                return false;
             }
         } else {
             logger.logError("Selected ECU-TEST installation is not configured for this node!");
-            return false;
         }
-
-        return true;
     }
 
     /**

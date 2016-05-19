@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,7 +30,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 
 import hudson.Launcher;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 
 import java.io.IOException;
 
@@ -56,8 +56,8 @@ public interface ToolClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    boolean start(boolean checkProcesses, Launcher launcher, BuildListener listener) throws IOException,
-    InterruptedException;
+    boolean start(boolean checkProcesses, Launcher launcher, TaskListener listener) throws IOException,
+            InterruptedException;
 
     /**
      * Stops a tool.
@@ -75,8 +75,8 @@ public interface ToolClient {
      *             if the build gets interrupted
      *
      */
-    boolean stop(boolean checkProcesses, Launcher launcher, BuildListener listener) throws IOException,
-    InterruptedException;
+    boolean stop(boolean checkProcesses, Launcher launcher, TaskListener listener) throws IOException,
+            InterruptedException;
 
     /**
      * Restarts a tool.
@@ -93,7 +93,7 @@ public interface ToolClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    boolean restart(boolean checkProcesses, Launcher launcher, BuildListener listener) throws IOException,
-    InterruptedException;
+    boolean restart(boolean checkProcesses, Launcher launcher, TaskListener listener) throws IOException,
+            InterruptedException;
 
 }

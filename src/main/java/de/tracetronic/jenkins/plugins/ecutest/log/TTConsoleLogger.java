@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,7 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.log;
 
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -43,7 +43,7 @@ import java.nio.charset.Charset;
  */
 public class TTConsoleLogger {
 
-    private final BuildListener listener;
+    private final TaskListener listener;
     private final TTConsoleAnnotator annotator;
 
     /**
@@ -52,7 +52,7 @@ public class TTConsoleLogger {
      * @param listener
      *            the listener
      */
-    public TTConsoleLogger(final BuildListener listener) {
+    public TTConsoleLogger(final TaskListener listener) {
         this.listener = listener;
         annotator = new TTConsoleAnnotator(this.listener.getLogger());
     }

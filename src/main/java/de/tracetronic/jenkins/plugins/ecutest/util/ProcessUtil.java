@@ -30,7 +30,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.util;
 
 import hudson.Launcher;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -167,7 +167,7 @@ public final class ProcessUtil {
      *            the listener
      * @return {@code true} if Windows launcher, {@code false} if Unix-based launcher
      */
-    public static boolean checkOS(final Launcher launcher, final BuildListener listener) {
+    public static boolean checkOS(final Launcher launcher, final TaskListener listener) {
         if (launcher.isUnix()) {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logError("Trying to build Windows related configuration on an Unix-based system! "

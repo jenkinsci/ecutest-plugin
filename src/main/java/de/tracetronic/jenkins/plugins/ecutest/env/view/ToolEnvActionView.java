@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,7 @@ import hudson.Extension;
 import hudson.model.InvisibleAction;
 import hudson.model.ParameterValue;
 import hudson.model.TaskListener;
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
 import hudson.model.StringParameterValue;
 import hudson.model.listeners.RunListener;
 
@@ -57,20 +57,20 @@ public class ToolEnvActionView extends InvisibleAction {
 
     private static final Logger LOGGER = Logger.getLogger(ToolEnvActionView.class.getName());
 
-    private final AbstractBuild<?, ?> build;
+    private final Run<?, ?> build;
     private final transient TaskListener listener;
 
     /**
      * Instantiates a new {@link ToolEnvActionView}.
      *
-     * @param build
+     * @param run
      *            the build
      * @param listener
      *            the listener
      */
-    public ToolEnvActionView(final AbstractBuild<?, ?> build, final TaskListener listener) {
+    public ToolEnvActionView(final Run<?, ?> run, final TaskListener listener) {
         super();
-        this.build = build;
+        build = run;
         this.listener = listener;
     }
 
@@ -107,10 +107,10 @@ public class ToolEnvActionView extends InvisibleAction {
      * Listener notifying the build on completion and adding this {@link ToolEnvInvisibleAction} as a new build action.
      */
     @Extension
-    public static final class RunListenerImpl extends RunListener<AbstractBuild<?, ?>> {
+    public static final class RunListenerImpl extends RunListener<Run<?, ?>> {
 
         @Override
-        public void onCompleted(final AbstractBuild<?, ?> run, final TaskListener listener) {
+        public void onCompleted(final Run<?, ?> run, final TaskListener listener) {
             if (run.getAction(ToolEnvInvisibleAction.class) != null) {
                 run.addAction(new ToolEnvActionView(run, listener));
             }

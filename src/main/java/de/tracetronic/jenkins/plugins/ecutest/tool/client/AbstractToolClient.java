@@ -31,7 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 
 import hudson.Launcher;
 import hudson.Proc;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.util.ArgumentListBuilder;
 
 import java.io.IOException;
@@ -122,7 +122,7 @@ public abstract class AbstractToolClient implements ToolClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    protected boolean launchProcess(final Launcher launcher, final BuildListener listener) throws InterruptedException {
+    protected boolean launchProcess(final Launcher launcher, final TaskListener listener) throws InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Create command line

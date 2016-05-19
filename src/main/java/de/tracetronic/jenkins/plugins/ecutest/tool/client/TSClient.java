@@ -30,7 +30,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 
 import hudson.Launcher;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 import hudson.util.ArgumentListBuilder;
 
@@ -110,7 +110,7 @@ public class TSClient extends AbstractToolClient {
     }
 
     @Override
-    public boolean start(final boolean checkProcesses, final Launcher launcher, final BuildListener listener)
+    public boolean start(final boolean checkProcesses, final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
@@ -127,13 +127,13 @@ public class TSClient extends AbstractToolClient {
     }
 
     @Override
-    public boolean stop(final boolean checkProcesses, final Launcher launcher, final BuildListener listener)
+    public boolean stop(final boolean checkProcesses, final Launcher launcher, final TaskListener listener)
             throws InterruptedException, IOException {
         return launcher.getChannel().call(new StopCallable(getTimeout(), listener));
     }
 
     @Override
-    public boolean restart(final boolean checkProcesses, final Launcher launcher, final BuildListener listener)
+    public boolean restart(final boolean checkProcesses, final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
         if (stop(checkProcesses, launcher, listener) && start(checkProcesses, launcher, listener)) {
             return true;
@@ -181,7 +181,7 @@ public class TSClient extends AbstractToolClient {
         private static final long serialVersionUID = 1L;
 
         private final int timeout;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link StopCallable}.
@@ -191,7 +191,7 @@ public class TSClient extends AbstractToolClient {
          * @param listener
          *            the listener
          */
-        StopCallable(final int timeout, final BuildListener listener) {
+        StopCallable(final int timeout, final TaskListener listener) {
             this.timeout = timeout;
             this.listener = listener;
         }

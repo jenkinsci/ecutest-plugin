@@ -31,6 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 
 import hudson.Launcher;
 import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 import hudson.util.ArgumentListBuilder;
 
@@ -133,7 +134,7 @@ public class ETClient extends AbstractToolClient {
     }
 
     @Override
-    public boolean start(final boolean checkProcesses, final Launcher launcher, final BuildListener listener)
+    public boolean start(final boolean checkProcesses, final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
@@ -183,7 +184,7 @@ public class ETClient extends AbstractToolClient {
     }
 
     @Override
-    public boolean stop(final boolean checkProcesses, final Launcher launcher, final BuildListener listener)
+    public boolean stop(final boolean checkProcesses, final Launcher launcher, final TaskListener listener)
             throws InterruptedException, IOException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
@@ -205,7 +206,7 @@ public class ETClient extends AbstractToolClient {
     }
 
     @Override
-    public boolean restart(final boolean checkProcesses, final Launcher launcher, final BuildListener listener)
+    public boolean restart(final boolean checkProcesses, final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
         if (stop(checkProcesses, launcher, listener) && start(checkProcesses, launcher, listener)) {
             return true;
@@ -279,7 +280,7 @@ public class ETClient extends AbstractToolClient {
         private static final long serialVersionUID = 1L;
 
         private final int timeout;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link StartCallable}.
@@ -289,7 +290,7 @@ public class ETClient extends AbstractToolClient {
          * @param listener
          *            the listener
          */
-        StartCallable(final int timeout, final BuildListener listener) {
+        StartCallable(final int timeout, final TaskListener listener) {
             this.timeout = timeout;
             this.listener = listener;
         }
@@ -318,7 +319,7 @@ public class ETClient extends AbstractToolClient {
 
         private final int timeout;
         private final boolean checkProcesses;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a {@link StopCallable}.
@@ -330,7 +331,7 @@ public class ETClient extends AbstractToolClient {
          * @param listener
          *            the listener
          */
-        StopCallable(final int timeout, final boolean checkProcesses, final BuildListener listener) {
+        StopCallable(final int timeout, final boolean checkProcesses, final TaskListener listener) {
             this.timeout = timeout;
             this.checkProcesses = checkProcesses;
             this.listener = listener;
