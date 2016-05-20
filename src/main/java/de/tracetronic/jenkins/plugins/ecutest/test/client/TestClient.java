@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,7 +30,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
 import hudson.Launcher;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 
 import java.io.IOException;
 
@@ -54,6 +54,6 @@ public interface TestClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    boolean runTestCase(Launcher launcher, BuildListener listener) throws IOException, InterruptedException;
+    boolean runTestCase(Launcher launcher, TaskListener listener) throws IOException, InterruptedException;
 
 }

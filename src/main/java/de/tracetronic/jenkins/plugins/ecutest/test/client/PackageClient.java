@@ -30,7 +30,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
 import hudson.Launcher;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 
 import java.io.File;
@@ -89,8 +89,8 @@ public class PackageClient extends AbstractTestClient {
     }
 
     @Override
-    public boolean runTestCase(final Launcher launcher, final BuildListener listener) throws IOException,
-    InterruptedException {
+    public boolean runTestCase(final Launcher launcher, final TaskListener listener) throws IOException,
+            InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -151,7 +151,7 @@ public class PackageClient extends AbstractTestClient {
 
         private final String packageFile;
         private final boolean checkTestFile;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link OpenPackageCallable}.
@@ -163,7 +163,7 @@ public class PackageClient extends AbstractTestClient {
          * @param listener
          *            the listener
          */
-        OpenPackageCallable(final String packageFile, final boolean checkTestFile, final BuildListener listener) {
+        OpenPackageCallable(final String packageFile, final boolean checkTestFile, final TaskListener listener) {
             this.packageFile = packageFile;
             this.checkTestFile = checkTestFile;
             this.listener = listener;
@@ -222,7 +222,7 @@ public class PackageClient extends AbstractTestClient {
         private final String packageFile;
         private final PackageConfig packageConfig;
         private final ExecutionConfig executionConfig;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link RunPackageCallable}.
@@ -237,7 +237,7 @@ public class PackageClient extends AbstractTestClient {
          *            the listener
          */
         RunPackageCallable(final String packageFile, final PackageConfig packageConfig,
-                final ExecutionConfig executionConfig, final BuildListener listener) {
+                final ExecutionConfig executionConfig, final TaskListener listener) {
             this.packageFile = packageFile;
             this.packageConfig = packageConfig;
             this.executionConfig = executionConfig;
@@ -315,7 +315,7 @@ public class PackageClient extends AbstractTestClient {
         private static final long serialVersionUID = 1L;
 
         private final String packageFile;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link ClosePackageCallable}.
@@ -325,7 +325,7 @@ public class PackageClient extends AbstractTestClient {
          * @param listener
          *            the listener
          */
-        ClosePackageCallable(final String packageFile, final BuildListener listener) {
+        ClosePackageCallable(final String packageFile, final TaskListener listener) {
             this.packageFile = packageFile;
             this.listener = listener;
         }

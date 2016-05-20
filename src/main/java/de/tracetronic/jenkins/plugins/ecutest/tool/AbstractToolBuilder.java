@@ -71,7 +71,7 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
      */
     public AbstractToolBuilder(@Nonnull final String toolName) {
         super();
-        this.toolName = toolName;
+        this.toolName = StringUtils.trimToEmpty(toolName);
     }
 
     /**

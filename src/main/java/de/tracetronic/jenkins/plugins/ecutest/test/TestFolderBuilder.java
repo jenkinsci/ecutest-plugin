@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,8 +33,8 @@ import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
+import hudson.model.Run;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 
@@ -43,7 +43,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
@@ -90,12 +93,26 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     }
 
     // Scan settings
-    private final ScanMode scanMode;
-    private final boolean recursiveScan;
+    @Nonnull
+    private ScanMode scanMode = DEFAULT_SCANMODE;
+    private boolean recursiveScan;
 
     // Test settings
-    private final PackageConfig packageConfig;
-    private final ProjectConfig projectConfig;
+    @Nonnull
+    private PackageConfig packageConfig = PackageConfig.newInstance();
+    @Nonnull
+    private ProjectConfig projectConfig = ProjectConfig.newInstance();
+
+    /**
+     * Instantiates a new {@link TestFolderBuilder}.
+     *
+     * @param testFile
+     *            the test folder
+     */
+    @DataBoundConstructor
+    public TestFolderBuilder(final String testFile) {
+        super(testFile);
+    }
 
     /**
      * Instantiates a new {@link TestFolderBuilder}.
@@ -114,8 +131,9 @@ public class TestFolderBuilder extends AbstractTestBuilder {
      *            the project configuration
      * @param executionConfig
      *            the execution configuration
+     * @deprecated since 1.11 use {@link #TestFolderBuilder(String)}
      */
-    @DataBoundConstructor
+    @Deprecated
     public TestFolderBuilder(final String testFile, final ScanMode scanMode, final boolean recursiveScan,
             final TestConfig testConfig, final PackageConfig packageConfig, final ProjectConfig projectConfig,
             final ExecutionConfig executionConfig) {
@@ -141,22 +159,60 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     }
 
     /**
-     * @return the packageConfig
+     * @return the package configuration
      */
+    @Nonnull
     public PackageConfig getPackageConfig() {
         return packageConfig;
     }
 
     /**
-     * @return the projectConfig
+     * @return the project configuration
      */
+    @Nonnull
     public ProjectConfig getProjectConfig() {
         return projectConfig;
     }
 
+    /**
+     * @param scanMode
+     *            the scan mode
+     */
+    @DataBoundSetter
+    public void setScanMode(@Nonnull final ScanMode scanMode) {
+        this.scanMode = scanMode;
+    }
+
+    /**
+     * @param recursiveScan
+     *            the recursive scan mode
+     */
+    @DataBoundSetter
+    public void setRecursiveScan(final boolean recursiveScan) {
+        this.recursiveScan = recursiveScan;
+    }
+
+    /**
+     * @param packageConfig
+     *            the package configuration
+     */
+    @DataBoundSetter
+    public void setPackageConfig(@Nonnull final PackageConfig packageConfig) {
+        this.packageConfig = packageConfig;
+    }
+
+    /**
+     * @param projectConfig
+     *            the project configuration
+     */
+    @DataBoundSetter
+    public void setProjectConfig(@Nonnull final ProjectConfig projectConfig) {
+        this.projectConfig = projectConfig;
+    }
+
     @Override
     protected String getTestFilePath(final String testFile, final String pkgDir, final Launcher launcher,
-            final BuildListener listener) throws IOException, InterruptedException {
+            final TaskListener listener) throws IOException, InterruptedException {
         String testFolderPath = null;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (testFile.isEmpty()) {
@@ -175,8 +231,8 @@ public class TestFolderBuilder extends AbstractTestBuilder {
 
     @Override
     protected boolean runTest(final String testFolder, final TestConfig testConfig,
-            final ExecutionConfig executionConfig, final AbstractBuild<?, ?> build, final Launcher launcher,
-            final BuildListener listener) throws IOException, InterruptedException {
+            final ExecutionConfig executionConfig, final Run<?, ?> run, final Launcher launcher,
+            final TaskListener listener) throws IOException, InterruptedException {
         // Scan test folder for tests
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Executing test folder...");
@@ -185,7 +241,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
         final List<String> prjFiles = scanProjects(testFolder, launcher, listener);
 
         // Expand package configuration
-        final EnvVars buildEnv = build.getEnvironment(listener);
+        final EnvVars buildEnv = run.getEnvironment(listener);
         final PackageConfig packageConfig = getPackageConfig().expand(buildEnv);
 
         // Run packages
@@ -200,9 +256,9 @@ public class TestFolderBuilder extends AbstractTestBuilder {
             }
 
             // Add action for injecting environment variables
-            final int testId = getTestId(build);
+            final int testId = getTestId(run);
             final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(testId, testClient);
-            build.addAction(envAction);
+            run.addAction(envAction);
         }
 
         // Expand project configuration
@@ -220,9 +276,9 @@ public class TestFolderBuilder extends AbstractTestBuilder {
             }
 
             // Add action for injecting environment variables
-            final int testId = getTestId(build);
+            final int testId = getTestId(run);
             final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(testId, testClient);
-            build.addAction(envAction);
+            run.addAction(envAction);
         }
 
         return true;
@@ -243,7 +299,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private List<String> scanPackages(final String testFolder, final Launcher launcher, final BuildListener listener)
+    private List<String> scanPackages(final String testFolder, final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
         List<String> pkgFiles = new ArrayList<String>();
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
@@ -274,7 +330,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private List<String> scanProjects(final String testFolder, final Launcher launcher, final BuildListener listener)
+    private List<String> scanProjects(final String testFolder, final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
         List<String> prjFiles = new ArrayList<String>();
         final TTConsoleLogger logger = new TTConsoleLogger(listener);

@@ -30,7 +30,6 @@
 package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 
 import hudson.Launcher;
-import hudson.model.BuildListener;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 import hudson.util.ArgumentListBuilder;
@@ -170,7 +169,7 @@ public class ETClient extends AbstractToolClient {
             logger.logWarn(String.format(
                     "The configured ECU-TEST version %s might be incompatible with this plugin. "
                             + "Currently supported versions: %s up to %s", comVersion,
-                    ETPlugin.ET_MIN_VERSION.toShortString(), ETPlugin.ET_MAX_VERSION.toShortString()));
+                            ETPlugin.ET_MIN_VERSION.toShortString(), ETPlugin.ET_MAX_VERSION.toShortString()));
         } else if (comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
             logger.logError(String.format(
                     "The configured ECU-TEST version %s is not compatible with this plugin. "
@@ -267,7 +266,7 @@ public class ETClient extends AbstractToolClient {
      * @throws InterruptedException
      *             if the current thread is interrupted while waiting for the completion
      */
-    public static boolean stopProcesses(final Launcher launcher, final BuildListener listener, final boolean kill)
+    public static boolean stopProcesses(final Launcher launcher, final TaskListener listener, final boolean kill)
             throws IOException, InterruptedException {
         return launcher.getChannel().call(new StopCallable(StartETBuilder.DEFAULT_TIMEOUT, kill, listener));
     }

@@ -29,7 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 
 import java.io.File;
@@ -181,7 +181,7 @@ public abstract class AbstractTestClient implements TestClient {
 
         private final TestConfig testConfig;
         private final ExecutionConfig executionConfig;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link LoadConfigCallable}.
@@ -194,7 +194,7 @@ public abstract class AbstractTestClient implements TestClient {
          *            the listener
          */
         public LoadConfigCallable(final TestConfig testConfig, final ExecutionConfig executionConfig,
-                final BuildListener listener) {
+                final TaskListener listener) {
             this.testConfig = testConfig;
             this.executionConfig = executionConfig;
             this.listener = listener;
