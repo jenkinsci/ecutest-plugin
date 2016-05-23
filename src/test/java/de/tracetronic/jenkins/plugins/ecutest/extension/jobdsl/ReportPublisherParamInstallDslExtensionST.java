@@ -112,7 +112,7 @@ public class ReportPublisherParamInstallDslExtensionST extends AbstractDslExtens
         final DescribableList<Publisher, Descriptor<Publisher>> publishers = project.getPublishersList();
         final ATXPublisher publisher = publishers.get(ATXPublisher.class);
         assertNotNull("ATX report publisher should exist", publisher);
-        assertThat(publisher.getATXName(), is("${TESTGUIDE}"));
+        assertThat(publisher.getAtxName(), is("${TESTGUIDE}"));
         assertThat(publisher.getInstallation(envVars).getName(), is("TEST-GUIDE"));
         assertThat(publisher.getInstallation(envVars).getToolName(), is("${ECUTEST}"));
     }

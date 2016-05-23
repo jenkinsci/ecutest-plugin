@@ -29,10 +29,14 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
+import hudson.model.Action;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+import jenkins.tasks.SimpleBuildStep;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 
 /**
@@ -43,7 +47,8 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ATXBuildAction<T extends AbstractTestReport> extends AbstractATXAction {
+public class ATXBuildAction<T extends AbstractTestReport> extends AbstractATXAction implements
+SimpleBuildStep.LastBuildAction {
 
     private final List<T> atxReports = new ArrayList<T>();
 
@@ -146,5 +151,11 @@ public class ATXBuildAction<T extends AbstractTestReport> extends AbstractATXAct
     @Override
     public String getDisplayName() {
         return Messages.ATXBuildAction_DisplayName();
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Collection<? extends Action> getProjectActions() {
+        return Collections.singleton(new ATXProjectAction(isProjectLevel()));
     }
 }

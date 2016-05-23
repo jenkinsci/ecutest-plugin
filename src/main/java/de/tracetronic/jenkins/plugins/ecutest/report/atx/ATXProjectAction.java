@@ -29,7 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
 
 import javax.annotation.CheckForNull;
 
@@ -70,7 +70,7 @@ public class ATXProjectAction<T extends AbstractTestReport> extends AbstractATXA
     @SuppressWarnings("unchecked")
     @CheckForNull
     public ATXBuildAction<T> getLastBuildAction(final StaplerRequest req) {
-        final AbstractBuild<?, ?> build = getBuild(req);
+        final Run<?, ?> build = getBuild(req);
         return build != null ? build.getAction(ATXBuildAction.class) : null;
     }
 

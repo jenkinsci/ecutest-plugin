@@ -29,7 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.trf;
 
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
 
 import javax.annotation.CheckForNull;
 
@@ -64,7 +64,7 @@ public class TRFProjectAction extends AbstractTRFAction {
      */
     @CheckForNull
     public TRFBuildAction getLastBuildAction(final StaplerRequest req) {
-        final AbstractBuild<?, ?> build = getBuild(req);
+        final Run<?, ?> build = getBuild(req);
         return build != null ? build.getAction(TRFBuildAction.class) : null;
     }
 

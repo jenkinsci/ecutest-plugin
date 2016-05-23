@@ -31,7 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 
 import java.io.File;
@@ -89,7 +89,7 @@ public class ReportGenerator {
      *             if the build gets interrupted
      */
     public boolean generate(final List<FilePath> reportFiles, final Launcher launcher,
-            final BuildListener listener) throws IOException, InterruptedException {
+            final TaskListener listener) throws IOException, InterruptedException {
         return launcher.getChannel().call(new GenerateReportCallable(config, reportFiles, listener));
     }
 
@@ -102,7 +102,7 @@ public class ReportGenerator {
 
         private final ReportGeneratorConfig config;
         private final List<FilePath> dbFiles;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link GenerateUnitReportCallable}.
@@ -115,7 +115,7 @@ public class ReportGenerator {
          *            the listener
          */
         GenerateReportCallable(final ReportGeneratorConfig config, final List<FilePath> dbFiles,
-                final BuildListener listener) {
+                final TaskListener listener) {
             this.config = config;
             this.dbFiles = dbFiles;
             this.listener = listener;

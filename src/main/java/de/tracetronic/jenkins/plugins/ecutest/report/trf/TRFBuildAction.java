@@ -29,10 +29,14 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.trf;
 
+import hudson.model.Action;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+import jenkins.tasks.SimpleBuildStep;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 
 /**
@@ -40,7 +44,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class TRFBuildAction extends AbstractTRFAction {
+public class TRFBuildAction extends AbstractTRFAction implements SimpleBuildStep.LastBuildAction {
 
     private final List<TRFReport> trfReports = new ArrayList<TRFReport>();
 
@@ -133,5 +137,10 @@ public class TRFBuildAction extends AbstractTRFAction {
     @Override
     public String getDisplayName() {
         return Messages.TRFBuildAction_DisplayName();
+    }
+
+    @Override
+    public Collection<? extends Action> getProjectActions() {
+        return Collections.singleton(new TRFProjectAction(isProjectLevel()));
     }
 }

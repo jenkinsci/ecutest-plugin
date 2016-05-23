@@ -147,6 +147,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     /**
      * @return the scanMode
      */
+    @Nonnull
     public ScanMode getScanMode() {
         return scanMode;
     }

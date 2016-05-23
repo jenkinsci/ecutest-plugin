@@ -47,7 +47,7 @@ public class ATXPublisherTest {
     public void testConstructor() {
         final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, true, false, false);
         assertNotNull(publisher);
-        assertEquals("TEST-GUIDE", publisher.getATXName());
+        assertEquals("TEST-GUIDE", publisher.getAtxName());
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
         assertFalse(publisher.isArchiving());

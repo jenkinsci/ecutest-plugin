@@ -32,9 +32,8 @@ package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 import hudson.FilePath;
 import hudson.FilePath.FileCallable;
 import hudson.Launcher;
-import hudson.model.BuildListener;
 import hudson.model.TaskListener;
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
 import hudson.remoting.VirtualChannel;
 import hudson.tasks.junit.TestResult;
 import hudson.tasks.test.TestResultParser;
@@ -46,6 +45,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import jenkins.MasterToSlaveFileCallable;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
@@ -75,16 +76,12 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
         return "UNIT XML reports:";
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public TestResult parse(final String junitDir, final AbstractBuild build, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
-        if (!(listener instanceof BuildListener)) {
-            throw new AssertionError("Unexpected type: " + listener);
-        }
-        final TTConsoleLogger logger = new TTConsoleLogger((BuildListener) listener);
+    public TestResult parseResult(final String junitDir, final Run<?, ?> run, @Nonnull final FilePath workspace,
+            final Launcher launcher, final TaskListener listener) throws InterruptedException, IOException {
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
         TestResult testResult = new TestResult(false);
-        final List<FilePath> reportFiles = getReportFiles(junitDir, build, launcher);
+        final List<FilePath> reportFiles = getReportFiles(junitDir, run, launcher);
         for (final FilePath reportFile : reportFiles) {
             logger.logInfo(String.format("- Processing UNIT test results: %s", reportFile));
             testResult = reportFile.act(new ParseTestResultCallable(testResult));
@@ -99,8 +96,8 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
      *
      * @param junitDir
      *            the UNIT directory
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @param launcher
      *            the launcher
      * @return the list of report files
@@ -109,10 +106,10 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private List<FilePath> getReportFiles(final String junitDir, final AbstractBuild<?, ?> build,
+    private List<FilePath> getReportFiles(final String junitDir, final Run<?, ?> run,
             final Launcher launcher) throws IOException, InterruptedException {
         final List<FilePath> reportFiles = new ArrayList<FilePath>();
-        final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
+        final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
             if (testReportDir.exists()) {

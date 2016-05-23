@@ -35,11 +35,10 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
-import hudson.model.Action;
-import hudson.model.BuildListener;
 import hudson.model.Result;
-import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
 import hudson.model.AbstractProject;
+import hudson.model.Run;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 import hudson.tools.ToolInstallation;
@@ -49,9 +48,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
@@ -74,15 +75,28 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      */
     protected static final String URL_NAME = "generator-reports";
 
+    @Nonnull
     private final String toolName;
-    private final List<ReportGeneratorConfig> generators;
-    private final List<ReportGeneratorConfig> customGenerators;
+    private List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
+    private List<ReportGeneratorConfig> customGenerators = new ArrayList<ReportGeneratorConfig>();
 
     /**
      * Instantiates a new {@link ReportGeneratorPublisher}.
      *
      * @param toolName
-     *            the tool name
+     *            the tool name identifying the {@link ETInstallation} to be used
+     */
+    @DataBoundConstructor
+    public ReportGeneratorPublisher(@Nonnull final String toolName) {
+        super();
+        this.toolName = StringUtils.trimToEmpty(toolName);
+    }
+
+    /**
+     * Instantiates a new {@link ReportGeneratorPublisher}.
+     *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
      * @param generators
      *            the report generators
      * @param customGenerators
@@ -96,8 +110,9 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      * @param keepAll
      *            specifies whether artifacts are archived for all successful builds,
      *            otherwise only the most recent
+     * @deprecated since 1.11 use {@link #ReportGeneratorPublisher(String)}
      */
-    @DataBoundConstructor
+    @Deprecated
     public ReportGeneratorPublisher(final String toolName, final List<ReportGeneratorConfig> generators,
             final List<ReportGeneratorConfig> customGenerators, final boolean allowMissing, final boolean runOnFailed,
             final boolean archiving, final boolean keepAll) {
@@ -113,7 +128,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      * Instantiates a new {@link ReportGeneratorPublisher}.
      *
      * @param toolName
-     *            the tool name
+     *            the tool name identifying the {@link ETInstallation} to be used
      * @param generators
      *            the report generators
      * @param customGenerators
@@ -142,8 +157,9 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * @return the toolName
+     * @return the {@link ETInstallation} name
      */
+    @Nonnull
     public String getToolName() {
         return toolName;
     }
@@ -160,6 +176,24 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      */
     public List<ReportGeneratorConfig> getCustomGenerators() {
         return customGenerators;
+    }
+
+    /**
+     * @param generators
+     *            the report generators
+     */
+    @DataBoundSetter
+    public void setGenerators(final List<ReportGeneratorConfig> generators) {
+        this.generators = generators;
+    }
+
+    /**
+     * @param customGenerators
+     *            the custom report generators
+     */
+    @DataBoundSetter
+    public void setCustomGenerators(final List<ReportGeneratorConfig> customGenerators) {
+        this.customGenerators = customGenerators;
     }
 
     /**
@@ -199,26 +233,26 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
 
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
-    public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-            final BuildListener listener) throws InterruptedException, IOException {
+    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException {
         // Check OS running this build
         if (!ProcessUtil.checkOS(launcher, listener)) {
-            return false;
+            return;
         }
 
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing generator reports...");
 
-        final Result buildResult = build.getResult();
+        final Result buildResult = run.getResult();
         if (buildResult != null && !canContinue(buildResult)) {
             logger.logInfo(String.format("Skipping publisher since build result is %s", buildResult));
-            return true;
+            return;
         }
 
-        final List<FilePath> reportFiles = getReportFiles(build, launcher);
+        final List<FilePath> reportFiles = getReportFiles(run, launcher);
         if (reportFiles.isEmpty() && !isAllowMissing()) {
             logger.logError("Empty test results are not allowed, setting build status to FAILURE!");
-            return false;
+            return;
         }
 
         final List<GeneratorReport> reports = new ArrayList<GeneratorReport>();
@@ -227,22 +261,22 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
 
         // Start ECU-TEST if necessary
         if (isETRunning) {
-            reports.addAll(generateReports(reportFiles, build, launcher, listener));
+            reports.addAll(generateReports(reportFiles, run, launcher, listener));
         } else {
             // Get selected ECU-TEST installation
             final AbstractToolInstallation installation = configureToolInstallation(toolName, listener,
-                    build.getEnvironment(listener));
+                    run.getEnvironment(listener));
             if (installation instanceof ETInstallation) {
                 final String installPath = installation.getExecutable(launcher);
-                final String workspaceDir = getWorkspaceDir(build);
-                final String settingsDir = getSettingsDir(build);
-                final String expandedToolName = build.getEnvironment(listener).expand(installation.getName());
+                final String workspaceDir = getWorkspaceDir(run);
+                final String settingsDir = getSettingsDir(run);
+                final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
                 final ETClient etClient = new ETClient(expandedToolName, installPath, workspaceDir, settingsDir,
                         StartETBuilder.DEFAULT_TIMEOUT, false);
                 logger.logInfo(String.format("Starting %s...", toolName));
                 if (etClient.start(false, launcher, listener)) {
                     logger.logInfo(String.format("%s started successfully.", toolName));
-                    reports.addAll(generateReports(reportFiles, build, launcher, listener));
+                    reports.addAll(generateReports(reportFiles, run, launcher, listener));
                 } else {
                     logger.logError(String.format("Starting %s failed.", toolName));
                 }
@@ -254,18 +288,18 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
                 }
             } else {
                 logger.logError("Selected ECU-TEST installation is not configured for this node!");
-                return false;
+                return;
             }
         }
 
         if (isArchiving()) {
-            addBuildAction(build, reports);
+            addBuildAction(run, reports);
         } else {
             logger.logInfo("Archiving TRF reports is disabled.");
         }
 
         logger.logInfo("Generator reports published successfully.");
-        return true;
+        return;
     }
 
     /**
@@ -273,8 +307,8 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      *
      * @param reportFiles
      *            the report files
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @param launcher
      *            the launcher
      * @param listener
@@ -286,12 +320,12 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      *             the interrupted exception
      */
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
-    private List<GeneratorReport> generateReports(final List<FilePath> reportFiles, final AbstractBuild<?, ?> build,
-            final Launcher launcher, final BuildListener listener) throws IOException, InterruptedException {
+    private List<GeneratorReport> generateReports(final List<FilePath> reportFiles, final Run<?, ?> run,
+            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<GeneratorReport> reports = new ArrayList<GeneratorReport>();
-        final FilePath archiveTarget = getArchiveTarget(build);
-        final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
+        final FilePath archiveTarget = getArchiveTarget(run);
+        final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
         final List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
         generators.addAll(getGenerators());
         generators.addAll(getCustomGenerators());
@@ -299,13 +333,13 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
         // Removing old artifacts at project level
         if (!reportFiles.isEmpty() && !isKeepAll()) {
             archiveTarget.deleteRecursive();
-            removePreviousReports(build, ReportGeneratorBuildAction.class);
+            removePreviousReports(run, ReportGeneratorBuildAction.class);
         }
 
         // Generate reports with all generators
         int index = 0;
         for (final ReportGeneratorConfig config : generators) {
-            final EnvVars envVars = build.getEnvironment(listener);
+            final EnvVars envVars = run.getEnvironment(listener);
             final ReportGeneratorConfig expConfig = config.expand(envVars);
             final ReportGenerator generator = new ReportGenerator(expConfig);
             final boolean isGenerated = generator.generate(reportFiles, launcher, listener);
@@ -369,16 +403,16 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     /**
      * Adds the {@link ReportGeneratorBuildAction} to the build holding the found {@link GeneratorReport}s.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @param reports
      *            the list of {@link GeneratorReport}s to add
      */
-    private void addBuildAction(final AbstractBuild<?, ?> build, final List<GeneratorReport> reports) {
-        ReportGeneratorBuildAction action = build.getAction(ReportGeneratorBuildAction.class);
+    private void addBuildAction(final Run<?, ?> run, final List<GeneratorReport> reports) {
+        ReportGeneratorBuildAction action = run.getAction(ReportGeneratorBuildAction.class);
         if (action == null) {
             action = new ReportGeneratorBuildAction(!isKeepAll());
-            build.addAction(action);
+            run.addAction(action);
         }
         action.addAll(reports);
     }
@@ -386,11 +420,6 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     @Override
     protected String getUrlName() {
         return URL_NAME;
-    }
-
-    @Override
-    public Action getProjectAction(final AbstractProject<?, ?> project) {
-        return new ReportGeneratorProjectAction(!isKeepAll());
     }
 
     @Override

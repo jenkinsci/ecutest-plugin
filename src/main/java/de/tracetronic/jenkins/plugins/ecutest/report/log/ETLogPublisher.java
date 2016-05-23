@@ -34,12 +34,10 @@ import hudson.FilePath;
 import hudson.FilePath.FileCallable;
 import hudson.Launcher;
 import hudson.Util;
-import hudson.model.Action;
-import hudson.model.BuildListener;
 import hudson.model.Result;
 import hudson.model.TaskListener;
-import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.model.Run;
 import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
@@ -53,6 +51,7 @@ import java.util.List;
 import jenkins.MasterToSlaveFileCallable;
 
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction.TestType;
@@ -83,12 +82,20 @@ public class ETLogPublisher extends AbstractReportPublisher {
      */
     protected static final String URL_NAME = "ecutest-logs";
 
-    private final boolean unstableOnWarning;
-    private final boolean failedOnError;
+    private boolean unstableOnWarning;
+    private boolean failedOnError;
     /**
      * @since 1.10
      */
-    private final boolean testSpecific;
+    private boolean testSpecific;
+
+    /**
+     * Instantiates a new {@link ETLogPublisher}.
+     */
+    @DataBoundConstructor
+    public ETLogPublisher() {
+        super();
+    }
 
     /**
      * Instantiates a new {@link ETLogPublisher}.
@@ -108,8 +115,9 @@ public class ETLogPublisher extends AbstractReportPublisher {
      * @param keepAll
      *            specifies whether artifacts are archived for all successful builds,
      *            otherwise only the most recent
+     * @deprecated since 1.11 use {@link #ETLogPublisher()}
      */
-    @DataBoundConstructor
+    @Deprecated
     public ETLogPublisher(final boolean unstableOnWarning, final boolean failedOnError, final boolean testSpecific,
             final boolean allowMissing, final boolean runOnFailed, final boolean archiving, final boolean keepAll) {
         super(allowMissing, runOnFailed, archiving, keepAll);
@@ -193,32 +201,59 @@ public class ETLogPublisher extends AbstractReportPublisher {
         return testSpecific;
     }
 
+    /**
+     * @param unstableOnWarning
+     *            specifies whether to mark the build as unstable if warnings found
+     */
+    @DataBoundSetter
+    public void setUnstableOnWarning(final boolean unstableOnWarning) {
+        this.unstableOnWarning = unstableOnWarning;
+    }
+
+    /**
+     * @param failedOnError
+     *            specifies whether to mark the build as failed if errors found
+     */
+    @DataBoundSetter
+    public void setFailedOnError(final boolean failedOnError) {
+        this.failedOnError = failedOnError;
+    }
+
+    /**
+     * @param testSpecific
+     *            specifies whether to parse the test specific log files
+     */
+    @DataBoundSetter
+    public void setTestSpecific(final boolean testSpecific) {
+        this.testSpecific = testSpecific;
+    }
+
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
-    public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-            final BuildListener listener) throws InterruptedException, IOException {
+    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing ECU-TEST logs...");
 
-        final Result buildResult = build.getResult();
+        final Result buildResult = run.getResult();
         if (buildResult != null && !canContinue(buildResult)) {
             logger.logInfo(String.format("Skipping publisher since build result is %s", buildResult));
-            return true;
+            return;
         }
 
         if (isArchiving()) {
             final List<ETLogReport> logReports = new ArrayList<ETLogReport>();
-            final FilePath archiveTarget = getArchiveTarget(build);
+            final FilePath archiveTarget = getArchiveTarget(run);
 
             // Removing old artifacts at project level
             if (!isKeepAll()) {
                 archiveTarget.deleteRecursive();
-                removePreviousReports(build, ETLogBuildAction.class);
+                removePreviousReports(run, ETLogBuildAction.class);
             }
 
             if (isTestSpecific()) {
                 int index = 0;
-                final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
+                final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
                 for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
                     final FilePath testReportDir = new FilePath(launcher.getChannel(),
                             testEnvAction.getTestReportDir());
@@ -236,14 +271,14 @@ public class ETLogPublisher extends AbstractReportPublisher {
                         } catch (final IOException e) {
                             Util.displayIOException(e, listener);
                             logger.logError("Failed publishing ECU-TEST logs.");
-                            build.setResult(Result.FAILURE);
-                            return true;
+                            run.setResult(Result.FAILURE);
+                            return;
                         }
                         index = traverseReports(logReports, archiveTargetDir, index);
                     }
                 }
             } else {
-                final List<FilePath> logFiles = getLogFiles(build, launcher);
+                final List<FilePath> logFiles = getLogFiles(run, workspace, launcher);
                 for (final FilePath logFile : logFiles) {
                     final FilePath targetFile = archiveTarget.child(logFile.getName());
                     try {
@@ -256,15 +291,15 @@ public class ETLogPublisher extends AbstractReportPublisher {
                             } else {
                                 logger.logError(String.format("Specified ECU-TEST log file '%s' does not exist.",
                                         logFile));
-                                build.setResult(Result.FAILURE);
-                                return true;
+                                run.setResult(Result.FAILURE);
+                                return;
                             }
                         }
                     } catch (final IOException e) {
                         Util.displayIOException(e, listener);
                         logger.logError("Failed publishing ECU-TEST logs.");
-                        build.setResult(Result.FAILURE);
-                        return true;
+                        run.setResult(Result.FAILURE);
+                        return;
                     }
                     final ETLogReport logReport = parseLogFile(logFile, logFile.getParent(), logReports.size() + 1);
                     logReports.add(logReport);
@@ -275,19 +310,18 @@ public class ETLogPublisher extends AbstractReportPublisher {
                 logger.logInfo("No log results found.");
                 if (!isAllowMissing()) {
                     logger.logError("Empty log results are not allowed, setting build status to FAILURE!");
-                    build.setResult(Result.FAILURE);
-                    return true;
+                    run.setResult(Result.FAILURE);
+                    return;
                 }
             } else {
-                addBuildAction(build, logReports);
-                setBuildResult(build, listener, logReports);
+                addBuildAction(run, logReports);
+                setBuildResult(run, listener, logReports);
             }
         } else {
             logger.logInfo("Archiving ECU-TEST logs is disabled.");
         }
 
         logger.logInfo("ECU-TEST logs published successfully.");
-        return true;
     }
 
     /**
@@ -421,16 +455,16 @@ public class ETLogPublisher extends AbstractReportPublisher {
     /**
      * Adds the {@link ETLogBuildAction} to the build holding the found {@link ETLogReport}s.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @param logReports
      *            the list of {@link ETLogReport}s to add
      */
-    private void addBuildAction(final AbstractBuild<?, ?> build, final List<ETLogReport> logReports) {
-        ETLogBuildAction action = build.getAction(ETLogBuildAction.class);
+    private void addBuildAction(final Run<?, ?> run, final List<ETLogReport> logReports) {
+        ETLogBuildAction action = run.getAction(ETLogBuildAction.class);
         if (action == null) {
             action = new ETLogBuildAction(!isKeepAll());
-            build.addAction(action);
+            run.addAction(action);
         }
         action.addAll(logReports);
     }
@@ -438,14 +472,14 @@ public class ETLogPublisher extends AbstractReportPublisher {
     /**
      * Sets the build result in case of errors or warnings.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @param listener
      *            the listener
      * @param logReports
      *            the log reports
      */
-    private void setBuildResult(final AbstractBuild<?, ?> build, final BuildListener listener,
+    private void setBuildResult(final Run<?, ?> run, final TaskListener listener,
             final List<ETLogReport> logReports) {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         int totalWarnings = 0;
@@ -459,12 +493,12 @@ public class ETLogPublisher extends AbstractReportPublisher {
             logger.logInfo(String.format(
                     "-> %d error(s) found in the ECU-TEST logs, setting build status to FAILURE!",
                     totalErrors));
-            build.setResult(Result.FAILURE);
+            run.setResult(Result.FAILURE);
         } else if (totalWarnings > 0 && isUnstableOnWarning()) {
             logger.logInfo(String.format(
                     "-> %d warning(s) found in the ECU-TEST logs, setting build status to UNSTABLE!",
                     totalWarnings));
-            build.setResult(Result.UNSTABLE);
+            run.setResult(Result.UNSTABLE);
         } else {
             logger.logInfo(String.format("-> %d warning(s) and %d error(s) found in the ECU-TEST logs.",
                     totalWarnings, totalErrors));
@@ -474,8 +508,9 @@ public class ETLogPublisher extends AbstractReportPublisher {
     /**
      * Builds a list of ECU-TEST log files for archiving, either all test specific logs or the complete logs.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
+     * @param workspace
      * @param launcher
      *            the launcher
      * @return the list of log files
@@ -484,13 +519,13 @@ public class ETLogPublisher extends AbstractReportPublisher {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private List<FilePath> getLogFiles(final AbstractBuild<?, ?> build, final Launcher launcher)
+    private List<FilePath> getLogFiles(final Run<?, ?> run, final FilePath workspace, final Launcher launcher)
             throws IOException, InterruptedException {
         final List<FilePath> archiveFiles = new ArrayList<FilePath>();
         if (isTestSpecific()) {
-            archiveFiles.addAll(getTestSpecificLogFiles(build, launcher));
+            archiveFiles.addAll(getTestSpecificLogFiles(run, launcher));
         } else {
-            archiveFiles.addAll(getCompleteLogFiles(build, launcher));
+            archiveFiles.addAll(getCompleteLogFiles(run, workspace, launcher));
         }
         return archiveFiles;
     }
@@ -498,8 +533,10 @@ public class ETLogPublisher extends AbstractReportPublisher {
     /**
      * Builds a list of the entire ECU-TEST log files for archiving.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @return the complete log files
@@ -508,19 +545,19 @@ public class ETLogPublisher extends AbstractReportPublisher {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private List<FilePath> getCompleteLogFiles(final AbstractBuild<?, ?> build, final Launcher launcher)
+    private List<FilePath> getCompleteLogFiles(final Run<?, ?> run, final FilePath workspace, final Launcher launcher)
             throws IOException, InterruptedException {
         final List<FilePath> archiveFiles = new ArrayList<FilePath>();
-        FilePath workspace;
-        final ToolEnvInvisibleAction toolEnvAction = build.getAction(ToolEnvInvisibleAction.class);
+        FilePath workspacePath;
+        final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
         if (toolEnvAction != null) {
-            workspace = new FilePath(launcher.getChannel(), toolEnvAction.getToolSettings());
+            workspacePath = new FilePath(launcher.getChannel(), toolEnvAction.getToolSettings());
         } else {
-            workspace = build.getWorkspace();
+            workspacePath = workspace;
         }
-        if (workspace != null && workspace.exists()) {
+        if (workspacePath != null && workspacePath.exists()) {
             final String includes = String.format("%s,%s", INFO_LOG_NAME, ERROR_LOG_NAME);
-            for (final String includeFile : workspace.act(new ListFilesCallable(includes, ""))) {
+            for (final String includeFile : workspacePath.act(new ListFilesCallable(includes, ""))) {
                 final FilePath archiveFile = new FilePath(launcher.getChannel(), includeFile);
                 archiveFiles.add(archiveFile);
             }
@@ -531,8 +568,8 @@ public class ETLogPublisher extends AbstractReportPublisher {
     /**
      * Builds a list of all test specific ECU-TEST log files for archiving.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @param launcher
      *            the launcher
      * @return the list of log files
@@ -541,10 +578,10 @@ public class ETLogPublisher extends AbstractReportPublisher {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private List<FilePath> getTestSpecificLogFiles(final AbstractBuild<?, ?> build, final Launcher launcher)
+    private List<FilePath> getTestSpecificLogFiles(final Run<?, ?> run, final Launcher launcher)
             throws IOException, InterruptedException {
         final List<FilePath> archiveFiles = new ArrayList<FilePath>();
-        final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
+        final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
             if (testReportDir.exists()) {
@@ -606,11 +643,6 @@ public class ETLogPublisher extends AbstractReportPublisher {
     }
 
     @Override
-    public Action getProjectAction(final AbstractProject<?, ?> project) {
-        return new ETLogProjectAction(!isKeepAll());
-    }
-
-    @Override
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl) super.getDescriptor();
     }
@@ -658,10 +690,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
                         errorLogFile.delete();
                     }
                 } catch (IOException | InterruptedException e) {
-                    if (!(listener instanceof BuildListener)) {
-                        throw new AssertionError("Unexpected type: " + listener);
-                    }
-                    final TTConsoleLogger logger = new TTConsoleLogger((BuildListener) listener);
+                    final TTConsoleLogger logger = new TTConsoleLogger(listener);
                     logger.logWarn("Failed deleting ECU-TEST log files: " + e.getMessage());
                 }
             }

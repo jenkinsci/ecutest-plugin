@@ -32,6 +32,8 @@ package de.tracetronic.jenkins.plugins.ecutest.report;
 import hudson.Util;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.model.Job;
+import hudson.model.Run;
 
 import java.io.File;
 import java.io.IOException;
@@ -69,12 +71,12 @@ public abstract class AbstractRequestHandler {
      */
     @CheckForNull
     public Object getOwner(final StaplerRequest req) {
-        final AbstractBuild<?, ?> build = getAnchestorBuild(req);
+        final Run<?, ?> build = getAnchestorBuild(req);
         if (build != null) {
             return build;
         }
 
-        final AbstractProject<?, ?> project = getAnchestorProject(req);
+        final Job<?, ?> project = getAnchestorProject(req);
         if (project != null) {
             return project;
         }
@@ -92,7 +94,7 @@ public abstract class AbstractRequestHandler {
      * @return the build with report artifacts to handle or {@code null} if no proper build exists
      */
     @CheckForNull
-    public abstract AbstractBuild<?, ?> getBuild(final StaplerRequest req);
+    public abstract Run<?, ?> getBuild(final StaplerRequest req);
 
     /**
      * Gets the archive target directory for use in {@link #doZipDownload}.
@@ -123,8 +125,8 @@ public abstract class AbstractRequestHandler {
      * @return the build containing this action or {@code null} if no proper project exists
      */
     @CheckForNull
-    protected AbstractBuild<?, ?> getAnchestorBuild(final StaplerRequest req) {
-        return req.findAncestorObject(AbstractBuild.class);
+    protected Run<?, ?> getAnchestorBuild(final StaplerRequest req) {
+        return req.findAncestorObject(Run.class);
     }
 
     /**
@@ -135,8 +137,8 @@ public abstract class AbstractRequestHandler {
      * @return the project containing this action or {@code null} if no proper project exists
      */
     @CheckForNull
-    protected AbstractProject<?, ?> getAnchestorProject(final StaplerRequest req) {
-        return req.findAncestorObject(AbstractProject.class);
+    protected Job<?, ?> getAnchestorProject(final StaplerRequest req) {
+        return req.findAncestorObject(Job.class);
     }
 
     /**
@@ -153,7 +155,7 @@ public abstract class AbstractRequestHandler {
      */
     public void doZipDownload(final StaplerRequest req, final StaplerResponse rsp)
             throws IOException, ServletException {
-        final AbstractBuild<?, ?> build = getBuild(req);
+        final Run<?, ?> build = getBuild(req);
         final AbstractReportAction action = getBuildAction(req);
         if (build == null || action == null) {
             LOGGER.warning(String.format("No build or related action found for url %s", req.getRequestURI()));
@@ -162,7 +164,7 @@ public abstract class AbstractRequestHandler {
         }
 
         final boolean isProjectLevel = action.isProjectLevel();
-        final File rootDir = isProjectLevel ? build.getProject().getRootDir() : build.getRootDir();
+        final File rootDir = isProjectLevel ? build.getParent().getRootDir() : build.getRootDir();
         final VirtualFile archiveDir = getArchiveTargetDir(rootDir);
         if (!archiveDir.exists()) {
             LOGGER.warning(String.format("Archive directory does not exists: %s for %s", archiveDir.getName(),
@@ -184,7 +186,7 @@ public abstract class AbstractRequestHandler {
         }
 
         // Compress and download the archive directory
-        final String zipFileName = String.format("%s_%s#%d", archiveDir.getName(), build.getProject().getName(),
+        final String zipFileName = String.format("%s_%s#%d", archiveDir.getName(), build.getParent().getName(),
                 build.getNumber());
         rsp.setHeader("Content-Disposition", "attachment;filename=\"" + zipFileName + "\"");
         rsp.setContentType("application/zip");

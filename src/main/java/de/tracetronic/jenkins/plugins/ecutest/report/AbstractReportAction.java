@@ -31,8 +31,8 @@ package de.tracetronic.jenkins.plugins.ecutest.report;
 
 import hudson.PluginWrapper;
 import hudson.model.Action;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
+import hudson.model.Job;
+import hudson.model.Run;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -82,13 +82,13 @@ public abstract class AbstractReportAction extends AbstractRequestHandler implem
     }
 
     @Override
-    public AbstractBuild<?, ?> getBuild(final StaplerRequest req) {
-        final AbstractBuild<?, ?> build = getAnchestorBuild(req);
+    public Run<?, ?> getBuild(final StaplerRequest req) {
+        final Run<?, ?> build = getAnchestorBuild(req);
         if (build != null) {
             return build;
         }
 
-        final AbstractProject<?, ?> project = getAnchestorProject(req);
+        final Job<?, ?> project = getAnchestorProject(req);
         if (project != null) {
             return getLastReportBuild(project);
         }
@@ -109,7 +109,7 @@ public abstract class AbstractReportAction extends AbstractRequestHandler implem
      * @return the last build with report artifacts or {@code null} if no proper build exists
      */
     @CheckForNull
-    protected abstract AbstractBuild<?, ?> getLastReportBuild(final AbstractProject<?, ?> project);
+    protected abstract Run<?, ?> getLastReportBuild(final Job<?, ?> project);
 
     /**
      * Gets the icon path inside of this plugin.

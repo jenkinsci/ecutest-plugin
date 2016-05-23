@@ -29,7 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
 
 import java.io.File;
 import java.io.IOException;
@@ -120,7 +120,7 @@ public class ATXReport extends AbstractTestReport {
      *             signals that an I/O exception has occurred
      */
     public void doDynamic(final StaplerRequest req, final StaplerResponse rsp) throws IOException {
-        final AbstractBuild<?, ?> build = getBuild(req);
+        final Run<?, ?> build = getBuild(req);
         if (build == null) {
             LOGGER.warning(String.format("No build found for url %s", req.getRequestURI()));
             rsp.sendError(HttpServletResponse.SC_NOT_FOUND);

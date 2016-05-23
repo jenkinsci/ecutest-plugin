@@ -33,8 +33,8 @@ import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
+import hudson.model.Run;
 import hudson.remoting.Callable;
 
 import java.io.IOException;
@@ -73,8 +73,8 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      *            specifies whether to keep all artifacts
      * @param installation
      *            the ATX installation
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @param launcher
      *            the launcher
      * @param listener
@@ -87,11 +87,11 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      */
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     public boolean generate(final FilePath archiveTarget, final boolean allowMissing, final boolean isArchiving,
-            final boolean keepAll, final ATXInstallation installation, final AbstractBuild<?, ?> build,
-            final Launcher launcher, final BuildListener listener) throws IOException, InterruptedException {
+            final boolean keepAll, final ATXInstallation installation, final Run<?, ?> run, final Launcher launcher,
+            final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<FilePath> reportFiles = new ArrayList<FilePath>();
-        final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
+        final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
             final FilePath reportFile = testReportDir.child(TRFPublisher.TRF_FILE_NAME);
@@ -114,14 +114,14 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
 
         // Generate ATX reports
         final boolean isGenerated = launcher.getChannel().call(
-                new GenerateReportCallable(installation.getConfig(), reportFiles, build.getEnvironment(listener),
+                new GenerateReportCallable(installation.getConfig(), reportFiles, run.getEnvironment(listener),
                         listener));
 
         if (isArchiving) {
             // Removing old artifacts at project level
             if (!reportFiles.isEmpty() && !keepAll) {
                 archiveTarget.deleteRecursive();
-                AbstractReportPublisher.removePreviousReports(build, ATXBuildAction.class);
+                AbstractReportPublisher.removePreviousReports(run, ATXBuildAction.class);
             }
 
             if (isGenerated && !reportFiles.isEmpty()) {
@@ -147,7 +147,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
                     }
                     index = traverseReports(atxReports, archiveTargetDir, index);
                 }
-                addBuildAction(build, atxReports, keepAll);
+                addBuildAction(run, atxReports, keepAll);
             }
         } else {
             logger.logInfo("Archiving ATX reports is disabled.");
@@ -231,20 +231,19 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
     /**
      * Adds the {@link ATXBuildAction} to the build holding the found {@link ATXZipReport}s.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @param atxReports
      *            the list of {@link ATXZipReport}s to add
      * @param keepAll
      *            specifies whether to keep all artifacts
      */
     @SuppressWarnings("unchecked")
-    private void addBuildAction(final AbstractBuild<?, ?> build, final List<ATXZipReport> atxReports,
-            final boolean keepAll) {
-        ATXBuildAction<ATXZipReport> action = build.getAction(ATXBuildAction.class);
+    private void addBuildAction(final Run<?, ?> run, final List<ATXZipReport> atxReports, final boolean keepAll) {
+        ATXBuildAction<ATXZipReport> action = run.getAction(ATXBuildAction.class);
         if (action == null) {
             action = new ATXBuildAction<ATXZipReport>(!keepAll);
-            build.addAction(action);
+            run.addAction(action);
         }
         action.addAll(atxReports);
     }
@@ -269,7 +268,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
          *            the listener
          */
         GenerateReportCallable(final ATXConfig config, final List<FilePath> reportFiles, final EnvVars envVars,
-                final BuildListener listener) {
+                final TaskListener listener) {
             super(config, reportFiles, envVars, listener);
         }
 

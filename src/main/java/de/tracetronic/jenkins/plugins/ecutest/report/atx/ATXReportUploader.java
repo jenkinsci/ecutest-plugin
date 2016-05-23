@@ -32,8 +32,8 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
+import hudson.model.Run;
 import hudson.remoting.Callable;
 
 import java.io.File;
@@ -78,8 +78,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      *            specifies whether missing reports are allowed
      * @param installation
      *            the ATX installation
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @param launcher
      *            the launcher
      * @param listener
@@ -90,15 +90,14 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    public boolean upload(final boolean allowMissing, final ATXInstallation installation,
-            final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
-            throws IOException, InterruptedException {
+    public boolean upload(final boolean allowMissing, final ATXInstallation installation, final Run<?, ?> run,
+            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<ATXReport> atxReports = new ArrayList<ATXReport>();
         final List<FilePath> uploadFiles = new ArrayList<FilePath>();
 
         int index = 0;
-        final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
+        final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
             final FilePath reportFile = testReportDir.child(TRFPublisher.TRF_FILE_NAME);
@@ -106,13 +105,13 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 uploadFiles.addAll(Arrays.asList(testReportDir.list("**/" + TRFPublisher.TRF_FILE_NAME)));
 
                 // Prepare ATX report information
-                final String baseUrl = ATXUtil.getBaseUrl(installation.getConfig(), build.getEnvironment(listener));
+                final String baseUrl = ATXUtil.getBaseUrl(installation.getConfig(), run.getEnvironment(listener));
                 if (baseUrl == null) {
                     logger.logError(String.format("Error getting base URL for selected TEST-GUIDE installation: %s",
                             installation.getName()));
                     return false;
                 }
-                final String from = String.valueOf(build.getStartTimeInMillis());
+                final String from = String.valueOf(run.getStartTimeInMillis());
                 final String to = String.valueOf(Calendar.getInstance().getTimeInMillis());
                 final String title = reportFile.getParent().getName();
                 final String testName = testEnvAction.getTestName();
@@ -135,10 +134,10 @@ public class ATXReportUploader extends AbstractATXReportHandler {
 
         // Upload ATX reports
         final boolean isUploaded = launcher.getChannel().call(
-                new UploadReportCallable(installation.getConfig(), uploadFiles, build.getEnvironment(listener),
+                new UploadReportCallable(installation.getConfig(), uploadFiles, run.getEnvironment(listener),
                         listener));
         if (isUploaded) {
-            addBuildAction(build, atxReports);
+            addBuildAction(run, atxReports);
         }
 
         return isUploaded;
@@ -174,7 +173,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     private int traverseReports(final List<ATXReport> atxReports, final FilePath testReportDir, int id,
             final String title, final String baseUrl, final String from, final String to, final String testName,
             final TestType testType)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         // Prepare ATX report information
         String reportUrl = null;
         String trendReportUrl = null;
@@ -221,7 +220,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      */
     private int traverseSubReports(final ATXReport atxReport, final FilePath testReportDir, int id,
             final String baseUrl, final String from, final String to)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         for (final FilePath subDir : testReportDir.listDirectories()) {
             final FilePath reportFile = subDir.child(TRFPublisher.TRF_FILE_NAME);
             if (reportFile.exists()) {
@@ -241,17 +240,17 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     /**
      * Adds the {@link ATXBuildAction} to the build holding the found {@link ATXReport}s.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @param atxReports
      *            the list of {@link ATXReport}s to add
      */
     @SuppressWarnings("unchecked")
-    private void addBuildAction(final AbstractBuild<?, ?> build, final List<ATXReport> atxReports) {
-        ATXBuildAction<ATXReport> action = build.getAction(ATXBuildAction.class);
+    private void addBuildAction(final Run<?, ?> run, final List<ATXReport> atxReports) {
+        ATXBuildAction<ATXReport> action = run.getAction(ATXBuildAction.class);
         if (action == null) {
             action = new ATXBuildAction<ATXReport>(false);
-            build.addAction(action);
+            run.addAction(action);
         }
         action.addAll(atxReports);
     }
@@ -328,7 +327,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          *            the listener
          */
         UploadReportCallable(final ATXConfig config, final List<FilePath> reportFiles, final EnvVars envVars,
-                final BuildListener listener) {
+                final TaskListener listener) {
             super(config, reportFiles, envVars, listener);
         }
 
