@@ -70,8 +70,11 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         final StartETContext context = new StartETContext();
         executeInContext(closure, context);
 
-        final StartETBuilder builder = new StartETBuilder(toolName.toString(), context.workspaceDir,
-                context.settingsDir, context.timeout, context.debugMode);
+        final StartETBuilder builder = new StartETBuilder(toolName.toString());
+        builder.setWorkspaceDir(context.workspaceDir);
+        builder.setSettingsDir(context.settingsDir);
+        builder.setTimeout(context.timeout);
+        builder.setDebugMode(context.debugMode);
         checkToolInstallation(toolName.toString(), builder);
         return builder;
     }
@@ -104,7 +107,8 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         final StopETContext context = new StopETContext();
         executeInContext(closure, context);
 
-        final StopETBuilder builder = new StopETBuilder(toolName.toString(), context.timeout);
+        final StopETBuilder builder = new StopETBuilder(toolName.toString());
+        builder.setTimeout(context.timeout);
         checkToolInstallation(toolName.toString(), builder);
         return builder;
     }
@@ -137,8 +141,10 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         final StartTSContext context = new StartTSContext();
         executeInContext(closure, context);
 
-        final StartTSBuilder builder = new StartTSBuilder(toolName.toString(), context.timeout,
-                context.toolLibsIni, context.tcpPort);
+        final StartTSBuilder builder = new StartTSBuilder(toolName.toString());
+        builder.setToolLibsIni(context.toolLibsIni);
+        builder.setTcpPort(context.tcpPort);
+        builder.setTimeout(context.timeout);
         checkToolInstallation(toolName.toString(), builder);
         return builder;
     }
@@ -171,7 +177,8 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         final StopTSContext context = new StopTSContext();
         executeInContext(closure, context);
 
-        final StopTSBuilder builder = new StopTSBuilder(toolName.toString(), context.timeout);
+        final StopTSBuilder builder = new StopTSBuilder(toolName.toString());
+        builder.setTimeout(context.timeout);
         checkToolInstallation(toolName.toString(), builder);
         return builder;
     }

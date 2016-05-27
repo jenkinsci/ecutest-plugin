@@ -80,8 +80,11 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         final PublishATXContext context = new PublishATXContext();
         executeInContext(closure, context);
 
-        final ATXPublisher publisher = new ATXPublisher(atxName.toString(), context.allowMissing, context.runOnFailed,
-                context.archiving, context.keepAll);
+        final ATXPublisher publisher = new ATXPublisher(atxName.toString());
+        publisher.setAllowMissing(context.allowMissing);
+        publisher.setRunOnFailed(context.runOnFailed);
+        publisher.setArchiving(context.archiving);
+        publisher.setKeepAll(context.keepAll);
         checkATXInstallation(atxName.toString(), publisher);
         return publisher;
     }
@@ -128,8 +131,13 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         final PublishUNITContext context = new PublishUNITContext();
         executeInContext(closure, context);
 
-        final JUnitPublisher publisher = new JUnitPublisher(toolName.toString(), context.unstableThreshold,
-                context.failedThreshold, context.allowMissing, context.runOnFailed, context.archiving, context.keepAll);
+        final JUnitPublisher publisher = new JUnitPublisher(toolName.toString());
+        publisher.setUnstableThreshold(context.unstableThreshold);
+        publisher.setFailedThreshold(context.failedThreshold);
+        publisher.setAllowMissing(context.allowMissing);
+        publisher.setRunOnFailed(context.runOnFailed);
+        publisher.setArchiving(context.archiving);
+        publisher.setKeepAll(context.keepAll);
         checkToolInstallation(toolName.toString(), publisher);
         return publisher;
     }
@@ -157,7 +165,12 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     public Object publishTRF(final Runnable closure) {
         final PublishTRFContext context = new PublishTRFContext();
         executeInContext(closure, context);
-        return new TRFPublisher(context.allowMissing, context.runOnFailed, context.archiving, context.keepAll);
+        final TRFPublisher publisher = new TRFPublisher();
+        publisher.setAllowMissing(context.allowMissing);
+        publisher.setRunOnFailed(context.runOnFailed);
+        publisher.setArchiving(context.archiving);
+        publisher.setKeepAll(context.keepAll);
+        return publisher;
     }
 
     /**
@@ -181,8 +194,15 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     public Object publishETLogs(final Runnable closure) {
         final PublishETLogContext context = new PublishETLogContext();
         executeInContext(closure, context);
-        return new ETLogPublisher(context.unstableOnWarning, context.failedOnError, context.testSpecific,
-                context.allowMissing, context.runOnFailed, context.archiving, context.keepAll);
+        final ETLogPublisher publisher = new ETLogPublisher();
+        publisher.setUnstableOnWarning(context.unstableOnWarning);
+        publisher.setFailedOnError(context.failedOnError);
+        publisher.setTestSpecific(context.testSpecific);
+        publisher.setAllowMissing(context.allowMissing);
+        publisher.setRunOnFailed(context.runOnFailed);
+        publisher.setArchiving(context.archiving);
+        publisher.setKeepAll(context.keepAll);
+        return publisher;
     }
 
     /**
@@ -211,9 +231,13 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         final PublishGeneratorsContext context = new PublishGeneratorsContext();
         executeInContext(closure, context);
 
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher(toolName.toString(),
-                context.generators, context.customGenerators, context.allowMissing, context.runOnFailed,
-                context.archiving, context.keepAll);
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher(toolName.toString());
+        publisher.setGenerators(context.generators);
+        publisher.setCustomGenerators(context.customGenerators);
+        publisher.setAllowMissing(context.allowMissing);
+        publisher.setRunOnFailed(context.runOnFailed);
+        publisher.setArchiving(context.archiving);
+        publisher.setKeepAll(context.keepAll);
         checkToolInstallation(toolName.toString(), publisher);
         return publisher;
     }
