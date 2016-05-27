@@ -79,6 +79,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
+import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
 
 /**
@@ -170,6 +171,7 @@ public class ATXPublisher extends AbstractReportPublisher {
             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing ATX reports...");
+        ProcessUtil.checkOS(launcher);
 
         final Result buildResult = run.getResult();
         if (buildResult != null && !canContinue(buildResult)) {
@@ -237,7 +239,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean publishReports(final ATXInstallation installation, final Run<?, ?> run,
             final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final boolean isUploadEnabled = isUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, launcher, run.getEnvironment(listener));

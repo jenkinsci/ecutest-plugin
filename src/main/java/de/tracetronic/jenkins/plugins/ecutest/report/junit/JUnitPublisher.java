@@ -68,6 +68,7 @@ import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
 
 /**
@@ -230,6 +231,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing UNIT reports...");
+        ProcessUtil.checkOS(launcher);
 
         final Result buildResult = run.getResult();
         if (buildResult != null && !canContinue(buildResult)) {

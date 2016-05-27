@@ -62,6 +62,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 
 /**
  * Publisher providing links to saved {@link GeneratorReport}s.
@@ -240,6 +241,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing generator reports...");
+        ProcessUtil.checkOS(launcher);
 
         final Result buildResult = run.getResult();
         if (buildResult != null && !canContinue(buildResult)) {
