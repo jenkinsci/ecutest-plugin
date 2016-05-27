@@ -40,6 +40,7 @@ import hudson.model.FreeStyleBuild;
 import hudson.model.Result;
 import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
+import hudson.model.Label;
 import hudson.slaves.DumbSlave;
 import hudson.slaves.SlaveComputer;
 
@@ -47,6 +48,9 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 
+import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
+import org.jenkinsci.plugins.workflow.job.WorkflowJob;
+import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
@@ -75,7 +79,27 @@ public class JUnitPublisherST extends SystemTestBase {
     }
 
     @Test
-    public void testRoundTripConfig() throws Exception {
+    public void testDefaultConfigRoundTripStep() throws Exception {
+        final JUnitPublisher before = new JUnitPublisher("ECU-TEST");
+        final JUnitPublisher after = jenkins.configRoundtrip(before);
+        jenkins.assertEqualDataBoundBeans(before, after);
+    }
+
+    @Test
+    public void testConfigRoundTripStep() throws Exception {
+        final JUnitPublisher before = new JUnitPublisher("ECU-TEST");
+        before.setUnstableThreshold(0);
+        before.setFailedThreshold(0);
+        before.setAllowMissing(false);
+        before.setRunOnFailed(false);
+        final JUnitPublisher after = jenkins.configRoundtrip(before);
+        jenkins.assertEqualBeans(before, after,
+                "unstableThreshold,failedThreshold,allowMissing,runOnFailed");
+    }
+
+    @Deprecated
+    @Test
+    public void testConfigRoundTrip() throws Exception {
         final JUnitPublisher before = new JUnitPublisher("ECU-TEST", 0, 0, false, false, true, true);
         final JUnitPublisher after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after,
@@ -85,7 +109,13 @@ public class JUnitPublisherST extends SystemTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final JUnitPublisher publisher = new JUnitPublisher("ECU-TEST", 0, 0, true, true, true, true);
+        final JUnitPublisher publisher = new JUnitPublisher("ECU-TEST");
+        publisher.setUnstableThreshold(0);
+        publisher.setFailedThreshold(0);
+        publisher.setAllowMissing(true);
+        publisher.setRunOnFailed(true);
+        publisher.setArchiving(true);
+        publisher.setKeepAll(true);
         project.getPublishersList().add(publisher);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
@@ -109,7 +139,8 @@ public class JUnitPublisherST extends SystemTestBase {
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.setAssignedNode(slave);
-        final JUnitPublisher publisher = new JUnitPublisher("ECU-TEST", 0, 0, false, true, true, true);
+        final JUnitPublisher publisher = new JUnitPublisher("ECU-TEST");
+        publisher.setAllowMissing(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
@@ -132,7 +163,8 @@ public class JUnitPublisherST extends SystemTestBase {
                 return false;
             }
         });
-        final JUnitPublisher publisher = new JUnitPublisher("ECU-TEST", 0, 0, true, false, true, true);
+        final JUnitPublisher publisher = new JUnitPublisher("ECU-TEST");
+        publisher.setRunOnFailed(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
@@ -143,7 +175,7 @@ public class JUnitPublisherST extends SystemTestBase {
     @Test
     public void testParameterizedToolName() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final JUnitPublisher publisher = new JUnitPublisher("${ECUTEST}", 0, 0, true, false, true, true);
+        final JUnitPublisher publisher = new JUnitPublisher("${ECUTEST}");
         project.getPublishersList().add(publisher);
 
         final EnvVars envVars = new EnvVars(
@@ -156,5 +188,53 @@ public class JUnitPublisherST extends SystemTestBase {
                 }));
 
         assertEquals("Tool name should be resolved", "ECU-TEST", publisher.getToolInstallation(envVars).getName());
+    }
+
+    @Test
+    public void testDefaultPipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'JUnitPublisher', toolName: 'ECU-TEST'])\n"
+                + "}";
+        assertPipelineStep(script, true);
+    }
+
+    @Test
+    public void testPipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'JUnitPublisher', toolName: 'ECU-TEST',"
+                + "        allowMissing: true, runOnFailed: true,"
+                + "        unstableThreshold: 0, failedThreshold: 0])\n"
+                + "}";
+        assertPipelineStep(script, false);
+    }
+
+    /**
+     * Asserts the pipeline step execution.
+     *
+     * @param script
+     *            the script
+     * @param emptyResults
+     *            if results are expected
+     * @throws Exception
+     *             the exception
+     */
+    private void assertPipelineStep(final String script, final boolean emptyResults) throws Exception {
+        // Windows only
+        final DumbSlave slave = jenkins.createOnlineSlave(Label.get("slaves"));
+        final SlaveComputer computer = slave.getComputer();
+        assumeFalse("Test is Windows only!", computer.isUnix());
+
+        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
+        job.setDefinition(new CpsFlowDefinition(script, true));
+
+        final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
+        jenkins.assertLogContains("Publishing UNIT reports...", run);
+        if (emptyResults == false) {
+            jenkins.assertLogContains("Starting ECU-TEST failed.", run);
+        } else {
+            jenkins.assertLogContains("Empty test results are not allowed, setting build status to FAILURE!", run);
+        }
     }
 }

@@ -29,16 +29,29 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool;
 
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assume.assumeFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hudson.EnvVars;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
+import hudson.model.Label;
+import hudson.slaves.DumbSlave;
+import hudson.slaves.SlaveComputer;
 
 import java.util.Collections;
 import java.util.HashMap;
 
+import jenkins.tasks.SimpleBuildStep;
+
+import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
+import org.jenkinsci.plugins.workflow.job.WorkflowJob;
+import org.jenkinsci.plugins.workflow.job.WorkflowRun;
+import org.jenkinsci.plugins.workflow.steps.CoreStep;
+import org.jenkinsci.plugins.workflow.steps.StepConfigTester;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
@@ -66,7 +79,35 @@ public class StopTSBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testRoundTripConfig() throws Exception {
+    public void testDefaultConfigRoundTripStep() throws Exception {
+        final StopTSBuilder before = new StopTSBuilder("ECU-TEST");
+
+        CoreStep step = new CoreStep(before);
+        step = new StepConfigTester(jenkins).configRoundTrip(step);
+        final SimpleBuildStep delegate = step.delegate;
+        assertThat(delegate, instanceOf(StopTSBuilder.class));
+
+        final StopTSBuilder after = (StopTSBuilder) delegate;
+        jenkins.assertEqualDataBoundBeans(before, after);
+    }
+
+    @Test
+    public void testConfigRoundTripStep() throws Exception {
+        final StopTSBuilder before = new StopTSBuilder("ECU-TEST");
+        before.setTimeout("120");
+
+        CoreStep step = new CoreStep(before);
+        step = new StepConfigTester(jenkins).configRoundTrip(step);
+        final SimpleBuildStep delegate = step.delegate;
+        assertThat(delegate, instanceOf(StopTSBuilder.class));
+
+        final StopTSBuilder after = (StopTSBuilder) delegate;
+        jenkins.assertEqualBeans(before, after, "timeout");
+    }
+
+    @Deprecated
+    @Test
+    public void testConfigRoundTrip() throws Exception {
         final StopTSBuilder before = new StopTSBuilder("ECU-TEST", "30");
         final StopTSBuilder after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after, "timeout");
@@ -75,8 +116,9 @@ public class StopTSBuilderST extends SystemTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final StopTSBuilder before = new StopTSBuilder("ECU-TEST", "30");
-        project.getBuildersList().add(before);
+        final StopTSBuilder builder = new StopTSBuilder("ECU-TEST");
+        builder.setTimeout("30");
+        project.getBuildersList().add(builder);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.StopTSBuilder_DisplayName());
@@ -89,7 +131,7 @@ public class StopTSBuilderST extends SystemTestBase {
     @Test
     public void testToolId() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final StopTSBuilder builder = new StopTSBuilder("ECU-TEST", "30");
+        final StopTSBuilder builder = new StopTSBuilder("ECU-TEST");
         project.getBuildersList().add(builder);
 
         final FreeStyleBuild build = mock(FreeStyleBuild.class);
@@ -101,7 +143,7 @@ public class StopTSBuilderST extends SystemTestBase {
     @Test
     public void testParameterizedToolName() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final StopTSBuilder builder = new StopTSBuilder("${ECUTEST}", "30");
+        final StopTSBuilder builder = new StopTSBuilder("${ECUTEST}");
         project.getBuildersList().add(builder);
 
         final EnvVars envVars = new EnvVars(
@@ -114,5 +156,46 @@ public class StopTSBuilderST extends SystemTestBase {
                 }));
 
         assertEquals("Tool name should be resolved", "ECU-TEST", builder.getToolInstallation(envVars).getName());
+    }
+
+    @Test
+    public void testPipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'StopTSBuilder', toolName: 'ECU-TEST', timeout: '120'])\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
+    @Test
+    public void testDefaultPipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'StopTSBuilder', toolName: 'ECU-TEST'])\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
+    /**
+     * Asserts the pipeline step execution.
+     *
+     * @param script
+     *            the script
+     * @throws Exception
+     *             the exception
+     */
+    private void assertPipelineStep(final String script) throws Exception {
+        // Windows only
+        final DumbSlave slave = jenkins.createOnlineSlave(Label.get("slaves"));
+        final SlaveComputer computer = slave.getComputer();
+        assumeFalse("Test is Windows only!", computer.isUnix());
+
+        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
+        job.setDefinition(new CpsFlowDefinition(script, true));
+
+        final WorkflowRun run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
+        jenkins.assertLogContains("Stopping Tool-Server...", run);
+        jenkins.assertLogContains("No running Tool-Server instance found!", run);
+        jenkins.assertLogContains("Tool-Server stopped successfully.", run);
     }
 }

@@ -31,15 +31,22 @@ package de.tracetronic.jenkins.plugins.ecutest.report.trf;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assume.assumeFalse;
 import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
 import hudson.model.Result;
 import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
+import hudson.model.Label;
+import hudson.slaves.DumbSlave;
+import hudson.slaves.SlaveComputer;
 
 import java.io.IOException;
 
+import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
+import org.jenkinsci.plugins.workflow.job.WorkflowJob;
+import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.junit.Test;
 import org.jvnet.hudson.test.TestBuilder;
 
@@ -56,7 +63,26 @@ import de.tracetronic.jenkins.plugins.ecutest.SystemTestBase;
 public class TRFPublisherST extends SystemTestBase {
 
     @Test
-    public void testRoundTripConfig() throws Exception {
+    public void testDefaultConfigRoundTripStep() throws Exception {
+        final TRFPublisher before = new TRFPublisher();
+        final TRFPublisher after = jenkins.configRoundtrip(before);
+        jenkins.assertEqualDataBoundBeans(before, after);
+    }
+
+    @Test
+    public void testConfigRoundTripStep() throws Exception {
+        final TRFPublisher before = new TRFPublisher();
+        before.setAllowMissing(false);
+        before.setRunOnFailed(false);
+        before.setArchiving(true);
+        before.setKeepAll(true);
+        final TRFPublisher after = jenkins.configRoundtrip(before);
+        jenkins.assertEqualBeans(before, after, "allowMissing,runOnFailed,archiving,keepAll");
+    }
+
+    @Deprecated
+    @Test
+    public void testConfigRoundTrip() throws Exception {
         final TRFPublisher before = new TRFPublisher(false, false, true, true);
         final TRFPublisher after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after, "allowMissing,runOnFailed,archiving,keepAll");
@@ -65,7 +91,11 @@ public class TRFPublisherST extends SystemTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final TRFPublisher publisher = new TRFPublisher(true, true, true, true);
+        final TRFPublisher publisher = new TRFPublisher();
+        publisher.setAllowMissing(true);
+        publisher.setRunOnFailed(true);
+        publisher.setArchiving(true);
+        publisher.setKeepAll(true);
         project.getPublishersList().add(publisher);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
@@ -79,7 +109,8 @@ public class TRFPublisherST extends SystemTestBase {
     @Test
     public void testAllowMissing() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final TRFPublisher publisher = new TRFPublisher(false, true, true, true);
+        final TRFPublisher publisher = new TRFPublisher();
+        publisher.setAllowMissing(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
@@ -96,11 +127,60 @@ public class TRFPublisherST extends SystemTestBase {
                 return false;
             }
         });
-        final TRFPublisher publisher = new TRFPublisher(true, false, true, true);
+        final TRFPublisher publisher = new TRFPublisher();
+        publisher.setRunOnFailed(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
         assertThat("Skip message should be present in console log", build.getLog(100).toString(),
                 containsString("Skipping publisher"));
+    }
+
+    @Test
+    public void testDefaultPipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'TRFPublisher'])\n"
+                + "}";
+        assertPipelineStep(script, false);
+    }
+
+    @Test
+    public void testPipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'TRFPublisher', allowMissing: true, archiving: false, keepAll: false, runOnFailed: true])\n"
+                + "}";
+        assertPipelineStep(script, true);
+    }
+
+    /**
+     * Asserts the pipeline step execution.
+     *
+     * @param script
+     *            the script
+     * @param status
+     *            the expected build status
+     * @throws Exception
+     *             the exception
+     */
+    private void assertPipelineStep(final String script, final boolean status) throws Exception {
+        // Windows only
+        final DumbSlave slave = jenkins.createOnlineSlave(Label.get("slaves"));
+        final SlaveComputer computer = slave.getComputer();
+        assumeFalse("Test is Windows only!", computer.isUnix());
+
+        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
+        job.setDefinition(new CpsFlowDefinition(script, true));
+
+        if (status == true) {
+            final WorkflowRun run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
+            jenkins.assertLogContains("Publishing TRF reports...", run);
+            jenkins.assertLogContains("Archiving TRF reports is disabled.", run);
+        } else {
+            final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
+            jenkins.assertLogContains("Publishing TRF reports...", run);
+            jenkins.assertLogContains("Empty test results are not allowed, setting build status to FAILURE!", run);
+        }
     }
 }

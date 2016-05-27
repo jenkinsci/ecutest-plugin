@@ -30,11 +30,11 @@
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Unit tests for {@link ATXPublisher}.
@@ -44,13 +44,48 @@ import org.junit.Test;
 public class ATXPublisherTest {
 
     @Test
-    public void testConstructor() {
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, true, false, false);
-        assertNotNull(publisher);
+    public void testDefaultStep() {
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        assertPublisher(publisher, true);
         assertEquals("TEST-GUIDE", publisher.getAtxName());
-        assertTrue(publisher.isAllowMissing());
-        assertTrue(publisher.isRunOnFailed());
-        assertFalse(publisher.isArchiving());
-        assertFalse(publisher.isKeepAll());
+    }
+
+    @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
+    @Test
+    public void testNullStep() {
+        final ATXPublisher publisher = new ATXPublisher(null);
+        assertPublisher(publisher, true);
+    }
+
+    @Deprecated
+    @Test
+    public void testDefault() {
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", false, false, true, true);
+        assertPublisher(publisher, true);
+        assertEquals("TEST-GUIDE", publisher.getAtxName());
+    }
+
+    @Deprecated
+    @Test
+    public void testNull() {
+        final ATXPublisher publisher = new ATXPublisher(null, true, true, false, false);
+        assertPublisher(publisher, false);
+    }
+
+    /**
+     * Asserts the publisher properties.
+     *
+     * @param publisher
+     *            the publisher
+     * @param isDefault
+     *            specifies whether to check default values
+     */
+    private void assertPublisher(final ATXPublisher publisher, final boolean isDefault) {
+        assertNotNull(publisher);
+        assertNotNull(publisher.getAtxName());
+        assertEquals(!isDefault, publisher.isAllowMissing());
+        assertEquals(!isDefault, publisher.isRunOnFailed());
+        assertEquals(isDefault, publisher.isArchiving());
+        assertEquals(isDefault, publisher.isKeepAll());
     }
 }

@@ -34,14 +34,16 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Unit tests for {@link ReportGeneratorPublisher}.
@@ -51,30 +53,42 @@ import org.junit.Test;
 public class ReportGeneratorPublisherTest {
 
     @Test
-    public void testNullConstructor() {
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher(null, null, null, true, true, false,
-                false);
-        assertNotNull(publisher);
-        assertNull(publisher.getToolName());
-        assertNotNull(publisher.getGenerators());
-        assertNotNull(publisher.getCustomGenerators());
-        assertTrue(publisher.isAllowMissing());
-        assertTrue(publisher.isRunOnFailed());
-        assertFalse(publisher.isArchiving());
-        assertFalse(publisher.isKeepAll());
+    public void testDefaultStep() throws IOException {
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("");
+        assertPublisher(publisher);
     }
 
+    @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
     @Test
-    public void testEmptyConstructor() {
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("", null, null, true, true, false,
-                false);
-        assertTrue(publisher.getToolName().isEmpty());
+    public void testNullStep() {
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher(null);
+        publisher.setGenerators(null);
+        publisher.setCustomGenerators(null);
+        publisher.setAllowMissing(false);
+        publisher.setRunOnFailed(false);
+        publisher.setArchiving(true);
+        publisher.setKeepAll(true);
+        assertPublisher(publisher);
+    }
+
+    @Deprecated
+    @Test
+    public void testDefault() {
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("", null, null, false, false, true,
+                true);
+        assertPublisher(publisher);
         assertTrue(publisher.getGenerators().isEmpty());
         assertTrue(publisher.getCustomGenerators().isEmpty());
-        assertTrue(publisher.isAllowMissing());
-        assertTrue(publisher.isRunOnFailed());
-        assertFalse(publisher.isArchiving());
-        assertFalse(publisher.isKeepAll());
+    }
+
+    @Deprecated
+    @Test
+    public void testNull() {
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher(null, null, null, false, false, true,
+                true);
+        assertPublisher(publisher);
+        assertTrue(publisher.getGenerators().isEmpty());
+        assertTrue(publisher.getCustomGenerators().isEmpty());
     }
 
     @Test
@@ -83,9 +97,10 @@ public class ReportGeneratorPublisherTest {
         generators.add(new ReportGeneratorConfig("HTML", null));
         final List<ReportGeneratorConfig> customGenerators = new ArrayList<ReportGeneratorConfig>();
         customGenerators.add(new ReportGeneratorConfig("Custom", null));
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST", generators,
-                customGenerators, true, true, false, false);
-        assertNotNull(publisher);
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
+        publisher.setGenerators(generators);
+        publisher.setCustomGenerators(customGenerators);
+        assertPublisher(publisher);
         assertEquals("ECU-TEST", publisher.getToolName());
         assertThat(publisher.getGenerators(), hasSize(1));
         assertThat(publisher.getCustomGenerators(), hasSize(1));
@@ -93,18 +108,14 @@ public class ReportGeneratorPublisherTest {
         assertTrue(publisher.getGenerators().get(0).getSettings().isEmpty());
         assertThat(publisher.getCustomGenerators().get(0).getName(), is("Custom"));
         assertTrue(publisher.getCustomGenerators().get(0).getSettings().isEmpty());
-        assertTrue(publisher.isAllowMissing());
-        assertTrue(publisher.isRunOnFailed());
-        assertFalse(publisher.isArchiving());
-        assertFalse(publisher.isKeepAll());
     }
 
     @Test
     public void testEmptyGenerators() {
         final List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
         generators.add(new ReportGeneratorConfig(" ", null));
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST", generators,
-                null, true, true, false, false);
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
+        publisher.setGenerators(generators);
         assertTrue(publisher.getGenerators().isEmpty());
     }
 
@@ -112,8 +123,25 @@ public class ReportGeneratorPublisherTest {
     public void testEmptyCustomGenerators() {
         final List<ReportGeneratorConfig> customGenerators = new ArrayList<ReportGeneratorConfig>();
         customGenerators.add(new ReportGeneratorConfig(" ", null));
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST", null,
-                customGenerators, true, true, false, false);
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
+        publisher.setCustomGenerators(customGenerators);
         assertTrue(publisher.getCustomGenerators().isEmpty());
+    }
+
+    /**
+     * Asserts the publisher properties.
+     *
+     * @param publisher
+     *            the publisher
+     */
+    private void assertPublisher(final ReportGeneratorPublisher publisher) {
+        assertNotNull(publisher);
+        assertNotNull(publisher.getToolName());
+        assertNotNull(publisher.getGenerators());
+        assertNotNull(publisher.getCustomGenerators());
+        assertFalse(publisher.isAllowMissing());
+        assertFalse(publisher.isRunOnFailed());
+        assertTrue(publisher.isArchiving());
+        assertTrue(publisher.isKeepAll());
     }
 }

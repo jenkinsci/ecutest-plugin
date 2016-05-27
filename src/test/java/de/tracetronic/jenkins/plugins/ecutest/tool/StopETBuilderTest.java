@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,9 +31,11 @@ package de.tracetronic.jenkins.plugins.ecutest.tool;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Unit tests for {@link StopETBuilder}.
@@ -43,17 +45,44 @@ import org.junit.Test;
 public class StopETBuilderTest {
 
     @Test
-    public void testBlankConfigShouldReturnDefaults() {
-        final StopETBuilder builder = new StopETBuilder("", "");
-        assertEquals("Check default timeout", String.valueOf(StopETBuilder.DEFAULT_TIMEOUT), builder.getTimeout());
+    public void testDefaultStep() {
+        final StopETBuilder builder = new StopETBuilder("");
+        assertBuilder(builder);
     }
 
+    @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
+    @Test
+    public void testNullStep() {
+        final StopETBuilder builder = new StopETBuilder(null);
+        builder.setTimeout(null);
+        assertBuilder(builder);
+    }
+
+    @Deprecated
+    @Test
+    public void testDefault() {
+        final StopETBuilder builder = new StopETBuilder("", "");
+        assertBuilder(builder);
+    }
+
+    @Deprecated
     @Test
     public void testNull() {
         final StopETBuilder builder = new StopETBuilder(null, null);
+        assertBuilder(builder);
+    }
+
+    /**
+     * Asserts the builder properties.
+     *
+     * @param builder
+     *            the builder
+     */
+    private void assertBuilder(final StopETBuilder builder) {
         assertNotNull(builder);
-        assertNull(builder.getToolName());
+        assertNotNull(builder.getToolName());
+        assertTrue(builder.getToolName().isEmpty());
         assertNotNull(builder.getTimeout());
-        assertEquals("Check default timeout", String.valueOf(builder.getDefaultTimeout()), builder.getTimeout());
+        assertEquals(String.valueOf(builder.getDefaultTimeout()), builder.getTimeout());
     }
 }

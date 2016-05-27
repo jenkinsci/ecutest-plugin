@@ -43,8 +43,29 @@ import org.junit.Test;
 public class TRFPublisherTest {
 
     @Test
+    public void testConstructorStep() {
+        final TRFPublisher publisher = new TRFPublisher();
+        publisher.setAllowMissing(true);
+        publisher.setRunOnFailed(true);
+        publisher.setArchiving(false);
+        publisher.setKeepAll(false);
+        assertPublisher(publisher);
+    }
+
+    @Deprecated
+    @Test
     public void testConstructor() {
         final TRFPublisher publisher = new TRFPublisher(true, true, false, false);
+        assertPublisher(publisher);
+    }
+
+    /**
+     * Asserts the publisher properties.
+     *
+     * @param publisher
+     *            the publisher
+     */
+    private void assertPublisher(final TRFPublisher publisher) {
         assertNotNull(publisher);
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());

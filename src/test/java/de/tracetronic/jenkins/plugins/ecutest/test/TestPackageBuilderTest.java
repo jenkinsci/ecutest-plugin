@@ -34,11 +34,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Unit tests for {@link TestPackageBuilder}.
@@ -48,21 +51,54 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 public class TestPackageBuilderTest {
 
     @Test
-    public void testBlankConfigShouldReturnDefaults() {
+    public void testDefaultStep() throws IOException {
+        final TestConfig testConfig = new TestConfig("", "");
+        final PackageConfig packageConfig = new PackageConfig(true, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig("", true, true);
+        final TestPackageBuilder builder = new TestPackageBuilder("");
+        builder.setTestConfig(testConfig);
+        builder.setPackageConfig(packageConfig);
+        builder.setExecutionConfig(executionConfig);
+        assertBuilder(builder);
+    }
+
+    @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
+    @Test
+    public void testNullStep() {
+        final TestPackageBuilder builder = new TestPackageBuilder(null);
+        builder.setTestConfig(null);
+        builder.setPackageConfig(null);
+        builder.setExecutionConfig(null);
+        assertBuilder(builder);
+    }
+
+    @Deprecated
+    @Test
+    public void testDefault() {
         final TestConfig testConfig = new TestConfig("", "");
         final PackageConfig packageConfig = new PackageConfig(true, true);
         final ExecutionConfig executionConfig = new ExecutionConfig("", true, true);
         final TestPackageBuilder builder = new TestPackageBuilder("", testConfig, packageConfig, executionConfig);
-        assertEquals("Check default timeout", ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig()
-                .getTimeout());
+        assertBuilder(builder);
     }
 
+    @Deprecated
     @Test
     public void testNull() {
         final TestConfig testConfig = new TestConfig(null, null, false, false, null);
         final PackageConfig packageConfig = new PackageConfig(true, true, null);
-        final ExecutionConfig executionConfig = new ExecutionConfig(null, false, false);
+        final ExecutionConfig executionConfig = new ExecutionConfig(null, true, true);
         final TestPackageBuilder builder = new TestPackageBuilder(null, testConfig, packageConfig, executionConfig);
+        assertBuilder(builder);
+    }
+
+    /**
+     * Asserts the builder properties.
+     *
+     * @param builder
+     *            the builder
+     */
+    private void assertBuilder(final TestPackageBuilder builder) {
         assertNotNull(builder);
         assertNotNull(builder.getTestFile());
         assertTrue(builder.getTestFile().isEmpty());
@@ -77,9 +113,8 @@ public class TestPackageBuilderTest {
         assertTrue(builder.getPackageConfig().isRunTraceAnalysis());
         assertNotNull(builder.getPackageConfig().getParameters());
         assertNotNull(builder.getExecutionConfig().getTimeout());
-        assertEquals("Check default timeout", ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig()
-                .getTimeout());
-        assertFalse(builder.getExecutionConfig().isStopOnError());
-        assertFalse(builder.getExecutionConfig().isCheckTestFile());
+        assertEquals(ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig().getTimeout());
+        assertTrue(builder.getExecutionConfig().isStopOnError());
+        assertTrue(builder.getExecutionConfig().isCheckTestFile());
     }
 }

@@ -29,24 +29,48 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest;
 
+import hudson.Functions;
+
+import java.io.File;
+import java.net.URLConnection;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.JenkinsRule.WebClient;
 
 /**
- * Base class for all Jenkins related unit tests.
+ * Base class for all Jenkins related system tests.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class SystemTestBase {
 
-    static {
-        TestPluginManagerCleanUp.registerCleanup();
-    }
-
     @Rule
-    public JenkinsRule jenkins = new JenkinsRule();
+    public JenkinsRule jenkins = new JenkinsRule() {
+
+        private boolean origDefaultUseCache = true;
+
+        @Override
+        public void before() throws Throwable {
+            if (Functions.isWindows()) {
+                // To avoid JENKINS-4409
+                final URLConnection connection = new File(".").toURI().toURL().openConnection();
+                origDefaultUseCache = connection.getDefaultUseCaches();
+                connection.setDefaultUseCaches(false);
+            }
+            super.before();
+        }
+
+        @Override
+        public void after() throws Exception {
+            super.after();
+            if (Functions.isWindows()) {
+                final URLConnection connection = new File(".").toURI().toURL().openConnection();
+                connection.setDefaultUseCaches(origDefaultUseCache);
+            }
+        }
+    };
 
     /**
      * Setups the JenkinsRule for a test.

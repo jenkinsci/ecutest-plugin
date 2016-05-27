@@ -54,16 +54,17 @@ public class ETLogPublisherTest {
     public TemporaryFolder folder = new TemporaryFolder();
 
     @Test
+    public void testConstructorStep() {
+        final ETLogPublisher publisher = new ETLogPublisher();
+        assertPublisher(publisher);
+
+    }
+
+    @Deprecated
+    @Test
     public void testConstructor() {
-        final ETLogPublisher publisher = new ETLogPublisher(true, true, true, true, true, false, false);
-        assertNotNull(publisher);
-        assertTrue(publisher.isUnstableOnWarning());
-        assertTrue(publisher.isFailedOnError());
-        assertTrue(publisher.isTestSpecific());
-        assertTrue(publisher.isAllowMissing());
-        assertTrue(publisher.isRunOnFailed());
-        assertFalse(publisher.isArchiving());
-        assertFalse(publisher.isKeepAll());
+        final ETLogPublisher publisher = new ETLogPublisher(false, false, false, false, false, true, true);
+        assertPublisher(publisher);
     }
 
     @Test
@@ -77,5 +78,22 @@ public class ETLogPublisherTest {
 
         assertFalse("Standard log should be deleted", infoLog.exists());
         assertFalse("Errot log should be deleted", errorLog.exists());
+    }
+
+    /**
+     * Asserts the publisher properties.
+     *
+     * @param publisher
+     *            the publisher
+     */
+    private void assertPublisher(final ETLogPublisher publisher) {
+        assertNotNull(publisher);
+        assertFalse(publisher.isUnstableOnWarning());
+        assertFalse(publisher.isFailedOnError());
+        assertFalse(publisher.isTestSpecific());
+        assertFalse(publisher.isAllowMissing());
+        assertFalse(publisher.isRunOnFailed());
+        assertTrue(publisher.isArchiving());
+        assertTrue(publisher.isKeepAll());
     }
 }

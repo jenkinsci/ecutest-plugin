@@ -29,12 +29,25 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assume.assumeFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hudson.model.FreeStyleBuild;
+import hudson.model.Result;
 import hudson.model.FreeStyleProject;
+import hudson.model.Label;
+import hudson.slaves.DumbSlave;
+import hudson.slaves.SlaveComputer;
+import jenkins.tasks.SimpleBuildStep;
 
+import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
+import org.jenkinsci.plugins.workflow.job.WorkflowJob;
+import org.jenkinsci.plugins.workflow.job.WorkflowRun;
+import org.jenkinsci.plugins.workflow.steps.CoreStep;
+import org.jenkinsci.plugins.workflow.steps.StepConfigTester;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.WebAssert;
@@ -54,6 +67,39 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 public class TestProjectBuilderST extends SystemTestBase {
 
     @Test
+    public void testDefaultConfigRoundTripStep() throws Exception {
+        final TestProjectBuilder before = new TestProjectBuilder("test.prj");
+
+        CoreStep step = new CoreStep(before);
+        step = new StepConfigTester(jenkins).configRoundTrip(step);
+        final SimpleBuildStep delegate = step.delegate;
+        assertThat(delegate, instanceOf(TestProjectBuilder.class));
+
+        final TestProjectBuilder after = (TestProjectBuilder) delegate;
+        jenkins.assertEqualDataBoundBeans(before, after);
+    }
+
+    @Test
+    public void testConfigRoundTripStep() throws Exception {
+        final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true, true);
+        final ProjectConfig projectConfig = new ProjectConfig(true, "filter", JobExecutionMode.SEQUENTIAL_EXECUTION);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
+        final TestProjectBuilder before = new TestProjectBuilder("test.pkg");
+        before.setTestConfig(testConfig);
+        before.setProjectConfig(projectConfig);
+        before.setExecutionConfig(executionConfig);
+
+        CoreStep step = new CoreStep(before);
+        step = new StepConfigTester(jenkins).configRoundTrip(step);
+        final SimpleBuildStep delegate = step.delegate;
+        assertThat(delegate, instanceOf(TestProjectBuilder.class));
+
+        final TestProjectBuilder after = (TestProjectBuilder) delegate;
+        jenkins.assertEqualBeans(before, after, "testFile,testConfig,projectConfig,executionConfig");
+    }
+
+    @Deprecated
+    @Test
     public void testRoundTripConfig() throws Exception {
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
         final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
@@ -69,8 +115,10 @@ public class TestProjectBuilderST extends SystemTestBase {
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true, true);
         final ProjectConfig projectConfig = new ProjectConfig(true, "filter", JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
-        final TestProjectBuilder builder = new TestProjectBuilder("test.prj", testConfig, projectConfig,
-                executionConfig);
+        final TestProjectBuilder builder = new TestProjectBuilder("test.prj");
+        builder.setTestConfig(testConfig);
+        builder.setProjectConfig(projectConfig);
+        builder.setExecutionConfig(executionConfig);
         project.getBuildersList().add(builder);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
@@ -97,16 +145,55 @@ public class TestProjectBuilderST extends SystemTestBase {
     @Test
     public void testTestId() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
-        final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
-        final TestProjectBuilder builder = new TestProjectBuilder("test.prj", testConfig, projectConfig,
-                executionConfig);
+        final TestProjectBuilder builder = new TestProjectBuilder("test.prj");
         project.getBuildersList().add(builder);
 
         final FreeStyleBuild build = mock(FreeStyleBuild.class);
         when(build.getProject()).thenReturn(project);
 
         assertEquals("Test id should be 0", 0, builder.getTestId(build));
+    }
+
+    @Test
+    public void testPipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'TestProjectBuilder',"
+                + "        testFile: 'test.prj',"
+                + "        testConfig: [constants: [], forceReload: true, loadOnly: true, tbcFile: 'test.tbc', tcfFile: 'test.tcf'],"
+                + "        projectConfig: [execInCurrentPkgDir: true, filterExpression: 'Name=\"test\"', jobExecMode: 'SEPARATE_SEQUENTIAL_EXECUTION'],"
+                + "        executionConfig: [checkTestFile: false, stopOnError: false, timeout: '0']])\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
+    @Test
+    public void testDefaultPipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'TestProjectBuilder', testFile: 'test.prj'])\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
+    /**
+     * Asserts the pipeline step execution.
+     *
+     * @param script
+     *            the script
+     * @throws Exception
+     *             the exception
+     */
+    private void assertPipelineStep(final String script) throws Exception {
+        // Windows only
+        final DumbSlave slave = jenkins.createOnlineSlave(Label.get("slaves"));
+        final SlaveComputer computer = slave.getComputer();
+        assumeFalse("Test is Windows only!", computer.isUnix());
+
+        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
+        job.setDefinition(new CpsFlowDefinition(script, true));
+
+        final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
+        jenkins.assertLogContains("No running ECU-TEST instance found, please configure one at first!", run);
     }
 }

@@ -29,16 +29,30 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool;
 
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assume.assumeFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hudson.EnvVars;
 import hudson.model.FreeStyleBuild;
+import hudson.model.Result;
 import hudson.model.FreeStyleProject;
+import hudson.model.Label;
+import hudson.slaves.DumbSlave;
+import hudson.slaves.SlaveComputer;
 
 import java.util.Collections;
 import java.util.HashMap;
 
+import jenkins.tasks.SimpleBuildStep;
+
+import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
+import org.jenkinsci.plugins.workflow.job.WorkflowJob;
+import org.jenkinsci.plugins.workflow.job.WorkflowRun;
+import org.jenkinsci.plugins.workflow.steps.CoreStep;
+import org.jenkinsci.plugins.workflow.steps.StepConfigTester;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
@@ -66,16 +80,49 @@ public class StartTSBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testRoundTripConfig() throws Exception {
-        final StartTSBuilder before = new StartTSBuilder("ECU-TEST", "120", "", "5017");
+    public void testDefaultConfigRoundTripStep() throws Exception {
+        final StartTSBuilder before = new StartTSBuilder("ECU-TEST");
+
+        CoreStep step = new CoreStep(before);
+        step = new StepConfigTester(jenkins).configRoundTrip(step);
+        final SimpleBuildStep delegate = step.delegate;
+        assertThat(delegate, instanceOf(StartTSBuilder.class));
+
+        final StartTSBuilder after = (StartTSBuilder) delegate;
+        jenkins.assertEqualDataBoundBeans(before, after);
+    }
+
+    @Test
+    public void testConfigRoundTripStep() throws Exception {
+        final StartTSBuilder before = new StartTSBuilder("ECU-TEST");
+        before.setToolLibsIni("C:\\ToolLibs.ini");
+        before.setTcpPort("5017");
+        before.setTimeout("120");
+
+        CoreStep step = new CoreStep(before);
+        step = new StepConfigTester(jenkins).configRoundTrip(step);
+        final SimpleBuildStep delegate = step.delegate;
+        assertThat(delegate, instanceOf(StartTSBuilder.class));
+
+        final StartTSBuilder after = (StartTSBuilder) delegate;
+        jenkins.assertEqualBeans(before, after, "toolLibsIni,tcpPort,timeout");
+    }
+
+    @Deprecated
+    @Test
+    public void testConfigRoundTrip() throws Exception {
+        final StartTSBuilder before = new StartTSBuilder("ECU-TEST", "120", "C:\\ToolLibs.ini", "5017");
         final StartTSBuilder after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "timeout,toolLibsIni,tcpPort");
+        jenkins.assertEqualBeans(before, after, "toolLibsIni,tcpPort,timeout");
     }
 
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final StartTSBuilder builder = new StartTSBuilder("ECU-TEST", "120", "C:\\ToolLibs.ini", "5017");
+        final StartTSBuilder builder = new StartTSBuilder("ECU-TEST");
+        builder.setToolLibsIni("C:\\ToolLibs.ini");
+        builder.setTcpPort("5017");
+        builder.setTimeout("120");
         project.getBuildersList().add(builder);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
@@ -93,7 +140,7 @@ public class StartTSBuilderST extends SystemTestBase {
     @Test
     public void testToolId() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final StartTSBuilder builder = new StartTSBuilder("ECU-TEST", "120", "", "5017");
+        final StartTSBuilder builder = new StartTSBuilder("ECU-TEST");
         project.getBuildersList().add(builder);
 
         final FreeStyleBuild build = mock(FreeStyleBuild.class);
@@ -105,7 +152,7 @@ public class StartTSBuilderST extends SystemTestBase {
     @Test
     public void testParameterizedToolName() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final StartTSBuilder builder = new StartTSBuilder("${ECUTEST}", "120", "", "5017");
+        final StartTSBuilder builder = new StartTSBuilder("${ECUTEST}");
         project.getBuildersList().add(builder);
 
         final EnvVars envVars = new EnvVars(
@@ -118,5 +165,46 @@ public class StartTSBuilderST extends SystemTestBase {
                 }));
 
         assertEquals("Tool name should be resolved", "ECU-TEST", builder.getToolInstallation(envVars).getName());
+    }
+
+    @Test
+    public void testPipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  writeFile file: 'ToolLibs.ini', text: ''\n"
+                + "  step([$class: 'StartTSBuilder', toolName: 'ECU-TEST', toolLibsIni: pwd() + '\\\\ToolLibs.ini', tcpPort: '5017', timeout: '120'])\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
+    @Test
+    public void testDefaultPipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'StartTSBuilder', toolName: 'ECU-TEST'])\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
+    /**
+     * Asserts the pipeline step execution.
+     *
+     * @param script
+     *            the script
+     * @throws Exception
+     *             the exception
+     */
+    private void assertPipelineStep(final String script) throws Exception {
+        // Windows only
+        final DumbSlave slave = jenkins.createOnlineSlave(Label.get("slaves"));
+        final SlaveComputer computer = slave.getComputer();
+        assumeFalse("Test is Windows only!", computer.isUnix());
+
+        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
+        job.setDefinition(new CpsFlowDefinition(script, true));
+
+        final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
+        jenkins.assertLogContains("Starting Tool-Server...", run);
+        jenkins.assertLogContains("Starting Tool-Server failed!", run);
     }
 }
