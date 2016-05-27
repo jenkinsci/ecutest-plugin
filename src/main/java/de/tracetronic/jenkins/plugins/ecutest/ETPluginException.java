@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,49 +29,51 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest;
 
-import hudson.Util;
-import hudson.PluginWrapper;
-
-import java.io.IOException;
-
-import org.jvnet.hudson.test.TestPluginManager;
-
 /**
- * Cleanup the temporary directory created by {@link org.jvnet.hudson.test.TestPluginManager}.
- * <p>
- * Call {@link #registerCleanup()} at least once from anywhere.
+ * Exception thrown if an error occurs while performing plugin-specific operations.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class TestPluginManagerCleanUp {
+public class ETPluginException extends Exception {
 
-    private static Thread deleteThread = null;
+    private static final long serialVersionUID = 1L;
 
-    public static synchronized void registerCleanup() {
-        if (deleteThread != null) {
-            return;
-        }
-        deleteThread = new Thread("HOTFIX: cleanup " + TestPluginManager.INSTANCE.rootDir) {
+    /**
+     * Instantiates a new {@link ETPluginException}.
+     *
+     * @param cause
+     *            the cause of the {@link Exception}
+     */
+    public ETPluginException(final Throwable cause) {
+        super(cause);
+    }
 
-            @Override
-            public void run() {
-                if (TestPluginManager.INSTANCE != null && TestPluginManager.INSTANCE.rootDir != null
-                        && TestPluginManager.INSTANCE.rootDir.exists()) {
-                    // Work as PluginManager#stop
-                    for (final PluginWrapper p : TestPluginManager.INSTANCE.getPlugins()) {
-                        p.stop();
-                        p.releaseClassLoader();
-                    }
-                    TestPluginManager.INSTANCE.getPlugins().clear();
-                    System.gc();
-                    try {
-                        Util.deleteRecursive(TestPluginManager.INSTANCE.rootDir);
-                    } catch (final IOException x) {
-                        x.printStackTrace();
-                    }
-                }
-            }
-        };
-        Runtime.getRuntime().addShutdownHook(deleteThread);
+    /**
+     * Instantiates a new {@link ETPluginException}.
+     *
+     * @param message
+     *            the message to attach to the {@link Exception}
+     * @param cause
+     *            the cause of the {@link Exception}
+     */
+    public ETPluginException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    /**
+     * Instantiates a new {@link ETPluginException}.
+     *
+     * @param message
+     *            the message to attach to the {@link Exception}
+     */
+    public ETPluginException(final String message) {
+        super(message);
+    }
+
+    /**
+     * Instantiates a new {@link ETPluginException}.
+     */
+    public ETPluginException() {
+        super();
     }
 }

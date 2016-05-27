@@ -33,11 +33,10 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
-import hudson.model.Action;
-import hudson.model.BuildListener;
 import hudson.model.Result;
-import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
 import hudson.model.AbstractProject;
+import hudson.model.Run;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 
@@ -70,6 +69,14 @@ public class TRFPublisher extends AbstractReportPublisher {
 
     /**
      * Instantiates a new {@link TRFPublisher}.
+     */
+    @DataBoundConstructor
+    public TRFPublisher() {
+        super();
+    }
+
+    /**
+     * Instantiates a new {@link TRFPublisher}.
      *
      * @param allowMissing
      *            specifies whether missing reports are allowed
@@ -80,8 +87,9 @@ public class TRFPublisher extends AbstractReportPublisher {
      * @param keepAll
      *            specifies whether artifacts are archived for all successful builds,
      *            otherwise only the most recent
+     * @deprecated since 1.11 use {@link #TRFPublisher()}
      */
-    @DataBoundConstructor
+    @Deprecated
     public TRFPublisher(final boolean allowMissing, final boolean runOnFailed, final boolean archiving,
             final boolean keepAll) {
         super(allowMissing, runOnFailed, archiving, keepAll);
@@ -113,27 +121,27 @@ public class TRFPublisher extends AbstractReportPublisher {
 
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
-    public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-            final BuildListener listener) throws InterruptedException, IOException {
+    public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing TRF reports...");
 
-        final Result buildResult = build.getResult();
+        final Result buildResult = run.getResult();
         if (buildResult != null && !canContinue(buildResult)) {
             logger.logInfo(String.format("Skipping publisher since build result is %s", buildResult));
-            return true;
+            return;
         }
 
         if (isArchiving()) {
             int index = 0;
             final List<TRFReport> trfReports = new ArrayList<TRFReport>();
-            final FilePath archiveTarget = getArchiveTarget(build);
-            final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
+            final FilePath archiveTarget = getArchiveTarget(run);
+            final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
 
             // Removing old artifacts at project level
             if (!testEnvActions.isEmpty() && !isKeepAll()) {
                 archiveTarget.deleteRecursive();
-                removePreviousReports(build, TRFBuildAction.class);
+                removePreviousReports(run, TRFBuildAction.class);
             }
             for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
                 final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
@@ -151,8 +159,8 @@ public class TRFPublisher extends AbstractReportPublisher {
                     } catch (final IOException e) {
                         Util.displayIOException(e, listener);
                         logger.logError("Failed publishing TRF reports.");
-                        build.setResult(Result.FAILURE);
-                        return true;
+                        run.setResult(Result.FAILURE);
+                        return;
                     }
                     index = traverseReports(trfReports, archiveTargetDir, index);
                 } else {
@@ -160,24 +168,23 @@ public class TRFPublisher extends AbstractReportPublisher {
                         continue;
                     } else {
                         logger.logError(String.format("Specified TRF file '%s' does not exist.", reportFile));
-                        build.setResult(Result.FAILURE);
-                        return true;
+                        run.setResult(Result.FAILURE);
+                        return;
                     }
                 }
             }
 
             if (trfReports.isEmpty() && !isAllowMissing()) {
                 logger.logError("Empty test results are not allowed, setting build status to FAILURE!");
-                build.setResult(Result.FAILURE);
-                return true;
+                run.setResult(Result.FAILURE);
+                return;
             }
 
-            addBuildAction(build, trfReports);
+            addBuildAction(run, trfReports);
             logger.logInfo("TRF reports published successfully.");
         } else {
             logger.logInfo("Archiving TRF reports is disabled.");
         }
-        return true;
     }
 
     /**
@@ -228,7 +235,7 @@ public class TRFPublisher extends AbstractReportPublisher {
      */
     private int traverseSubReports(final TRFReport trfReport, final FilePath testReportDir,
             final FilePath subTestReportDir, int id)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
             final FilePath reportFile = subDir.child(TRF_FILE_NAME);
             if (reportFile.exists()) {
@@ -245,18 +252,18 @@ public class TRFPublisher extends AbstractReportPublisher {
     /**
      * Adds the {@link TRFBuildAction} to the build holding the found {@link TRFReport}s.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @param trfReports
      *            the list of {@link TRFReport}s to add
      * @throws IOException
      *             signals that an I/O exception has occurred
      */
-    private void addBuildAction(final AbstractBuild<?, ?> build, final List<TRFReport> trfReports) throws IOException {
-        TRFBuildAction action = build.getAction(TRFBuildAction.class);
+    private void addBuildAction(final Run<?, ?> run, final List<TRFReport> trfReports) throws IOException {
+        TRFBuildAction action = run.getAction(TRFBuildAction.class);
         if (action == null) {
             action = new TRFBuildAction(!isKeepAll());
-            build.addAction(action);
+            run.addAction(action);
         }
         action.addAll(trfReports);
     }
@@ -264,11 +271,6 @@ public class TRFPublisher extends AbstractReportPublisher {
     @Override
     protected String getUrlName() {
         return URL_NAME;
-    }
-
-    @Override
-    public Action getProjectAction(final AbstractProject<?, ?> project) {
-        return new TRFProjectAction(!isKeepAll());
     }
 
     @Override

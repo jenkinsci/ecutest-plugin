@@ -37,17 +37,16 @@ import hudson.Launcher;
 import hudson.matrix.MatrixAggregatable;
 import hudson.matrix.MatrixAggregator;
 import hudson.matrix.MatrixBuild;
-import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.Result;
-import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
 import hudson.model.AbstractProject;
+import hudson.model.Run;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 import hudson.tasks.junit.TestResult;
 import hudson.tasks.junit.TestResultAction;
 import hudson.tasks.test.TestResultAggregator;
-import hudson.tasks.test.TestResultProjectAction;
 import hudson.tools.ToolInstallation;
 import hudson.util.FormValidation;
 
@@ -56,12 +55,15 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
@@ -77,9 +79,22 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
  */
 public class JUnitPublisher extends AbstractReportPublisher implements MatrixAggregatable {
 
+    @Nonnull
     private final String toolName;
-    private final double unstableThreshold;
-    private final double failedThreshold;
+    private double unstableThreshold;
+    private double failedThreshold;
+
+    /**
+     * Instantiates a new {@link JUnitPublisher}.
+     *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
+     */
+    @DataBoundConstructor
+    public JUnitPublisher(@Nonnull final String toolName) {
+        super();
+        this.toolName = StringUtils.trimToEmpty(toolName);
+    }
 
     /**
      * Instantiates a new {@link JUnitPublisher}.
@@ -99,13 +114,14 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
      * @param keepAll
      *            specifies whether artifacts are archived for all successful builds,
      *            otherwise only the most recent
+     * @deprecated since 1.11 use {@link #JUnitPublisher(String)}
      */
-    @DataBoundConstructor
+    @Deprecated
     public JUnitPublisher(final String toolName, final double unstableThreshold,
             final double failedThreshold, final boolean allowMissing, final boolean runOnFailed,
             final boolean archiving, final boolean keepAll) {
         super(allowMissing, runOnFailed, archiving, keepAll);
-        this.toolName = toolName;
+        this.toolName = StringUtils.trimToEmpty(toolName);
         this.unstableThreshold = convertToPercentage(unstableThreshold);
         this.failedThreshold = convertToPercentage(failedThreshold);
     }
@@ -144,6 +160,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     /**
      * @return the {@link ETInstallation} name
      */
+    @Nonnull
     public String getToolName() {
         return toolName;
     }
@@ -160,6 +177,24 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
      */
     public double getFailedThreshold() {
         return failedThreshold;
+    }
+
+    /**
+     * @param unstableThreshold
+     *            the unstable threshold
+     */
+    @DataBoundSetter
+    public void setUnstableThreshold(final double unstableThreshold) {
+        this.unstableThreshold = convertToPercentage(unstableThreshold);
+    }
+
+    /**
+     * @param failedThreshold
+     *            the failed threshold
+     */
+    @DataBoundSetter
+    public void setFailedThreshold(final double failedThreshold) {
+        this.failedThreshold = convertToPercentage(failedThreshold);
     }
 
     /**
@@ -181,16 +216,6 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     }
 
     @Override
-    public Action getProjectAction(final AbstractProject<?, ?> project) {
-        final TestResultProjectAction action = project.getAction(TestResultProjectAction.class);
-        if (action == null) {
-            return new TestResultProjectAction(project);
-        } else {
-            return action;
-        }
-    }
-
-    @Override
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl) super.getDescriptor();
     }
@@ -201,81 +226,73 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
         return new TestResultAggregator(build, launcher, listener);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
-    public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-            final BuildListener listener) throws InterruptedException, IOException {
-        // Check OS running this build
-        if (!ProcessUtil.checkOS(launcher, listener)) {
-            return false;
-        }
-
+    public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing UNIT reports...");
+        ProcessUtil.checkOS(launcher);
 
-        final Result buildResult = build.getResult();
+        final Result buildResult = run.getResult();
         if (buildResult != null && !canContinue(buildResult)) {
             logger.logInfo(String.format("Skipping publisher since build result is %s", buildResult));
-            return true;
+            return;
         }
 
-        final List<FilePath> reportFiles = getReportFiles(build, launcher);
+        final List<FilePath> reportFiles = getReportFiles(run, launcher);
         if (reportFiles.isEmpty() && !isAllowMissing()) {
-            logger.logError("Empty test results are not allowed, setting build status to FAILURE!");
-            return false;
+            throw new ETPluginException("Empty test results are not allowed, setting build status to FAILURE!");
         }
 
         // Generate JUnit reports
-        final AbstractToolInstallation installation = configureToolInstallation(toolName, listener,
-                build.getEnvironment(listener));
+        final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
+                run.getEnvironment(listener));
         final JUnitReportGenerator generator = new JUnitReportGenerator();
-        if (!generator.generate(installation, reportFiles, build, launcher, listener)) {
-            build.setResult(Result.FAILURE);
-            return true;
+        if (!generator.generate(installation, reportFiles, run, workspace, launcher, listener)) {
+            run.setResult(Result.FAILURE);
+            return;
         }
 
         // Parse generated JUnit reports
         final JUnitTestResultParser parser = new JUnitTestResultParser();
-        final TestResult testResult = parser.parse(JUnitReportGenerator.UNIT_TEMPLATE_NAME, build, launcher,
-                listener);
+        final TestResult testResult = parser.parseResult(JUnitReportGenerator.UNIT_TEMPLATE_NAME, run, workspace,
+                launcher, listener);
 
         // Add action for publishing JUnit results
         TestResultAction action;
         try {
-            action = new TestResultAction(build, testResult, listener);
+            action = new TestResultAction(run, testResult, listener);
         } catch (final NullPointerException npe) {
-            logger.logError(String.format("Parsing UNIT test results failed: %s", npe.getMessage()));
-            return false;
+            throw new ETPluginException(String.format("Parsing UNIT test results failed: %s", npe.getMessage()));
         }
         testResult.freeze(action);
-        build.addAction(action);
+        run.addAction(action);
 
         // Change build result if thresholds exceeded
-        if (setBuildResult(build, listener, testResult)) {
+        if (setBuildResult(run, listener, testResult)) {
             logger.logInfo("UNIT reports published successfully.");
         }
-        return true;
     }
 
     /**
      * Sets the build result according to the test result.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @param listener
      *            the listener
      * @param testResult
      *            the test result
      * @return {@code true} if test results exist and could be published
      */
-    private boolean setBuildResult(final AbstractBuild<?, ?> build, final BuildListener listener,
+    private boolean setBuildResult(final Run<?, ?> run, final TaskListener listener,
             final TestResult testResult) {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (testResult.getTotalCount() == 0) {
             logger.logInfo("-> No UNIT test results found.");
             if (!isAllowMissing()) {
                 logger.logError("Empty test results are not allowed, setting build status to FAILURE!");
-                build.setResult(Result.FAILURE);
+                run.setResult(Result.FAILURE);
                 return false;
             }
         } else {
@@ -291,12 +308,12 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
             logger.logInfo(String.format(
                     "-> %.1f%% of failed test results exceed failed threshold of %.1f%%, "
                             + "setting build status to FAILURE!", failedPercentage, failedThreshold));
-            build.setResult(Result.FAILURE);
+            run.setResult(Result.FAILURE);
         } else if (failedPercentage > unstableThreshold) {
             logger.logInfo(String.format(
                     "-> %.1f%% of failed test results exceed unstable threshold of %.1f%%, "
                             + "setting build status to UNSTABLE!", failedPercentage, unstableThreshold));
-            build.setResult(Result.UNSTABLE);
+            run.setResult(Result.UNSTABLE);
         }
         return true;
     }

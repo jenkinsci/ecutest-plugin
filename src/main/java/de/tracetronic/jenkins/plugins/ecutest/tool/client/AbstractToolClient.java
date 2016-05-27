@@ -31,7 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 
 import hudson.Launcher;
 import hudson.Proc;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.util.ArgumentListBuilder;
 
 import java.io.IOException;
@@ -122,31 +122,33 @@ public abstract class AbstractToolClient implements ToolClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    protected boolean launchProcess(final Launcher launcher, final BuildListener listener) throws InterruptedException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
-
+    protected boolean launchProcess(final Launcher launcher, final TaskListener listener) throws InterruptedException {
         // Create command line
         final ArgumentListBuilder args = createCmdLine();
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo(args.toString());
 
+        boolean isStarted = false;
         try {
             // Launch tool process
-            final Proc process = launcher.launch().stdout(listener.getLogger()).cmds(args).start();
+            final Proc process = launcher.launch().cmds(args).quiet(true).start();
 
             // Wait for process start up
             final long endTimeMillis = System.currentTimeMillis() + Long.valueOf(getTimeout()) * 1000L;
             while (getTimeout() <= 0 || System.currentTimeMillis() < endTimeMillis) {
                 if (process.isAlive()) {
+                    isStarted = true;
                     break;
                 } else {
                     Thread.sleep(1000L);
                 }
             }
+            if (!isStarted) {
+                logger.logError(String.format("-> Timeout of %d seconds reached!", getTimeout()));
+            }
         } catch (final IOException e) {
             logger.logError("-> Command line execution failed: " + e.getMessage());
-            return false;
         }
-
-        return true;
+        return isStarted;
     }
 }

@@ -29,8 +29,8 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.trf;
 
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
+import hudson.model.Job;
+import hudson.model.Run;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportAction;
 
 /**
@@ -51,9 +51,8 @@ public abstract class AbstractTRFAction extends AbstractReportAction {
     }
 
     @Override
-    public AbstractBuild<?, ?> getLastReportBuild(final AbstractProject<?, ?> project) {
-        for (AbstractBuild<?, ?> build = project.getLastBuild(); build != null; build = build
-                .getPreviousBuild()) {
+    public Run<?, ?> getLastReportBuild(final Job<?, ?> project) {
+        for (Run<?, ?> build = project.getLastBuild(); build != null; build = build.getPreviousBuild()) {
             final TRFBuildAction buildAction = build.getAction(TRFBuildAction.class);
             if (buildAction != null) {
                 return build;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,8 +29,9 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
+import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 
 import java.io.IOException;
 
@@ -44,6 +45,8 @@ public interface TestClient {
     /**
      * Runs a test case, can be either an ECU-TEST package or project.
      *
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @param listener
@@ -54,6 +57,7 @@ public interface TestClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    boolean runTestCase(Launcher launcher, BuildListener listener) throws IOException, InterruptedException;
+    boolean runTestCase(final FilePath workspace, Launcher launcher, TaskListener listener)
+            throws IOException, InterruptedException;
 
 }

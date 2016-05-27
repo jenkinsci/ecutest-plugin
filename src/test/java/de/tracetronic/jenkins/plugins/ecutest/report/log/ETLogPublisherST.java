@@ -31,6 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.log;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assume.assumeFalse;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.BuildListener;
@@ -38,11 +39,17 @@ import hudson.model.FreeStyleBuild;
 import hudson.model.Result;
 import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
+import hudson.model.Label;
+import hudson.slaves.DumbSlave;
+import hudson.slaves.SlaveComputer;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
+import org.jenkinsci.plugins.workflow.job.WorkflowJob;
+import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.junit.Test;
 import org.jvnet.hudson.test.TestBuilder;
 
@@ -59,6 +66,28 @@ import de.tracetronic.jenkins.plugins.ecutest.SystemTestBase;
 public class ETLogPublisherST extends SystemTestBase {
 
     @Test
+    public void testDefaultConfigRoundTripStep() throws Exception {
+        final ETLogPublisher before = new ETLogPublisher();
+        final ETLogPublisher after = jenkins.configRoundtrip(before);
+        jenkins.assertEqualDataBoundBeans(before, after);
+    }
+
+    @Test
+    public void testConfigRoundTripStep() throws Exception {
+        final ETLogPublisher before = new ETLogPublisher();
+        before.setUnstableOnWarning(false);
+        before.setRunOnFailed(false);
+        before.setAllowMissing(false);
+        before.setRunOnFailed(false);
+        before.setArchiving(true);
+        before.setKeepAll(true);
+        final ETLogPublisher after = jenkins.configRoundtrip(before);
+        jenkins.assertEqualBeans(before, after,
+                "unstableOnWarning,failedOnError,testSpecific,allowMissing,runOnFailed,archiving,keepAll");
+    }
+
+    @Deprecated
+    @Test
     public void testRoundTripConfig() throws Exception {
         final ETLogPublisher before = new ETLogPublisher(false, false, false, false, false, true, true);
         final ETLogPublisher after = jenkins.configRoundtrip(before);
@@ -69,7 +98,14 @@ public class ETLogPublisherST extends SystemTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ETLogPublisher publisher = new ETLogPublisher(true, true, true, true, true, true, true);
+        final ETLogPublisher publisher = new ETLogPublisher();
+        publisher.setUnstableOnWarning(true);
+        publisher.setFailedOnError(true);
+        publisher.setTestSpecific(true);
+        publisher.setAllowMissing(true);
+        publisher.setRunOnFailed(true);
+        publisher.setArchiving(true);
+        publisher.setKeepAll(true);
         project.getPublishersList().add(publisher);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
@@ -86,7 +122,8 @@ public class ETLogPublisherST extends SystemTestBase {
     @Test
     public void testAllowMissing() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ETLogPublisher publisher = new ETLogPublisher(true, true, false, false, true, true, true);
+        final ETLogPublisher publisher = new ETLogPublisher();
+        publisher.setAllowMissing(false);
         project.getPublishersList().add(publisher);
 
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -105,7 +142,8 @@ public class ETLogPublisherST extends SystemTestBase {
             }
         });
 
-        final ETLogPublisher publisher = new ETLogPublisher(true, true, false, true, false, false, false);
+        final ETLogPublisher publisher = new ETLogPublisher();
+        publisher.setRunOnFailed(false);
         project.getPublishersList().add(publisher);
 
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -121,7 +159,8 @@ public class ETLogPublisherST extends SystemTestBase {
         final FilePath logFile = new FilePath(new File(url.getFile()));
         project.setCustomWorkspace(logFile.getParent().getRemote());
 
-        final ETLogPublisher publisher = new ETLogPublisher(true, false, false, true, true, true, true);
+        final ETLogPublisher publisher = new ETLogPublisher();
+        publisher.setUnstableOnWarning(true);
         project.getPublishersList().add(publisher);
 
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -135,10 +174,60 @@ public class ETLogPublisherST extends SystemTestBase {
         final FilePath logFile = new FilePath(new File(url.getFile()));
         project.setCustomWorkspace(logFile.getParent().getRemote());
 
-        final ETLogPublisher publisher = new ETLogPublisher(false, true, false, true, true, true, true);
+        final ETLogPublisher publisher = new ETLogPublisher();
+        publisher.setFailedOnError(true);
         project.getPublishersList().add(publisher);
 
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
+    }
+
+    @Test
+    public void testDefaultPipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'ETLogPublisher'])\n"
+                + "}";
+        assertPipelineStep(script, false);
+    }
+
+    @Test
+    public void testPipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'ETLogPublisher', allowMissing: true, archiving: false, failedOnError: true, "
+                + "        keepAll: false, runOnFailed: true, testSpecific: true, unstableOnWarning: true])\n"
+                + "}";
+        assertPipelineStep(script, true);
+    }
+
+    /**
+     * Asserts the pipeline step execution.
+     *
+     * @param script
+     *            the script
+     * @param status
+     *            the expected build status
+     * @throws Exception
+     *             the exception
+     */
+    private void assertPipelineStep(final String script, final boolean status) throws Exception {
+        // Windows only
+        final DumbSlave slave = jenkins.createOnlineSlave(Label.get("slaves"));
+        final SlaveComputer computer = slave.getComputer();
+        assumeFalse("Test is Windows only!", computer.isUnix());
+
+        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
+        job.setDefinition(new CpsFlowDefinition(script, true));
+
+        if (status == true) {
+            final WorkflowRun run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
+            jenkins.assertLogContains("Publishing ECU-TEST logs...", run);
+            jenkins.assertLogContains("Archiving ECU-TEST logs is disabled.", run);
+        } else {
+            final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
+            jenkins.assertLogContains("Publishing ECU-TEST logs...", run);
+            jenkins.assertLogContains("Empty log results are not allowed, setting build status to FAILURE!", run);
+        }
     }
 }

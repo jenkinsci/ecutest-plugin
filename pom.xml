@@ -79,11 +79,12 @@
 
     <properties>
         <!-- Jenkins base -->
-        <jenkins.version>1.565.3</jenkins.version>
-        <jenkins-test-harness.version>1.565.3</jenkins-test-harness.version>
+        <jenkins.version>1.580.1</jenkins.version>
+        <jenkins-test-harness.version>1.580.1</jenkins-test-harness.version>
         
         <!-- Jenkins plugins -->
         <matrix-project.version>1.4</matrix-project.version>
+        <junit.version>1.3</junit.version>
         <job-dsl.version>1.37</job-dsl.version>
 
         <!-- Static code analysis -->
@@ -93,6 +94,7 @@
         <!-- Test scope -->
         <equalsverifier.version>1.7.8</equalsverifier.version>
         <mockito-core.version>1.10.19</mockito-core.version>
+        <workflow.version>1.4.2</workflow.version>
         <concurrency>2</concurrency>
 
         <!-- JACOB -->
@@ -154,6 +156,12 @@
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>job-dsl</artifactId>
             <version>${job-dsl.version}</version>
             <optional>true</optional>
@@ -176,6 +184,25 @@
             <version>${equalsverifier.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-aggregator</artifactId>
+            <version>${workflow.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-cps</artifactId>
+            <version>${workflow.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-step-api</artifactId>
+            <version>${workflow.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -185,14 +212,32 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <includes>
-                        <!-- Includes system tests ending with ST -->
                         <include>**/*Test.java</include>
-                        <include>**/*ST.java</include>
                     </includes>
                     <excludes>
                         <exclude>InjectedTest.java</exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*ST.java</include>
+                        <include>InjectedTest.java</include>
+                    </includes>
+                    <reuseForks>true</reuseForks>
+                    <forkCount>${concurrency}</forkCount>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -263,37 +308,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.eclipse.m2e</groupId>
-                <artifactId>lifecycle-mapping</artifactId>
-                <configuration>
-                    <lifecycleMappingMetadata>
-                        <pluginExecutions>
-                            <pluginExecution>
-                                <pluginExecutionFilter>
-                                    <groupId>
-                                        org.apache.maven.plugins
-                                    </groupId>
-                                    <artifactId>
-                                        maven-dependency-plugin
-                                    </artifactId>
-                                    <versionRange>
-                                        [2.3,)
-                                    </versionRange>
-                                    <goals>
-                                        <goal>
-                                            copy-dependencies
-                                        </goal>
-                                    </goals>
-                                </pluginExecutionFilter>
-                                <action>
-                                    <ignore />
-                                </action>
-                            </pluginExecution>
-                        </pluginExecutions>
-                    </lifecycleMappingMetadata>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -314,6 +328,29 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.eclipse.m2e</groupId>
+                <artifactId>lifecycle-mapping</artifactId>
+                <configuration>
+                    <lifecycleMappingMetadata>
+                        <pluginExecutions>
+                            <pluginExecution>
+                                <pluginExecutionFilter>
+                                    <groupId>org.jenkins-ci.tools</groupId>
+                                    <artifactId>maven-dependency-plugin</artifactId>
+                                    <versionRange>[2.3,)</versionRange>
+                                    <goals>
+                                        <goal>copy-dependencies</goal>
+                                    </goals>
+                                </pluginExecutionFilter>
+                                <action>
+                                    <ignore />
+                                </action>
+                            </pluginExecution>
+                        </pluginExecutions>
+                    </lifecycleMappingMetadata>
+                </configuration>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
@@ -326,15 +363,9 @@
                             <pluginExecutions>
                                 <pluginExecution>
                                     <pluginExecutionFilter>
-                                        <groupId>
-                                            org.apache.maven.plugins
-                                        </groupId>
-                                        <artifactId>
-                                            maven-javadoc-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [2.10.1,)
-                                        </versionRange>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-javadoc-plugin</artifactId>
+                                        <versionRange>[2.10.1,)</versionRange>
                                         <goals>
                                             <goal>javadoc</goal>
                                         </goals>

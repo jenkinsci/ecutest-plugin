@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,14 +31,19 @@ package de.tracetronic.jenkins.plugins.ecutest.test;
 
 import hudson.EnvVars;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
+import hudson.model.Run;
 import hudson.util.FormValidation;
 
 import java.io.IOException;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
@@ -55,7 +60,19 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
  */
 public class TestPackageBuilder extends AbstractTestBuilder {
 
-    private final PackageConfig packageConfig;
+    @Nonnull
+    private PackageConfig packageConfig = PackageConfig.newInstance();
+
+    /**
+     * Instantiates a new {@link TestPackageBuilder}.
+     *
+     * @param testFile
+     *            the package file
+     */
+    @DataBoundConstructor
+    public TestPackageBuilder(@Nonnull final String testFile) {
+        super(testFile);
+    }
 
     /**
      * Instantiates a new {@link TestPackageBuilder}.
@@ -68,8 +85,9 @@ public class TestPackageBuilder extends AbstractTestBuilder {
      *            the package configuration
      * @param executionConfig
      *            the execution configuration
+     * @deprecated since 1.11 use {@link #TestPackageBuilder(String)}
      */
-    @DataBoundConstructor
+    @Deprecated
     public TestPackageBuilder(final String testFile, final TestConfig testConfig,
             final PackageConfig packageConfig, final ExecutionConfig executionConfig) {
         super(testFile, testConfig, executionConfig);
@@ -79,16 +97,26 @@ public class TestPackageBuilder extends AbstractTestBuilder {
     /**
      * @return the package configuration
      */
+    @Nonnull
     public PackageConfig getPackageConfig() {
         return packageConfig;
     }
 
+    /**
+     * @param packageConfig
+     *            the package configuration
+     */
+    @DataBoundSetter
+    public void setPackageConfig(@CheckForNull final PackageConfig packageConfig) {
+        this.packageConfig = packageConfig == null ? PackageConfig.newInstance() : packageConfig;
+    }
+
     @Override
     protected boolean runTest(final String testFile, final TestConfig testConfig,
-            final ExecutionConfig executionConfig, final AbstractBuild<?, ?> build, final Launcher launcher,
-            final BuildListener listener) throws IOException, InterruptedException {
+            final ExecutionConfig executionConfig, final Run<?, ?> run, final FilePath workspace,
+            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
         // Expand package configuration
-        final EnvVars buildEnv = build.getEnvironment(listener);
+        final EnvVars buildEnv = run.getEnvironment(listener);
         final PackageConfig packageConfig = getPackageConfig().expand(buildEnv);
 
         // Run test case with package client
@@ -96,7 +124,7 @@ public class TestPackageBuilder extends AbstractTestBuilder {
                 executionConfig);
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo(String.format("Executing package %s...", testFile));
-        if (testClient.runTestCase(launcher, listener)) {
+        if (testClient.runTestCase(workspace, launcher, listener)) {
             logger.logInfo("Package executed successfully.");
         } else {
             logger.logError("Executing package failed!");
@@ -104,9 +132,9 @@ public class TestPackageBuilder extends AbstractTestBuilder {
         }
 
         // Add action for injecting environment variables
-        final int builderId = getTestId(build);
+        final int builderId = getTestId(run);
         final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(builderId, testClient);
-        build.addAction(envAction);
+        run.addAction(envAction);
 
         return true;
     }

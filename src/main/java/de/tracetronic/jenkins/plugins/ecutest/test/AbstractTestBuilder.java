@@ -29,20 +29,31 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
+import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
+import hudson.Util;
+import hudson.model.TaskListener;
+import hudson.model.Run;
 import hudson.remoting.Callable;
+import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Builder;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 
+import jenkins.security.MasterToSlaveCallable;
+import jenkins.tasks.SimpleBuildStep;
+
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.DataBoundSetter;
+
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
@@ -59,7 +70,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class AbstractTestBuilder extends Builder {
+public abstract class AbstractTestBuilder extends Builder implements SimpleBuildStep {
 
     /**
      * Defines the default "Packages" directory in the ECU-TEST workspace.
@@ -71,9 +82,23 @@ public abstract class AbstractTestBuilder extends Builder {
      */
     private static final String DEFAULT_CONFIG_DIR = "Configurations";
 
+    @Nonnull
     private final String testFile;
-    private final TestConfig testConfig;
-    private final ExecutionConfig executionConfig;
+    @Nonnull
+    private TestConfig testConfig = TestConfig.newInstance();
+    @Nonnull
+    private ExecutionConfig executionConfig = ExecutionConfig.newInstance();
+
+    /**
+     * Instantiates a new {@link AbstractTestBuilder}.
+     *
+     * @param testFile
+     *            the test file
+     */
+    public AbstractTestBuilder(final String testFile) {
+        super();
+        this.testFile = StringUtils.trimToEmpty(testFile);
+    }
 
     /**
      * Instantiates a new {@link AbstractTestBuilder}.
@@ -84,7 +109,9 @@ public abstract class AbstractTestBuilder extends Builder {
      *            the test configuration
      * @param executionConfig
      *            the execution configuration
+     * @deprecated since 1.11 use {@link #AbstractTestBuilder(String)}
      */
+    @Deprecated
     public AbstractTestBuilder(final String testFile, final TestConfig testConfig,
             final ExecutionConfig executionConfig) {
         super();
@@ -110,6 +137,7 @@ public abstract class AbstractTestBuilder extends Builder {
     /**
      * @return the test file path
      */
+    @Nonnull
     public String getTestFile() {
         return testFile;
     }
@@ -117,6 +145,7 @@ public abstract class AbstractTestBuilder extends Builder {
     /**
      * @return the test configuration
      */
+    @Nonnull
     public TestConfig getTestConfig() {
         return testConfig;
     }
@@ -124,41 +153,73 @@ public abstract class AbstractTestBuilder extends Builder {
     /**
      * @return the execution configuration
      */
+    @Nonnull
     public ExecutionConfig getExecutionConfig() {
         return executionConfig;
     }
 
+    /**
+     * @param testConfig
+     *            the test configuration
+     */
+    @DataBoundSetter
+    public void setTestConfig(@CheckForNull final TestConfig testConfig) {
+        this.testConfig = testConfig == null ? TestConfig.newInstance() : testConfig;
+    }
+
+    /**
+     * @param executionConfig
+     *            the execution configuration
+     */
+    @DataBoundSetter
+    public void setExecutionConfig(@CheckForNull final ExecutionConfig executionConfig) {
+        this.executionConfig = executionConfig == null ? ExecutionConfig.newInstance() : executionConfig;
+    }
+
     @Override
-    public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
-            throws InterruptedException, IOException {
-        // Check OS running this build
-        if (!ProcessUtil.checkOS(launcher, listener)) {
-            return false;
+    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException {
+        // FIXME: workaround because pipeline node allocation does not create the actual workspace directory
+        if (!workspace.exists()) {
+            workspace.mkdirs();
         }
 
-        final boolean performed = performTest(build, launcher, listener);
-        if (!performed && getExecutionConfig().isStopOnError()) {
-            final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            logger.logInfo("- Closing running ECU-TEST and Tool-Server instances...");
-            if (closeETInstance(launcher, listener)) {
-                logger.logInfo("-> ECU-TEST closed successfully.");
-            } else {
-                logger.logInfo("-> No running ECU-TEST instance found.");
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        try {
+            ProcessUtil.checkOS(launcher);
+            final boolean performed = performTest(run, workspace, launcher, listener);
+            if (!performed) {
+                if (getExecutionConfig().isStopOnError()) {
+                    logger.logInfo("- Closing running ECU-TEST and Tool-Server instances...");
+                    if (closeETInstance(launcher, listener)) {
+                        logger.logInfo("-> ECU-TEST closed successfully.");
+                    } else {
+                        logger.logInfo("-> No running ECU-TEST instance found.");
+                    }
+                    if (checkTSInstance(launcher, true)) {
+                        logger.logInfo("-> Tool-Server closed successfully.");
+                    } else {
+                        logger.logInfo("-> No running Tool-Server instance found.");
+                    }
+                }
+                throw new AbortException("Test execution failed!");
             }
-            if (checkTSInstance(launcher, true)) {
-                logger.logInfo("-> Tool-Server closed successfully.");
-            } else {
-                logger.logInfo("-> No running Tool-Server instance found.");
-            }
+        } catch (final IOException e) {
+            Util.displayIOException(e, listener);
+            throw e;
+        } catch (final ETPluginException e) {
+            logger.logError(e.getMessage());
+            throw new AbortException(e.getMessage());
         }
-        return performed;
     }
 
     /**
      * Perform a test execution.
      *
-     * @param build
+     * @param run
      *            the build
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @param listener
@@ -169,8 +230,8 @@ public abstract class AbstractTestBuilder extends Builder {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private boolean performTest(final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
-            throws IOException, InterruptedException {
+    private boolean performTest(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Check for running ECU-TEST instance
@@ -180,7 +241,7 @@ public abstract class AbstractTestBuilder extends Builder {
         }
 
         // Expand build parameters
-        final EnvVars buildEnv = build.getEnvironment(listener);
+        final EnvVars buildEnv = run.getEnvironment(listener);
         final String expTestFile = buildEnv.expand(getTestFile());
         TestConfig expTestConfig = getTestConfig().expand(buildEnv);
         final ExecutionConfig expExecConfig = getExecutionConfig().expand(buildEnv);
@@ -195,7 +256,7 @@ public abstract class AbstractTestBuilder extends Builder {
             final String packageDir = getPackagesDir(launcher, listener);
 
             // Absolutize packages directory, if not absolute assume relative to ECU-TEST workspace
-            expPkgDir = PathUtil.makeAbsolutePath(packageDir, build.getWorkspace());
+            expPkgDir = PathUtil.makeAbsolutePath(packageDir, workspace);
         }
 
         // Configure test file
@@ -216,7 +277,7 @@ public abstract class AbstractTestBuilder extends Builder {
             final String configDir = getConfigDir(launcher, listener);
 
             // Absolutize configuration directory, if not absolute assume relative to ECU-TEST workspace
-            final String expConfigDir = PathUtil.makeAbsolutePath(configDir, build.getWorkspace());
+            final String expConfigDir = PathUtil.makeAbsolutePath(configDir, workspace);
             expTbcConfigDir = tbcFile.isAbsolute() ? null : expConfigDir;
             expTcfConfigDir = tcfFile.isAbsolute() ? null : expConfigDir;
         }
@@ -239,7 +300,7 @@ public abstract class AbstractTestBuilder extends Builder {
                 expTestConfig.isLoadOnly(), expTestConfig.getConstants());
 
         // Run tests
-        return runTest(expTestFilePath, expTestConfig, expExecConfig, build, launcher, listener);
+        return runTest(expTestFilePath, expTestConfig, expExecConfig, run, workspace, launcher, listener);
     }
 
     /**
@@ -251,8 +312,10 @@ public abstract class AbstractTestBuilder extends Builder {
      *            the expanded test configuration
      * @param executionConfig
      *            the expanded execution configuration
-     * @param build
+     * @param run
      *            the build
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @param listener
@@ -264,8 +327,8 @@ public abstract class AbstractTestBuilder extends Builder {
      *             if the build gets interrupted
      */
     protected abstract boolean runTest(String testFile, TestConfig testConfig, ExecutionConfig executionConfig,
-            AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException,
-            InterruptedException;
+            Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
+                    throws IOException, InterruptedException;
 
     /**
      * Checks already opened ECU-TEST instances.
@@ -300,7 +363,7 @@ public abstract class AbstractTestBuilder extends Builder {
      * @throws InterruptedException
      *             if the current thread is interrupted while waiting for the completion
      */
-    private boolean closeETInstance(final Launcher launcher, final BuildListener listener) throws IOException,
+    private boolean closeETInstance(final Launcher launcher, final TaskListener listener) throws IOException,
     InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
         if (foundProcesses.isEmpty()) {
@@ -331,12 +394,12 @@ public abstract class AbstractTestBuilder extends Builder {
     /**
      * Gets the test identifier by the size of {@link TestEnvInvisibleAction}s already added to the build.
      *
-     * @param build
+     * @param run
      *            the build
      * @return the test id
      */
-    protected int getTestId(final AbstractBuild<?, ?> build) {
-        final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
+    protected int getTestId(final Run<?, ?> run) {
+        final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
         return testEnvActions.size();
     }
 
@@ -358,7 +421,7 @@ public abstract class AbstractTestBuilder extends Builder {
      *             if the build gets interrupted
      */
     protected String getTestFilePath(final String testFile, final String pkgDir, final Launcher launcher,
-            final BuildListener listener) throws IOException, InterruptedException {
+            final TaskListener listener) throws IOException, InterruptedException {
         String testFilePath = null;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (testFile.isEmpty()) {
@@ -393,7 +456,7 @@ public abstract class AbstractTestBuilder extends Builder {
      *             if the build gets interrupted
      */
     private String getConfigFilePath(final String configFile, final String configDir, final Launcher launcher,
-            final BuildListener listener) throws IOException, InterruptedException {
+            final TaskListener listener) throws IOException, InterruptedException {
         String configFilePath = null;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (configFile.isEmpty()) {
@@ -421,7 +484,7 @@ public abstract class AbstractTestBuilder extends Builder {
      * @throws InterruptedException
      *             if the current thread is interrupted while waiting for the completion
      */
-    protected String getConfigDir(final Launcher launcher, final BuildListener listener) throws InterruptedException {
+    protected String getConfigDir(final Launcher launcher, final TaskListener listener) throws InterruptedException {
         String configDir;
         try {
             configDir = launcher.getChannel().call(new GetSettingCallable("configPath"));
@@ -444,7 +507,7 @@ public abstract class AbstractTestBuilder extends Builder {
      * @throws InterruptedException
      *             if the current thread is interrupted while waiting for the completion
      */
-    protected String getPackagesDir(final Launcher launcher, final BuildListener listener) throws InterruptedException {
+    protected String getPackagesDir(final Launcher launcher, final TaskListener listener) throws InterruptedException {
         String packagesDir;
         try {
             packagesDir = launcher.getChannel().call(new GetSettingCallable("packagePath"));
@@ -459,7 +522,7 @@ public abstract class AbstractTestBuilder extends Builder {
     /**
      * {@link Callable} providing remote access to get a ECU-TEST workspace setting value via COM.
      */
-    private static final class GetSettingCallable implements Callable<String, IOException> {
+    private static final class GetSettingCallable extends MasterToSlaveCallable<String, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -488,6 +551,11 @@ public abstract class AbstractTestBuilder extends Builder {
             }
             return settingValue;
         }
+    }
+
+    @Override
+    public BuildStepMonitor getRequiredMonitorService() {
+        return BuildStepMonitor.NONE;
     }
 
     @Override

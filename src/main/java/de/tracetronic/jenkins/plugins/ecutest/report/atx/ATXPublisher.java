@@ -35,12 +35,11 @@ import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.Action;
-import hudson.model.BuildListener;
 import hudson.model.Result;
-import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
 import hudson.model.AbstractProject;
 import hudson.model.Descriptor;
+import hudson.model.Run;
 import hudson.remoting.Callable;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
@@ -57,15 +56,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 
+import jenkins.security.MasterToSlaveCallable;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
@@ -74,7 +77,6 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstall
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
@@ -92,7 +94,20 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     protected static final String URL_NAME = "atx-reports";
 
+    @Nonnull
     private final String atxName;
+
+    /**
+     * Instantiates a new {@link ATXPublisher}.
+     *
+     * @param atxName
+     *            the tool name identifying the {@link ATXInstallation} to be used
+     */
+    @DataBoundConstructor
+    public ATXPublisher(@Nonnull final String atxName) {
+        super();
+        this.atxName = StringUtils.trimToEmpty(atxName);
+    }
 
     /**
      * Instantiates a new {@link ATXPublisher}.
@@ -108,12 +123,13 @@ public class ATXPublisher extends AbstractReportPublisher {
      * @param keepAll
      *            specifies whether artifacts are archived for all successful builds,
      *            otherwise only the most recent
+     * @deprecated since 1.11 use {@link #ATXPublisher(String)}
      */
-    @DataBoundConstructor
+    @Deprecated
     public ATXPublisher(final String atxName, final boolean allowMissing, final boolean runOnFailed,
             final boolean archiving, final boolean keepAll) {
         super(allowMissing, runOnFailed, archiving, keepAll);
-        this.atxName = atxName;
+        this.atxName = StringUtils.trimToEmpty(atxName);
     }
 
     /**
@@ -145,39 +161,29 @@ public class ATXPublisher extends AbstractReportPublisher {
     /**
      * @return the {@link ATXInstallation} name
      */
-    public String getATXName() {
+    @Nonnull
+    public String getAtxName() {
         return atxName;
     }
 
     @Override
-    public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-            final BuildListener listener) throws InterruptedException, IOException {
-        // Check OS running this build
-        if (!ProcessUtil.checkOS(launcher, listener)) {
-            return false;
-        }
-
-        // Initialize logger
+    public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing ATX reports...");
+        ProcessUtil.checkOS(launcher);
 
-        final Result buildResult = build.getResult();
+        final Result buildResult = run.getResult();
         if (buildResult != null && !canContinue(buildResult)) {
             logger.logInfo(String.format("Skipping publisher since build result is %s", buildResult));
-            return true;
+            return;
         }
 
         // Get selected TEST-GUIDE installation
-        final ATXInstallation installation = getInstallation(build.getEnvironment(listener));
+        final ATXInstallation installation = getInstallation(run.getEnvironment(listener));
         if (installation == null) {
-            logger.logError("Selected TEST-GUIDE installation is not configured!");
-            return false;
+            throw new ETPluginException("Selected TEST-GUIDE installation is not configured!");
         }
-
-        // Get selected ECU-TEST installation
-        String toolName = installation.getToolName();
-        final AbstractToolInstallation etInstallation = configureToolInstallation(toolName, listener,
-                build.getEnvironment(listener));
 
         boolean isPublished = false;
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
@@ -185,40 +191,32 @@ public class ATXPublisher extends AbstractReportPublisher {
 
         // Start ECU-TEST if necessary and publish the ATX reports
         if (isETRunning) {
-            isPublished = publishReports(installation, build, launcher, listener);
+            isPublished = publishReports(installation, run, launcher, listener);
         } else {
-            if (etInstallation instanceof ETInstallation) {
-                final String installPath = etInstallation.getExecutable(launcher);
-                final String workspaceDir = getWorkspaceDir(build);
-                final String settingsDir = getSettingsDir(build);
-                toolName = build.getEnvironment(listener).expand(etInstallation.getName());
-                final ETClient etClient = new ETClient(toolName, installPath, workspaceDir, settingsDir,
-                        StartETBuilder.DEFAULT_TIMEOUT, false);
-                logger.logInfo(String.format("Starting %s...", toolName));
-                if (etClient.start(false, launcher, listener)) {
-                    logger.logInfo(String.format("%s started successfully.", toolName));
-                    isPublished = publishReports(installation, build, launcher, listener);
-                } else {
-                    logger.logError(String.format("Starting %s failed.", toolName));
-                }
-                logger.logInfo(String.format("Stopping %s...", toolName));
-                if (etClient.stop(true, launcher, listener)) {
-                    logger.logInfo(String.format("%s stopped successfully.", toolName));
-                } else {
-                    logger.logError(String.format("Stopping %s failed.", toolName));
-                }
+            String toolName = installation.getToolName();
+            final ETInstallation etInstallation = configureToolInstallation(toolName, workspace.toComputer(), listener,
+                    run.getEnvironment(listener));
+            final String installPath = etInstallation.getExecutable(launcher);
+            final String workspaceDir = getWorkspaceDir(run);
+            final String settingsDir = getSettingsDir(run);
+            toolName = run.getEnvironment(listener).expand(etInstallation.getName());
+            final ETClient etClient = new ETClient(toolName, installPath, workspaceDir, settingsDir,
+                    StartETBuilder.DEFAULT_TIMEOUT, false);
+            if (etClient.start(false, workspace, launcher, listener)) {
+                isPublished = publishReports(installation, run, launcher, listener);
             } else {
-                logger.logError("Selected ECU-TEST installation is not configured for this node!");
-                return false;
+                logger.logError(String.format("Starting %s failed.", toolName));
+            }
+            if (!etClient.stop(true, workspace, launcher, listener)) {
+                logger.logError(String.format("Stopping %s failed.", toolName));
             }
         }
 
         if (isPublished) {
             logger.logInfo("ATX reports published successfully.");
         } else {
-            build.setResult(Result.FAILURE);
+            run.setResult(Result.FAILURE);
         }
-        return true;
     }
 
     /**
@@ -227,8 +225,8 @@ public class ATXPublisher extends AbstractReportPublisher {
      *
      * @param installation
      *            the installation
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @param launcher
      *            the launcher
      * @param listener
@@ -239,24 +237,24 @@ public class ATXPublisher extends AbstractReportPublisher {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private boolean publishReports(final ATXInstallation installation, final AbstractBuild<?, ?> build,
-            final Launcher launcher, final BuildListener listener)
-            throws IOException, InterruptedException {
+    private boolean publishReports(final ATXInstallation installation, final Run<?, ?> run,
+            final Launcher launcher, final TaskListener listener)
+                    throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final boolean isUploadEnabled = isUploadEnabled(installation);
-        final boolean isServerReachable = isServerReachable(installation, launcher, build.getEnvironment(listener));
+        final boolean isServerReachable = isServerReachable(installation, launcher, run.getEnvironment(listener));
         if (isUploadEnabled && isServerReachable) {
             logger.logInfo("- Generating and uploading ATX reports...");
             final ATXReportUploader uploader = new ATXReportUploader();
-            return uploader.upload(isAllowMissing(), installation, build, launcher, listener);
+            return uploader.upload(isAllowMissing(), installation, run, launcher, listener);
         } else {
             logger.logInfo("- Generating ATX reports...");
             if (isUploadEnabled && !isServerReachable) {
                 logger.logWarn("-> ATX upload will be skipped because selected TEST-GUIDE server is not reachable!");
             }
-            final FilePath archiveTarget = getArchiveTarget(build);
+            final FilePath archiveTarget = getArchiveTarget(run);
             final ATXReportGenerator generator = new ATXReportGenerator();
-            return generator.generate(archiveTarget, isAllowMissing(), isArchiving(), isKeepAll(), installation, build,
+            return generator.generate(archiveTarget, isAllowMissing(), isArchiving(), isKeepAll(), installation, run,
                     launcher, listener);
         }
     }
@@ -301,7 +299,7 @@ public class ATXPublisher extends AbstractReportPublisher {
     /**
      * {@link Callable} providing remote access to test the TEST-GUIDE server availability.
      */
-    private static final class TestConnectionCallable implements Callable<Boolean, IOException> {
+    private static final class TestConnectionCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -354,14 +352,8 @@ public class ATXPublisher extends AbstractReportPublisher {
     }
 
     @Override
-    protected String getUrlName() {
+    public String getUrlName() {
         return URL_NAME;
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    public Action getProjectAction(final AbstractProject<?, ?> project) {
-        return new ATXProjectAction(!isKeepAll());
     }
 
     @Override

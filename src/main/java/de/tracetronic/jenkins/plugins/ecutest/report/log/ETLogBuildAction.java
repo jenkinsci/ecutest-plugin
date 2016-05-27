@@ -29,10 +29,14 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.log;
 
+import hudson.model.Action;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+import jenkins.tasks.SimpleBuildStep;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 
 /**
@@ -40,7 +44,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ETLogBuildAction extends AbstractETLogAction {
+public class ETLogBuildAction extends AbstractETLogAction implements SimpleBuildStep.LastBuildAction {
 
     private final List<ETLogReport> logReports = new ArrayList<ETLogReport>();
 
@@ -133,5 +137,10 @@ public class ETLogBuildAction extends AbstractETLogAction {
     @Override
     public String getDisplayName() {
         return Messages.ETLogBuildAction_DisplayName();
+    }
+
+    @Override
+    public Collection<? extends Action> getProjectActions() {
+        return Collections.singleton(new ETLogProjectAction(isProjectLevel()));
     }
 }

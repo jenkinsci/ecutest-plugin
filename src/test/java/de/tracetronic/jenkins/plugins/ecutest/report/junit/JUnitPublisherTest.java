@@ -32,10 +32,13 @@ package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.junit.Test;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Unit tests for {@link JUnitPublisher}.
@@ -45,28 +48,52 @@ import org.junit.Test;
 public class JUnitPublisherTest {
 
     @Test
+    public void testDefaultStep() throws IOException {
+        final JUnitPublisher publisher = new JUnitPublisher("");
+        assertPublisher(publisher);
+    }
+
+    @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
+    @Test
+    public void testNullStep() {
+        final JUnitPublisher publisher = new JUnitPublisher(null);
+        publisher.setUnstableThreshold(0);
+        publisher.setFailedThreshold(0);
+        publisher.setAllowMissing(false);
+        publisher.setRunOnFailed(false);
+        publisher.setArchiving(true);
+        publisher.setKeepAll(true);
+        assertPublisher(publisher);
+    }
+
+    @Deprecated
+    @Test
+    public void testDefault() {
+        final JUnitPublisher publisher = new JUnitPublisher("", 0, 0, false, false, true, true);
+        assertPublisher(publisher);
+    }
+
+    @Deprecated
+    @Test
     public void testNull() {
-        final JUnitPublisher publisher = new JUnitPublisher(null, 0, 0, true, true, false, false);
-        assertNotNull(publisher);
-        assertNull(publisher.getToolName());
-        assertEquals(0, Double.compare(0, publisher.getUnstableThreshold()));
-        assertEquals(0, Double.compare(0, publisher.getFailedThreshold()));
-        assertTrue(publisher.isAllowMissing());
-        assertTrue(publisher.isRunOnFailed());
-        assertFalse(publisher.isArchiving());
-        assertFalse(publisher.isKeepAll());
+        final JUnitPublisher publisher = new JUnitPublisher(null, 0, 0, false, false, true, true);
+        assertPublisher(publisher);
     }
 
     @Test
     public void testNegativeThresholds() {
-        final JUnitPublisher publisher = new JUnitPublisher(null, -1, -1, false, false, true, true);
+        final JUnitPublisher publisher = new JUnitPublisher("");
+        publisher.setUnstableThreshold(-1);
+        publisher.setFailedThreshold(-1);
         assertEquals(0, Double.compare(0, publisher.getUnstableThreshold()));
         assertEquals(0, Double.compare(0, publisher.getFailedThreshold()));
     }
 
     @Test
     public void testInvalidThresholds() {
-        final JUnitPublisher publisher = new JUnitPublisher(null, 101, 101, false, false, true, true);
+        final JUnitPublisher publisher = new JUnitPublisher("");
+        publisher.setUnstableThreshold(101);
+        publisher.setFailedThreshold(101);
         assertEquals(0, Double.compare(100, publisher.getUnstableThreshold()));
         assertEquals(0, Double.compare(100, publisher.getFailedThreshold()));
     }
@@ -77,5 +104,22 @@ public class JUnitPublisherTest {
         assertEquals(0, Double.compare(0, JUnitPublisher.getFailedPercentage(0, 100)));
         assertEquals(0, Double.compare(50.0, JUnitPublisher.getFailedPercentage(50, 100)));
         assertEquals(0, Double.compare(100, JUnitPublisher.getFailedPercentage(100, 100)));
+    }
+
+    /**
+     * Asserts the publisher properties.
+     *
+     * @param publisher
+     *            the publisher
+     */
+    private void assertPublisher(final JUnitPublisher publisher) {
+        assertNotNull(publisher);
+        assertNotNull(publisher.getToolName());
+        assertEquals(0, Double.compare(0, publisher.getUnstableThreshold()));
+        assertEquals(0, Double.compare(0, publisher.getFailedThreshold()));
+        assertFalse(publisher.isAllowMissing());
+        assertFalse(publisher.isRunOnFailed());
+        assertTrue(publisher.isArchiving());
+        assertTrue(publisher.isKeepAll());
     }
 }

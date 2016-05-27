@@ -29,8 +29,9 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
+import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 
 import java.io.File;
@@ -40,6 +41,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder.Seriousness;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
@@ -88,12 +90,12 @@ public class PackageClient extends AbstractTestClient {
     }
 
     @Override
-    public boolean runTestCase(final Launcher launcher, final BuildListener listener) throws IOException,
-            InterruptedException {
+    public boolean runTestCase(final FilePath workspace, final Launcher launcher, final TaskListener listener)
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
-        if (!DllUtil.loadLibrary()) {
+        if (!DllUtil.loadLibrary(workspace.toComputer())) {
             logger.logError("Could not load JACOB library!");
             return false;
         }
@@ -144,13 +146,13 @@ public class PackageClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to open a package via COM.
      */
-    private static final class OpenPackageCallable implements Callable<PackageInfoHolder, IOException> {
+    private static final class OpenPackageCallable extends MasterToSlaveCallable<PackageInfoHolder, IOException> {
 
         private static final long serialVersionUID = 1L;
 
         private final String packageFile;
         private final boolean checkTestFile;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link OpenPackageCallable}.
@@ -162,7 +164,7 @@ public class PackageClient extends AbstractTestClient {
          * @param listener
          *            the listener
          */
-        OpenPackageCallable(final String packageFile, final boolean checkTestFile, final BuildListener listener) {
+        OpenPackageCallable(final String packageFile, final boolean checkTestFile, final TaskListener listener) {
             this.packageFile = packageFile;
             this.checkTestFile = checkTestFile;
             this.listener = listener;
@@ -214,14 +216,14 @@ public class PackageClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to run a package via COM.
      */
-    private static final class RunPackageCallable implements Callable<TestInfoHolder, InterruptedException> {
+    private static final class RunPackageCallable extends MasterToSlaveCallable<TestInfoHolder, InterruptedException> {
 
         private static final long serialVersionUID = 1L;
 
         private final String packageFile;
         private final PackageConfig packageConfig;
         private final ExecutionConfig executionConfig;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link RunPackageCallable}.
@@ -236,7 +238,7 @@ public class PackageClient extends AbstractTestClient {
          *            the listener
          */
         RunPackageCallable(final String packageFile, final PackageConfig packageConfig,
-                final ExecutionConfig executionConfig, final BuildListener listener) {
+                final ExecutionConfig executionConfig, final TaskListener listener) {
             this.packageFile = packageFile;
             this.packageConfig = packageConfig;
             this.executionConfig = executionConfig;
@@ -309,12 +311,12 @@ public class PackageClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to close a package via COM.
      */
-    private static final class ClosePackageCallable implements Callable<Boolean, IOException> {
+    private static final class ClosePackageCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
         private final String packageFile;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link ClosePackageCallable}.
@@ -324,7 +326,7 @@ public class PackageClient extends AbstractTestClient {
          * @param listener
          *            the listener
          */
-        ClosePackageCallable(final String packageFile, final BuildListener listener) {
+        ClosePackageCallable(final String packageFile, final TaskListener listener) {
             this.packageFile = packageFile;
             this.listener = listener;
         }

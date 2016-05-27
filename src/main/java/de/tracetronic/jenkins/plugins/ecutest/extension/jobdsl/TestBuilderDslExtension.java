@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -74,8 +74,11 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         final TestPackageContext context = new TestPackageContext();
         executeInContext(closure, context);
 
-        return new TestPackageBuilder(pkgFile.toString(), context.testConfig, context.packageConfig,
-                context.executionConfig);
+        final TestPackageBuilder builder = new TestPackageBuilder(pkgFile.toString());
+        builder.setTestConfig(context.testConfig);
+        builder.setPackageConfig(context.packageConfig);
+        builder.setExecutionConfig(context.executionConfig);
+        return builder;
     }
 
     /**
@@ -106,8 +109,11 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         final TestProjectContext context = new TestProjectContext();
         executeInContext(closure, context);
 
-        return new TestProjectBuilder(prjFile.toString(), context.testConfig, context.projectConfig,
-                context.executionConfig);
+        final TestProjectBuilder builder = new TestProjectBuilder(prjFile.toString());
+        builder.setTestConfig(context.testConfig);
+        builder.setProjectConfig(context.projectConfig);
+        builder.setExecutionConfig(context.executionConfig);
+        return builder;
     }
 
     /**
@@ -139,8 +145,14 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         final TestFolderContext context = new TestFolderContext();
         executeInContext(closure, context);
 
-        return new TestFolderBuilder(testFolder.toString(), context.scanMode, context.recursiveScan,
-                context.testConfig, context.packageConfig, context.projectConfig, context.executionConfig);
+        final TestFolderBuilder builder = new TestFolderBuilder(testFolder.toString());
+        builder.setScanMode(context.scanMode);
+        builder.setRecursiveScan(context.recursiveScan);
+        builder.setTestConfig(context.testConfig);
+        builder.setPackageConfig(context.packageConfig);
+        builder.setProjectConfig(context.projectConfig);
+        builder.setExecutionConfig(context.executionConfig);
+        return builder;
     }
 
     /**

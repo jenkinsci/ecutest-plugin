@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,6 @@ import hudson.MarkupText;
 import hudson.console.ConsoleAnnotationDescriptor;
 import hudson.console.ConsoleAnnotator;
 import hudson.console.ConsoleNote;
-import hudson.model.Run;
 
 import java.util.Arrays;
 
@@ -44,13 +43,12 @@ import java.util.Arrays;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class TTConsoleNote extends ConsoleNote<Run<?, ?>> {
+public class TTConsoleNote extends ConsoleNote<Object> {
 
     private static final long serialVersionUID = 1L;
 
     @Override
-    public ConsoleAnnotator<Run<?, ?>> annotate(final Run<?, ?> context, final MarkupText text,
-            final int charPos) {
+    public ConsoleAnnotator<Object> annotate(final Object context, final MarkupText text, final int charPos) {
         final String plainText = text.getText();
         if (plainText.contains("ERROR:")) {
             text.addMarkup(0, text.length(), "<span style=\"font-weight: bold; color:#FF0000\">", "</span>");

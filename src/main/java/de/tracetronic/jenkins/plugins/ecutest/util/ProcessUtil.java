@@ -30,7 +30,6 @@
 package de.tracetronic.jenkins.plugins.ecutest.util;
 
 import hudson.Launcher;
-import hudson.model.BuildListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,7 +41,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 
 /**
  * Utility class providing process and system operations.
@@ -163,17 +162,13 @@ public final class ProcessUtil {
      *
      * @param launcher
      *            the launcher
-     * @param listener
-     *            the listener
-     * @return {@code true} if Windows launcher, {@code false} if Unix-based launcher
+     * @throws ETPluginException
+     *             if Unix-based launcher
      */
-    public static boolean checkOS(final Launcher launcher, final BuildListener listener) {
+    public static void checkOS(final Launcher launcher) throws ETPluginException {
         if (launcher.isUnix()) {
-            final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            logger.logError("Trying to build Windows related configuration on an Unix-based system! "
+            throw new ETPluginException("Trying to build Windows related configuration on an Unix-based system! "
                     + "Restrict the project to be built on a particular Windows slave or master.");
-            return false;
         }
-        return true;
     }
 }

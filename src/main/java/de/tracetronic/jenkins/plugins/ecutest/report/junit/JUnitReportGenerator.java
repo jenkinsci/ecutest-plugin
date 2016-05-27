@@ -31,19 +31,19 @@ package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
+import hudson.model.Run;
 import hudson.remoting.Callable;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
@@ -69,8 +69,10 @@ public class JUnitReportGenerator {
      *            the installation
      * @param reportFiles
      *            the report files
-     * @param build
-     *            the build
+     * @param run
+     *            the run
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @param listener
@@ -81,9 +83,9 @@ public class JUnitReportGenerator {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    public boolean generate(final AbstractToolInstallation installation, final List<FilePath> reportFiles,
-            final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener) throws IOException,
-            InterruptedException {
+    public boolean generate(final ETInstallation installation, final List<FilePath> reportFiles,
+            final Run<?, ?> run, final FilePath workspace, final Launcher launcher, final TaskListener listener)
+            throws IOException, InterruptedException {
         boolean isGenerated = false;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
@@ -93,29 +95,19 @@ public class JUnitReportGenerator {
         if (isETRunning) {
             isGenerated = generateReports(reportFiles, launcher, listener);
         } else {
-            if (installation instanceof ETInstallation) {
-                final String toolName = build.getEnvironment(listener).expand(installation.getName());
-                final String installPath = installation.getExecutable(launcher);
-                final String workspaceDir = getWorkspaceDir(build);
-                final String settingsDir = getSettingsDir(build);
-                final ETClient etClient = new ETClient(toolName, installPath, workspaceDir, settingsDir,
-                        StartETBuilder.DEFAULT_TIMEOUT, false);
-                logger.logInfo(String.format("Starting %s...", toolName));
-                if (etClient.start(false, launcher, listener)) {
-                    logger.logInfo(String.format("%s started successfully.", toolName));
-                    isGenerated = generateReports(reportFiles, launcher, listener);
-                } else {
-                    logger.logError(String.format("Starting %s failed.", toolName));
-                }
-                logger.logInfo(String.format("Stopping %s...", toolName));
-                if (etClient.stop(true, launcher, listener)) {
-                    logger.logInfo(String.format("%s stopped successfully.", toolName));
-                } else {
-                    logger.logError(String.format("Stopping %s failed.", toolName));
-                }
+            final String toolName = run.getEnvironment(listener).expand(installation.getName());
+            final String installPath = installation.getExecutable(launcher);
+            final String workspaceDir = getWorkspaceDir(run);
+            final String settingsDir = getSettingsDir(run);
+            final ETClient etClient = new ETClient(toolName, installPath, workspaceDir, settingsDir,
+                    StartETBuilder.DEFAULT_TIMEOUT, false);
+            if (etClient.start(false, workspace, launcher, listener)) {
+                isGenerated = generateReports(reportFiles, launcher, listener);
             } else {
-                logger.logError("Selected ECU-TEST installation is not configured for this node!");
-                isGenerated = false;
+                logger.logError(String.format("Starting %s failed.", toolName));
+            }
+            if (!etClient.stop(true, workspace, launcher, listener)) {
+                logger.logError(String.format("Stopping %s failed.", toolName));
             }
         }
 
@@ -138,7 +130,7 @@ public class JUnitReportGenerator {
      *             if the build gets interrupted
      */
     private boolean generateReports(final List<FilePath> reportFiles, final Launcher launcher,
-            final BuildListener listener) throws IOException, InterruptedException {
+            final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("- Generating UNIT test reports...");
         return launcher.getChannel().call(
@@ -148,13 +140,13 @@ public class JUnitReportGenerator {
     /**
      * Gets the workspace directory, either previous ECU-TEST workspace or default one.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @return the workspace directory
      */
-    private String getWorkspaceDir(final AbstractBuild<?, ?> build) {
+    private String getWorkspaceDir(final Run<?, ?> run) {
         String workspaceDir = "";
-        final ToolEnvInvisibleAction toolEnvAction = build.getAction(ToolEnvInvisibleAction.class);
+        final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
         if (toolEnvAction != null) {
             workspaceDir = toolEnvAction.getToolWorkspace();
         }
@@ -164,13 +156,13 @@ public class JUnitReportGenerator {
     /**
      * Gets the settings directory, either previous ECU-TEST settings or default one.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @return the settings directory
      */
-    private String getSettingsDir(final AbstractBuild<?, ?> build) {
+    private String getSettingsDir(final Run<?, ?> run) {
         String settingsDir = "";
-        final ToolEnvInvisibleAction toolEnvAction = build.getAction(ToolEnvInvisibleAction.class);
+        final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
         if (toolEnvAction != null) {
             settingsDir = toolEnvAction.getToolSettings();
         }
@@ -180,12 +172,12 @@ public class JUnitReportGenerator {
     /**
      * {@link Callable} enabling generation of UNIT reports remotely.
      */
-    private static final class GenerateUnitReportCallable implements Callable<Boolean, IOException> {
+    private static final class GenerateUnitReportCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
         private final List<FilePath> dbFiles;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link GenerateUnitReportCallable}.
@@ -195,7 +187,7 @@ public class JUnitReportGenerator {
          * @param listener
          *            the listener
          */
-        GenerateUnitReportCallable(final List<FilePath> dbFiles, final BuildListener listener) {
+        GenerateUnitReportCallable(final List<FilePath> dbFiles, final TaskListener listener) {
             this.dbFiles = dbFiles;
             this.listener = listener;
         }

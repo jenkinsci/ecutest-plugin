@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,10 +31,11 @@ package de.tracetronic.jenkins.plugins.ecutest.tool;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Unit tests for {@link StartTSBuilder}.
@@ -44,22 +45,50 @@ import org.junit.Test;
 public class StartTSBuilderTest {
 
     @Test
-    public void testBlankConfigShouldReturnDefaults() {
-        final StartTSBuilder builder = new StartTSBuilder("", "", "", "");
-        assertEquals("Check default timeout", String.valueOf(StartTSBuilder.DEFAULT_TIMEOUT), builder.getTimeout());
-        assertEquals("Check default TCP port", String.valueOf(StartTSBuilder.DEFAULT_TCP_PORT), builder.getTcpPort());
+    public void testDefaultStep() {
+        final StartTSBuilder builder = new StartTSBuilder("");
+        assertBuilder(builder);
     }
 
+    @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
+    @Test
+    public void testNullStep() {
+        final StartTSBuilder builder = new StartTSBuilder(null);
+        builder.setToolLibsIni(null);
+        builder.setTcpPort(null);
+        builder.setTimeout(null);
+        assertBuilder(builder);
+    }
+
+    @Deprecated
+    @Test
+    public void testDefault() {
+        final StartTSBuilder builder = new StartTSBuilder("", "", "", "");
+        assertBuilder(builder);
+    }
+
+    @Deprecated
     @Test
     public void testNull() {
         final StartTSBuilder builder = new StartTSBuilder(null, null, null, null);
+        assertBuilder(builder);
+    }
+
+    /**
+     * Asserts the builder properties.
+     *
+     * @param builder
+     *            the builder
+     */
+    private void assertBuilder(final StartTSBuilder builder) {
         assertNotNull(builder);
-        assertNull(builder.getToolName());
+        assertNotNull(builder.getToolName());
+        assertTrue(builder.getToolName().isEmpty());
         assertNotNull(builder.getTimeout());
-        assertEquals("Check default timeout", String.valueOf(builder.getDefaultTimeout()), builder.getTimeout());
+        assertEquals(String.valueOf(builder.getDefaultTimeout()), builder.getTimeout());
         assertNotNull(builder.getToolLibsIni());
         assertTrue(builder.getToolLibsIni().isEmpty());
         assertNotNull(builder.getTcpPort());
-        assertEquals("Check default TCP port", String.valueOf(builder.getDefaultTcpPort()), builder.getTcpPort());
+        assertEquals(String.valueOf(builder.getDefaultTcpPort()), builder.getTcpPort());
     }
 }

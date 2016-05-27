@@ -29,7 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report;
 
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
 
 import java.io.File;
 import java.io.IOException;
@@ -117,7 +117,7 @@ public abstract class AbstractArchiveFileReport extends AbstractTestReport {
      *             if serving the file failed
      */
     public void doDynamic(final StaplerRequest req, final StaplerResponse rsp) throws IOException, ServletException {
-        final AbstractBuild<?, ?> build = getBuild(req);
+        final Run<?, ?> build = getBuild(req);
         final AbstractReportAction action = getBuildAction(req);
         if (build == null || action == null) {
             LOGGER.warning(String.format("No build or related action found for url %s", req.getRequestURI()));
@@ -126,7 +126,7 @@ public abstract class AbstractArchiveFileReport extends AbstractTestReport {
         }
 
         final boolean isProjectLevel = action.isProjectLevel();
-        final File rootDir = isProjectLevel ? build.getProject().getRootDir() : build.getRootDir();
+        final File rootDir = isProjectLevel ? build.getParent().getRootDir() : build.getRootDir();
         final File archiveFile = new File(new File(rootDir, getArchiveDir()), getFileName());
         if (!archiveFile.exists()) {
             LOGGER.warning(String.format("Archive file does not exists: %s for %s", getFileName(),

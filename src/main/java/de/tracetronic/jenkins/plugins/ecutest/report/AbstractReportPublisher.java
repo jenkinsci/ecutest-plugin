@@ -29,17 +29,14 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report;
 
+import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.matrix.MatrixConfiguration;
-import hudson.matrix.MatrixProject;
-import hudson.model.Action;
-import hudson.model.BuildListener;
+import hudson.Util;
 import hudson.model.Result;
-import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
 import hudson.model.AbstractItem;
-import hudson.model.AbstractProject;
 import hudson.model.Computer;
 import hudson.model.Run;
 import hudson.tasks.BuildStepMonitor;
@@ -49,23 +46,23 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import jenkins.model.Jenkins;
+import jenkins.tasks.SimpleBuildStep;
 
 import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.DataBoundSetter;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
+import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 
 /**
@@ -74,24 +71,29 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 @SuppressWarnings("unchecked")
-public abstract class AbstractReportPublisher extends Recorder {
+public abstract class AbstractReportPublisher extends Recorder implements SimpleBuildStep {
 
-    private static final Logger LOGGER = Logger.getLogger(AbstractReportPublisher.class.getName());
-
-    private final boolean allowMissing;
-    private final boolean runOnFailed;
+    private boolean allowMissing;
+    private boolean runOnFailed;
     /**
      * {@code Boolean} type is required to retain backward compatibility with default value {@code true}.
      *
      * @since 1.9
      */
-    private final Boolean archiving;
+    private Boolean archiving = true;
     /**
      * {@code Boolean} type is required to retain backward compatibility with default value {@code true}.
      *
      * @since 1.9
      */
-    private final Boolean keepAll;
+    private Boolean keepAll = true;
+
+    /**
+     * Instantiates a new {@link AbstractReportPublisher}.
+     */
+    public AbstractReportPublisher() {
+        super();
+    }
 
     /**
      * Instantiates a new {@link AbstractReportPublisher}.
@@ -171,25 +173,83 @@ public abstract class AbstractReportPublisher extends Recorder {
         return keepAll;
     }
 
-    @Override
-    public abstract Action getProjectAction(final AbstractProject<?, ?> project);
+    /**
+     * @param allowMissing
+     *            specifies whether missing reports are allowed
+     */
+    @DataBoundSetter
+    public void setAllowMissing(final boolean allowMissing) {
+        this.allowMissing = allowMissing;
+    }
+
+    /**
+     * @param runOnFailed
+     *            specifies whether this publisher even runs on a failed build
+     */
+    @DataBoundSetter
+    public void setRunOnFailed(final boolean runOnFailed) {
+        this.runOnFailed = runOnFailed;
+    }
+
+    /**
+     * @param archiving
+     *            specifies whether archiving artifacts is enabled
+     */
+    @DataBoundSetter
+    public void setArchiving(final boolean archiving) {
+        this.archiving = archiving;
+    }
+
+    /**
+     * @param keepAll
+     *            specifies whether artifacts are archived for all successful builds,
+     *            otherwise only the most recent
+     */
+    @DataBoundSetter
+    public void setKeepAll(final boolean keepAll) {
+        this.keepAll = keepAll;
+    }
 
     @Override
-    public Collection<? extends Action> getProjectActions(final AbstractProject<?, ?> project) {
-        final ArrayList<Action> actions = new ArrayList<Action>();
-        actions.add(getProjectAction(project));
-        if (project instanceof MatrixProject && ((MatrixProject) project).getActiveConfigurations() != null) {
-            for (final MatrixConfiguration mc : ((MatrixProject) project).getActiveConfigurations()) {
-                try {
-                    mc.onLoad(mc.getParent(), mc.getName());
-                } catch (final IOException e) {
-                    LOGGER.log(Level.SEVERE, "Could not reload the matrix configuration");
-                }
-            }
+    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException {
+        // FIXME: workaround because pipeline node allocation does not create the actual workspace directory
+        if (!workspace.exists()) {
+            workspace.mkdirs();
         }
 
-        return actions;
+        try {
+            performReport(run, workspace, launcher, listener);
+        } catch (final IOException e) {
+            Util.displayIOException(e, listener);
+            throw e;
+        } catch (final ETPluginException e) {
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            logger.logError(e.getMessage());
+            throw new AbortException(e.getMessage());
+        }
     }
+
+    /**
+     * Performs the report-specific post-build operations.
+     *
+     * @param run
+     *            the run
+     * @param workspace
+     *            the workspace
+     * @param launcher
+     *            the launcher
+     * @param listener
+     *            the listener
+     * @throws InterruptedException
+     *             the interrupted exception
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws ETPluginException
+     *             in case of report operation errors
+     */
+    protected abstract void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException;
 
     @Override
     public BuildStepMonitor getRequiredMonitorService() {
@@ -201,7 +261,7 @@ public abstract class AbstractReportPublisher extends Recorder {
      * is set or if the build is not aborted or failed.
      *
      * @param result
-     *            the build result
+     *            the run result
      * @return {@code true} if the build can continue
      */
     protected boolean canContinue(final Result result) {
@@ -217,6 +277,8 @@ public abstract class AbstractReportPublisher extends Recorder {
      *
      * @param toolName
      *            the tool name identifying the specific tool
+     * @param computer
+     *            the computer
      * @param listener
      *            the listener
      * @param envVars
@@ -226,13 +288,18 @@ public abstract class AbstractReportPublisher extends Recorder {
      *             signals that an I/O exception has occurred
      * @throws InterruptedException
      *             if the build gets interrupted
+     * @throws ETPluginException
+     *             if the selected tool installation is not configured
      */
-    protected AbstractToolInstallation configureToolInstallation(final String toolName,
-            final BuildListener listener, final EnvVars envVars) throws IOException, InterruptedException {
-        AbstractToolInstallation installation = getToolInstallation(toolName, envVars);
-        if (installation != null) {
-            installation = installation.forNode(Computer.currentComputer().getNode(), listener);
+    protected ETInstallation configureToolInstallation(final String toolName, final Computer computer,
+            final TaskListener listener, final EnvVars envVars) throws IOException, InterruptedException,
+            ETPluginException {
+        ETInstallation installation = getToolInstallation(toolName, envVars);
+        if (installation != null && computer != null && computer.getNode() != null) {
+            installation = installation.forNode(computer.getNode(), listener);
             installation = installation.forEnvironment(envVars);
+        } else {
+            throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }
         return installation;
     }
@@ -264,13 +331,13 @@ public abstract class AbstractReportPublisher extends Recorder {
     /**
      * Gets the workspace directory, either previous ECU-TEST workspace or default one.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @return the workspace directory
      */
-    protected String getWorkspaceDir(final AbstractBuild<?, ?> build) {
+    protected String getWorkspaceDir(final Run<?, ?> run) {
         String workspaceDir = "";
-        final ToolEnvInvisibleAction toolEnvAction = build.getAction(ToolEnvInvisibleAction.class);
+        final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
         if (toolEnvAction != null) {
             workspaceDir = toolEnvAction.getToolWorkspace();
         }
@@ -280,13 +347,13 @@ public abstract class AbstractReportPublisher extends Recorder {
     /**
      * Gets the settings directory, either previous ECU-TEST settings or default one.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @return the settings directory
      */
-    protected String getSettingsDir(final AbstractBuild<?, ?> build) {
+    protected String getSettingsDir(final Run<?, ?> run) {
         String settingsDir = "";
-        final ToolEnvInvisibleAction toolEnvAction = build.getAction(ToolEnvInvisibleAction.class);
+        final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
         if (toolEnvAction != null) {
             settingsDir = toolEnvAction.getToolSettings();
         }
@@ -296,12 +363,12 @@ public abstract class AbstractReportPublisher extends Recorder {
     /**
      * Gets the archive target.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @return the archive target
      */
-    protected FilePath getArchiveTarget(final AbstractBuild<?, ?> build) {
-        return new FilePath(isKeepAll() ? getBuildArchiveDir(build) : getProjectArchiveDir(build.getParent()));
+    protected FilePath getArchiveTarget(final Run<?, ?> run) {
+        return new FilePath(isKeepAll() ? getBuildArchiveDir(run) : getProjectArchiveDir(run.getParent()));
     }
 
     /**
@@ -337,8 +404,8 @@ public abstract class AbstractReportPublisher extends Recorder {
      * Builds a list of report files for report generation.
      * Includes the report files generated during separate sub-project execution.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @param launcher
      *            the launcher
      * @return the list of report files
@@ -347,10 +414,10 @@ public abstract class AbstractReportPublisher extends Recorder {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    protected List<FilePath> getReportFiles(final AbstractBuild<?, ?> build, final Launcher launcher)
+    protected List<FilePath> getReportFiles(final Run<?, ?> run, final Launcher launcher)
             throws IOException, InterruptedException {
         final List<FilePath> reportFiles = new ArrayList<FilePath>();
-        final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
+        final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
             if (testReportDir.exists()) {
@@ -364,17 +431,17 @@ public abstract class AbstractReportPublisher extends Recorder {
     /**
      * Removes the report actions from all previous builds which published at project level.
      *
-     * @param build
-     *            the build
+     * @param run
+     *            the run
      * @param clazz
      *            the report action class to remove
      * @throws IOException
      *             signals that an I/O exception has occurred
      */
     @SuppressWarnings("deprecation")
-    public static void removePreviousReports(final AbstractBuild<?, ?> build,
+    public static void removePreviousReports(final Run<?, ?> run,
             final Class<? extends AbstractReportAction> clazz) throws IOException {
-        AbstractBuild<?, ?> prevBuild = build.getPreviousBuild();
+        Run<?, ?> prevBuild = run.getPreviousBuild();
         while (prevBuild != null) {
             final AbstractReportAction buildAction = prevBuild.getAction(clazz);
             if (buildAction != null && buildAction.isProjectLevel()) {

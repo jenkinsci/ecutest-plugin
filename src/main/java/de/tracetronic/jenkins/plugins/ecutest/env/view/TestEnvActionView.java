@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,11 +31,10 @@ package de.tracetronic.jenkins.plugins.ecutest.env.view;
 
 import hudson.EnvVars;
 import hudson.Extension;
-import hudson.FilePath;
 import hudson.model.InvisibleAction;
 import hudson.model.ParameterValue;
 import hudson.model.TaskListener;
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
 import hudson.model.StringParameterValue;
 import hudson.model.listeners.RunListener;
 
@@ -59,20 +58,20 @@ public class TestEnvActionView extends InvisibleAction {
 
     private static final Logger LOGGER = Logger.getLogger(TestEnvActionView.class.getName());
 
-    private final AbstractBuild<?, ?> build;
+    private final Run<?, ?> build;
     private final transient TaskListener listener;
 
     /**
      * Instantiates a new {@link TestEnvActionView}.
      *
-     * @param build
+     * @param run
      *            the build
      * @param listener
      *            the listener
      */
-    public TestEnvActionView(final AbstractBuild<?, ?> build, final TaskListener listener) {
+    public TestEnvActionView(final Run<?, ?> run, final TaskListener listener) {
         super();
-        this.build = build;
+        build = run;
         this.listener = listener;
     }
 
@@ -90,9 +89,9 @@ public class TestEnvActionView extends InvisibleAction {
         try {
             final EnvVars envVars = build.getEnvironment(listener);
             String buildWs = "";
-            final FilePath buildWsPath = build.getWorkspace();
+            final String buildWsPath = envVars.get("WORKSPACE");
             if (buildWsPath != null) {
-                buildWs = buildWsPath.getRemote() + File.separator;
+                buildWs = buildWsPath + File.separator;
             }
 
             for (int i = 0; i < testBuilderSize; i++) {
@@ -116,10 +115,10 @@ public class TestEnvActionView extends InvisibleAction {
      * Listener notifying the build on completion and adding this {@link TestEnvActionView} as a new build action.
      */
     @Extension
-    public static final class RunListenerImpl extends RunListener<AbstractBuild<?, ?>> {
+    public static final class RunListenerImpl extends RunListener<Run<?, ?>> {
 
         @Override
-        public void onCompleted(final AbstractBuild<?, ?> run, final TaskListener listener) {
+        public void onCompleted(final Run<?, ?> run, final TaskListener listener) {
             if (run.getAction(TestEnvInvisibleAction.class) != null) {
                 run.addAction(new TestEnvActionView(run, listener));
             }

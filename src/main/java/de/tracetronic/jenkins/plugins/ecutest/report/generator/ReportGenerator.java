@@ -31,7 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 
 import java.io.File;
@@ -40,6 +40,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
@@ -88,20 +89,20 @@ public class ReportGenerator {
      *             if the build gets interrupted
      */
     public boolean generate(final List<FilePath> reportFiles, final Launcher launcher,
-            final BuildListener listener) throws IOException, InterruptedException {
+            final TaskListener listener) throws IOException, InterruptedException {
         return launcher.getChannel().call(new GenerateReportCallable(config, reportFiles, listener));
     }
 
     /**
      * {@link Callable} enabling generation of reports with specific generator remotely.
      */
-    private static final class GenerateReportCallable implements Callable<Boolean, IOException> {
+    private static final class GenerateReportCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
         private final ReportGeneratorConfig config;
         private final List<FilePath> dbFiles;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link GenerateUnitReportCallable}.
@@ -114,7 +115,7 @@ public class ReportGenerator {
          *            the listener
          */
         GenerateReportCallable(final ReportGeneratorConfig config, final List<FilePath> dbFiles,
-                final BuildListener listener) {
+                final TaskListener listener) {
             this.config = config;
             this.dbFiles = dbFiles;
             this.listener = listener;

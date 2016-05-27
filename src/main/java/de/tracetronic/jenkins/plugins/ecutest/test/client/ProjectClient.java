@@ -29,13 +29,16 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
+import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import jenkins.security.MasterToSlaveCallable;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -86,12 +89,12 @@ public class ProjectClient extends AbstractTestClient {
     }
 
     @Override
-    public boolean runTestCase(final Launcher launcher, final BuildListener listener) throws IOException,
-            InterruptedException {
+    public boolean runTestCase(final FilePath workspace, final Launcher launcher, final TaskListener listener)
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
-        if (!DllUtil.loadLibrary()) {
+        if (!DllUtil.loadLibrary(workspace.toComputer())) {
             logger.logError("Could not load JACOB library!");
             return false;
         }
@@ -141,14 +144,14 @@ public class ProjectClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to open a project via COM.
      */
-    private static final class OpenProjectCallable implements Callable<Boolean, IOException> {
+    private static final class OpenProjectCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
         private final String projectFile;
         private final ProjectConfig projectConfig;
         private final boolean checkTestFile;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link OpenProjectCallable}.
@@ -163,7 +166,7 @@ public class ProjectClient extends AbstractTestClient {
          *            the listener
          */
         OpenProjectCallable(final String projectFile, final ProjectConfig projectConfig,
-                final boolean checkTestFile, final BuildListener listener) {
+                final boolean checkTestFile, final TaskListener listener) {
             this.projectFile = projectFile;
             this.projectConfig = projectConfig;
             this.checkTestFile = checkTestFile;
@@ -219,14 +222,14 @@ public class ProjectClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to run a project via COM.
      */
-    private static final class RunProjectCallable implements Callable<TestInfoHolder, InterruptedException> {
+    private static final class RunProjectCallable extends MasterToSlaveCallable<TestInfoHolder, InterruptedException> {
 
         private static final long serialVersionUID = 1L;
 
         private final String projectFile;
         private final ProjectConfig projectConfig;
         private final ExecutionConfig executionConfig;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link RunProjectCallable}.
@@ -241,7 +244,7 @@ public class ProjectClient extends AbstractTestClient {
          *            the listener
          */
         RunProjectCallable(final String projectFile, final ProjectConfig projectConfig,
-                final ExecutionConfig executionConfig, final BuildListener listener) {
+                final ExecutionConfig executionConfig, final TaskListener listener) {
             this.projectFile = projectFile;
             this.projectConfig = projectConfig;
             this.executionConfig = executionConfig;
@@ -295,12 +298,12 @@ public class ProjectClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to close a project via COM.
      */
-    private static final class CloseProjectCallable implements Callable<Boolean, IOException> {
+    private static final class CloseProjectCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
         private final String projectFile;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link CloseProjectCallable}.
@@ -310,7 +313,7 @@ public class ProjectClient extends AbstractTestClient {
          * @param listener
          *            the listener
          */
-        CloseProjectCallable(final String projectFile, final BuildListener listener) {
+        CloseProjectCallable(final String projectFile, final TaskListener listener) {
             this.projectFile = projectFile;
             this.listener = listener;
         }

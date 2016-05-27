@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -64,8 +64,8 @@ public class JUnitTestResultParserST extends SystemTestBase {
         final StreamBuildListener buildListener = new StreamBuildListener((OutputStream) listener.getLogger());
 
         final JUnitTestResultParser parser = new JUnitTestResultParser();
-        final TestResult testResult = parser.parse(JUnitReportGenerator.UNIT_TEMPLATE_NAME, build, launcher,
-                buildListener);
+        final TestResult testResult = parser.parseResult(JUnitReportGenerator.UNIT_TEMPLATE_NAME, build,
+                build.getWorkspace(), launcher, buildListener);
 
         assertEquals("No tests should be found", 0, testResult.getTotalCount());
     }
@@ -86,8 +86,8 @@ public class JUnitTestResultParserST extends SystemTestBase {
         build.addAction(testEnvAction);
 
         final JUnitTestResultParser parser = new JUnitTestResultParser();
-        final TestResult testResult = parser.parse(JUnitReportGenerator.UNIT_TEMPLATE_NAME, build, launcher,
-                buildListener);
+        final TestResult testResult = parser.parseResult(JUnitReportGenerator.UNIT_TEMPLATE_NAME, build,
+                build.getWorkspace(), launcher, buildListener);
 
         assertEquals("No tests should be found", 0, testResult.getTotalCount());
     }
@@ -111,8 +111,8 @@ public class JUnitTestResultParserST extends SystemTestBase {
         build.addAction(testEnvAction);
 
         final JUnitTestResultParser parser = new JUnitTestResultParser();
-        final TestResult testResult = parser.parse(JUnitReportGenerator.UNIT_TEMPLATE_NAME, build, launcher,
-                buildListener);
+        final TestResult testResult = parser.parseResult(JUnitReportGenerator.UNIT_TEMPLATE_NAME, build,
+                build.getWorkspace(), launcher, buildListener);
 
         assertEquals("One passed test should be found", 1, testResult.getPassCount());
     }
@@ -136,8 +136,9 @@ public class JUnitTestResultParserST extends SystemTestBase {
         build.addAction(testEnvAction);
 
         final JUnitTestResultParser parser = new JUnitTestResultParser();
-        final TestResult testResult = parser.parse(JUnitReportGenerator.UNIT_TEMPLATE_NAME, build, launcher,
-                buildListener);
+        final TestResult testResult = parser.parseResult(JUnitReportGenerator.UNIT_TEMPLATE_NAME, build,
+                build.getWorkspace(),
+                launcher, buildListener);
 
         assertEquals("One failed test should be found", 1, testResult.getFailCount());
     }
@@ -161,8 +162,9 @@ public class JUnitTestResultParserST extends SystemTestBase {
         build.addAction(testEnvAction);
 
         final JUnitTestResultParser parser = new JUnitTestResultParser();
-        final TestResult testResult = parser.parse(JUnitReportGenerator.UNIT_TEMPLATE_NAME, build, launcher,
-                buildListener);
+        final TestResult testResult = parser.parseResult(JUnitReportGenerator.UNIT_TEMPLATE_NAME, build,
+                build.getWorkspace(),
+                launcher, buildListener);
 
         assertEquals("One skipped test should be found", 1, testResult.getSkipCount());
     }

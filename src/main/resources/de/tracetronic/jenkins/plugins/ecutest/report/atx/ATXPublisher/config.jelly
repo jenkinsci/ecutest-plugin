@@ -35,7 +35,7 @@
             <j:forEach var="inst" items="${descriptor.installations}">
                 <f:option value="${inst.name}" selected="${inst.name == instance.installation.name}">${inst.name}</f:option>
             </j:forEach>
-            <f:option value="$${TESTGUIDE}" selected="${instance.getATXName() eq '${TESTGUIDE}'}">${%atxName.parameter}</f:option>
+            <f:option value="$${TESTGUIDE}" selected="${instance.getAtxName() eq '${TESTGUIDE}'}">${%atxName.parameter}</f:option>
         </select>
     </f:entry>
     <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly" />

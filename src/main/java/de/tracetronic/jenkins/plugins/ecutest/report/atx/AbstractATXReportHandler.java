@@ -31,7 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
 import hudson.EnvVars;
 import hudson.FilePath;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 
 import java.io.IOException;
@@ -39,6 +39,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomBooleanSetting;
@@ -62,14 +63,14 @@ public abstract class AbstractATXReportHandler {
     /**
      * Common {@link Callable} enabling generating and uploading ATX reports remotely.
      */
-    protected abstract static class AbstractReportCallable implements Callable<Boolean, IOException> {
+    protected abstract static class AbstractReportCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
         private final ATXConfig config;
         private final List<FilePath> reportFiles;
         private final EnvVars envVars;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link AbstractReportCallable}.
@@ -84,7 +85,7 @@ public abstract class AbstractATXReportHandler {
          *            the listener
          */
         public AbstractReportCallable(final ATXConfig config, final List<FilePath> reportFiles, final EnvVars envVars,
-                final BuildListener listener) {
+                final TaskListener listener) {
             this.config = config;
             this.reportFiles = reportFiles;
             this.envVars = envVars;
@@ -101,7 +102,7 @@ public abstract class AbstractATXReportHandler {
         /**
          * @return the listener
          */
-        public BuildListener getListener() {
+        public TaskListener getListener() {
             return listener;
         }
 

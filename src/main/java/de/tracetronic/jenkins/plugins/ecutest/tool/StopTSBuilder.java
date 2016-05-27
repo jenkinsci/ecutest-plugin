@@ -31,21 +31,22 @@ package de.tracetronic.jenkins.plugins.ecutest.tool;
 
 import hudson.EnvVars;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
+import hudson.model.Run;
 
 import java.io.IOException;
+
+import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.TSClient;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
-import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 
 /**
  * Builder providing to stop the Tool-Server.
@@ -64,10 +65,22 @@ public class StopTSBuilder extends AbstractToolBuilder {
      *
      * @param toolName
      *            the tool name identifying the {@link ETInstallation} to be used
-     * @param timeout
-     *            the timeout
      */
     @DataBoundConstructor
+    public StopTSBuilder(@Nonnull final String toolName) {
+        super(toolName);
+    }
+
+    /**
+     * Instantiates a new {@link StopTSBuilder}.
+     *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param timeout
+     *            the timeout
+     * @deprecated since 1.11 use {@link #StopTSBuilder(String)}
+     */
+    @Deprecated
     public StopTSBuilder(final String toolName, final String timeout) {
         super(toolName, StringUtils.defaultIfEmpty(timeout, String.valueOf(DEFAULT_TIMEOUT)));
     }
@@ -75,46 +88,22 @@ public class StopTSBuilder extends AbstractToolBuilder {
     /**
      * @return the default timeout
      */
+    @Override
     public int getDefaultTimeout() {
         return DEFAULT_TIMEOUT;
     }
 
     @Override
-    public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-            final BuildListener listener) throws InterruptedException, IOException {
-        // Check OS running this build
-        if (!ProcessUtil.checkOS(launcher, listener)) {
-            return false;
-        }
-
-        // Initialize logger
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
-
-        // Get selected ECU-TEST installation
-        final AbstractToolInstallation installation = configureToolInstallation(listener,
-                build.getEnvironment(listener));
-
+    public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         // Stop selected Tool-Server of related ECU-TEST installation
-        if (installation instanceof ETInstallation) {
-            final String tsName = "Tool-Server";
-            final EnvVars buildEnvVars = build.getEnvironment(listener);
-            final int expandedTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
-                    String.valueOf(DEFAULT_TIMEOUT)));
-
-            logger.logInfo(String.format("Stopping %s...", tsName));
-            final TSClient tsClient = new TSClient(getToolName(), expandedTimeout);
-            if (tsClient.stop(true, launcher, listener)) {
-                logger.logInfo(String.format("%s stopped successfully.", tsName));
-            } else {
-                logger.logError(String.format("Stopping %s failed.", tsName));
-                return false;
-            }
-        } else {
-            logger.logError("Selected ECU-TEST installation is not configured for this node!");
-            return false;
+        final EnvVars buildEnvVars = run.getEnvironment(listener);
+        final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
+                String.valueOf(DEFAULT_TIMEOUT)));
+        final TSClient tsClient = new TSClient(getToolName(), expTimeout);
+        if (!tsClient.stop(true, workspace, launcher, listener)) {
+            throw new ETPluginException("Stopping Tool-Server failed.");
         }
-
-        return true;
     }
 
     /**

@@ -34,6 +34,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
@@ -41,6 +43,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Unit tests for {@link TestFolderBuilderTest}.
@@ -50,25 +53,61 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 public class TestFolderBuilderTest {
 
     @Test
-    public void testBlankConfigShouldReturnDefaults() {
+    public void testDefaultStep() throws IOException {
+        final TestConfig testConfig = new TestConfig("", "");
+        final PackageConfig packageConfig = new PackageConfig(true, true);
+        final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
+        final ExecutionConfig executionConfig = new ExecutionConfig("", true, true);
+        final TestFolderBuilder builder = new TestFolderBuilder("");
+        builder.setTestConfig(testConfig);
+        builder.setPackageConfig(packageConfig);
+        builder.setProjectConfig(projectConfig);
+        builder.setExecutionConfig(executionConfig);
+        assertBuilder(builder);
+    }
+
+    @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
+    @Test
+    public void testNullStep() {
+        final TestFolderBuilder builder = new TestFolderBuilder(null);
+        builder.setTestConfig(null);
+        builder.setPackageConfig(null);
+        builder.setProjectConfig(null);
+        builder.setExecutionConfig(null);
+        assertBuilder(builder);
+    }
+
+    @Deprecated
+    @Test
+    public void testDefault() {
         final TestConfig testConfig = new TestConfig("", "");
         final PackageConfig packageConfig = new PackageConfig(true, true);
         final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig("", true, true);
         final TestFolderBuilder builder = new TestFolderBuilder("", TestFolderBuilder.DEFAULT_SCANMODE, false,
                 testConfig, packageConfig, projectConfig, executionConfig);
-        assertEquals("Check default timeout", ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig()
-                .getTimeout());
+        assertBuilder(builder);
     }
 
+    @Deprecated
     @Test
     public void testNull() {
         final TestConfig testConfig = new TestConfig(null, null, false, false, null);
         final PackageConfig packageConfig = new PackageConfig(true, true, null);
         final ProjectConfig projectConfig = new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(null, false, false);
+        final ExecutionConfig executionConfig = new ExecutionConfig(null, true, true);
         final TestFolderBuilder builder = new TestFolderBuilder(null, TestFolderBuilder.DEFAULT_SCANMODE, false,
                 testConfig, packageConfig, projectConfig, executionConfig);
+        assertBuilder(builder);
+    }
+
+    /**
+     * Asserts the builder properties.
+     *
+     * @param builder
+     *            the builder
+     */
+    private void assertBuilder(final TestFolderBuilder builder) {
         assertNotNull(builder);
         assertNotNull(builder.getTestFile());
         assertTrue(builder.getTestFile().isEmpty());
@@ -87,9 +126,8 @@ public class TestFolderBuilderTest {
         assertTrue(builder.getProjectConfig().getFilterExpression().isEmpty());
         assertEquals(JobExecutionMode.SEQUENTIAL_EXECUTION, builder.getProjectConfig().getJobExecMode());
         assertNotNull(builder.getExecutionConfig().getTimeout());
-        assertEquals("Check default timeout", ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig()
-                .getTimeout());
-        assertFalse(builder.getExecutionConfig().isStopOnError());
-        assertFalse(builder.getExecutionConfig().isCheckTestFile());
+        assertEquals(ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig().getTimeout());
+        assertTrue(builder.getExecutionConfig().isStopOnError());
+        assertTrue(builder.getExecutionConfig().isCheckTestFile());
     }
 }

@@ -31,7 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report;
 
 import hudson.Util;
 import hudson.model.ModelObject;
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +120,7 @@ public abstract class AbstractTestReport extends AbstractRequestHandler implemen
     }
 
     @Override
-    public AbstractBuild<?, ?> getBuild(final StaplerRequest req) {
+    public Run<?, ?> getBuild(final StaplerRequest req) {
         return getAnchestorBuild(req);
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,8 +29,9 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 
+import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 
 import java.io.IOException;
 
@@ -46,6 +47,8 @@ public interface ToolClient {
      *
      * @param checkProcesses
      *            specifies whether to check open processes after tear down
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @param listener
@@ -56,14 +59,16 @@ public interface ToolClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    boolean start(boolean checkProcesses, Launcher launcher, BuildListener listener) throws IOException,
-    InterruptedException;
+    boolean start(boolean checkProcesses, final FilePath workspace, Launcher launcher, TaskListener listener)
+            throws IOException, InterruptedException;
 
     /**
      * Stops a tool.
      *
      * @param checkProcesses
      *            specifies whether to check open processes after tear down
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @param listener
@@ -73,16 +78,17 @@ public interface ToolClient {
      *             signals that an I/O exception has occurred
      * @throws InterruptedException
      *             if the build gets interrupted
-     *
      */
-    boolean stop(boolean checkProcesses, Launcher launcher, BuildListener listener) throws IOException,
-    InterruptedException;
+    boolean stop(boolean checkProcesses, final FilePath workspace, Launcher launcher, TaskListener listener)
+            throws IOException, InterruptedException;
 
     /**
      * Restarts a tool.
      *
      * @param checkProcesses
      *            specifies whether to check open processes after tear down
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @param listener
@@ -93,7 +99,7 @@ public interface ToolClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    boolean restart(boolean checkProcesses, Launcher launcher, BuildListener listener) throws IOException,
-    InterruptedException;
+    boolean restart(boolean checkProcesses, final FilePath workspace, Launcher launcher, TaskListener listener)
+            throws IOException, InterruptedException;
 
 }

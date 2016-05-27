@@ -29,7 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 
 import java.io.File;
@@ -40,6 +40,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import jenkins.security.MasterToSlaveCallable;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -173,13 +175,13 @@ public abstract class AbstractTestClient implements TestClient {
     /**
      * {@link Callable} providing remote access to load configurations via COM.
      */
-    protected static final class LoadConfigCallable implements Callable<Boolean, IOException> {
+    protected static final class LoadConfigCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
         private final TestConfig testConfig;
         private final ExecutionConfig executionConfig;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link LoadConfigCallable}.
@@ -192,7 +194,7 @@ public abstract class AbstractTestClient implements TestClient {
          *            the listener
          */
         public LoadConfigCallable(final TestConfig testConfig, final ExecutionConfig executionConfig,
-                final BuildListener listener) {
+                final TaskListener listener) {
             this.testConfig = testConfig;
             this.executionConfig = executionConfig;
             this.listener = listener;

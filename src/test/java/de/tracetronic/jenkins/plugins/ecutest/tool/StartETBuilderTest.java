@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,10 +32,13 @@ package de.tracetronic.jenkins.plugins.ecutest.tool;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.junit.Test;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Unit tests for {@link StartETBuilder}.
@@ -45,29 +48,60 @@ import org.junit.Test;
 public class StartETBuilderTest {
 
     @Test
-    public void testBlankConfigShouldReturnDefaults() {
-        final StartETBuilder builder = new StartETBuilder("", "", "", "", false);
-        assertEquals("Check default timeout", String.valueOf(StartETBuilder.DEFAULT_TIMEOUT), builder.getTimeout());
+    public void testDefaultStep() throws IOException {
+        final StartETBuilder builder = new StartETBuilder("");
+        assertBuilder(builder);
     }
 
+    @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
+    @Test
+    public void testNullStep() {
+        final StartETBuilder builder = new StartETBuilder(null);
+        builder.setWorkspaceDir(null);
+        builder.setSettingsDir(null);
+        builder.setTimeout(null);
+        builder.setDebugMode(false);
+        assertBuilder(builder);
+    }
+
+    @Deprecated
+    @Test
+    public void testDefault() {
+        final StartETBuilder builder = new StartETBuilder("", "", "", "", false);
+        assertBuilder(builder);
+    }
+
+    @Deprecated
     @Test
     public void testNull() {
         final StartETBuilder builder = new StartETBuilder(null, null, null, null, false);
-        assertNotNull(builder);
-        assertNull(builder.getToolName());
-        assertNotNull(builder.getWorkspaceDir());
-        assertTrue(builder.getWorkspaceDir().isEmpty());
-        assertTrue(builder.getSettingsDir().isEmpty());
-        assertNotNull(builder.getTimeout());
-        assertEquals("Check default timeout", String.valueOf(builder.getDefaultTimeout()), builder.getTimeout());
-        assertFalse(builder.isDebugMode());
+        assertBuilder(builder);
     }
 
-    @SuppressWarnings("deprecation")
+    @Deprecated
     @Test
     public void testCompatibility() {
         final StartETBuilder builder = new StartETBuilder("", "", "", false);
         assertNotNull(builder.getSettingsDir());
         assertTrue(builder.getSettingsDir().isEmpty());
+    }
+
+    /**
+     * Asserts the builder properties.
+     *
+     * @param builder
+     *            the builder
+     */
+    private void assertBuilder(final StartETBuilder builder) {
+        assertNotNull(builder);
+        assertNotNull(builder.getToolName());
+        assertTrue(builder.getToolName().isEmpty());
+        assertNotNull(builder.getWorkspaceDir());
+        assertTrue(builder.getWorkspaceDir().isEmpty());
+        assertNotNull(builder.getSettingsDir());
+        assertTrue(builder.getSettingsDir().isEmpty());
+        assertNotNull(builder.getTimeout());
+        assertEquals(String.valueOf(builder.getDefaultTimeout()), builder.getTimeout());
+        assertFalse(builder.isDebugMode());
     }
 }

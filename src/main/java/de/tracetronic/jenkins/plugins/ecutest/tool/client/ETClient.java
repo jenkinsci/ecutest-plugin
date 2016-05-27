@@ -29,13 +29,16 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 
+import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 import hudson.util.ArgumentListBuilder;
 
 import java.io.IOException;
 import java.util.List;
+
+import jenkins.security.MasterToSlaveCallable;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -131,9 +134,10 @@ public class ETClient extends AbstractToolClient {
     }
 
     @Override
-    public boolean start(final boolean checkProcesses, final Launcher launcher, final BuildListener listener)
-            throws IOException, InterruptedException {
+    public boolean start(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        logger.logInfo(String.format("Starting %s...", getToolName()));
 
         // Check open processes
         if (checkProcesses) {
@@ -149,7 +153,7 @@ public class ETClient extends AbstractToolClient {
         }
 
         // Initialize COM connection
-        if (!DllUtil.loadLibrary()) {
+        if (!DllUtil.loadLibrary(workspace.toComputer())) {
             logger.logError("Could not load JACOB library!");
             return false;
         }
@@ -173,17 +177,19 @@ public class ETClient extends AbstractToolClient {
                     "The configured ECU-TEST version %s is not compatible with this plugin. "
                             + "Please use at least ECU-TEST %s!", comVersion, ETPlugin.ET_MIN_VERSION.toShortString()));
             // Close ECU-TEST
-            stop(checkProcesses, launcher, listener);
+            stop(checkProcesses, workspace, launcher, listener);
             return false;
         }
 
+        logger.logInfo(String.format("%s started successfully.", getToolName()));
         return true;
     }
 
     @Override
-    public boolean stop(final boolean checkProcesses, final Launcher launcher, final BuildListener listener)
-            throws InterruptedException, IOException {
+    public boolean stop(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        logger.logInfo(String.format("Stopping %s...", getToolName()));
 
         // Check open processes
         if (checkProcesses) {
@@ -195,20 +201,22 @@ public class ETClient extends AbstractToolClient {
         }
 
         // Close COM connection and stop ECU-TEST
-        if (!DllUtil.loadLibrary()) {
+        if (!DllUtil.loadLibrary(workspace.toComputer())) {
             logger.logError("Could not load JACOB library!");
             return false;
         }
-        return launcher.getChannel().call(new StopCallable(getTimeout(), checkProcesses, listener));
-    }
-
-    @Override
-    public boolean restart(final boolean checkProcesses, final Launcher launcher, final BuildListener listener)
-            throws IOException, InterruptedException {
-        if (stop(checkProcesses, launcher, listener) && start(checkProcesses, launcher, listener)) {
+        if (launcher.getChannel().call(new StopCallable(getTimeout(), checkProcesses, listener))) {
+            logger.logInfo(String.format("%s stopped successfully.", getToolName()));
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean restart(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws IOException, InterruptedException {
+        return stop(checkProcesses, workspace, launcher, listener)
+                && start(checkProcesses, workspace, launcher, listener);
     }
 
     @Override
@@ -264,7 +272,7 @@ public class ETClient extends AbstractToolClient {
      * @throws InterruptedException
      *             if the current thread is interrupted while waiting for the completion
      */
-    public static boolean stopProcesses(final Launcher launcher, final BuildListener listener, final boolean kill)
+    public static boolean stopProcesses(final Launcher launcher, final TaskListener listener, final boolean kill)
             throws IOException, InterruptedException {
         return launcher.getChannel().call(new StopCallable(StartETBuilder.DEFAULT_TIMEOUT, kill, listener));
     }
@@ -272,12 +280,12 @@ public class ETClient extends AbstractToolClient {
     /**
      * {@link Callable} providing remote access to establish a COM connection.
      */
-    private static final class StartCallable implements Callable<String, IOException> {
+    private static final class StartCallable extends MasterToSlaveCallable<String, IOException> {
 
         private static final long serialVersionUID = 1L;
 
         private final int timeout;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link StartCallable}.
@@ -287,7 +295,7 @@ public class ETClient extends AbstractToolClient {
          * @param listener
          *            the listener
          */
-        StartCallable(final int timeout, final BuildListener listener) {
+        StartCallable(final int timeout, final TaskListener listener) {
             this.timeout = timeout;
             this.listener = listener;
         }
@@ -310,13 +318,13 @@ public class ETClient extends AbstractToolClient {
     /**
      * {@link Callable} providing remote access to close ECU-TEST via COM.
      */
-    private static final class StopCallable implements Callable<Boolean, IOException> {
+    private static final class StopCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
         private final int timeout;
         private final boolean checkProcesses;
-        private final BuildListener listener;
+        private final TaskListener listener;
 
         /**
          * Instantiates a {@link StopCallable}.
@@ -328,7 +336,7 @@ public class ETClient extends AbstractToolClient {
          * @param listener
          *            the listener
          */
-        StopCallable(final int timeout, final boolean checkProcesses, final BuildListener listener) {
+        StopCallable(final int timeout, final boolean checkProcesses, final TaskListener listener) {
             this.timeout = timeout;
             this.checkProcesses = checkProcesses;
             this.listener = listener;
@@ -361,7 +369,7 @@ public class ETClient extends AbstractToolClient {
     /**
      * {@link Callable} providing remote access to check open ECU-TEST processes.
      */
-    private static final class CheckProcessCallable implements Callable<List<String>, IOException> {
+    private static final class CheckProcessCallable extends MasterToSlaveCallable<List<String>, IOException> {
 
         private static final long serialVersionUID = 1L;
 

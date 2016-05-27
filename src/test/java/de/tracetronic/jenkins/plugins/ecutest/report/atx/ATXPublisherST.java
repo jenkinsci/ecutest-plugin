@@ -41,6 +41,7 @@ import hudson.model.FreeStyleBuild;
 import hudson.model.Result;
 import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
+import hudson.model.Label;
 import hudson.slaves.DumbSlave;
 import hudson.slaves.SlaveComputer;
 
@@ -48,6 +49,9 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 
+import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
+import org.jenkinsci.plugins.workflow.job.WorkflowJob;
+import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
@@ -73,6 +77,9 @@ public class ATXPublisherST extends SystemTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
+                .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
         final ATXPublisher.DescriptorImpl atxImpl = jenkins.jenkins
                 .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
         final ATXInstallation inst = new ATXInstallation("TEST-GUIDE", "ECU-TEST", new ATXConfig());
@@ -80,7 +87,28 @@ public class ATXPublisherST extends SystemTestBase {
     }
 
     @Test
-    public void testRoundTripConfig() throws Exception {
+    public void testDefaultConfigRoundTripStep() throws Exception {
+        final ATXPublisher before = new ATXPublisher("TEST-GUIDE");
+        final ATXPublisher after = jenkins.configRoundtrip(before);
+        jenkins.assertEqualDataBoundBeans(before, after);
+    }
+
+    @Test
+    public void testConfigRoundTripStep() throws Exception {
+        final ATXPublisher before = new ATXPublisher("TEST-GUIDE");
+        before.setRunOnFailed(false);
+        before.setAllowMissing(false);
+        before.setRunOnFailed(false);
+        before.setArchiving(true);
+        before.setKeepAll(true);
+        final ATXPublisher after = jenkins.configRoundtrip(before);
+        jenkins.assertEqualBeans(before, after,
+                "allowMissing,runOnFailed,archiving,keepAll");
+    }
+
+    @Deprecated
+    @Test
+    public void testConfigRoundTrip() throws Exception {
         final ATXPublisher before = new ATXPublisher("TEST-GUIDE", false, false, true, true);
         final ATXPublisher after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after, "allowMissing,runOnFailed,archiving,keepAll");
@@ -89,7 +117,11 @@ public class ATXPublisherST extends SystemTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, true, true, true);
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        publisher.setAllowMissing(true);
+        publisher.setRunOnFailed(true);
+        publisher.setArchiving(false);
+        publisher.setKeepAll(false);
         project.getPublishersList().add(publisher);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
@@ -119,7 +151,7 @@ public class ATXPublisherST extends SystemTestBase {
     @Test
     @LocalData
     public void testCurrentInstallation() {
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", false, false, true, true);
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
         assertNotNull(publisher.getInstallation());
     }
 
@@ -129,7 +161,7 @@ public class ATXPublisherST extends SystemTestBase {
                 .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
         assertEquals(1, atxImpl.getInstallations().length);
 
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", false, false, true, true);
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
         final ATXInstallation installation = publisher.getInstallation();
         assertNotNull(installation);
         assertEquals(installation.getName(), "TEST-GUIDE");
@@ -145,7 +177,8 @@ public class ATXPublisherST extends SystemTestBase {
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.setAssignedNode(slave);
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, false, true, true);
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        publisher.setAllowMissing(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
@@ -168,7 +201,8 @@ public class ATXPublisherST extends SystemTestBase {
                 return false;
             }
         });
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, false, true, true);
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        publisher.setRunOnFailed(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
@@ -183,7 +217,7 @@ public class ATXPublisherST extends SystemTestBase {
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ATXPublisher publisher = new ATXPublisher("${TESTGUIDE}", true, false, true, true);
+        final ATXPublisher publisher = new ATXPublisher("${TESTGUIDE}");
         project.getPublishersList().add(publisher);
 
         final EnvVars envVars = new EnvVars(
@@ -205,7 +239,7 @@ public class ATXPublisherST extends SystemTestBase {
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", true, false, true, true);
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
         project.getPublishersList().add(publisher);
 
         final EnvVars envVars = new EnvVars(
@@ -221,5 +255,47 @@ public class ATXPublisherST extends SystemTestBase {
         assertNotNull(installation);
         assertEquals("Tool name should be resolved", "ECU-TEST",
                 publisher.getToolInstallation(installation.getToolName(), envVars).getName());
+    }
+
+    @Test
+    public void testDefaultPipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'ATXPublisher', atxName: 'TEST-GUIDE'])\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
+    @Test
+    public void testPipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'ATXPublisher', atxName: 'TEST-GUIDE',"
+                + "        allowMissing: true, runOnFailed: true,"
+                + "        archiving: false, keepAll: false])\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
+    /**
+     * Asserts the pipeline step execution.
+     *
+     * @param script
+     *            the script
+     * @throws Exception
+     *             the exception
+     */
+    private void assertPipelineStep(final String script) throws Exception {
+        // Windows only
+        final DumbSlave slave = jenkins.createOnlineSlave(Label.get("slaves"));
+        final SlaveComputer computer = slave.getComputer();
+        assumeFalse("Test is Windows only!", computer.isUnix());
+
+        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
+        job.setDefinition(new CpsFlowDefinition(script, true));
+
+        final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
+        jenkins.assertLogContains("Publishing ATX reports...", run);
+        jenkins.assertLogContains("Starting ECU-TEST failed.", run);
     }
 }
