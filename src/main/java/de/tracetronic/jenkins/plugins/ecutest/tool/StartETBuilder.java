@@ -49,15 +49,13 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
-import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.PathUtil;
-import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 
 /**
  * Builder providing the start up of ECU-TEST.
@@ -205,65 +203,48 @@ public class StartETBuilder extends AbstractToolBuilder {
     }
 
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
-        // Check OS running this build
-        if (!ProcessUtil.checkOS(launcher, listener)) {
-            return;
-        }
-
-        // Initialize logger
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
-
+    public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         // Expand build parameters
         final EnvVars buildEnvVars = run.getEnvironment(listener);
-        final int expandedTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
+        final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
                 String.valueOf(DEFAULT_TIMEOUT)));
 
         // Absolutize ECU-TEST workspace directory, if not absolute assume relative to build workspace
-        String expandedWorkspaceDir = EnvUtil.expandEnvVar(getWorkspaceDir(), buildEnvVars, workspace.getRemote());
-        expandedWorkspaceDir = PathUtil.makeAbsolutePath(expandedWorkspaceDir, workspace);
-        String expandedSettingsDir = EnvUtil.expandEnvVar(getSettingsDir(), buildEnvVars, workspace.getRemote());
-        expandedSettingsDir = PathUtil.makeAbsolutePath(expandedSettingsDir, workspace);
+        String expWorkspaceDir = EnvUtil.expandEnvVar(getWorkspaceDir(), buildEnvVars, workspace.getRemote());
+        expWorkspaceDir = PathUtil.makeAbsolutePath(expWorkspaceDir, workspace);
+        String expSettingsDir = EnvUtil.expandEnvVar(getSettingsDir(), buildEnvVars, workspace.getRemote());
+        expSettingsDir = PathUtil.makeAbsolutePath(expSettingsDir, workspace);
 
         // Check workspace validity
-        final FilePath expandedWorkspacePath = new FilePath(launcher.getChannel(), expandedWorkspaceDir);
-        final FilePath expandedSettingsPath = new FilePath(launcher.getChannel(), expandedSettingsDir);
-        if (!checkWorkspace(expandedWorkspacePath, expandedSettingsPath, listener)) {
-            return;
-        }
+        final FilePath expWorkspacePath = new FilePath(launcher.getChannel(), expWorkspaceDir);
+        final FilePath expSettingsPath = new FilePath(launcher.getChannel(), expSettingsDir);
+        checkWorkspace(expWorkspacePath, expSettingsPath);
 
         // Delete logs if log publisher is present
         final Object parent = run.getParent();
         if (parent instanceof Project
                 && ((Project<?, ?>) run.getParent()).getPublishersList().get(ETLogPublisher.class) != null) {
-            ETLogPublisher.RunListenerImpl.onStarted(expandedSettingsPath, listener);
+            ETLogPublisher.RunListenerImpl.onStarted(expSettingsPath, listener);
         }
 
         // Get selected ECU-TEST installation
-        final AbstractToolInstallation installation = configureToolInstallation(listener, run.getEnvironment(listener));
+        final ETInstallation installation = configureToolInstallation(workspace.toComputer(), listener,
+                run.getEnvironment(listener));
 
         // Start selected ECU-TEST
-        if (installation instanceof ETInstallation) {
-            final String toolName = run.getEnvironment(listener).expand(installation.getName());
-            logger.logInfo(String.format("Starting %s...", toolName));
-            final String installPath = installation.getExecutable(launcher);
-            final ETClient etClient = new ETClient(toolName, installPath, expandedWorkspaceDir,
-                    expandedSettingsDir, expandedTimeout, isDebugMode());
-            if (etClient.start(true, launcher, listener)) {
-                logger.logInfo(String.format("%s started successfully.", toolName));
-            } else {
-                logger.logError(String.format("Starting %s failed!", toolName));
-                return;
-            }
-
-            // Add action for injecting environment variables
-            final int toolId = getToolId(run);
-            final ToolEnvInvisibleAction envAction = new ToolEnvInvisibleAction(toolId, etClient);
-            run.addAction(envAction);
-        } else {
-            logger.logError("The selected ECU-TEST installation is not configured for this node!");
+        final String toolName = run.getEnvironment(listener).expand(installation.getName());
+        final String installPath = installation.getExecutable(launcher);
+        final ETClient etClient = new ETClient(toolName, installPath, expWorkspaceDir, expSettingsDir,
+                expTimeout, isDebugMode());
+        if (!etClient.start(true, workspace, launcher, listener)) {
+            throw new ETPluginException(String.format("Starting %s failed!", toolName));
         }
+
+        // Add action for injecting environment variables
+        final int toolId = getToolId(run);
+        final ToolEnvInvisibleAction envAction = new ToolEnvInvisibleAction(toolId, etClient);
+        run.addAction(envAction);
     }
 
     /**
@@ -273,31 +254,25 @@ public class StartETBuilder extends AbstractToolBuilder {
      *            the workspace path
      * @param settingsPath
      *            the settings path
-     * @param listener
-     *            the listener
-     * @return {@code true} if valid workspace, {@code false} otherwise
      * @throws IOException
      *             signals that an I/O exception has occurred
      * @throws InterruptedException
      *             the interrupted exception
+     * @throws ETPluginException
+     *             in case of an invalid workspace
      */
-    private boolean checkWorkspace(final FilePath workspacePath, final FilePath settingsPath,
-            final TaskListener listener) throws IOException, InterruptedException {
-        boolean isValid = false;
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+    private void checkWorkspace(final FilePath workspacePath, final FilePath settingsPath) throws IOException,
+    InterruptedException, ETPluginException {
         if (!workspacePath.exists()) {
-            logger.logError(String.format("ECU-TEST workspace at %s does not exist!",
+            throw new ETPluginException(String.format("ECU-TEST workspace at %s does not exist!",
                     workspacePath.getRemote()));
         } else if (!workspacePath.child(".workspace").exists()) {
-            logger.logError(String.format("%s seems not to be a valid ECU-TEST workspace!",
+            throw new ETPluginException(String.format("%s seems not to be a valid ECU-TEST workspace!",
                     workspacePath.getRemote()));
         } else if (!settingsPath.exists()) {
-            logger.logError(String.format("ECU-TEST settings directory at %s does not exist!",
+            throw new ETPluginException(String.format("ECU-TEST settings directory at %s does not exist!",
                     settingsPath.getRemote()));
-        } else {
-            isValid = true;
         }
-        return isValid;
     }
 
     /**

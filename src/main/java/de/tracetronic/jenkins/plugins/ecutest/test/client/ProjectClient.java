@@ -29,6 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
@@ -88,12 +89,12 @@ public class ProjectClient extends AbstractTestClient {
     }
 
     @Override
-    public boolean runTestCase(final Launcher launcher, final TaskListener listener) throws IOException,
-    InterruptedException {
+    public boolean runTestCase(final FilePath workspace, final Launcher launcher, final TaskListener listener)
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
-        if (!DllUtil.loadLibrary()) {
+        if (!DllUtil.loadLibrary(workspace.toComputer())) {
             logger.logError("Could not load JACOB library!");
             return false;
         }

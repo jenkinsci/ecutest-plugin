@@ -29,14 +29,15 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report;
 
+import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.Util;
 import hudson.model.Result;
 import hudson.model.TaskListener;
 import hudson.model.AbstractItem;
 import hudson.model.Computer;
-import hudson.model.Node;
 import hudson.model.Run;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Recorder;
@@ -54,14 +55,16 @@ import jenkins.tasks.SimpleBuildStep;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
+import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 
 /**
  * Common base class for {@link ATXPublisher}, {@link ETLogPublisher}, {@link JUnitPublisher} and {@link TRFPublisher}.
@@ -208,25 +211,47 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         this.keepAll = keepAll;
     }
 
-    // @Override
-    // public abstract Action getProjectAction(final AbstractProject<?, ?> project);
-    //
-    // @Override
-    // public Collection<? extends Action> getProjectActions(final AbstractProject<?, ?> project) {
-    // final ArrayList<Action> actions = new ArrayList<Action>();
-    // actions.add(getProjectAction(project));
-    // if (project instanceof MatrixProject && ((MatrixProject) project).getActiveConfigurations() != null) {
-    // for (final MatrixConfiguration mc : ((MatrixProject) project).getActiveConfigurations()) {
-    // try {
-    // mc.onLoad(mc.getParent(), mc.getName());
-    // } catch (final IOException e) {
-    // LOGGER.log(Level.SEVERE, "Could not reload the matrix configuration");
-    // }
-    // }
-    // }
-    //
-    // return actions;
-    // }
+    @Override
+    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException {
+        // FIXME: workaround because pipeline node allocation does not create the actual workspace directory
+        if (!workspace.exists()) {
+            workspace.mkdirs();
+        }
+
+        try {
+            ProcessUtil.checkOS(launcher);
+            performReport(run, workspace, launcher, listener);
+        } catch (final IOException e) {
+            Util.displayIOException(e, listener);
+            throw e;
+        } catch (final ETPluginException e) {
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            logger.logError(e.getMessage());
+            throw new AbortException(e.getMessage());
+        }
+    }
+
+    /**
+     * Performs the report-specific post-build operations.
+     *
+     * @param run
+     *            the run
+     * @param workspace
+     *            the workspace
+     * @param launcher
+     *            the launcher
+     * @param listener
+     *            the listener
+     * @throws InterruptedException
+     *             the interrupted exception
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws ETPluginException
+     *             in case of report operation errors
+     */
+    protected abstract void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException;
 
     @Override
     public BuildStepMonitor getRequiredMonitorService() {
@@ -254,6 +279,8 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      *
      * @param toolName
      *            the tool name identifying the specific tool
+     * @param computer
+     *            the computer
      * @param listener
      *            the listener
      * @param envVars
@@ -263,17 +290,18 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      *             signals that an I/O exception has occurred
      * @throws InterruptedException
      *             if the build gets interrupted
+     * @throws ETPluginException
+     *             if the selected tool installation is not configured
      */
-    protected AbstractToolInstallation configureToolInstallation(final String toolName,
-            final TaskListener listener, final EnvVars envVars) throws IOException, InterruptedException {
-        AbstractToolInstallation installation = getToolInstallation(toolName, envVars);
-
-        if (installation != null) {
-            final Node node = Computer.currentComputer().getNode();
-            if (node != null) {
-                installation = installation.forNode(node, listener);
-            }
+    protected ETInstallation configureToolInstallation(final String toolName, final Computer computer,
+            final TaskListener listener, final EnvVars envVars) throws IOException, InterruptedException,
+            ETPluginException {
+        ETInstallation installation = getToolInstallation(toolName, envVars);
+        if (installation != null && computer != null && computer.getNode() != null) {
+            installation = installation.forNode(computer.getNode(), listener);
             installation = installation.forEnvironment(envVars);
+        } else {
+            throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }
         return installation;
     }

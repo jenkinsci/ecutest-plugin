@@ -43,12 +43,10 @@ import javax.annotation.Nonnull;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.TSClient;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
-import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 
 /**
  * Builder providing to stop the Tool-Server.
@@ -96,35 +94,15 @@ public class StopTSBuilder extends AbstractToolBuilder {
     }
 
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
-        // Check OS running this build
-        if (!ProcessUtil.checkOS(launcher, listener)) {
-            return;
-        }
-
-        // Initialize logger
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
-
-        // Get selected ECU-TEST installation
-        final AbstractToolInstallation installation = configureToolInstallation(listener, run.getEnvironment(listener));
-
+    public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         // Stop selected Tool-Server of related ECU-TEST installation
-        if (installation instanceof ETInstallation) {
-            final String tsName = "Tool-Server";
-            final EnvVars buildEnvVars = run.getEnvironment(listener);
-            final int expandedTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
-                    String.valueOf(DEFAULT_TIMEOUT)));
-
-            logger.logInfo(String.format("Stopping %s...", tsName));
-            final TSClient tsClient = new TSClient(getToolName(), expandedTimeout);
-            if (tsClient.stop(true, launcher, listener)) {
-                logger.logInfo(String.format("%s stopped successfully.", tsName));
-            } else {
-                logger.logError(String.format("Stopping %s failed.", tsName));
-            }
-        } else {
-            logger.logError("Selected ECU-TEST installation is not configured for this node!");
+        final EnvVars buildEnvVars = run.getEnvironment(listener);
+        final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
+                String.valueOf(DEFAULT_TIMEOUT)));
+        final TSClient tsClient = new TSClient(getToolName(), expTimeout);
+        if (!tsClient.stop(true, workspace, launcher, listener)) {
+            throw new ETPluginException("Stopping Tool-Server failed.");
         }
     }
 

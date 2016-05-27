@@ -41,6 +41,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.annotation.CheckForNull;
+
 import jenkins.MasterToSlaveFileCallable;
 import jenkins.model.Jenkins;
 import jenkins.model.Jenkins.MasterComputer;
@@ -80,33 +82,40 @@ public final class DllUtil {
     /**
      * Loads the JACOB library.
      *
+     * @param computer
+     *            the computer
      * @return {@code true} if successful, {@code false} otherwise
      * @throws IOException
      *             signals that an I/O exception has occurred
      * @throws InterruptedException
      *             if the current thread is interrupted while waiting for the completion
      */
-    public static boolean loadLibrary() throws IOException, InterruptedException {
-        final FilePath libPath = getJacobLibrary();
+    public static boolean loadLibrary(@CheckForNull final Computer computer) throws IOException, InterruptedException {
+        if (computer == null) {
+            return false;
+        }
+        final FilePath libPath = getJacobLibrary(computer);
         return libPath.act(new LoadLibraryCallable());
     }
 
     /**
      * Gets the file path to the JACOB library.
      *
+     * @param computer
+     *            the computer
      * @return the library file path
      * @throws IOException
      *             signals that an I/O exception has occurred
      * @throws InterruptedException
      *             if the current thread is interrupted while waiting for the completion
      */
-    private static FilePath getJacobLibrary() throws IOException, InterruptedException {
+    private static FilePath getJacobLibrary(final Computer computer) throws IOException, InterruptedException {
         final FilePath jacobLib;
-        if (Computer.currentComputer() instanceof MasterComputer) {
-            jacobLib = getLocalLibrary();
+        if (computer instanceof MasterComputer) {
+            jacobLib = getLocalLibrary(computer);
         } else {
-            jacobLib = getRemoteLibrary();
-            final FilePath localLib = getLocalLibrary();
+            jacobLib = getRemoteLibrary(computer);
+            final FilePath localLib = getLocalLibrary(computer);
             if (!copyLibrary(localLib, jacobLib)) {
                 throw new IOException("Could not copy JACOB library to slave node!");
             }
@@ -117,15 +126,17 @@ public final class DllUtil {
     /**
      * Gets the local file path to the JACOB library.
      *
+     * @param computer
+     *            the computer
      * @return the local library file path
      * @throws IOException
      *             signals that an I/O exception has occurred
      * @throws InterruptedException
      *             if the current thread is interrupted while waiting for the completion
      */
-    private static FilePath getLocalLibrary() throws IOException, InterruptedException {
+    private static FilePath getLocalLibrary(final Computer computer) throws IOException, InterruptedException {
         FilePath localLib = null;
-        final String libFile = getLibraryFile();
+        final String libFile = getLibraryFile(computer);
         final Jenkins instance = Jenkins.getInstance();
         if (instance == null) {
             return new FilePath(FilePath.localChannel, libFile);
@@ -142,16 +153,18 @@ public final class DllUtil {
     /**
      * Gets the remote file path to the JACOB library.
      *
+     * @param computer
+     *            the computer
      * @return the remote library file path
      * @throws IOException
      *             signals that an I/O exception has occurred
      * @throws InterruptedException
      *             if the current thread is interrupted while waiting for the completion
      */
-    private static FilePath getRemoteLibrary() throws IOException, InterruptedException {
+    private static FilePath getRemoteLibrary(final Computer computer) throws IOException, InterruptedException {
         FilePath remoteLib = null;
-        final String libFile = getLibraryFile();
-        final Node node = Computer.currentComputer().getNode();
+        final String libFile = getLibraryFile(computer);
+        final Node node = computer.getNode();
         if (node != null) {
             final FilePath rootPath = node.getRootPath();
             if (rootPath != null) {
@@ -165,15 +178,16 @@ public final class DllUtil {
     /**
      * Gets the library file for the respective system architecture.
      *
+     * @param computer
+     *            the computer
      * @return the library file
      * @throws IOException
      *             signals that an I/O exception has occurred
      * @throws InterruptedException
      *             if the current thread is interrupted while waiting for the completion
      */
-    private static String getLibraryFile() throws IOException, InterruptedException {
-        return "amd64".equals(Computer.currentComputer().getSystemProperties().get("os.arch")) ? JACOB_DLL_X64
-                : JACOB_DLL_X86;
+    public static String getLibraryFile(final Computer computer) throws IOException, InterruptedException {
+        return "amd64".equals(computer.getSystemProperties().get("os.arch")) ? JACOB_DLL_X64 : JACOB_DLL_X86;
     }
 
     /**
@@ -190,7 +204,7 @@ public final class DllUtil {
      *             if the current thread is interrupted while waiting for the completion
      */
     private static boolean copyLibrary(final FilePath src, final FilePath dest) throws IOException,
-            InterruptedException {
+    InterruptedException {
         return PathUtil.copyRemoteFile(src, dest);
     }
 

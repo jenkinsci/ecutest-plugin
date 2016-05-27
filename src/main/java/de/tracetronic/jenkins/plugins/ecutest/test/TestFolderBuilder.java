@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -110,7 +111,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
      *            the test folder
      */
     @DataBoundConstructor
-    public TestFolderBuilder(final String testFile) {
+    public TestFolderBuilder(@Nonnull final String testFile) {
         super(testFile);
     }
 
@@ -198,8 +199,8 @@ public class TestFolderBuilder extends AbstractTestBuilder {
      *            the package configuration
      */
     @DataBoundSetter
-    public void setPackageConfig(@Nonnull final PackageConfig packageConfig) {
-        this.packageConfig = packageConfig;
+    public void setPackageConfig(@CheckForNull final PackageConfig packageConfig) {
+        this.packageConfig = packageConfig == null ? PackageConfig.newInstance() : packageConfig;
     }
 
     /**
@@ -207,8 +208,8 @@ public class TestFolderBuilder extends AbstractTestBuilder {
      *            the project configuration
      */
     @DataBoundSetter
-    public void setProjectConfig(@Nonnull final ProjectConfig projectConfig) {
-        this.projectConfig = projectConfig;
+    public void setProjectConfig(@CheckForNull final ProjectConfig projectConfig) {
+        this.projectConfig = projectConfig == null ? ProjectConfig.newInstance() : projectConfig;
     }
 
     @Override
@@ -232,8 +233,8 @@ public class TestFolderBuilder extends AbstractTestBuilder {
 
     @Override
     protected boolean runTest(final String testFolder, final TestConfig testConfig,
-            final ExecutionConfig executionConfig, final Run<?, ?> run, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+            final ExecutionConfig executionConfig, final Run<?, ?> run, final FilePath workspace,
+            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
         // Scan test folder for tests
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Executing test folder...");
@@ -249,7 +250,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
         for (final String pkgFile : pkgFiles) {
             final PackageClient testClient = new PackageClient(pkgFile, testConfig, packageConfig, executionConfig);
             logger.logInfo(String.format("Executing package %s...", pkgFile));
-            if (testClient.runTestCase(launcher, listener)) {
+            if (testClient.runTestCase(workspace, launcher, listener)) {
                 logger.logInfo("Package executed successfully.");
             } else {
                 logger.logError("Executing package failed!");
@@ -269,7 +270,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
         for (final String prjFile : prjFiles) {
             final ProjectClient testClient = new ProjectClient(prjFile, testConfig, projectConfig, executionConfig);
             logger.logInfo(String.format("Executing project %s...", prjFile));
-            if (testClient.runTestCase(launcher, listener)) {
+            if (testClient.runTestCase(workspace, launcher, listener)) {
                 logger.logInfo("Project executed successfully.");
             } else {
                 logger.logError("Executing project failed!");

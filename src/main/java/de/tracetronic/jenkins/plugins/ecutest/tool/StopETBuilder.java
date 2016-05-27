@@ -43,12 +43,10 @@ import javax.annotation.Nonnull;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
-import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 
 /**
  * Builder providing to stop ECU-TEST.
@@ -96,35 +94,20 @@ public class StopETBuilder extends AbstractToolBuilder {
     }
 
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
-        // Check OS running this build
-        if (!ProcessUtil.checkOS(launcher, listener)) {
-            return;
-        }
-
-        // Initialize logger
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
-
+    public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         // Get selected ECU-TEST installation
-        final AbstractToolInstallation installation = configureToolInstallation(listener, run.getEnvironment(listener));
+        final ETInstallation installation = configureToolInstallation(workspace.toComputer(), listener,
+                run.getEnvironment(listener));
 
         // Stop selected ECU-TEST
-        if (installation instanceof ETInstallation) {
-            final String toolName = run.getEnvironment(listener).expand(installation.getName());
-            final EnvVars buildEnvVars = run.getEnvironment(listener);
-            final int expandedTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
-                    String.valueOf(DEFAULT_TIMEOUT)));
-
-            logger.logInfo(String.format("Stopping %s...", toolName));
-            final ETClient etClient = new ETClient(toolName, expandedTimeout);
-            if (etClient.stop(true, launcher, listener)) {
-                logger.logInfo(String.format("%s stopped successfully.", toolName));
-            } else {
-                logger.logError(String.format("Stopping %s failed.", toolName));
-            }
-        } else {
-            logger.logError("Selected ECU-TEST installation is not configured for this node!");
+        final String toolName = run.getEnvironment(listener).expand(installation.getName());
+        final EnvVars buildEnvVars = run.getEnvironment(listener);
+        final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
+                String.valueOf(DEFAULT_TIMEOUT)));
+        final ETClient etClient = new ETClient(toolName, expTimeout);
+        if (!etClient.stop(true, workspace, launcher, listener)) {
+            throw new ETPluginException(String.format("Stopping %s failed.", toolName));
         }
     }
 

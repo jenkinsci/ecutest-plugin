@@ -31,6 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.test;
 
 import hudson.EnvVars;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.TaskListener;
 import hudson.model.Run;
@@ -38,6 +39,7 @@ import hudson.util.FormValidation;
 
 import java.io.IOException;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -68,7 +70,7 @@ public class TestProjectBuilder extends AbstractTestBuilder {
      *            the project file
      */
     @DataBoundConstructor
-    public TestProjectBuilder(final String testFile) {
+    public TestProjectBuilder(@Nonnull final String testFile) {
         super(testFile);
     }
 
@@ -105,14 +107,14 @@ public class TestProjectBuilder extends AbstractTestBuilder {
      *            the project configuration
      */
     @DataBoundSetter
-    public void setProjectConfig(@Nonnull final ProjectConfig projectConfig) {
-        this.projectConfig = projectConfig;
+    public void setProjectConfig(@CheckForNull final ProjectConfig projectConfig) {
+        this.projectConfig = projectConfig == null ? ProjectConfig.newInstance() : projectConfig;
     }
 
     @Override
     protected boolean runTest(final String testFile, final TestConfig testConfig,
-            final ExecutionConfig executionConfig, final Run<?, ?> run, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+            final ExecutionConfig executionConfig, final Run<?, ?> run, final FilePath workspace,
+            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
         // Expand project configuration
         final EnvVars buildEnv = run.getEnvironment(listener);
         final ProjectConfig projectConfig = getProjectConfig().expand(buildEnv);
@@ -122,7 +124,7 @@ public class TestProjectBuilder extends AbstractTestBuilder {
                 executionConfig);
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo(String.format("Executing project %s...", testFile));
-        if (testClient.runTestCase(launcher, listener)) {
+        if (testClient.runTestCase(workspace, launcher, listener)) {
             logger.logInfo("Project executed successfully.");
         } else {
             logger.logError("Executing project failed!");

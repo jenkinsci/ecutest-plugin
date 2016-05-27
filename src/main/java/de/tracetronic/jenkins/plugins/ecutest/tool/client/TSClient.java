@@ -29,6 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
@@ -110,9 +111,10 @@ public class TSClient extends AbstractToolClient {
     }
 
     @Override
-    public boolean start(final boolean checkProcesses, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+    public boolean start(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        logger.logInfo("Starting Tool-Server...");
 
         // Check open processes
         if (checkProcesses) {
@@ -123,22 +125,32 @@ public class TSClient extends AbstractToolClient {
         }
 
         // Launch Tool-Server process
-        return launchProcess(launcher, listener);
-    }
-
-    @Override
-    public boolean stop(final boolean checkProcesses, final Launcher launcher, final TaskListener listener)
-            throws InterruptedException, IOException {
-        return launcher.getChannel().call(new StopCallable(getTimeout(), listener));
-    }
-
-    @Override
-    public boolean restart(final boolean checkProcesses, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
-        if (stop(checkProcesses, launcher, listener) && start(checkProcesses, launcher, listener)) {
+        if (launchProcess(launcher, listener)) {
+            logger.logInfo("Tool-Server started successfully.");
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean stop(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException {
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        logger.logInfo("Stopping Tool-Server...");
+
+        // Stop Tool-Server
+        if (launcher.getChannel().call(new StopCallable(getTimeout(), listener))) {
+            logger.logInfo("Tool-Server stopped successfully.");
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean restart(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws IOException, InterruptedException {
+        return stop(checkProcesses, workspace, launcher, listener)
+                && start(checkProcesses, workspace, launcher, listener);
     }
 
     @Override
@@ -169,7 +181,7 @@ public class TSClient extends AbstractToolClient {
      *             if the current thread is interrupted while waiting for the completion
      */
     public static List<String> checkProcesses(final Launcher launcher, final boolean kill) throws IOException,
-            InterruptedException {
+    InterruptedException {
         return launcher.getChannel().call(new CheckProcessCallable(kill));
     }
 
@@ -216,6 +228,9 @@ public class TSClient extends AbstractToolClient {
                         } else {
                             Thread.sleep(1000L);
                         }
+                    }
+                    if (!isTerminated) {
+                        logger.logError(String.format("-> Timeout of %d seconds reached!", timeout));
                     }
                 }
             } catch (final IOException | InterruptedException e) {

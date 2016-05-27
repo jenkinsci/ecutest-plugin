@@ -63,11 +63,11 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
 
 /**
@@ -120,7 +120,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
             final double failedThreshold, final boolean allowMissing, final boolean runOnFailed,
             final boolean archiving, final boolean keepAll) {
         super(allowMissing, runOnFailed, archiving, keepAll);
-        this.toolName = toolName;
+        this.toolName = StringUtils.trimToEmpty(toolName);
         this.unstableThreshold = convertToPercentage(unstableThreshold);
         this.failedThreshold = convertToPercentage(failedThreshold);
     }
@@ -184,7 +184,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
      */
     @DataBoundSetter
     public void setUnstableThreshold(final double unstableThreshold) {
-        this.unstableThreshold = unstableThreshold;
+        this.unstableThreshold = convertToPercentage(unstableThreshold);
     }
 
     /**
@@ -193,7 +193,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
      */
     @DataBoundSetter
     public void setFailedThreshold(final double failedThreshold) {
-        this.failedThreshold = failedThreshold;
+        this.failedThreshold = convertToPercentage(failedThreshold);
     }
 
     /**
@@ -226,13 +226,8 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     }
 
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
-        // Check OS running this build
-        if (!ProcessUtil.checkOS(launcher, listener)) {
-            return;
-        }
-
+    public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing UNIT reports...");
 
@@ -244,15 +239,14 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
 
         final List<FilePath> reportFiles = getReportFiles(run, launcher);
         if (reportFiles.isEmpty() && !isAllowMissing()) {
-            logger.logError("Empty test results are not allowed, setting build status to FAILURE!");
-            return;
+            throw new ETPluginException("Empty test results are not allowed, setting build status to FAILURE!");
         }
 
         // Generate JUnit reports
-        final AbstractToolInstallation installation = configureToolInstallation(toolName, listener,
+        final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
                 run.getEnvironment(listener));
         final JUnitReportGenerator generator = new JUnitReportGenerator();
-        if (!generator.generate(installation, reportFiles, run, launcher, listener)) {
+        if (!generator.generate(installation, reportFiles, run, workspace, launcher, listener)) {
             run.setResult(Result.FAILURE);
             return;
         }
@@ -267,8 +261,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
         try {
             action = new TestResultAction(run, testResult, listener);
         } catch (final NullPointerException npe) {
-            logger.logError(String.format("Parsing UNIT test results failed: %s", npe.getMessage()));
-            return;
+            throw new ETPluginException(String.format("Parsing UNIT test results failed: %s", npe.getMessage()));
         }
         testResult.freeze(action);
         run.addAction(action);
@@ -277,7 +270,6 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
         if (setBuildResult(run, listener, testResult)) {
             logger.logInfo("UNIT reports published successfully.");
         }
-        return;
     }
 
     /**

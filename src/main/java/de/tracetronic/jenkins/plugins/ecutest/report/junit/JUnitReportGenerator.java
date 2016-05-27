@@ -44,7 +44,6 @@ import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
@@ -72,6 +71,8 @@ public class JUnitReportGenerator {
      *            the report files
      * @param run
      *            the run
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @param listener
@@ -82,9 +83,9 @@ public class JUnitReportGenerator {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    public boolean generate(final AbstractToolInstallation installation, final List<FilePath> reportFiles,
-            final Run<?, ?> run, final Launcher launcher, final TaskListener listener) throws IOException,
-            InterruptedException {
+    public boolean generate(final ETInstallation installation, final List<FilePath> reportFiles,
+            final Run<?, ?> run, final FilePath workspace, final Launcher launcher, final TaskListener listener)
+            throws IOException, InterruptedException {
         boolean isGenerated = false;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
@@ -94,29 +95,19 @@ public class JUnitReportGenerator {
         if (isETRunning) {
             isGenerated = generateReports(reportFiles, launcher, listener);
         } else {
-            if (installation instanceof ETInstallation) {
-                final String toolName = run.getEnvironment(listener).expand(installation.getName());
-                final String installPath = installation.getExecutable(launcher);
-                final String workspaceDir = getWorkspaceDir(run);
-                final String settingsDir = getSettingsDir(run);
-                final ETClient etClient = new ETClient(toolName, installPath, workspaceDir, settingsDir,
-                        StartETBuilder.DEFAULT_TIMEOUT, false);
-                logger.logInfo(String.format("Starting %s...", toolName));
-                if (etClient.start(false, launcher, listener)) {
-                    logger.logInfo(String.format("%s started successfully.", toolName));
-                    isGenerated = generateReports(reportFiles, launcher, listener);
-                } else {
-                    logger.logError(String.format("Starting %s failed.", toolName));
-                }
-                logger.logInfo(String.format("Stopping %s...", toolName));
-                if (etClient.stop(true, launcher, listener)) {
-                    logger.logInfo(String.format("%s stopped successfully.", toolName));
-                } else {
-                    logger.logError(String.format("Stopping %s failed.", toolName));
-                }
+            final String toolName = run.getEnvironment(listener).expand(installation.getName());
+            final String installPath = installation.getExecutable(launcher);
+            final String workspaceDir = getWorkspaceDir(run);
+            final String settingsDir = getSettingsDir(run);
+            final ETClient etClient = new ETClient(toolName, installPath, workspaceDir, settingsDir,
+                    StartETBuilder.DEFAULT_TIMEOUT, false);
+            if (etClient.start(false, workspace, launcher, listener)) {
+                isGenerated = generateReports(reportFiles, launcher, listener);
             } else {
-                logger.logError("Selected ECU-TEST installation is not configured for this node!");
-                isGenerated = false;
+                logger.logError(String.format("Starting %s failed.", toolName));
+            }
+            if (!etClient.stop(true, workspace, launcher, listener)) {
+                logger.logError(String.format("Stopping %s failed.", toolName));
             }
         }
 

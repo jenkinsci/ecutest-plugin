@@ -105,7 +105,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
      * @param failedOnError
      *            specifies whether to mark the build as failed if errors found
      * @param testSpecific
-     *            specifies whether to parse the test specific log files
+     *            specifies whether to parse the test-specific log files
      * @param allowMissing
      *            specifies whether missing reports are allowed
      * @param runOnFailed
@@ -195,7 +195,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * @return whether to parse the test specific log files
+     * @return whether to parse the test-specific log files
      */
     public boolean isTestSpecific() {
         return testSpecific;
@@ -221,7 +221,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
 
     /**
      * @param testSpecific
-     *            specifies whether to parse the test specific log files
+     *            specifies whether to parse the test-specific log files
      */
     @DataBoundSetter
     public void setTestSpecific(final boolean testSpecific) {
@@ -230,7 +230,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
 
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+    public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing ECU-TEST logs...");
@@ -434,7 +434,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
      */
     private int traverseSubReports(final ETLogReport logReport, final FilePath testReportDir,
             final FilePath subTestReportDir, int id)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
             FilePath logFile = subDir.child(ERROR_LOG_NAME);
             if (logFile.exists()) {
@@ -506,11 +506,12 @@ public class ETLogPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Builds a list of ECU-TEST log files for archiving, either all test specific logs or the complete logs.
+     * Builds a list of ECU-TEST log files for archiving, either all test-specific logs or the complete logs.
      *
      * @param run
      *            the run
      * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @return the list of log files
@@ -566,7 +567,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Builds a list of all test specific ECU-TEST log files for archiving.
+     * Builds a list of all test-specific ECU-TEST log files for archiving.
      *
      * @param run
      *            the run
@@ -626,7 +627,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
 
         @Override
         public List<String> invoke(final File baseDir, final VirtualChannel channel) throws IOException,
-        InterruptedException {
+                InterruptedException {
             final List<String> files = new ArrayList<String>();
             for (final String includedFile : Util.createFileSet(baseDir, includes, excludes)
                     .getDirectoryScanner().getIncludedFiles()) {

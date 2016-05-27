@@ -48,12 +48,10 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.TSClient;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
-import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 
 /**
  * Builder providing the start up of the Tool-Server.
@@ -154,56 +152,39 @@ public class StartTSBuilder extends AbstractToolBuilder {
      *            the TCP port
      */
     @DataBoundSetter
-    public void setTcpPort(@Nonnull final String tcpPort) {
-        this.tcpPort = tcpPort;
+    public void setTcpPort(@CheckForNull final String tcpPort) {
+        this.tcpPort = StringUtils.defaultIfBlank(tcpPort, String.valueOf(getDefaultTcpPort()));
     }
 
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
-        // Check OS running this build
-        if (!ProcessUtil.checkOS(launcher, listener)) {
-            return;
-        }
-
-        // Initialize logger
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
-
+    public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         // Expand build parameters
         final EnvVars buildEnvVars = run.getEnvironment(listener);
-        final int expandedTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
+        final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
                 String.valueOf(DEFAULT_TIMEOUT)));
 
-        final int expandedTcpPort = Integer.parseInt(EnvUtil.expandEnvVar(getTcpPort(), buildEnvVars,
+        final int expTcpPort = Integer.parseInt(EnvUtil.expandEnvVar(getTcpPort(), buildEnvVars,
                 String.valueOf(DEFAULT_TCP_PORT)));
 
-        final String expandedToolLibs = buildEnvVars.expand(getToolLibsIni());
-        final FilePath expandedTLPath = new FilePath(launcher.getChannel(), expandedToolLibs);
+        final String expToolLibs = buildEnvVars.expand(getToolLibsIni());
+        final FilePath expToolLibsPath = new FilePath(launcher.getChannel(), expToolLibs);
 
         // Check ToolLibs.ini path
-        if (!expandedTLPath.exists()) {
-            logger.logError(String.format("ToolLibs.ini path at %s does not exist!",
-                    expandedTLPath.getRemote()));
-            return;
+        if (!expToolLibsPath.exists()) {
+            throw new ETPluginException(String.format("ToolLibs.ini path at %s does not exist!",
+                    expToolLibsPath.getRemote()));
         }
 
         // Get selected ECU-TEST installation
-        final AbstractToolInstallation installation = configureToolInstallation(listener, run.getEnvironment(listener));
+        final ETInstallation installation = configureToolInstallation(workspace.toComputer(), listener,
+                run.getEnvironment(listener));
 
-        // Start selected Tool-Server from inside of ECU-TEST installation
-        if (installation instanceof ETInstallation) {
-            final String tsName = "Tool-Server";
-            logger.logInfo(String.format("Starting %s...", tsName));
-            final String installPath = ((ETInstallation) installation).getTSExecutable(launcher);
-            final TSClient tsClient = new TSClient(getToolName(), installPath, expandedTimeout,
-                    expandedToolLibs, expandedTcpPort);
-            if (tsClient.start(true, launcher, listener)) {
-                logger.logInfo(String.format("%s started successfully.", tsName));
-            } else {
-                logger.logError(String.format("Starting %s failed!", tsName));
-            }
-        } else {
-            logger.logError("Selected ECU-TEST installation is not configured for this node!");
+        // Start selected Tool-Server of related ECU-TEST installation
+        final String installPath = installation.getTSExecutable(launcher);
+        final TSClient tsClient = new TSClient(getToolName(), installPath, expTimeout, expToolLibs, expTcpPort);
+        if (!tsClient.start(true, workspace, launcher, listener)) {
+            throw new ETPluginException("Starting Tool-Server failed!");
         }
     }
 

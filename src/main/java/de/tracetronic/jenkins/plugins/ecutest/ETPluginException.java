@@ -27,37 +27,53 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.tracetronic.jenkins.plugins.ecutest.test.client;
-
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.TaskListener;
-
-import java.io.IOException;
+package de.tracetronic.jenkins.plugins.ecutest;
 
 /**
- * Client interface defining test execution controls.
+ * Exception thrown if an error occurs while performing plugin-specific operations.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public interface TestClient {
+public class ETPluginException extends Exception {
+
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Runs a test case, can be either an ECU-TEST package or project.
+     * Instantiates a new {@link ETPluginException}.
      *
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
-     * @return {@code true} if successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @param cause
+     *            the cause of the {@link Exception}
      */
-    boolean runTestCase(final FilePath workspace, Launcher launcher, TaskListener listener)
-            throws IOException, InterruptedException;
+    public ETPluginException(final Throwable cause) {
+        super(cause);
+    }
 
+    /**
+     * Instantiates a new {@link ETPluginException}.
+     *
+     * @param message
+     *            the message to attach to the {@link Exception}
+     * @param cause
+     *            the cause of the {@link Exception}
+     */
+    public ETPluginException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    /**
+     * Instantiates a new {@link ETPluginException}.
+     *
+     * @param message
+     *            the message to attach to the {@link Exception}
+     */
+    public ETPluginException(final String message) {
+        super(message);
+    }
+
+    /**
+     * Instantiates a new {@link ETPluginException}.
+     */
+    public ETPluginException() {
+        super();
+    }
 }

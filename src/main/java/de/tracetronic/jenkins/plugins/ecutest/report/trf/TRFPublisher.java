@@ -121,7 +121,7 @@ public class TRFPublisher extends AbstractReportPublisher {
 
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+    public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing TRF reports...");
@@ -235,7 +235,7 @@ public class TRFPublisher extends AbstractReportPublisher {
      */
     private int traverseSubReports(final TRFReport trfReport, final FilePath testReportDir,
             final FilePath subTestReportDir, int id)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
             final FilePath reportFile = subDir.child(TRF_FILE_NAME);
             if (reportFile.exists()) {

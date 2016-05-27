@@ -54,6 +54,7 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
@@ -61,7 +62,6 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 
 /**
  * Publisher providing links to saved {@link GeneratorReport}s.
@@ -77,7 +77,9 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
 
     @Nonnull
     private final String toolName;
+    @Nonnull
     private List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
+    @Nonnull
     private List<ReportGeneratorConfig> customGenerators = new ArrayList<ReportGeneratorConfig>();
 
     /**
@@ -117,7 +119,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
             final List<ReportGeneratorConfig> customGenerators, final boolean allowMissing, final boolean runOnFailed,
             final boolean archiving, final boolean keepAll) {
         super(allowMissing, runOnFailed, archiving, keepAll);
-        this.toolName = toolName;
+        this.toolName = StringUtils.trimToEmpty(toolName);
         this.generators = generators == null ? new ArrayList<ReportGeneratorConfig>()
                 : removeEmptyGenerators(generators);
         this.customGenerators = customGenerators == null ? new ArrayList<ReportGeneratorConfig>()
@@ -184,7 +186,8 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      */
     @DataBoundSetter
     public void setGenerators(final List<ReportGeneratorConfig> generators) {
-        this.generators = generators;
+        this.generators = generators == null ? new ArrayList<ReportGeneratorConfig>()
+                : removeEmptyGenerators(generators);
     }
 
     /**
@@ -193,7 +196,8 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      */
     @DataBoundSetter
     public void setCustomGenerators(final List<ReportGeneratorConfig> customGenerators) {
-        this.customGenerators = customGenerators;
+        this.customGenerators = customGenerators == null ? new ArrayList<ReportGeneratorConfig>()
+                : removeEmptyGenerators(customGenerators);
     }
 
     /**
@@ -231,15 +235,9 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
         return null;
     }
 
-    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
-        // Check OS running this build
-        if (!ProcessUtil.checkOS(launcher, listener)) {
-            return;
-        }
-
+    public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing generator reports...");
 
@@ -251,8 +249,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
 
         final List<FilePath> reportFiles = getReportFiles(run, launcher);
         if (reportFiles.isEmpty() && !isAllowMissing()) {
-            logger.logError("Empty test results are not allowed, setting build status to FAILURE!");
-            return;
+            throw new ETPluginException("Empty test results are not allowed, setting build status to FAILURE!");
         }
 
         final List<GeneratorReport> reports = new ArrayList<GeneratorReport>();
@@ -264,31 +261,21 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
             reports.addAll(generateReports(reportFiles, run, launcher, listener));
         } else {
             // Get selected ECU-TEST installation
-            final AbstractToolInstallation installation = configureToolInstallation(toolName, listener,
+            final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
                     run.getEnvironment(listener));
-            if (installation instanceof ETInstallation) {
-                final String installPath = installation.getExecutable(launcher);
-                final String workspaceDir = getWorkspaceDir(run);
-                final String settingsDir = getSettingsDir(run);
-                final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
-                final ETClient etClient = new ETClient(expandedToolName, installPath, workspaceDir, settingsDir,
-                        StartETBuilder.DEFAULT_TIMEOUT, false);
-                logger.logInfo(String.format("Starting %s...", toolName));
-                if (etClient.start(false, launcher, listener)) {
-                    logger.logInfo(String.format("%s started successfully.", toolName));
-                    reports.addAll(generateReports(reportFiles, run, launcher, listener));
-                } else {
-                    logger.logError(String.format("Starting %s failed.", toolName));
-                }
-                logger.logInfo(String.format("Stopping %s...", toolName));
-                if (etClient.stop(true, launcher, listener)) {
-                    logger.logInfo(String.format("%s stopped successfully.", toolName));
-                } else {
-                    logger.logError(String.format("Stopping %s failed.", toolName));
-                }
+            final String installPath = installation.getExecutable(launcher);
+            final String workspaceDir = getWorkspaceDir(run);
+            final String settingsDir = getSettingsDir(run);
+            final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
+            final ETClient etClient = new ETClient(expandedToolName, installPath, workspaceDir, settingsDir,
+                    StartETBuilder.DEFAULT_TIMEOUT, false);
+            if (etClient.start(false, workspace, launcher, listener)) {
+                reports.addAll(generateReports(reportFiles, run, launcher, listener));
             } else {
-                logger.logError("Selected ECU-TEST installation is not configured for this node!");
-                return;
+                logger.logError(String.format("Starting %s failed.", toolName));
+            }
+            if (!etClient.stop(true, workspace, launcher, listener)) {
+                logger.logError(String.format("Stopping %s failed.", toolName));
             }
         }
 
@@ -299,7 +286,6 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
         }
 
         logger.logInfo("Generator reports published successfully.");
-        return;
     }
 
     /**

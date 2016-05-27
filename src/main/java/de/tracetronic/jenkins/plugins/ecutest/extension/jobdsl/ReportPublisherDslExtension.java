@@ -305,7 +305,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         }
 
         /**
-         * Option defining whether to parse the test specific log files.
+         * Option defining whether to parse the test-specific log files.
          *
          * @param value
          *            the value

@@ -68,6 +68,7 @@ import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
@@ -76,10 +77,8 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstall
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
-import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
 
 /**
@@ -104,7 +103,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      *            the tool name identifying the {@link ATXInstallation} to be used
      */
     @DataBoundConstructor
-    public ATXPublisher(final String atxName) {
+    public ATXPublisher(@Nonnull final String atxName) {
         super();
         this.atxName = StringUtils.trimToEmpty(atxName);
     }
@@ -129,7 +128,7 @@ public class ATXPublisher extends AbstractReportPublisher {
     public ATXPublisher(final String atxName, final boolean allowMissing, final boolean runOnFailed,
             final boolean archiving, final boolean keepAll) {
         super(allowMissing, runOnFailed, archiving, keepAll);
-        this.atxName = atxName;
+        this.atxName = StringUtils.trimToEmpty(atxName);
     }
 
     /**
@@ -167,14 +166,8 @@ public class ATXPublisher extends AbstractReportPublisher {
     }
 
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
-        // Check OS running this build
-        if (!ProcessUtil.checkOS(launcher, listener)) {
-            return;
-        }
-
-        // Initialize logger
+    public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing ATX reports...");
 
@@ -187,14 +180,8 @@ public class ATXPublisher extends AbstractReportPublisher {
         // Get selected TEST-GUIDE installation
         final ATXInstallation installation = getInstallation(run.getEnvironment(listener));
         if (installation == null) {
-            logger.logError("Selected TEST-GUIDE installation is not configured!");
-            return;
+            throw new ETPluginException("Selected TEST-GUIDE installation is not configured!");
         }
-
-        // Get selected ECU-TEST installation
-        String toolName = installation.getToolName();
-        final AbstractToolInstallation etInstallation = configureToolInstallation(toolName, listener,
-                run.getEnvironment(listener));
 
         boolean isPublished = false;
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
@@ -204,29 +191,22 @@ public class ATXPublisher extends AbstractReportPublisher {
         if (isETRunning) {
             isPublished = publishReports(installation, run, launcher, listener);
         } else {
-            if (etInstallation instanceof ETInstallation) {
-                final String installPath = etInstallation.getExecutable(launcher);
-                final String workspaceDir = getWorkspaceDir(run);
-                final String settingsDir = getSettingsDir(run);
-                toolName = run.getEnvironment(listener).expand(etInstallation.getName());
-                final ETClient etClient = new ETClient(toolName, installPath, workspaceDir, settingsDir,
-                        StartETBuilder.DEFAULT_TIMEOUT, false);
-                logger.logInfo(String.format("Starting %s...", toolName));
-                if (etClient.start(false, launcher, listener)) {
-                    logger.logInfo(String.format("%s started successfully.", toolName));
-                    isPublished = publishReports(installation, run, launcher, listener);
-                } else {
-                    logger.logError(String.format("Starting %s failed.", toolName));
-                }
-                logger.logInfo(String.format("Stopping %s...", toolName));
-                if (etClient.stop(true, launcher, listener)) {
-                    logger.logInfo(String.format("%s stopped successfully.", toolName));
-                } else {
-                    logger.logError(String.format("Stopping %s failed.", toolName));
-                }
+            String toolName = installation.getToolName();
+            final ETInstallation etInstallation = configureToolInstallation(toolName, workspace.toComputer(), listener,
+                    run.getEnvironment(listener));
+            final String installPath = etInstallation.getExecutable(launcher);
+            final String workspaceDir = getWorkspaceDir(run);
+            final String settingsDir = getSettingsDir(run);
+            toolName = run.getEnvironment(listener).expand(etInstallation.getName());
+            final ETClient etClient = new ETClient(toolName, installPath, workspaceDir, settingsDir,
+                    StartETBuilder.DEFAULT_TIMEOUT, false);
+            if (etClient.start(false, workspace, launcher, listener)) {
+                isPublished = publishReports(installation, run, launcher, listener);
             } else {
-                logger.logError("Selected ECU-TEST installation is not configured for this node!");
-                return;
+                logger.logError(String.format("Starting %s failed.", toolName));
+            }
+            if (!etClient.stop(true, workspace, launcher, listener)) {
+                logger.logError(String.format("Stopping %s failed.", toolName));
             }
         }
 
@@ -235,7 +215,6 @@ public class ATXPublisher extends AbstractReportPublisher {
         } else {
             run.setResult(Result.FAILURE);
         }
-        return;
     }
 
     /**

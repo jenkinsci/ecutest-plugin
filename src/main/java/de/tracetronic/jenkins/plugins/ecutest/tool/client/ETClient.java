@@ -29,6 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
@@ -133,9 +134,10 @@ public class ETClient extends AbstractToolClient {
     }
 
     @Override
-    public boolean start(final boolean checkProcesses, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+    public boolean start(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        logger.logInfo(String.format("Starting %s...", getToolName()));
 
         // Check open processes
         if (checkProcesses) {
@@ -151,7 +153,7 @@ public class ETClient extends AbstractToolClient {
         }
 
         // Initialize COM connection
-        if (!DllUtil.loadLibrary()) {
+        if (!DllUtil.loadLibrary(workspace.toComputer())) {
             logger.logError("Could not load JACOB library!");
             return false;
         }
@@ -175,17 +177,19 @@ public class ETClient extends AbstractToolClient {
                     "The configured ECU-TEST version %s is not compatible with this plugin. "
                             + "Please use at least ECU-TEST %s!", comVersion, ETPlugin.ET_MIN_VERSION.toShortString()));
             // Close ECU-TEST
-            stop(checkProcesses, launcher, listener);
+            stop(checkProcesses, workspace, launcher, listener);
             return false;
         }
 
+        logger.logInfo(String.format("%s started successfully.", getToolName()));
         return true;
     }
 
     @Override
-    public boolean stop(final boolean checkProcesses, final Launcher launcher, final TaskListener listener)
-            throws InterruptedException, IOException {
+    public boolean stop(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws InterruptedException, IOException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        logger.logInfo(String.format("Stopping %s...", getToolName()));
 
         // Check open processes
         if (checkProcesses) {
@@ -197,20 +201,22 @@ public class ETClient extends AbstractToolClient {
         }
 
         // Close COM connection and stop ECU-TEST
-        if (!DllUtil.loadLibrary()) {
+        if (!DllUtil.loadLibrary(workspace.toComputer())) {
             logger.logError("Could not load JACOB library!");
             return false;
         }
-        return launcher.getChannel().call(new StopCallable(getTimeout(), checkProcesses, listener));
-    }
-
-    @Override
-    public boolean restart(final boolean checkProcesses, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
-        if (stop(checkProcesses, launcher, listener) && start(checkProcesses, launcher, listener)) {
+        if (launcher.getChannel().call(new StopCallable(getTimeout(), checkProcesses, listener))) {
+            logger.logInfo(String.format("%s stopped successfully.", getToolName()));
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean restart(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws IOException, InterruptedException {
+        return stop(checkProcesses, workspace, launcher, listener)
+                && start(checkProcesses, workspace, launcher, listener);
     }
 
     @Override

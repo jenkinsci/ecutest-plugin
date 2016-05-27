@@ -29,9 +29,11 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
+import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.Util;
 import hudson.model.TaskListener;
 import hudson.model.Run;
 import hudson.remoting.Callable;
@@ -42,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import jenkins.security.MasterToSlaveCallable;
@@ -50,6 +53,7 @@ import jenkins.tasks.SimpleBuildStep;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
@@ -159,8 +163,8 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
      *            the test configuration
      */
     @DataBoundSetter
-    public void setTestConfig(@Nonnull final TestConfig testConfig) {
-        this.testConfig = testConfig;
+    public void setTestConfig(@CheckForNull final TestConfig testConfig) {
+        this.testConfig = testConfig == null ? TestConfig.newInstance() : testConfig;
     }
 
     /**
@@ -168,34 +172,45 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
      *            the execution configuration
      */
     @DataBoundSetter
-    public void setExecutionConfig(@Nonnull final ExecutionConfig executionConfig) {
-        this.executionConfig = executionConfig;
+    public void setExecutionConfig(@CheckForNull final ExecutionConfig executionConfig) {
+        this.executionConfig = executionConfig == null ? ExecutionConfig.newInstance() : executionConfig;
     }
 
     @Override
     public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException {
-        // Check OS running this build
-        if (!ProcessUtil.checkOS(launcher, listener)) {
-            return;
+        // FIXME: workaround because pipeline node allocation does not create the actual workspace directory
+        if (!workspace.exists()) {
+            workspace.mkdirs();
         }
 
-        final boolean performed = performTest(run, workspace, launcher, listener);
-        if (!performed && getExecutionConfig().isStopOnError()) {
-            final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            logger.logInfo("- Closing running ECU-TEST and Tool-Server instances...");
-            if (closeETInstance(launcher, listener)) {
-                logger.logInfo("-> ECU-TEST closed successfully.");
-            } else {
-                logger.logInfo("-> No running ECU-TEST instance found.");
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        try {
+            ProcessUtil.checkOS(launcher);
+            final boolean performed = performTest(run, workspace, launcher, listener);
+            if (!performed) {
+                if (getExecutionConfig().isStopOnError()) {
+                    logger.logInfo("- Closing running ECU-TEST and Tool-Server instances...");
+                    if (closeETInstance(launcher, listener)) {
+                        logger.logInfo("-> ECU-TEST closed successfully.");
+                    } else {
+                        logger.logInfo("-> No running ECU-TEST instance found.");
+                    }
+                    if (checkTSInstance(launcher, true)) {
+                        logger.logInfo("-> Tool-Server closed successfully.");
+                    } else {
+                        logger.logInfo("-> No running Tool-Server instance found.");
+                    }
+                }
+                throw new AbortException("Test execution failed!");
             }
-            if (checkTSInstance(launcher, true)) {
-                logger.logInfo("-> Tool-Server closed successfully.");
-            } else {
-                logger.logInfo("-> No running Tool-Server instance found.");
-            }
+        } catch (final IOException e) {
+            Util.displayIOException(e, listener);
+            throw e;
+        } catch (final ETPluginException e) {
+            logger.logError(e.getMessage());
+            throw new AbortException(e.getMessage());
         }
-        return;
     }
 
     /**
@@ -285,7 +300,7 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
                 expTestConfig.isLoadOnly(), expTestConfig.getConstants());
 
         // Run tests
-        return runTest(expTestFilePath, expTestConfig, expExecConfig, run, launcher, listener);
+        return runTest(expTestFilePath, expTestConfig, expExecConfig, run, workspace, launcher, listener);
     }
 
     /**
@@ -299,6 +314,8 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
      *            the expanded execution configuration
      * @param run
      *            the build
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @param listener
@@ -310,8 +327,8 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
      *             if the build gets interrupted
      */
     protected abstract boolean runTest(String testFile, TestConfig testConfig, ExecutionConfig executionConfig,
-            Run<?, ?> run, Launcher launcher, TaskListener listener) throws IOException,
-            InterruptedException;
+            Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
+                    throws IOException, InterruptedException;
 
     /**
      * Checks already opened ECU-TEST instances.

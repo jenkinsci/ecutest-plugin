@@ -31,6 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.test;
 
 import hudson.EnvVars;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.TaskListener;
 import hudson.model.Run;
@@ -38,6 +39,7 @@ import hudson.util.FormValidation;
 
 import java.io.IOException;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -68,7 +70,7 @@ public class TestPackageBuilder extends AbstractTestBuilder {
      *            the package file
      */
     @DataBoundConstructor
-    public TestPackageBuilder(final String testFile) {
+    public TestPackageBuilder(@Nonnull final String testFile) {
         super(testFile);
     }
 
@@ -105,14 +107,14 @@ public class TestPackageBuilder extends AbstractTestBuilder {
      *            the package configuration
      */
     @DataBoundSetter
-    public void setPackageConfig(@Nonnull final PackageConfig packageConfig) {
-        this.packageConfig = packageConfig;
+    public void setPackageConfig(@CheckForNull final PackageConfig packageConfig) {
+        this.packageConfig = packageConfig == null ? PackageConfig.newInstance() : packageConfig;
     }
 
     @Override
     protected boolean runTest(final String testFile, final TestConfig testConfig,
-            final ExecutionConfig executionConfig, final Run<?, ?> run, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+            final ExecutionConfig executionConfig, final Run<?, ?> run, final FilePath workspace,
+            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
         // Expand package configuration
         final EnvVars buildEnv = run.getEnvironment(listener);
         final PackageConfig packageConfig = getPackageConfig().expand(buildEnv);
@@ -122,7 +124,7 @@ public class TestPackageBuilder extends AbstractTestBuilder {
                 executionConfig);
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo(String.format("Executing package %s...", testFile));
-        if (testClient.runTestCase(launcher, listener)) {
+        if (testClient.runTestCase(workspace, launcher, listener)) {
             logger.logInfo("Package executed successfully.");
         } else {
             logger.logError("Executing package failed!");
