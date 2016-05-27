@@ -94,7 +94,7 @@
         <!-- Test scope -->
         <equalsverifier.version>1.7.8</equalsverifier.version>
         <mockito-core.version>1.10.19</mockito-core.version>
-        <workflow-aggregator.version>1.4.2</workflow-aggregator.version>
+        <workflow.version>1.4.2</workflow.version>
         <concurrency>2</concurrency>
 
         <!-- JACOB -->
@@ -187,7 +187,20 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-aggregator</artifactId>
-            <version>${workflow-aggregator.version}</version>
+            <version>${workflow.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-cps</artifactId>
+            <version>${workflow.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-step-api</artifactId>
+            <version>${workflow.version}</version>
+            <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -199,14 +212,32 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <includes>
-                        <!-- Includes system tests ending with ST -->
                         <include>**/*Test.java</include>
-                        <include>**/*ST.java</include>
                     </includes>
                     <excludes>
                         <exclude>InjectedTest.java</exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*ST.java</include>
+                        <include>InjectedTest.java</include>
+                    </includes>
+                    <reuseForks>true</reuseForks>
+                    <forkCount>${concurrency}</forkCount>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -326,6 +357,7 @@
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
                     <configuration>
                         <lifecycleMappingMetadata>
                             <pluginExecutions>
