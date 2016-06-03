@@ -8,9 +8,7 @@
         <Package name="~.*\.filter" />
     </Match>
     <Match>
-        <!-- Ignore warnings in unit test classes. -->
-        <Class name="~.*Test$" />
-        <Class name="~.*ST$" />
-        <Class name="TestPluginManagerCleanUp" />
+        <!-- Ignore warnings in test classes. -->
+        <Class name="~.*\.*(Test|ST)$" />
     </Match>
 </FindBugsFilter>
