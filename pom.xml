@@ -95,6 +95,7 @@
         <equalsverifier.version>1.7.8</equalsverifier.version>
         <mockito-core.version>1.10.19</mockito-core.version>
         <workflow.version>1.4.2</workflow.version>
+        <jacoco.version>0.7.6.201602180812</jacoco.version>
         <concurrency>2</concurrency>
 
         <!-- JACOB -->
@@ -217,6 +218,7 @@
                     <excludes>
                         <exclude>InjectedTest.java</exclude>
                     </excludes>
+                    <argLine>@{argLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -227,6 +229,7 @@
                         <include>**/*ST.java</include>
                         <include>InjectedTest.java</include>
                     </includes>
+                    <argLine>@{argLine}</argLine>
                     <reuseForks>true</reuseForks>
                     <forkCount>${concurrency}</forkCount>
                 </configuration>
@@ -354,6 +357,11 @@
         </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.version}</version>
+                </plugin>
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
