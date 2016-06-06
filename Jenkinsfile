@@ -3,6 +3,7 @@ timestamps {
         checkout scm
 
         def mvnHome = tool 'M3'
+        env.JAVA_HOME = tool 'JDK7'
 
         if (isUnix()) {
             stage 'Build'
