@@ -48,19 +48,27 @@
                 </j:if>
                 <table class="fileList" id="logs">
                     <j:set var="indent" value="0" />
-                    <j:forEach var="report" items="${it.getLogReports()}">
+                    <j:set var="reports" value="${it.getLogReports()}" />
+                    <j:forEach var="report" items="reports">
                         <st:include page="report.jelly" />
                     </j:forEach>
-                    <tr>
-                        <td style="text-align:right;" colspan="3">
-                            <div style="margin-top: 1em;">
-                                <img src="${resURL}/images/16x16/package.png" /><st:nbsp />
-                                <a href="${rootURL}/${build.url}${it.urlName}/zipDownload">
-                                    ${%download.zip}
-                                </a>
-                            </div>
-                        </td>
-                     </tr>
+                    <j:choose>
+                        <j:when test="${empty(reports)}">
+                            ${%reports.empty}
+                        </j:when>
+                        <j:otherwise>
+                            <tr>
+                                <td style="text-align:right;" colspan="3">
+                                    <div style="margin-top: 1em;">
+                                        <img src="${resURL}/images/16x16/package.png" /><st:nbsp />
+                                        <a href="${rootURL}/${build.url}${it.urlName}/zipDownload">
+                                            ${%download.zip}
+                                        </a>
+                                    </div>
+                                </td>
+                             </tr>
+                         </j:otherwise>
+                     </j:choose>
                 </table>
             </j:if>
         </l:main-panel>
