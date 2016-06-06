@@ -24,12 +24,8 @@ timestamps {
             sh "${mvnHome}/bin/mvn -B -e test-compile jacoco:prepare-agent surefire:test"
             step([$class: 'JUnitResultArchiver', testResults: 'target/surefire-reports/*.xml'])
 
-            stage 'System Tests'
-            sh "${mvnHome}/bin/mvn -B -e test-compile jacoco:prepare-agent-integration failsafe:integration-test"
-            step([$class: 'JUnitResultArchiver', testResults: 'target/failsafe-reports/*.xml'])
-
             stage 'Code Coverage'
-            step([$class: 'JacocoPublisher', execPattern: 'target/jacoco.exec, target/jacoco-it.exec', exclusionPattern: '**/Messages.class'])
+            step([$class: 'JacocoPublisher', execPattern: 'target/jacoco.exec', exclusionPattern: '**/Messages.class'])
 
             stage 'Archive Artifacts'
             step([$class: 'ArtifactArchiver', artifacts: 'target/ecutest.hpi', fingerprint: true])
@@ -53,12 +49,8 @@ timestamps {
             bat "${mvnHome}\\bin\\mvn -B -e test-compile jacoco:prepare-agent surefire:test"
             step([$class: 'JUnitResultArchiver', testResults: 'target/surefire-reports/*.xml'])
 
-            stage 'System Tests'
-            bat "${mvnHome}\\bin\\mvn -B -e test-compile jacoco:prepare-agent-integration failsafe:integration-test"
-            step([$class: 'JUnitResultArchiver', testResults: 'target/failsafe-reports/*.xml'])
-
             stage 'Code Coverage'
-            step([$class: 'JacocoPublisher', execPattern: 'target/jacoco.exec, target/jacoco-it.exec', exclusionPattern: '**/Messages.class'])
+            step([$class: 'JacocoPublisher', execPattern: 'target/jacoco.exec', exclusionPattern: '**/Messages.class'])
 
             stage 'Archive Artifacts'
             step([$class: 'ArtifactArchiver', artifacts: 'target/ecutest.hpi', fingerprint: true])
