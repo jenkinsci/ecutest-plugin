@@ -34,7 +34,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>2.9</version>
+        <version>2.10</version>
         <relativePath />
     </parent>
 
@@ -95,7 +95,7 @@
         <equalsverifier.version>1.7.8</equalsverifier.version>
         <mockito-core.version>1.10.19</mockito-core.version>
         <workflow.version>1.4.2</workflow.version>
-        <jacoco.version>0.7.6.201602180812</jacoco.version>
+        <jacoco.version>0.7.7.201606060606</jacoco.version>
         <concurrency>2</concurrency>
 
         <!-- JACOB -->
