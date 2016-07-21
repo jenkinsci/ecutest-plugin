@@ -48,7 +48,7 @@
                 <table class="fileList">
                     <j:set var="indent" value="0" />
                     <j:set var="reports" value="${it.getGeneratorReports()}" />
-                    <j:forEach var="report" items="reports">
+                    <j:forEach var="report" items="${reports}">
                         <st:include page="report.jelly" />
                     </j:forEach>
                     <j:choose>
