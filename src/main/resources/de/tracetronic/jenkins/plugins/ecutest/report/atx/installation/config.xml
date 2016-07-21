@@ -421,16 +421,38 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
+		<SETTING name="captureSubPackageOnVerdict" default=""
+			xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">Legt fest bei welchen Ergebnissen der
+							SubPackages deren TestSteps mit erfasst werden sollen. Beispiel:
+							FAILED; ERROR
+						</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">Defines the results of the sub packages on
+							which the test steps have to be recorded. Example: FAILED; ERROR
+						</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
 		<SETTING name="includeResourceAdapterInfo" default="True"
 			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
-						<DVALUE xsi:type="unicode">True, wenn die ResourceAdapter Informationen als
-							ATX-Konstanten erfasst werden sollen, sonst False.</DVALUE>
+						<DVALUE xsi:type="unicode">True, wenn die ResourceAdapter
+							Informationen als
+							ATX-Konstanten erfasst werden sollen, sonst
+							False.</DVALUE>
 					</ELEMENT>
 					<ELEMENT dkey="en_US">
-						<DVALUE xsi:type="unicode">True, if the ResourceAdapter info should be 
+						<DVALUE xsi:type="unicode">True, if the ResourceAdapter info should
+							be
 							recorded as ATX constant, otherwise False.</DVALUE>
 					</ELEMENT>
 				</MULTILANGDATA>
