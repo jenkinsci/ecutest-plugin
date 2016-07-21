@@ -66,21 +66,21 @@ public abstract class AbstractATXAction extends AbstractReportAction {
     }
 
     @Override
-    public String getIconFileName() {
-        return getIconPath("48x48/test-guide.png");
+    public String getIconClassName() {
+        return "icon-ecutest-test-guide";
     }
 
     /**
-     * @return the report icon file name
+     * @return the report icon class name
      */
-    public String getReportIconFileName() {
-        return getIconPath("24x24/atx.png");
+    public String getReportIconClassName() {
+        return "icon-ecutest-atx-report";
     }
 
     /**
-     * @return the trend icon file name
+     * @return the trend icon class name
      */
-    public String getTrendIconFileName() {
-        return getIconPath("24x24/atx-trend.png");
+    public String getTrendIconClassName() {
+        return "icon-ecutest-atx-trend";
     }
 }

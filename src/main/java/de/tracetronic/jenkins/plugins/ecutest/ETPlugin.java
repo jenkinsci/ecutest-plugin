@@ -201,14 +201,14 @@ public class ETPlugin extends Plugin {
         super.start();
 
         for (final String name : new String[] {
-                "atx",
+                "atx-report",
                 "atx-trend",
                 "ecu-test",
                 "ecu-test-pkg",
                 "ecu-test-prj",
                 "report-generator",
                 "test-guide",
-                "trf",
+                "trf-report",
         }) {
             // Register small (16x16) icons
             IconSet.icons.addIcon(new Icon(

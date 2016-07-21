@@ -29,11 +29,11 @@
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:lsi="/shim/layout/icon">
     <tr>
         <td>
             <div style="text-indent: ${indent}px;">
-                <img src="${resURL}${it.iconFileName}" alt="ECU-TEST Log" height="16" width="16" />
+                <lsi:icon class="${it.iconClassName} icon-sm" alt="ECU-TEST Log" />
                 <st:nbsp />
                 <j:choose>
                     <j:when test="${!report.fileName.endsWith('.log')}">
