@@ -199,23 +199,17 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
         return new TestConfig(expTbcFile, expTcfFile, isForceReload(), isLoadOnly(), constants);
     }
 
-    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
-    public final boolean equals(final Object that) {
-        if (this == that) {
-            return true;
+    public final boolean equals(final Object other) {
+        boolean result = false;
+        if (other instanceof TestConfig) {
+            final TestConfig that = (TestConfig) other;
+            result = (tbcFile == null ? that.tbcFile == null : tbcFile.equals(that.tbcFile))
+                    && (tcfFile == null ? that.tcfFile == null : tcfFile.equals(that.tcfFile))
+                    && (constants == null ? that.constants == null : constants.equals(that.constants))
+                    && forceReload == that.forceReload && loadOnly == that.loadOnly;
         }
-        if (!(that instanceof TestConfig)) {
-            return false;
-        }
-        final TestConfig other = (TestConfig) that;
-        if ((constants == null ? other.constants != null : !constants.equals(other.constants))
-                || (tbcFile == null ? other.tbcFile != null : !tbcFile.equals(other.tbcFile))
-                || (tcfFile == null ? other.tcfFile != null : !tcfFile.equals(other.tcfFile))
-                || forceReload != other.forceReload || loadOnly != other.loadOnly) {
-            return false;
-        }
-        return true;
+        return result;
     }
 
     @Override

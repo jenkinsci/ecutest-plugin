@@ -32,6 +32,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 import hudson.Extension;
 import hudson.util.FormValidation;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -65,6 +66,27 @@ public class ATXCustomTextSetting extends ATXCustomSetting {
      */
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public final boolean equals(final Object other) {
+        boolean result = false;
+        if (other instanceof ATXCustomTextSetting) {
+            final ATXCustomTextSetting that = (ATXCustomTextSetting) other;
+            result = that.canEqual(this) && super.equals(that)
+                    && (value == null ? that.value == null : value.equals(that.value));
+        }
+        return result;
+    }
+
+    @Override
+    public final boolean canEqual(final Object other) {
+        return other instanceof ATXCustomTextSetting;
+    }
+
+    @Override
+    public final int hashCode() {
+        return new HashCodeBuilder(17, 31).append(super.hashCode()).append(value).toHashCode();
     }
 
     /**

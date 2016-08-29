@@ -89,22 +89,29 @@ public abstract class ATXCustomSetting implements Serializable, Cloneable, Descr
     }
 
     @Override
-    public final boolean equals(final Object that) {
-        if (this == that) {
-            return true;
+    public boolean equals(final Object other) {
+        boolean result = false;
+        if (other instanceof ATXCustomSetting) {
+            final ATXCustomSetting that = (ATXCustomSetting) other;
+            result = that.canEqual(this) && (name == null ? that.name == null : name.equals(that.name));
         }
-        if (!(that instanceof ATXCustomSetting)) {
-            return false;
-        }
-        final ATXCustomSetting other = (ATXCustomSetting) that;
-        if (name == null ? other.name != null : !name.equals(other.name)) {
-            return false;
-        }
-        return true;
+        return result;
+    }
+
+    /**
+     * Implementation according to <a href="www.artima.com/lejava/articles/equality.html">Equality Pitfall #4</a>.
+     *
+     * @param other
+     *            the other object
+     * @return {@code true} if the other object is an instance of the class in which canEqual is (re)defined,
+     *         {@code false} otherwise.
+     */
+    public boolean canEqual(final Object other) {
+        return other instanceof ATXCustomSetting;
     }
 
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         return new HashCodeBuilder(17, 31).append(name).toHashCode();
     }
 

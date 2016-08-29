@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -75,7 +75,7 @@ public class ATXCustomSettingTest {
 
     @Test
     public void testHashCodeAndEquals() {
-        EqualsVerifier.forClass(ATXCustomBooleanSetting.class).verify();
-        EqualsVerifier.forClass(ATXCustomTextSetting.class).verify();
+        EqualsVerifier.forClass(ATXCustomBooleanSetting.class).withRedefinedSuperclass().verify();
+        EqualsVerifier.forClass(ATXCustomTextSetting.class).withRedefinedSuperclass().verify();
     }
 }

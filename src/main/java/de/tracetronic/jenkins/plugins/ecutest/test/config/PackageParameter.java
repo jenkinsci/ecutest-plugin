@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -50,7 +50,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class PackageParameter extends AbstractDescribableImpl<PackageParameter> implements Serializable,
-ExpandableConfig {
+        ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 
@@ -94,20 +94,14 @@ ExpandableConfig {
     }
 
     @Override
-    public final boolean equals(final Object that) {
-        if (this == that) {
-            return true;
+    public final boolean equals(final Object other) {
+        boolean result = false;
+        if (other instanceof PackageParameter) {
+            final PackageParameter that = (PackageParameter) other;
+            result = (name == null ? that.name == null : name.equals(that.name))
+                    && (value == null ? that.value == null : value.equals(that.value));
         }
-        if (!(that instanceof PackageParameter)) {
-            return false;
-        }
-        final PackageParameter other = (PackageParameter) that;
-        if ((name == null ? other.name != null
-                : !name.equals(other.name)) || (value == null ? other.value != null : !value
-                .equals(other.value))) {
-            return false;
-        }
-        return true;
+        return result;
     }
 
     @Override
