@@ -151,17 +151,13 @@ public class ETPlugin extends Plugin {
         }
 
         @Override
-        public boolean equals(final Object that) {
-            if (this == that) {
-                return true;
+        public boolean equals(final Object other) {
+            boolean result = false;
+            if (other instanceof ToolVersion) {
+                final ToolVersion that = (ToolVersion) other;
+                result = compareTo((ToolVersion) that) == 0;
             }
-            if (that == null) {
-                return false;
-            }
-            if (this.getClass() != that.getClass()) {
-                return false;
-            }
-            return compareTo((ToolVersion) that) == 0;
+            return result;
         }
 
         @Override

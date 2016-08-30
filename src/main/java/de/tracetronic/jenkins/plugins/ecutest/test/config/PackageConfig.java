@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -138,19 +138,14 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
     }
 
     @Override
-    public final boolean equals(final Object that) {
-        if (this == that) {
-            return true;
+    public final boolean equals(final Object other) {
+        boolean result = false;
+        if (other instanceof PackageConfig) {
+            final PackageConfig that = (PackageConfig) other;
+            result = (parameters == null ? that.parameters == null : parameters.equals(that.parameters))
+                    && runTest == that.runTest && runTraceAnalysis == that.runTraceAnalysis;
         }
-        if (!(that instanceof PackageConfig)) {
-            return false;
-        }
-        final PackageConfig other = (PackageConfig) that;
-        if ((parameters == null ? other.parameters != null : !parameters.equals(other.parameters))
-                || runTest != other.runTest || runTraceAnalysis != other.runTraceAnalysis) {
-            return false;
-        }
-        return true;
+        return result;
     }
 
     @Override

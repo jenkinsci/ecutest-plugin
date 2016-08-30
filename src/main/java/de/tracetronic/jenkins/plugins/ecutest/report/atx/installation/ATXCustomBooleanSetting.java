@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,6 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
 import hudson.Extension;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -63,6 +64,26 @@ public class ATXCustomBooleanSetting extends ATXCustomSetting {
      */
     public boolean isChecked() {
         return checked;
+    }
+
+    @Override
+    public final boolean equals(final Object other) {
+        boolean result = false;
+        if (other instanceof ATXCustomBooleanSetting) {
+            final ATXCustomBooleanSetting that = (ATXCustomBooleanSetting) other;
+            result = that.canEqual(this) && super.equals(that) && checked == that.checked;
+        }
+        return result;
+    }
+
+    @Override
+    public final boolean canEqual(final Object other) {
+        return other instanceof ATXCustomBooleanSetting;
+    }
+
+    @Override
+    public final int hashCode() {
+        return new HashCodeBuilder(17, 31).append(super.hashCode()).append(checked).toHashCode();
     }
 
     /**

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -51,7 +51,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig> implements Serializable,
-        ExpandableConfig {
+ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 
@@ -191,19 +191,14 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig> im
     }
 
     @Override
-    public final boolean equals(final Object that) {
-        if (this == that) {
-            return true;
+    public final boolean equals(final Object other) {
+        boolean result = false;
+        if (other instanceof ExecutionConfig) {
+            final ExecutionConfig that = (ExecutionConfig) other;
+            result = (timeout == null ? that.timeout == null : timeout.equals(that.timeout))
+                    && stopOnError == that.stopOnError && checkTestFile == that.checkTestFile;
         }
-        if (!(that instanceof ExecutionConfig)) {
-            return false;
-        }
-        final ExecutionConfig other = (ExecutionConfig) that;
-        if ((timeout == null ? other.timeout != null : !timeout.equals(other.timeout))
-                || stopOnError != other.stopOnError || checkTestFile != other.checkTestFile) {
-            return false;
-        }
-        return true;
+        return result;
     }
 
     @Override

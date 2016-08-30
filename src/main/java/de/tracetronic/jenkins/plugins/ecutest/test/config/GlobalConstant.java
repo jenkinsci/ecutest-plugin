@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -94,20 +94,14 @@ public class GlobalConstant extends AbstractDescribableImpl<GlobalConstant> impl
     }
 
     @Override
-    public final boolean equals(final Object that) {
-        if (this == that) {
-            return true;
+    public final boolean equals(final Object other) {
+        boolean result = false;
+        if (other instanceof GlobalConstant) {
+            final GlobalConstant that = (GlobalConstant) other;
+            result = (name == null ? that.name == null : name.equals(that.name))
+                    && (value == null ? that.value == null : value.equals(that.value));
         }
-        if (!(that instanceof GlobalConstant)) {
-            return false;
-        }
-        final GlobalConstant other = (GlobalConstant) that;
-        if (name == null ? other.name != null
-                : !name.equals(other.name) || value == null ? other.value != null : !value
-                        .equals(other.value)) {
-            return false;
-        }
-        return true;
+        return result;
     }
 
     @Override

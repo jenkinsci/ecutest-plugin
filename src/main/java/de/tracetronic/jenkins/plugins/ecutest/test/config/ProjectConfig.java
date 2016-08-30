@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -225,21 +225,16 @@ public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implem
     }
 
     @Override
-    public final boolean equals(final Object that) {
-        if (this == that) {
-            return true;
+    public final boolean equals(final Object other) {
+        boolean result = false;
+        if (other instanceof ProjectConfig) {
+            final ProjectConfig that = (ProjectConfig) other;
+            result = (filterExpression == null ? that.filterExpression == null : filterExpression
+                    .equals(that.filterExpression))
+                    && execInCurrentPkgDir == that.execInCurrentPkgDir
+                    && jobExecMode == that.jobExecMode;
         }
-        if (!(that instanceof ProjectConfig)) {
-            return false;
-        }
-        final ProjectConfig other = (ProjectConfig) that;
-        if ((filterExpression == null ? other.filterExpression != null : !filterExpression
-                .equals(other.filterExpression))
-                || execInCurrentPkgDir != other.execInCurrentPkgDir
-                || jobExecMode != other.jobExecMode) {
-            return false;
-        }
-        return true;
+        return result;
     }
 
     @Override
