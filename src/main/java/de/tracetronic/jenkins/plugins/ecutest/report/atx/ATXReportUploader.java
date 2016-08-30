@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sf.json.groovy.JsonSlurper;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
@@ -336,7 +337,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             boolean isUploaded = true;
             final TTConsoleLogger logger = new TTConsoleLogger(getListener());
             final Map<String, String> configMap = getConfigMap(true);
-            try (ETComClient comClient = new ETComClient()) {
+            try (final ETComClient comClient = new ETComClient()) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                 final List<FilePath> uploadFiles = getReportFiles();
                 if (uploadFiles.isEmpty()) {
@@ -355,15 +356,19 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                         if (errorFile.exists()) {
                             isUploaded = false;
                             logger.logError("Error during uploading ATX report:");
-                            final JSONObject jsonObject = (JSONObject) new JsonSlurper().parse(errorFile);
-                            final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
-                            if (jsonArray != null) {
-                                for (int i = 0; i < jsonArray.size(); i++) {
-                                    final String file = jsonArray.getJSONObject(i).getString("FILE");
-                                    final String status = jsonArray.getJSONObject(i).getString("STATUS");
-                                    final String text = jsonArray.getJSONObject(i).getString("TEXT");
-                                    logger.logError(String.format("%s: %s - %s", status, file, text));
+                            try {
+                                final JSONObject jsonObject = (JSONObject) new JsonSlurper().parse(errorFile);
+                                final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
+                                if (jsonArray != null) {
+                                    for (int i = 0; i < jsonArray.size(); i++) {
+                                        final String file = jsonArray.getJSONObject(i).getString("FILE");
+                                        final String status = jsonArray.getJSONObject(i).getString("STATUS");
+                                        final String text = jsonArray.getJSONObject(i).getString("TEXT");
+                                        logger.logError(String.format("%s: %s - %s", status, file, text));
+                                    }
                                 }
+                            } catch (final JSONException e) {
+                                logger.logError("-> Could not parse JSON response: " + e.getMessage());
                             }
                             break;
                         }
