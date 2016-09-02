@@ -181,6 +181,22 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
+		<SETTING name="archivePlots" default="True" xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">True, wenn die erstellten Plots aus der
+							Trace-Analyse für die Anzeige in TEST-GUIDE archviert werden
+							sollen, sonst False</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">True, if you want archive trace analysis
+							plots to show in TEST-GUIDE, otherwise False.</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
 		<SETTING name="archiveMiscFiles" default="" xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
@@ -232,6 +248,24 @@
 					<ELEMENT dkey="en_US">
 						<DVALUE xsi:type="unicode">Map the package property 'Testcase' to ATX
 							attribut 'isTestCase'?</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
+		<SETTING name="mapTestCaseVersionAsAttribute" default="True"
+			xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">True, wenn die Packageeigenschaft
+							'Version' als ATX-Attribut 'TestCaseVersion' erfasst werden soll,
+							sonst False.</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">True if the package property 'version'
+							should be
+							mapped as attribute 'TestCaseVersion', otherwise False.</DVALUE>
 					</ELEMENT>
 				</MULTILANGDATA>
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
@@ -434,6 +468,27 @@
 					<ELEMENT dkey="en_US">
 						<DVALUE xsi:type="unicode">Defines the results of the sub packages on
 							which the test steps have to be recorded. Example: FAILED; ERROR
+						</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
+		<SETTING name="mapSeparateProjectExecutionAsSingleTestplan"
+			default="False" xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">True, wenn bei der separaten
+							Unterprojektausführung diese Projekte als eigener Testplan
+							gelistet werden sollen, sonst False.
+						</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">True, if you want to map separate project
+							execution reports as own testplan,
+							otherwise
+							False.
 						</DVALUE>
 					</ELEMENT>
 				</MULTILANGDATA>
