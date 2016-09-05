@@ -124,8 +124,10 @@ public class TSClient extends AbstractToolClient {
             }
         }
 
-        // Launch Tool-Server process
-        if (launchProcess(launcher, listener)) {
+        // Check Tool-Server location and launch process
+        if (StringUtils.isEmpty(getInstallPath())) {
+            logger.logError("Tool-Server executable could not be found!");
+        } else if (launchProcess(launcher, listener)) {
             logger.logInfo("Tool-Server started successfully.");
             return true;
         }

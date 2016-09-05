@@ -79,7 +79,7 @@ public class ETInstallation extends AbstractToolInstallation {
     /**
      * Executable file name of Tool-Server.
      */
-    private static final String TS_EXECUTABLE = "ToolServer/Tool-Server.exe";
+    private static final String TS_EXECUTABLE = "Tool-Server.exe";
 
     private transient String installationPath;
 
@@ -141,14 +141,18 @@ public class ETInstallation extends AbstractToolInstallation {
      *
      * @param home
      *            the home directory of the tool
+     * @param subDir
+     *            the sub directory relative to home directory
      * @return the Tool-Server executable file
      */
-    protected File getTSExeFile(final File home) {
-        return DescriptorImpl.getTSExeFile(home);
+    protected File getTSExeFile(final File home, final String subDir) {
+        return DescriptorImpl.getTSExeFile(home, subDir);
     }
 
     /**
      * Gets the executable path of the Tool-Server on the given target system.
+     * According to ECU-TEST 6.5 and above the Tool-Server executable is directly
+     * located in ECU-TEST installation path, otherwise in sub directory 'ToolServer'.
      *
      * @param launcher
      *            the launcher
@@ -165,7 +169,10 @@ public class ETInstallation extends AbstractToolInstallation {
 
             @Override
             public String call() throws IOException {
-                final File exe = getTSExeFile();
+                File exe = getTSExeFile("");
+                if (exe == null || !exe.exists()) {
+                    exe = getTSExeFile("ToolServer");
+                }
                 return exe != null && exe.exists() ? exe.getPath() : null;
             }
         });
@@ -174,13 +181,15 @@ public class ETInstallation extends AbstractToolInstallation {
     /**
      * Gets the expanded Tool-Server executable file path.
      *
+     * @param subDir
+     *            the sub directory relative to home directory
      * @return the Tool-Server executable file path or {@code null} if home directory is not set
      */
     @CheckForNull
-    private File getTSExeFile() {
+    private File getTSExeFile(final String subDir) {
         if (getHome() != null) {
             final String home = Util.replaceMacro(getHome(), EnvVars.masterEnvVars);
-            return getTSExeFile(new File(home));
+            return getTSExeFile(new File(home), subDir);
         }
         return null;
     }
@@ -273,12 +282,14 @@ public class ETInstallation extends AbstractToolInstallation {
          *
          * @param home
          *            the home directory of ECU-TEST
+         * @param subDir
+         *            the sub directory relative to home directory
          * @return the executable file or {@code null} if Unix-based system
          */
         @CheckForNull
-        private static File getTSExeFile(final File home) {
-            if (Functions.isWindows() && home != null) {
-                return new File(home, TS_EXECUTABLE);
+        private static File getTSExeFile(final File home, final String subDir) {
+            if (Functions.isWindows() && home != null && subDir != null) {
+                return new File(new File(home, subDir), TS_EXECUTABLE);
             }
             return null;
         }

@@ -147,8 +147,11 @@ public class ETClient extends AbstractToolClient {
             }
         }
 
-        // Launch ECU-TEST process
-        if (!launchProcess(launcher, listener)) {
+        // Check ECU-TEST location and launch process
+        if (StringUtils.isEmpty(getInstallPath())) {
+            logger.logError("ECU-TEST executable could not be found!");
+            return false;
+        } else if (!launchProcess(launcher, listener)) {
             return false;
         }
 
@@ -171,7 +174,7 @@ public class ETClient extends AbstractToolClient {
             logger.logWarn(String.format(
                     "The configured ECU-TEST version %s might be incompatible with this plugin. "
                             + "Currently supported versions: %s up to %s", comVersion,
-                            ETPlugin.ET_MIN_VERSION.toShortString(), ETPlugin.ET_MAX_VERSION.toShortString()));
+                    ETPlugin.ET_MIN_VERSION.toShortString(), ETPlugin.ET_MAX_VERSION.toShortString()));
         } else if (comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
             logger.logError(String.format(
                     "The configured ECU-TEST version %s is not compatible with this plugin. "
