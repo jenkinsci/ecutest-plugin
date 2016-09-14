@@ -34,16 +34,16 @@ import hudson.Extension;
 import hudson.Functions;
 import hudson.Launcher;
 import hudson.Util;
+import hudson.init.InitMilestone;
+import hudson.init.Initializer;
 import hudson.model.TaskListener;
 import hudson.model.Node;
-import hudson.tools.ToolInstaller;
 import hudson.tools.ToolProperty;
 import hudson.tools.ToolDescriptor;
 import hudson.util.FormValidation;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.CheckForNull;
@@ -55,12 +55,7 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
-import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
-import de.tracetronic.jenkins.plugins.ecutest.tool.StopETBuilder;
-import de.tracetronic.jenkins.plugins.ecutest.tool.StopTSBuilder;
 
 /**
  * Represents a ECU-TEST installation specified by name and home directory.
@@ -200,6 +195,16 @@ public class ETInstallation extends AbstractToolInstallation {
     @Extension(ordinal = 1001)
     public static class DescriptorImpl extends ToolDescriptor<ETInstallation> {
 
+        private volatile ETInstallation[] installations = new ETInstallation[0];
+
+        /**
+         * Instantiates a new {@link DescriptorImpl}.
+         */
+        public DescriptorImpl() {
+            super();
+            load();
+        }
+
         @Override
         public String getDisplayName() {
             return "ECU-TEST";
@@ -207,43 +212,35 @@ public class ETInstallation extends AbstractToolInstallation {
 
         @Override
         public ETInstallation[] getInstallations() {
-            final Jenkins instance = Jenkins.getInstance();
-            if (instance != null) {
-                // Take available installations from one of the tool descriptors
-                final ETInstallation[] startInstallations = instance.getDescriptorByType(
-                        StartETBuilder.DescriptorImpl.class).getInstallations();
-                return startInstallations;
-            }
-            return new ETInstallation[0];
+            return installations;
         }
 
         @Override
         public void setInstallations(final ETInstallation... installations) {
-            final Jenkins instance = Jenkins.getInstance();
-            if (instance != null) {
-                // Set installations to all descriptors
-                instance.getDescriptorByType(StartETBuilder.DescriptorImpl.class).setInstallations(installations);
-                instance.getDescriptorByType(StopETBuilder.DescriptorImpl.class).setInstallations(installations);
-                instance.getDescriptorByType(StartTSBuilder.DescriptorImpl.class).setInstallations(installations);
-                instance.getDescriptorByType(StopTSBuilder.DescriptorImpl.class).setInstallations(installations);
-                instance.getDescriptorByType(JUnitPublisher.DescriptorImpl.class).setInstallations(installations);
-                instance.getDescriptorByType(ReportGeneratorPublisher.DescriptorImpl.class).setInstallations(
-                        installations);
+            this.installations = installations;
+            save();
+        }
+
+        /**
+         * Gets the ECU-TEST installation specified by name.
+         *
+         * @param name
+         *            the installation name
+         * @return the installation or {@code null} if not found
+         */
+        @CheckForNull
+        public ETInstallation getInstallation(final String name) {
+            for (final ETInstallation installation : getInstallations()) {
+                if (installation.getName().equals(name)) {
+                    return installation;
+                }
             }
-        }
-
-        @Override
-        public List<? extends ToolInstaller> getDefaultInstallers() {
-            return Collections.emptyList();
-        }
-
-        @Override
-        public FormValidation doCheckName(@QueryParameter final String value) {
-            return FormValidation.validateRequired(value);
+            return null;
         }
 
         @Override
         public FormValidation doCheckHome(@QueryParameter final File value) {
+            Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
             FormValidation returnValue = FormValidation.ok();
             if (!Functions.isWindows()) {
                 returnValue = FormValidation.warning(Messages.ET_IsUnixSystem());
@@ -292,6 +289,29 @@ public class ETInstallation extends AbstractToolInstallation {
                 return new File(new File(home, subDir), TS_EXECUTABLE);
             }
             return null;
+        }
+
+        /**
+         * Moves the configured installations from {@link StartETBuilder} to this descriptor
+         * in order to retain backward compatibility.
+         *
+         * Old configuration files of all builder and publisher classes storing the installations previously
+         * will be removed automatically on next Jenkins startup.
+         *
+         * @since 1.12
+         */
+        @Initializer(before = InitMilestone.PLUGINS_STARTED)
+        public static void retainBackwardCompatibility() {
+            final Jenkins instance = Jenkins.getInstance();
+            if (instance != null) {
+                final StartETBuilder.DescriptorImpl oldDescriptor = instance
+                        .getDescriptorByType(StartETBuilder.DescriptorImpl.class);
+                final ETInstallation.DescriptorImpl newDescriptor = instance
+                        .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+                if (oldDescriptor.getInstallations().length > 0) {
+                    newDescriptor.setInstallations(oldDescriptor.getInstallations());
+                }
+            }
         }
     }
 }

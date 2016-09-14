@@ -49,7 +49,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.ToolValidator;
 public abstract class AbstractToolDescriptor extends BuildStepDescriptor<Builder> {
 
     @CopyOnWrite
-    private volatile ETInstallation[] installations = new ETInstallation[0];
+    private transient ETInstallation[] installations = new ETInstallation[0];
 
     /**
      * Validator to check form fields.
@@ -64,14 +64,9 @@ public abstract class AbstractToolDescriptor extends BuildStepDescriptor<Builder
      */
     public AbstractToolDescriptor(final Class<? extends AbstractToolBuilder> clazz) {
         super(clazz);
+        load();
+        getConfigFile().delete(); // FIXME: backward compatibility
         toolValidator = new ToolValidator();
-    }
-
-    /**
-     * @return the tool descriptor
-     */
-    public ETInstallation.DescriptorImpl getToolDescriptor() {
-        return ToolInstallation.all().get(ETInstallation.DescriptorImpl.class);
     }
 
     /**
@@ -82,14 +77,10 @@ public abstract class AbstractToolDescriptor extends BuildStepDescriptor<Builder
     }
 
     /**
-     * Sets the installations.
-     *
-     * @param installations
-     *            the new installations
+     * @return the tool descriptor
      */
-    public void setInstallations(final ETInstallation... installations) {
-        this.installations = installations;
-        save();
+    public ETInstallation.DescriptorImpl getToolDescriptor() {
+        return ToolInstallation.all().get(ETInstallation.DescriptorImpl.class);
     }
 
     @SuppressWarnings("rawtypes")

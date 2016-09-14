@@ -52,6 +52,8 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import jenkins.model.Jenkins;
+
 import org.apache.commons.lang.StringUtils;
 
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.Messages;
@@ -65,6 +67,16 @@ import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXValidator extends AbstractValidator {
+
+    /**
+     * Instantiates a new {@link ATXValidator}.
+     * ATX settings needs permission check.
+     *
+     */
+    public ATXValidator() {
+        super();
+        Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
+    }
 
     /**
      * Validates the TEST-GUIDE name.

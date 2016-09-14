@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 
-import hudson.CopyOnWrite;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
@@ -228,7 +227,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     @CheckForNull
     public AbstractToolInstallation getToolInstallation(final EnvVars envVars) {
         final String expToolName = envVars.expand(toolName);
-        for (final AbstractToolInstallation installation : getDescriptor().getInstallations()) {
+        for (final AbstractToolInstallation installation : getDescriptor().getToolDescriptor().getInstallations()) {
             if (StringUtils.equals(expToolName, installation.getName())) {
                 return installation;
             }
@@ -421,15 +420,12 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     @Extension(ordinal = 1001)
     public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
-        @CopyOnWrite
-        private ETInstallation[] installations = new ETInstallation[0];
-
         /**
          * Instantiates a new {@link DescriptorImpl}.
          */
         public DescriptorImpl() {
             super();
-            load();
+            getConfigFile().delete(); // FIXME: backward compatibility only
         }
 
         /**
@@ -439,24 +435,6 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
          */
         public ETInstallation.DescriptorImpl getToolDescriptor() {
             return ToolInstallation.all().get(ETInstallation.DescriptorImpl.class);
-        }
-
-        /**
-         * @return the list of ECU-TEST installations
-         */
-        public ETInstallation[] getInstallations() {
-            return installations.clone();
-        }
-
-        /**
-         * Sets the installations.
-         *
-         * @param installations
-         *            the new installations
-         */
-        public void setInstallations(final ETInstallation... installations) {
-            this.installations = installations;
-            save();
         }
 
         @SuppressWarnings("rawtypes")

@@ -117,7 +117,6 @@ public class StopTSBuilder extends AbstractToolBuilder {
          */
         public DescriptorImpl() {
             super(StopTSBuilder.class);
-            load();
         }
 
         @Override

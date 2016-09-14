@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 
-import hudson.CopyOnWrite;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
@@ -207,7 +206,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     @CheckForNull
     public AbstractToolInstallation getToolInstallation(final EnvVars envVars) {
         final String expToolName = envVars.expand(toolName);
-        for (final AbstractToolInstallation installation : getDescriptor().getInstallations()) {
+        for (final AbstractToolInstallation installation : getDescriptor().getToolDescriptor().getInstallations()) {
             if (StringUtils.equals(expToolName, installation.getName())) {
                 return installation;
             }
@@ -379,9 +378,6 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     @Extension(ordinal = 1002)
     public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
-        @CopyOnWrite
-        private ETInstallation[] installations = new ETInstallation[0];
-
         private final JUnitValidator unitValidator;
 
         /**
@@ -389,7 +385,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
          */
         public DescriptorImpl() {
             super();
-            load();
+            getConfigFile().delete(); // FIXME: backward compatibility
             unitValidator = new JUnitValidator();
         }
 
@@ -400,24 +396,6 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
          */
         public ETInstallation.DescriptorImpl getToolDescriptor() {
             return ToolInstallation.all().get(ETInstallation.DescriptorImpl.class);
-        }
-
-        /**
-         * @return the list of ECU-TEST installations
-         */
-        public ETInstallation[] getInstallations() {
-            return installations.clone();
-        }
-
-        /**
-         * Sets the installations.
-         *
-         * @param installations
-         *            the new installations
-         */
-        public void setInstallations(final ETInstallation... installations) {
-            this.installations = installations;
-            save();
         }
 
         @SuppressWarnings("rawtypes")

@@ -199,7 +199,6 @@ public class StartTSBuilder extends AbstractToolBuilder {
          */
         public DescriptorImpl() {
             super(StartTSBuilder.class);
-            load();
         }
 
         @Override

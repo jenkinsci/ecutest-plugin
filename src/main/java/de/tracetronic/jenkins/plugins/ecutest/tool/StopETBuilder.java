@@ -122,7 +122,6 @@ public class StopETBuilder extends AbstractToolBuilder {
          */
         public DescriptorImpl() {
             super(StopETBuilder.class);
-            load();
         }
 
         @Override

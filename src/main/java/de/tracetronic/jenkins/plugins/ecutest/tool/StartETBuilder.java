@@ -286,7 +286,6 @@ public class StartETBuilder extends AbstractToolBuilder {
          */
         public DescriptorImpl() {
             super(StartETBuilder.class);
-            load();
         }
 
         @Override
