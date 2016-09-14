@@ -183,7 +183,7 @@ public class TSClient extends AbstractToolClient {
      *             if the current thread is interrupted while waiting for the completion
      */
     public static List<String> checkProcesses(final Launcher launcher, final boolean kill) throws IOException,
-    InterruptedException {
+            InterruptedException {
         return launcher.getChannel().call(new CheckProcessCallable(kill));
     }
 
@@ -235,7 +235,7 @@ public class TSClient extends AbstractToolClient {
                         logger.logError(String.format("-> Timeout of %d seconds reached!", timeout));
                     }
                 }
-            } catch (final IOException | InterruptedException e) {
+            } catch (final InterruptedException e) {
                 logger.logError(e.getMessage());
             }
             return isTerminated;

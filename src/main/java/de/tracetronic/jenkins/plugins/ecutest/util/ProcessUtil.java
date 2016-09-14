@@ -31,15 +31,15 @@ package de.tracetronic.jenkins.plugins.ecutest.util;
 
 import hudson.Launcher;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.commons.lang.StringUtils;
+import org.jvnet.winp.WinProcess;
+import org.jvnet.winp.WinpException;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 
@@ -49,8 +49,6 @@ import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public final class ProcessUtil {
-
-    private static final Logger LOGGER = Logger.getLogger(DllUtil.class.getName());
 
     /**
      * Defines ECU-TEST related process names.
@@ -75,10 +73,8 @@ public final class ProcessUtil {
      * @param kill
      *            specifies whether to task-kill the running processes
      * @return the list of found or killed processes
-     * @throws IOException
-     *             signals that an I/O exception has occurred
      */
-    public static List<String> checkETProcesses(final boolean kill) throws IOException {
+    public static List<String> checkETProcesses(final boolean kill) {
         return checkProcesses(ET_PROCS, kill);
     }
 
@@ -88,10 +84,8 @@ public final class ProcessUtil {
      * @param kill
      *            specifies whether to task-kill the running processes
      * @return the list of found or killed processes
-     * @throws IOException
-     *             signals that an I/O exception has occurred
      */
-    public static List<String> checkTSProcess(final boolean kill) throws IOException {
+    public static List<String> checkTSProcess(final boolean kill) {
         return checkProcesses(TS_PROCS, kill);
     }
 
@@ -105,54 +99,39 @@ public final class ProcessUtil {
      * @return the list of found or killed processes
      * @throws IOException
      *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
      */
-    private static List<String> checkProcesses(final List<String> processes, final boolean kill) throws IOException {
+    private static List<String> checkProcesses(final List<String> processes, final boolean kill) {
         final List<String> found = new ArrayList<String>();
-        for (final String process : processes) {
-            BufferedReader reader = null;
+        WinProcess.enableDebugPrivilege();
+        final Iterator<WinProcess> openProcesses = WinProcess.all().iterator();
+        while (openProcesses.hasNext()) {
             try {
-                final String cmd = String.format(System.getenv("windir")
-                        + "\\system32\\tasklist.exe /fi \"IMAGENAME eq %s\" /fo table /nh", process);
-                final Process p = Runtime.getRuntime().exec(cmd);
-                if (p.waitFor() == 0) {
-                    reader = new BufferedReader(new InputStreamReader(p.getInputStream(), Charset.forName("UTF-8")));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        if (line.startsWith(process)) {
-                            found.add(process);
-                            if (kill) {
-                                killProcess(process);
-                            }
+                final WinProcess openProcess = openProcesses.next();
+                final String cmdLine = openProcess.getCommandLine();
+                for (final String process : processes) {
+                    if (StringUtils.containsIgnoreCase(cmdLine, process)) {
+                        found.add(process);
+                        if (kill) {
+                            killProcess(openProcess);
                         }
                     }
                 }
-            } catch (final IOException | InterruptedException e) {
-                LOGGER.log(Level.SEVERE, e.getMessage());
-                throw new IOException(e);
-            } finally {
-                if (reader != null) {
-                    reader.close();
-                }
+            } catch (final WinpException e) {
+                // Skip system pseudo-processes with insufficient security privileges
+                continue;
             }
         }
         return found;
     }
 
     /**
-     * Kills a specific process.
+     * Kills this process and all the descendant processes that this process launched.
      *
      * @param process
-     *            the process name
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     *            the process to kill
      */
-    private static void killProcess(final String process) throws IOException, InterruptedException {
-        final String cmd = String.format(System.getenv("windir") + "\\system32\\taskkill.exe /f /im %s", process);
-        Runtime.getRuntime().exec(cmd).waitFor();
+    private static void killProcess(final WinProcess process) {
+        process.killRecursively();
     }
 
     /**
