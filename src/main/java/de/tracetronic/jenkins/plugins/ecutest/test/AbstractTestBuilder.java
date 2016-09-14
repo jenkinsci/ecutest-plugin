@@ -39,6 +39,7 @@ import hudson.model.Run;
 import hudson.remoting.Callable;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Builder;
+import hudson.util.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -248,8 +249,7 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
 
         // Get test file path
         final String expPkgDir;
-        final File testFile = new File(expTestFile);
-        if (testFile.isAbsolute()) {
+        if (IOUtils.isAbsolute(expTestFile)) {
             expPkgDir = null;
         } else {
             // Determine packages directory by COM API
@@ -270,16 +270,16 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
         // Get test configuration file paths
         String expTbcConfigDir = null;
         String expTcfConfigDir = null;
-        final File tbcFile = new File(expTestConfig.getTbcFile());
-        final File tcfFile = new File(expTestConfig.getTcfFile());
-        if (!tbcFile.isAbsolute() || !tcfFile.isAbsolute()) {
+        final String tbcFile = expTestConfig.getTbcFile();
+        final String tcfFile = expTestConfig.getTcfFile();
+        if (!IOUtils.isAbsolute(tbcFile) || !IOUtils.isAbsolute(tcfFile)) {
             // Determine configuration directory by COM API
             final String configDir = getConfigDir(launcher, listener);
 
             // Absolutize configuration directory, if not absolute assume relative to ECU-TEST workspace
             final String expConfigDir = PathUtil.makeAbsolutePath(configDir, workspace);
-            expTbcConfigDir = tbcFile.isAbsolute() ? null : expConfigDir;
-            expTcfConfigDir = tcfFile.isAbsolute() ? null : expConfigDir;
+            expTbcConfigDir = IOUtils.isAbsolute(tbcFile) ? null : expConfigDir;
+            expTcfConfigDir = IOUtils.isAbsolute(tcfFile) ? null : expConfigDir;
         }
 
         // Configure test bench configuration file
@@ -328,7 +328,7 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
      */
     protected abstract boolean runTest(String testFile, TestConfig testConfig, ExecutionConfig executionConfig,
             Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
-                    throws IOException, InterruptedException;
+            throws IOException, InterruptedException;
 
     /**
      * Checks already opened ECU-TEST instances.
@@ -344,7 +344,7 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean checkETInstance(final Launcher launcher, final boolean kill) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }
@@ -364,7 +364,7 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean closeETInstance(final Launcher launcher, final TaskListener listener) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
         if (foundProcesses.isEmpty()) {
             return false;
@@ -386,7 +386,7 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean checkTSInstance(final Launcher launcher, final boolean kill) throws IOException,
-    InterruptedException {
+            InterruptedException {
         final List<String> foundProcesses = TSClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }

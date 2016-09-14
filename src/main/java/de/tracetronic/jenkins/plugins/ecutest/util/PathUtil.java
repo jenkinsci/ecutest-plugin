@@ -30,8 +30,8 @@
 package de.tracetronic.jenkins.plugins.ecutest.util;
 
 import hudson.FilePath;
+import hudson.util.IOUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,8 +62,7 @@ public final class PathUtil {
      * @return the absolute path
      */
     public static String makeAbsolutePath(final String path, final FilePath relativeTo) {
-        final File wsFile = new File(path);
-        if (!wsFile.isAbsolute()) {
+        if (!IOUtils.isAbsolute(path)) {
             final FilePath wsDir = new FilePath(relativeTo, path);
             return wsDir.getRemote();
         }
@@ -84,7 +83,7 @@ public final class PathUtil {
      *             if the current thread is interrupted while waiting for the completion
      */
     public static boolean copyRemoteFile(final FilePath src, final FilePath dest) throws IOException,
-            InterruptedException {
+    InterruptedException {
         if (dest != null && !dest.exists()) {
             if (src != null && src.exists()) {
                 try {
