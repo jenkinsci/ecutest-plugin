@@ -80,6 +80,6 @@ public class ETToolPropertyST extends SystemTestBase {
         final ETToolProperty.DescriptorImpl toolDescriptor = jenkins.jenkins
                 .getDescriptorByType(ETToolProperty.DescriptorImpl.class);
         final FormValidation validation = toolDescriptor.doCheckProgramId("invalid");
-        assertEquals("Error if invalid ProgID", FormValidation.Kind.OK, validation.kind);
+        assertEquals("Error if invalid ProgID", FormValidation.Kind.ERROR, validation.kind);
     }
 }
