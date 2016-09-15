@@ -425,7 +425,6 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
          */
         public DescriptorImpl() {
             super();
-            getConfigFile().delete(); // FIXME: backward compatibility only
         }
 
         /**

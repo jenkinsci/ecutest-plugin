@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool;
 
-import hudson.CopyOnWrite;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
@@ -48,9 +47,6 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.ToolValidator;
  */
 public abstract class AbstractToolDescriptor extends BuildStepDescriptor<Builder> {
 
-    @CopyOnWrite
-    private transient ETInstallation[] installations = new ETInstallation[0];
-
     /**
      * Validator to check form fields.
      */
@@ -64,8 +60,6 @@ public abstract class AbstractToolDescriptor extends BuildStepDescriptor<Builder
      */
     public AbstractToolDescriptor(final Class<? extends AbstractToolBuilder> clazz) {
         super(clazz);
-        load();
-        getConfigFile().delete(); // FIXME: backward compatibility
         toolValidator = new ToolValidator();
     }
 
@@ -73,7 +67,7 @@ public abstract class AbstractToolDescriptor extends BuildStepDescriptor<Builder
      * @return the installations
      */
     public ETInstallation[] getInstallations() {
-        return installations.clone();
+        return getToolDescriptor().getInstallations();
     }
 
     /**

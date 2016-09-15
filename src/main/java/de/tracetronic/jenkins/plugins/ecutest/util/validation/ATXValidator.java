@@ -52,8 +52,6 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import jenkins.model.Jenkins;
-
 import org.apache.commons.lang.StringUtils;
 
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.Messages;
@@ -75,7 +73,6 @@ public class ATXValidator extends AbstractValidator {
      */
     public ATXValidator() {
         super();
-        Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
     }
 
     /**

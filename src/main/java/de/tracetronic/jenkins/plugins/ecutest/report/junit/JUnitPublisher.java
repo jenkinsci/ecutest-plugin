@@ -385,7 +385,6 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
          */
         public DescriptorImpl() {
             super();
-            getConfigFile().delete(); // FIXME: backward compatibility
             unitValidator = new JUnitValidator();
         }
 

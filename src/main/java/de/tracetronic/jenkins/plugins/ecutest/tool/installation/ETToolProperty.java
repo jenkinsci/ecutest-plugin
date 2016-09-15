@@ -99,7 +99,7 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
         /**
          * @return the default COM specific program identifier
          */
-        public String getDefaultProgramId() {
+        public static String getDefaultProgramId() {
             return ETComClient.DEFAULT_PROG_ID;
         }
 
