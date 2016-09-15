@@ -58,9 +58,9 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 public class TRFPublisher extends AbstractReportPublisher {
 
     /**
-     * File name of the TRF file.
+     * File name extension of TRF files.
      */
-    public static final String TRF_FILE_NAME = "report.trf";
+    public static final String TRF_EXTENSION = ".trf";
 
     /**
      * The URL name to {@link TRFReport}s holding by {@link AbstractTRFAction}.
@@ -146,11 +146,12 @@ public class TRFPublisher extends AbstractReportPublisher {
             for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
                 final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
                 final FilePath archiveTargetDir = archiveTarget.child(testReportDir.getName());
-                final FilePath reportFile = testReportDir.child(TRF_FILE_NAME);
+                final FilePath reportFile = getFirstReportFile(testReportDir);
                 if (reportFile.exists()) {
                     try {
                         logger.logInfo(String.format("- Archiving TRF report: %s", reportFile));
-                        final int copiedFiles = testReportDir.copyRecursiveTo("**/" + TRF_FILE_NAME, archiveTargetDir);
+                        final int copiedFiles = testReportDir.copyRecursiveTo("**/*" + TRF_EXTENSION,
+                                archiveTargetDir);
                         if (copiedFiles == 0) {
                             continue;
                         } else if (copiedFiles > 1) {
@@ -204,7 +205,7 @@ public class TRFPublisher extends AbstractReportPublisher {
      */
     private int traverseReports(final List<TRFReport> trfReports, final FilePath archiveTargetDir, int id)
             throws IOException, InterruptedException {
-        final FilePath trfFile = archiveTargetDir.child(TRF_FILE_NAME);
+        final FilePath trfFile = getFirstReportFile(archiveTargetDir); // TODO: trf name
         final String relFilePath = archiveTargetDir.getParent().toURI().relativize(trfFile.toURI()).getPath();
         final TRFReport trfReport = new TRFReport(String.format("%d", ++id),
                 trfFile.getParent().getName(), relFilePath, trfFile.length());
@@ -234,10 +235,9 @@ public class TRFPublisher extends AbstractReportPublisher {
      *             if the build gets interrupted
      */
     private int traverseSubReports(final TRFReport trfReport, final FilePath testReportDir,
-            final FilePath subTestReportDir, int id)
-                    throws IOException, InterruptedException {
+            final FilePath subTestReportDir, int id) throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
-            final FilePath reportFile = subDir.child(TRF_FILE_NAME);
+            final FilePath reportFile = getFirstReportFile(subDir); // TODO: trf name
             if (reportFile.exists()) {
                 final String relFilePath = testReportDir.toURI().relativize(reportFile.toURI()).getPath();
                 final TRFReport subReport = new TRFReport(String.format("%d", ++id), reportFile.getParent()

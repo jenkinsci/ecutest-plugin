@@ -51,6 +51,7 @@ import net.sf.json.groovy.JsonSlurper;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction.TestType;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
@@ -101,9 +102,9 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-            final FilePath reportFile = testReportDir.child(TRFPublisher.TRF_FILE_NAME);
+            final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(testReportDir); // TODO: trf name
             if (reportFile.exists()) {
-                uploadFiles.addAll(Arrays.asList(testReportDir.list("**/" + TRFPublisher.TRF_FILE_NAME)));
+                uploadFiles.addAll(Arrays.asList(testReportDir.list("**/*" + TRFPublisher.TRF_EXTENSION)));
 
                 // Prepare ATX report information
                 final String baseUrl = ATXUtil.getBaseUrl(installation.getConfig(), run.getEnvironment(listener));
@@ -174,7 +175,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     private int traverseReports(final List<ATXReport> atxReports, final FilePath testReportDir, int id,
             final String title, final String baseUrl, final String from, final String to, final String testName,
             final TestType testType)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         // Prepare ATX report information
         String reportUrl = null;
         String trendReportUrl = null;
@@ -221,9 +222,9 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      */
     private int traverseSubReports(final ATXReport atxReport, final FilePath testReportDir, int id,
             final String baseUrl, final String from, final String to)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         for (final FilePath subDir : testReportDir.listDirectories()) {
-            final FilePath reportFile = subDir.child(TRFPublisher.TRF_FILE_NAME);
+            final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(subDir); // TODO: trf name
             if (reportFile.exists()) {
                 // Prepare ATX report information for sub-report
                 final String testName = reportFile.getParent().getName().replaceFirst("^Report\\s", "");

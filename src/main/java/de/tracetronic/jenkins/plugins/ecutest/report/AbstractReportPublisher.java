@@ -421,11 +421,27 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
             if (testReportDir.exists()) {
-                reportFiles.addAll(Arrays.asList(testReportDir.list("**/" + TRFPublisher.TRF_FILE_NAME)));
+                reportFiles.addAll(Arrays.asList(testReportDir.list("**/*" + TRFPublisher.TRF_EXTENSION)));
             }
         }
         Collections.reverse(reportFiles);
         return reportFiles;
+    }
+
+    /**
+     * Gets the first TRF file found in given report directory.
+     *
+     * @param reportDir
+     *            the report directory
+     * @return the first report file or {@code null} if not found
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the build gets interrupted
+     */
+    public static FilePath getFirstReportFile(final FilePath reportDir) throws IOException, InterruptedException {
+        final FilePath[] files = reportDir.list("*" + TRFPublisher.TRF_EXTENSION);
+        return files.length > 0 ? files[0] : null;
     }
 
     /**
