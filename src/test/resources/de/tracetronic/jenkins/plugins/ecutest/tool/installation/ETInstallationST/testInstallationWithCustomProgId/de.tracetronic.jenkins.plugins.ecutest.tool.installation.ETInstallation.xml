@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation_-DescriptorImpl plugin="ecutest@1.12">
+  <installations>
+    <de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation>
+      <name>ECU-TEST</name>
+      <home>C:\ECU-TEST</home>
+      <properties>
+        <de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETToolProperty>
+          <programId>ECU-TEST6.Application</programId>
+        </de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETToolProperty>
+      </properties>
+    </de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation>
+  </installations>
+</de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation_-DescriptorImpl>

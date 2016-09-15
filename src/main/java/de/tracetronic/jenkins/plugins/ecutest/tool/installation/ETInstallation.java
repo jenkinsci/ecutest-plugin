@@ -273,7 +273,7 @@ public class ETInstallation extends AbstractToolInstallation {
 
         @Override
         public ETInstallation[] getInstallations() {
-            return installations;
+            return installations.clone();
         }
 
         @Override

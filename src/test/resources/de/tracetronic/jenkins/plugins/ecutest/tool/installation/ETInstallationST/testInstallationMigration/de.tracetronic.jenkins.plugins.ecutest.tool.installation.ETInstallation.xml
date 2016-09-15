@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder_-DescriptorImpl plugin="ecutest@1.0-SNAPSHOT">
+<de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder_-DescriptorImpl plugin="ecutest@1.11">
   <installations>
     <de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation>
       <name>ECU-TEST</name>

@@ -30,38 +30,31 @@
 package de.tracetronic.jenkins.plugins.ecutest.tool.installation;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import hudson.tools.ToolProperty;
-
-import java.util.Collections;
 
 import org.junit.Test;
 
 /**
- * Unit tests for {@link ETInstallation}.
+ * Unit tests for {@link ETToolProperty}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ETInstallationTest {
+public class ETToolPropertyTest {
 
     @Test
-    public void testInstallation() {
-        final ETInstallation inst = new ETInstallation("ECU-TEST", "C:\\ECU-TEST",
-                Collections.<ToolProperty<?>> emptyList());
-        assertNotNull(inst);
-        assertEquals("ECU-TEST", inst.getName());
-        assertEquals("C:\\ECU-TEST", inst.getHome());
-        assertEquals("ECU-TEST.Application", inst.getProgramId());
+    public void testBlankConstructor() {
+        final ETToolProperty property = new ETToolProperty("");
+        assertEquals(ETToolProperty.DescriptorImpl.getDefaultProgramId(), property.getProgramId());
     }
 
     @Test
-    public void testInstallationWithCustomProgId() {
-        final ETInstallation inst = new ETInstallation("ECU-TEST", "C:\\ECU-TEST",
-                Collections.singletonList(new ETToolProperty("ECU-TEST6.Application")));
-        assertNotNull(inst);
-        assertEquals("ECU-TEST", inst.getName());
-        assertEquals("C:\\ECU-TEST", inst.getHome());
-        assertEquals(1, inst.getProperties().size());
-        assertEquals("ECU-TEST6.Application", inst.getProgramId());
+    public void testNullConstructor() {
+        final ETToolProperty property = new ETToolProperty(null);
+        assertEquals(ETToolProperty.DescriptorImpl.getDefaultProgramId(), property.getProgramId());
+    }
+
+    @Test
+    public void testConstructor() {
+        final ETToolProperty property = new ETToolProperty("ECU-TEST6.Application");
+        assertEquals("ECU-TEST6.Application", property.getProgramId());
     }
 }
