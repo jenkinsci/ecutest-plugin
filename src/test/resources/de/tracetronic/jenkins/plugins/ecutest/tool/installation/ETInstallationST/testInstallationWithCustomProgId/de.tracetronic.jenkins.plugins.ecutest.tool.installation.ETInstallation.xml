@@ -6,7 +6,7 @@
       <home>C:\ECU-TEST</home>
       <properties>
         <de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETToolProperty>
-          <programId>ECU-TEST6.Application</programId>
+          <progId>ECU-TEST6.Application</progId>
         </de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETToolProperty>
       </properties>
     </de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation>
