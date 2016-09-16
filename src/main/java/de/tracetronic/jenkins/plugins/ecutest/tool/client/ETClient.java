@@ -51,6 +51,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
 
 /**
  * Client to start and stop ECU-TEST by either COM or XML-RPC communication.
@@ -307,7 +308,8 @@ public class ETClient extends AbstractToolClient {
         public String call() throws IOException {
             String version = "";
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            try (ETComClient comClient = new ETComClient(timeout)) {
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId, timeout)) {
                 if (comClient.isApplicationRunning()) {
                     version = comClient.getVersion();
                 }
@@ -349,7 +351,8 @@ public class ETClient extends AbstractToolClient {
         public Boolean call() throws IOException {
             boolean isTerminated = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            try (ETComClient comClient = new ETComClient(timeout)) {
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId, timeout)) {
                 if (comClient.isApplicationRunning()) {
                     isTerminated = comClient.quit() || comClient.exit();
                 } else {

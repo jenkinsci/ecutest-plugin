@@ -56,6 +56,7 @@ import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
 
 /**
  * Common base class for all tool related task builders implemented in this plugin.
@@ -208,6 +209,8 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
         } else {
             throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }
+        // Set the COM programmatic identifier for the current ECU-TEST instance
+        ETComProgId.getInstance().setProgId(installation.getProgramId());
         return installation;
     }
 

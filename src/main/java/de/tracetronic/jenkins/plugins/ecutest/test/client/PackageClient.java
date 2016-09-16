@@ -51,6 +51,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Package;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestExecutionInfo;
@@ -175,7 +176,8 @@ public class PackageClient extends AbstractTestClient {
             PackageInfoHolder pkgInfo = null;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Opening package...");
-            try (ETComClient comClient = new ETComClient();
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId);
                     Package pkg = (Package) comClient.openPackage(packageFile)) {
                 logger.logInfo("-> Package opened successfully.");
                 pkgInfo = new PackageInfoHolder(pkg.getName(), pkg.getDescription());
@@ -258,7 +260,8 @@ public class PackageClient extends AbstractTestClient {
             if (!paramMap.isEmpty()) {
                 logger.logInfo("-> With parameters: " + paramMap.toString());
             }
-            try (ETComClient comClient = new ETComClient();
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId);
                     TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                     TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.executePackage(packageFile,
                             runTraceAnalysis, runTest, paramMap)) {
@@ -336,7 +339,8 @@ public class PackageClient extends AbstractTestClient {
             boolean isClosed = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Closing package...");
-            try (ETComClient comClient = new ETComClient()) {
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId)) {
                 if (comClient.closePackage(packageFile)) {
                     isClosed = true;
                     logger.logInfo("-> Package closed successfully.");

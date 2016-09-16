@@ -65,6 +65,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.PathUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
 
 /**
  * Common base class for all test related task builders implemented in this plugin.
@@ -328,7 +329,7 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
      */
     protected abstract boolean runTest(String testFile, TestConfig testConfig, ExecutionConfig executionConfig,
             Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
-            throws IOException, InterruptedException;
+                    throws IOException, InterruptedException;
 
     /**
      * Checks already opened ECU-TEST instances.
@@ -344,7 +345,7 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean checkETInstance(final Launcher launcher, final boolean kill) throws IOException,
-            InterruptedException {
+    InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }
@@ -364,7 +365,7 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean closeETInstance(final Launcher launcher, final TaskListener listener) throws IOException,
-            InterruptedException {
+    InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
         if (foundProcesses.isEmpty()) {
             return false;
@@ -386,7 +387,7 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
      *             if the current thread is interrupted while waiting for the completion
      */
     private boolean checkTSInstance(final Launcher launcher, final boolean kill) throws IOException,
-            InterruptedException {
+    InterruptedException {
         final List<String> foundProcesses = TSClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }
@@ -541,7 +542,8 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
         @Override
         public String call() throws IOException {
             String settingValue;
-            try (ETComClient comClient = new ETComClient()) {
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId)) {
                 settingValue = comClient.getSetting(settingName);
                 if ("None".equals(settingValue)) {
                     throw new IOException("Setting is not defined: " + settingName);

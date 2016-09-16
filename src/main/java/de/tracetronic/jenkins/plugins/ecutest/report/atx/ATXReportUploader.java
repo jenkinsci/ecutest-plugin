@@ -58,6 +58,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 
 /**
@@ -174,8 +175,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      */
     private int traverseReports(final List<ATXReport> atxReports, final FilePath testReportDir, int id,
             final String title, final String baseUrl, final String from, final String to, final String testName,
-            final TestType testType)
-            throws IOException, InterruptedException {
+            final TestType testType) throws IOException, InterruptedException {
         // Prepare ATX report information
         String reportUrl = null;
         String trendReportUrl = null;
@@ -221,8 +221,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      *             if the build gets interrupted
      */
     private int traverseSubReports(final ATXReport atxReport, final FilePath testReportDir, int id,
-            final String baseUrl, final String from, final String to)
-            throws IOException, InterruptedException {
+            final String baseUrl, final String from, final String to) throws IOException, InterruptedException {
         for (final FilePath subDir : testReportDir.listDirectories()) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(subDir);
             if (reportFile != null && reportFile.exists()) {
@@ -338,7 +337,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             boolean isUploaded = true;
             final TTConsoleLogger logger = new TTConsoleLogger(getListener());
             final Map<String, String> configMap = getConfigMap(true);
-            try (final ETComClient comClient = new ETComClient()) {
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (final ETComClient comClient = new ETComClient(progId)) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                 final List<FilePath> uploadFiles = getReportFiles();
                 if (uploadFiles.isEmpty()) {

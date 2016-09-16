@@ -58,11 +58,6 @@ public class ETComClient implements ComApplication, AutoCloseable {
     private static final Logger LOGGER = Logger.getLogger(ETComClient.class.getName());
 
     /**
-     * Default COM specific programmatic identifier.
-     */
-    public static final String DEFAULT_PROG_ID = "ECU-TEST.Application";
-
-    /**
      * Default connection timeout in seconds.
      */
     private static final int DEFAULT_TIMOUT = 120;
@@ -80,21 +75,21 @@ public class ETComClient implements ComApplication, AutoCloseable {
      *             in case of a COM exception or if the timeout is reached
      */
     public ETComClient() throws ETComException {
-        initDispatch(DEFAULT_PROG_ID);
+        initDispatch(ETComProgId.DEFAULT_PROG_ID);
         waitForConnection(DEFAULT_TIMOUT);
     }
 
     /**
-     * Instantiates a new {@link ETComClient} by initializing the {@link ETComDispatch} with given program identifier
-     * and waits for connection within the default timeout.
+     * Instantiates a new {@link ETComClient} by initializing the {@link ETComDispatch} with given programmatic
+     * identifier and waits for connection within the default timeout.
      *
-     * @param programId
-     *            the program identifier
+     * @param progId
+     *            the programmatic identifier
      * @throws ETComException
      *             in case of a COM exception or if the timeout is reached
      */
-    public ETComClient(final String programId) throws ETComException {
-        initDispatch(programId);
+    public ETComClient(final String progId) throws ETComException {
+        initDispatch(progId);
         waitForConnection(DEFAULT_TIMOUT);
     }
 
@@ -108,23 +103,23 @@ public class ETComClient implements ComApplication, AutoCloseable {
      *             in case of a COM exception or if the timeout is reached
      */
     public ETComClient(final int timeout) throws ETComException {
-        initDispatch(DEFAULT_PROG_ID);
+        initDispatch(ETComProgId.DEFAULT_PROG_ID);
         waitForConnection(timeout);
     }
 
     /**
-     * Instantiates a new {@link ETComClient} by initializing the {@link ETComDispatch} with given program identifier
-     * and waits for connection within the given timeout.
+     * Instantiates a new {@link ETComClient} by initializing the {@link ETComDispatch} with given programmatic
+     * identifier and waits for connection within the given timeout.
      *
-     * @param programId
-     *            the program identifier
+     * @param progId
+     *            the programmatic identifier
      * @param timeout
      *            the timeout waiting for a connection
      * @throws ETComException
      *             in case of a COM exception or if the timeout is reached
      */
-    public ETComClient(final String programId, final int timeout) throws ETComException {
-        initDispatch(programId);
+    public ETComClient(final String progId, final int timeout) throws ETComException {
+        initDispatch(progId);
         waitForConnection(timeout);
     }
 
@@ -142,16 +137,16 @@ public class ETComClient implements ComApplication, AutoCloseable {
      * Initializes the a single-threaded {@link COMThread} and sets the {@link ETComDispatch} instance using the default
      * program id returned from the {@link ActiveXComponent}.
      *
-     * @param programId
-     *            the program identifier
+     * @param progId
+     *            the programmatic identifier
      * @throws ETComException
      *             in case of a COM exception
      */
-    private void initDispatch(final String programId) throws ETComException {
+    private void initDispatch(final String progId) throws ETComException {
         try {
             ComThread.InitSTA();
-            final ActiveXComponent component = new ActiveXComponent(StringUtils.isEmpty(programId) ? DEFAULT_PROG_ID
-                    : programId);
+            final ActiveXComponent component = new ActiveXComponent(StringUtils.isEmpty(progId) ?
+                    ETComProgId.DEFAULT_PROG_ID : progId);
             dispatch = new ETComDispatch(component.getObject());
         } catch (final JacobException e) {
             throw new ETComException(e.getMessage(), e);

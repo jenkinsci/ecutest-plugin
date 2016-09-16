@@ -52,6 +52,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Constant;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestConfiguration;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComConstants;
 
@@ -209,7 +210,8 @@ public abstract class AbstractTestClient implements TestClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             boolean isLoaded = false;
 
-            try (ETComClient comClient = new ETComClient()) {
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId)) {
                 final String tbcName = getConfigName(tbcFile);
                 final String tcfName = getConfigName(tcfFile);
                 logger.logInfo(String.format("- Loading configurations: TBC=%s TCF=%s", tbcName, tcfName));

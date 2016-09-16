@@ -188,17 +188,17 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
-     * Gets the program identifier from tool properties.
+     * Gets the programmatic identifier from tool properties.
      *
-     * @return the program id, default program id if tool property does not exist
+     * @return the progId, default progId if tool property does not exist
      */
     public String getProgramId() {
         String progId;
         final ETToolProperty toolProperty = getProperties().get(ETToolProperty.class);
         if (toolProperty != null) {
-            progId = toolProperty.getProgramId();
+            progId = toolProperty.getProgId();
         } else {
-            progId = ETToolProperty.DescriptorImpl.getDefaultProgramId();
+            progId = ETToolProperty.DescriptorImpl.getDefaultProgId();
         }
         return progId;
     }

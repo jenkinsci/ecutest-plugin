@@ -47,6 +47,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 
 /**
@@ -196,7 +197,8 @@ public class JUnitReportGenerator {
         public Boolean call() throws IOException {
             boolean isGenerated = true;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            try (ETComClient comClient = new ETComClient()) {
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId)) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                 for (final FilePath dbFile : dbFiles) {
                     logger.logInfo(String.format("-> Generating UNIT report: %s", dbFile.getRemote()));

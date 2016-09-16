@@ -45,7 +45,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
 
 /**
  * Contributes additional settings for the {@link ETInstallation}.
@@ -56,25 +56,27 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
 
     private static final long serialVersionUID = 1L;
 
-    private final String programId;
+    private final String progId;
 
     /**
      * Instantiates a new {@link ETToolProperty}.
      *
-     * @param programId
-     *            the program identifier
+     * @param progId
+     *            the programmatic identifier
      */
     @DataBoundConstructor
-    public ETToolProperty(final String programId) {
+    public ETToolProperty(final String progId) {
         super();
-        this.programId = StringUtils.defaultIfBlank(programId, String.valueOf(ETComClient.DEFAULT_PROG_ID));
+        this.progId = StringUtils.defaultIfBlank(progId, String.valueOf(ETComProgId.DEFAULT_PROG_ID));
     }
 
     /**
-     * @return the ECU-TEST COM specific program identifier
+     * Gets the ECU-TEST COM specific programmatic identifier.
+     *
+     * @return the progId
      */
-    public String getProgramId() {
-        return programId;
+    public String getProgId() {
+        return progId;
     }
 
     @Override
@@ -97,17 +99,17 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
         }
 
         /**
-         * @return the default COM specific program identifier
+         * @return the default COM specific programmatic identifier
          */
-        public static String getDefaultProgramId() {
-            return ETComClient.DEFAULT_PROG_ID;
+        public static String getDefaultProgId() {
+            return ETComProgId.DEFAULT_PROG_ID;
         }
 
         /**
-         * Validates the ECU-TEST specific program identifier.
+         * Validates the ECU-TEST specific programmatic identifier.
          *
          * @param value
-         *            the program identifier
+         *            the programmatic identifier
          * @return the form validation
          */
         public FormValidation doCheckProgramId(@QueryParameter final String value) {

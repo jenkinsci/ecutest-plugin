@@ -43,18 +43,18 @@ public class ETToolPropertyTest {
     @Test
     public void testBlankConstructor() {
         final ETToolProperty property = new ETToolProperty("");
-        assertEquals(ETToolProperty.DescriptorImpl.getDefaultProgramId(), property.getProgramId());
+        assertEquals(ETToolProperty.DescriptorImpl.getDefaultProgId(), property.getProgId());
     }
 
     @Test
     public void testNullConstructor() {
         final ETToolProperty property = new ETToolProperty(null);
-        assertEquals(ETToolProperty.DescriptorImpl.getDefaultProgramId(), property.getProgramId());
+        assertEquals(ETToolProperty.DescriptorImpl.getDefaultProgId(), property.getProgId());
     }
 
     @Test
     public void testConstructor() {
         final ETToolProperty property = new ETToolProperty("ECU-TEST6.Application");
-        assertEquals("ECU-TEST6.Application", property.getProgramId());
+        assertEquals("ECU-TEST6.Application", property.getProgId());
     }
 }

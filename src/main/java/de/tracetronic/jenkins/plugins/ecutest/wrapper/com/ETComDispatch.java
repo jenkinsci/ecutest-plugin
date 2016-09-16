@@ -49,10 +49,10 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     private static final Logger LOGGER = Logger.getLogger(ETComDispatch.class.getName());
 
     /**
-     * Instantiates a new {@link ETComDispatch} with default program identifier.
+     * Instantiates a new {@link ETComDispatch} with default programmatic identifier.
      */
     public ETComDispatch() {
-        super(ETComClient.DEFAULT_PROG_ID);
+        super(ETComProgId.DEFAULT_PROG_ID);
     }
 
     /**
