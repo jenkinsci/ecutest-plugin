@@ -31,8 +31,8 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <f:advanced>
-         <f:entry title="${%programId.title}" description="${%programId.description}" field="programId">
-            <f:textbox default="${descriptor.defaultProgramId}" />
+         <f:entry title="${%progId.title}" description="${%progId.description}" field="progId">
+            <f:textbox default="${descriptor.defaultProgId}" />
         </f:entry>
     </f:advanced>
 </j:jelly>
