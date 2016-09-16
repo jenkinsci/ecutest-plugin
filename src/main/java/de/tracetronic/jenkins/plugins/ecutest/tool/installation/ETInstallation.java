@@ -192,7 +192,7 @@ public class ETInstallation extends AbstractToolInstallation {
      *
      * @return the progId, default progId if tool property does not exist
      */
-    public String getProgramId() {
+    public String getProgId() {
         String progId;
         final ETToolProperty toolProperty = getProperties().get(ETToolProperty.class);
         if (toolProperty != null) {

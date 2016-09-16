@@ -112,7 +112,7 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
          *            the programmatic identifier
          * @return the form validation
          */
-        public FormValidation doCheckProgramId(@QueryParameter final String value) {
+        public FormValidation doCheckProgId(@QueryParameter final String value) {
             Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
             FormValidation returnValue = FormValidation.ok();
             if (!StringUtils.isEmpty(value)) {

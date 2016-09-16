@@ -61,7 +61,7 @@ public class ETInstallationST extends SystemTestBase {
         final ETInstallation inst = installations[0];
         assertEquals("ECU-TEST", inst.getName());
         assertEquals("C:\\ECU-TEST", inst.getHome());
-        assertEquals("ECU-TEST.Application", inst.getProgramId());
+        assertEquals("ECU-TEST.Application", inst.getProgId());
     }
 
     @Test
@@ -74,7 +74,7 @@ public class ETInstallationST extends SystemTestBase {
         final ETInstallation inst = installations[0];
         assertEquals("ECU-TEST", inst.getName());
         assertEquals("C:\\ECU-TEST", inst.getHome());
-        assertEquals("ECU-TEST6.Application", inst.getProgramId());
+        assertEquals("ECU-TEST6.Application", inst.getProgId());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class ETInstallationST extends SystemTestBase {
         final ETInstallation inst = installations[0];
         assertEquals("ECU-TEST", inst.getName());
         assertEquals("C:\\ECU-TEST", inst.getHome());
-        assertEquals("ECU-TEST.Application", inst.getProgramId());
+        assertEquals("ECU-TEST.Application", inst.getProgId());
     }
 
     @Test

@@ -298,7 +298,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
             throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }
         // Set the COM programmatic identifier for the current ECU-TEST instance
-        ETComProgId.getInstance().setProgId(installation.getProgramId());
+        ETComProgId.getInstance().setProgId(installation.getProgId());
         return installation;
     }
 

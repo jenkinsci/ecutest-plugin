@@ -51,7 +51,7 @@ public class ETInstallationTest {
         assertNotNull(inst);
         assertEquals("ECU-TEST", inst.getName());
         assertEquals("C:\\ECU-TEST", inst.getHome());
-        assertEquals("ECU-TEST.Application", inst.getProgramId());
+        assertEquals("ECU-TEST.Application", inst.getProgId());
     }
 
     @Test
@@ -62,6 +62,6 @@ public class ETInstallationTest {
         assertEquals("ECU-TEST", inst.getName());
         assertEquals("C:\\ECU-TEST", inst.getHome());
         assertEquals(1, inst.getProperties().size());
-        assertEquals("ECU-TEST6.Application", inst.getProgramId());
+        assertEquals("ECU-TEST6.Application", inst.getProgId());
     }
 }
