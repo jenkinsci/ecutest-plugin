@@ -94,8 +94,8 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
         final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-            final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(testReportDir); // TODO: trf name
-            if (reportFile.exists()) {
+            final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(testReportDir);
+            if (reportFile != null && reportFile.exists()) {
                 reportFiles.addAll(Arrays.asList(testReportDir.list("**/*" + TRFPublisher.TRF_EXTENSION)));
             } else {
                 if (allowMissing) {

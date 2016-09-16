@@ -221,12 +221,7 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     @CheckForNull
     public ETInstallation getToolInstallation(final EnvVars envVars) {
         final String expToolName = envVars.expand(getToolName());
-        for (final ETInstallation installation : getDescriptor().getToolDescriptor().getInstallations()) {
-            if (StringUtils.equals(expToolName, installation.getName())) {
-                return installation;
-            }
-        }
-        return null;
+        return getDescriptor().getToolDescriptor().getInstallation(expToolName);
     }
 
     @Override

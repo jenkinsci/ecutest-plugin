@@ -117,13 +117,6 @@ public class StopETBuilder extends AbstractToolBuilder {
     @Extension(ordinal = 1005)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
 
-        /**
-         * Instantiates a new {@link DescriptorImpl}.
-         */
-        public DescriptorImpl() {
-            super(StopETBuilder.class);
-        }
-
         @Override
         public int getDefaultTimeout() {
             return DEFAULT_TIMEOUT;

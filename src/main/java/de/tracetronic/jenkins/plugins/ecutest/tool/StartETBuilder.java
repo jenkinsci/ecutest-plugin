@@ -281,16 +281,14 @@ public class StartETBuilder extends AbstractToolBuilder {
     @Extension(ordinal = 1006)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
 
-        /**
-         * Instantiates a {@link DescriptorImpl}.
-         */
-        public DescriptorImpl() {
-            super(StartETBuilder.class);
-        }
-
         @Override
         public int getDefaultTimeout() {
             return DEFAULT_TIMEOUT;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return Messages.StartETBuilder_DisplayName();
         }
 
         /**
@@ -313,11 +311,6 @@ public class StartETBuilder extends AbstractToolBuilder {
          */
         public FormValidation doCheckSettingsDir(@QueryParameter final String value) {
             return toolValidator.validateSettingsDir(value);
-        }
-
-        @Override
-        public String getDisplayName() {
-            return Messages.StartETBuilder_DisplayName();
         }
     }
 }

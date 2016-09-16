@@ -194,13 +194,6 @@ public class StartTSBuilder extends AbstractToolBuilder {
     @Extension(ordinal = 1004)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
 
-        /**
-         * Instantiates a new {@link DescriptorImpl}.
-         */
-        public DescriptorImpl() {
-            super(StartTSBuilder.class);
-        }
-
         @Override
         public int getDefaultTimeout() {
             return DEFAULT_TIMEOUT;
@@ -211,6 +204,11 @@ public class StartTSBuilder extends AbstractToolBuilder {
          */
         public int getDefaultTcpPort() {
             return DEFAULT_TCP_PORT;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return Messages.StartTSBuilder_DisplayName();
         }
 
         /**
@@ -233,11 +231,6 @@ public class StartTSBuilder extends AbstractToolBuilder {
          */
         public FormValidation doCheckTcpPort(@QueryParameter final String value) {
             return toolValidator.validateTcpPort(value);
-        }
-
-        @Override
-        public String getDisplayName() {
-            return Messages.StartTSBuilder_DisplayName();
         }
     }
 }

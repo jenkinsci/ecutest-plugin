@@ -32,8 +32,8 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <f:entry title="${%atxName.title}" description="${%atxName.description}">
         <select class="setting-input" name="atxName" autocomplete="off">
-            <j:forEach var="inst" items="${descriptor.installations}">
-                <f:option value="${inst.name}" selected="${inst.name == instance.installation.name}">${inst.name}</f:option>
+            <j:forEach var="installation" items="${descriptor.installations}">
+                <f:option selected="${installation.name == instance.installation.name}">${installation.name}</f:option>
             </j:forEach>
             <f:option value="$${TESTGUIDE}" selected="${instance.getAtxName() eq '${TESTGUIDE}'}">${%atxName.parameter}</f:option>
         </select>

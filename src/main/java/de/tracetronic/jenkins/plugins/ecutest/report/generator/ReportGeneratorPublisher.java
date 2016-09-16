@@ -36,11 +36,7 @@ import hudson.Launcher;
 import hudson.Util;
 import hudson.model.Result;
 import hudson.model.TaskListener;
-import hudson.model.AbstractProject;
 import hudson.model.Run;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Publisher;
-import hudson.tools.ToolInstallation;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,6 +52,7 @@ import org.kohsuke.stapler.DataBoundSetter;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
@@ -409,38 +406,11 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
         return URL_NAME;
     }
 
-    @Override
-    public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl) super.getDescriptor();
-    }
-
     /**
      * DescriptorImpl for {@link ReportGeneratorPublisher}.
      */
     @Extension(ordinal = 1001)
-    public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
-
-        /**
-         * Instantiates a new {@link DescriptorImpl}.
-         */
-        public DescriptorImpl() {
-            super();
-        }
-
-        /**
-         * Gets the tool descriptor.
-         *
-         * @return the tool descriptor
-         */
-        public ETInstallation.DescriptorImpl getToolDescriptor() {
-            return ToolInstallation.all().get(ETInstallation.DescriptorImpl.class);
-        }
-
-        @SuppressWarnings("rawtypes")
-        @Override
-        public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
-            return true;
-        }
+    public static class DescriptorImpl extends AbstractReportDescriptor {
 
         @Override
         public String getDisplayName() {

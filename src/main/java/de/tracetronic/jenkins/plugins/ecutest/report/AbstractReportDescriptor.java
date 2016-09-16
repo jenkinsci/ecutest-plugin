@@ -27,45 +27,27 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.tracetronic.jenkins.plugins.ecutest.tool;
+package de.tracetronic.jenkins.plugins.ecutest.report;
 
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Builder;
+import hudson.tasks.Publisher;
 import hudson.tools.ToolInstallation;
-import hudson.util.FormValidation;
-
-import org.kohsuke.stapler.QueryParameter;
-
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.ToolValidator;
 
 /**
- * Common base descriptor class for all test related task build descriptors implemented in this plugin.
+ * Common base descriptor class for all report related publisher descriptors implemented in this plugin.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class AbstractToolDescriptor extends BuildStepDescriptor<Builder> {
-
-    /**
-     * Validator to check form fields.
-     */
-    protected final transient ToolValidator toolValidator;
-
-    /**
-     * Instantiates a new {@link AbstractToolDescriptor}.
-     */
-    public AbstractToolDescriptor() {
-        super();
-        toolValidator = new ToolValidator();
-    }
+public abstract class AbstractReportDescriptor extends BuildStepDescriptor<Publisher> {
 
     /**
      * Gets the tool installations.
      *
      * @return the installations
      */
-    public ETInstallation[] getInstallations() {
+    public ETInstallation[] getToolInstallations() {
         return getToolDescriptor().getInstallations();
     }
 
@@ -82,21 +64,5 @@ public abstract class AbstractToolDescriptor extends BuildStepDescriptor<Builder
     @Override
     public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
         return true;
-    }
-
-    /**
-     * @return the default timeout
-     */
-    public abstract int getDefaultTimeout();
-
-    /**
-     * Validates the timeout.
-     *
-     * @param value
-     *            the timeout
-     * @return the form validation
-     */
-    public FormValidation doCheckTimeout(@QueryParameter final String value) {
-        return toolValidator.validateTimeout(value, getDefaultTimeout());
     }
 }

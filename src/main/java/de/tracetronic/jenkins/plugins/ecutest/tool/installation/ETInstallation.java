@@ -29,6 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.installation;
 
+import hudson.CopyOnWrite;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Functions;
@@ -210,6 +211,7 @@ public class ETInstallation extends AbstractToolInstallation {
 
         private static final Logger LOGGER = Logger.getLogger(DescriptorImpl.class.getName());
 
+        @CopyOnWrite
         private volatile ETInstallation[] installations = new ETInstallation[0];
 
         /**
@@ -268,7 +270,7 @@ public class ETInstallation extends AbstractToolInstallation {
 
         @Override
         public String getDisplayName() {
-            return "ECU-TEST";
+            return Messages.ET_DisplayName();
         }
 
         @Override

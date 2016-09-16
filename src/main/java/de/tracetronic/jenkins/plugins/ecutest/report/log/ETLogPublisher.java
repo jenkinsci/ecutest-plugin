@@ -36,11 +36,8 @@ import hudson.Launcher;
 import hudson.Util;
 import hudson.model.Result;
 import hudson.model.TaskListener;
-import hudson.model.AbstractProject;
 import hudson.model.Run;
 import hudson.remoting.VirtualChannel;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Publisher;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,6 +54,7 @@ import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction.TestType;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogAnnotation.Severity;
 
@@ -643,22 +641,11 @@ public class ETLogPublisher extends AbstractReportPublisher {
         return URL_NAME;
     }
 
-    @Override
-    public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl) super.getDescriptor();
-    }
-
     /**
      * DescriptorImpl for {@link ETLogPublisher}.
      */
     @Extension(ordinal = 1000)
-    public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
-
-        @SuppressWarnings("rawtypes")
-        @Override
-        public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
-            return true;
-        }
+    public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         @Override
         public String getDisplayName() {

@@ -39,14 +39,10 @@ import hudson.matrix.MatrixBuild;
 import hudson.model.BuildListener;
 import hudson.model.Result;
 import hudson.model.TaskListener;
-import hudson.model.AbstractProject;
 import hudson.model.Run;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Publisher;
 import hudson.tasks.junit.TestResult;
 import hudson.tasks.junit.TestResultAction;
 import hudson.tasks.test.TestResultAggregator;
-import hudson.tools.ToolInstallation;
 import hudson.util.FormValidation;
 
 import java.io.IOException;
@@ -64,6 +60,7 @@ import org.kohsuke.stapler.QueryParameter;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
@@ -212,11 +209,6 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
             }
         }
         return null;
-    }
-
-    @Override
-    public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl) super.getDescriptor();
     }
 
     @Override
@@ -376,7 +368,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
      * DescriptorImpl for {@link JUnitPublisher}.
      */
     @Extension(ordinal = 1002)
-    public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
+    public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         private final JUnitValidator unitValidator;
 
@@ -386,21 +378,6 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
         public DescriptorImpl() {
             super();
             unitValidator = new JUnitValidator();
-        }
-
-        /**
-         * Gets the tool descriptor.
-         *
-         * @return the tool descriptor
-         */
-        public ETInstallation.DescriptorImpl getToolDescriptor() {
-            return ToolInstallation.all().get(ETInstallation.DescriptorImpl.class);
-        }
-
-        @SuppressWarnings("rawtypes")
-        @Override
-        public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
-            return true;
         }
 
         @Override
