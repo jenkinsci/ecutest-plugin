@@ -55,7 +55,6 @@ import com.gargoylesoftware.htmlunit.WebAssert;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import de.tracetronic.jenkins.plugins.ecutest.SystemTestBase;
-import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 
 /**
  * System tests for {@link TRFPublisher}.
@@ -71,7 +70,7 @@ public class TRFPublisherST extends SystemTestBase {
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
         final SimpleBuildStep delegate = step.delegate;
-        assertThat(delegate, instanceOf(StartETBuilder.class));
+        assertThat(delegate, instanceOf(TRFPublisher.class));
 
         final TRFPublisher after = (TRFPublisher) delegate;
         jenkins.assertEqualDataBoundBeans(before, after);

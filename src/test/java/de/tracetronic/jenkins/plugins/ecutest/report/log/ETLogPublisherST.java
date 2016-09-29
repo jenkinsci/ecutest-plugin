@@ -58,7 +58,7 @@ import com.gargoylesoftware.htmlunit.WebAssert;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import de.tracetronic.jenkins.plugins.ecutest.SystemTestBase;
-import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
+import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 
 /**
  * System tests for {@link ETLogPublisher}.
@@ -74,7 +74,7 @@ public class ETLogPublisherST extends SystemTestBase {
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
         final SimpleBuildStep delegate = step.delegate;
-        assertThat(delegate, instanceOf(StartETBuilder.class));
+        assertThat(delegate, instanceOf(TRFPublisher.class));
 
         final ETLogPublisher after = (ETLogPublisher) delegate;
         jenkins.assertEqualDataBoundBeans(before, after);

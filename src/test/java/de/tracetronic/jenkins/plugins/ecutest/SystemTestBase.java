@@ -31,7 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest;
 
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeThat;
 import hudson.Functions;
@@ -151,7 +151,7 @@ public class SystemTestBase {
      */
     private static void assumePropertyIsGreaterThanOrEqualTo(@CheckForNull final String property,
             @Nonnull final String version) {
-        assertNotNull("Property should exist", property);
+        assumeThat(property, notNullValue());
         assumeThat(new VersionNumber(property).compareTo(new VersionNumber(version)), is(greaterThanOrEqualTo(0)));
     }
 }
