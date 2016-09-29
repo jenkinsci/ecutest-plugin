@@ -46,6 +46,7 @@ import java.util.List;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
@@ -351,6 +352,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     /**
      * DescriptorImpl for {@link TestFolderBuilder}.
      */
+    @Symbol("testFolder")
     @Extension(ordinal = 1000)
     public static final class DescriptorImpl extends AbstractTestDescriptor {
 

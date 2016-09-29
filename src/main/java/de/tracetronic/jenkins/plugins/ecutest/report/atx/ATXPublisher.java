@@ -59,6 +59,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -236,7 +237,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean publishReports(final ATXInstallation installation, final Run<?, ?> run,
             final Launcher launcher, final TaskListener listener)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final boolean isUploadEnabled = isUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, launcher, run.getEnvironment(listener));
@@ -357,6 +358,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link ATXPublisher}.
      */
     @SuppressWarnings("rawtypes")
+    @Symbol("publishATX")
     @Extension(ordinal = 1004)
     public static class DescriptorImpl extends AbstractReportDescriptor {
 

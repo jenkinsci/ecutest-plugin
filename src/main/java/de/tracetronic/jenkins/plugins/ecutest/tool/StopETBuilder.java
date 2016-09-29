@@ -41,6 +41,7 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
@@ -114,6 +115,7 @@ public class StopETBuilder extends AbstractToolBuilder {
     /**
      * DescriptorImpl for {@link StopETBuilder}.
      */
+    @Symbol("stopET")
     @Extension(ordinal = 1005)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
 

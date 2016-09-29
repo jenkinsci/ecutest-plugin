@@ -30,9 +30,9 @@
 package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assume.assumeFalse;
 import hudson.EnvVars;
 import hudson.Launcher;
 import hudson.model.BuildListener;
@@ -40,9 +40,7 @@ import hudson.model.FreeStyleBuild;
 import hudson.model.Result;
 import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
-import hudson.model.Label;
 import hudson.slaves.DumbSlave;
-import hudson.slaves.SlaveComputer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,9 +48,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import jenkins.tasks.SimpleBuildStep;
+
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
+import org.jenkinsci.plugins.workflow.steps.CoreStep;
+import org.jenkinsci.plugins.workflow.steps.StepConfigTester;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
@@ -83,7 +85,13 @@ public class ReportGeneratorPublisherST extends SystemTestBase {
     @Test
     public void testDefaultConfigRoundTripStep() throws Exception {
         final ReportGeneratorPublisher before = new ReportGeneratorPublisher("ECU-TEST");
-        final ReportGeneratorPublisher after = jenkins.configRoundtrip(before);
+
+        CoreStep step = new CoreStep(before);
+        step = new StepConfigTester(jenkins).configRoundTrip(step);
+        final SimpleBuildStep delegate = step.delegate;
+        assertThat(delegate, instanceOf(ReportGeneratorPublisher.class));
+
+        final ReportGeneratorPublisher after = (ReportGeneratorPublisher) delegate;
         jenkins.assertEqualDataBoundBeans(before, after);
     }
 
@@ -94,6 +102,12 @@ public class ReportGeneratorPublisherST extends SystemTestBase {
         before.setRunOnFailed(true);
         before.setArchiving(true);
         before.setKeepAll(true);
+
+        CoreStep step = new CoreStep(before);
+        step = new StepConfigTester(jenkins).configRoundTrip(step);
+        final SimpleBuildStep delegate = step.delegate;
+        assertThat(delegate, instanceOf(ReportGeneratorPublisher.class));
+
         final ReportGeneratorPublisher after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after, "allowMissing,runOnFailed,archiving,keepAll");
     }
@@ -141,10 +155,7 @@ public class ReportGeneratorPublisherST extends SystemTestBase {
 
     @Test
     public void testAllowMissing() throws Exception {
-        // Windows only
-        final DumbSlave slave = jenkins.createOnlineSlave();
-        final SlaveComputer computer = slave.getComputer();
-        assumeFalse("Test is Windows only!", computer.isUnix());
+        final DumbSlave slave = assumeWindowsSlave();
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.setAssignedNode(slave);
@@ -157,10 +168,7 @@ public class ReportGeneratorPublisherST extends SystemTestBase {
 
     @Test
     public void testRunOnFailed() throws Exception {
-        // Windows only
-        final DumbSlave slave = jenkins.createOnlineSlave();
-        final SlaveComputer computer = slave.getComputer();
-        assumeFalse("Test is Windows only!", computer.isUnix());
+        final DumbSlave slave = assumeWindowsSlave();
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.setAssignedNode(slave);
@@ -200,6 +208,17 @@ public class ReportGeneratorPublisherST extends SystemTestBase {
     }
 
     @Test
+    public void testPipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'ReportGeneratorPublisher', toolName: 'ECU-TEST',"
+                + "        generators: [[name: 'HTML', settings: []]], customGenerators: [[name: 'Custom', settings: []]],"
+                + "        allowMissing: true, archiving: false, keepAll: false, runOnFailed: true])\n"
+                + "}";
+        assertPipelineStep(script, false);
+    }
+
+    @Test
     public void testDefaultPipelineStep() throws Exception {
         final String script = ""
                 + "node('slaves') {\n"
@@ -209,12 +228,25 @@ public class ReportGeneratorPublisherST extends SystemTestBase {
     }
 
     @Test
-    public void testPipelineStep() throws Exception {
+    public void testSymbolAnnotatedPipelineStep() throws Exception {
+        assumeSymbolDependencies();
+
         final String script = ""
                 + "node('slaves') {\n"
-                + "  step([$class: 'ReportGeneratorPublisher', toolName: 'ECU-TEST',"
-                + "        generators: [[name: 'HTML', settings: []]], customGenerators: [[name: 'Custom', settings: []]],"
-                + "        allowMissing: true, archiving: false, keepAll: false, runOnFailed: true])\n"
+                + "  publishGenerators toolName: 'ECU-TEST',"
+                + "  generators: [[name: 'HTML', settings: []]], customGenerators: [[name: 'Custom', settings: []]],"
+                + "  allowMissing: true, runOnFailed: true, archiving: false, keepAll: false\n"
+                + "}";
+        assertPipelineStep(script, true);
+    }
+
+    @Test
+    public void testSymbolAnnotatedDefaultPipelineStep() throws Exception {
+        assumeSymbolDependencies();
+
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  publishGenerators toolName: 'ECU-TEST'\n"
                 + "}";
         assertPipelineStep(script, false);
     }
@@ -230,10 +262,7 @@ public class ReportGeneratorPublisherST extends SystemTestBase {
      *             the exception
      */
     private void assertPipelineStep(final String script, final boolean emptyResults) throws Exception {
-        // Windows only
-        final DumbSlave slave = jenkins.createOnlineSlave(Label.get("slaves"));
-        final SlaveComputer computer = slave.getComputer();
-        assumeFalse("Test is Windows only!", computer.isUnix());
+        assumeWindowsSlave();
 
         final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));

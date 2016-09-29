@@ -54,6 +54,7 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
@@ -367,6 +368,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     /**
      * DescriptorImpl for {@link JUnitPublisher}.
      */
+    @Symbol("publishUNIT")
     @Extension(ordinal = 1002)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 

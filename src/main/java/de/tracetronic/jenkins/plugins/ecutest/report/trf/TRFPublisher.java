@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
@@ -276,6 +277,7 @@ public class TRFPublisher extends AbstractReportPublisher {
     /**
      * DescriptorImpl for {@link TRFPublisher}.
      */
+    @Symbol("publishTRF")
     @Extension(ordinal = 1003)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 

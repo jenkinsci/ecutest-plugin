@@ -86,6 +86,7 @@
         <matrix-project.version>1.4</matrix-project.version>
         <junit.version>1.3</junit.version>
         <job-dsl.version>1.37</job-dsl.version>
+        <structs.version>1.5</structs.version>
 
         <!-- Static code analysis -->
         <maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
@@ -94,8 +95,11 @@
         <!-- Test scope -->
         <equalsverifier.version>2.1.5</equalsverifier.version>
         <mockito-core.version>1.10.19</mockito-core.version>
-        <workflow.version>1.4.2</workflow.version>
         <jacoco.version>0.7.7.201606060606</jacoco.version>
+        <workflow-aggregator.version>1.4.3</workflow-aggregator.version>
+        <workflow-basic-steps.version>1.4.3</workflow-basic-steps.version>
+        <workflow-cps.version>1.4.3</workflow-cps.version>
+        <workflow-step-api.version>1.4.3</workflow-step-api.version>
         <concurrency>2</concurrency>
 
         <!-- JACOB -->
@@ -173,6 +177,11 @@
             <version>1.4.7-jenkins-1</version>
         </dependency>
         <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>structs</artifactId>
+            <version>${structs.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito-core.version}</version>
@@ -193,19 +202,25 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-aggregator</artifactId>
-            <version>${workflow.version}</version>
+            <version>${workflow-aggregator.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-basic-steps</artifactId>
+            <version>${workflow-basic-steps.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-cps</artifactId>
-            <version>${workflow.version}</version>
+            <version>${workflow-cps.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-step-api</artifactId>
-            <version>${workflow.version}</version>
+            <version>${workflow-step-api.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>

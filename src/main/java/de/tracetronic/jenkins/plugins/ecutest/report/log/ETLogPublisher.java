@@ -47,6 +47,7 @@ import java.util.List;
 
 import jenkins.MasterToSlaveFileCallable;
 
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
@@ -432,7 +433,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
      */
     private int traverseSubReports(final ETLogReport logReport, final FilePath testReportDir,
             final FilePath subTestReportDir, int id)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
             FilePath logFile = subDir.child(ERROR_LOG_NAME);
             if (logFile.exists()) {
@@ -625,7 +626,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
 
         @Override
         public List<String> invoke(final File baseDir, final VirtualChannel channel) throws IOException,
-                InterruptedException {
+        InterruptedException {
             final List<String> files = new ArrayList<String>();
             for (final String includedFile : Util.createFileSet(baseDir, includes, excludes)
                     .getDirectoryScanner().getIncludedFiles()) {
@@ -644,6 +645,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
     /**
      * DescriptorImpl for {@link ETLogPublisher}.
      */
+    @Symbol("publishETLogs")
     @Extension(ordinal = 1000)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 

@@ -44,6 +44,7 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
@@ -191,6 +192,7 @@ public class StartTSBuilder extends AbstractToolBuilder {
     /**
      * DescriptorImpl for {@link StartTSBuilder}.
      */
+    @Symbol("startTS")
     @Extension(ordinal = 1004)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
 

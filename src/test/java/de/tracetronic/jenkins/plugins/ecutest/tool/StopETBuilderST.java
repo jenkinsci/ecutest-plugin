@@ -32,16 +32,12 @@ package de.tracetronic.jenkins.plugins.ecutest.tool;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assume.assumeFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
-import hudson.model.Label;
-import hudson.slaves.DumbSlave;
-import hudson.slaves.SlaveComputer;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -164,7 +160,6 @@ public class StopETBuilderST extends SystemTestBase {
     public void testPipelineStep() throws Exception {
         final String script = ""
                 + "node('slaves') {\n"
-                + "  writeFile file: 'ToolLibs.ini', text: ''\n"
                 + "  step([$class: 'StopETBuilder', toolName: 'ECU-TEST', timeout: '120'])\n"
                 + "}";
         assertPipelineStep(script);
@@ -179,6 +174,28 @@ public class StopETBuilderST extends SystemTestBase {
         assertPipelineStep(script);
     }
 
+    @Test
+    public void testSymbolAnnotatedPipelineStep() throws Exception {
+        assumeSymbolDependencies();
+
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  stopET toolName: 'ECU-TEST', timeout: '120'\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
+    @Test
+    public void testSymbolAnnotatedDefaultPipelineStep() throws Exception {
+        assumeSymbolDependencies();
+
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  stopET toolName: 'ECU-TEST'\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
     /**
      * Asserts the pipeline step execution.
      *
@@ -188,10 +205,7 @@ public class StopETBuilderST extends SystemTestBase {
      *             the exception
      */
     private void assertPipelineStep(final String script) throws Exception {
-        // Windows only
-        final DumbSlave slave = jenkins.createOnlineSlave(Label.get("slaves"));
-        final SlaveComputer computer = slave.getComputer();
-        assumeFalse("Test is Windows only!", computer.isUnix());
+        assumeWindowsSlave();
 
         // Create dummy JACOB library
         final FilePath rootPath = jenkins.jenkins.getRootPath();
