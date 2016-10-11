@@ -93,7 +93,7 @@
         <maven-pmd-plugin.version>3.6</maven-pmd-plugin.version>
         
         <!-- Test scope -->
-        <equalsverifier.version>2.1.5</equalsverifier.version>
+        <equalsverifier.version>2.1.6</equalsverifier.version>
         <mockito-core.version>1.10.19</mockito-core.version>
         <jacoco.version>0.7.7.201606060606</jacoco.version>
         <workflow-aggregator.version>1.4.3</workflow-aggregator.version>
