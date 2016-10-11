@@ -418,7 +418,9 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
             if (testReportDir.exists()) {
-                reportFiles.addAll(Arrays.asList(testReportDir.list("**/*" + TRFPublisher.TRF_EXTENSION)));
+                reportFiles.addAll(Arrays.asList(testReportDir.list(
+                        "**/*" + TRFPublisher.TRF_EXTENSION,
+                        "**/Job_\\d+" + TRFPublisher.TRF_EXTENSION)));
             }
         }
         Collections.reverse(reportFiles);

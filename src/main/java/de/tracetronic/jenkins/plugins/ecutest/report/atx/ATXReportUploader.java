@@ -105,7 +105,9 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(testReportDir);
             if (reportFile != null && reportFile.exists()) {
-                uploadFiles.addAll(Arrays.asList(testReportDir.list("**/*" + TRFPublisher.TRF_EXTENSION)));
+                uploadFiles.addAll(Arrays.asList(testReportDir.list(
+                        "**/*" + TRFPublisher.TRF_EXTENSION,
+                        "**/Job_\\d+" + TRFPublisher.TRF_EXTENSION)));
 
                 // Prepare ATX report information
                 final String baseUrl = ATXUtil.getBaseUrl(installation.getConfig(), run.getEnvironment(listener));

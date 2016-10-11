@@ -149,7 +149,9 @@ public class TRFPublisher extends AbstractReportPublisher {
                 if (reportFile != null && reportFile.exists()) {
                     try {
                         logger.logInfo(String.format("- Archiving TRF report: %s", reportFile));
-                        final int copiedFiles = testReportDir.copyRecursiveTo("**/*" + TRF_EXTENSION,
+                        final int copiedFiles = testReportDir.copyRecursiveTo(
+                                "**/*" + TRF_EXTENSION,
+                                "**/Job_\\d+" + TRFPublisher.TRF_EXTENSION,
                                 archiveTargetDir);
                         if (copiedFiles == 0) {
                             continue;
