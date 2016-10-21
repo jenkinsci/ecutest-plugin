@@ -29,6 +29,21 @@
 			</DESCRIPTION>
 		</SETTING>
 		<SETTING name="serverURL" default="127.0.0.1" xsi:type="reportConfigItem" />
+		<SETTING name="serverLabel" default="" xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">Optionaler Name für die angegebene
+							Server-Instanz, welcher bei Log-Nachrichten verwendet wird.</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">Optional name for the server-instance,
+							which is used for log messages.</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
 		<SETTING name="useHttpsConnection" default="False" xsi:type="reportConfigItem" />
 		<SETTING name="serverPort" default="8085" xsi:type="reportConfigItem" />
 		<SETTING name="serverContextPath" default="" xsi:type="reportConfigItem">
