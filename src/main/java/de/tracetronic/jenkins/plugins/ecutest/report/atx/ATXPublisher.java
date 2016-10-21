@@ -237,7 +237,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean publishReports(final ATXInstallation installation, final Run<?, ?> run,
             final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final boolean isUploadEnabled = isUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, launcher, run.getEnvironment(listener));
@@ -373,15 +373,13 @@ public class ATXPublisher extends AbstractReportPublisher {
         private final transient ATXValidator atxValidator;
 
         /**
-         * Instantiates a new {@link DescriptorImpl} and synchronizes
-         * the current ATX configuration with the default one.
+         * Instantiates a new {@link DescriptorImpl}.
          */
         public DescriptorImpl() {
             super();
             load();
             atxValidator = new ATXValidator();
             defaultConfig = new ATXConfig();
-            syncWithDefaultConfig();
         }
 
         /**
@@ -461,9 +459,12 @@ public class ATXPublisher extends AbstractReportPublisher {
         /**
          * Synchronizes current ATX configuration with default configuration
          * by overriding their current values and saving them as new ATX installation.
+         *
+         * This method will be automatically called by {@link ETPlugin#postInitialize()} to
+         * avoid circular dependencies while loading other plugins.
          */
         @SuppressWarnings("unchecked")
-        private void syncWithDefaultConfig() {
+        public void syncWithDefaultConfig() {
             final List<ATXInstallation> list = new ArrayList<ATXInstallation>();
             for (final ATXInstallation installation : installations.clone()) {
                 final ATXConfig currentConfig = installation.getConfig();

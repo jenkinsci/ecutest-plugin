@@ -38,6 +38,8 @@ import jenkins.model.Jenkins;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher.DescriptorImpl;
+
 /**
  * Main entry point to this plugin for the {@link Jenkins} instance.
  *
@@ -186,6 +188,19 @@ public class ETPlugin extends Plugin {
             final long qualifier = Long.parseLong(matcher.group(4));
 
             return new ToolVersion(major, minor, micro, qualifier);
+        }
+    }
+
+    @Override
+    public void postInitialize() throws Exception {
+        super.postInitialize();
+        final Jenkins instance = Jenkins.getInstance();
+        if (instance != null) {
+            // Synchronize current ATX configuration with the default one.
+            final DescriptorImpl descriptor = instance.getDescriptorByType(DescriptorImpl.class);
+            if (descriptor != null) {
+                descriptor.syncWithDefaultConfig();
+            }
         }
     }
 }
