@@ -45,6 +45,8 @@ import hudson.util.XStream2;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -280,7 +282,17 @@ public class ETInstallation extends AbstractToolInstallation {
 
         @Override
         public void setInstallations(final ETInstallation... installations) {
-            this.installations = installations;
+            // Remove empty installations
+            final List<ETInstallation> inst = new ArrayList<ETInstallation>();
+            if (installations != null) {
+                Collections.addAll(inst, installations);
+                for (final ETInstallation installation : installations) {
+                    if (StringUtils.isBlank(installation.getName())) {
+                        inst.remove(installation);
+                    }
+                }
+            }
+            this.installations = inst.toArray(new ETInstallation[inst.size()]);
             save();
         }
 

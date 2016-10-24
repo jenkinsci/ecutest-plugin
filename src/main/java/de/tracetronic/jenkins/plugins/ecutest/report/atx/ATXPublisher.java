@@ -44,6 +44,7 @@ import hudson.util.FormValidation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -396,7 +397,17 @@ public class ATXPublisher extends AbstractReportPublisher {
          *            the new installations
          */
         public void setInstallations(final ATXInstallation... installations) {
-            this.installations = installations;
+            // Remove empty installations
+            final List<ATXInstallation> inst = new ArrayList<ATXInstallation>();
+            if (installations != null) {
+                Collections.addAll(inst, installations);
+                for (final ATXInstallation installation : installations) {
+                    if (StringUtils.isBlank(installation.getName())) {
+                        inst.remove(installation);
+                    }
+                }
+            }
+            this.installations = inst.toArray(new ATXInstallation[inst.size()]);
             save();
         }
 
