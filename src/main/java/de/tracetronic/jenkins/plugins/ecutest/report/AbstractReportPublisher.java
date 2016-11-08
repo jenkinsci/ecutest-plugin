@@ -418,9 +418,8 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
             if (testReportDir.exists()) {
-                reportFiles.addAll(Arrays.asList(testReportDir.list(
-                        "**/*" + TRFPublisher.TRF_EXTENSION,
-                        "**/Job_\\d+" + TRFPublisher.TRF_EXTENSION)));
+                reportFiles.addAll(Arrays.asList(
+                        testReportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
             }
         }
         Collections.reverse(reportFiles);
@@ -440,7 +439,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      */
     @CheckForNull
     public static FilePath getFirstReportFile(final FilePath reportDir) throws IOException, InterruptedException {
-        final FilePath[] files = reportDir.list("*" + TRFPublisher.TRF_EXTENSION);
+        final FilePath[] files = reportDir.list(TRFPublisher.TRF_INCLUDE);
         return files.length > 0 ? files[0] : null;
     }
 

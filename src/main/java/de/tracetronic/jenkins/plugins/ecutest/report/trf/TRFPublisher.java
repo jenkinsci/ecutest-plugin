@@ -62,6 +62,21 @@ public class TRFPublisher extends AbstractReportPublisher {
     public static final String TRF_EXTENSION = ".trf";
 
     /**
+     * Ant-style include pattern for listing up top level TRF files.
+     */
+    public static final String TRF_INCLUDE = "*" + TRF_EXTENSION;
+
+    /**
+     * Ant-style include pattern for listing up TRF files recursively.
+     */
+    public static final String TRF_INCLUDES = "**/*" + TRF_EXTENSION;
+
+    /**
+     * Ant-style pattern for excluding job analysis files recursively.
+     */
+    public static final String TRF_EXCLUDES = "*/**/Job_*" + TRF_EXTENSION;
+
+    /**
      * The URL name to {@link TRFReport}s holding by {@link AbstractTRFAction}.
      */
     protected static final String URL_NAME = "trf-reports";
@@ -149,9 +164,7 @@ public class TRFPublisher extends AbstractReportPublisher {
                 if (reportFile != null && reportFile.exists()) {
                     try {
                         logger.logInfo(String.format("- Archiving TRF report: %s", reportFile));
-                        final int copiedFiles = testReportDir.copyRecursiveTo(
-                                "**/*" + TRF_EXTENSION,
-                                "**/Job_\\d+" + TRFPublisher.TRF_EXTENSION,
+                        final int copiedFiles = testReportDir.copyRecursiveTo(TRF_INCLUDES, TRF_EXCLUDES,
                                 archiveTargetDir);
                         if (copiedFiles == 0) {
                             continue;

@@ -105,9 +105,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(testReportDir);
             if (reportFile != null && reportFile.exists()) {
-                uploadFiles.addAll(Arrays.asList(testReportDir.list(
-                        "**/*" + TRFPublisher.TRF_EXTENSION,
-                        "**/Job_\\d+" + TRFPublisher.TRF_EXTENSION)));
+                uploadFiles.addAll(Arrays.asList(
+                        testReportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
 
                 // Prepare ATX report information
                 final String baseUrl = ATXUtil.getBaseUrl(installation.getConfig(), run.getEnvironment(listener));
@@ -358,7 +357,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                         final File errorFile = new File(outDir.getRemote(), ERROR_FILE_NAME);
                         if (errorFile.exists()) {
                             isUploaded = false;
-                            logger.logError("Error during uploading ATX report:");
+                            logger.logError("Error while uploading ATX report:");
                             try {
                                 final JSONObject jsonObject = (JSONObject) new JsonSlurper().parse(errorFile);
                                 final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
