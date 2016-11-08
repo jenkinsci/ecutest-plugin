@@ -94,7 +94,7 @@
         
         <!-- Test scope -->
         <equalsverifier.version>2.1.6</equalsverifier.version>
-        <mockito-core.version>2.2.2</mockito-core.version>
+        <mockito-core.version>2.2.9</mockito-core.version>
         <jacoco.version>0.7.7.201606060606</jacoco.version>
         <workflow-aggregator.version>1.4.3</workflow-aggregator.version>
         <workflow-basic-steps.version>1.4.3</workflow-basic-steps.version>
