@@ -252,6 +252,30 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
+		<SETTING name="attributeDelimiter" default="" xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">Angabe der Package-Attribut samt
+							Trennzeichen
+							z.B. ReqId=_;Ref=- um Attributwerte getrennt für die
+							Suche zu
+							erfassen z.B. von folgenden Attributangaben
+							ReqID=RQ1_RQ2_RQ3 bzw.
+							Ref=A-B-C</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">Specify the package attribute including
+							separator
+							e.g. ReqId=_;Ref=- to separate attribute values for the
+							search for e.g. of the following attributes
+							ReqID=RQ1_RQ2_RQ3 or
+							Ref=A-B-C</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
 		<SETTING name="mapIsTestCaseAsAttribute" default="True"
 			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
