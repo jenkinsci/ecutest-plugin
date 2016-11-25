@@ -244,17 +244,17 @@ public class ATXPublisher extends AbstractReportPublisher {
         final boolean isServerReachable = isServerReachable(installation, launcher, run.getEnvironment(listener));
         if (isUploadEnabled && isServerReachable) {
             logger.logInfo("- Generating and uploading ATX reports...");
-            final ATXReportUploader uploader = new ATXReportUploader();
-            return uploader.upload(isAllowMissing(), installation, run, launcher, listener);
+            final ATXReportUploader uploader = new ATXReportUploader(installation);
+            return uploader.upload(isAllowMissing(), run, launcher, listener);
         } else {
             logger.logInfo("- Generating ATX reports...");
             if (isUploadEnabled && !isServerReachable) {
                 logger.logWarn("-> ATX upload will be skipped because selected TEST-GUIDE server is not reachable!");
             }
             final FilePath archiveTarget = getArchiveTarget(run);
-            final ATXReportGenerator generator = new ATXReportGenerator();
-            return generator.generate(archiveTarget, isAllowMissing(), isArchiving(), isKeepAll(), installation, run,
-                    launcher, listener);
+            final ATXReportGenerator generator = new ATXReportGenerator(installation);
+            return generator.generate(archiveTarget, isAllowMissing(), isArchiving(), isKeepAll(), run, launcher,
+                    listener);
         }
     }
 

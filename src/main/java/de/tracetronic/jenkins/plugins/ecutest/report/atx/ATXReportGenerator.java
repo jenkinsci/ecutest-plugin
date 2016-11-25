@@ -62,6 +62,16 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 public class ATXReportGenerator extends AbstractATXReportHandler {
 
     /**
+     * Instantiates a new {@code ATXReportGenerator}.
+     *
+     * @param installation
+     *            the ATX installation
+     */
+    public ATXReportGenerator(final ATXInstallation installation) {
+        super(installation);
+    }
+
+    /**
      * Generates {@link ATXReport}s without uploading them.
      *
      * @param archiveTarget
@@ -88,8 +98,8 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      */
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     public boolean generate(final FilePath archiveTarget, final boolean allowMissing, final boolean isArchiving,
-            final boolean keepAll, final ATXInstallation installation, final Run<?, ?> run, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+            final boolean keepAll, final Run<?, ?> run, final Launcher launcher, final TaskListener listener)
+                    throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<FilePath> reportFiles = new ArrayList<FilePath>();
         final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
@@ -116,7 +126,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
 
         // Generate ATX reports
         final boolean isGenerated = launcher.getChannel().call(
-                new GenerateReportCallable(installation.getConfig(), reportFiles, run.getEnvironment(listener),
+                new GenerateReportCallable(getInstallation().getConfig(), reportFiles, run.getEnvironment(listener),
                         listener));
 
         if (isArchiving) {
