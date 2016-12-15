@@ -49,7 +49,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestEnvironment
  * COM client to initialize a COM connection and to perform requests on application specific COM API.
  * <p>
  * All threads from COM will be automatically released after closing the client or at the latest when finalizing
- * occurred
+ * occurred.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
