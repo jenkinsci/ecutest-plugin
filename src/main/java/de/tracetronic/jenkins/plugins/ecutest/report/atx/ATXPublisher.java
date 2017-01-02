@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -238,7 +238,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean publishReports(final ATXInstallation installation, final Run<?, ?> run,
             final Launcher launcher, final TaskListener listener)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final boolean isUploadEnabled = isUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, launcher, run.getEnvironment(listener));
@@ -553,15 +553,6 @@ public class ATXPublisher extends AbstractReportPublisher {
          */
         public static String getATXVersion() {
             return ETPlugin.ATX_VERSION.toShortString();
-        }
-
-        /**
-         * Gets the target type for Jelly.
-         *
-         * @return the target type
-         */
-        public static Class<ATXPublisher> getTargetType() {
-            return ATXPublisher.class;
         }
 
         /**

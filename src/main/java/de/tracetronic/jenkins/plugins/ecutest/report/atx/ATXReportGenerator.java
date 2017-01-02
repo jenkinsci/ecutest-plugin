@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -82,8 +82,6 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      *            specifies whether archiving artifacts is enabled
      * @param keepAll
      *            specifies whether to keep all artifacts
-     * @param installation
-     *            the ATX installation
      * @param run
      *            the run
      * @param launcher
@@ -99,7 +97,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     public boolean generate(final FilePath archiveTarget, final boolean allowMissing, final boolean isArchiving,
             final boolean keepAll, final Run<?, ?> run, final Launcher launcher, final TaskListener listener)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<FilePath> reportFiles = new ArrayList<FilePath>();
         final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
