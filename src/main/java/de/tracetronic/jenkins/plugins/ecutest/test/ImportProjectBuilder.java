@@ -53,6 +53,7 @@ import javax.annotation.Nonnull;
 
 import jenkins.tasks.SimpleBuildStep;
 
+import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
@@ -60,7 +61,9 @@ import org.kohsuke.stapler.DataBoundSetter;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.ImportProjectClient;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.util.PathUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 
 /**
@@ -80,12 +83,13 @@ public class ImportProjectBuilder extends AbstractTestHelper implements SimpleBu
      *            the list of configured project importers
      */
     @DataBoundConstructor
-    public ImportProjectBuilder(final List<ImportProjectConfig> importConfigs) {
-        this.importConfigs = importConfigs == null ? new ArrayList<ImportProjectConfig>() : importConfigs;
+    public ImportProjectBuilder(@CheckForNull final List<ImportProjectConfig> importConfigs) {
+        this.importConfigs = importConfigs == null ? new ArrayList<ImportProjectConfig>()
+                : removeEmptyConfigs(importConfigs);
     }
 
     /**
-     * @return the project configuration
+     * @return the list of configured project importers
      */
     @Nonnull
     public List<ImportProjectConfig> getImportConfigs() {
@@ -99,6 +103,23 @@ public class ImportProjectBuilder extends AbstractTestHelper implements SimpleBu
     @DataBoundSetter
     public void setImportConfig(@CheckForNull final List<ImportProjectConfig> importConfigs) {
         this.importConfigs.addAll(importConfigs);
+    }
+
+    /**
+     * Removes empty import configurations.
+     *
+     * @param importConfigs
+     *            the import configurations
+     * @return the list of valid import configurations
+     */
+    private static List<ImportProjectConfig> removeEmptyConfigs(final List<ImportProjectConfig> importConfigs) {
+        final List<ImportProjectConfig> validConfigs = new ArrayList<ImportProjectConfig>();
+        for (final ImportProjectConfig config : importConfigs) {
+            if (StringUtils.isNotBlank(config.getProjectPath())) {
+                validConfigs.add(config);
+            }
+        }
+        return validConfigs;
     }
 
     @Override
@@ -155,7 +176,16 @@ public class ImportProjectBuilder extends AbstractTestHelper implements SimpleBu
         for (final ImportProjectConfig importConfig : importConfigs) {
             // Expand import configuration
             final EnvVars buildEnv = run.getEnvironment(listener);
-            final ImportProjectConfig expImportConfig = (ImportProjectConfig) importConfig.expand(buildEnv);
+            ImportProjectConfig expImportConfig = (ImportProjectConfig) importConfig.expand(buildEnv);
+
+            // Absolutize archive path, if not absolute assume relative to build workspace
+            if (expImportConfig instanceof ImportProjectArchiveConfig) {
+                final String expArchivePath = PathUtil.makeAbsolutePath(expImportConfig.getProjectPath(), workspace);
+                final ImportProjectArchiveConfig archiveConfig = (ImportProjectArchiveConfig) expImportConfig;
+                expImportConfig = new ImportProjectArchiveConfig(expArchivePath, archiveConfig.getImportPath(),
+                        archiveConfig.getImportConfigPath(), archiveConfig.isReplaceFiles(),
+                        archiveConfig.getTimeout());
+            }
 
             // Import project
             final ImportProjectClient importClient = new ImportProjectClient(expImportConfig);
@@ -199,8 +229,8 @@ public class ImportProjectBuilder extends AbstractTestHelper implements SimpleBu
          */
         public List<Descriptor<? extends ImportProjectConfig>> getApplicableImporters() {
             final List<Descriptor<? extends ImportProjectConfig>> list = new ArrayList<>();
-            final DescriptorExtensionList<ImportProjectConfig, Descriptor<ImportProjectConfig>> configs = ImportProjectConfig
-                    .all();
+            final DescriptorExtensionList<ImportProjectConfig, Descriptor<ImportProjectConfig>> configs =
+                    ImportProjectConfig.all();
             if (configs != null) {
                 list.addAll(configs);
             }
