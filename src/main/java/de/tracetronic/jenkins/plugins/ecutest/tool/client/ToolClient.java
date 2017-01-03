@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -59,7 +59,7 @@ public interface ToolClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    boolean start(boolean checkProcesses, final FilePath workspace, Launcher launcher, TaskListener listener)
+    boolean start(boolean checkProcesses, FilePath workspace, Launcher launcher, TaskListener listener)
             throws IOException, InterruptedException;
 
     /**
@@ -79,7 +79,7 @@ public interface ToolClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    boolean stop(boolean checkProcesses, final FilePath workspace, Launcher launcher, TaskListener listener)
+    boolean stop(boolean checkProcesses, FilePath workspace, Launcher launcher, TaskListener listener)
             throws IOException, InterruptedException;
 
     /**
@@ -99,7 +99,7 @@ public interface ToolClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    boolean restart(boolean checkProcesses, final FilePath workspace, Launcher launcher, TaskListener listener)
+    boolean restart(boolean checkProcesses, FilePath workspace, Launcher launcher, TaskListener listener)
             throws IOException, InterruptedException;
 
 }

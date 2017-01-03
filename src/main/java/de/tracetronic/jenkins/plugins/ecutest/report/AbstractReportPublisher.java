@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -249,8 +249,8 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * @throws ETPluginException
      *             in case of report operation errors
      */
-    protected abstract void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException, ETPluginException;
+    protected abstract void performReport(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
+            throws InterruptedException, IOException, ETPluginException;
 
     /**
      * Returns whether this publisher can continue processing. Returns {@code true} if the property {@code runOnFailed}

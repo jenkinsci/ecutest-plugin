@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -368,7 +368,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             final TTConsoleLogger logger = new TTConsoleLogger(getListener());
             final Map<String, String> configMap = getConfigMap(true);
             final String progId = ETComProgId.getInstance().getProgId();
-            try (final ETComClient comClient = new ETComClient(progId)) {
+            try (ETComClient comClient = new ETComClient(progId)) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                 final List<FilePath> uploadFiles = getReportFiles();
                 if (uploadFiles.isEmpty()) {

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -51,7 +51,7 @@ import jenkins.security.MasterToSlaveCallable;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractToolInstallation extends ToolInstallation implements
-        EnvironmentSpecific<AbstractToolInstallation>, NodeSpecific<AbstractToolInstallation> {
+EnvironmentSpecific<AbstractToolInstallation>, NodeSpecific<AbstractToolInstallation> {
 
     private static final long serialVersionUID = 1L;
 
@@ -130,6 +130,6 @@ public abstract class AbstractToolInstallation extends ToolInstallation implemen
      *            the home directory of the tool
      * @return the executable file
      */
-    protected abstract File getExeFile(final File home);
+    protected abstract File getExeFile(File home);
 
 }

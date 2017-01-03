@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -168,8 +168,8 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
      * @throws ETPluginException
      *             in case of tool operation errors
      */
-    protected abstract void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException, ETPluginException;
+    protected abstract void performTool(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
+            throws InterruptedException, IOException, ETPluginException;
 
     /**
      * Gets the test identifier by the size of {@link ToolEnvInvisibleAction}s already added to the build.
