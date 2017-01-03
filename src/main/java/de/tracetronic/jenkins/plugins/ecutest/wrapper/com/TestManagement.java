@@ -182,6 +182,21 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     }
 
     /**
+     * Same as {@link #exportReport(String, String, int)} but without archive path.
+     *
+     * @param filePath
+     *            the file path of the report file to be exported
+     * @param timeout
+     *            the timeout in seconds to wait for export to be finished
+     * @return {@code true} if export succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    public boolean exportReport(final String filePath, final int timeout) throws ETComException {
+        return exportReport(filePath, null, timeout);
+    }
+
+    /**
      * Same as {@link #exportReport(String, String, int)} but without timeout.
      *
      * @param filePath

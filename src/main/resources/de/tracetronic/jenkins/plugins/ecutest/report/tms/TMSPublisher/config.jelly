@@ -29,19 +29,16 @@
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
+    <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation" page="select.jelly" />
     <f:entry title="${%credentialsId.title}" description="${%credentialsId.description}" field="credentialsId">
         <c:select />
-    </f:entry>
-    <f:entry title="${%projectPath.title}" description="${%projectPath.description}" field="projectPath">
-        <f:textbox />
-    </f:entry>
-    <f:entry title="${%importPath.title}" description="${%importPath.description}" field="importPath">
-        <f:textbox />
     </f:entry>
     <f:advanced>
         <f:entry title="${%timeout.title}" description="${%timeout.description}" field="timeout">
             <f:textbox default="${descriptor.defaultTimeout}" />
         </f:entry>
     </f:advanced>
+    <j:set var="showArchiving" value="false" />
+    <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly" />
 </j:jelly>

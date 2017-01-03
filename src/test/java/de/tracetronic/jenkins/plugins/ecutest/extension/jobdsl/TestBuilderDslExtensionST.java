@@ -156,7 +156,7 @@ public class TestBuilderDslExtensionST extends AbstractDslExtensionST {
 
     private void testExecutionConfigWithDsl(final ExecutionConfig config) throws Exception {
         assertNotNull("Execution configuration should exist", config);
-        assertThat(config.getTimeout(), is(600));
+        assertThat(config.getParsedTimeout(), is(600));
         assertFalse(config.isStopOnError());
         assertFalse(config.isCheckTestFile());
     }

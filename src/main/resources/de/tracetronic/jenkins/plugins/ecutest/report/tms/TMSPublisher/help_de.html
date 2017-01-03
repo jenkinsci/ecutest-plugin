@@ -28,20 +28,7 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
-    <f:entry title="${%credentialsId.title}" description="${%credentialsId.description}" field="credentialsId">
-        <c:select />
-    </f:entry>
-    <f:entry title="${%projectPath.title}" description="${%projectPath.description}" field="projectPath">
-        <f:textbox />
-    </f:entry>
-    <f:entry title="${%importPath.title}" description="${%importPath.description}" field="importPath">
-        <f:textbox />
-    </f:entry>
-    <f:advanced>
-        <f:entry title="${%timeout.title}" description="${%timeout.description}" field="timeout">
-            <f:textbox default="${descriptor.defaultTimeout}" />
-        </f:entry>
-    </f:advanced>
-</j:jelly>
+<div>
+    Veröffentlicht die TRF-Reports aller in diesem Job konfigurierten ECU-TEST-Packages bzw. -Projekte
+    in ein vorkonfiguriertes Testmanagementsystem wie RQM oder ALM.
+</div>

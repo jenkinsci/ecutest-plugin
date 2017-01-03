@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -293,7 +293,7 @@ public class TRFPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link TRFPublisher}.
      */
     @Symbol("publishTRF")
-    @Extension(ordinal = 1003)
+    @Extension(ordinal = 1004)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         @Override

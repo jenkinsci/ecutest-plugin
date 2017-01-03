@@ -67,7 +67,7 @@ public class ImportProjectDirTMSConfig extends ImportProjectTMSConfig {
     public ImportProjectDirTMSConfig expand(final EnvVars envVars) {
         final ImportProjectTMSConfig config = super.expand(envVars);
         return new ImportProjectDirTMSConfig(config.getProjectPath(), config.getImportPath(),
-                config.getCredentialsId(), config.getStringTimeout());
+                config.getCredentialsId(), config.getTimeout());
     }
 
     /**

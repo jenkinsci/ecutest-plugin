@@ -94,14 +94,14 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
     /**
      * @return the timeout as integer
      */
-    public int getTimeout() {
-        return ExecutionConfig.parse(getStringTimeout());
+    public int getParsedTimeout() {
+        return ExecutionConfig.parse(getTimeout());
     }
 
     /**
      * @return the timeout as string
      */
-    public String getStringTimeout() {
+    public String getTimeout() {
         return timeout;
     }
 
@@ -141,7 +141,7 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
         final String expProjectPath = envVars.expand(getProjectPath());
         final String expImportPath = envVars.expand(getImportPath());
         final String expCredentialsId = envVars.expand(getCredentialsId());
-        final String expTimeout = EnvUtil.expandEnvVar(getStringTimeout(), envVars, String.valueOf(DEFAULT_TIMEOUT));
+        final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars, String.valueOf(DEFAULT_TIMEOUT));
         return new ImportProjectTMSConfig(expProjectPath, expImportPath, expCredentialsId, expTimeout);
     }
 

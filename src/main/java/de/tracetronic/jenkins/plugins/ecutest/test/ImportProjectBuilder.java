@@ -101,7 +101,7 @@ public class ImportProjectBuilder extends AbstractTestHelper implements SimpleBu
      *            the list of configured project importers
      */
     @DataBoundSetter
-    public void setImportConfig(@CheckForNull final List<ImportProjectConfig> importConfigs) {
+    public void setImportConfigs(@CheckForNull final List<ImportProjectConfig> importConfigs) {
         this.importConfigs.addAll(importConfigs);
     }
 

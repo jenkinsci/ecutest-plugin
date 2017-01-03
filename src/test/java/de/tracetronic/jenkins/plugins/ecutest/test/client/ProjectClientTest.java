@@ -83,7 +83,7 @@ public class ProjectClientTest {
         assertFalse(client.getProjectConfig().isExecInCurrentPkgDir());
         assertEquals("", client.getProjectConfig().getFilterExpression());
         assertEquals(JobExecutionMode.SEQUENTIAL_EXECUTION, client.getProjectConfig().getJobExecMode());
-        assertEquals("Check timeout", 30, client.getExecutionConfig().getTimeout());
+        assertEquals("Check timeout", 30, client.getExecutionConfig().getParsedTimeout());
         assertTrue("Check stop mode", client.getExecutionConfig().isStopOnError());
         assertTrue(client.getExecutionConfig().isCheckTestFile());
     }

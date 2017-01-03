@@ -36,7 +36,7 @@ import org.apache.commons.lang.StringUtils;
 import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
 
 /**
- * Validator to check tool related form fields.
+ * Validator to check project importer related form fields.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */

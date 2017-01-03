@@ -47,7 +47,7 @@ public class ExecutionConfigTest {
     @Test
     public void testIntConstructor() {
         final ExecutionConfig config = new ExecutionConfig(60, true, true);
-        assertThat(config.getTimeout(), is(60));
+        assertThat(config.getParsedTimeout(), is(60));
         assertTrue(config.isStopOnError());
         assertTrue(config.isCheckTestFile());
     }
@@ -55,13 +55,13 @@ public class ExecutionConfigTest {
     @Test
     public void testStringConstructor() {
         final ExecutionConfig config = new ExecutionConfig("60", true, true);
-        assertThat(config.getTimeout(), is(60));
+        assertThat(config.getParsedTimeout(), is(60));
     }
 
     @Test
     public void testInvalidConstructor() {
         final ExecutionConfig config = new ExecutionConfig("abc", true, true);
-        assertThat(config.getTimeout(), is(ExecutionConfig.getDefaultTimeout()));
+        assertThat(config.getParsedTimeout(), is(ExecutionConfig.getDefaultTimeout()));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class ExecutionConfigTest {
         final ExecutionConfig config = new ExecutionConfig("${TIMEOUT}", true, true);
         final EnvVars envVars = new EnvVars();
         envVars.put("TIMEOUT", "60");
-        assertThat(config.expand(envVars).getTimeout(), is(60));
+        assertThat(config.expand(envVars).getParsedTimeout(), is(60));
     }
 
     @SuppressWarnings("deprecation")
