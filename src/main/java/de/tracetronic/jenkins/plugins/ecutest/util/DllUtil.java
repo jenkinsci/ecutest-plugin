@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -204,7 +204,7 @@ public final class DllUtil {
      *             if the current thread is interrupted while waiting for the completion
      */
     private static boolean copyLibrary(final FilePath src, final FilePath dest) throws IOException,
-    InterruptedException {
+            InterruptedException {
         return PathUtil.copyRemoteFile(src, dest);
     }
 
@@ -223,11 +223,11 @@ public final class DllUtil {
 
         @Override
         public Boolean invoke(final File libFile, final VirtualChannel channel) throws IOException,
-                InterruptedException {
+        InterruptedException {
             if (libFile.exists() && libFile.isFile()) {
                 final String libProperty = System.getProperty(LibraryLoader.JACOB_DLL_PATH);
                 if (!StringUtils.isBlank(libProperty)) {
-                    LOGGER.log(Level.INFO, String.format("%s already loaded.", libFile));
+                    LOGGER.log(Level.FINE, String.format("%s already loaded.", libFile));
                 } else {
                     System.setProperty(LibraryLoader.JACOB_DLL_PATH, libFile.getAbsolutePath());
                     try {

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -57,7 +57,7 @@ public interface TestClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    boolean runTestCase(final FilePath workspace, Launcher launcher, TaskListener listener)
+    boolean runTestCase(FilePath workspace, Launcher launcher, TaskListener listener)
             throws IOException, InterruptedException;
 
 }
