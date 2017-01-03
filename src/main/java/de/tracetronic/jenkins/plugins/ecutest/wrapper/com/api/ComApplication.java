@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -64,6 +64,15 @@ public interface ComApplication {
      *             in case of a COM exception
      */
     ComTestEnvironment getTestEnvironment() throws ETComException;
+
+    /**
+     * Returns the test management module.
+     *
+     * @return the {@link ComTestEnvironment} dispatch
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    ComTestManagement getTestManagement() throws ETComException;
 
     /**
      * Checks if the application process is running and ready to use.
@@ -143,6 +152,17 @@ public interface ComApplication {
     ComPackage openPackage(String path) throws ETComException;
 
     /**
+     * Closes a package.
+     *
+     * @param path
+     *            the full path name of the package to close
+     * @return {@code true} if the package was closed, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    boolean closePackage(String path) throws ETComException;
+
+    /**
      * Opens an existing project in COM-Application.
      *
      * @param path
@@ -171,15 +191,24 @@ public interface ComApplication {
     boolean closeProject(String path) throws ETComException;
 
     /**
-     * Closes a package.
+     * Imports a project from an archive.
      *
      * @param path
-     *            the full path name of the package to close
-     * @return {@code true} if the package was closed, {@code false} otherwise
+     *            the full path name of the project to import
+     * @param importPath
+     *            the full path name or a relative directory to the default package directory
+     *            as the projects/packages destination directory
+     * @param importConfigPath
+     *            the full path name or a relative directory to the default configuration directory
+     *            as the configurations destination directory
+     * @param replaceFiles
+     *            specifies whether files of same name should be replaced or left untouched
+     * @return the {@link ComPackage} dispatch, if the project was successfully imported, {@code null} otherwise
      * @throws ETComException
      *             in case of a COM exception
      */
-    boolean closePackage(String path) throws ETComException;
+    boolean importProject(String path, String importPath, String importConfigPath, boolean replaceFiles)
+            throws ETComException;
 
     /**
      * Opens a test bench configuration file (*.tbc).

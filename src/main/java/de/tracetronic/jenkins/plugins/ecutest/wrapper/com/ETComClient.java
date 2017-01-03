@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -44,6 +44,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComPackage;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComProject;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestConfiguration;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestEnvironment;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestManagement;
 
 /**
  * COM client to initialize a COM connection and to perform requests on application specific COM API.
@@ -227,6 +228,11 @@ public class ETComClient implements ComApplication, AutoCloseable {
     }
 
     @Override
+    public ComTestManagement getTestManagement() throws ETComException {
+        return new TestManagement(dispatch.performRequest("GetTestManagementModule").toDispatch());
+    }
+
+    @Override
     public boolean isApplicationRunning() throws ETComException {
         return dispatch.performRequest("IsApplicationRunning").getBoolean();
     }
@@ -256,6 +262,11 @@ public class ETComClient implements ComApplication, AutoCloseable {
         return new Package(dispatch.performRequest("OpenPackage", new Variant(path)).toDispatch());
     }
 
+    @Override
+    public boolean closePackage(final String path) throws ETComException {
+        return dispatch.performRequest("ClosePackage", new Variant(path)).getBoolean();
+    }
+
     /**
      * Same as {@link #openProject(String, boolean, String)} but with default parameters.
      *
@@ -283,8 +294,10 @@ public class ETComClient implements ComApplication, AutoCloseable {
     }
 
     @Override
-    public boolean closePackage(final String path) throws ETComException {
-        return dispatch.performRequest("ClosePackage", new Variant(path)).getBoolean();
+    public boolean importProject(final String path, final String importPath, final String importConfigPath,
+            final boolean replaceFiles) throws ETComException {
+        return dispatch.performRequest("ImportProject", new Variant(path), new Variant(replaceFiles),
+                new Variant(false), new Variant(importPath), new Variant(importConfigPath)).getBoolean();
     }
 
     @Override

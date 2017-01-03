@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -56,7 +56,7 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
 
     @Override
     public boolean login(final String user, final String password) throws ETComException {
-        return performRequest("Logout", new Variant(user), new Variant(password)).getBoolean();
+        return performRequest("Login", new Variant(user), new Variant(password)).getBoolean();
     }
 
     @Override

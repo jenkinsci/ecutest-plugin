@@ -29,10 +29,13 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
+import hudson.AbortException;
 import hudson.DescriptorExtensionList;
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.Util;
 import hudson.model.TaskListener;
 import hudson.model.AbstractProject;
 import hudson.model.Descriptor;
@@ -54,14 +57,18 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
+import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.test.client.ImportProjectClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 
 /**
  * Builder providing the import of one or multiple ECU-TEST projects.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ImportProjectBuilder extends Builder implements SimpleBuildStep {
+public class ImportProjectBuilder extends AbstractTestHelper implements SimpleBuildStep {
 
     @Nonnull
     private final List<ImportProjectConfig> importConfigs;
@@ -97,7 +104,66 @@ public class ImportProjectBuilder extends Builder implements SimpleBuildStep {
     @Override
     public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException {
-        // TODO implement
+        // FIXME: workaround because pipeline node allocation does not create the actual workspace directory
+        if (!workspace.exists()) {
+            workspace.mkdirs();
+        }
+
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        try {
+            ProcessUtil.checkOS(launcher);
+            final boolean performed = performImport(run, workspace, launcher, listener);
+            if (!performed) {
+                throw new AbortException("Importing projects failed!");
+            }
+        } catch (final IOException e) {
+            Util.displayIOException(e, listener);
+            throw e;
+        } catch (final ETPluginException e) {
+            logger.logError(e.getMessage());
+            throw new AbortException(e.getMessage());
+        }
+    }
+
+    /**
+     * Performs the project imports.
+     *
+     * @param run
+     *            the run
+     * @param workspace
+     *            the workspace
+     * @param launcher
+     *            the launcher
+     * @param listener
+     *            the listener
+     * @return {@code true} if import succeeded, {@code false} otherwise
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the build gets interrupted
+     */
+    private boolean performImport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws IOException, InterruptedException {
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+
+        // Check for running ECU-TEST instance
+        if (!checkETInstance(launcher, false)) {
+            logger.logError("No running ECU-TEST instance found, please configure one at first!");
+            return false;
+        }
+
+        for (final ImportProjectConfig importConfig : importConfigs) {
+            // Expand import configuration
+            final EnvVars buildEnv = run.getEnvironment(listener);
+            final ImportProjectConfig expImportConfig = (ImportProjectConfig) importConfig.expand(buildEnv);
+
+            // Import project
+            final ImportProjectClient importClient = new ImportProjectClient(expImportConfig);
+            if (!importClient.importProject(workspace, launcher, listener)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

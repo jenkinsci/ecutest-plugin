@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -74,5 +74,5 @@ public abstract class AbstractTestDescriptor extends BuildStepDescriptor<Builder
      *            the test file
      * @return the form validation
      */
-    public abstract FormValidation doCheckTestFile(@QueryParameter final String value);
+    public abstract FormValidation doCheckTestFile(@QueryParameter String value);
 }

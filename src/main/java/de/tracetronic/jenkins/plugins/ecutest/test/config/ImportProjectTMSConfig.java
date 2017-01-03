@@ -31,11 +31,25 @@ package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
 import hudson.EnvVars;
 import hudson.Extension;
+import hudson.security.ACL;
 import hudson.util.FormValidation;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.CheckForNull;
+
+import jenkins.model.Jenkins;
 
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
+
+import com.cloudbees.plugins.credentials.CredentialsMatchers;
+import com.cloudbees.plugins.credentials.CredentialsProvider;
+import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
+import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 
 import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
 
@@ -74,6 +88,23 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
      */
     public String getCredentialsId() {
         return credentialsId;
+    }
+
+    /**
+     * Gets the credentials providing access to user name and password.
+     *
+     * @return the credentials
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             the interrupted exception
+     */
+    @CheckForNull
+    public StandardUsernamePasswordCredentials getCredentials() throws IOException, InterruptedException {
+        final List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider.lookupCredentials(
+                StandardUsernamePasswordCredentials.class, Jenkins.getInstance(), ACL.SYSTEM,
+                Collections.<DomainRequirement> emptyList());
+        return CredentialsMatchers.firstOrNull(credentials, CredentialsMatchers.withId(credentialsId));
     }
 
     @Override
