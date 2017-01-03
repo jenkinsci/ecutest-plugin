@@ -43,8 +43,5 @@
         <f:entry title="${%replaceFiles.title}" description="${%replaceFiles.description}" field="replaceFiles">
             <f:checkbox default="true" />
         </f:entry>
-        <f:entry title="${%timeout.title}" description="${%timeout.description}" field="timeout">
-            <f:textbox default="0" />
-        </f:entry>
     </f:advanced>
 </j:jelly>

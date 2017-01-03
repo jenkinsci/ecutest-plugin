@@ -142,7 +142,7 @@ public class ImportProjectClient {
      *             if the build gets interrupted
      */
     public boolean isTMSAvailable(final Launcher launcher, final TaskListener listener) throws IOException,
-            InterruptedException {
+    InterruptedException {
         return launcher.getChannel().call(new TMSAvailableCallable(listener));
     }
 
@@ -180,7 +180,7 @@ public class ImportProjectClient {
      *             if the build gets interrupted
      */
     public boolean logout(final Launcher launcher, final TaskListener listener) throws IOException,
-    InterruptedException {
+            InterruptedException {
         return launcher.getChannel().call(new LogoutTMSCallable(listener));
     }
 
@@ -198,7 +198,7 @@ public class ImportProjectClient {
      *             if the build gets interrupted
      */
     public boolean importProjectArchive(final Launcher launcher, final TaskListener listener) throws IOException,
-            InterruptedException {
+    InterruptedException {
         return launcher.getChannel().call(
                 new ImportProjectArchiveCallable((ImportProjectArchiveConfig) importConfig, listener));
     }
@@ -217,7 +217,7 @@ public class ImportProjectClient {
      *             if the build gets interrupted
      */
     public boolean importProjectFromTMS(final Launcher launcher, final TaskListener listener) throws IOException,
-            InterruptedException {
+    InterruptedException {
         return launcher.getChannel().call(
                 new ImportProjectTMSCallable((ImportProjectTMSConfig) importConfig, listener));
     }
@@ -236,7 +236,7 @@ public class ImportProjectClient {
      *             if the build gets interrupted
      */
     public boolean importProjectDirFromTMS(final Launcher launcher, final TaskListener listener) throws IOException,
-            InterruptedException {
+    InterruptedException {
         return launcher.getChannel().call(
                 new ImportProjectDirTMSCallable((ImportProjectDirTMSConfig) importConfig, listener));
     }
@@ -450,7 +450,7 @@ public class ImportProjectClient {
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 if (isImported = tm.importProject(importConfig.getProjectPath(), importConfig.getImportPath(),
-                        Integer.parseInt(importConfig.getTimeout()))) {
+                        importConfig.getTimeout())) {
                     logger.logInfo(String.format("-> Project imported successfully to target directory %s.",
                             importConfig.getImportPath()));
                 }
@@ -494,7 +494,7 @@ public class ImportProjectClient {
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 isImported = tm.importProjectDirectory(importConfig.getProjectPath(), importConfig.getImportPath(),
-                        Integer.parseInt(importConfig.getTimeout()));
+                        importConfig.getTimeout());
                 logger.logInfo(String.format("-> Project directory imported successfully to target directory %s.",
                         importConfig.getImportPath()));
             } catch (final ETComException e) {

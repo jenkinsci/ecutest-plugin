@@ -67,27 +67,9 @@ public abstract class ImportProjectConfig implements Describable<ImportProjectCo
 
     private final String projectPath;
     private final String importPath;
-    private final String timeout;
 
     /**
      * Instantiates a new {@link ImportProjectConfig}.
-     *
-     * @param projectPath
-     *            the project path
-     * @param importPath
-     *            the import path
-     * @param timeout
-     *            the import timeout
-     */
-    public ImportProjectConfig(final String projectPath, final String importPath, final String timeout) {
-        super();
-        this.projectPath = StringUtils.trimToEmpty(projectPath);
-        this.importPath = StringUtils.trimToEmpty(importPath);
-        this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(0));
-    }
-
-    /**
-     * Instantiates a new {@link ImportProjectConfig} with disabled timeout.
      *
      * @param projectPath
      *            the project path
@@ -98,7 +80,6 @@ public abstract class ImportProjectConfig implements Describable<ImportProjectCo
         super();
         this.projectPath = StringUtils.trimToEmpty(projectPath);
         this.importPath = StringUtils.trimToEmpty(importPath);
-        timeout = String.valueOf(0);
     }
 
     /**
@@ -113,13 +94,6 @@ public abstract class ImportProjectConfig implements Describable<ImportProjectCo
      */
     public String getImportPath() {
         return importPath;
-    }
-
-    /**
-     * @return the import timeout
-     */
-    public String getTimeout() {
-        return timeout;
     }
 
     @CheckForNull
@@ -175,17 +149,6 @@ public abstract class ImportProjectConfig implements Describable<ImportProjectCo
          */
         public FormValidation doCheckImportPath(@QueryParameter final String value) {
             return importValidator.validateImportPath(value);
-        }
-
-        /**
-         * Validates the timeout.
-         *
-         * @param value
-         *            the timeout
-         * @return the form validation
-         */
-        public FormValidation doCheckTimeout(@QueryParameter final String value) {
-            return importValidator.validateTimeout(value, 0);
         }
 
         /**

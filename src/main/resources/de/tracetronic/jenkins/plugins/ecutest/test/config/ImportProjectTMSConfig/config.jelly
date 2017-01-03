@@ -41,7 +41,7 @@
     </f:entry>
     <f:advanced>
         <f:entry title="${%timeout.title}" description="${%timeout.description}" field="timeout">
-            <f:textbox default="0" />
+            <f:textbox default="${descriptor.defaultTimeout}" />
         </f:entry>
     </f:advanced>
 </j:jelly>

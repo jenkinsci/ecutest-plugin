@@ -183,8 +183,7 @@ public class ImportProjectBuilder extends AbstractTestHelper implements SimpleBu
                 final String expArchivePath = PathUtil.makeAbsolutePath(expImportConfig.getProjectPath(), workspace);
                 final ImportProjectArchiveConfig archiveConfig = (ImportProjectArchiveConfig) expImportConfig;
                 expImportConfig = new ImportProjectArchiveConfig(expArchivePath, archiveConfig.getImportPath(),
-                        archiveConfig.getImportConfigPath(), archiveConfig.isReplaceFiles(),
-                        archiveConfig.getTimeout());
+                        archiveConfig.getImportConfigPath(), archiveConfig.isReplaceFiles());
             }
 
             // Import project

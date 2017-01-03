@@ -52,6 +52,7 @@ import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredenti
 import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 
 import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
+import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
 
 /**
  * Class holding the configuration for importing a project from test management system.
@@ -62,7 +63,13 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Defines the default timeout for importing a project.
+     */
+    protected static final int DEFAULT_TIMEOUT = 60;
+
     private final String credentialsId;
+    private final String timeout;
 
     /**
      * Instantiates a new {@link ImportProjectTMSConfig}.
@@ -79,8 +86,30 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
     @DataBoundConstructor
     public ImportProjectTMSConfig(final String projectPath, final String importPath, final String credentialsId,
             final String timeout) {
-        super(projectPath, importPath, timeout);
+        super(projectPath, importPath);
         this.credentialsId = StringUtils.trimToEmpty(credentialsId);
+        this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(DEFAULT_TIMEOUT));
+    }
+
+    /**
+     * @return the timeout as integer
+     */
+    public int getTimeout() {
+        return ExecutionConfig.parse(getStringTimeout());
+    }
+
+    /**
+     * @return the timeout as string
+     */
+    public String getStringTimeout() {
+        return timeout;
+    }
+
+    /**
+     * @return the default timeout
+     */
+    public static int getDefaultTimeout() {
+        return DEFAULT_TIMEOUT;
     }
 
     /**
@@ -112,7 +141,7 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
         final String expProjectPath = envVars.expand(getProjectPath());
         final String expImportPath = envVars.expand(getImportPath());
         final String expCredentialsId = envVars.expand(getCredentialsId());
-        final String expTimeout = envVars.expand(getTimeout());
+        final String expTimeout = EnvUtil.expandEnvVar(getStringTimeout(), envVars, String.valueOf(DEFAULT_TIMEOUT));
         return new ImportProjectTMSConfig(expProjectPath, expImportPath, expCredentialsId, expTimeout);
     }
 
@@ -122,9 +151,27 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
     @Extension(ordinal = 2)
     public static class DescriptorImpl extends ImportProjectConfig.DescriptorImpl {
 
+        /**
+         * @return the default timeout
+         */
+        public static int getDefaultTimeout() {
+            return DEFAULT_TIMEOUT;
+        }
+
         @Override
         public FormValidation doCheckProjectPath(@QueryParameter final String value) {
             return importValidator.validateProjectPath(value);
+        }
+
+        /**
+         * Validates the timeout.
+         *
+         * @param value
+         *            the timeout
+         * @return the form validation
+         */
+        public FormValidation doCheckTimeout(@QueryParameter final String value) {
+            return importValidator.validateTimeout(value, getDefaultTimeout());
         }
 
         @Override

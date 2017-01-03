@@ -65,11 +65,9 @@ public class ImportProjectDirTMSConfig extends ImportProjectTMSConfig {
 
     @Override
     public ImportProjectDirTMSConfig expand(final EnvVars envVars) {
-        final String expProjectPath = envVars.expand(getProjectPath());
-        final String expImportPath = envVars.expand(getImportPath());
-        final String expCredentialsId = envVars.expand(getCredentialsId());
-        final String expTimeout = envVars.expand(getTimeout());
-        return new ImportProjectDirTMSConfig(expProjectPath, expImportPath, expCredentialsId, expTimeout);
+        final ImportProjectTMSConfig config = super.expand(envVars);
+        return new ImportProjectDirTMSConfig(config.getProjectPath(), config.getImportPath(),
+                config.getCredentialsId(), config.getStringTimeout());
     }
 
     /**

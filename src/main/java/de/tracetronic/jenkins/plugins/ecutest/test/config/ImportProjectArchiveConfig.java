@@ -62,13 +62,11 @@ public class ImportProjectArchiveConfig extends ImportProjectConfig {
      *            the import configuration path
      * @param replaceFiles
      *            specifies whether to replace files
-     * @param timeout
-     *            the import timeout
      */
     @DataBoundConstructor
     public ImportProjectArchiveConfig(final String projectPath, final String importPath, final String importConfigPath,
-            final boolean replaceFiles, final String timeout) {
-        super(projectPath, importPath, timeout);
+            final boolean replaceFiles) {
+        super(projectPath, importPath);
         this.importConfigPath = StringUtils.trimToEmpty(importConfigPath);
         this.replaceFiles = replaceFiles;
     }
@@ -92,9 +90,7 @@ public class ImportProjectArchiveConfig extends ImportProjectConfig {
         final String expProjectPath = envVars.expand(getProjectPath());
         final String expImportPath = envVars.expand(getImportPath());
         final String expImportConfigPath = envVars.expand(getImportConfigPath());
-        final String expTimeout = envVars.expand(getTimeout());
-        return new ImportProjectArchiveConfig(expProjectPath, expImportPath, expImportConfigPath, isReplaceFiles(),
-                expTimeout);
+        return new ImportProjectArchiveConfig(expProjectPath, expImportPath, expImportConfigPath, isReplaceFiles());
     }
 
     /**
