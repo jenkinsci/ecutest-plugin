@@ -51,7 +51,7 @@ import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFReport;
-import de.tracetronic.jenkins.plugins.ecutest.test.client.TMSClient;
+import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTMSClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
@@ -62,7 +62,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class TMSReportUploader extends TMSClient {
+public class TMSReportUploader extends AbstractTMSClient {
 
     /**
      * Uploads the reports to the test management system.

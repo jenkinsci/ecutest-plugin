@@ -56,7 +56,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ImportProjectClient extends TMSClient {
+public class ImportProjectClient extends AbstractTMSClient {
 
     private final ImportProjectConfig importConfig;
 

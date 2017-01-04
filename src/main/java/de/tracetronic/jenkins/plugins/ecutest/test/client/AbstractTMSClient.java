@@ -51,7 +51,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class TMSClient {
+public abstract class AbstractTMSClient {
 
     /**
      * Checks whether the test management module is available in current running ECU-TEST instance.
