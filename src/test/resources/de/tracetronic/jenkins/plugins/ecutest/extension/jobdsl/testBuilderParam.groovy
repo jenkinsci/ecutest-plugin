@@ -26,6 +26,12 @@ def strJobExecutionMode = 'PARALLEL_EXECUTION'
 def intJobExecutionMode = 2
 def strScanMode = 'PACKAGES_ONLY'
 def bRecursiveScan = true
+def strArchivePath = 'test.prz'
+def strImportPath = 'import'
+def bReplaceFiles = false
+def strCredentialsId = 'credentialsId'
+def strProjectPath = 'Root/Test'
+def strProjectDirPath = 'Root/TestDir'
 
 freeStyleJob("${strJobName}") {
     steps {
@@ -121,6 +127,24 @@ freeStyleJob("${strJobName}") {
                 timeout("${strTimeout}")
                 stopOnError(bStopOnError)
                 checkTestFile(bCheckTestFile)
+            }
+        }
+        importProjects {
+            importFromArchive("${strArchivePath}", "${strImportPath}", "${strImportPath}", bReplaceFiles)
+            importFromArchive("${strArchivePath}") {
+                importPath("${strImportPath}")
+                importConfigPath("${strImportPath}")
+                replaceFiles(bReplaceFiles)
+            }
+            importFromTMS("${strCredentialsId}", "${strProjectPath}", "${strImportPath}", "${strTimeout}")
+            importFromTMS("${strCredentialsId}", "${strProjectPath}") {
+                importPath("${strImportPath}")
+                timeout(intTimeout)
+            }
+            importFromTMSDir("${strCredentialsId}", "${strProjectDirPath}", "${strImportPath}", "${strTimeout}")
+            importFromTMSDir("${strCredentialsId}", "${strProjectDirPath}") {
+                importPath("${strImportPath}")
+                timeout(intTimeout)
             }
         }
     }

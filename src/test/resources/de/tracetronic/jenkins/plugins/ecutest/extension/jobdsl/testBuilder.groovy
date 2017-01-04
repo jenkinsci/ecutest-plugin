@@ -94,5 +94,23 @@ freeStyleJob("testBuilder") {
                 checkTestFile(false)
             }
         }
+        importProjects {
+            importFromArchive("test.prz", "import", "import", false)
+            importFromArchive("test.prz") {
+                importPath("import")
+                importConfigPath("import")
+                replaceFiles(false)
+            }
+            importFromTMS("credentialsId", "Root/Test", "import", "600")
+            importFromTMS("credentialsId", "Root/Test") {
+                importPath("import")
+                timeout(600)
+            }
+            importFromTMSDir("credentialsId", "Root/TestDir", "import", "600")
+            importFromTMSDir("credentialsId", "Root/TestDir") {
+                importPath("import")
+                timeout(600)
+            }
+        }
     }
 }

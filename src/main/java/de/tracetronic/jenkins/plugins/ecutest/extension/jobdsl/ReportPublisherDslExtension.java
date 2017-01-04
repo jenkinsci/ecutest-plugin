@@ -280,6 +280,8 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         publisher.setTimeout(context.timeout);
         publisher.setAllowMissing(context.allowMissing);
         publisher.setRunOnFailed(context.runOnFailed);
+        publisher.setArchiving(context.archiving);
+        publisher.setKeepAll(context.keepAll);
         checkToolInstallation(toolName.toString(), publisher);
         return publisher;
     }

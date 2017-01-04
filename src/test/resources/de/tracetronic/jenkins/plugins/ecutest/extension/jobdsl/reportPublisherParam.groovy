@@ -15,6 +15,8 @@ def strSettingName = 'param'
 def strSettingValue = '123'
 def strSettingName2 = 'param2'
 def strSettingValue2 = '456'
+def strCredentialsId = 'credentialsId'
+def strTimeout = '600'
 
 freeStyleJob("${strJobName}") {
     publishers {
@@ -69,6 +71,13 @@ freeStyleJob("${strJobName}") {
                     }
                 }
             }
+            allowMissing(bAllowMissing)
+            runOnFailed(bRunOnFailed)
+            archiving(bArchiving)
+            keepAll(bKeepAll)
+        }
+        publishTMS("${strETInstall}", "${strCredentialsId}") {
+            timeout("${strTimeout}")
             allowMissing(bAllowMissing)
             runOnFailed(bRunOnFailed)
             archiving(bArchiving)
