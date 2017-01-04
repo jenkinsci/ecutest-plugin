@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -41,14 +41,21 @@ import javaposse.jobdsl.plugin.DslExtensionMethod;
 
 import com.google.common.base.Preconditions;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.test.ImportProjectBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestFolderBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestFolderBuilder.ScanMode;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestPackageBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestProjectBuilder;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirTMSConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectTMSConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageParameter;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.ImportProjectValidator;
 
 /**
  * Class providing test related DSL extensions.
@@ -169,6 +176,33 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
     }
 
     /**
+     * {@link DslExtensionMethod} providing the import of projects from archive and test management system.
+     *
+     * @param closure
+     *            the nested Groovy closure
+     * @return the instance of a {@link ImportProjectBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object importProjects(final Runnable closure) {
+        final ImportProjectContext context = new ImportProjectContext();
+        executeInContext(closure, context);
+
+        final ImportProjectBuilder publisher = new ImportProjectBuilder(context.importConfigs);
+        return publisher;
+    }
+
+    /**
+     * {@link DslExtensionMethod} providing the import of projects from archive
+     * and test management system with default settings.
+     *
+     * @return the instance of a {@link ReportGeneratorPublisher}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object importProjects() {
+        return importProjects(null);
+    }
+
+    /**
      * {@link Context} class providing ECU-TEST package execution methods for the nested DSL context.
      */
     public class TestPackageContext extends AbstractTestContext {
@@ -248,7 +282,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
              *            the parameter value
              */
             public void parameter(final CharSequence name, final CharSequence value) {
-                Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_PARAM_NAME);
+                Preconditions.checkNotNull(name, NOT_NULL_MSG, OPT_PARAM_NAME);
                 Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_PARAM_VALUE);
 
                 FormValidation validation = validator.validateParameterName(name.toString());
@@ -441,6 +475,283 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             executeInContext(closure, context);
             projectConfig = new ProjectConfig(context.execInCurrentPkgDir, context.filterExpression,
                     context.jobExecutionMode);
+        }
+    }
+
+    /**
+     * {@link Context} class providing import project methods for the nested DSL context.
+     */
+    public class ImportProjectContext extends AbstractTestContext {
+
+        private static final String OPT_ARCHIVE_PATH = "archivePath";
+        private static final String OPT_PROJECT_PATH = "projectPath";
+        private static final String OPT_PROJECT_DIR_PATH = "projectDirPath";
+        private static final String OPT_IMPORT_PATH = "importPath";
+        private static final String OPT_IMPORT_CONFIG_PATH = "importConfigPath";
+        private static final String OPT_CREDENTIALS_ID = "credentialsId";
+
+        private final List<ImportProjectConfig> importConfigs = new ArrayList<ImportProjectConfig>();
+
+        /**
+         * Validator to check import project related DSL options.
+         */
+        protected final ImportProjectValidator validator = new ImportProjectValidator();
+
+        /**
+         * Option defining the import project from archive configuration.
+         *
+         * @param archivePath
+         *            the archive path
+         * @param importPath
+         *            the import path
+         * @param importConfigPath
+         *            the import configuration path
+         * @param replaceFiles
+         *            specifies whether to replace files
+         */
+        public void importFromArchive(final CharSequence archivePath, final CharSequence importPath,
+                final CharSequence importConfigPath, final boolean replaceFiles) {
+            Preconditions.checkNotNull(archivePath, NOT_NULL_MSG, OPT_ARCHIVE_PATH);
+            Preconditions.checkNotNull(importPath, NOT_NULL_MSG, OPT_IMPORT_PATH);
+            Preconditions.checkNotNull(importConfigPath, NOT_NULL_MSG, OPT_IMPORT_CONFIG_PATH);
+
+            FormValidation validation = validator.validateArchivePath(archivePath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            validation = validator.validateImportPath(importPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            validation = validator.validateImportPath(importConfigPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            importConfigs.add(new ImportProjectArchiveConfig(archivePath.toString(), importPath.toString(),
+                    importConfigPath.toString(), replaceFiles));
+        }
+
+        /**
+         * Option defining the import project from archive configuration.
+         *
+         * @param archivePath
+         *            the archive path
+         * @param closure
+         *            the nested Groovy closure
+         */
+        public void importFromArchive(final CharSequence archivePath, final Runnable closure) {
+            Preconditions.checkNotNull(archivePath, NOT_NULL_MSG, OPT_ARCHIVE_PATH);
+            final ImportArchiveContext context = new ImportArchiveContext();
+            executeInContext(closure, context);
+            importConfigs.add(new ImportProjectArchiveConfig(archivePath.toString(), context.importPath,
+                    context.importConfigPath, context.replaceFiles));
+        }
+
+        /**
+         * Option defining the import project from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectPath
+         *            the project path
+         * @param importPath
+         *            the import path
+         * @param timeout
+         *            the import timeout
+         */
+        public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
+                final CharSequence importPath, final CharSequence timeout) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(projectPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
+            Preconditions.checkNotNull(importPath, NOT_NULL_MSG, OPT_IMPORT_PATH);
+            Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_TIMEOUT);
+
+            FormValidation validation = validator.validateProjectPath(projectPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            validation = validator.validateImportPath(importPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            importConfigs.add(new ImportProjectTMSConfig(projectPath.toString(), importPath.toString(),
+                    credentialsId.toString(), timeout.toString()));
+        }
+
+        /**
+         * Option defining the import project from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectPath
+         *            the project path
+         * @param importPath
+         *            the import path
+         * @param timeout
+         *            the import timeout
+         */
+        public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
+                final CharSequence importPath, final int timeout) {
+            importFromTMS(credentialsId, projectPath, importPath, String.valueOf(timeout));
+        }
+
+        /**
+         * Option defining the import project from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectPath
+         *            the project path
+         * @param closure
+         *            the nested Groovy closure
+         */
+        public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
+                final Runnable closure) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(projectPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
+            final ImportTMSContext context = new ImportTMSContext();
+            executeInContext(closure, context);
+            importConfigs.add(new ImportProjectTMSConfig(projectPath.toString(), context.importPath,
+                    credentialsId.toString(), context.timeout));
+        }
+
+        /**
+         * Option defining the import project directory from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectDirPath
+         *            the project directory path
+         * @param importPath
+         *            the import path
+         * @param timeout
+         *            the import timeout
+         */
+        public void importFromTMSDir(final CharSequence credentialsId, final CharSequence projectDirPath,
+                final CharSequence importPath, final CharSequence timeout) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(projectDirPath, NOT_NULL_MSG, OPT_PROJECT_DIR_PATH);
+            Preconditions.checkNotNull(importPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
+            Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_PROJECT_PATH);
+
+            FormValidation validation = validator.validateProjectPath(projectDirPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            validation = validator.validateImportPath(importPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            importConfigs.add(new ImportProjectDirTMSConfig(projectDirPath.toString(), importPath.toString(),
+                    credentialsId.toString(), timeout.toString()));
+        }
+
+        /**
+         * Option defining the import project directory from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectDirPath
+         *            the project directory path
+         * @param importPath
+         *            the import path
+         * @param timeout
+         *            the import timeout
+         */
+        public void importFromTMSDir(final CharSequence credentialsId, final CharSequence projectDirPath,
+                final CharSequence importPath, final int timeout) {
+            importFromTMSDir(credentialsId, projectDirPath, importPath, String.valueOf(timeout));
+        }
+
+        /**
+         * Option defining the import project directory from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectDirPath
+         *            the project path
+         * @param closure
+         *            the nested Groovy closure
+         */
+        public void importFromTMSDir(final CharSequence credentialsId, final CharSequence projectDirPath,
+                final Runnable closure) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(projectDirPath, NOT_NULL_MSG, OPT_PROJECT_DIR_PATH);
+            final ImportTMSContext context = new ImportTMSContext();
+            executeInContext(closure, context);
+            importConfigs.add(new ImportProjectDirTMSConfig(projectDirPath.toString(), context.importPath,
+                    credentialsId.toString(), context.timeout));
+        }
+
+        /**
+         * {@link Context} class providing common import project methods for the nested DSL context.
+         */
+        public class AbstractImportProjectContext implements Context {
+
+            /**
+             * The import path.
+             */
+            protected String importPath;
+
+            /**
+             * Option defining the import path.
+             *
+             * @param value
+             *            the value
+             */
+            public void importPath(final String value) {
+                final FormValidation validation = validator.validateImportPath(value);
+                Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+                importPath = value;
+            }
+        }
+
+        /**
+         * {@link Context} class providing the import from archive methods for the nested DSL context.
+         */
+        public class ImportArchiveContext extends AbstractImportProjectContext {
+
+            private String importConfigPath;
+            private boolean replaceFiles = true;
+
+            /**
+             * Option defining the import configuration path.
+             *
+             * @param value
+             *            the value
+             */
+            public void importConfigPath(final String value) {
+                final FormValidation validation = validator.validateImportConfigPath(value);
+                Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+                importConfigPath = value;
+            }
+
+            /**
+             * Option defining whether to replace files.
+             *
+             * @param value
+             *            the value
+             */
+            public void replaceFiles(final boolean value) {
+                replaceFiles = value;
+            }
+        }
+
+        /**
+         * {@link Context} class providing the import from test management system methods for the nested DSL context.
+         */
+        public class ImportTMSContext extends AbstractImportProjectContext {
+
+            private String timeout = String.valueOf(ImportProjectTMSConfig.getDefaultTimeout());
+
+            /**
+             * Option defining the import timeout.
+             *
+             * @param value
+             *            the value
+             */
+            public void timeout(final String value) {
+                final FormValidation validation = validator.validateTimeout(value,
+                        ImportProjectTMSConfig.getDefaultTimeout());
+                Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+                timeout = value;
+            }
+
+            /**
+             * Option defining the import timeout.
+             *
+             * @param value
+             *            the value as Integer
+             */
+            public void timeout(final int value) {
+                timeout(String.valueOf((Object) value));
+            }
         }
     }
 }
