@@ -84,13 +84,13 @@ public class TMSPublisher extends AbstractReportPublisher {
     /**
      * Defines the default timeout for importing a project.
      */
-    protected static final int DEFAULT_TIMEOUT = 60;
+    private static final int DEFAULT_TIMEOUT = 60;
 
     @Nonnull
     private final String toolName;
     @Nonnull
     private final String credentialsId;
-    private String timeout;
+    private String timeout = String.valueOf(getDefaultTimeout());
 
     /**
      * Instantiates a new {@link TMSPublisher}.
@@ -124,8 +124,18 @@ public class TMSPublisher extends AbstractReportPublisher {
     }
 
     /**
+     * @param timeout
+     *            the timeout
+     */
+    @DataBoundSetter
+    public void setTimeout(@CheckForNull final String timeout) {
+        this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(getDefaultTimeout()));
+    }
+
+    /**
      * @return the export timeout
      */
+    @Nonnull
     public String getTimeout() {
         return timeout;
     }
@@ -135,15 +145,6 @@ public class TMSPublisher extends AbstractReportPublisher {
      */
     public static int getDefaultTimeout() {
         return DEFAULT_TIMEOUT;
-    }
-
-    /**
-     * @param timeout
-     *            the export timeout
-     */
-    @DataBoundSetter
-    public void setTimeout(final String timeout) {
-        this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(DEFAULT_TIMEOUT));
     }
 
     /**
