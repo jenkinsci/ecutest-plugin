@@ -183,12 +183,13 @@ public class TMSPublisher extends AbstractReportPublisher {
             throw new ETPluginException("Empty test results are not allowed, setting build status to FAILURE!");
         }
 
+        boolean isPublished = false;
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
         final boolean isETRunning = !foundProcesses.isEmpty();
 
         // Start ECU-TEST if necessary
         if (isETRunning) {
-            publishReports(reportFiles, launcher, listener);
+            isPublished = publishReports(reportFiles, launcher, listener);
         } else {
             // Get selected ECU-TEST installation
             final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
@@ -200,7 +201,7 @@ public class TMSPublisher extends AbstractReportPublisher {
             final ETClient etClient = new ETClient(expandedToolName, installPath, workspaceDir, settingsDir,
                     StartETBuilder.DEFAULT_TIMEOUT, false);
             if (etClient.start(false, workspace, launcher, listener)) {
-                publishReports(reportFiles, launcher, listener);
+                isPublished = publishReports(reportFiles, launcher, listener);
             } else {
                 logger.logError(String.format("Starting %s failed.", toolName));
             }
@@ -209,7 +210,12 @@ public class TMSPublisher extends AbstractReportPublisher {
             }
         }
 
-        logger.logInfo("Reports published successfully to test management system.");
+        if (isPublished) {
+            logger.logInfo("Reports published successfully to test management system.");
+        } else {
+            logger.logInfo("Failed publishing report to test management system.");
+            run.setResult(Result.FAILURE);
+        }
     }
 
     /**

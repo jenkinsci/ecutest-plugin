@@ -43,6 +43,7 @@ import javax.annotation.CheckForNull;
 import jenkins.model.Jenkins;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -143,6 +144,29 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
         final String expCredentialsId = envVars.expand(getCredentialsId());
         final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars, String.valueOf(DEFAULT_TIMEOUT));
         return new ImportProjectTMSConfig(expProjectPath, expImportPath, expCredentialsId, expTimeout);
+    }
+
+    @Override
+    public final boolean equals(final Object other) {
+        boolean result = false;
+        if (other instanceof ImportProjectTMSConfig) {
+            final ImportProjectTMSConfig that = (ImportProjectTMSConfig) other;
+            final String projectPath = getProjectPath();
+            final String importPath = getImportPath();
+            final String thatProjectPath = that.getProjectPath();
+            final String thatImportPath = that.getImportPath();
+            result = (projectPath == null ? thatProjectPath == null : projectPath.equals(thatProjectPath))
+                    && (importPath == null ? thatImportPath == null : importPath.equals(thatImportPath))
+                    && (credentialsId == null ? that.credentialsId == null : credentialsId.equals(that.credentialsId))
+                    && (timeout == null ? that.timeout == null : timeout.equals(that.timeout));
+        }
+        return result;
+    }
+
+    @Override
+    public final int hashCode() {
+        return new HashCodeBuilder(17, 31).append(getProjectPath()).append(getImportPath())
+                .append(credentialsId).append(timeout).toHashCode();
     }
 
     /**

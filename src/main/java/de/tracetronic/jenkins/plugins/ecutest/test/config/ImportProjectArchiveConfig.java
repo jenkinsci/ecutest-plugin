@@ -34,6 +34,7 @@ import hudson.Extension;
 import hudson.util.FormValidation;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -93,6 +94,29 @@ public class ImportProjectArchiveConfig extends ImportProjectConfig {
         return new ImportProjectArchiveConfig(expProjectPath, expImportPath, expImportConfigPath, isReplaceFiles());
     }
 
+    @Override
+    public final boolean equals(final Object other) {
+        boolean result = false;
+        if (other instanceof ImportProjectArchiveConfig) {
+            final ImportProjectArchiveConfig that = (ImportProjectArchiveConfig) other;
+            final String projectPath = getProjectPath();
+            final String importPath = getImportPath();
+            final String thatProjectPath = that.getProjectPath();
+            final String thatImportPath = that.getImportPath();
+            result = (projectPath == null ? thatProjectPath == null : projectPath.equals(thatProjectPath))
+                    && (importPath == null ? thatImportPath == null : importPath.equals(thatImportPath))
+                    && (importConfigPath == null ? that.importConfigPath == null : importConfigPath
+                    .equals(that.importConfigPath)) && replaceFiles == that.replaceFiles;
+        }
+        return result;
+    }
+
+    @Override
+    public final int hashCode() {
+        return new HashCodeBuilder(17, 31).append(getProjectPath()).append(getImportPath())
+                .append(importConfigPath).append(replaceFiles).toHashCode();
+    }
+
     /**
      * DescriptorImpl for {@link ImportProjectArchiveConfig}.
      */
@@ -119,7 +143,5 @@ public class ImportProjectArchiveConfig extends ImportProjectConfig {
         public String getDisplayName() {
             return Messages.ImportProjectArchiveConfig_DisplayName();
         }
-
     }
-
 }

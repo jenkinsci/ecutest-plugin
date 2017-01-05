@@ -58,6 +58,9 @@ import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.TestBuilder;
 
+import com.cloudbees.plugins.credentials.CredentialsScope;
+import com.cloudbees.plugins.credentials.SystemCredentialsProvider;
+import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl;
 import com.gargoylesoftware.htmlunit.WebAssert;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
@@ -75,14 +78,18 @@ public class TMSPublisherST extends SystemTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
                 .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+
+        SystemCredentialsProvider.getInstance().getCredentials().add(new UsernamePasswordCredentialsImpl(
+                CredentialsScope.GLOBAL, "credentialsId", "test", "user", "password"));
     }
 
     @Test
     public void testDefaultConfigRoundTripStep() throws Exception {
-        final TMSPublisher before = new TMSPublisher("ECU-TEST", "");
+        final TMSPublisher before = new TMSPublisher("ECU-TEST", "credentialsId");
 
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
@@ -124,9 +131,8 @@ public class TMSPublisherST extends SystemTestBase {
         WebAssert.assertTextPresent(page, Messages.TMSPublisher_DisplayName());
         jenkins.assertXPath(page, "//select[@name='toolName']");
         jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
-        // TODO: assert credentialsId field
-        // WebAssert.assertInputPresent(page, "_.credentialsId");
-        // WebAssert.assertInputContainsValue(page, "_.credentialsId", "credentialsId");
+        jenkins.assertXPath(page, "//select[@name='_.credentialsId']");
+        jenkins.assertXPath(page, "//option[@value='credentialsId']");
         WebAssert.assertInputPresent(page, "_.timeout");
         WebAssert.assertInputContainsValue(page, "_.timeout", "600");
         jenkins.assertXPath(page, "//input[@name='_.allowMissing' and @checked='true']");
@@ -247,7 +253,7 @@ public class TMSPublisherST extends SystemTestBase {
         final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
-        final WorkflowRun run = jenkins.assertBuildStatus(Result.SUCCESS, job.scheduleBuild2(0).get());
+        final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
         jenkins.assertLogContains("Publishing reports to test management system...", run);
         if (emptyResults == false) {
             jenkins.assertLogContains("Starting ECU-TEST failed.", run);

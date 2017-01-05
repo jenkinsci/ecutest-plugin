@@ -32,6 +32,7 @@ package de.tracetronic.jenkins.plugins.ecutest.test.config;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import hudson.EnvVars;
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Test;
 
@@ -65,5 +66,10 @@ public class ImportProjectTMSConfigTest {
         assertThat(expConfig.getImportPath(), is("import"));
         assertThat(expConfig.getCredentialsId(), is("credentialsId"));
         assertThat(expConfig.getTimeout(), is("600"));
+    }
+
+    @Test
+    public void testHashCodeAndEquals() {
+        EqualsVerifier.forClass(ImportProjectTMSConfig.class).verify();
     }
 }

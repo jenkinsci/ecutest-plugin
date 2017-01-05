@@ -34,6 +34,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import hudson.EnvVars;
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Test;
 
@@ -66,5 +67,10 @@ public class ImportProjectArchiveConfigTest {
         assertThat(expConfig.getImportPath(), is("import"));
         assertThat(expConfig.getImportConfigPath(), is("import"));
         assertTrue(config.isReplaceFiles());
+    }
+
+    @Test
+    public void testHashCodeAndEquals() {
+        EqualsVerifier.forClass(ImportProjectArchiveConfig.class).verify();
     }
 }
