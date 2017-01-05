@@ -52,6 +52,7 @@ import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction.TestType;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
@@ -124,8 +125,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 uploadFiles.addAll(Arrays.asList(
                         testReportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
                 // Prepare ATX report links
-                final String from = String.valueOf(run.getStartTimeInMillis());
-                final String to = String.valueOf(Calendar.getInstance().getTimeInMillis());
+                final String from = String.valueOf(Calendar.getInstance().getTimeInMillis());
+                final String to = from;
                 final String title = reportFile.getParent().getName();
                 final String testName = testEnvAction.getTestName();
                 final TestType testType = testEnvAction.getTestType();
@@ -150,10 +151,45 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 new UploadReportCallable(getInstallation().getConfig(), uploadFiles, run.getEnvironment(listener),
                         listener));
         if (isUploaded) {
+            // FIXME: hackish way to fix the upload end date
+            final String to = String.valueOf(Calendar.getInstance().getTimeInMillis());
+            updateReportUrls(atxReports, to);
             addBuildAction(run, atxReports);
         }
 
         return isUploaded;
+    }
+
+    /**
+     * Updates the end date of all report URLs.
+     *
+     * @param reports
+     *            the ATX reports
+     * @param to
+     *            the new end date
+     */
+    private void updateReportUrls(final List<? extends AbstractTestReport> reports, final String to) {
+        for (final AbstractTestReport report : reports) {
+            if (report instanceof ATXReport) {
+                final ATXReport atxReport = (ATXReport) report;
+                final String reportUrl = updateEndDate(atxReport.getReportUrl(), to);
+                atxReport.setReportUrl(reportUrl);
+                updateReportUrls(atxReport.getSubReports(), to);
+            }
+        }
+    }
+
+    /**
+     * Replaces the end date of the report URL.
+     *
+     * @param reportUrl
+     *            the report URL
+     * @param to
+     *            the new end date
+     * @return the replaced report URL
+     */
+    private String updateEndDate(final String reportUrl, final String to) {
+        return reportUrl.replaceFirst("dateTo=\\d+", "dateTo=" + to);
     }
 
     /**
@@ -401,7 +437,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                             } catch (final JSONException e) {
                                 logger.logError("-> Could not parse JSON response: " + e.getMessage());
                             }
-                            break;
+                            break; // TODO: no break going on
                         }
                     }
                 }

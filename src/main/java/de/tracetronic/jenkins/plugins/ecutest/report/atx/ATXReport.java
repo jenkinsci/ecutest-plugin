@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -56,7 +56,7 @@ public class ATXReport extends AbstractTestReport {
 
     private static final Logger LOGGER = Logger.getLogger(ATXReport.class.getName());
 
-    private final String reportUrl;
+    private String reportUrl;
     private final boolean hasTrendReport;
 
     /**
@@ -98,6 +98,16 @@ public class ATXReport extends AbstractTestReport {
      */
     public String getReportUrl() {
         return reportUrl;
+    }
+
+    /**
+     * Sets the report URL.
+     *
+     * @param reportUrl
+     *            the new report URL
+     */
+    public void setReportUrl(final String reportUrl) {
+        this.reportUrl = reportUrl;
     }
 
     /**
