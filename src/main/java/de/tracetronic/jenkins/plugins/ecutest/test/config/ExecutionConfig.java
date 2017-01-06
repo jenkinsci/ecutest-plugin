@@ -150,14 +150,14 @@ ExpandableConfig {
     /**
      * @return the timeout as integer
      */
-    public int getTimeout() {
-        return parse(getStringTimeout());
+    public int getParsedTimeout() {
+        return parse(getTimeout());
     }
 
     /**
      * @return the timeout as string
      */
-    public String getStringTimeout() {
+    public String getTimeout() {
         return timeout;
     }
 
@@ -185,7 +185,7 @@ ExpandableConfig {
 
     @Override
     public ExecutionConfig expand(final EnvVars envVars) {
-        final String expTimeout = EnvUtil.expandEnvVar(getStringTimeout(), envVars,
+        final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars,
                 String.valueOf(DEFAULT_TIMEOUT));
         return new ExecutionConfig(expTimeout, isStopOnError(), isCheckTestFile());
     }

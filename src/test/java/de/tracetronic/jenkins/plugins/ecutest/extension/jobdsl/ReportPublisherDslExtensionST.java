@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -55,6 +55,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPu
 import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.tms.TMSPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 
@@ -98,7 +99,7 @@ public class ReportPublisherDslExtensionST extends AbstractDslExtensionST {
         final FreeStyleProject project = createTestJob();
 
         final List<Publisher> publishers = project.getPublishersList();
-        assertThat("Report related publisher steps should exist", publishers, hasSize(5));
+        assertThat("Report related publisher steps should exist", publishers, hasSize(6));
     }
 
     @Test
@@ -194,5 +195,21 @@ public class ReportPublisherDslExtensionST extends AbstractDslExtensionST {
         assertThat(list.get(0).getValue(), is("123"));
         assertThat(list.get(1).getName(), is("param2"));
         assertThat(list.get(1).getValue(), is("456"));
+    }
+
+    @Test
+    public void testTMSPublisherWithDsl() throws Exception {
+        final FreeStyleProject project = createTestJob();
+
+        final DescribableList<Publisher, Descriptor<Publisher>> publishers = project.getPublishersList();
+        final TMSPublisher publisher = publishers.get(TMSPublisher.class);
+        assertNotNull("TMS publisher should exist", publisher);
+        assertThat(publisher.getToolName(), is("ECU-TEST"));
+        assertThat(publisher.getCredentialsId(), is("credentialsId"));
+        assertThat(publisher.getTimeout(), is("600"));
+        assertTrue(publisher.isAllowMissing());
+        assertTrue(publisher.isRunOnFailed());
+        assertFalse(publisher.isArchiving());
+        assertFalse(publisher.isKeepAll());
     }
 }

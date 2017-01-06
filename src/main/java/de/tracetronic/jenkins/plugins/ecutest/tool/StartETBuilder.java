@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -263,7 +263,7 @@ public class StartETBuilder extends AbstractToolBuilder {
      *             in case of an invalid workspace
      */
     private void checkWorkspace(final FilePath workspacePath, final FilePath settingsPath) throws IOException,
-            InterruptedException, ETPluginException {
+    InterruptedException, ETPluginException {
         if (!workspacePath.exists()) {
             throw new ETPluginException(String.format("ECU-TEST workspace at %s does not exist!",
                     workspacePath.getRemote()));
@@ -280,7 +280,7 @@ public class StartETBuilder extends AbstractToolBuilder {
      * DescriptorImpl for {@link StartETBuilder}.
      */
     @Symbol("startET")
-    @Extension(ordinal = 1006)
+    @Extension(ordinal = 1007)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
 
         @Override

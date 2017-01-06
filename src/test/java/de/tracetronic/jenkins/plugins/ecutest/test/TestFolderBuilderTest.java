@@ -125,8 +125,8 @@ public class TestFolderBuilderTest {
         assertNotNull(builder.getProjectConfig().getFilterExpression());
         assertTrue(builder.getProjectConfig().getFilterExpression().isEmpty());
         assertEquals(JobExecutionMode.SEQUENTIAL_EXECUTION, builder.getProjectConfig().getJobExecMode());
-        assertNotNull(builder.getExecutionConfig().getTimeout());
-        assertEquals(ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig().getTimeout());
+        assertNotNull(builder.getExecutionConfig().getParsedTimeout());
+        assertEquals(ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig().getParsedTimeout());
         assertTrue(builder.getExecutionConfig().isStopOnError());
         assertTrue(builder.getExecutionConfig().isCheckTestFile());
     }

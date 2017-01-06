@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -69,5 +69,10 @@ public class TestBuilderParamDslExtensionST extends TestBuilderDslExtensionST {
     @Test
     public void testFolderWithParamDsl() throws Exception {
         testFolderWithDsl();
+    }
+
+    @Test
+    public void testImportProjectWithParamDsl() throws Exception {
+        testImportProjectWithDsl();
     }
 }

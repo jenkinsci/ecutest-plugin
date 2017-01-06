@@ -251,7 +251,7 @@ public class PackageClient extends AbstractTestClient {
         public TestInfoHolder call() throws InterruptedException {
             final boolean runTest = packageConfig.isRunTest();
             final boolean runTraceAnalysis = packageConfig.isRunTraceAnalysis();
-            final int timeout = executionConfig.getTimeout();
+            final int timeout = executionConfig.getParsedTimeout();
             TestInfoHolder testInfo = null;
 
             final TTConsoleLogger logger = new TTConsoleLogger(listener);

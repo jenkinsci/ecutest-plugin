@@ -86,7 +86,7 @@ public class TestEnvInvisibleAction extends InvisibleAction {
         testTcf = testClient.getTestConfig().getTcfFile();
         testReportDir = testClient.getTestReportDir();
         testResult = testClient.getTestResult();
-        timeout = testClient.getExecutionConfig().getTimeout();
+        timeout = testClient.getExecutionConfig().getParsedTimeout();
     }
 
     /**

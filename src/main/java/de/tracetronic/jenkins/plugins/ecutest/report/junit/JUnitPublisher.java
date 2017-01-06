@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -369,7 +369,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
      * DescriptorImpl for {@link JUnitPublisher}.
      */
     @Symbol("publishUNIT")
-    @Extension(ordinal = 1002)
+    @Extension(ordinal = 1003)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         private final JUnitValidator unitValidator;

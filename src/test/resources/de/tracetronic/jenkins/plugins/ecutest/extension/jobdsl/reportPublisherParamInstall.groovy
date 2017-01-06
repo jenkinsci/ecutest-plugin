@@ -7,5 +7,6 @@ freeStyleJob(strJobName) {
         publishATX(strATXInstall)
         publishUNIT(strETInstall)
         publishGenerators(strETInstall)
+        publishTMS(strETInstall, "credentialsId")
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -79,7 +79,7 @@ public abstract class AbstractValidator {
      *            the form value
      * @return the form validation
      */
-    public FormValidation validateParameterizedValue(final String value) {
+    protected FormValidation validateParameterizedValue(final String value) {
         FormValidation returnValue = FormValidation.ok();
         if (!StringUtils.isEmpty(value) && value.contains(PARAMETER)) {
             returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());

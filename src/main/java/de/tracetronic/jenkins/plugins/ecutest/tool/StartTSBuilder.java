@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -193,7 +193,7 @@ public class StartTSBuilder extends AbstractToolBuilder {
      * DescriptorImpl for {@link StartTSBuilder}.
      */
     @Symbol("startTS")
-    @Extension(ordinal = 1004)
+    @Extension(ordinal = 1005)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
 
         @Override

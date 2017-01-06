@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,6 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isA;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -44,11 +45,16 @@ import java.util.List;
 
 import org.junit.Test;
 
+import de.tracetronic.jenkins.plugins.ecutest.test.ImportProjectBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestFolderBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestPackageBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestProjectBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.GlobalConstant;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirTMSConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectTMSConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageParameter;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
@@ -80,7 +86,7 @@ public class TestBuilderDslExtensionST extends AbstractDslExtensionST {
         final FreeStyleProject project = createTestJob();
 
         final List<Builder> builders = project.getBuilders();
-        assertThat("Test related build steps should exist", builders, hasSize(3));
+        assertThat("Test related build steps should exist", builders, hasSize(4));
     }
 
     @Test
@@ -123,6 +129,16 @@ public class TestBuilderDslExtensionST extends AbstractDslExtensionST {
         testExecutionConfigWithDsl(builder.getExecutionConfig());
     }
 
+    @Test
+    public void testImportProjectWithDsl() throws Exception {
+        final FreeStyleProject project = createTestJob();
+
+        final DescribableList<Builder, Descriptor<Builder>> builders = project.getBuildersList();
+        final ImportProjectBuilder builder = builders.get(ImportProjectBuilder.class);
+        assertNotNull("Import project builder should exist", builder);
+        testImportConfigsWithDsl(builder.getImportConfigs());
+    }
+
     private void testConfigWithDsl(final TestConfig config) throws Exception {
         assertNotNull("Test configuration should exist", config);
         assertThat(config.getTbcFile(), is("test.tbc"));
@@ -156,7 +172,7 @@ public class TestBuilderDslExtensionST extends AbstractDslExtensionST {
 
     private void testExecutionConfigWithDsl(final ExecutionConfig config) throws Exception {
         assertNotNull("Execution configuration should exist", config);
-        assertThat(config.getTimeout(), is(600));
+        assertThat(config.getParsedTimeout(), is(600));
         assertFalse(config.isStopOnError());
         assertFalse(config.isCheckTestFile());
     }
@@ -166,5 +182,42 @@ public class TestBuilderDslExtensionST extends AbstractDslExtensionST {
         assertFalse(config.isExecInCurrentPkgDir());
         assertThat(config.getFilterExpression(), is("Name='TestCase'"));
         assertThat(config.getJobExecMode(), is(JobExecutionMode.PARALLEL_EXECUTION));
+    }
+
+    private void testImportConfigsWithDsl(final List<ImportProjectConfig> list) throws Exception {
+        assertThat("Import configurations should exist", list, hasSize(6));
+        assertThat((ImportProjectArchiveConfig) list.get(0), isA(ImportProjectArchiveConfig.class));
+        assertThat((ImportProjectArchiveConfig) list.get(1), isA(ImportProjectArchiveConfig.class));
+        assertThat((ImportProjectTMSConfig) list.get(2), isA(ImportProjectTMSConfig.class));
+        assertThat((ImportProjectTMSConfig) list.get(3), isA(ImportProjectTMSConfig.class));
+        assertThat((ImportProjectDirTMSConfig) list.get(4), isA(ImportProjectDirTMSConfig.class));
+        assertThat((ImportProjectDirTMSConfig) list.get(5), isA(ImportProjectDirTMSConfig.class));
+        testArchiveSettingsWithDsl((ImportProjectArchiveConfig) list.get(0));
+        testArchiveSettingsWithDsl((ImportProjectArchiveConfig) list.get(1));
+        testTMSSettingsWithDsl((ImportProjectTMSConfig) list.get(2));
+        testTMSSettingsWithDsl((ImportProjectTMSConfig) list.get(3));
+        testTMSDirSettingsWithDsl((ImportProjectDirTMSConfig) list.get(4));
+        testTMSDirSettingsWithDsl((ImportProjectDirTMSConfig) list.get(5));
+    }
+
+    private void testArchiveSettingsWithDsl(final ImportProjectArchiveConfig config) throws Exception {
+        assertThat(config.getProjectPath(), is("test.prz"));
+        assertThat(config.getImportPath(), is("import"));
+        assertThat(config.getImportConfigPath(), is("import"));
+        assertFalse(config.isReplaceFiles());
+    }
+
+    private void testTMSSettingsWithDsl(final ImportProjectTMSConfig config) throws Exception {
+        assertThat(config.getProjectPath(), is("Root/Test"));
+        assertThat(config.getImportPath(), is("import"));
+        assertThat(config.getCredentialsId(), is("credentialsId"));
+        assertThat(config.getTimeout(), is("600"));
+    }
+
+    private void testTMSDirSettingsWithDsl(final ImportProjectDirTMSConfig config) throws Exception {
+        assertThat(config.getProjectPath(), is("Root/TestDir"));
+        assertThat(config.getImportPath(), is("import"));
+        assertThat(config.getCredentialsId(), is("credentialsId"));
+        assertThat(config.getTimeout(), is("600"));
     }
 }

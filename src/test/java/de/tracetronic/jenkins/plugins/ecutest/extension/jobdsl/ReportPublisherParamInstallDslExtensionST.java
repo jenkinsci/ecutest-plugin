@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -52,6 +52,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.tms.TMSPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 
 /**
@@ -94,7 +95,7 @@ public class ReportPublisherParamInstallDslExtensionST extends AbstractDslExtens
         final FreeStyleProject project = createTestJob();
 
         final List<Publisher> publishers = project.getPublishersList();
-        assertThat("Report related publisher steps should exist", publishers, hasSize(3));
+        assertThat("Report related publisher steps should exist", publishers, hasSize(4));
     }
 
     @Test
@@ -134,6 +135,16 @@ public class ReportPublisherParamInstallDslExtensionST extends AbstractDslExtens
         final DescribableList<Publisher, Descriptor<Publisher>> publishers = project.getPublishersList();
         final ReportGeneratorPublisher publisher = publishers.get(ReportGeneratorPublisher.class);
         assertNotNull("Report generator publisher should exist", publisher);
+        assertThat(publisher.getToolName(), is("${ECUTEST}"));
+    }
+
+    @Test
+    public void testTMSPublisherWithDsl() throws Exception {
+        final FreeStyleProject project = createTestJob();
+
+        final DescribableList<Publisher, Descriptor<Publisher>> publishers = project.getPublishersList();
+        final TMSPublisher publisher = publishers.get(TMSPublisher.class);
+        assertNotNull("TMS publisher should exist", publisher);
         assertThat(publisher.getToolName(), is("${ECUTEST}"));
     }
 }

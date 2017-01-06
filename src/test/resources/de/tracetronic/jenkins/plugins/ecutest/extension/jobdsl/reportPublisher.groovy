@@ -56,5 +56,12 @@ freeStyleJob("reportPublisher") {
             archiving(false)
             keepAll(false)
         }
+        publishTMS("ECU-TEST", "credentialsId") {
+            timeout("600")
+            allowMissing(true)
+            runOnFailed(true)
+            archiving(false)
+            keepAll(false)
+        }
     }
 }

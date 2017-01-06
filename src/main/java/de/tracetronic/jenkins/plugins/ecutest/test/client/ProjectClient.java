@@ -256,7 +256,7 @@ public class ProjectClient extends AbstractTestClient {
         @Override
         public TestInfoHolder call() throws InterruptedException {
             final int jobExecutionMode = projectConfig.getJobExecMode().getValue();
-            final int timeout = executionConfig.getTimeout();
+            final int timeout = executionConfig.getParsedTimeout();
             TestInfoHolder testInfo = null;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Running project...");

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -50,8 +50,10 @@ import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPu
 import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.tms.TMSPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.ImportProjectValidator;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ReportGeneratorValidator;
 
 /**
@@ -63,6 +65,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.ReportGeneratorVal
 public class ReportPublisherDslExtension extends AbstractReportPublisherDslExtension {
 
     private static final String OPT_ATX_NAME = "atxName";
+    private static final String OPT_CREDENTIALS_ID = "credentialsId";
 
     /**
      * {@link DslExtensionMethod} for publishing ATX reports.
@@ -252,6 +255,49 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     @DslExtensionMethod(context = PublisherContext.class)
     public Object publishGenerators(final CharSequence toolName) {
         return publishGenerators(toolName, null);
+    }
+
+    /**
+     * {@link DslExtensionMethod} for publishing report to test management system.
+     *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param credentialsId
+     *            the credentials id
+     * @param closure
+     *            the nested Groovy closure
+     * @return the instance of a {@link TMSPublisher}
+     */
+    @DslExtensionMethod(context = PublisherContext.class)
+    public Object publishTMS(final CharSequence toolName, final CharSequence credentialsId, final Runnable closure) {
+        Preconditions.checkNotNull(toolName, NOT_NULL_MSG, OPT_TOOL_NAME);
+        Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+
+        final PublishTMSContext context = new PublishTMSContext();
+        executeInContext(closure, context);
+
+        final TMSPublisher publisher = new TMSPublisher(toolName.toString(), credentialsId.toString());
+        publisher.setTimeout(context.timeout);
+        publisher.setAllowMissing(context.allowMissing);
+        publisher.setRunOnFailed(context.runOnFailed);
+        publisher.setArchiving(context.archiving);
+        publisher.setKeepAll(context.keepAll);
+        checkToolInstallation(toolName.toString(), publisher);
+        return publisher;
+    }
+
+    /**
+     * {@link DslExtensionMethod} for publishing report to test management system with default settings.
+     *
+     * @param toolName
+     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param credentialsId
+     *            the credentials id
+     * @return the instance of a {@link ReportGeneratorPublisher}
+     */
+    @DslExtensionMethod(context = PublisherContext.class)
+    public Object publishTMS(final CharSequence toolName, final CharSequence credentialsId) {
+        return publishTMS(toolName, credentialsId, null);
     }
 
     /**
@@ -474,7 +520,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
                  *            the setting value
                  */
                 public void setting(final CharSequence name, final CharSequence value) {
-                    Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_SETTING_NAME);
+                    Preconditions.checkNotNull(name, NOT_NULL_MSG, OPT_SETTING_NAME);
                     Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_SETTING_VALUE);
 
                     FormValidation validation = reportValidator.validateSettingName(name.toString());
@@ -534,6 +580,31 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * {@link Context} class providing TMS publisher methods for the nested DSL context.
+     */
+    public class PublishTMSContext extends AbstractReportContext {
+
+        /**
+         * Validator to check report project import related DSL options.
+         */
+        protected final ImportProjectValidator importValidator = new ImportProjectValidator();
+
+        private String timeout;
+
+        /**
+         * Option defining the timeout.
+         *
+         * @param value
+         *            the value
+         */
+        public void timeout(final String value) {
+            final FormValidation validation = importValidator.validateTimeout(value, TMSPublisher.getDefaultTimeout());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            timeout = value;
         }
     }
 }

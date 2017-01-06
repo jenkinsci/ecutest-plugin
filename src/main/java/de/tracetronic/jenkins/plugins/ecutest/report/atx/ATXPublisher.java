@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -360,7 +360,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     @SuppressWarnings("rawtypes")
     @Symbol("publishATX")
-    @Extension(ordinal = 1004)
+    @Extension(ordinal = 1005)
     public static class DescriptorImpl extends AbstractReportDescriptor {
 
         @CopyOnWrite
@@ -553,15 +553,6 @@ public class ATXPublisher extends AbstractReportPublisher {
          */
         public static String getATXVersion() {
             return ETPlugin.ATX_VERSION.toShortString();
-        }
-
-        /**
-         * Gets the target type for Jelly.
-         *
-         * @return the target type
-         */
-        public static Class<ATXPublisher> getTargetType() {
-            return ATXPublisher.class;
         }
 
         /**

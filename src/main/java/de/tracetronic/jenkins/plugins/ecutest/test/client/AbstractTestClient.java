@@ -206,7 +206,7 @@ public abstract class AbstractTestClient implements TestClient {
             final String tbcFile = testConfig.getTbcFile();
             final String tcfFile = testConfig.getTcfFile();
             final List<GlobalConstant> constants = testConfig.getConstants();
-            final int timeout = executionConfig.getTimeout();
+            final int timeout = executionConfig.getParsedTimeout();
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             boolean isLoaded = false;
 
