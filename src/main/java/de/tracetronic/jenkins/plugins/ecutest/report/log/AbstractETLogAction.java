@@ -77,7 +77,7 @@ public abstract class AbstractETLogAction extends AbstractReportAction {
     }
 
     @Override
-    public String getIconFileName() {
-        return getIconPath("48x48/ecu-test.png");
+    public String getIconClassName() {
+        return "icon-ecutest-ecu-test";
     }
 }

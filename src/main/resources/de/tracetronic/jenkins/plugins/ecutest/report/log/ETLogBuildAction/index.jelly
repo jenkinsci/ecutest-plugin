@@ -29,7 +29,7 @@
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:lsi="/shim/layout/icon">
     <j:set var="owner" value="${it.getOwner(request)}" />
     <j:set var="build" value="${it.getBuild(request)}" />
     <l:layout title="${it.displayName}" norefresh="true">
@@ -37,7 +37,7 @@
         <st:include page="sidepanel.jelly" it="${owner}" />
         <l:main-panel>
             <h1>
-                <img src="${resURL}${it.iconFileName}" alt="ECU-TEST Logs" height="48" width="48" />
+                <lsi:icon class="${it.iconClassName} icon-xlg" alt="ECU-TEST Logs" />
                 ${it.displayName}
             </h1>
             <j:if test="${owner != null}">
@@ -49,18 +49,18 @@
                 <table class="fileList" id="logs">
                     <j:set var="indent" value="0" />
                     <j:set var="reports" value="${it.getLogReports()}" />
-                    <j:forEach var="report" items="${reports}">
-                        <st:include page="report.jelly" />
-                    </j:forEach>
                     <j:choose>
                         <j:when test="${empty(reports)}">
                             ${%reports.empty}
                         </j:when>
                         <j:otherwise>
+                            <j:forEach var="report" items="${reports}">
+                                <st:include page="report.jelly" />
+                            </j:forEach>
                             <tr>
                                 <td style="text-align:right;" colspan="3">
                                     <div style="margin-top: 1em;">
-                                        <img src="${resURL}/images/16x16/package.png" /><st:nbsp />
+                                        <l:icon class="icon-package icon-sm" /><st:nbsp />
                                         <a href="${rootURL}/${build.url}${it.urlName}/zipDownload">
                                             ${%download.zip}
                                         </a>

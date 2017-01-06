@@ -37,6 +37,9 @@ import java.util.regex.Pattern;
 import jenkins.model.Jenkins;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.jenkins.ui.icon.Icon;
+import org.jenkins.ui.icon.IconSet;
+import org.jenkins.ui.icon.IconType;
 
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher.DescriptorImpl;
 
@@ -188,6 +191,50 @@ public class ETPlugin extends Plugin {
             final long qualifier = Long.parseLong(matcher.group(4));
 
             return new ToolVersion(major, minor, micro, qualifier);
+        }
+    }
+
+    @Override
+    public void start() throws Exception {
+        super.start();
+
+        for (final String name : new String[] {
+                "atx-report",
+                "atx-trend",
+                "ecu-test",
+                "ecu-test-pkg",
+                "ecu-test-prj",
+                "report-generator",
+                "test-guide",
+                "trf-report",
+        }) {
+            // Register small (16x16) icons
+            IconSet.icons.addIcon(new Icon(
+                    String.format("icon-ecutest-%s icon-sm", name),
+                    String.format("ecutest/icons/16x16/%s.png", name),
+                    Icon.ICON_SMALL_STYLE, IconType.PLUGIN)
+                    );
+
+            // Register medium (24x24) icons
+            IconSet.icons.addIcon(new Icon(
+                    String.format("icon-ecutest-%s icon-md", name),
+                    String.format("ecutest/icons/24x24/%s.png", name),
+                    Icon.ICON_MEDIUM_STYLE, IconType.PLUGIN)
+                    );
+
+            // Register large (32x32) icons
+            IconSet.icons.addIcon(new Icon(
+                    String.format("icon-ecutest-%s icon-lg", name),
+                    String.format("ecutest/icons/32x32/%s.png", name),
+                    Icon.ICON_LARGE_STYLE, IconType.PLUGIN)
+                    );
+
+            // Register x-large (48x48) icons
+            IconSet.icons.addIcon(new Icon(
+                    String.format("icon-ecutest-%s icon-xlg", name),
+                    String.format("ecutest/icons/48x48/%s.png", name),
+                    Icon.ICON_XLARGE_STYLE, IconType.PLUGIN)
+                    );
         }
     }
 

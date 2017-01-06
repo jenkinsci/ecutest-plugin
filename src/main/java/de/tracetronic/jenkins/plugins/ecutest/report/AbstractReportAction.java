@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,24 +29,23 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report;
 
-import hudson.PluginWrapper;
 import hudson.model.Action;
 import hudson.model.Job;
 import hudson.model.Run;
 
 import java.io.File;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import javax.annotation.CheckForNull;
 
-import jenkins.model.Jenkins;
 import jenkins.util.VirtualFile;
 
+import org.jenkins.ui.icon.Icon;
+import org.jenkins.ui.icon.IconSet;
+import org.jenkins.ui.icon.IconSpec;
 import org.kohsuke.stapler.StaplerRequest;
 
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.AbstractATXAction;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.AbstractTRFAction;
 
@@ -55,9 +54,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.trf.AbstractTRFAction;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class AbstractReportAction extends AbstractRequestHandler implements Action {
-
-    private static final Logger LOGGER = Logger.getLogger(AbstractReportAction.class.getName());
+public abstract class AbstractReportAction extends AbstractRequestHandler implements Action, IconSpec {
 
     private final boolean projectLevel;
 
@@ -111,36 +108,16 @@ public abstract class AbstractReportAction extends AbstractRequestHandler implem
     @CheckForNull
     protected abstract Run<?, ?> getLastReportBuild(Job<?, ?> project);
 
-    /**
-     * Gets the icon path inside of this plugin.
-     *
-     * @param icon
-     *            the icon to search
-     * @return the full icon path or {@code null} if the icon does not exist
-     */
-    @CheckForNull
-    protected String getIconPath(final String icon) {
-        String iconPath = null;
-        if (icon == null) {
-            return iconPath;
+    @Override
+    public String getIconFileName() {
+        final String iconClass = getIconClassName() + " icon-xlg";
+        try {
+            // FIXME: workaround signature changes in different versions of {@link IconSet} by reflection
+            final Method getIconByClassSpec = IconSet.class.getMethod("getIconByClassSpec", Object.class);
+            return ((Icon) getIconByClassSpec.invoke(IconSet.icons, iconClass)).getUrl();
+        } catch (final NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            // ignore
         }
-        // Try plugin icons dir, fallback to Jenkins image
-        final Jenkins instance = Jenkins.getInstance();
-        if (instance != null) {
-            final PluginWrapper wrapper = instance.getPluginManager().getPlugin(ETPlugin.class);
-            boolean pluginIconExists = false;
-            try {
-                pluginIconExists = wrapper != null
-                        && new File(wrapper.baseResourceURL.toURI().getPath() + "/icons/" + icon).exists();
-            } catch (final URISyntaxException e) {
-                LOGGER.log(Level.WARNING, e.getMessage());
-            }
-            if (pluginIconExists) {
-                iconPath = "/plugin/" + wrapper.getShortName() + "/icons/" + icon;
-            } else {
-                iconPath = "/images/48x48/document.png";
-            }
-        }
-        return iconPath;
+        return IconSet.icons.getIconByClassSpec(iconClass).getUrl();
     }
 }

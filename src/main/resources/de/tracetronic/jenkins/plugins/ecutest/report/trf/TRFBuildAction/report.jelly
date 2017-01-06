@@ -1,5 +1,5 @@
 <!--
-    Copyright (c) 2015 TraceTronic GmbH
+    Copyright (c) 2015-2016 TraceTronic GmbH
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification,
@@ -29,11 +29,11 @@
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:lsi="/shim/layout/icon">
     <tr>
         <td>
             <div style="text-indent: ${indent}px;">
-                <img src="${resURL}${it.iconFileName}" alt="TRF report" height="16" width="16" />
+                <lsi:icon class="${it.iconClassName} icon-sm" alt="TRF report" />
                 <st:nbsp />
                 <j:if test="${owner == build}">
                     <a href="${report.url}">${report.title}</a>

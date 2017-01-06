@@ -67,7 +67,7 @@ public abstract class AbstractTRFAction extends AbstractReportAction {
     }
 
     @Override
-    public String getIconFileName() {
-        return getIconPath("48x48/trf.png");
+    public String getIconClassName() {
+        return "icon-ecutest-trf-report";
     }
 }

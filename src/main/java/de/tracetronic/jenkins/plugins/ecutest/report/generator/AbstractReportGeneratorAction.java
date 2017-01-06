@@ -66,16 +66,7 @@ public abstract class AbstractReportGeneratorAction extends AbstractReportAction
     }
 
     @Override
-    public String getIconFileName() {
-        return getIconPath("48x48/report-generator.png");
-    }
-
-    /**
-     * Gets the small icon file name.
-     *
-     * @return the small icon file name
-     */
-    public String getSmallIconFileName() {
-        return getIconPath("24x24/report-generator.png");
+    public String getIconClassName() {
+        return "icon-ecutest-report-generator";
     }
 }
