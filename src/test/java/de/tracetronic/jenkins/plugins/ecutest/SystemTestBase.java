@@ -29,10 +29,22 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest;
 
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeThat;
 import hudson.Functions;
+import hudson.model.Label;
+import hudson.slaves.DumbSlave;
+import hudson.slaves.SlaveComputer;
+import hudson.util.VersionNumber;
 
 import java.io.File;
 import java.net.URLConnection;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -94,5 +106,52 @@ public class SystemTestBase {
         webClient.setIncorrectnessListener(new SilentIncorrectnessListener());
         webClient.setCssErrorHandler(new QuietCssErrorHandler());
         return webClient;
+    }
+
+    /**
+     * Creates a dumb slave and assumes that it runs on a Windows machine.
+     *
+     * @return the dumb slave
+     * @throws Exception
+     *             signals that an exception has occurred
+     */
+    protected DumbSlave assumeWindowsSlave() throws Exception {
+        // Windows only
+        final DumbSlave slave = jenkins.createOnlineSlave(Label.get("slaves"));
+        final SlaveComputer computer = slave.getComputer();
+        assumeFalse("Test is Windows only!", computer.isUnix());
+        return slave;
+    }
+
+    /**
+     * To use the @Symbol annotation in tests, minimum workflow-cps version 2.10 is required.
+     * This dependency comes with other dependency version requirements, as stated by this method.
+     * To run tests restricted by this method, type
+     *
+     * <pre>
+     * mvn clean install -Djenkins.version=1.642.1 -Djava.level=7 -Dworkflow-aggregator.version=2.3 -Dworkflow-basic-steps.version=2.1 -Dworkflow-cps.version=2.10 -Dworkflow-step-api.version=2.3
+     * </pre>
+     */
+    protected static void assumeSymbolDependencies() {
+        assumePropertyIsGreaterThanOrEqualTo(System.getProperty("jenkins.version"), "1.642.1");
+        assumePropertyIsGreaterThanOrEqualTo(System.getProperty("java.level"), "7");
+        assumePropertyIsGreaterThanOrEqualTo(System.getProperty("workflow-aggregator.version"), "2.3");
+        assumePropertyIsGreaterThanOrEqualTo(System.getProperty("workflow-basic-steps.version"), "2.1");
+        assumePropertyIsGreaterThanOrEqualTo(System.getProperty("workflow-cps.version"), "2.10");
+        assumePropertyIsGreaterThanOrEqualTo(System.getProperty("workflow-step-api.version"), "2.3");
+    }
+
+    /**
+     * Checks if the given property is not null, and if it's greater than or equal to the given version.
+     *
+     * @param property
+     *            the property to be checked
+     * @param version
+     *            the version on which the property is checked against
+     */
+    private static void assumePropertyIsGreaterThanOrEqualTo(@CheckForNull final String property,
+            @Nonnull final String version) {
+        assumeThat(property, notNullValue());
+        assumeThat(new VersionNumber(property).compareTo(new VersionNumber(version)), is(greaterThanOrEqualTo(0)));
     }
 }

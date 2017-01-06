@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -65,6 +65,15 @@ import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXValidator extends AbstractValidator {
+
+    /**
+     * Instantiates a new {@link ATXValidator}.
+     * ATX settings needs permission check.
+     *
+     */
+    public ATXValidator() {
+        super();
+    }
 
     /**
      * Validates the TEST-GUIDE name.
@@ -346,7 +355,7 @@ public class ATXValidator extends AbstractValidator {
                 if (httpResponse != HttpURLConnection.HTTP_OK) {
                     returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(baseUrl));
                 } else {
-                    try (final BufferedReader in = new BufferedReader(new InputStreamReader(
+                    try (BufferedReader in = new BufferedReader(new InputStreamReader(
                             connection.getInputStream(), Charset.forName("UTF-8")))) {
                         final String inputLine = in.readLine();
                         if (inputLine == null || !inputLine.contains("TraceTronic")) {

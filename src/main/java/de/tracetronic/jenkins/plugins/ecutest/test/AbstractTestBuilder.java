@@ -39,6 +39,7 @@ import hudson.model.Run;
 import hudson.remoting.Callable;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Builder;
+import hudson.util.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,6 +65,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.PathUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
 
 /**
  * Common base class for all test related task builders implemented in this plugin.
@@ -248,8 +250,7 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
 
         // Get test file path
         final String expPkgDir;
-        final File testFile = new File(expTestFile);
-        if (testFile.isAbsolute()) {
+        if (IOUtils.isAbsolute(expTestFile)) {
             expPkgDir = null;
         } else {
             // Determine packages directory by COM API
@@ -270,16 +271,16 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
         // Get test configuration file paths
         String expTbcConfigDir = null;
         String expTcfConfigDir = null;
-        final File tbcFile = new File(expTestConfig.getTbcFile());
-        final File tcfFile = new File(expTestConfig.getTcfFile());
-        if (!tbcFile.isAbsolute() || !tcfFile.isAbsolute()) {
+        final String tbcFile = expTestConfig.getTbcFile();
+        final String tcfFile = expTestConfig.getTcfFile();
+        if (!IOUtils.isAbsolute(tbcFile) || !IOUtils.isAbsolute(tcfFile)) {
             // Determine configuration directory by COM API
             final String configDir = getConfigDir(launcher, listener);
 
             // Absolutize configuration directory, if not absolute assume relative to ECU-TEST workspace
             final String expConfigDir = PathUtil.makeAbsolutePath(configDir, workspace);
-            expTbcConfigDir = tbcFile.isAbsolute() ? null : expConfigDir;
-            expTcfConfigDir = tcfFile.isAbsolute() ? null : expConfigDir;
+            expTbcConfigDir = IOUtils.isAbsolute(tbcFile) ? null : expConfigDir;
+            expTcfConfigDir = IOUtils.isAbsolute(tcfFile) ? null : expConfigDir;
         }
 
         // Configure test bench configuration file
@@ -541,7 +542,8 @@ public abstract class AbstractTestBuilder extends Builder implements SimpleBuild
         @Override
         public String call() throws IOException {
             String settingValue;
-            try (ETComClient comClient = new ETComClient()) {
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId)) {
                 settingValue = comClient.getSetting(settingName);
                 if ("None".equals(settingValue)) {
                     throw new IOException("Setting is not defined: " + settingName);

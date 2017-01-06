@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -94,7 +94,7 @@ public abstract class AbstractRequestHandler {
      * @return the build with report artifacts to handle or {@code null} if no proper build exists
      */
     @CheckForNull
-    public abstract Run<?, ?> getBuild(final StaplerRequest req);
+    public abstract Run<?, ?> getBuild(StaplerRequest req);
 
     /**
      * Gets the archive target directory for use in {@link #doZipDownload}.

@@ -29,6 +29,21 @@
 			</DESCRIPTION>
 		</SETTING>
 		<SETTING name="serverURL" default="127.0.0.1" xsi:type="reportConfigItem" />
+		<SETTING name="serverLabel" default="" xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">Optionaler Name für die angegebene
+							Server-Instanz, welcher bei Log-Nachrichten verwendet wird.</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">Optional name for the server-instance,
+							which is used for log messages.</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
 		<SETTING name="useHttpsConnection" default="False" xsi:type="reportConfigItem" />
 		<SETTING name="serverPort" default="8085" xsi:type="reportConfigItem" />
 		<SETTING name="serverContextPath" default="" xsi:type="reportConfigItem">
@@ -181,6 +196,22 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
+		<SETTING name="archivePlots" default="True" xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">True, wenn die erstellten Plots aus der
+							Trace-Analyse für die Anzeige in TEST-GUIDE archviert werden
+							sollen, sonst False</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">True, if you want archive trace analysis
+							plots to show in TEST-GUIDE, otherwise False.</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
 		<SETTING name="archiveMiscFiles" default="" xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
@@ -221,6 +252,30 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
+		<SETTING name="attributeDelimiter" default="" xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">Angabe der Package-Attribut samt
+							Trennzeichen
+							z.B. ReqId=_;Ref=- um Attributwerte getrennt für die
+							Suche zu
+							erfassen z.B. von folgenden Attributangaben
+							ReqID=RQ1_RQ2_RQ3 bzw.
+							Ref=A-B-C</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">Specify the package attribute including
+							separator
+							e.g. ReqId=_;Ref=- to separate attribute values for the
+							search for e.g. of the following attributes
+							ReqID=RQ1_RQ2_RQ3 or
+							Ref=A-B-C</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
 		<SETTING name="mapIsTestCaseAsAttribute" default="True"
 			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
@@ -232,6 +287,24 @@
 					<ELEMENT dkey="en_US">
 						<DVALUE xsi:type="unicode">Map the package property 'Testcase' to ATX
 							attribut 'isTestCase'?</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
+		<SETTING name="mapTestCaseVersionAsAttribute" default="True"
+			xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">True, wenn die Packageeigenschaft
+							'Version' als ATX-Attribut 'TestCaseVersion' erfasst werden soll,
+							sonst False.</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">True if the package property 'version'
+							should be
+							mapped as attribute 'TestCaseVersion', otherwise False.</DVALUE>
 					</ELEMENT>
 				</MULTILANGDATA>
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
@@ -434,6 +507,27 @@
 					<ELEMENT dkey="en_US">
 						<DVALUE xsi:type="unicode">Defines the results of the sub packages on
 							which the test steps have to be recorded. Example: FAILED; ERROR
+						</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
+		<SETTING name="mapSeparateProjectExecutionAsSingleTestplan"
+			default="False" xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">True, wenn bei der separaten
+							Unterprojektausführung diese Projekte als eigener Testplan
+							gelistet werden sollen, sonst False.
+						</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">True, if you want to map separate project
+							execution reports as own testplan,
+							otherwise
+							False.
 						</DVALUE>
 					</ELEMENT>
 				</MULTILANGDATA>

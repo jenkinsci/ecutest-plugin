@@ -32,15 +32,11 @@ package de.tracetronic.jenkins.plugins.ecutest.test;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assume.assumeFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hudson.model.FreeStyleBuild;
 import hudson.model.Result;
 import hudson.model.FreeStyleProject;
-import hudson.model.Label;
-import hudson.slaves.DumbSlave;
-import hudson.slaves.SlaveComputer;
 import jenkins.tasks.SimpleBuildStep;
 
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
@@ -189,6 +185,33 @@ public class TestFolderBuilderST extends SystemTestBase {
         assertPipelineStep(script);
     }
 
+    @Test
+    public void testSymbolAnnotatedPipelineStep() throws Exception {
+        assumeSymbolDependencies();
+
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  testFolder "
+                + "        testFile: 'tests', recursiveScan: true, scanMode: 'PACKAGES_ONLY',"
+                + "        testConfig: [constants: [], forceReload: true, loadOnly: true, tbcFile: 'test.tbc', tcfFile: 'test.tcf'],"
+                + "        packageConfig: [parameters: [], runTest: false, runTraceAnalysis: false],"
+                + "        projectConfig: [execInCurrentPkgDir: true, filterExpression: 'Name=\"test\"', jobExecMode: 'SEPARATE_SEQUENTIAL_EXECUTION'],"
+                + "        executionConfig: [checkTestFile: false, stopOnError: false, timeout: '0']\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
+    @Test
+    public void testSymbolAnnotatedDefaultPipelineStep() throws Exception {
+        assumeSymbolDependencies();
+
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  testFolder testFile: 'tests'\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
     /**
      * Asserts the pipeline step execution.
      *
@@ -198,10 +221,7 @@ public class TestFolderBuilderST extends SystemTestBase {
      *             the exception
      */
     private void assertPipelineStep(final String script) throws Exception {
-        // Windows only
-        final DumbSlave slave = jenkins.createOnlineSlave(Label.get("slaves"));
-        final SlaveComputer computer = slave.getComputer();
-        assumeFalse("Test is Windows only!", computer.isUnix());
+        assumeWindowsSlave();
 
         final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));

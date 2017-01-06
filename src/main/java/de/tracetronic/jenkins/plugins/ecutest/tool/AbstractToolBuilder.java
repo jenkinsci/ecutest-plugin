@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -56,6 +56,7 @@ import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
 
 /**
  * Common base class for all tool related task builders implemented in this plugin.
@@ -167,8 +168,8 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
      * @throws ETPluginException
      *             in case of tool operation errors
      */
-    protected abstract void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException, ETPluginException;
+    protected abstract void performTool(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
+            throws InterruptedException, IOException, ETPluginException;
 
     /**
      * Gets the test identifier by the size of {@link ToolEnvInvisibleAction}s already added to the build.
@@ -208,6 +209,8 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
         } else {
             throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }
+        // Set the COM programmatic identifier for the current ECU-TEST instance
+        ETComProgId.getInstance().setProgId(installation.getProgId());
         return installation;
     }
 
@@ -221,12 +224,7 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     @CheckForNull
     public ETInstallation getToolInstallation(final EnvVars envVars) {
         final String expToolName = envVars.expand(getToolName());
-        for (final ETInstallation installation : getDescriptor().getInstallations()) {
-            if (StringUtils.equals(expToolName, installation.getName())) {
-                return installation;
-            }
-        }
-        return null;
+        return getDescriptor().getToolDescriptor().getInstallation(expToolName);
     }
 
     @Override

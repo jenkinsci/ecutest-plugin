@@ -42,6 +42,7 @@ import java.io.IOException;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
@@ -142,6 +143,7 @@ public class TestProjectBuilder extends AbstractTestBuilder {
     /**
      * DescriptorImpl for {@link TestProjectBuilder}.
      */
+    @Symbol("testProject")
     @Extension(ordinal = 1001)
     public static final class DescriptorImpl extends AbstractTestDescriptor {
 

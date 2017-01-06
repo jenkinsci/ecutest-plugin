@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,15 +34,15 @@ import hudson.EnvVars;
 import hudson.slaves.DumbSlave;
 import hudson.tools.ToolLocationNodeProperty;
 
+import java.util.Collections;
+
 import org.junit.Test;
-import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.recipes.LocalData;
 
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import de.tracetronic.jenkins.plugins.ecutest.SystemTestBase;
-import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 
 /**
  * System tests for {@link ETInstallation}.
@@ -54,13 +54,48 @@ public class ETInstallationST extends SystemTestBase {
     @Test
     @LocalData
     public void testInstallation() {
-        final ETInstallation[] installations = jenkins.jenkins.getDescriptorByType(StartETBuilder.DescriptorImpl.class)
+        final ETInstallation[] installations = jenkins.jenkins.getDescriptorByType(ETInstallation.DescriptorImpl.class)
                 .getInstallations();
         assertEquals(1, installations.length);
 
         final ETInstallation inst = installations[0];
-        assertEquals(inst.getName(), "ECU-TEST");
-        assertEquals(inst.getHome(), "C:\\ECU-TEST");
+        assertEquals("ECU-TEST", inst.getName());
+        assertEquals("C:\\ECU-TEST", inst.getHome());
+        assertEquals("ECU-TEST.Application", inst.getProgId());
+    }
+
+    @Test
+    @LocalData
+    public void testInstallationWithCustomProgId() {
+        final ETInstallation[] installations = jenkins.jenkins.getDescriptorByType(ETInstallation.DescriptorImpl.class)
+                .getInstallations();
+        assertEquals(1, installations.length);
+
+        final ETInstallation inst = installations[0];
+        assertEquals("ECU-TEST", inst.getName());
+        assertEquals("C:\\ECU-TEST", inst.getHome());
+        assertEquals("ECU-TEST6.Application", inst.getProgId());
+    }
+
+    @Test
+    @LocalData
+    public void testInstallationWithoutConfiguration() {
+        final ETInstallation[] installations = jenkins.jenkins.getDescriptorByType(ETInstallation.DescriptorImpl.class)
+                .getInstallations();
+        assertEquals(0, installations.length);
+    }
+
+    @Test
+    @LocalData
+    public void testInstallationMigration() {
+        final ETInstallation[] installations = jenkins.jenkins.getDescriptorByType(ETInstallation.DescriptorImpl.class)
+                .getInstallations();
+        assertEquals(1, installations.length);
+
+        final ETInstallation inst = installations[0];
+        assertEquals("ECU-TEST", inst.getName());
+        assertEquals("C:\\ECU-TEST", inst.getHome());
+        assertEquals("ECU-TEST.Application", inst.getProgId());
     }
 
     @Test
@@ -74,10 +109,11 @@ public class ETInstallationST extends SystemTestBase {
     public void testFormRoundTrip() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
                 .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", Collections
+                .singletonList(new ETToolProperty("ECU-TEST6.Application"))));
 
         final ToolLocationNodeProperty property = new ToolLocationNodeProperty(
-                new ToolLocationNodeProperty.ToolLocation(etDescriptor, "ECU-TEST 6.3.0", "C:\\ECU-TEST 6.3.0"));
+                new ToolLocationNodeProperty.ToolLocation(etDescriptor, "ECU-TEST", "C:\\ECU-TEST"));
         final DumbSlave slave = jenkins.createSlave("slave", new EnvVars());
         slave.getNodeProperties().add(property);
 
@@ -92,7 +128,6 @@ public class ETInstallationST extends SystemTestBase {
 
         final ToolLocationNodeProperty.ToolLocation location = prop.getLocations().get(0);
         assertEquals(etDescriptor, location.getType());
-        assertEquals("ECU-TEST 6.3.0", location.getName());
-        assertEquals("C:\\ECU-TEST 6.3.0", location.getHome());
+        assertEquals("ECU-TEST", location.getName());
     }
 }

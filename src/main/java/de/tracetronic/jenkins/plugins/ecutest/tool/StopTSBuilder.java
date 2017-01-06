@@ -41,6 +41,7 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
@@ -109,16 +110,9 @@ public class StopTSBuilder extends AbstractToolBuilder {
     /**
      * DescriptorImpl for {@link StopTSBuilder}.
      */
+    @Symbol("stopTS")
     @Extension(ordinal = 1003)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
-
-        /**
-         * Instantiates a new {@link DescriptorImpl}.
-         */
-        public DescriptorImpl() {
-            super(StopTSBuilder.class);
-            load();
-        }
 
         @Override
         public int getDefaultTimeout() {

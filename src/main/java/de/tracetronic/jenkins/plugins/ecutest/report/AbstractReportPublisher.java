@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -41,6 +41,7 @@ import hudson.model.Computer;
 import hudson.model.Run;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Recorder;
+import hudson.tools.ToolInstallation;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,10 +50,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import jenkins.model.Jenkins;
+import javax.annotation.CheckForNull;
+
 import jenkins.tasks.SimpleBuildStep;
 
-import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundSetter;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
@@ -64,13 +65,13 @@ import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
 
 /**
  * Common base class for {@link ATXPublisher}, {@link ETLogPublisher}, {@link JUnitPublisher} and {@link TRFPublisher}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-@SuppressWarnings("unchecked")
 public abstract class AbstractReportPublisher extends Recorder implements SimpleBuildStep {
 
     private boolean allowMissing;
@@ -248,13 +249,8 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * @throws ETPluginException
      *             in case of report operation errors
      */
-    protected abstract void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException, ETPluginException;
-
-    @Override
-    public BuildStepMonitor getRequiredMonitorService() {
-        return BuildStepMonitor.NONE;
-    }
+    protected abstract void performReport(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
+            throws InterruptedException, IOException, ETPluginException;
 
     /**
      * Returns whether this publisher can continue processing. Returns {@code true} if the property {@code runOnFailed}
@@ -301,6 +297,8 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         } else {
             throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }
+        // Set the COM programmatic identifier for the current ECU-TEST instance
+        ETComProgId.getInstance().setProgId(installation.getProgId());
         return installation;
     }
 
@@ -314,18 +312,17 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * @return the tool installation
      */
     public ETInstallation getToolInstallation(final String toolName, final EnvVars envVars) {
-        final Jenkins instance = Jenkins.getInstance();
-        if (instance != null) {
-            final ETInstallation[] installations = instance.getDescriptorByType(
-                    ETInstallation.DescriptorImpl.class).getInstallations();
-            final String expToolName = envVars.expand(toolName);
-            for (final ETInstallation installation : installations) {
-                if (StringUtils.equals(expToolName, installation.getName())) {
-                    return installation;
-                }
-            }
-        }
-        return null;
+        final String expToolName = envVars.expand(toolName);
+        return getToolDescriptor().getInstallation(expToolName);
+    }
+
+    /**
+     * Gets the tool descriptor holding the installations.
+     *
+     * @return the tool descriptor
+     */
+    public ETInstallation.DescriptorImpl getToolDescriptor() {
+        return ToolInstallation.all().get(ETInstallation.DescriptorImpl.class);
     }
 
     /**
@@ -421,11 +418,29 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
             if (testReportDir.exists()) {
-                reportFiles.addAll(Arrays.asList(testReportDir.list("**/" + TRFPublisher.TRF_FILE_NAME)));
+                reportFiles.addAll(Arrays.asList(
+                        testReportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
             }
         }
         Collections.reverse(reportFiles);
         return reportFiles;
+    }
+
+    /**
+     * Gets the first TRF file found in given report directory.
+     *
+     * @param reportDir
+     *            the report directory
+     * @return the first report file or {@code null} if not found
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the build gets interrupted
+     */
+    @CheckForNull
+    public static FilePath getFirstReportFile(final FilePath reportDir) throws IOException, InterruptedException {
+        final FilePath[] files = reportDir.list(TRFPublisher.TRF_INCLUDE);
+        return files.length > 0 ? files[0] : null;
     }
 
     /**
@@ -450,5 +465,15 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
             }
             prevBuild = prevBuild.getPreviousBuild();
         }
+    }
+
+    @Override
+    public BuildStepMonitor getRequiredMonitorService() {
+        return BuildStepMonitor.NONE;
+    }
+
+    @Override
+    public AbstractReportDescriptor getDescriptor() {
+        return (AbstractReportDescriptor) super.getDescriptor();
     }
 }

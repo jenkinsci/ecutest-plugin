@@ -45,6 +45,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomBooleanSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomTextSetting;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting;
 
@@ -59,6 +60,25 @@ public abstract class AbstractATXReportHandler {
      * Defines the path name containing the ATX reports inside of the test report directory.
      */
     protected static final String ATX_TEMPLATE_NAME = "ATX";
+
+    private final ATXInstallation installation;
+
+    /**
+     * Instantiates a new {@code ATXReportUploader}.
+     *
+     * @param installation
+     *            the ATX installation
+     */
+    public AbstractATXReportHandler(final ATXInstallation installation) {
+        this.installation = installation;
+    }
+
+    /**
+     * @return the installation
+     */
+    protected ATXInstallation getInstallation() {
+        return installation;
+    }
 
     /**
      * Common {@link Callable} enabling generating and uploading ATX reports remotely.

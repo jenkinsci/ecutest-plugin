@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool;
 
-import hudson.CopyOnWrite;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
@@ -48,48 +47,35 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.ToolValidator;
  */
 public abstract class AbstractToolDescriptor extends BuildStepDescriptor<Builder> {
 
-    @CopyOnWrite
-    private volatile ETInstallation[] installations = new ETInstallation[0];
-
     /**
      * Validator to check form fields.
      */
     protected final transient ToolValidator toolValidator;
 
     /**
-     * Instantiates a {@link AbstractToolDescriptor}.
-     *
-     * @param clazz
-     *            the {@link AbstractToolBuilder} class name
+     * Instantiates a new {@link AbstractToolDescriptor}.
      */
-    public AbstractToolDescriptor(final Class<? extends AbstractToolBuilder> clazz) {
-        super(clazz);
+    public AbstractToolDescriptor() {
+        super();
         toolValidator = new ToolValidator();
     }
 
     /**
+     * Gets the tool installations.
+     *
+     * @return the installations
+     */
+    public ETInstallation[] getInstallations() {
+        return getToolDescriptor().getInstallations();
+    }
+
+    /**
+     * Gets the tool descriptor holding the installations.
+     *
      * @return the tool descriptor
      */
     public ETInstallation.DescriptorImpl getToolDescriptor() {
         return ToolInstallation.all().get(ETInstallation.DescriptorImpl.class);
-    }
-
-    /**
-     * @return the installations
-     */
-    public ETInstallation[] getInstallations() {
-        return installations.clone();
-    }
-
-    /**
-     * Sets the installations.
-     *
-     * @param installations
-     *            the new installations
-     */
-    public void setInstallations(final ETInstallation... installations) {
-        this.installations = installations;
-        save();
     }
 
     @SuppressWarnings("rawtypes")

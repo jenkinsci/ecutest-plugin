@@ -50,6 +50,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Project;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestExecutionInfo;
@@ -180,7 +181,8 @@ public class ProjectClient extends AbstractTestClient {
             boolean isOpened = true;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Opening project...");
-            try (ETComClient comClient = new ETComClient();
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId);
                     Project project = (Project) comClient.openProject(projectFile, execInCurrentPkgDir,
                             filterExpression)) {
                 logger.logInfo("-> Project opened successfully.");
@@ -258,7 +260,8 @@ public class ProjectClient extends AbstractTestClient {
             TestInfoHolder testInfo = null;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Running project...");
-            try (ETComClient comClient = new ETComClient();
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId);
                     TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                     TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.executeProject(projectFile, true,
                             jobExecutionMode)) {
@@ -323,7 +326,8 @@ public class ProjectClient extends AbstractTestClient {
             boolean isClosed = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Closing project...");
-            try (ETComClient comClient = new ETComClient()) {
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId)) {
                 if (comClient.closeProject(projectFile)) {
                     isClosed = true;
                     logger.logInfo("-> Project closed successfully.");

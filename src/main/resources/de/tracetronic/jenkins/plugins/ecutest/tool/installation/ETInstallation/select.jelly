@@ -32,8 +32,8 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <f:entry title="${%tool.title}" description="${%tool.description}">
         <select class="setting-input" name="toolName" autocomplete="off">
-            <j:forEach var="inst" items="${descriptor.toolDescriptor.installations}">
-                <f:option selected="${inst.name == instance.toolName}">${inst.name}</f:option>
+            <j:forEach var="installation" items="${descriptor.toolDescriptor.installations}">
+                <f:option selected="${installation.name eq instance.toolName}">${installation.name}</f:option>
             </j:forEach>
             <f:option value="$${ECUTEST}" selected="${instance.toolName eq '${ECUTEST}'}">${%tool.parameter}</f:option>
         </select>

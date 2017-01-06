@@ -37,17 +37,14 @@ import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.Result;
 import hudson.model.TaskListener;
-import hudson.model.AbstractProject;
 import hudson.model.Descriptor;
 import hudson.model.Run;
 import hudson.remoting.Callable;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Publisher;
-import hudson.tools.ToolInstallation;
 import hudson.util.FormValidation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -63,6 +60,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -70,6 +68,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomSetting;
@@ -245,17 +244,17 @@ public class ATXPublisher extends AbstractReportPublisher {
         final boolean isServerReachable = isServerReachable(installation, launcher, run.getEnvironment(listener));
         if (isUploadEnabled && isServerReachable) {
             logger.logInfo("- Generating and uploading ATX reports...");
-            final ATXReportUploader uploader = new ATXReportUploader();
-            return uploader.upload(isAllowMissing(), installation, run, launcher, listener);
+            final ATXReportUploader uploader = new ATXReportUploader(installation);
+            return uploader.upload(isAllowMissing(), run, launcher, listener);
         } else {
             logger.logInfo("- Generating ATX reports...");
             if (isUploadEnabled && !isServerReachable) {
                 logger.logWarn("-> ATX upload will be skipped because selected TEST-GUIDE server is not reachable!");
             }
             final FilePath archiveTarget = getArchiveTarget(run);
-            final ATXReportGenerator generator = new ATXReportGenerator();
-            return generator.generate(archiveTarget, isAllowMissing(), isArchiving(), isKeepAll(), installation, run,
-                    launcher, listener);
+            final ATXReportGenerator generator = new ATXReportGenerator(installation);
+            return generator.generate(archiveTarget, isAllowMissing(), isArchiving(), isKeepAll(), run, launcher,
+                    listener);
         }
     }
 
@@ -356,17 +355,13 @@ public class ATXPublisher extends AbstractReportPublisher {
         return URL_NAME;
     }
 
-    @Override
-    public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl) super.getDescriptor();
-    }
-
     /**
      * DescriptorImpl for {@link ATXPublisher}.
      */
     @SuppressWarnings("rawtypes")
+    @Symbol("publishATX")
     @Extension(ordinal = 1004)
-    public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
+    public static class DescriptorImpl extends AbstractReportDescriptor {
 
         @CopyOnWrite
         private volatile ATXInstallation[] installations = new ATXInstallation[0];
@@ -379,24 +374,13 @@ public class ATXPublisher extends AbstractReportPublisher {
         private final transient ATXValidator atxValidator;
 
         /**
-         * Instantiates a new {@link DescriptorImpl} and synchronizes
-         * the current ATX configuration with the default one.
+         * Instantiates a new {@link DescriptorImpl}.
          */
         public DescriptorImpl() {
             super();
             load();
             atxValidator = new ATXValidator();
             defaultConfig = new ATXConfig();
-            syncWithDefaultConfig();
-        }
-
-        /**
-         * Gets the ATX version that this ATX configuration is based on.
-         *
-         * @return the related ATX version
-         */
-        public static String getATXVersion() {
-            return ETPlugin.ATX_VERSION.toShortString();
         }
 
         /**
@@ -413,7 +397,17 @@ public class ATXPublisher extends AbstractReportPublisher {
          *            the new installations
          */
         public void setInstallations(final ATXInstallation... installations) {
-            this.installations = installations;
+            // Remove empty installations
+            final List<ATXInstallation> inst = new ArrayList<ATXInstallation>();
+            if (installations != null) {
+                Collections.addAll(inst, installations);
+                for (final ATXInstallation installation : installations) {
+                    if (StringUtils.isBlank(installation.getName())) {
+                        inst.remove(installation);
+                    }
+                }
+            }
+            this.installations = inst.toArray(new ATXInstallation[inst.size()]);
             save();
         }
 
@@ -428,9 +422,9 @@ public class ATXPublisher extends AbstractReportPublisher {
         public boolean configure(final StaplerRequest req, final JSONObject json) {
             final List<ATXInstallation> list = new ArrayList<ATXInstallation>();
             final JSONArray instArray = new JSONArray();
-            final JSONArray inst = json.optJSONArray("inst");
+            final JSONArray inst = json.optJSONArray("installation");
             if (inst == null) {
-                instArray.add(json.getJSONObject("inst"));
+                instArray.add(json.getJSONObject("installation"));
             } else {
                 instArray.addAll(inst);
             }
@@ -476,9 +470,12 @@ public class ATXPublisher extends AbstractReportPublisher {
         /**
          * Synchronizes current ATX configuration with default configuration
          * by overriding their current values and saving them as new ATX installation.
+         *
+         * This method will be automatically called by {@link ETPlugin#postInitialize()} to
+         * avoid circular dependencies while loading other plugins.
          */
         @SuppressWarnings("unchecked")
-        private void syncWithDefaultConfig() {
+        public void syncWithDefaultConfig() {
             final List<ATXInstallation> list = new ArrayList<ATXInstallation>();
             for (final ATXInstallation installation : installations.clone()) {
                 final ATXConfig currentConfig = installation.getConfig();
@@ -497,8 +494,8 @@ public class ATXPublisher extends AbstractReportPublisher {
                         }
                     }
                     final List<ATXCustomSetting> customSettings = currentConfig.getCustomSettings();
-                    newConfig.setCustomSettings(customSettings == null ? new ArrayList<ATXCustomSetting>()
-                            : customSettings);
+                    newConfig.setCustomSettings(customSettings == null ?
+                            new ArrayList<ATXCustomSetting>() : customSettings);
                 }
 
                 // Fill installations
@@ -550,6 +547,15 @@ public class ATXPublisher extends AbstractReportPublisher {
         }
 
         /**
+         * Gets the ATX version that this ATX configuration is based on.
+         *
+         * @return the related ATX version
+         */
+        public static String getATXVersion() {
+            return ETPlugin.ATX_VERSION.toShortString();
+        }
+
+        /**
          * Gets the target type for Jelly.
          *
          * @return the target type
@@ -566,8 +572,8 @@ public class ATXPublisher extends AbstractReportPublisher {
          * @return the custom settings list
          */
         public List<ATXCustomSetting> getCustomSettings(final ATXInstallation installation) {
-            return installation == null ? new ArrayList<ATXCustomSetting>() : installation.getConfig()
-                    .getCustomSettings();
+            return installation == null ?
+                    new ArrayList<ATXCustomSetting>() : installation.getConfig().getCustomSettings();
         }
 
         /**
@@ -585,18 +591,6 @@ public class ATXPublisher extends AbstractReportPublisher {
                 }
             }
             return list;
-        }
-
-        /**
-         * @return the tool descriptor
-         */
-        public ETInstallation.DescriptorImpl getToolDescriptor() {
-            return ToolInstallation.all().get(ETInstallation.DescriptorImpl.class);
-        }
-
-        @Override
-        public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
-            return true;
         }
 
         @Override

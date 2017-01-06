@@ -51,6 +51,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstall
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 
 /**
@@ -59,6 +60,16 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXReportGenerator extends AbstractATXReportHandler {
+
+    /**
+     * Instantiates a new {@code ATXReportGenerator}.
+     *
+     * @param installation
+     *            the ATX installation
+     */
+    public ATXReportGenerator(final ATXInstallation installation) {
+        super(installation);
+    }
 
     /**
      * Generates {@link ATXReport}s without uploading them.
@@ -71,8 +82,6 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      *            specifies whether archiving artifacts is enabled
      * @param keepAll
      *            specifies whether to keep all artifacts
-     * @param installation
-     *            the ATX installation
      * @param run
      *            the run
      * @param launcher
@@ -87,16 +96,17 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      */
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     public boolean generate(final FilePath archiveTarget, final boolean allowMissing, final boolean isArchiving,
-            final boolean keepAll, final ATXInstallation installation, final Run<?, ?> run, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+            final boolean keepAll, final Run<?, ?> run, final Launcher launcher, final TaskListener listener)
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<FilePath> reportFiles = new ArrayList<FilePath>();
         final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-            final FilePath reportFile = testReportDir.child(TRFPublisher.TRF_FILE_NAME);
-            if (reportFile.exists()) {
-                reportFiles.addAll(Arrays.asList(testReportDir.list("**/" + TRFPublisher.TRF_FILE_NAME)));
+            final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(testReportDir);
+            if (reportFile != null && reportFile.exists()) {
+                reportFiles.addAll(Arrays.asList(
+                        testReportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
             } else {
                 if (allowMissing) {
                     continue;
@@ -114,7 +124,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
 
         // Generate ATX reports
         final boolean isGenerated = launcher.getChannel().call(
-                new GenerateReportCallable(installation.getConfig(), reportFiles, run.getEnvironment(listener),
+                new GenerateReportCallable(getInstallation().getConfig(), reportFiles, run.getEnvironment(listener),
                         listener));
 
         if (isArchiving) {
@@ -277,7 +287,8 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
             boolean isGenerated = true;
             final TTConsoleLogger logger = new TTConsoleLogger(getListener());
             final Map<String, String> configMap = getConfigMap(false);
-            try (ETComClient comClient = new ETComClient()) {
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId)) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                 final List<FilePath> reportFiles = getReportFiles();
                 if (reportFiles.isEmpty()) {

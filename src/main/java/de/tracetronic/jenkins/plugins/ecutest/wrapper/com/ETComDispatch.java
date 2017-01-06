@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -49,10 +49,10 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     private static final Logger LOGGER = Logger.getLogger(ETComDispatch.class.getName());
 
     /**
-     * Instantiates a new {@link ETComDispatch} with default program id.
+     * Instantiates a new {@link ETComDispatch} with default programmatic identifier.
      */
     public ETComDispatch() {
-        super(ETComClient.PROGRAM_ID);
+        super(ETComProgId.DEFAULT_PROG_ID);
     }
 
     /**

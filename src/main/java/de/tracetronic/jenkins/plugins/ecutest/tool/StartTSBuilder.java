@@ -44,6 +44,7 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
@@ -191,16 +192,9 @@ public class StartTSBuilder extends AbstractToolBuilder {
     /**
      * DescriptorImpl for {@link StartTSBuilder}.
      */
+    @Symbol("startTS")
     @Extension(ordinal = 1004)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
-
-        /**
-         * Instantiates a new {@link DescriptorImpl}.
-         */
-        public DescriptorImpl() {
-            super(StartTSBuilder.class);
-            load();
-        }
 
         @Override
         public int getDefaultTimeout() {
@@ -212,6 +206,11 @@ public class StartTSBuilder extends AbstractToolBuilder {
          */
         public int getDefaultTcpPort() {
             return DEFAULT_TCP_PORT;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return Messages.StartTSBuilder_DisplayName();
         }
 
         /**
@@ -234,11 +233,6 @@ public class StartTSBuilder extends AbstractToolBuilder {
          */
         public FormValidation doCheckTcpPort(@QueryParameter final String value) {
             return toolValidator.validateTcpPort(value);
-        }
-
-        @Override
-        public String getDisplayName() {
-            return Messages.StartTSBuilder_DisplayName();
         }
     }
 }

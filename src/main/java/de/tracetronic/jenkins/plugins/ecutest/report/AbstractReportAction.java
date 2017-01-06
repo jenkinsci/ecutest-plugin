@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -103,7 +103,7 @@ public abstract class AbstractReportAction extends AbstractRequestHandler implem
      * @return the last build with report artifacts or {@code null} if no proper build exists
      */
     @CheckForNull
-    protected abstract Run<?, ?> getLastReportBuild(final Job<?, ?> project);
+    protected abstract Run<?, ?> getLastReportBuild(Job<?, ?> project);
 
     @Override
     public String getIconFileName() {

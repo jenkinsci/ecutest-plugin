@@ -124,8 +124,10 @@ public class TSClient extends AbstractToolClient {
             }
         }
 
-        // Launch Tool-Server process
-        if (launchProcess(launcher, listener)) {
+        // Check Tool-Server location and launch process
+        if (StringUtils.isEmpty(getInstallPath())) {
+            logger.logError("Tool-Server executable could not be found!");
+        } else if (launchProcess(launcher, listener)) {
             logger.logInfo("Tool-Server started successfully.");
             return true;
         }
@@ -181,7 +183,7 @@ public class TSClient extends AbstractToolClient {
      *             if the current thread is interrupted while waiting for the completion
      */
     public static List<String> checkProcesses(final Launcher launcher, final boolean kill) throws IOException,
-    InterruptedException {
+            InterruptedException {
         return launcher.getChannel().call(new CheckProcessCallable(kill));
     }
 
@@ -233,7 +235,7 @@ public class TSClient extends AbstractToolClient {
                         logger.logError(String.format("-> Timeout of %d seconds reached!", timeout));
                     }
                 }
-            } catch (final IOException | InterruptedException e) {
+            } catch (final InterruptedException e) {
                 logger.logError(e.getMessage());
             }
             return isTerminated;

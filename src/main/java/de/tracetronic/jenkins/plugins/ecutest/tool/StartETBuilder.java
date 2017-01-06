@@ -45,6 +45,7 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
@@ -262,7 +263,7 @@ public class StartETBuilder extends AbstractToolBuilder {
      *             in case of an invalid workspace
      */
     private void checkWorkspace(final FilePath workspacePath, final FilePath settingsPath) throws IOException,
-    InterruptedException, ETPluginException {
+            InterruptedException, ETPluginException {
         if (!workspacePath.exists()) {
             throw new ETPluginException(String.format("ECU-TEST workspace at %s does not exist!",
                     workspacePath.getRemote()));
@@ -278,20 +279,18 @@ public class StartETBuilder extends AbstractToolBuilder {
     /**
      * DescriptorImpl for {@link StartETBuilder}.
      */
+    @Symbol("startET")
     @Extension(ordinal = 1006)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
-
-        /**
-         * Instantiates a {@link DescriptorImpl}.
-         */
-        public DescriptorImpl() {
-            super(StartETBuilder.class);
-            load();
-        }
 
         @Override
         public int getDefaultTimeout() {
             return DEFAULT_TIMEOUT;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return Messages.StartETBuilder_DisplayName();
         }
 
         /**
@@ -314,11 +313,6 @@ public class StartETBuilder extends AbstractToolBuilder {
          */
         public FormValidation doCheckSettingsDir(@QueryParameter final String value) {
             return toolValidator.validateSettingsDir(value);
-        }
-
-        @Override
-        public String getDisplayName() {
-            return Messages.StartETBuilder_DisplayName();
         }
     }
 }

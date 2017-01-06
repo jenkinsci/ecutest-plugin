@@ -41,6 +41,8 @@ import org.jenkins.ui.icon.Icon;
 import org.jenkins.ui.icon.IconSet;
 import org.jenkins.ui.icon.IconType;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher.DescriptorImpl;
+
 /**
  * Main entry point to this plugin for the {@link Jenkins} instance.
  *
@@ -56,12 +58,12 @@ public class ETPlugin extends Plugin {
     /**
      * Defines the maximum allowed ECU-TEST version supported by this plugin.
      */
-    public static final ToolVersion ET_MAX_VERSION = new ToolVersion(6, 4, 0, 0);
+    public static final ToolVersion ET_MAX_VERSION = new ToolVersion(6, 5, 0, 0);
 
     /**
      * Defines the TEST-GUIDE version that the provided ATX configuration is based on.
      */
-    public static final ToolVersion ATX_VERSION = new ToolVersion(1, 33, 0, 0);
+    public static final ToolVersion ATX_VERSION = new ToolVersion(1, 38, 0, 0);
 
     /**
      * Helper class to easily compare tool versions defined by major, minor, micro and qualifier version. Mainly used to
@@ -233,6 +235,19 @@ public class ETPlugin extends Plugin {
                     String.format("ecutest/icons/48x48/%s.png", name),
                     Icon.ICON_XLARGE_STYLE, IconType.PLUGIN)
                     );
+        }
+    }
+
+    @Override
+    public void postInitialize() throws Exception {
+        super.postInitialize();
+        final Jenkins instance = Jenkins.getInstance();
+        if (instance != null) {
+            // Synchronize current ATX configuration with the default one.
+            final DescriptorImpl descriptor = instance.getDescriptorByType(DescriptorImpl.class);
+            if (descriptor != null) {
+                descriptor.syncWithDefaultConfig();
+            }
         }
     }
 }

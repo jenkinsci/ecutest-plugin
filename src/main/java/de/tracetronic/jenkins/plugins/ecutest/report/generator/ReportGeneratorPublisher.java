@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 
-import hudson.CopyOnWrite;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
@@ -37,11 +36,7 @@ import hudson.Launcher;
 import hudson.Util;
 import hudson.model.Result;
 import hudson.model.TaskListener;
-import hudson.model.AbstractProject;
 import hudson.model.Run;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Publisher;
-import hudson.tools.ToolInstallation;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,12 +46,14 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
@@ -228,7 +225,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     @CheckForNull
     public AbstractToolInstallation getToolInstallation(final EnvVars envVars) {
         final String expToolName = envVars.expand(toolName);
-        for (final AbstractToolInstallation installation : getDescriptor().getInstallations()) {
+        for (final AbstractToolInstallation installation : getDescriptor().getToolDescriptor().getInstallations()) {
             if (StringUtils.equals(expToolName, installation.getName())) {
                 return installation;
             }
@@ -410,60 +407,12 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
         return URL_NAME;
     }
 
-    @Override
-    public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl) super.getDescriptor();
-    }
-
     /**
      * DescriptorImpl for {@link ReportGeneratorPublisher}.
      */
+    @Symbol("publishGenerators")
     @Extension(ordinal = 1001)
-    public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
-
-        @CopyOnWrite
-        private ETInstallation[] installations = new ETInstallation[0];
-
-        /**
-         * Instantiates a new {@link DescriptorImpl}.
-         */
-        public DescriptorImpl() {
-            super();
-            load();
-        }
-
-        /**
-         * Gets the tool descriptor.
-         *
-         * @return the tool descriptor
-         */
-        public ETInstallation.DescriptorImpl getToolDescriptor() {
-            return ToolInstallation.all().get(ETInstallation.DescriptorImpl.class);
-        }
-
-        /**
-         * @return the list of ECU-TEST installations
-         */
-        public ETInstallation[] getInstallations() {
-            return installations.clone();
-        }
-
-        /**
-         * Sets the installations.
-         *
-         * @param installations
-         *            the new installations
-         */
-        public void setInstallations(final ETInstallation... installations) {
-            this.installations = installations;
-            save();
-        }
-
-        @SuppressWarnings("rawtypes")
-        @Override
-        public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
-            return true;
-        }
+    public static class DescriptorImpl extends AbstractReportDescriptor {
 
         @Override
         public String getDisplayName() {

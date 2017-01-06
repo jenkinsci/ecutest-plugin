@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 
-import hudson.CopyOnWrite;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
@@ -40,14 +39,10 @@ import hudson.matrix.MatrixBuild;
 import hudson.model.BuildListener;
 import hudson.model.Result;
 import hudson.model.TaskListener;
-import hudson.model.AbstractProject;
 import hudson.model.Run;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Publisher;
 import hudson.tasks.junit.TestResult;
 import hudson.tasks.junit.TestResultAction;
 import hudson.tasks.test.TestResultAggregator;
-import hudson.tools.ToolInstallation;
 import hudson.util.FormValidation;
 
 import java.io.IOException;
@@ -59,12 +54,14 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
@@ -207,17 +204,12 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     @CheckForNull
     public AbstractToolInstallation getToolInstallation(final EnvVars envVars) {
         final String expToolName = envVars.expand(toolName);
-        for (final AbstractToolInstallation installation : getDescriptor().getInstallations()) {
+        for (final AbstractToolInstallation installation : getDescriptor().getToolDescriptor().getInstallations()) {
             if (StringUtils.equals(expToolName, installation.getName())) {
                 return installation;
             }
         }
         return null;
-    }
-
-    @Override
-    public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl) super.getDescriptor();
     }
 
     @Override
@@ -376,11 +368,9 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     /**
      * DescriptorImpl for {@link JUnitPublisher}.
      */
+    @Symbol("publishUNIT")
     @Extension(ordinal = 1002)
-    public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
-
-        @CopyOnWrite
-        private ETInstallation[] installations = new ETInstallation[0];
+    public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         private final JUnitValidator unitValidator;
 
@@ -389,41 +379,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
          */
         public DescriptorImpl() {
             super();
-            load();
             unitValidator = new JUnitValidator();
-        }
-
-        /**
-         * Gets the tool descriptor.
-         *
-         * @return the tool descriptor
-         */
-        public ETInstallation.DescriptorImpl getToolDescriptor() {
-            return ToolInstallation.all().get(ETInstallation.DescriptorImpl.class);
-        }
-
-        /**
-         * @return the list of ECU-TEST installations
-         */
-        public ETInstallation[] getInstallations() {
-            return installations.clone();
-        }
-
-        /**
-         * Sets the installations.
-         *
-         * @param installations
-         *            the new installations
-         */
-        public void setInstallations(final ETInstallation... installations) {
-            this.installations = installations;
-            save();
-        }
-
-        @SuppressWarnings("rawtypes")
-        @Override
-        public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
-            return true;
         }
 
         @Override

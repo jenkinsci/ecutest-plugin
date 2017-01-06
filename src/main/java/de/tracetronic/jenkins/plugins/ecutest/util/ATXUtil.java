@@ -165,4 +165,25 @@ public final class ATXUtil {
         }
         return fullServerUrl;
     }
+
+    /**
+     * Returns the current ATX setting {@code mapSeparateProjectExecutionAsSingleTestplan}.
+     *
+     * @param config
+     *            the ATX configuration
+     * @return the value of this setting as boolean
+     */
+    @SuppressWarnings("rawtypes")
+    public static boolean isSingleTestplanMap(final ATXConfig config) {
+        boolean isMapEnabled = true; // true by default when setting not exists
+        if (config != null) {
+            final List<ATXSetting> specialSettings = config.getConfigByName("specialConfig");
+            final Object settingValue = config.getSettingValueByName("mapSeparateProjectExecutionAsSingleTestplan",
+                    specialSettings);
+            if (settingValue != null) {
+                isMapEnabled = (boolean) settingValue;
+            }
+        }
+        return isMapEnabled;
+    }
 }

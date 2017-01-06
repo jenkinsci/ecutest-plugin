@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -49,7 +49,19 @@ public class ETInstallationTest {
         final ETInstallation inst = new ETInstallation("ECU-TEST", "C:\\ECU-TEST",
                 Collections.<ToolProperty<?>> emptyList());
         assertNotNull(inst);
-        assertEquals(inst.getName(), "ECU-TEST");
-        assertEquals(inst.getHome(), "C:\\ECU-TEST");
+        assertEquals("ECU-TEST", inst.getName());
+        assertEquals("C:\\ECU-TEST", inst.getHome());
+        assertEquals("ECU-TEST.Application", inst.getProgId());
+    }
+
+    @Test
+    public void testInstallationWithCustomProgId() {
+        final ETInstallation inst = new ETInstallation("ECU-TEST", "C:\\ECU-TEST",
+                Collections.singletonList(new ETToolProperty("ECU-TEST6.Application")));
+        assertNotNull(inst);
+        assertEquals("ECU-TEST", inst.getName());
+        assertEquals("C:\\ECU-TEST", inst.getHome());
+        assertEquals(1, inst.getProperties().size());
+        assertEquals("ECU-TEST6.Application", inst.getProgId());
     }
 }

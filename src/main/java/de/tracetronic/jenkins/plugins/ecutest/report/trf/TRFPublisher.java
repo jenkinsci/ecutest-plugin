@@ -35,19 +35,18 @@ import hudson.Launcher;
 import hudson.Util;
 import hudson.model.Result;
 import hudson.model.TaskListener;
-import hudson.model.AbstractProject;
 import hudson.model.Run;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Publisher;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 
 /**
@@ -58,9 +57,24 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 public class TRFPublisher extends AbstractReportPublisher {
 
     /**
-     * File name of the TRF file.
+     * File name extension of TRF files.
      */
-    public static final String TRF_FILE_NAME = "report.trf";
+    public static final String TRF_EXTENSION = ".trf";
+
+    /**
+     * Ant-style include pattern for listing up top level TRF files.
+     */
+    public static final String TRF_INCLUDE = "*" + TRF_EXTENSION;
+
+    /**
+     * Ant-style include pattern for listing up TRF files recursively.
+     */
+    public static final String TRF_INCLUDES = "**/*" + TRF_EXTENSION;
+
+    /**
+     * Ant-style pattern for excluding job analysis files recursively.
+     */
+    public static final String TRF_EXCLUDES = "*/**/Job_*" + TRF_EXTENSION;
 
     /**
      * The URL name to {@link TRFReport}s holding by {@link AbstractTRFAction}.
@@ -146,11 +160,12 @@ public class TRFPublisher extends AbstractReportPublisher {
             for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
                 final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
                 final FilePath archiveTargetDir = archiveTarget.child(testReportDir.getName());
-                final FilePath reportFile = testReportDir.child(TRF_FILE_NAME);
-                if (reportFile.exists()) {
+                final FilePath reportFile = getFirstReportFile(testReportDir);
+                if (reportFile != null && reportFile.exists()) {
                     try {
                         logger.logInfo(String.format("- Archiving TRF report: %s", reportFile));
-                        final int copiedFiles = testReportDir.copyRecursiveTo("**/" + TRF_FILE_NAME, archiveTargetDir);
+                        final int copiedFiles = testReportDir.copyRecursiveTo(TRF_INCLUDES, TRF_EXCLUDES,
+                                archiveTargetDir);
                         if (copiedFiles == 0) {
                             continue;
                         } else if (copiedFiles > 1) {
@@ -204,14 +219,16 @@ public class TRFPublisher extends AbstractReportPublisher {
      */
     private int traverseReports(final List<TRFReport> trfReports, final FilePath archiveTargetDir, int id)
             throws IOException, InterruptedException {
-        final FilePath trfFile = archiveTargetDir.child(TRF_FILE_NAME);
-        final String relFilePath = archiveTargetDir.getParent().toURI().relativize(trfFile.toURI()).getPath();
-        final TRFReport trfReport = new TRFReport(String.format("%d", ++id),
-                trfFile.getParent().getName(), relFilePath, trfFile.length());
-        trfReports.add(trfReport);
+        final FilePath trfFile = getFirstReportFile(archiveTargetDir);
+        if (trfFile != null && trfFile.exists()) {
+            final String relFilePath = archiveTargetDir.getParent().toURI().relativize(trfFile.toURI()).getPath();
+            final TRFReport trfReport = new TRFReport(String.format("%d", ++id),
+                    trfFile.getParent().getName(), relFilePath, trfFile.length());
+            trfReports.add(trfReport);
 
-        // Search for sub-reports
-        id = traverseSubReports(trfReport, archiveTargetDir.getParent(), archiveTargetDir, id);
+            // Search for sub-reports
+            id = traverseSubReports(trfReport, archiveTargetDir.getParent(), archiveTargetDir, id);
+        }
         return id;
     }
 
@@ -234,11 +251,10 @@ public class TRFPublisher extends AbstractReportPublisher {
      *             if the build gets interrupted
      */
     private int traverseSubReports(final TRFReport trfReport, final FilePath testReportDir,
-            final FilePath subTestReportDir, int id)
-                    throws IOException, InterruptedException {
+            final FilePath subTestReportDir, int id) throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
-            final FilePath reportFile = subDir.child(TRF_FILE_NAME);
-            if (reportFile.exists()) {
+            final FilePath reportFile = getFirstReportFile(subDir);
+            if (reportFile != null && reportFile.exists()) {
                 final String relFilePath = testReportDir.toURI().relativize(reportFile.toURI()).getPath();
                 final TRFReport subReport = new TRFReport(String.format("%d", ++id), reportFile.getParent()
                         .getName().replaceFirst("^Report\\s", ""), relFilePath, reportFile.length());
@@ -273,22 +289,12 @@ public class TRFPublisher extends AbstractReportPublisher {
         return URL_NAME;
     }
 
-    @Override
-    public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl) super.getDescriptor();
-    }
-
     /**
      * DescriptorImpl for {@link TRFPublisher}.
      */
+    @Symbol("publishTRF")
     @Extension(ordinal = 1003)
-    public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
-
-        @SuppressWarnings("rawtypes")
-        @Override
-        public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
-            return true;
-        }
+    public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         @Override
         public String getDisplayName() {
