@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2016 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,11 +34,14 @@ import hudson.model.Job;
 import hudson.model.Run;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import javax.annotation.CheckForNull;
 
 import jenkins.util.VirtualFile;
 
+import org.jenkins.ui.icon.Icon;
 import org.jenkins.ui.icon.IconSet;
 import org.jenkins.ui.icon.IconSpec;
 import org.kohsuke.stapler.StaplerRequest;
@@ -107,6 +110,14 @@ public abstract class AbstractReportAction extends AbstractRequestHandler implem
 
     @Override
     public String getIconFileName() {
-        return IconSet.icons.getIconByClassSpec(getIconClassName() + " icon-xlg").getUrl();
+        final String iconClass = getIconClassName() + " icon-xlg";
+        try {
+            // FIXME: workaround signature changes in different versions of {@link IconSet} by reflection
+            final Method getIconByClassSpec = IconSet.class.getMethod("getIconByClassSpec", Object.class);
+            return ((Icon) getIconByClassSpec.invoke(IconSet.icons, iconClass)).getUrl();
+        } catch (final NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            // ignore
+        }
+        return IconSet.icons.getIconByClassSpec(iconClass).getUrl();
     }
 }
