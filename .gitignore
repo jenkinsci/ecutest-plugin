@@ -11,7 +11,6 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
-
 ### Eclipse ###
 .metadata
 bin/
@@ -40,7 +39,7 @@ local.properties
 .checkstyle
 .pmd
 /infinitest.filters
-
+versioneye.properties
 
 ### Intellij ###
 *.iml
@@ -52,7 +51,6 @@ local.properties
 *.ipr
 *.iws
 
-
 ### NetBeans ###
 nbproject/private/
 build/
@@ -61,7 +59,6 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
-
 
 ### Jenkins ###
 work/
