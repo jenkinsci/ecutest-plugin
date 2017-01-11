@@ -95,9 +95,9 @@
         <maven-pmd-plugin.version>3.7</maven-pmd-plugin.version>
         
         <!-- Test scope -->
-        <equalsverifier.version>2.1.7</equalsverifier.version>
-        <mockito-core.version>2.3.0</mockito-core.version>
-        <jacoco.version>0.7.7.201606060606</jacoco.version>
+        <equalsverifier.version>2.1.8</equalsverifier.version>
+        <mockito-core.version>2.5.5</mockito-core.version>
+        <jacoco.version>0.7.8</jacoco.version>
         <workflow-aggregator.version>1.4.3</workflow-aggregator.version>
         <workflow-basic-steps.version>1.4.3</workflow-basic-steps.version>
         <workflow-cps.version>1.4.3</workflow-cps.version>
@@ -108,8 +108,8 @@
         <jacob.version>1.18</jacob.version>
 
         <!-- ANTLR -->
-        <antlr4-maven-plugin.version>4.5.3</antlr4-maven-plugin.version>
-        <antlr4-runtime.version>4.5.3</antlr4-runtime.version>
+        <antlr4-maven-plugin.version>4.6</antlr4-maven-plugin.version>
+        <antlr4-runtime.version>4.6</antlr4-runtime.version>
     </properties>
 
     <repositories>
