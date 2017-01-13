@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -59,6 +59,9 @@ public class TTConsoleNote extends ConsoleNote<Object> {
         if (plainText.contains("INFO:")) {
             text.addMarkup(0, text.length(), "<span style=\"color:#208CA3\">", "</span>");
             addResultMarkup(text);
+        }
+        if (plainText.contains("DEBUG:")) {
+            text.addMarkup(0, text.length(), "<span style=\"color:#63666A\">", "</span>");
         }
         return null;
     }

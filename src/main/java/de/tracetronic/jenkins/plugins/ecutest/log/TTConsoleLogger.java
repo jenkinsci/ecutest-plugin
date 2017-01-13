@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -104,6 +104,16 @@ public class TTConsoleLogger {
      */
     public void logError(final String message) {
         logAnnot("[TT] ERROR: ", message);
+    }
+
+    /**
+     * Log debug message.
+     *
+     * @param message
+     *            the message to log
+     */
+    public void logDebug(final String message) {
+        logAnnot("[TT] DEBUG: ", message);
     }
 
     /**
