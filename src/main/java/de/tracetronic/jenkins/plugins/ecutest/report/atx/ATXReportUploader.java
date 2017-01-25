@@ -125,7 +125,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 uploadFiles.addAll(Arrays.asList(
                         testReportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
                 // Prepare ATX report links
-                final String from = String.valueOf(Calendar.getInstance().getTimeInMillis());
+                final String from = String.valueOf(run.getTimeInMillis());
                 final String to = from;
                 final String title = reportFile.getParent().getName();
                 final String testName = testEnvAction.getTestName();
