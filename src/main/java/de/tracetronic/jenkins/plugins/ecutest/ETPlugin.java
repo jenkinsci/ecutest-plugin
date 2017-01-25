@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2015-2016 TraceTronic GmbH
+/*
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -63,7 +63,7 @@ public class ETPlugin extends Plugin {
     /**
      * Defines the TEST-GUIDE version that the provided ATX configuration is based on.
      */
-    public static final ToolVersion ATX_VERSION = new ToolVersion(1, 38, 0, 0);
+    public static final ToolVersion ATX_VERSION = new ToolVersion(1, 39, 0, 0);
 
     /**
      * Helper class to easily compare tool versions defined by major, minor, micro and qualifier version. Mainly used to

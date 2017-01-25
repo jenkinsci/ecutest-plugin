@@ -84,6 +84,23 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
+		<SETTING name="projectId" default="1" xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">Eindeutige Projekt-Id in TEST-GUIDE. Muss
+							angegeben werden, wenn mehr als ein Projekt in einer TEST-GUIDE
+							Instanz verwaltet wird.</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">Unique project id in TEST-GUIDE. Have to
+							specified, if more than one project is managed in one TEST-GUIDE
+							instance.</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
 		<SETTING name="cleanAfterSuccessUpload" default="True"
 			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
@@ -529,6 +546,41 @@
 							otherwise
 							False.
 						</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
+		<SETTING name="mapAttributeAsConstant" default=""
+			xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">Angabe der Package-Attribute durch ';'
+							getrennt, welche als ATX-Konstante für die Suche zusätzlich
+							erfasst werden sollen.</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">Specifying the package attributes by ';',
+							which are mapped additionaly to ATX constants.</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
+		<SETTING name="mapTestReportPathAsConstant" default="False"
+			xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">True, wenn der TRF-Reportpfad als
+							ATX-Konstante TRF_Link abgebildet
+							werden soll, sonst False.</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">True, if the TRF report path should be
+							mapped as ATX constant TRF_Link, otherwise
+							False.</DVALUE>
 					</ELEMENT>
 				</MULTILANGDATA>
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
