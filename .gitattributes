@@ -1,0 +1,32 @@
+# Handle line endings automatically for files detected as text
+# and leave all files detected as binary untouched.
+* text=auto
+
+# These files are text and should be normalized (Convert crlf => lf)
+*.css           text
+*.g4            text
+*.html          text
+*.java          text
+*.jelly         text
+*.js            text
+*.json          text
+*.md            text
+*.md5           text
+*.pom           text
+*.properties    text
+*.sha1          text
+*.txt           text
+*.xml           text
+
+# These files are binary and should be left untouched
+# (binary is a macro for -text -diff)
+*.class         binary
+*.dll           binary
+*.gif           binary
+*.hpi           binary
+*.ico           binary
+*.jar           binary
+*.jpg           binary
+*.jpeg          binary
+*.png           binary
+*.war           binary
