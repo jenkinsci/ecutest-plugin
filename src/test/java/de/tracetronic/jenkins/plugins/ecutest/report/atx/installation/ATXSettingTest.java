@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2015 TraceTronic GmbH
  * All rights reserved.
  *
