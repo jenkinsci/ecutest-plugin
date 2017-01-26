@@ -1,5 +1,5 @@
 <!--
-    Copyright (c) 2015-2016 TraceTronic GmbH
+    Copyright (c) 2015-2017 TraceTronic GmbH
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification,
@@ -29,7 +29,7 @@
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
     <f:entry title="${%unstableOnWarning.title}" description="${%unstableOnWarning.description}" field="unstableOnWarning">
         <f:checkbox />
     </f:entry>
