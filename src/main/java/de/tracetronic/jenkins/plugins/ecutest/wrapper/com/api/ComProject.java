@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -35,16 +35,16 @@ import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.Che
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 
 /**
- * Represents the ECU-TEST specific COMPackage API.
+ * Represents the ECU-TEST specific COMProject API.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public interface ComProject {
 
     /**
-     * Queries the package name.
+     * Queries the project name.
      *
-     * @return the name of this package
+     * @return the name of this project
      * @throws ETComException
      *             in case of a COM exception
      */
