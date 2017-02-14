@@ -482,7 +482,27 @@
 					</ELEMENT>
 					<ELEMENT dkey="en_US">
 						<DVALUE xsi:type="unicode">Use the parameter set name instead of the
-							package name as a ATX TestCase name?</DVALUE>
+							package name as a ATX testcase name?</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
+		<SETTING name="mapProjectElementNameAsTestCaseName" default="False"
+			xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">True, wenn der Projektreferenzname statt
+							der Packagenamen
+							als Testfallnamen verwenden werden soll im ATX,
+							sonst False.</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">True, if the project reference name should
+							be used instead of the
+							package name as a ATX testcase name,
+							otherwise False.</DVALUE>
 					</ELEMENT>
 				</MULTILANGDATA>
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>

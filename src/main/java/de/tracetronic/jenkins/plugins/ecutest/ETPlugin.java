@@ -63,7 +63,7 @@ public class ETPlugin extends Plugin {
     /**
      * Defines the TEST-GUIDE version that the provided ATX configuration is based on.
      */
-    public static final ToolVersion ATX_VERSION = new ToolVersion(1, 39, 0, 0);
+    public static final ToolVersion ATX_VERSION = new ToolVersion(1, 40, 0, 0);
 
     /**
      * Helper class to easily compare tool versions defined by major, minor, micro and qualifier version. Mainly used to
