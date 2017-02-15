@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -92,10 +92,10 @@ public interface ComTestExecutionInfo {
      *
      * @return the state current test execution. One of:
      *         <ol>
-     *         <li>NONE</li>
-     *         <li>SUCCESS</li>
-     *         <li>FAILED</li>
-     *         <li>ERROR</li>
+     *         <li>IDLE</li>
+     *         <li>RUNNING</li>
+     *         <li>ABORTED</li>
+     *         <li>FINISHED</li>
      *         </ol>
      * @throws ETComException
      *             in case of a COM exception
