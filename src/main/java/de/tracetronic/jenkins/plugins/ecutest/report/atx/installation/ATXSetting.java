@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -205,6 +205,6 @@ public abstract class ATXSetting<T> implements Serializable, Cloneable {
     private static String toSpaceCase(final String camelCase) {
         final String separated = camelCase.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])",
                 "(?<=[^A-Z])(?=[A-Z])", "(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
-        return Character.toString(separated.charAt(0)).toUpperCase() + separated.substring(1);
+        return Character.toString(separated.charAt(0)).toUpperCase(Locale.getDefault()) + separated.substring(1);
     }
 }

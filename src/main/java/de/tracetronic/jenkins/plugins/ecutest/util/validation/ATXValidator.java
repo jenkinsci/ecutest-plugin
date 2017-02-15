@@ -384,13 +384,13 @@ public class ATXValidator extends AbstractValidator {
      * @throws KeyManagementException
      *             the key management exception
      */
-    private void initSSLConnection() throws NoSuchAlgorithmException, KeyManagementException {
+    private static void initSSLConnection() throws NoSuchAlgorithmException, KeyManagementException {
         // Create a trust manager that does not validate certificate chains
         final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
 
             @Override
             public X509Certificate[] getAcceptedIssuers() {
-                return null;
+                return new X509Certificate[0];
             }
 
             @Override

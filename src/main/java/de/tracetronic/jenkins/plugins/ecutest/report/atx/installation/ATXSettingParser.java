@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,6 +32,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -187,7 +188,8 @@ public final class ATXSettingParser {
      */
     private static boolean isCheckbox(final String defaultValue) {
         final boolean isCheckbox;
-        if ("true".equals(defaultValue.toLowerCase()) || "false".equals(defaultValue.toLowerCase())) {
+        if ("true".equals(defaultValue.toLowerCase(Locale.getDefault()))
+                || "false".equals(defaultValue.toLowerCase(Locale.getDefault()))) {
             isCheckbox = true;
         } else {
             isCheckbox = false;
@@ -203,7 +205,7 @@ public final class ATXSettingParser {
      * @return {@code true} if value represents true, {@code false} otherwise
      */
     private static boolean toBoolean(final String value) {
-        return "true".equals(value.toLowerCase()) ? true : false;
+        return "true".equals(value.toLowerCase(Locale.getDefault())) ? true : false;
     }
 
     /**

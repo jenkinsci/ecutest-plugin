@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,6 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.jacob.com.Dispatch;
 import com.jacob.com.SafeArray;
@@ -84,8 +85,9 @@ public abstract class AbstractTestObject extends ETComDispatch {
             final int uBound = array.getUBound(1);
             if (array.getUBound(2) == 3) {
                 for (int i = lBound; i <= uBound; i++) {
-                    errorList.add(new CheckInfoHolder(array.getString(i, 0), Seriousness.valueOf(array.getString(i, 1)
-                            .toUpperCase()), array.getString(i, 2), array.getString(i, 3)));
+                    errorList.add(new CheckInfoHolder(array.getString(i, 0),
+                            Seriousness.valueOf(array.getString(i, 1).toUpperCase(Locale.getDefault())),
+                            array.getString(i, 2), array.getString(i, 3)));
                 }
             }
         }

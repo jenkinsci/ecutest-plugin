@@ -253,7 +253,7 @@ public class TMSPublisher extends AbstractReportPublisher {
         /**
          * Validator to check form fields.
          */
-        protected final ImportProjectValidator importValidator = new ImportProjectValidator();
+        private final ImportProjectValidator importValidator = new ImportProjectValidator();
 
         /**
          * Instantiates a new {@link DescriptorImpl}.
