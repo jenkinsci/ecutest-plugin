@@ -37,7 +37,7 @@
     </style>
     <j:if test="${!it.envVariables.isEmpty()}">
         <t:summary icon="document.png">
-            <l:pane title="${%Tool Parameters}" width="3">
+            <l:pane title="${%Tool Parameters}" width="3" id="${it.getPaneId()}">
                 <j:forEach var="parameterValue" items="${it.envVariables}">
                     <st:include it="${parameterValue}" page="value.jelly" />
                 </j:forEach>
