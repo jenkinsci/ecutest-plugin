@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -167,15 +167,37 @@ public final class ATXUtil {
     }
 
     /**
+     * Gets the current ATX project id.
+     *
+     * @param config
+     *            the ATX configuration
+     * @param envVars
+     *            the environment variables
+     * @return the project id, {@code null} if setting is not available
+     */
+    @SuppressWarnings("rawtypes")
+    public static String getProjectId(final ATXConfig config, final EnvVars envVars) {
+        String projectId = null;
+        if (config != null && envVars != null) {
+            final List<ATXSetting> uploadSettings = config.getConfigByName("uploadConfig");
+            final Object projectIdSetting = config.getSettingValueByName("projectId", uploadSettings);
+            if (projectIdSetting != null) {
+                projectId = envVars.expand((String) projectIdSetting);
+            }
+        }
+        return projectId;
+    }
+
+    /**
      * Returns the current ATX setting {@code mapSeparateProjectExecutionAsSingleTestplan}.
      *
      * @param config
      *            the ATX configuration
-     * @return the value of this setting as boolean
+     * @return the value of this setting as boolean, {@code true} by default if setting not exists
      */
     @SuppressWarnings("rawtypes")
     public static boolean isSingleTestplanMap(final ATXConfig config) {
-        boolean isMapEnabled = true; // true by default when setting not exists
+        boolean isMapEnabled = true;
         if (config != null) {
             final List<ATXSetting> specialSettings = config.getConfigByName("specialConfig");
             final Object settingValue = config.getSettingValueByName("mapSeparateProjectExecutionAsSingleTestplan",

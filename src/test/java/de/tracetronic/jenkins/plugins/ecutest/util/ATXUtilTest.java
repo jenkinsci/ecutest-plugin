@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,6 +30,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.util;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import hudson.EnvVars;
@@ -187,5 +188,69 @@ public class ATXUtilTest {
                 }));
 
         assertThat(ATXUtil.getBaseUrl(atxConfig, envVars), is("https://localhost:8086/context"));
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Test
+    public void testProjectId() {
+        final List<ATXSetting> uploadSettings = new ArrayList<ATXSetting>();
+        final ATXTextSetting projectId = new ATXTextSetting("projectId", "", "", "2");
+        uploadSettings.add(projectId);
+
+        final Map<String, List<ATXSetting>> configMap = new LinkedHashMap<String, List<ATXSetting>>();
+        configMap.put("uploadConfig", uploadSettings);
+        final ATXConfig atxConfig = new ATXConfig(configMap, null);
+
+        assertThat(ATXUtil.getProjectId(atxConfig, new EnvVars()), is("2"));
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Test
+    public void testProjectIdByExpandedConfig() {
+        final List<ATXSetting> uploadSettings = new ArrayList<ATXSetting>();
+        final ATXTextSetting projectId = new ATXTextSetting("projectId", "", "", "${PROJECT_ID}");
+        uploadSettings.add(projectId);
+
+        final Map<String, List<ATXSetting>> configMap = new LinkedHashMap<String, List<ATXSetting>>();
+        configMap.put("uploadConfig", uploadSettings);
+        final ATXConfig atxConfig = new ATXConfig(configMap, null);
+
+        final EnvVars envVars = new EnvVars(
+                Collections.unmodifiableMap(new HashMap<String, String>() {
+
+                    private static final long serialVersionUID = 1L;
+                    {
+                        put("PROJECT_ID", "2");
+                    }
+                }));
+
+        assertThat(ATXUtil.getProjectId(atxConfig, envVars), is("2"));
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Test
+    public void testUnavailableProjectId() {
+        final List<ATXSetting> uploadSettings = new ArrayList<ATXSetting>();
+
+        final Map<String, List<ATXSetting>> configMap = new LinkedHashMap<String, List<ATXSetting>>();
+        configMap.put("uploadConfig", uploadSettings);
+        final ATXConfig atxConfig = new ATXConfig(configMap, null);
+
+        assertThat(ATXUtil.getProjectId(atxConfig, new EnvVars()), nullValue());
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Test
+    public void testSingleTestplanMap() {
+        final List<ATXSetting> specialSettings = new ArrayList<ATXSetting>();
+        final ATXBooleanSetting singleTestplanMap = new ATXBooleanSetting(
+                "mapSeparateProjectExecutionAsSingleTestplan", "", "", false);
+        specialSettings.add(singleTestplanMap);
+
+        final Map<String, List<ATXSetting>> configMap = new LinkedHashMap<String, List<ATXSetting>>();
+        configMap.put("specialConfig", specialSettings);
+        final ATXConfig atxConfig = new ATXConfig(configMap, null);
+
+        assertThat(ATXUtil.isSingleTestplanMap(atxConfig), is(false));
     }
 }
