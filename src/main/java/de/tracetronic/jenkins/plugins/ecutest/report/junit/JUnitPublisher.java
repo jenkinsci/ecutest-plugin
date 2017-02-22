@@ -250,15 +250,19 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
         final TestResult testResult = parser.parseResult(JUnitReportGenerator.UNIT_TEMPLATE_NAME, run, workspace,
                 launcher, listener);
 
-        // Add action for publishing JUnit results
-        TestResultAction action;
-        try {
-            action = new TestResultAction(run, testResult, listener);
-        } catch (final NullPointerException npe) {
-            throw new ETPluginException(String.format("Parsing UNIT test results failed: %s", npe.getMessage()));
+        // Add or append to action for publishing JUnit results
+        TestResultAction action = run.getAction(TestResultAction.class);
+        if (action == null) {
+            try {
+                action = new TestResultAction(run, testResult, listener);
+                run.addAction(action);
+            } catch (final NullPointerException npe) {
+                throw new ETPluginException(String.format("Parsing UNIT test results failed: %s", npe.getMessage()));
+            }
+        } else {
+            action.setResult(testResult, listener);
         }
         testResult.freeze(action);
-        run.addAction(action);
 
         // Change build result if thresholds exceeded
         if (setBuildResult(run, listener, testResult)) {
