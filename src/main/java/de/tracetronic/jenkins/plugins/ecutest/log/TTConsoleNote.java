@@ -75,7 +75,7 @@ public class TTConsoleNote extends ConsoleNote<Object> {
     private void addResultMarkup(final MarkupText text) {
         final String plainText = text.getText();
         for (final String result : Arrays.asList("NONE", "INCONCLUSIVE", "SUCCESS", "FAILED", "ERROR")) {
-            if (plainText.contains(result)) {
+            if (plainText.contains("result: " + result)) {
                 final int startPos = plainText.indexOf(result);
                 final int endPos = startPos + result.length();
                 String color;
