@@ -31,6 +31,8 @@ package de.tracetronic.jenkins.plugins.ecutest;
 
 import hudson.Plugin;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -206,7 +208,9 @@ public class ETPlugin extends Plugin {
                 "ecu-test-prj",
                 "report-generator",
                 "test-guide",
-                "trf-report",
+                "test-param",
+                "tool-param",
+                "trf-report"
         }) {
             // Register small (16x16) icons
             IconSet.icons.addIcon(new Icon(
@@ -249,5 +253,26 @@ public class ETPlugin extends Plugin {
                 descriptor.syncWithDefaultConfig();
             }
         }
+    }
+
+    /**
+     * Gets the icon file name by class specification.
+     *
+     * @param iconClassName
+     *            the icon class name
+     * @param iconStyle
+     *            the icon style
+     * @return the icon file name
+     */
+    public static String getIconFileName(final String iconClassName, final String iconStyle) {
+        final String iconClass = iconClassName + " " + iconStyle;
+        try {
+            // FIXME: workaround signature changes in different versions of {@link IconSet} by reflection
+            final Method getIconByClassSpec = IconSet.class.getMethod("getIconByClassSpec", Object.class);
+            return ((Icon) getIconByClassSpec.invoke(IconSet.icons, iconClass)).getUrl();
+        } catch (final NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            // ignore
+        }
+        return IconSet.icons.getIconByClassSpec(iconClass).getUrl();
     }
 }

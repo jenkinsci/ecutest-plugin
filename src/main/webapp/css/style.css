@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2015 TraceTronic GmbH
+    Copyright (c) 2015-2017 TraceTronic GmbH
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification,
@@ -64,4 +64,81 @@ table.jobMain {
 #logs td.timestamp {
     text-align: right;
     color: #888;
+}
+
+.results {
+    min-width: 500px;
+    max-width: 1000px;
+}
+
+.results h3 {
+    color: #63666A;
+}
+
+.expander {
+    float:right;
+    outline: 0 none;
+}
+
+#envAction {
+    border: 1px solid #bbb;
+    border-spacing: 0;
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+    word-wrap: break-word;
+    white-space: normal;
+    margin: 0;
+}
+
+#envAction td {
+    border: 1px solid #bbb;
+    border-radius: 0;
+    text-align: center;
+    vertical-align: middle;
+    padding: 2px;
+}
+
+#envAction td.FAILED {
+    background-color: #F25757;
+}
+
+#envAction td.ERROR{
+    background-color: #B40000;
+}
+
+#envAction td.SUCCESS {
+    background-color: #A1C057;
+}
+
+#envAction td.NONE {
+    background-color: #63666A;
+}
+
+#envAction td.INCONCLUSIVE {
+    background-color: #FDC142;
+}
+
+#envAction td.close {
+    background-image: url(../icons/16x16/plus.png);
+    background-repeat: no-repeat;
+    background-position: 2% 50%;
+    border: 1px solid #bbb;
+    outline: 0 none;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: #eee;
+}
+
+#envAction td.open {
+    background-image: url(../icons/16x16/minus.png);
+    background-repeat: no-repeat;
+    background-position: 2% 50%;
+    border: 1px solid #bbb;
+    outline: 0 none;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: #eee;
 }

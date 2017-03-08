@@ -34,18 +34,15 @@ import hudson.model.Job;
 import hudson.model.Run;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import javax.annotation.CheckForNull;
 
 import jenkins.util.VirtualFile;
 
-import org.jenkins.ui.icon.Icon;
-import org.jenkins.ui.icon.IconSet;
 import org.jenkins.ui.icon.IconSpec;
 import org.kohsuke.stapler.StaplerRequest;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.AbstractATXAction;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.AbstractTRFAction;
 
@@ -110,14 +107,6 @@ public abstract class AbstractReportAction extends AbstractRequestHandler implem
 
     @Override
     public String getIconFileName() {
-        final String iconClass = getIconClassName() + " icon-xlg";
-        try {
-            // FIXME: workaround signature changes in different versions of {@link IconSet} by reflection
-            final Method getIconByClassSpec = IconSet.class.getMethod("getIconByClassSpec", Object.class);
-            return ((Icon) getIconByClassSpec.invoke(IconSet.icons, iconClass)).getUrl();
-        } catch (final NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            // ignore
-        }
-        return IconSet.icons.getIconByClassSpec(iconClass).getUrl();
+        return ETPlugin.getIconFileName(getIconClassName(), "icon-xlg");
     }
 }

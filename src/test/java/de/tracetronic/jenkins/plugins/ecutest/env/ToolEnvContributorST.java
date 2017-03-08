@@ -80,7 +80,7 @@ public class ToolEnvContributorST extends SystemTestBase {
         assertEquals("TT_TOOL_INSTALL_0 should match env action", toolEnvAction.getToolInstallation(),
                 envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_INSTALL + toolId));
         assertEquals("TT_TOOL_WS_0 should match env action", toolEnvAction.getToolWorkspace(),
-                envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_WS + toolId));
+                envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_WORKSPACE + toolId));
         assertEquals("TT_TOOL_SETTINGS_0 should match env action", toolEnvAction.getToolSettings(),
                 envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_SETTINGS + toolId));
         assertEquals("TT_TOOL_TIMEOUT_0 should match env action", String.valueOf(toolEnvAction.getTimeout()),

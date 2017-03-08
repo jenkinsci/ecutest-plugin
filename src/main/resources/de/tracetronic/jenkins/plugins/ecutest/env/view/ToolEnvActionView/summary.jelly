@@ -30,18 +30,59 @@
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
-    <style type="text/css">
-        .setting-input {
-            width: 30em !important;
-        }
-    </style>
-    <j:if test="${!it.envVariables.isEmpty()}">
-        <t:summary icon="document.png">
-            <l:pane title="${%Tool Parameters}" width="3" id="${it.getPaneId()}">
-                <j:forEach var="parameterValue" items="${it.envVariables}">
-                    <st:include it="${parameterValue}" page="value.jelly" />
+    <link type="text/css" href="${resURL}/plugin/ecutest/css/style.css" rel="stylesheet" />
+    <script type="text/javascript">jQuery.noConflict(true);</script>
+    <script type="text/javascript" src="${resURL}/plugin/ecutest/js/expand.js" />
+    <j:set var="toolActions" value="${it.getToolEnvActions()}" />
+    <j:if test="${!empty(toolActions)}">
+        <t:summary icon="${it.iconFile}">
+            <div class="results">
+                <h3>${%parameters}</h3>
+                <a href="#" class="expander">${%collapse}</a>
+                <table class="pane" id="envAction">
+                <j:forEach var="action" items="${toolActions}">
+                    <j:set var="toolId" value="${action.getToolId()}" />
+                    <tr class="parent tool" id="${toolId}">
+                        <td class="pane-header open NONE" colspan="3">${action.getToolName()}</td>
+                    </tr>
+                    <tr class="child-${toolId}">
+                        <td>${%name}</td>
+                        <td>TT_TOOL_NAME_${toolId}</td>
+                        <td>${action.getToolName()}</td>
+                    </tr>
+                    <tr class="child-${toolId}">
+                        <td>${%install}</td>
+                        <td>TT_TOOL_INSTALL_${toolId}</td>
+                        <td>${action.getToolInstallation()}</td>
+                    </tr>
+                    <tr class="child-${toolId}">
+                        <td>${%version}</td>
+                        <td>TT_TOOL_VERSION_${toolId}</td>
+                        <td>${action.getToolVersion()}</td>
+                    </tr>
+                    <tr class="child-${toolId}">
+                        <td>${%workspace}</td>
+                        <td>TT_TOOL_WORKSPACE_${toolId}</td>
+                        <td>${action.getToolWorkspace()}</td>
+                    </tr>
+                    <tr class="child-${toolId}">
+                        <td>${%settings}</td>
+                        <td>TT_TOOL_SETTINGS_${toolId}</td>
+                        <td>${action.getToolSettings()}</td>
+                    </tr>
+                    <tr class="child-${toolId}">
+                        <td>${%debug}</td>
+                        <td>TT_TOOL_DEBUG_${toolId}</td>
+                        <td>${action.isDebug()}</td>
+                    </tr>
+                    <tr class="child-${toolId}">
+                        <td>${%timeout}</td>
+                        <td>TT_TOOL_TIMEOUT_${toolId}</td>
+                        <td>${action.getTimeout()}</td>
+                    </tr>
                 </j:forEach>
-            </l:pane>
+                </table>
+            </div>
         </t:summary>
     </j:if>
 </j:jelly>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -86,7 +86,7 @@ public class TestEnvContributor extends EnvironmentContributor {
     /**
      * Build environment variable part for the test report directory.
      */
-    public static final String TEST_REPORT_DIR = "TEST_REPORT_DIR_";
+    public static final String TEST_REPORT = "TEST_REPORT_";
 
     /**
      * Build environment variable part for the test result.
@@ -120,7 +120,7 @@ public class TestEnvContributor extends EnvironmentContributor {
             envs.put(PREFIX + TEST_FILE + id, action.getTestFile());
             envs.put(PREFIX + TEST_TBC + id, action.getTestTbc());
             envs.put(PREFIX + TEST_TCF + id, action.getTestTcf());
-            envs.put(PREFIX + TEST_REPORT_DIR + id, action.getTestReportDir());
+            envs.put(PREFIX + TEST_REPORT + id, action.getTestReportDir());
             envs.put(PREFIX + TEST_RESULT + id, action.getTestResult());
             envs.put(PREFIX + TEST_TIMEOUT + id, String.valueOf(action.getTimeout()));
         }

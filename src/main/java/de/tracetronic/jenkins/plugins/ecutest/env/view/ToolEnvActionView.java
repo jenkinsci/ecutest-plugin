@@ -46,6 +46,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 
 /**
@@ -104,12 +105,21 @@ public class ToolEnvActionView extends InvisibleAction {
     }
 
     /**
-     * Returns an identifier for the collapsible pane view.
+     * Gets the list of {@link ToolEnvInvisibleAction}s according to this build action.
      *
-     * @return the pane id
+     * @return the tool environment actions
      */
-    public String getPaneId() {
-        return "tool-param-" + build.getId();
+    public List<ToolEnvInvisibleAction> getToolEnvActions() {
+        return build.getActions(ToolEnvInvisibleAction.class);
+    }
+
+    /**
+     * Gets the file name of the icon.
+     *
+     * @return the icon file name
+     */
+    public String getIconFile() {
+        return ETPlugin.getIconFileName("icon-ecutest-tool-param", "icon-xlg");
     }
 
     /**

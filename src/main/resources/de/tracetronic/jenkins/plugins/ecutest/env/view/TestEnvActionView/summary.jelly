@@ -30,18 +30,79 @@
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
-    <style type="text/css">
-        .setting-input {
-            width: 30em !important;
-        }
-    </style>
-    <j:if test="${!it.envVariables.isEmpty()}">
-        <t:summary icon="document.png">
-            <l:pane title="${%Test Parameters}" width="3" id="${it.getPaneId()}">
-                <j:forEach var="parameterValue" items="${it.envVariables}">
-                    <st:include it="${parameterValue}" page="value.jelly" />
+    <link type="text/css" href="${resURL}/plugin/ecutest/css/style.css" rel="stylesheet" />
+    <script type="text/javascript" src="${resURL}/plugin/ecutest/js/expand.js" />
+    <j:set var="testActions" value="${it.getTestEnvActions()}" />
+    <j:if test="${!empty(testActions)}">
+        <t:summary icon="${it.iconFile}">
+            <div class="results">
+                <h3>${%parameters}</h3>
+                <a href="#" class="expander">${%collapse}</a>
+                <table class="pane" id="envAction">
+                <j:forEach var="action" items="${testActions}">
+                    <j:set var="testId" value="${action.getTestId()}" />
+                    <tr class="parent" id="${testId}">
+                        <j:choose>
+                            <j:when test="${action.getTestType() == 'PACKAGE'}">
+                                <j:set var="extension" value=".pkg" />
+                            </j:when>
+                            <j:when test="${action.getTestType() == 'PROJECT'}">
+                                <j:set var="extension" value=".prj" />
+                            </j:when>
+                            <j:otherwise>
+                                <j:set var="extension" value="" />
+                            </j:otherwise>
+                        </j:choose>
+                        <td class="pane-header open ${action.getTestResult()}" colspan="3">${action.getTestName()}${extension}</td>
+                    </tr>
+                    <tr class="child-${testId}">
+                        <td>${%name}</td>
+                        <td>TT_TEST_NAME_${testId}</td>
+                        <td>${action.getTestName()}</td>
+                    </tr>
+                    <tr class="child-${testId}">
+                        <td>${%file}</td>
+                        <td>TT_TEST_FILE_${testId}</td>
+                        <td>${action.getTestFile()}</td>
+                    </tr>
+                    <tr class="child-${testId}">
+                        <td>${%type}</td>
+                        <td>TT_TEST_TYPE_${testId}</td>
+                        <td>${action.getTestType()}</td>
+                    </tr>
+                    <tr class="child-${testId}">
+                        <td>${%description}</td>
+                        <td>TT_TEST_DESCRIPTION_${testId}</td>
+                        <td>${action.getTestDescription()}</td>
+                    </tr>
+                    <tr class="child-${testId}">
+                        <td>${%tbc}</td>
+                        <td>TT_TEST_TBC_${testId}</td>
+                        <td>${action.getTestTbc()}</td>
+                    </tr>
+                    <tr class="child-${testId}">
+                        <td>${%tcf}</td>
+                        <td>TT_TEST_TCF_${testId}</td>
+                        <td>${action.getTestTcf()}</td>
+                    </tr>
+                    <tr class="child-${testId}">
+                        <td>${%report}</td>
+                        <td>TT_TEST_REPORT_${testId}</td>
+                        <td>${action.getTestReportDir()}</td>
+                    </tr>
+                    <tr class="child-${testId}">
+                        <td>${%result}</td>
+                        <td>TT_TEST_RESULT_${testId}</td>
+                        <td>${action.getTestResult()}</td>
+                    </tr>
+                    <tr class="child-${testId}">
+                        <td>${%timeout}</td>
+                        <td>TT_TEST_TIMEOUT_${testId}</td>
+                        <td>${action.getTimeout()}</td>
+                    </tr>
                 </j:forEach>
-            </l:pane>
+                </table>
+            </div>
         </t:summary>
     </j:if>
 </j:jelly>

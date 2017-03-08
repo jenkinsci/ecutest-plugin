@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -69,7 +69,7 @@ public class ToolEnvContributor extends EnvironmentContributor {
     /**
      * Build environment variable part for the workspace used by the tool.
      */
-    public static final String TOOL_WS = "TOOL_WS_";
+    public static final String TOOL_WORKSPACE = "TOOL_WORKSPACE_";
 
     /**
      * Build environment variable part for the settings used by the tool.
@@ -101,7 +101,7 @@ public class ToolEnvContributor extends EnvironmentContributor {
             envs.put(PREFIX + TOOL_NAME + id, action.getToolName());
             envs.put(PREFIX + TOOL_VERSION + id, action.getToolVersion());
             envs.put(PREFIX + TOOL_INSTALL + id, action.getToolInstallation());
-            envs.put(PREFIX + TOOL_WS + id, action.getToolWorkspace());
+            envs.put(PREFIX + TOOL_WORKSPACE + id, action.getToolWorkspace());
             envs.put(PREFIX + TOOL_SETTINGS + id, action.getToolSettings());
             envs.put(PREFIX + TOOL_TIMEOUT + id, String.valueOf(action.getTimeout()));
             envs.put(PREFIX + TOOL_DEBUG + id, action.isDebug() ? "true" : "false");
