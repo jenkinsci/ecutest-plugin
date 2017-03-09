@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -79,7 +79,7 @@ public class ToolEnvContributorST extends SystemTestBase {
                 envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_VERSION + toolId));
         assertEquals("TT_TOOL_INSTALL_0 should match env action", toolEnvAction.getToolInstallation(),
                 envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_INSTALL + toolId));
-        assertEquals("TT_TOOL_WS_0 should match env action", toolEnvAction.getToolWorkspace(),
+        assertEquals("TT_TOOL_WORKSPACE_0 should match env action", toolEnvAction.getToolWorkspace(),
                 envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_WORKSPACE + toolId));
         assertEquals("TT_TOOL_SETTINGS_0 should match env action", toolEnvAction.getToolSettings(),
                 envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_SETTINGS + toolId));

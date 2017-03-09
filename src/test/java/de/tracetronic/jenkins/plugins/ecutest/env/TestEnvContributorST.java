@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -95,8 +95,8 @@ public class TestEnvContributorST extends SystemTestBase {
                 envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TBC + testId));
         assertEquals("TT_TEST_TCF_0 should match env action", String.valueOf(testEnvAction.getTestTcf()),
                 envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TCF + testId));
-        assertEquals("TT_TEST_REPORT_DIR_0 should match env action", testEnvAction.getTestReportDir(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_REPORT_DIR + testId));
+        assertEquals("TT_TEST_REPORT_0 should match env action", testEnvAction.getTestReportDir(),
+                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_REPORT + testId));
         assertEquals("TT_TEST_RESULT_0 should match env action", testEnvAction.getTestResult(),
                 envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_RESULT + testId));
         assertEquals("TT_TEST_TIMEOUT_0 should match env action", String.valueOf(testEnvAction.getTimeout()),
