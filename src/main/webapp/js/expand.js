@@ -98,7 +98,7 @@
         $('.parent').each(function() {
             var children = getChildren($(this));
             var toggler = $(this).children('td');
-            if (!($(toggler).hasClass('FAILED') || $(toggler).hasClass('ERROR')) || $this.hasClass('tool')) {
+            if (!($(toggler).hasClass('FAILED') || $(toggler).hasClass('ERROR'))) {
                 $(this).click();
             }
         });

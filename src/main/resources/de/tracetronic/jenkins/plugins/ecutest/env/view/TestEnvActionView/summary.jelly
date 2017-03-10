@@ -35,12 +35,17 @@
     <j:set var="testActions" value="${it.getTestEnvActions()}" />
     <j:if test="${!empty(testActions)}">
         <t:summary icon="${it.iconFile}">
+            <h3 class="results">${%parameters}</h3>
+            <a href="#" class="expander">${%expand}</a>
             <div class="results">
-                <h3>${%parameters}</h3>
-                <a href="#" class="expander">${%collapse}</a>
+            <j:forEach var="action" items="${testActions}">
+                <j:set var="testId" value="${action.getTestId()}" />
                 <table class="pane" id="envAction">
-                <j:forEach var="action" items="${testActions}">
-                    <j:set var="testId" value="${action.getTestId()}" />
+                    <colgroup>
+                        <col class="column1" />
+                        <col class="column2" />
+                        <col class="column3" />
+                    </colgroup>
                     <tr class="parent" id="${testId}">
                         <j:choose>
                             <j:when test="${action.getTestType() == 'PACKAGE'}">
@@ -100,8 +105,8 @@
                         <td>TT_TEST_TIMEOUT_${testId}</td>
                         <td>${action.getTimeout()}</td>
                     </tr>
-                </j:forEach>
                 </table>
+            </j:forEach>
             </div>
         </t:summary>
     </j:if>

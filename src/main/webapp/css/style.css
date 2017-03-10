@@ -67,28 +67,48 @@ table.jobMain {
 }
 
 .results {
-    min-width: 500px;
+    min-width: 700px;
     max-width: 1000px;
 }
 
-.results h3 {
+h3.results {
+    float: left;
     color: #63666A;
 }
 
+a.expander {
+    text-decoration: none;
+}
+
 .expander {
-    float:right;
+    float: right;
+    position: relative;
+    top: 15px;
+    margin: 15px 0;
     outline: 0 none;
 }
 
 #envAction {
     border: 1px solid #bbb;
-    border-spacing: 0;
     border-collapse: collapse;
+    border-spacing: 0;
     width: 100%;
     table-layout: fixed;
     word-wrap: break-word;
     white-space: normal;
     margin: 0;
+}
+
+#envAction colgroup .column1 {
+    width: 25%;
+}
+
+#envAction colgroup .column2 {
+    width: 25%;
+}
+
+#envAction colgroup .column3 {
+    width: 50%;
 }
 
 #envAction td {
@@ -128,7 +148,7 @@ table.jobMain {
     text-decoration: none;
     cursor: pointer;
     font-weight: bold;
-    color: #eee;
+    color: #fff;
 }
 
 #envAction td.open {
@@ -140,5 +160,5 @@ table.jobMain {
     text-decoration: none;
     cursor: pointer;
     font-weight: bold;
-    color: #eee;
+    color: #fff;
 }
