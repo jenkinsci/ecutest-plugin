@@ -42,9 +42,8 @@
                 <j:set var="testId" value="${action.getTestId()}" />
                 <table class="pane" id="envAction">
                     <colgroup>
-                        <col class="column1" />
-                        <col class="column2" />
-                        <col class="column3" />
+                        <col class="column-param" />
+                        <col class="column-value" />
                     </colgroup>
                     <tr class="parent" id="${testId}">
                         <j:choose>
@@ -61,48 +60,39 @@
                         <td class="pane-header open ${action.getTestResult()}" colspan="3">${action.getTestName()}${extension}</td>
                     </tr>
                     <tr class="child-${testId}">
-                        <td>${%name}</td>
-                        <td>TT_TEST_NAME_${testId}</td>
+                        <td class="tooltip" tooltip="${%name}">TT_TEST_NAME_${testId}</td>
                         <td>${action.getTestName()}</td>
                     </tr>
                     <tr class="child-${testId}">
-                        <td>${%file}</td>
-                        <td>TT_TEST_FILE_${testId}</td>
+                        <td class="tooltip" tooltip="${%file}">TT_TEST_FILE_${testId}</td>
                         <td>${action.getTestFile()}</td>
                     </tr>
                     <tr class="child-${testId}">
-                        <td>${%type}</td>
-                        <td>TT_TEST_TYPE_${testId}</td>
+                        <td class="tooltip" tooltip="${%type}">TT_TEST_TYPE_${testId}</td>
                         <td>${action.getTestType()}</td>
                     </tr>
                     <tr class="child-${testId}">
-                        <td>${%description}</td>
-                        <td>TT_TEST_DESCRIPTION_${testId}</td>
+                        <td class="tooltip" tooltip="${%description}">TT_TEST_DESCRIPTION_${testId}</td>
                         <td>${action.getTestDescription()}</td>
                     </tr>
                     <tr class="child-${testId}">
-                        <td>${%tbc}</td>
-                        <td>TT_TEST_TBC_${testId}</td>
+                        <td class="tooltip" tooltip="${%tbc}">TT_TEST_TBC_${testId}</td>
                         <td>${action.getTestTbc()}</td>
                     </tr>
                     <tr class="child-${testId}">
-                        <td>${%tcf}</td>
-                        <td>TT_TEST_TCF_${testId}</td>
+                        <td class="tooltip" tooltip="${%tcf}">TT_TEST_TCF_${testId}</td>
                         <td>${action.getTestTcf()}</td>
                     </tr>
                     <tr class="child-${testId}">
-                        <td>${%report}</td>
-                        <td>TT_TEST_REPORT_${testId}</td>
+                        <td class="tooltip" tooltip="${%report}">TT_TEST_REPORT_${testId}</td>
                         <td>${action.getTestReportDir()}</td>
                     </tr>
                     <tr class="child-${testId}">
-                        <td>${%result}</td>
-                        <td>TT_TEST_RESULT_${testId}</td>
+                        <td class="tooltip" tooltip="${%result}">TT_TEST_RESULT_${testId}</td>
                         <td>${action.getTestResult()}</td>
                     </tr>
                     <tr class="child-${testId}">
-                        <td>${%timeout}</td>
-                        <td>TT_TEST_TIMEOUT_${testId}</td>
+                        <td class="tooltip" tooltip="${%timeout}">TT_TEST_TIMEOUT_${testId}</td>
                         <td>${action.getTimeout()}</td>
                     </tr>
                 </table>

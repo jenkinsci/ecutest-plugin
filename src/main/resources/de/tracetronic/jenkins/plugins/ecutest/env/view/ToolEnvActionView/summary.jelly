@@ -43,46 +43,38 @@
                 <j:set var="toolId" value="${action.getToolId()}" />
                 <table class="pane" id="envAction">
                     <colgroup>
-                        <col class="column1" />
-                        <col class="column2" />
-                        <col class="column3" />
+                        <col class="column-param" />
+                        <col class="column-value" />
                     </colgroup>
                     <tr class="parent tool" id="${toolId}">
-                        <td class="pane-header open NONE" colspan="3">${action.getToolName()}</td>
+                        <td class="pane-header open NONE" colspan="2">${action.getToolName()}</td>
                     </tr>
                     <tr class="child-${toolId}">
-                        <td>${%name}</td>
-                        <td>TT_TOOL_NAME_${toolId}</td>
+                        <td class="tooltip" tooltip="${%name}">TT_TOOL_NAME_${toolId}</td>
                         <td>${action.getToolName()}</td>
                     </tr>
                     <tr class="child-${toolId}">
-                        <td>${%install}</td>
-                        <td>TT_TOOL_INSTALL_${toolId}</td>
+                        <td class="tooltip" tooltip="${%install}">TT_TOOL_INSTALL_${toolId}</td>
                         <td>${action.getToolInstallation()}</td>
                     </tr>
                     <tr class="child-${toolId}">
-                        <td>${%version}</td>
-                        <td>TT_TOOL_VERSION_${toolId}</td>
+                        <td class="tooltip" tooltip="${%version}">TT_TOOL_VERSION_${toolId}</td>
                         <td>${action.getToolVersion()}</td>
                     </tr>
                     <tr class="child-${toolId}">
-                        <td>${%workspace}</td>
-                        <td>TT_TOOL_WORKSPACE_${toolId}</td>
+                        <td class="tooltip" tooltip="${%workspace}">TT_TOOL_WORKSPACE_${toolId}</td>
                         <td>${action.getToolWorkspace()}</td>
                     </tr>
                     <tr class="child-${toolId}">
-                        <td>${%settings}</td>
-                        <td>TT_TOOL_SETTINGS_${toolId}</td>
+                        <td class="tooltip" tooltip="${%settings}">TT_TOOL_SETTINGS_${toolId}</td>
                         <td>${action.getToolSettings()}</td>
                     </tr>
                     <tr class="child-${toolId}">
-                        <td>${%debug}</td>
-                        <td>TT_TOOL_DEBUG_${toolId}</td>
+                        <td class="tooltip" tooltip="${%debug}">TT_TOOL_DEBUG_${toolId}</td>
                         <td>${action.isDebug()}</td>
                     </tr>
                     <tr class="child-${toolId}">
-                        <td>${%timeout}</td>
-                        <td>TT_TOOL_TIMEOUT_${toolId}</td>
+                        <td class="tooltip" tooltip="${%timeout}">TT_TOOL_TIMEOUT_${toolId}</td>
                         <td>${action.getTimeout()}</td>
                     </tr>
                 </table>
