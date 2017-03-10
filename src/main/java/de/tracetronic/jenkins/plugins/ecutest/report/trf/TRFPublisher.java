@@ -72,6 +72,11 @@ public class TRFPublisher extends AbstractReportPublisher {
     public static final String TRF_INCLUDES = "**/*" + TRF_EXTENSION;
 
     /**
+     * Ant-style pattern for excluding job analysis files.
+     */
+    public static final String TRF_EXCLUDE = "Job_*" + TRF_EXTENSION;
+
+    /**
      * Ant-style pattern for excluding job analysis files recursively.
      */
     public static final String TRF_EXCLUDES = "*/**/Job_*" + TRF_EXTENSION;

@@ -439,7 +439,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      */
     @CheckForNull
     public static FilePath getFirstReportFile(final FilePath reportDir) throws IOException, InterruptedException {
-        final FilePath[] files = reportDir.list(TRFPublisher.TRF_INCLUDE);
+        final FilePath[] files = reportDir.list(TRFPublisher.TRF_INCLUDE, TRFPublisher.TRF_EXCLUDE);
         return files.length > 0 ? files[0] : null;
     }
 
