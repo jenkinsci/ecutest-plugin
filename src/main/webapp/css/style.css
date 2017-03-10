@@ -96,7 +96,7 @@ a.expander {
     table-layout: fixed;
     word-wrap: break-word;
     white-space: normal;
-    margin: 0;
+    margin-bottom: 10px;
 }
 
 #envAction colgroup .column1 {
