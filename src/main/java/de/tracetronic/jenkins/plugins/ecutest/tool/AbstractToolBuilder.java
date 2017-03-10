@@ -36,6 +36,7 @@ import hudson.Launcher;
 import hudson.Util;
 import hudson.model.TaskListener;
 import hudson.model.Computer;
+import hudson.model.Node;
 import hudson.model.Run;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Builder;
@@ -203,9 +204,12 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     protected ETInstallation configureToolInstallation(final Computer computer, final TaskListener listener,
             final EnvVars envVars) throws IOException, InterruptedException, ETPluginException {
         ETInstallation installation = getToolInstallation(envVars);
-        if (installation != null && computer != null && computer.getNode() != null) {
-            installation = installation.forNode(computer.getNode(), listener);
-            installation = installation.forEnvironment(envVars);
+        if (installation != null && computer != null) {
+            final Node node = computer.getNode();
+            if (node != null) {
+                installation = installation.forNode(node, listener);
+                installation = installation.forEnvironment(envVars);
+            }
         } else {
             throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }

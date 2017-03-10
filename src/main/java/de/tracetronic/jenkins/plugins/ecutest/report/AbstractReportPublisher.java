@@ -38,6 +38,7 @@ import hudson.model.Result;
 import hudson.model.TaskListener;
 import hudson.model.AbstractItem;
 import hudson.model.Computer;
+import hudson.model.Node;
 import hudson.model.Run;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Recorder;
@@ -291,9 +292,12 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
             final TaskListener listener, final EnvVars envVars) throws IOException, InterruptedException,
             ETPluginException {
         ETInstallation installation = getToolInstallation(toolName, envVars);
-        if (installation != null && computer != null && computer.getNode() != null) {
-            installation = installation.forNode(computer.getNode(), listener);
-            installation = installation.forEnvironment(envVars);
+        if (installation != null && computer != null) {
+            final Node node = computer.getNode();
+            if (node != null) {
+                installation = installation.forNode(node, listener);
+                installation = installation.forEnvironment(envVars);
+            }
         } else {
             throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }

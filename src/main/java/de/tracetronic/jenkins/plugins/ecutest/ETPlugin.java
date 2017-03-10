@@ -210,7 +210,7 @@ public class ETPlugin extends Plugin {
                 "test-guide",
                 "test-param",
                 "tool-param",
-                "trf-report"
+                "trf-report",
         }) {
             // Register small (16x16) icons
             IconSet.icons.addIcon(new Icon(
