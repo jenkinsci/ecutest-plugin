@@ -34,7 +34,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>2.23</version>
+        <version>2.25</version>
         <relativePath />
     </parent>
 
@@ -97,7 +97,7 @@
 
         <!-- Test scope -->
         <equalsverifier.version>2.2.1</equalsverifier.version>
-        <mockito-core.version>2.7.14</mockito-core.version>
+        <mockito-core.version>2.7.18</mockito-core.version>
         <jacoco.version>0.7.9</jacoco.version>
         <workflow-aggregator.version>1.4.3</workflow-aggregator.version>
         <workflow-basic-steps.version>1.4.3</workflow-basic-steps.version>
