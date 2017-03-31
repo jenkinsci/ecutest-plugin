@@ -43,7 +43,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
@@ -76,6 +75,8 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      *
      * @param archiveTarget
      *            the archive target directory
+     * @param reportDirs
+     *            the report directories
      * @param allowMissing
      *            specifies whether missing reports are allowed
      * @param isArchiving
@@ -95,18 +96,16 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      *             if the build gets interrupted
      */
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
-    public boolean generate(final FilePath archiveTarget, final boolean allowMissing, final boolean isArchiving,
-            final boolean keepAll, final Run<?, ?> run, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+    public boolean generate(final FilePath archiveTarget, final List<FilePath> reportDirs, final boolean allowMissing,
+            final boolean isArchiving, final boolean keepAll, final Run<?, ?> run, final Launcher launcher,
+            final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<FilePath> reportFiles = new ArrayList<FilePath>();
-        final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
-        for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-            final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-            final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(testReportDir);
+        for (final FilePath reportDir : reportDirs) {
+            final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(reportDir);
             if (reportFile != null && reportFile.exists()) {
                 reportFiles.addAll(Arrays.asList(
-                        testReportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
+                        reportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
             } else {
                 if (allowMissing) {
                     continue;
@@ -133,20 +132,16 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
                 archiveTarget.deleteRecursive();
                 AbstractReportPublisher.removePreviousReports(run, ATXBuildAction.class);
             }
-
             if (isGenerated && !reportFiles.isEmpty()) {
                 final List<ATXZipReport> atxReports = new ArrayList<ATXZipReport>();
                 logger.logInfo("- Archiving generated ATX reports...");
                 int index = 0;
-                for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-                    final FilePath testReportDir = new FilePath(launcher.getChannel(),
-                            testEnvAction.getTestReportDir());
-                    final FilePath archiveTargetDir = archiveTarget.child(testReportDir.getName());
+                for (final FilePath reportDir : reportDirs) {
+                    final FilePath archiveTargetDir = archiveTarget.child(reportDir.getName());
                     try {
-                        final int copiedFiles = testReportDir.copyRecursiveTo(
+                        final int copiedFiles = reportDir.copyRecursiveTo(
                                 String.format("**/%s/*.zip", ATX_TEMPLATE_NAME), archiveTargetDir);
-                        logger.logInfo(String.format("-> Archived %d report(s) for %s.", copiedFiles,
-                                testEnvAction.getTestName()));
+                        logger.logInfo(String.format("-> Archived %d report(s).", copiedFiles));
                         if (copiedFiles == 0) {
                             continue;
                         }

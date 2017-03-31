@@ -441,11 +441,51 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     protected abstract String getUrlName();
 
     /**
-     * Builds a list of report files for report generation.
-     * Includes the report files generated during separate sub-project execution.
+     * Gets the report directories either from test environment actions or downstream workspace.
      *
      * @param run
      *            the run
+     * @param workspace
+     *            the workspace
+     * @param launcher
+     *            the launcher
+     * @return the report directories
+     * @throws IOException
+     *             signals that an I/O exception has occurred.
+     * @throws InterruptedException
+     *             the interrupted exception
+     */
+    protected List<FilePath> getReportDirs(final Run<?, ?> run, final FilePath workspace, final Launcher launcher)
+            throws IOException, InterruptedException {
+        final List<FilePath> reportDirs = new ArrayList<FilePath>();
+        if (isDownstream()) {
+            final FilePath wsDir = workspace.child(getWorkspace());
+            if (wsDir.exists()) {
+                final FilePath reportDir = wsDir.child("TestReports");
+                if (reportDir.exists()) {
+                    reportDirs.addAll(reportDir.listDirectories());
+                }
+            }
+        } else {
+            final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
+            for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
+                final FilePath reportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
+                if (reportDir.exists()) {
+                    reportDirs.add(reportDir);
+                }
+            }
+        }
+        return reportDirs;
+    }
+
+    /**
+     * Builds a list of TRF files for report generation.
+     * Includes the TRF files generated during separate sub-project execution.
+     *
+     * @param run
+     *            the run
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @return the list of report files
@@ -454,16 +494,38 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    protected List<FilePath> getReportFiles(final Run<?, ?> run, final Launcher launcher)
+    protected List<FilePath> getReportFiles(final Run<?, ?> run, final FilePath workspace, final Launcher launcher)
             throws IOException, InterruptedException {
+        return getReportFiles(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES, run, workspace, launcher);
+    }
+
+    /**
+     * Builds a list of report files for report generation.
+     * Includes the report files generated during separate sub-project execution.
+     *
+     * @param includes
+     *            the includes
+     * @param excludes
+     *            the excludes
+     * @param run
+     *            the run
+     * @param workspace
+     *            the workspace
+     * @param launcher
+     *            the launcher
+     * @return the list of report files
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the build gets interrupted
+     */
+    protected List<FilePath> getReportFiles(final String includes, final String excludes, final Run<?, ?> run,
+            final FilePath workspace, final Launcher launcher) throws IOException, InterruptedException {
         final List<FilePath> reportFiles = new ArrayList<FilePath>();
-        final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
-        for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-            final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-            if (testReportDir.exists()) {
-                reportFiles.addAll(Arrays.asList(
-                        testReportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
-            }
+        final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
+        for (final FilePath reportDir : reportDirs) {
+            reportFiles.addAll(Arrays.asList(
+                    reportDir.list(includes, excludes)));
         }
         Collections.reverse(reportFiles);
         return reportFiles;

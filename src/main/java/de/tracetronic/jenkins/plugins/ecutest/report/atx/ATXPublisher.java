@@ -190,7 +190,7 @@ public class ATXPublisher extends AbstractReportPublisher {
 
         // Start ECU-TEST if necessary and publish the ATX reports
         if (isETRunning) {
-            isPublished = publishReports(installation, run, launcher, listener);
+            isPublished = publishReports(installation, run, workspace, launcher, listener);
         } else {
             String toolName = installation.getToolName();
             final ETInstallation etInstallation = configureToolInstallation(toolName, workspace.toComputer(), listener,
@@ -202,7 +202,7 @@ public class ATXPublisher extends AbstractReportPublisher {
             final ETClient etClient = new ETClient(toolName, installPath, workspaceDir, settingsDir,
                     StartETBuilder.DEFAULT_TIMEOUT, false);
             if (etClient.start(false, workspace, launcher, listener)) {
-                isPublished = publishReports(installation, run, launcher, listener);
+                isPublished = publishReports(installation, run, workspace, launcher, listener);
             } else {
                 logger.logError(String.format("Starting %s failed.", toolName));
             }
@@ -226,6 +226,8 @@ public class ATXPublisher extends AbstractReportPublisher {
      *            the installation
      * @param run
      *            the run
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @param listener
@@ -236,9 +238,8 @@ public class ATXPublisher extends AbstractReportPublisher {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private boolean publishReports(final ATXInstallation installation, final Run<?, ?> run,
-            final Launcher launcher, final TaskListener listener)
-                    throws IOException, InterruptedException {
+    private boolean publishReports(final ATXInstallation installation, final Run<?, ?> run, final FilePath workspace,
+            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final boolean isUploadEnabled = isUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, launcher, run.getEnvironment(listener));
@@ -252,9 +253,10 @@ public class ATXPublisher extends AbstractReportPublisher {
                 logger.logWarn("-> ATX upload will be skipped because selected TEST-GUIDE server is not reachable!");
             }
             final FilePath archiveTarget = getArchiveTarget(run);
+            final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
             final ATXReportGenerator generator = new ATXReportGenerator(installation);
-            return generator.generate(archiveTarget, isAllowMissing(), isArchiving(), isKeepAll(), run, launcher,
-                    listener);
+            return generator.generate(archiveTarget, reportDirs, isAllowMissing(), isArchiving(), isKeepAll(), run,
+                    launcher, listener);
         }
     }
 

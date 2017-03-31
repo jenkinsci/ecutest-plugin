@@ -51,7 +51,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
-import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
@@ -246,7 +245,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
             return;
         }
 
-        final List<FilePath> reportFiles = getReportFiles(run, launcher);
+        final List<FilePath> reportFiles = getReportFiles(run, workspace, launcher);
         if (reportFiles.isEmpty() && !isAllowMissing()) {
             throw new ETPluginException("Empty test results are not allowed, setting build status to FAILURE!");
         }
@@ -257,7 +256,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
 
         // Start ECU-TEST if necessary
         if (isETRunning) {
-            reports.addAll(generateReports(reportFiles, run, launcher, listener));
+            reports.addAll(generateReports(reportFiles, run, workspace, launcher, listener));
         } else {
             // Get selected ECU-TEST installation
             final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
@@ -269,7 +268,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
             final ETClient etClient = new ETClient(expandedToolName, installPath, workspaceDir, settingsDir,
                     StartETBuilder.DEFAULT_TIMEOUT, false);
             if (etClient.start(false, workspace, launcher, listener)) {
-                reports.addAll(generateReports(reportFiles, run, launcher, listener));
+                reports.addAll(generateReports(reportFiles, run, workspace, launcher, listener));
             } else {
                 logger.logError(String.format("Starting %s failed.", toolName));
             }
@@ -294,6 +293,8 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      *            the report files
      * @param run
      *            the run
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @param listener
@@ -306,11 +307,11 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      */
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private List<GeneratorReport> generateReports(final List<FilePath> reportFiles, final Run<?, ?> run,
-            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
+            final FilePath workspace, final Launcher launcher, final TaskListener listener)
+                    throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<GeneratorReport> reports = new ArrayList<GeneratorReport>();
         final FilePath archiveTarget = getArchiveTarget(run);
-        final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
         final List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
         generators.addAll(getGenerators());
         generators.addAll(getCustomGenerators());
@@ -333,20 +334,17 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
                 logger.logInfo("- Archiving generated reports...");
                 final String templateName = expConfig.getName();
                 final FilePath archiveTargetDir = archiveTarget.child(templateName);
-                for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-                    final FilePath testReportDir = new FilePath(launcher.getChannel(),
-                            testEnvAction.getTestReportDir());
+                final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
+                for (final FilePath reportDir : reportDirs) {
                     try {
-                        final int copiedFiles = testReportDir.copyRecursiveTo(String.format("**/%s/**", templateName),
-                                archiveTargetDir.child(testReportDir.getName()));
-                        logger.logInfo(String.format("-> Archived %d report file(s) for %s.", copiedFiles,
-                                testEnvAction.getTestName()));
+                        final int copiedFiles = reportDir.copyRecursiveTo(String.format("**/%s/**", templateName),
+                                archiveTargetDir.child(reportDir.getName()));
+                        logger.logInfo(String.format("-> Archived %d report file(s).", copiedFiles));
                     } catch (final IOException e) {
                         Util.displayIOException(e, listener);
                         logger.logError("Failed archiving generated reports.");
                     }
                 }
-
                 // Collect reports
                 if (archiveTargetDir.exists()) {
                     final GeneratorReport report = new GeneratorReport(String.format("%d", ++index), templateName,

@@ -44,7 +44,6 @@ import java.util.List;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
@@ -204,44 +203,6 @@ public class TRFPublisher extends AbstractReportPublisher {
         } else {
             logger.logInfo("Archiving TRF reports is disabled.");
         }
-    }
-
-    /**
-     * Gets the report directories either from test environment actions or downstream workspace.
-     *
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @return the report directories
-     * @throws IOException
-     *             signals that an I/O exception has occurred.
-     * @throws InterruptedException
-     *             the interrupted exception
-     */
-    private List<FilePath> getReportDirs(final Run<?, ?> run, final FilePath workspace, final Launcher launcher)
-            throws IOException, InterruptedException {
-        final List<FilePath> reportDirs = new ArrayList<FilePath>();
-        if (isDownstream()) {
-            final FilePath wsDir = workspace.child(getWorkspace());
-            if (wsDir.exists()) {
-                final FilePath reportDir = wsDir.child("TestReports");
-                if (reportDir.exists()) {
-                    reportDirs.addAll(reportDir.listDirectories());
-                }
-            }
-        } else {
-            final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
-            for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-                final FilePath reportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-                if (reportDir != null) {
-                    reportDirs.add(reportDir);
-                }
-            }
-        }
-        return reportDirs;
     }
 
     /**

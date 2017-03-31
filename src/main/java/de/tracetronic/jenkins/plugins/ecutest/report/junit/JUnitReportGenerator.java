@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -56,11 +56,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class JUnitReportGenerator {
-
-    /**
-     * Defines the path name containing the UNIT reports inside of the test report directory.
-     */
-    protected static final String UNIT_TEMPLATE_NAME = "UNIT";
 
     /**
      * Generates UNIT reports by invoking the startup of ECU-TEST if not already running, otherwise using the current
@@ -202,9 +197,9 @@ public class JUnitReportGenerator {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                 for (final FilePath dbFile : dbFiles) {
                     logger.logInfo(String.format("-> Generating UNIT report: %s", dbFile.getRemote()));
-                    final File outDir = new File(dbFile.getParent().getRemote(), UNIT_TEMPLATE_NAME);
+                    final File outDir = new File(dbFile.getParent().getRemote(), JUnitPublisher.UNIT_TEMPLATE_NAME);
                     if (!testEnv.generateTestReportDocumentFromDB(dbFile.getRemote(),
-                            outDir.getAbsolutePath(), UNIT_TEMPLATE_NAME, true)) {
+                            outDir.getAbsolutePath(), JUnitPublisher.UNIT_TEMPLATE_NAME, true)) {
                         isGenerated = false;
                         logger.logError("Generating UNIT report failed!");
                     }

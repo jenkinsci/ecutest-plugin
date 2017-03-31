@@ -76,6 +76,16 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
  */
 public class JUnitPublisher extends AbstractReportPublisher implements MatrixAggregatable {
 
+    /**
+     * File name of the UNIT report file.
+     */
+    private static final String JUNIT_REPORT_FILE = "junit-report.xml";
+
+    /**
+     * Defines the path name containing the UNIT reports inside of the test report directory.
+     */
+    protected static final String UNIT_TEMPLATE_NAME = "UNIT";
+
     @Nonnull
     private final String toolName;
     private double unstableThreshold;
@@ -230,8 +240,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
             logger.logInfo(String.format("Skipping publisher since build result is %s", buildResult));
             return;
         }
-
-        final List<FilePath> reportFiles = getReportFiles(run, launcher);
+        final List<FilePath> reportFiles = getReportFiles(run, workspace, launcher);
         if (reportFiles.isEmpty() && !isAllowMissing()) {
             throw new ETPluginException("Empty test results are not allowed, setting build status to FAILURE!");
         }
@@ -246,9 +255,10 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
         }
 
         // Parse generated JUnit reports
+        final String includes = String.format("**/%s/%s", UNIT_TEMPLATE_NAME, JUNIT_REPORT_FILE);
+        final List<FilePath> xmlFiles = getReportFiles(includes, "", run, workspace, launcher);
         final JUnitTestResultParser parser = new JUnitTestResultParser();
-        final TestResult testResult = parser.parseResult(JUnitReportGenerator.UNIT_TEMPLATE_NAME, run, workspace,
-                launcher, listener);
+        final TestResult testResult = parser.parseResult(xmlFiles, listener);
 
         // Add or append to action for publishing JUnit results
         TestResultAction action = run.getAction(TestResultAction.class);
