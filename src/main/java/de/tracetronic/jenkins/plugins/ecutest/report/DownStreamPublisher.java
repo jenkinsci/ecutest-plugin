@@ -122,6 +122,11 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
         return BuildStepMonitor.NONE;
     }
 
+    @Override
+    public AbstractReportDescriptor getDescriptor() {
+        return (DescriptorImpl) super.getDescriptor();
+    }
+
     /**
      * DescriptorImpl for {@link DownStreamPublisher}.
      */
@@ -129,16 +134,22 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
     @Extension(ordinal = 999)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
+        /**
+         * Gets the applicable publishers.
+         *
+         * @return the applicable publishers
+         */
+        @SuppressWarnings("checkstyle:booleanexpressioncomplexity")
         public List<Descriptor<? extends Publisher>> getApplicablePublishers() {
             final List<Descriptor<? extends Publisher>> list = new ArrayList<>();
             final DescriptorExtensionList<Publisher, Descriptor<Publisher>> publishers = AbstractReportPublisher.all();
             if (publishers != null) {
                 for (final Descriptor<Publisher> publisher : publishers) {
-                    if (publisher instanceof ATXPublisher.DescriptorImpl ||
-                            publisher instanceof ReportGeneratorPublisher.DescriptorImpl ||
-                            publisher instanceof JUnitPublisher.DescriptorImpl ||
-                            publisher instanceof TMSPublisher.DescriptorImpl ||
-                            publisher instanceof TRFPublisher.DescriptorImpl) {
+                    if (publisher instanceof ATXPublisher.DescriptorImpl
+                            || publisher instanceof ReportGeneratorPublisher.DescriptorImpl
+                            || publisher instanceof JUnitPublisher.DescriptorImpl
+                            || publisher instanceof TMSPublisher.DescriptorImpl
+                            || publisher instanceof TRFPublisher.DescriptorImpl) {
                         list.add(publisher);
                     }
                 }

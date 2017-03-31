@@ -206,6 +206,21 @@ public class TRFPublisher extends AbstractReportPublisher {
         }
     }
 
+    /**
+     * Gets the report directories either from test environment actions or downstream workspace.
+     *
+     * @param run
+     *            the run
+     * @param workspace
+     *            the workspace
+     * @param launcher
+     *            the launcher
+     * @return the report directories
+     * @throws IOException
+     *             signals that an I/O exception has occurred.
+     * @throws InterruptedException
+     *             the interrupted exception
+     */
     private List<FilePath> getReportDirs(final Run<?, ?> run, final FilePath workspace, final Launcher launcher)
             throws IOException, InterruptedException {
         final List<FilePath> reportDirs = new ArrayList<FilePath>();
