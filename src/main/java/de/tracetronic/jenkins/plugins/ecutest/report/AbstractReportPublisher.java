@@ -90,6 +90,9 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      */
     private Boolean keepAll = true;
 
+    private transient boolean downstream;
+    private transient String workspace;
+
     /**
      * Instantiates a new {@link AbstractReportPublisher}.
      */
@@ -210,6 +213,42 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     @DataBoundSetter
     public void setKeepAll(final boolean keepAll) {
         this.keepAll = keepAll;
+    }
+
+    /**
+     * Returns whether this publisher is part of {@link DownStreamPublisher} actions.
+     * 
+     * @return {@code true}, if downstream-based, {@code false} otherwise
+     */
+    public boolean isDownstream() {
+        return downstream;
+    }
+
+    /**
+     * Transient setter to inform this publisher that it is part of a {@link DownStreamPublisher}.
+     *
+     * @param downstream
+     *            the downstream flag
+     */
+    public void setDownstream(final boolean downstream) {
+        this.downstream = downstream;
+    }
+
+    /**
+     * @return the downstream workspace
+     */
+    public String getWorkspace() {
+        return workspace;
+    }
+
+    /**
+     * Transient setter for the downstream workspace.
+     *
+     * @param workspace
+     *            the downstream workspace
+     */
+    public void setWorkspace(final String workspace) {
+        this.workspace = workspace;
     }
 
     @Override

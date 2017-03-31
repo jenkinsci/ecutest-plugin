@@ -155,21 +155,20 @@ public class TRFPublisher extends AbstractReportPublisher {
             int index = 0;
             final List<TRFReport> trfReports = new ArrayList<TRFReport>();
             final FilePath archiveTarget = getArchiveTarget(run);
-            final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
 
             // Removing old artifacts at project level
-            if (!testEnvActions.isEmpty() && !isKeepAll()) {
+            final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
+            if (!reportDirs.isEmpty() && !isKeepAll()) {
                 archiveTarget.deleteRecursive();
                 removePreviousReports(run, TRFBuildAction.class);
             }
-            for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-                final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-                final FilePath archiveTargetDir = archiveTarget.child(testReportDir.getName());
-                final FilePath reportFile = getFirstReportFile(testReportDir);
+            for (final FilePath reportDir : reportDirs) {
+                final FilePath archiveTargetDir = archiveTarget.child(reportDir.getName());
+                final FilePath reportFile = getFirstReportFile(reportDir);
                 if (reportFile != null && reportFile.exists()) {
                     try {
                         logger.logInfo(String.format("- Archiving TRF report: %s", reportFile));
-                        final int copiedFiles = testReportDir.copyRecursiveTo(TRF_INCLUDES, TRF_EXCLUDES,
+                        final int copiedFiles = reportDir.copyRecursiveTo(TRF_INCLUDES, TRF_EXCLUDES,
                                 archiveTargetDir);
                         if (copiedFiles == 0) {
                             continue;
@@ -205,6 +204,29 @@ public class TRFPublisher extends AbstractReportPublisher {
         } else {
             logger.logInfo("Archiving TRF reports is disabled.");
         }
+    }
+
+    private List<FilePath> getReportDirs(final Run<?, ?> run, final FilePath workspace, final Launcher launcher)
+            throws IOException, InterruptedException {
+        final List<FilePath> reportDirs = new ArrayList<FilePath>();
+        if (isDownstream()) {
+            final FilePath wsDir = workspace.child(getWorkspace());
+            if (wsDir.exists()) {
+                final FilePath reportDir = wsDir.child("TestReports");
+                if (reportDir.exists()) {
+                    reportDirs.addAll(reportDir.listDirectories());
+                }
+            }
+        } else {
+            final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
+            for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
+                final FilePath reportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
+                if (reportDir != null) {
+                    reportDirs.add(reportDir);
+                }
+            }
+        }
+        return reportDirs;
     }
 
     /**
