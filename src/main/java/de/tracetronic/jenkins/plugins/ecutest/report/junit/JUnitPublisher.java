@@ -79,7 +79,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     /**
      * File name of the UNIT report file.
      */
-    private static final String JUNIT_REPORT_FILE = "junit-report.xml";
+    protected static final String JUNIT_REPORT_FILE = "junit-report.xml";
 
     /**
      * Defines the path name containing the UNIT reports inside of the test report directory.

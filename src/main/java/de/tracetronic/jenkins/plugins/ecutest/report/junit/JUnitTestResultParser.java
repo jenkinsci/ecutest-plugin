@@ -71,9 +71,11 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         TestResult testResult = new TestResult(false);
         for (final FilePath xmlFile : xmlFiles) {
-            logger.logInfo(String.format("- Processing UNIT test results: %s", xmlFile));
-            testResult = xmlFile.act(new ParseTestResultCallable(testResult));
-            testResult.tally();
+            if (xmlFile.exists()) {
+                logger.logInfo(String.format("- Processing UNIT test results: %s", xmlFile));
+                testResult = xmlFile.act(new ParseTestResultCallable(testResult));
+                testResult.tally();
+            }
         }
         return testResult;
     }
