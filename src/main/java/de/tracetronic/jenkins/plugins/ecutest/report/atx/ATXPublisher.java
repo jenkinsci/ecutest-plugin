@@ -241,19 +241,20 @@ public class ATXPublisher extends AbstractReportPublisher {
     private boolean publishReports(final ATXInstallation installation, final Run<?, ?> run, final FilePath workspace,
             final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
         final boolean isUploadEnabled = isUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, launcher, run.getEnvironment(listener));
         if (isUploadEnabled && isServerReachable) {
             logger.logInfo("- Generating and uploading ATX reports...");
             final ATXReportUploader uploader = new ATXReportUploader(installation);
-            return uploader.upload(isAllowMissing(), run, launcher, listener);
+            return uploader.upload(reportDirs, isAllowMissing(), run, launcher, listener);
         } else {
             logger.logInfo("- Generating ATX reports...");
             if (isUploadEnabled && !isServerReachable) {
                 logger.logWarn("-> ATX upload will be skipped because selected TEST-GUIDE server is not reachable!");
             }
             final FilePath archiveTarget = getArchiveTarget(run);
-            final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
+
             final ATXReportGenerator generator = new ATXReportGenerator(installation);
             return generator.generate(archiveTarget, reportDirs, isAllowMissing(), isArchiving(), isKeepAll(), run,
                     launcher, listener);

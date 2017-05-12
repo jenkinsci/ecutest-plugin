@@ -53,6 +53,7 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
@@ -110,10 +111,14 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
     @Override
     public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException {
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        logger.logInfo("Publishing downstream reports...");
         for (final AbstractReportPublisher publisher : getPublishers()) {
-            publisher.setDownstream(true);
-            publisher.setWorkspace(getWorkspace());
-            publisher.perform(run, workspace, launcher, listener);
+            if (publisher != null) {
+                publisher.setDownstream(true);
+                publisher.setWorkspace(getWorkspace());
+                publisher.perform(run, workspace, launcher, listener);
+            }
         }
     }
 

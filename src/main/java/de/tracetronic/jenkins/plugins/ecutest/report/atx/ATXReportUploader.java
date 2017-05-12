@@ -48,7 +48,6 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sf.json.groovy.JsonSlurper;
-import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction.TestType;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
@@ -88,6 +87,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     /**
      * Generates and uploads {@link ATXReport}s.
      *
+     * @param reportDirs
+     *            the report directories
      * @param allowMissing
      *            specifies whether missing reports are allowed
      * @param run
@@ -102,8 +103,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    public boolean upload(final boolean allowMissing, final Run<?, ?> run, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+    public boolean upload(final List<FilePath> reportDirs, final boolean allowMissing, final Run<?, ?> run,
+            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<ATXReport> atxReports = new ArrayList<ATXReport>();
         final List<FilePath> uploadFiles = new ArrayList<FilePath>();
@@ -120,20 +121,19 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         }
 
         int index = 0;
-        final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
-        for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-            final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-            final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(testReportDir);
+        // TODO: replace with getReportDirs()
+        for (final FilePath reportDir : reportDirs) {
+            final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(reportDir);
             if (reportFile != null && reportFile.exists()) {
                 uploadFiles.addAll(Arrays.asList(
-                        testReportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
+                        reportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
                 // Prepare ATX report links
                 final String from = String.valueOf(run.getTimeInMillis());
                 final String to = from;
                 final String title = reportFile.getParent().getName();
-                final String testName = testEnvAction.getTestName();
-                final TestType testType = testEnvAction.getTestType();
-                index = traverseReports(atxReports, testReportDir, index, title, baseUrl, from, to,
+                final String testName = reportFile.getBaseName();// TODO: testEnvAction.getTestName();
+                final TestType testType = TestType.PROJECT;// TODO: testEnvAction.getTestType();
+                index = traverseReports(atxReports, reportDir, index, title, baseUrl, from, to,
                         testName, testType, projectId);
             } else {
                 if (allowMissing) {
