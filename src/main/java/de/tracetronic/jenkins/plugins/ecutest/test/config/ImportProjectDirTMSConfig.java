@@ -60,7 +60,7 @@ public class ImportProjectDirTMSConfig extends ImportProjectTMSConfig {
     @DataBoundConstructor
     public ImportProjectDirTMSConfig(final String projectPath, final String importPath, final String credentialsId,
             final String timeout) {
-        super(projectPath, importPath, credentialsId, timeout);
+        super(projectPath, importPath, false, credentialsId, timeout);
     }
 
     @Override

@@ -33,6 +33,7 @@ def bReplaceFiles = false
 def strCredentialsId = 'credentialsId'
 def strProjectPath = 'Root/Test'
 def strProjectDirPath = 'Root/TestDir'
+def bImportMissingPackages = true
 
 freeStyleJob("${strJobName}") {
     steps {
@@ -140,9 +141,10 @@ freeStyleJob("${strJobName}") {
                 importConfigPath("${strImportPath}")
                 replaceFiles(bReplaceFiles)
             }
-            importFromTMS("${strCredentialsId}", "${strProjectPath}", "${strImportPath}", "${strTimeout}")
+            importFromTMS("${strCredentialsId}", "${strProjectPath}", "${strImportPath}", bImportMissingPackages, "${strTimeout}")
             importFromTMS("${strCredentialsId}", "${strProjectPath}") {
                 importPath("${strImportPath}")
+                importMissingPackages(bImportMissingPackages)
                 timeout(intTimeout)
             }
             importFromTMSDir("${strCredentialsId}", "${strProjectDirPath}", "${strImportPath}", "${strTimeout}")

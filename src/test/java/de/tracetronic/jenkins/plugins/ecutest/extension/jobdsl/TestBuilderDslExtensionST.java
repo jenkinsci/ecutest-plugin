@@ -212,6 +212,7 @@ public class TestBuilderDslExtensionST extends AbstractDslExtensionST {
     private void testTMSSettingsWithDsl(final ImportProjectTMSConfig config) throws Exception {
         assertThat(config.getProjectPath(), is("Root/Test"));
         assertThat(config.getImportPath(), is("import"));
+        assertTrue(config.isImportMissingPackages());
         assertThat(config.getCredentialsId(), is("credentialsId"));
         assertThat(config.getTimeout(), is("600"));
     }

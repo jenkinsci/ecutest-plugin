@@ -151,6 +151,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
         jenkins.assertXPath(page, "//option[@value='credentialsId']");
         jenkins.assertXPath(page, "//input[@name='_.projectPath' and @value='project']");
         jenkins.assertXPath(page, "//input[@name='_.importPath' and @value='import']");
+        jenkins.assertXPath(page, "//input[@name='_.importMissingPackages' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.timeout' and @value='600']");
     }
 
@@ -221,7 +222,8 @@ public class ImportProjectBuilderST extends SystemTestBase {
                 + "node('slaves') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
                 + "        importConfigs: [[$class: 'ImportProjectTMSConfig', projectPath: 'project',"
-                + "        importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]])\n"
+                + "        importPath: 'import', importMissingPackages: false,"
+                + "        credentialsId: 'credentialsId', timeout: '600']]])\n"
                 + "}";
         assertPipelineStep(script);
     }
@@ -244,7 +246,8 @@ public class ImportProjectBuilderST extends SystemTestBase {
                 + "node('slaves') {\n"
                 + "  importProjects "
                 + "     importConfigs: [[$class: 'ImportProjectTMSConfig', projectPath: projectPath: 'project',"
-                + "        importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]\n"
+                + "        importPath: 'import', importMissingPackages: false, "
+                + "        credentialsId: 'credentialsId', timeout: '600']]\n"
                 + "}";
         assertPipelineStep(script);
     }
@@ -381,7 +384,8 @@ public class ImportProjectBuilderST extends SystemTestBase {
      */
     private ImportProjectBuilder createImportTMSBuilder() {
         final List<ImportProjectConfig> importConfigs = new ArrayList<ImportProjectConfig>();
-        final ImportProjectTMSConfig tmsConfig = new ImportProjectTMSConfig("project", "import", "credentialsId", "600");
+        final ImportProjectTMSConfig tmsConfig = new ImportProjectTMSConfig("project", "import", true,
+                "credentialsId", "600");
         importConfigs.add(tmsConfig);
         return new ImportProjectBuilder(importConfigs);
     }

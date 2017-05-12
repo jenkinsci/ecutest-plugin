@@ -30,7 +30,9 @@
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import hudson.EnvVars;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
@@ -45,9 +47,10 @@ public class ImportProjectTMSConfigTest {
 
     @Test
     public void testNullConstructor() {
-        final ImportProjectTMSConfig config = new ImportProjectTMSConfig(null, null, null, null);
+        final ImportProjectTMSConfig config = new ImportProjectTMSConfig(null, null, false, null, null);
         assertThat(config.getProjectPath(), is(""));
         assertThat(config.getImportPath(), is(""));
+        assertFalse(config.isImportMissingPackages());
         assertThat(config.getCredentialsId(), is(""));
         assertThat(config.getTimeout(), is(String.valueOf(ImportProjectTMSConfig.getDefaultTimeout())));
     }
@@ -55,7 +58,7 @@ public class ImportProjectTMSConfigTest {
     @Test
     public void testExpand() {
         final ImportProjectTMSConfig config = new ImportProjectTMSConfig("${PROJECT_PATH}", "${IMPORT_PATH}",
-                "${CREDENTIALS_ID}", "${TIMEOUT}");
+                true, "${CREDENTIALS_ID}", "${TIMEOUT}");
         final EnvVars envVars = new EnvVars();
         envVars.put("PROJECT_PATH", "project");
         envVars.put("IMPORT_PATH", "import");
@@ -64,6 +67,7 @@ public class ImportProjectTMSConfigTest {
         final ImportProjectTMSConfig expConfig = config.expand(envVars);
         assertThat(expConfig.getProjectPath(), is("project"));
         assertThat(expConfig.getImportPath(), is("import"));
+        assertTrue(config.isImportMissingPackages());
         assertThat(expConfig.getCredentialsId(), is("credentialsId"));
         assertThat(expConfig.getTimeout(), is("600"));
     }

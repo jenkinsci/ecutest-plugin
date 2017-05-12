@@ -104,9 +104,10 @@ freeStyleJob("testBuilder") {
                 importConfigPath("import")
                 replaceFiles(false)
             }
-            importFromTMS("credentialsId", "Root/Test", "import", "600")
+            importFromTMS("credentialsId", "Root/Test", "import", true, "600")
             importFromTMS("credentialsId", "Root/Test") {
                 importPath("import")
+                importMissingPackages(true)
                 timeout(600)
             }
             importFromTMSDir("credentialsId", "Root/TestDir", "import", "600")

@@ -71,6 +71,10 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
 
     private final String credentialsId;
     private final String timeout;
+    /**
+     * @since 1.17
+     */
+    private final boolean importMissingPackages;
 
     /**
      * Instantiates a new {@link ImportProjectTMSConfig}.
@@ -79,17 +83,27 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
      *            the project path in test management system
      * @param importPath
      *            the import path
+     * @param importMissingPackages
+     *            specifies whether to import missing packages
      * @param credentialsId
      *            the credentials id
      * @param timeout
      *            the import timeout
      */
     @DataBoundConstructor
-    public ImportProjectTMSConfig(final String projectPath, final String importPath, final String credentialsId,
-            final String timeout) {
+    public ImportProjectTMSConfig(final String projectPath, final String importPath,
+            final boolean importMissingPackages, final String credentialsId, final String timeout) {
         super(projectPath, importPath);
+        this.importMissingPackages = importMissingPackages;
         this.credentialsId = StringUtils.trimToEmpty(credentialsId);
         this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(DEFAULT_TIMEOUT));
+    }
+
+    /**
+     * @return specifies whether to import missing packages
+     */
+    public boolean isImportMissingPackages() {
+        return importMissingPackages;
     }
 
     /**
@@ -143,7 +157,8 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
         final String expImportPath = envVars.expand(getImportPath());
         final String expCredentialsId = envVars.expand(getCredentialsId());
         final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars, String.valueOf(DEFAULT_TIMEOUT));
-        return new ImportProjectTMSConfig(expProjectPath, expImportPath, expCredentialsId, expTimeout);
+        return new ImportProjectTMSConfig(expProjectPath, expImportPath, isImportMissingPackages(),
+                expCredentialsId, expTimeout);
     }
 
     @Override
@@ -158,7 +173,8 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
             result = (projectPath == null ? thatProjectPath == null : projectPath.equals(thatProjectPath))
                     && (importPath == null ? thatImportPath == null : importPath.equals(thatImportPath))
                     && (credentialsId == null ? that.credentialsId == null : credentialsId.equals(that.credentialsId))
-                    && (timeout == null ? that.timeout == null : timeout.equals(that.timeout));
+                    && (timeout == null ? that.timeout == null : timeout.equals(that.timeout))
+                    && importMissingPackages == that.importMissingPackages;
         }
         return result;
     }
@@ -166,7 +182,7 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
     @Override
     public final int hashCode() {
         return new HashCodeBuilder(17, 31).append(getProjectPath()).append(getImportPath())
-                .append(credentialsId).append(timeout).toHashCode();
+                .append(importMissingPackages).append(credentialsId).append(timeout).toHashCode();
     }
 
     /**

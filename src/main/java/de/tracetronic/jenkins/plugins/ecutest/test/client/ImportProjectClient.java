@@ -140,8 +140,8 @@ public class ImportProjectClient extends AbstractTMSClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    public boolean importProjectArchive(final Launcher launcher, final TaskListener listener) throws IOException,
-            InterruptedException {
+    public boolean importProjectArchive(final Launcher launcher, final TaskListener listener) 
+            throws IOException, InterruptedException {
         return launcher.getChannel().call(
                 new ImportProjectArchiveCallable((ImportProjectArchiveConfig) importConfig, listener));
     }
@@ -159,8 +159,8 @@ public class ImportProjectClient extends AbstractTMSClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    public boolean importProjectFromTMS(final Launcher launcher, final TaskListener listener) throws IOException,
-            InterruptedException {
+    public boolean importProjectFromTMS(final Launcher launcher, final TaskListener listener) 
+            throws IOException, InterruptedException {
         return launcher.getChannel().call(
                 new ImportProjectTMSCallable((ImportProjectTMSConfig) importConfig, listener));
     }
@@ -178,8 +178,8 @@ public class ImportProjectClient extends AbstractTMSClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    public boolean importProjectDirFromTMS(final Launcher launcher, final TaskListener listener) throws IOException,
-            InterruptedException {
+    public boolean importProjectDirFromTMS(final Launcher launcher, final TaskListener listener) 
+            throws IOException, InterruptedException {
         return launcher.getChannel().call(
                 new ImportProjectDirTMSCallable((ImportProjectDirTMSConfig) importConfig, listener));
     }
@@ -259,7 +259,7 @@ public class ImportProjectClient extends AbstractTMSClient {
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 if (isImported = tm.importProject(importConfig.getProjectPath(), importConfig.getImportPath(),
-                        importConfig.getParsedTimeout())) {
+                        importConfig.isImportMissingPackages(), importConfig.getParsedTimeout())) {
                     logger.logInfo(String.format("-> Project imported successfully to target directory %s.",
                             importConfig.getImportPath()));
                 }

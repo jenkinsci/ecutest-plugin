@@ -550,11 +550,13 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          *            the project path
          * @param importPath
          *            the import path
+         * @param importMissingPackages
+         *            specifies whether to import missing packages
          * @param timeout
          *            the import timeout
          */
         public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
-                final CharSequence importPath, final CharSequence timeout) {
+                final CharSequence importPath, final boolean importMissingPackages, final CharSequence timeout) {
             Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
             Preconditions.checkNotNull(projectPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
             Preconditions.checkNotNull(importPath, NOT_NULL_MSG, OPT_IMPORT_PATH);
@@ -565,7 +567,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             validation = validator.validateImportPath(importPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
             importConfigs.add(new ImportProjectTMSConfig(projectPath.toString(), importPath.toString(),
-                    credentialsId.toString(), timeout.toString()));
+                    importMissingPackages, credentialsId.toString(), timeout.toString()));
         }
 
         /**
@@ -582,7 +584,26 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          */
         public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
                 final CharSequence importPath, final int timeout) {
-            importFromTMS(credentialsId, projectPath, importPath, String.valueOf(timeout));
+            importFromTMS(credentialsId, projectPath, importPath, false, String.valueOf(timeout));
+        }
+
+        /**
+         * Option defining the import project from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectPath
+         *            the project path
+         * @param importPath
+         *            the import path
+         * @param importMissingPackages
+         *            specifies whether to import missing packages
+         * @param timeout
+         *            the import timeout
+         */
+        public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
+                final CharSequence importPath, final boolean importMissingPackages, final int timeout) {
+            importFromTMS(credentialsId, projectPath, importPath, importMissingPackages, String.valueOf(timeout));
         }
 
         /**
@@ -602,7 +623,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             final ImportTMSContext context = new ImportTMSContext();
             executeInContext(closure, context);
             importConfigs.add(new ImportProjectTMSConfig(projectPath.toString(), context.importPath,
-                    credentialsId.toString(), context.timeout));
+                    context.importMissingPackages, credentialsId.toString(), context.timeout));
         }
 
         /**
@@ -729,6 +750,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         public class ImportTMSContext extends AbstractImportProjectContext {
 
             private String timeout = String.valueOf(ImportProjectTMSConfig.getDefaultTimeout());
+            private boolean importMissingPackages;
 
             /**
              * Option defining the import timeout.
@@ -751,6 +773,16 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
              */
             public void timeout(final int value) {
                 timeout(String.valueOf((Object) value));
+            }
+
+            /**
+             * Option defining whether to import missing packages.
+             *
+             * @param value
+             *            the value
+             */
+            public void importMissingPackages(final boolean value) {
+                importMissingPackages = value;
             }
         }
     }
