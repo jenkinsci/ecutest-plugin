@@ -107,13 +107,17 @@ public class TTConsoleLogger {
     }
 
     /**
-     * Log debug message.
-     *
+     * Log debug message. Can be enabled either by
+     * providing -Decutest.debugLog=true to Jenkins master JVM or
+     * setting system property ecutest.debugLog directly.
+     * 
      * @param message
      *            the message to log
      */
     public void logDebug(final String message) {
-        logAnnot("[TT] DEBUG: ", message);
+        if (Boolean.getBoolean("ecutest.debugLog")) {
+            logAnnot("[TT] DEBUG: ", message);
+        }
     }
 
     /**

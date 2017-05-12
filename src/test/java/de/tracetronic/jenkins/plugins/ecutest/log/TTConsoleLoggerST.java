@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,6 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.log;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import hudson.Launcher;
 import hudson.model.BuildListener;
@@ -40,6 +41,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.jvnet.hudson.test.TestBuilder;
+import org.xml.sax.SAXException;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
@@ -67,7 +69,6 @@ public class TTConsoleLoggerST extends SystemTestBase {
         });
 
         final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
-
         final HtmlPage consoleLog = getWebClient().getPage(build, "console");
         assertTrue("Plain text log output should be present in build console log",
                 consoleLog.asText().contains("TTConsoleLogger"));
@@ -88,7 +89,6 @@ public class TTConsoleLoggerST extends SystemTestBase {
         });
 
         final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
-
         final HtmlPage consoleLog = getWebClient().getPage(build, "console");
         assertTrue("Annotated info log output should be present in build console log",
                 consoleLog.asText().contains("[TT] INFO: TTConsoleLogger"));
@@ -109,7 +109,6 @@ public class TTConsoleLoggerST extends SystemTestBase {
         });
 
         final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
-
         final HtmlPage consoleLog = getWebClient().getPage(build, "console");
         assertTrue("Annotated warn log output should be present in build console log",
                 consoleLog.asText().contains("[TT] WARN: TTConsoleLogger"));
@@ -130,9 +129,42 @@ public class TTConsoleLoggerST extends SystemTestBase {
         });
 
         final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
-
         final HtmlPage consoleLog = getWebClient().getPage(build, "console");
         assertTrue("Annotated error log output should be present in build console log",
                 consoleLog.asText().contains("[TT] ERROR: TTConsoleLogger"));
+    }
+
+    @Test
+    public void testEnabledDebugTextLogger() throws Exception {
+        System.setProperty("ecutest.debugLog", "true");
+        final HtmlPage consoleLog = logDebug();
+        assertTrue("Annotated debug log output should be present in build console log",
+                consoleLog.asText().contains("[TT] DEBUG: TTConsoleLogger"));
+    }
+
+    @Test
+    public void testDisabledDebugTextLogger() throws Exception {
+        System.setProperty("ecutest.debugLog", "false");
+        final HtmlPage consoleLog = logDebug();
+        assertFalse("Annotated debug log output should NOT be present in build console log",
+                consoleLog.asText().contains("[TT] DEBUG: TTConsoleLogger"));
+    }
+
+    private HtmlPage logDebug() throws IOException, Exception, SAXException {
+        final FreeStyleProject project = jenkins.createFreeStyleProject();
+        project.getBuildersList().add(new TestBuilder() {
+
+            @Override
+            public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
+                    final BuildListener listener) throws InterruptedException, IOException {
+                final TTConsoleLogger logger = new TTConsoleLogger(listener);
+                logger.logDebug("TTConsoleLogger");
+                return true;
+            }
+        });
+
+        final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
+        final HtmlPage consoleLog = getWebClient().getPage(build, "console");
+        return consoleLog;
     }
 }
