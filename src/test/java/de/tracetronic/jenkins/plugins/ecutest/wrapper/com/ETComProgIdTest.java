@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,6 +29,8 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,8 +41,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
 
 /**
@@ -48,7 +48,7 @@ import org.junit.Test;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ETComProgIdTest extends TestCase {
+public class ETComProgIdTest {
 
     @Test
     public void testDefaultProgId() {

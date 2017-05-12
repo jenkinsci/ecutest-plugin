@@ -29,8 +29,8 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
+import static org.junit.Assert.assertEquals;
 import hudson.util.FormValidation;
-import junit.framework.TestCase;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,14 +40,12 @@ import org.junit.Test;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ImportProjectValidatorTest extends TestCase {
+public class ImportProjectValidatorTest {
 
     ImportProjectValidator importValidator;
 
-    @Override
     @Before
-    protected void setUp() throws Exception {
-        super.setUp();
+    public void setUp() throws Exception {
         importValidator = new ImportProjectValidator();
     }
 

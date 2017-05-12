@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,11 +29,10 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
+import static org.junit.Assert.assertEquals;
 import hudson.util.FormValidation;
 
 import java.io.IOException;
-
-import junit.framework.TestCase;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -43,14 +42,12 @@ import org.junit.Test;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ATXValidatorTest extends TestCase {
+public class ATXValidatorTest {
 
     ATXValidator atxValidator;
 
-    @Override
     @Before
-    protected void setUp() throws Exception {
-        super.setUp();
+    public void setUp() throws Exception {
         atxValidator = new ATXValidator();
     }
 
