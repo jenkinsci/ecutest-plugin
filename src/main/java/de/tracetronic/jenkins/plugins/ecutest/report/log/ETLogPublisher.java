@@ -252,15 +252,13 @@ public class ETLogPublisher extends AbstractReportPublisher {
 
             if (isTestSpecific()) {
                 int index = 0;
-                final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
-                for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-                    final FilePath testReportDir = new FilePath(launcher.getChannel(),
-                            testEnvAction.getTestReportDir());
-                    final FilePath archiveTargetDir = archiveTarget.child(testReportDir.getName());
-                    if (testReportDir.exists()) {
+                final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
+                for (final FilePath reportDir : reportDirs) {
+                    final FilePath archiveTargetDir = archiveTarget.child(reportDir.getName());
+                    if (reportDir.exists()) {
                         try {
-                            logger.logInfo(String.format("- Archiving log files: %s", testReportDir));
-                            final int copiedFiles = testReportDir.copyRecursiveTo(
+                            logger.logInfo(String.format("- Archiving log files: %s", reportDir));
+                            final int copiedFiles = reportDir.copyRecursiveTo(
                                     String.format("**/%s,**/%s", ERROR_LOG_NAME, INFO_LOG_NAME), archiveTargetDir);
                             if (copiedFiles == 0) {
                                 continue;
@@ -581,6 +579,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
     private List<FilePath> getTestSpecificLogFiles(final Run<?, ?> run, final Launcher launcher)
             throws IOException, InterruptedException {
         final List<FilePath> archiveFiles = new ArrayList<FilePath>();
+        // TODO: replace with getReportDirs()
         final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
             final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
