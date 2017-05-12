@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -86,7 +86,7 @@ public class TestProjectBuilderTest {
     @Deprecated
     @Test
     public void testNull() {
-        final TestConfig testConfig = new TestConfig(null, null, false, false, null);
+        final TestConfig testConfig = new TestConfig(null, null, false, false, false, null);
         final ProjectConfig projectConfig = new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
         final ExecutionConfig executionConfig = new ExecutionConfig(null, true, true);
         final TestProjectBuilder builder = new TestProjectBuilder("", testConfig, projectConfig, executionConfig);

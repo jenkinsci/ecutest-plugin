@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -85,7 +85,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             final TestConfigContext context = new TestConfigContext();
             executeInContext(closure, context);
             testConfig = new TestConfig(context.tbcFile, context.tcfFile, context.forceReload, context.loadOnly,
-                    context.constants);
+                    context.keepConfig, context.constants);
         }
 
         /**
@@ -114,6 +114,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             private String tcfFile;
             private boolean forceReload;
             private boolean loadOnly;
+            private boolean keepConfig;
             private List<GlobalConstant> constants;
 
             /**
@@ -160,6 +161,16 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
              */
             public void loadOnly(final boolean value) {
                 loadOnly = value;
+            }
+
+            /**
+             * Option defining whether to keep the previous loaded configuration.
+             *
+             * @param value
+             *            the value
+             */
+            public void keepConfig(final boolean value) {
+                keepConfig = value;
             }
 
             /**

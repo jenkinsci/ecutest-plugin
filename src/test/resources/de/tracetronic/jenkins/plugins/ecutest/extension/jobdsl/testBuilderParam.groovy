@@ -6,6 +6,7 @@ def strTbcFile = 'test.tbc'
 def strTcfFile = 'test.tcf'
 def bForceReload = true
 def bLoadOnly = true
+def bkeepConfig = true
 def strConstantName = 'test'
 def strConstantValue = '123'
 def strConstantName2 = 'test2'
@@ -41,6 +42,7 @@ freeStyleJob("${strJobName}") {
                 tcfFile("${strTcfFile}")
                 forceReload(bForceReload)
                 loadOnly(bLoadOnly)
+                keepConfig(bkeepConfig)
                 constants {
                     constant("${strConstantName}", "${strConstantValue}")
                     constant {
@@ -72,6 +74,7 @@ freeStyleJob("${strJobName}") {
                 tcfFile("${strTcfFile}")
                 forceReload(bForceReload)
                 loadOnly(bLoadOnly)
+                keepConfig(bkeepConfig)
                 constants {
                     constant("${strConstantName}", "${strConstantValue}")
                     constant {
@@ -99,6 +102,7 @@ freeStyleJob("${strJobName}") {
                 tcfFile("${strTcfFile}")
                 forceReload(bForceReload)
                 loadOnly(bLoadOnly)
+                keepConfig(bkeepConfig)
                 constants {
                     constant("${strConstantName}", "${strParamValue}")
                     constant {

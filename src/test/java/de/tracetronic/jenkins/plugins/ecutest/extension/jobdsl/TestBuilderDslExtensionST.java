@@ -144,6 +144,8 @@ public class TestBuilderDslExtensionST extends AbstractDslExtensionST {
         assertThat(config.getTbcFile(), is("test.tbc"));
         assertThat(config.getTcfFile(), is("test.tcf"));
         assertTrue(config.isForceReload());
+        assertTrue(config.isLoadOnly());
+        assertTrue(config.isKeepConfig());
         testGlobalConstantsWithDsl(config.getConstants());
     }
 

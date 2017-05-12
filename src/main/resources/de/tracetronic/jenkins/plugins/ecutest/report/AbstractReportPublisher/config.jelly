@@ -40,12 +40,12 @@
                     <j:otherwise>
                         <j:set var="checked" value="${instance.isArchiving()}" />
                     </j:otherwise>
-                    <f:optionalBlock inline="true" checked="${checked}" title="${%archiving.title}" description="${%archiving.description}" field="archiving">
-                        <f:entry title="${%keepAll.title}" description="${%keepAll.description}" field="keepAll">
-                            <f:checkbox checked="${instance.isKeepAll()}" default="true" />
-                        </f:entry>
-                    </f:optionalBlock>
                 </j:choose>
+                <f:optionalBlock inline="true" checked="${checked}" title="${%archiving.title}" field="archiving">
+                    <f:entry title="${%keepAll.title}" description="${%keepAll.description}" field="keepAll">
+                        <f:checkbox checked="${instance.isKeepAll()}" default="true" />
+                    </f:entry>
+                </f:optionalBlock>
             </j:if>
             <f:entry title="${%allowMissing.title}" description="${%allowMissing.description}" field="allowMissing">
                 <f:checkbox />

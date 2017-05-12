@@ -263,7 +263,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
 
         // Set expanded test configuration
         expTestConfig = new TestConfig(expTbcFilePath, expTcfFilePath, expTestConfig.isForceReload(),
-                expTestConfig.isLoadOnly(), expTestConfig.getConstants());
+                expTestConfig.isLoadOnly(), expTestConfig.isKeepConfig(), expTestConfig.getConstants());
 
         // Run tests
         return runTest(expTestFilePath, expTestConfig, expExecConfig, run, workspace, launcher, listener);

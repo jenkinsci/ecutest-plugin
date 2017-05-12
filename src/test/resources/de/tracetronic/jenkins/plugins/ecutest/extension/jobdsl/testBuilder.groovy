@@ -6,6 +6,7 @@ freeStyleJob("testBuilder") {
                 tcfFile("test.tcf")
                 forceReload(true)
                 loadOnly(true)
+                keepConfig(true)
                 constants {
                     constant("test", "123")
                     constant {
@@ -37,6 +38,7 @@ freeStyleJob("testBuilder") {
                 tcfFile("test.tcf")
                 forceReload(true)
                 loadOnly(true)
+                keepConfig(true)
                 constants {
                     constant("test", "123")
                     constant {
@@ -64,6 +66,7 @@ freeStyleJob("testBuilder") {
                 tcfFile("test.tcf")
                 forceReload(true)
                 loadOnly(true)
+                keepConfig(true)
                 constants {
                     constant {
                         name("test")
