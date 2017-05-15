@@ -97,6 +97,18 @@ freeStyleJob("testBuilder") {
                 checkTestFile(false)
             }
         }
+        importPackages {
+            importFromTMS("credentialsId", "Root/Test", "import", true, "600")
+            importFromTMS("credentialsId", "Root/Test") {
+                importPath("import")
+                timeout(600)
+            }
+            importFromTMSDir("credentialsId", "Root/TestDir", "import", "600")
+            importFromTMSDir("credentialsId", "Root/TestDir") {
+                importPath("import")
+                timeout(600)
+            }
+        }
         importProjects {
             importFromArchive("test.prz", "import", "import", false)
             importFromArchive("test.prz") {
@@ -112,7 +124,7 @@ freeStyleJob("testBuilder") {
             }
             importFromTMSDir("credentialsId", "Root/TestDir", "import", "600")
             importFromTMSDir("credentialsId", "Root/TestDir") {
-                importPath("import")
+                importPath("import")6.6
                 timeout(600)
             }
         }

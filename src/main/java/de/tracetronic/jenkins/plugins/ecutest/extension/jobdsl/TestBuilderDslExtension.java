@@ -42,11 +42,15 @@ import javaposse.jobdsl.plugin.DslExtensionMethod;
 import com.google.common.base.Preconditions;
 
 import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.test.ImportPackageBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.ImportProjectBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestFolderBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestFolderBuilder.ScanMode;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestPackageBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestProjectBuilder;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageDirTMSConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageTMSConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirTMSConfig;
@@ -173,6 +177,32 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
     @DslExtensionMethod(context = StepContext.class)
     public Object testFolder(final CharSequence testFolder) {
         return testFolder(testFolder, null);
+    }
+
+    /**
+     * {@link DslExtensionMethod} providing the import of packages from test management system.
+     *
+     * @param closure
+     *            the nested Groovy closure
+     * @return the instance of a {@link ImportProjectBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object importPackages(final Runnable closure) {
+        final ImportPackageContext context = new ImportPackageContext();
+        executeInContext(closure, context);
+
+        final ImportPackageBuilder builder = new ImportPackageBuilder(context.importConfigs);
+        return builder;
+    }
+
+    /**
+     * {@link DslExtensionMethod} providing the import of packages test management system with default settings.
+     *
+     * @return the instance of a {@link ReportGeneratorPublisher}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object importPackages() {
+        return importPackages(null);
     }
 
     /**
@@ -475,6 +505,206 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             executeInContext(closure, context);
             projectConfig = new ProjectConfig(context.execInCurrentPkgDir, context.filterExpression,
                     context.jobExecutionMode);
+        }
+    }
+
+    /**
+     * {@link Context} class providing import package methods for the nested DSL context.
+     */
+    public class ImportPackageContext extends AbstractTestContext {
+
+        private static final String OPT_PACKAGE_PATH = "packagePath";
+        private static final String OPT_PACKAGE_DIR_PATH = "packageDirPath";
+        private static final String OPT_IMPORT_PATH = "importPath";
+        private static final String OPT_CREDENTIALS_ID = "credentialsId";
+
+        private final List<ImportPackageConfig> importConfigs = new ArrayList<ImportPackageConfig>();
+
+        /**
+         * Validator to check import package related DSL options.
+         */
+        protected final ImportTestValidator validator = new ImportTestValidator();
+
+        /**
+         * Option defining the import package from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param importPath
+         *            the import path
+         * @param timeout
+         *            the import timeout
+         */
+        public void importFromTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final CharSequence importPath, final CharSequence timeout) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(packagePath, NOT_NULL_MSG, OPT_PACKAGE_PATH);
+            Preconditions.checkNotNull(importPath, NOT_NULL_MSG, OPT_IMPORT_PATH);
+            Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_TIMEOUT);
+
+            FormValidation validation = validator.validateTestPath(packagePath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            validation = validator.validateImportPath(importPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            importConfigs.add(new ImportPackageTMSConfig(packagePath.toString(), importPath.toString(),
+                    credentialsId.toString(), timeout.toString()));
+        }
+
+        /**
+         * Option defining the import package from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param importPath
+         *            the import path
+         * @param timeout
+         *            the import timeout
+         */
+        public void importFromTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final CharSequence importPath, final int timeout) {
+            importFromTMS(credentialsId, packagePath, importPath, String.valueOf(timeout));
+        }
+
+        /**
+         * Option defining the import package from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param closure
+         *            the nested Groovy closure
+         */
+        public void importFromTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final Runnable closure) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(packagePath, NOT_NULL_MSG, OPT_PACKAGE_PATH);
+            final ImportTMSContext context = new ImportTMSContext();
+            executeInContext(closure, context);
+            importConfigs.add(new ImportPackageTMSConfig(packagePath.toString(), context.importPath,
+                    credentialsId.toString(), context.timeout));
+        }
+
+        /**
+         * Option defining the import package directory from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packageDirPath
+         *            the package directory path
+         * @param importPath
+         *            the import path
+         * @param timeout
+         *            the import timeout
+         */
+        public void importFromTMSDir(final CharSequence credentialsId, final CharSequence packageDirPath,
+                final CharSequence importPath, final CharSequence timeout) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(packageDirPath, NOT_NULL_MSG, OPT_PACKAGE_DIR_PATH);
+            Preconditions.checkNotNull(importPath, NOT_NULL_MSG, OPT_PACKAGE_PATH);
+            Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_PACKAGE_PATH);
+
+            FormValidation validation = validator.validateTestPath(packageDirPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            validation = validator.validateImportPath(importPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            importConfigs.add(new ImportPackageDirTMSConfig(packageDirPath.toString(), importPath.toString(),
+                    credentialsId.toString(), timeout.toString()));
+        }
+
+        /**
+         * Option defining the import package directory from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packageDirPath
+         *            the package directory path
+         * @param importPath
+         *            the import path
+         * @param timeout
+         *            the import timeout
+         */
+        public void importFromTMSDir(final CharSequence credentialsId, final CharSequence packageDirPath,
+                final CharSequence importPath, final int timeout) {
+            importFromTMSDir(credentialsId, packageDirPath, importPath, String.valueOf(timeout));
+        }
+
+        /**
+         * Option defining the import package directory from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param closure
+         *            the nested Groovy closure
+         */
+        public void importFromTMSDir(final CharSequence credentialsId, final CharSequence packagePath,
+                final Runnable closure) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(packagePath, NOT_NULL_MSG, OPT_PACKAGE_DIR_PATH);
+            final ImportTMSContext context = new ImportTMSContext();
+            executeInContext(closure, context);
+            importConfigs.add(new ImportPackageDirTMSConfig(packagePath.toString(), context.importPath,
+                    credentialsId.toString(), context.timeout));
+        }
+
+        /**
+         * {@link Context} class providing common import project methods for the nested DSL context.
+         */
+        public class AbstractImportProjectContext implements Context {
+
+            /**
+             * The import path.
+             */
+            protected String importPath;
+
+            /**
+             * Option defining the import path.
+             *
+             * @param value
+             *            the value
+             */
+            public void importPath(final String value) {
+                final FormValidation validation = validator.validateImportPath(value);
+                Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+                importPath = value;
+            }
+        }
+
+        /**
+         * {@link Context} class providing the import from test management system methods for the nested DSL context.
+         */
+        public class ImportTMSContext extends AbstractImportProjectContext {
+
+            private String timeout = String.valueOf(ImportProjectTMSConfig.getDefaultTimeout());
+
+            /**
+             * Option defining the import timeout.
+             *
+             * @param value
+             *            the value
+             */
+            public void timeout(final String value) {
+                final FormValidation validation = validator.validateTimeout(value,
+                        ImportProjectTMSConfig.getDefaultTimeout());
+                Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+                timeout = value;
+            }
+
+            /**
+             * Option defining the import timeout.
+             *
+             * @param value
+             *            the value as Integer
+             */
+            public void timeout(final int value) {
+                timeout(String.valueOf((Object) value));
+            }
         }
     }
 
