@@ -36,61 +36,39 @@ import org.apache.commons.lang.StringUtils;
 import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
 
 /**
- * Validator to check project importer related form fields.
+ * Validator to check project exporter related form fields.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ImportTestValidator extends AbstractValidator {
+public class ExportTestValidator extends AbstractValidator {
 
     /**
-     * Validates the test path to import.
+     * Validates the package file.
      *
-     * @param testPath
-     *            the test path to import
+     * @param testFile
+     *            the test file
      * @return the form validation
      */
-    public FormValidation validateTestPath(final String testPath) {
-        return validateRequiredParamValue(testPath);
-    }
-
-    /**
-     * Validates the project archive path to import.
-     *
-     * @param archivePath
-     *            the project archive to import
-     * @return the form validation
-     */
-    public FormValidation validateArchivePath(final String archivePath) {
+    public FormValidation validatePackageFile(final String testFile) {
         FormValidation returnValue = FormValidation.ok();
-        if (StringUtils.isBlank(archivePath)) {
-            returnValue = FormValidation.validateRequired(archivePath);
-        } else if (archivePath.contains(PARAMETER)) {
+        if (StringUtils.isBlank(testFile)) {
+            returnValue = FormValidation.validateRequired(testFile);
+        } else if (testFile.contains(PARAMETER)) {
             returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
-        } else if (!archivePath.endsWith(".prz")) {
-            returnValue = FormValidation.error(Messages.ImportProjectBuilder_PrzFileExtension());
+        } else if (!testFile.endsWith(".pkg")) {
+            returnValue = FormValidation.error(Messages.TestBuilder_PkgFileExtension());
         }
         return returnValue;
     }
 
     /**
-     * Validates the import target path.
+     * Validates the export target path.
      *
-     * @param importPath
-     *            the import path
+     * @param exportPath
+     *            the export path
      * @return the form validation
      */
-    public FormValidation validateImportPath(final String importPath) {
-        return validateParameterizedValue(importPath);
-    }
-
-    /**
-     * Validates the import configuration target path.
-     *
-     * @param importConfigPath
-     *            the import configuration path
-     * @return the form validation
-     */
-    public FormValidation validateImportConfigPath(final String importConfigPath) {
-        return validateParameterizedValue(importConfigPath);
+    public FormValidation validateExportPath(final String exportPath) {
+        return validateRequiredParamValue(exportPath);
     }
 }
