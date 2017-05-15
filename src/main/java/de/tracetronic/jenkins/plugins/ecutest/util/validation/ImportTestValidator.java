@@ -40,20 +40,20 @@ import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ImportProjectValidator extends AbstractValidator {
+public class ImportTestValidator extends AbstractValidator {
 
     /**
-     * Validates the project path to import.
+     * Validates the test path to import.
      *
-     * @param projectPath
-     *            the project to import
+     * @param testPath
+     *            the test path to import
      * @return the form validation
      */
-    public FormValidation validateProjectPath(final String projectPath) {
+    public FormValidation validateTestPath(final String testPath) {
         FormValidation returnValue = FormValidation.ok();
-        if (StringUtils.isBlank(projectPath)) {
-            returnValue = FormValidation.validateRequired(projectPath);
-        } else if (projectPath.contains(PARAMETER)) {
+        if (StringUtils.isBlank(testPath)) {
+            returnValue = FormValidation.validateRequired(testPath);
+        } else if (testPath.contains(PARAMETER)) {
             returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
         }
         return returnValue;

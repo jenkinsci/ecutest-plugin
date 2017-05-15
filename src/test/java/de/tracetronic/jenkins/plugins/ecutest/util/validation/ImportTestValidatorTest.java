@@ -36,42 +36,42 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link ImportProjectValidator}.
+ * Unit tests for {@link ImportTestValidator}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ImportProjectValidatorTest {
+public class ImportTestValidatorTest {
 
-    ImportProjectValidator importValidator;
+    ImportTestValidator importValidator;
 
     @Before
     public void setUp() throws Exception {
-        importValidator = new ImportProjectValidator();
+        importValidator = new ImportTestValidator();
     }
 
-    // Validation of project path
+    // Validation of test path
     @Test
-    public void testEmptyProjectPath() {
-        final FormValidation validation = importValidator.validateProjectPath("");
-        assertEquals("Error if empty project path", FormValidation.Kind.ERROR, validation.kind);
-    }
-
-    @Test
-    public void testNullProjectPath() {
-        final FormValidation validation = importValidator.validateProjectPath(null);
-        assertEquals("Error if project path not defined", FormValidation.Kind.ERROR, validation.kind);
+    public void testEmptyTestPath() {
+        final FormValidation validation = importValidator.validateTestPath("");
+        assertEquals("Error if empty test path", FormValidation.Kind.ERROR, validation.kind);
     }
 
     @Test
-    public void testParameterizedProjectPath() {
-        final FormValidation validation = importValidator.validateProjectPath("${PROJECT_PATH}");
-        assertEquals("Warning if parameterized project path", FormValidation.Kind.WARNING, validation.kind);
+    public void testNullTestPath() {
+        final FormValidation validation = importValidator.validateTestPath(null);
+        assertEquals("Error if test path not defined", FormValidation.Kind.ERROR, validation.kind);
     }
 
     @Test
-    public void testValidProjectPath() {
-        final FormValidation validation = importValidator.validateProjectPath("project");
-        assertEquals("Valid project path", FormValidation.Kind.OK, validation.kind);
+    public void testParameterizedTestPath() {
+        final FormValidation validation = importValidator.validateTestPath("${PROJECT_PATH}");
+        assertEquals("Warning if parameterized test path", FormValidation.Kind.WARNING, validation.kind);
+    }
+
+    @Test
+    public void testValidTestPath() {
+        final FormValidation validation = importValidator.validateTestPath("project");
+        assertEquals("Valid test path", FormValidation.Kind.OK, validation.kind);
     }
 
     // Validation of archive path

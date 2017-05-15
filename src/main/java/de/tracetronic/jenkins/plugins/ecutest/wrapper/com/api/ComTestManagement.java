@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -61,7 +61,41 @@ public interface ComTestManagement {
     boolean logout() throws ETComException;
 
     /**
-     * Imports a Project from a test management system.
+     * Imports a package from a test management system.
+     * The tmProjectPath specifies the package in the test management system.
+     * The package will be imported into directory given by importPath.
+     *
+     * @param tmPackagePath
+     *            the path specifying the package in the test management system
+     * @param importPath
+     *            the directory to save the package (relative to package directory or absolute)
+     * @param timeout
+     *            the timeout in seconds to wait for import to be finished
+     * @return {@code true} if import succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    boolean importPackage(String tmPackagePath, String importPath, int timeout) throws ETComException;
+
+    /**
+     * Imports a directory from a test management system with all sub directories and package.
+     * The tmDirectoryPath specifies the directory in the test management system.
+     * The directory will be imported into the directory given by importPath.
+     *
+     * @param tmDirectoryPath
+     *            the path specifying the package in the test management system
+     * @param importPath
+     *            the directory to save the package (relative to package directory or absolute)
+     * @param timeout
+     *            the timeout in seconds to wait for import to be finished
+     * @return {@code true} if import succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    boolean importPackageDirectory(String tmDirectoryPath, String importPath, int timeout) throws ETComException;
+
+    /**
+     * Imports a project from a test management system.
      * The tmProjectPath specifies the project in the test management system.
      * The project will be imported into directory given by importPath.
      *
@@ -96,6 +130,25 @@ public interface ComTestManagement {
      *             in case of a COM exception
      */
     boolean importProjectDirectory(String tmDirectoryPath, String importPath, int timeout) throws ETComException;
+
+    /**
+     * Exports the given package to test management system.
+     * The exportPath is needed to specify where the package should be placed at.
+     *
+     * @param filePath
+     *            the file path of the package to be exported (relative to package directory or absolute)
+     * @param exportPath
+     *            the path specifying where the package should be placed at
+     * @param createNewPath
+     *            if the exportPath does not exist, it will be created
+     * @param timeout
+     *            the timeout in seconds to wait for export to be finished
+     * @return {@code true} if export succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    boolean exportPackage(String filePath, String exportPath, boolean createNewPath, int timeout)
+            throws ETComException;
 
     /**
      * Exports the given project to test management system.

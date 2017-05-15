@@ -56,54 +56,40 @@ import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
 import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
 
 /**
- * Class holding the configuration for importing a project from test management system.
+ * Class holding the configuration for importing a package from test management system.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ImportProjectTMSConfig extends ImportProjectConfig {
+public class ImportPackageTMSConfig extends ImportPackageConfig {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * Defines the default timeout for importing a project.
+     * Defines the default timeout for importing a package.
      */
     protected static final int DEFAULT_TIMEOUT = 60;
 
     private final String credentialsId;
     private final String timeout;
-    /**
-     * @since 1.17
-     */
-    private final boolean importMissingPackages;
 
     /**
-     * Instantiates a new {@link ImportProjectTMSConfig}.
+     * Instantiates a new {@link ImportPackageTMSConfig}.
      *
-     * @param projectPath
-     *            the project path in test management system
+     * @param packagePath
+     *            the package path in test management system
      * @param importPath
      *            the import path
-     * @param importMissingPackages
-     *            specifies whether to import missing packages
      * @param credentialsId
      *            the credentials id
      * @param timeout
      *            the import timeout
      */
     @DataBoundConstructor
-    public ImportProjectTMSConfig(final String projectPath, final String importPath,
-            final boolean importMissingPackages, final String credentialsId, final String timeout) {
-        super(projectPath, importPath);
-        this.importMissingPackages = importMissingPackages;
+    public ImportPackageTMSConfig(final String packagePath, final String importPath,
+            final String credentialsId, final String timeout) {
+        super(packagePath, importPath);
         this.credentialsId = StringUtils.trimToEmpty(credentialsId);
         this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(DEFAULT_TIMEOUT));
-    }
-
-    /**
-     * @return specifies whether to import missing packages
-     */
-    public boolean isImportMissingPackages() {
-        return importMissingPackages;
     }
 
     /**
@@ -152,44 +138,42 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
     }
 
     @Override
-    public ImportProjectTMSConfig expand(final EnvVars envVars) {
-        final String expProjectPath = envVars.expand(getProjectPath());
+    public ImportPackageTMSConfig expand(final EnvVars envVars) {
+        final String expPackagePath = envVars.expand(getPackagePath());
         final String expImportPath = envVars.expand(getImportPath());
         final String expCredentialsId = envVars.expand(getCredentialsId());
         final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars, String.valueOf(DEFAULT_TIMEOUT));
-        return new ImportProjectTMSConfig(expProjectPath, expImportPath, isImportMissingPackages(),
-                expCredentialsId, expTimeout);
+        return new ImportPackageTMSConfig(expPackagePath, expImportPath, expCredentialsId, expTimeout);
     }
 
     @Override
     public final boolean equals(final Object other) {
         boolean result = false;
-        if (other instanceof ImportProjectTMSConfig) {
-            final ImportProjectTMSConfig that = (ImportProjectTMSConfig) other;
-            final String projectPath = getProjectPath();
+        if (other instanceof ImportPackageTMSConfig) {
+            final ImportPackageTMSConfig that = (ImportPackageTMSConfig) other;
+            final String packagePath = getPackagePath();
             final String importPath = getImportPath();
-            final String thatProjectPath = that.getProjectPath();
+            final String thatPackagePath = that.getPackagePath();
             final String thatImportPath = that.getImportPath();
-            result = (projectPath == null ? thatProjectPath == null : projectPath.equals(thatProjectPath))
+            result = (packagePath == null ? thatPackagePath == null : packagePath.equals(thatPackagePath))
                     && (importPath == null ? thatImportPath == null : importPath.equals(thatImportPath))
                     && (credentialsId == null ? that.credentialsId == null : credentialsId.equals(that.credentialsId))
-                    && (timeout == null ? that.timeout == null : timeout.equals(that.timeout))
-                    && importMissingPackages == that.importMissingPackages;
+                    && (timeout == null ? that.timeout == null : timeout.equals(that.timeout));
         }
         return result;
     }
 
     @Override
     public final int hashCode() {
-        return new HashCodeBuilder(17, 31).append(getProjectPath()).append(getImportPath())
-                .append(importMissingPackages).append(credentialsId).append(timeout).toHashCode();
+        return new HashCodeBuilder(17, 31).append(getPackagePath()).append(getImportPath()).append(credentialsId)
+                .append(timeout).toHashCode();
     }
 
     /**
-     * DescriptorImpl for {@link ImportProjectTMSConfig}.
+     * DescriptorImpl for {@link ImportPackageTMSConfig}.
      */
     @Extension(ordinal = 2)
-    public static class DescriptorImpl extends ImportProjectConfig.DescriptorImpl {
+    public static class DescriptorImpl extends ImportPackageConfig.DescriptorImpl {
 
         /**
          * @return the default timeout
@@ -199,7 +183,7 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
         }
 
         @Override
-        public FormValidation doCheckProjectPath(@QueryParameter final String value) {
+        public FormValidation doCheckPackagePath(@QueryParameter final String value) {
             return importValidator.validateTestPath(value);
         }
 
@@ -216,7 +200,7 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
 
         @Override
         public String getDisplayName() {
-            return Messages.ImportProjectTMSConfig_DisplayName();
+            return Messages.ImportPackageTMSConfig_DisplayName();
         }
     }
 }

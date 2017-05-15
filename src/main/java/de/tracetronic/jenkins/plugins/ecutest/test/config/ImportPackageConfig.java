@@ -56,37 +56,36 @@ import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ImportTestValidator;
 
 /**
- * Common base class for {@link ImportProjectArchiveConfig}, {@link ImportProjectTMSConfig} and
- * {@link ImportProjectDirTMSConfig}.
+ * Common base class for {@link ImportPackageTMSConfig} and {@link ImportPackageDirTMSConfig}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class ImportProjectConfig implements Describable<ImportProjectConfig>, Serializable, ExpandableConfig {
+public abstract class ImportPackageConfig implements Describable<ImportPackageConfig>, Serializable, ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 
-    private final String projectPath;
+    private final String packagePath;
     private final String importPath;
 
     /**
-     * Instantiates a new {@link ImportProjectConfig}.
+     * Instantiates a new {@link ImportPackageConfig}.
      *
-     * @param projectPath
-     *            the project path
+     * @param packagePath
+     *            the package path
      * @param importPath
      *            the import path
      */
-    public ImportProjectConfig(final String projectPath, final String importPath) {
+    public ImportPackageConfig(final String packagePath, final String importPath) {
         super();
-        this.projectPath = StringUtils.trimToEmpty(projectPath);
+        this.packagePath = StringUtils.trimToEmpty(packagePath);
         this.importPath = StringUtils.trimToEmpty(importPath);
     }
 
     /**
-     * @return the project path to import
+     * @return the package path to import
      */
-    public String getProjectPath() {
-        return projectPath;
+    public String getPackagePath() {
+        return packagePath;
     }
 
     /**
@@ -99,32 +98,32 @@ public abstract class ImportProjectConfig implements Describable<ImportProjectCo
     @CheckForNull
     @SuppressWarnings("unchecked")
     @Override
-    public Descriptor<ImportProjectConfig> getDescriptor() {
+    public Descriptor<ImportPackageConfig> getDescriptor() {
         final Jenkins instance = Jenkins.getInstance();
         if (instance != null) {
-            return (Descriptor<ImportProjectConfig>) instance.getDescriptor(getClass());
+            return (Descriptor<ImportPackageConfig>) instance.getDescriptor(getClass());
         }
         return null;
     }
 
     /**
-     * Gets all descriptors of {@link ImportProjectConfig} type.
+     * Gets all descriptors of {@link ImportPackageConfig} type.
      *
      * @return the descriptor extension list
      */
     @CheckForNull
-    public static DescriptorExtensionList<ImportProjectConfig, Descriptor<ImportProjectConfig>> all() {
+    public static DescriptorExtensionList<ImportPackageConfig, Descriptor<ImportPackageConfig>> all() {
         final Jenkins instance = Jenkins.getInstance();
         if (instance != null) {
-            return instance.getDescriptorList(ImportProjectConfig.class);
+            return instance.getDescriptorList(ImportPackageConfig.class);
         }
         return null;
     }
 
     /**
-     * DescriptorImpl for {@link ImportProjectConfig}.
+     * DescriptorImpl for {@link ImportPackageConfig}.
      */
-    public abstract static class DescriptorImpl extends Descriptor<ImportProjectConfig> {
+    public abstract static class DescriptorImpl extends Descriptor<ImportPackageConfig> {
 
         /**
          * Validator to check form fields.
@@ -132,13 +131,13 @@ public abstract class ImportProjectConfig implements Describable<ImportProjectCo
         protected final ImportTestValidator importValidator = new ImportTestValidator();
 
         /**
-         * Validates the project path to import.
+         * Validates the package path to import.
          *
          * @param value
-         *            the project to import
+         *            the package to import
          * @return the form validation
          */
-        public abstract FormValidation doCheckProjectPath(@QueryParameter String value);
+        public abstract FormValidation doCheckPackagePath(@QueryParameter String value);
 
         /**
          * Validates the import target path.

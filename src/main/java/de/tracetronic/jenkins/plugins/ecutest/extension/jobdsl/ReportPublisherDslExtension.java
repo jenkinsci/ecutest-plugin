@@ -53,7 +53,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.tms.TMSPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.ImportProjectValidator;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.ImportTestValidator;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ReportGeneratorValidator;
 
 /**
@@ -591,7 +591,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         /**
          * Validator to check report project import related DSL options.
          */
-        protected final ImportProjectValidator importValidator = new ImportProjectValidator();
+        protected final ImportTestValidator importValidator = new ImportTestValidator();
 
         private String timeout;
 

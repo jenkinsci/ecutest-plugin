@@ -55,7 +55,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageParameter;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.ImportProjectValidator;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.ImportTestValidator;
 
 /**
  * Class providing test related DSL extensions.
@@ -495,7 +495,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         /**
          * Validator to check import project related DSL options.
          */
-        protected final ImportProjectValidator validator = new ImportProjectValidator();
+        protected final ImportTestValidator validator = new ImportTestValidator();
 
         /**
          * Option defining the import project from archive configuration.
@@ -562,7 +562,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             Preconditions.checkNotNull(importPath, NOT_NULL_MSG, OPT_IMPORT_PATH);
             Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_TIMEOUT);
 
-            FormValidation validation = validator.validateProjectPath(projectPath.toString());
+            FormValidation validation = validator.validateTestPath(projectPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
             validation = validator.validateImportPath(importPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
@@ -645,7 +645,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             Preconditions.checkNotNull(importPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
             Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_PROJECT_PATH);
 
-            FormValidation validation = validator.validateProjectPath(projectDirPath.toString());
+            FormValidation validation = validator.validateTestPath(projectDirPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
             validation = validator.validateImportPath(importPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
