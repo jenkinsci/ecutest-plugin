@@ -31,8 +31,10 @@ def strArchivePath = 'test.prz'
 def strImportPath = 'import'
 def bReplaceFiles = false
 def strCredentialsId = 'credentialsId'
-def strTestPath = 'Root/Test'
-def strTestDirPath = 'Root/TestDir'
+def strPackagePath = 'Subject/Test'
+def strPackageDirPath = 'Subject/TestDir'
+def strProjectPath = 'Root/Test'
+def strProjectDirPath = 'Root/TestDir'
 def bImportMissingPackages = true
 
 freeStyleJob("${strJobName}") {
@@ -135,13 +137,13 @@ freeStyleJob("${strJobName}") {
             }
         }
         importPackages {
-            importFromTMS("${strCredentialsId}", "${strTestPath}", "${strImportPath}", "${strTimeout}")
-            importFromTMS("${strCredentialsId}", "${strTestPath}") {
+            importFromTMS("${strCredentialsId}", "${strPackagePath}", "${strImportPath}", "${strTimeout}")
+            importFromTMS("${strCredentialsId}", "${strPackagePath}") {
                 importPath("${strImportPath}")
                 timeout(intTimeout)
             }
-            importFromTMSDir("${strCredentialsId}", "${strTestDirPath}", "${strImportPath}", "${strTimeout}")
-            importFromTMSDir("${strCredentialsId}", "${strTestDirPath}") {
+            importFromTMSDir("${strCredentialsId}", "${strPackageDirPath}", "${strImportPath}", "${strTimeout}")
+            importFromTMSDir("${strCredentialsId}", "${strPackageDirPath}") {
                 importPath("${strImportPath}")
                 timeout(intTimeout)
             }
@@ -153,14 +155,14 @@ freeStyleJob("${strJobName}") {
                 importConfigPath("${strImportPath}")
                 replaceFiles(bReplaceFiles)
             }
-            importFromTMS("${strCredentialsId}", "${strTestPath}", "${strImportPath}", bImportMissingPackages, "${strTimeout}")
-            importFromTMS("${strCredentialsId}", "${strTestPath}") {
+            importFromTMS("${strCredentialsId}", "${strProjectPath}", "${strImportPath}", bImportMissingPackages, "${strTimeout}")
+            importFromTMS("${strCredentialsId}", "${strProjectPath}") {
                 importPath("${strImportPath}")
                 importMissingPackages(bImportMissingPackages)
                 timeout(intTimeout)
             }
-            importFromTMSDir("${strCredentialsId}", "${strTestDirPath}", "${strImportPath}", "${strTimeout}")
-            importFromTMSDir("${strCredentialsId}", "${strTestDirPath}") {
+            importFromTMSDir("${strCredentialsId}", "${strProjectDirPath}", "${strImportPath}", "${strTimeout}")
+            importFromTMSDir("${strCredentialsId}", "${strProjectDirPath}") {
                 importPath("${strImportPath}")
                 timeout(intTimeout)
             }

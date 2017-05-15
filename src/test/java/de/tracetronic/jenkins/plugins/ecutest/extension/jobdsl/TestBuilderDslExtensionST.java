@@ -90,7 +90,7 @@ public class TestBuilderDslExtensionST extends AbstractDslExtensionST {
         final FreeStyleProject project = createTestJob();
 
         final List<Builder> builders = project.getBuilders();
-        assertThat("Test related build steps should exist", builders, hasSize(4));
+        assertThat("Test related build steps should exist", builders, hasSize(5));
     }
 
     @Test
@@ -201,11 +201,11 @@ public class TestBuilderDslExtensionST extends AbstractDslExtensionST {
     }
 
     private void testImportPackageConfigsWithDsl(final List<ImportPackageConfig> list) throws Exception {
-        assertThat("Package import configurations should exist", list, hasSize(6));
+        assertThat("Package import configurations should exist", list, hasSize(4));
         assertThat((ImportPackageTMSConfig) list.get(0), isA(ImportPackageTMSConfig.class));
         assertThat((ImportPackageTMSConfig) list.get(1), isA(ImportPackageTMSConfig.class));
+        assertThat((ImportPackageDirTMSConfig) list.get(2), isA(ImportPackageDirTMSConfig.class));
         assertThat((ImportPackageDirTMSConfig) list.get(3), isA(ImportPackageDirTMSConfig.class));
-        assertThat((ImportPackageDirTMSConfig) list.get(4), isA(ImportPackageDirTMSConfig.class));
         testPackageTMSSettingsWithDsl((ImportPackageTMSConfig) list.get(0));
         testPackageTMSSettingsWithDsl((ImportPackageTMSConfig) list.get(1));
         testPackageDirTMSSettingsWithDsl((ImportPackageDirTMSConfig) list.get(2));
@@ -213,14 +213,14 @@ public class TestBuilderDslExtensionST extends AbstractDslExtensionST {
     }
 
     private void testPackageTMSSettingsWithDsl(final ImportPackageTMSConfig config) throws Exception {
-        assertThat(config.getPackagePath(), is("Root/Test"));
+        assertThat(config.getPackagePath(), is("Subject/Test"));
         assertThat(config.getImportPath(), is("import"));
         assertThat(config.getCredentialsId(), is("credentialsId"));
         assertThat(config.getTimeout(), is("600"));
     }
 
     private void testPackageDirTMSSettingsWithDsl(final ImportPackageDirTMSConfig config) throws Exception {
-        assertThat(config.getPackagePath(), is("Root/TestDir"));
+        assertThat(config.getPackagePath(), is("Subject/TestDir"));
         assertThat(config.getImportPath(), is("import"));
         assertThat(config.getCredentialsId(), is("credentialsId"));
         assertThat(config.getTimeout(), is("600"));

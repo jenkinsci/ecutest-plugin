@@ -98,13 +98,13 @@ freeStyleJob("testBuilder") {
             }
         }
         importPackages {
-            importFromTMS("credentialsId", "Root/Test", "import", true, "600")
-            importFromTMS("credentialsId", "Root/Test") {
+            importFromTMS("credentialsId", "Subject/Test", "import", "600")
+            importFromTMS("credentialsId", "Subject/Test") {
                 importPath("import")
                 timeout(600)
             }
-            importFromTMSDir("credentialsId", "Root/TestDir", "import", "600")
-            importFromTMSDir("credentialsId", "Root/TestDir") {
+            importFromTMSDir("credentialsId", "Subject/TestDir", "import", "600")
+            importFromTMSDir("credentialsId", "Subject/TestDir") {
                 importPath("import")
                 timeout(600)
             }
