@@ -84,7 +84,7 @@ public class ExportProjectAttributeConfig extends ExportAttributeConfig {
 
         @Override
         public String getDisplayName() {
-            return Messages.ExportPackageAttributeConfig_DisplayName();
+            return Messages.ExportProjectAttributeConfig_DisplayName();
         }
     }
 }
