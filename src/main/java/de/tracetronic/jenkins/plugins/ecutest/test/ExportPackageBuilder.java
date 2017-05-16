@@ -29,16 +29,24 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
+import hudson.DescriptorExtensionList;
 import hudson.Extension;
+import hudson.model.Descriptor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.CheckForNull;
+
+import jenkins.model.Jenkins;
 
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageAttributeConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
 
 /**
  * Builder providing the export of one or multiple ECU-TEST packages.
@@ -58,6 +66,16 @@ public class ExportPackageBuilder extends AbstractExportBuilder {
         super(exportConfigs);
     }
 
+    @CheckForNull
+    @Override
+    public DescriptorImpl getDescriptor() {
+        final Jenkins instance = Jenkins.getInstance();
+        if (instance != null) {
+            return (DescriptorImpl) instance.getDescriptor(ExportPackageConfig.class);
+        }
+        return null;
+    }
+
     /**
      * DescriptorImpl for {@link ExportPackageBuilder}.
      */
@@ -71,6 +89,25 @@ public class ExportPackageBuilder extends AbstractExportBuilder {
         public DescriptorImpl() {
             super(ExportPackageBuilder.class);
             load();
+        }
+
+        /**
+         * Gets the applicable test exporters.
+         *
+         * @return the applicable test exporters
+         */
+        public List<Descriptor<? extends TMSConfig>> getApplicableExporters() {
+            final List<Descriptor<? extends TMSConfig>> list = new ArrayList<>();
+            final DescriptorExtensionList<TMSConfig, Descriptor<TMSConfig>> configs = ExportConfig.all();
+            if (configs != null) {
+                for (final Descriptor<TMSConfig> config : configs) {
+                    if (config.isSubTypeOf(ExportPackageConfig.class) ||
+                            config.isSubTypeOf(ExportPackageAttributeConfig.class)) {
+                        list.add(config);
+                    }
+                }
+            }
+            return list;
         }
 
         @Override

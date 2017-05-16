@@ -35,7 +35,6 @@ import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.TaskListener;
 import hudson.model.Run;
-import hudson.tasks.Builder;
 import hudson.util.FormValidation;
 
 import java.io.IOException;
@@ -43,13 +42,10 @@ import java.io.IOException;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
-import net.sf.json.JSONObject;
-
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.StaplerRequest;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
@@ -167,17 +163,6 @@ public class TestPackageBuilder extends AbstractTestBuilder {
         @Override
         public String getDisplayName() {
             return Messages.TestPackageBuilder_DisplayName();
-        }
-
-        @Override
-        public Builder newInstance(final StaplerRequest req, final JSONObject json) throws FormException {
-            final JSONObject testConfig = json.optJSONObject("testConfig");
-            if (testConfig != null) {
-                // Flip value due to inverted UI behavior
-                final boolean keepConfig = testConfig.optBoolean("keepConfig");
-                testConfig.put("keepConfig", !keepConfig);
-            }
-            return req.bindJSON(clazz, json);
         }
     }
 }
