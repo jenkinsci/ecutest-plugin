@@ -38,8 +38,6 @@ import java.util.List;
 
 import javax.annotation.CheckForNull;
 
-import jenkins.model.Jenkins;
-
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -62,18 +60,8 @@ public class ExportPackageBuilder extends AbstractExportBuilder {
      *            the list of configured package exporters
      */
     @DataBoundConstructor
-    public ExportPackageBuilder(@CheckForNull final List<ExportConfig> exportConfigs) {
+    public ExportPackageBuilder(@CheckForNull final List<TMSConfig> exportConfigs) {
         super(exportConfigs);
-    }
-
-    @CheckForNull
-    @Override
-    public DescriptorImpl getDescriptor() {
-        final Jenkins instance = Jenkins.getInstance();
-        if (instance != null) {
-            return (DescriptorImpl) instance.getDescriptor(ExportPackageConfig.class);
-        }
-        return null;
     }
 
     /**

@@ -170,6 +170,34 @@ public interface ComTestManagement {
             throws ETComException;
 
     /**
+     * Exports the attributes of given package to test management system.
+     *
+     * @param filePath
+     *            the file path of the package whose attributes have to be exported
+     *            (relative to package directory or absolute)
+     * @param timeout
+     *            the timeout in seconds to wait for export to be finished
+     * @return {@code true} if export succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    boolean exportPackageAttributes(String filePath, int timeout) throws ETComException;
+
+    /**
+     * Exports the attributes of given project to test management system.
+     *
+     * @param filePath
+     *            the file path of the project whose attributes have to be exported
+     *            (relative to package directory or absolute)
+     * @param timeout
+     *            the timeout in seconds to wait for export to be finished
+     * @return {@code true} if export succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    boolean exportProjectAttributes(String filePath, int timeout) throws ETComException;
+
+    /**
      * Exports the given report file to test management system.
      * The archive path may be used to copy the report to another directory and to reference
      * it from the test management entry.

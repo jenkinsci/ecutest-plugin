@@ -49,7 +49,6 @@ import de.tracetronic.jenkins.plugins.ecutest.test.TestFolderBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestFolderBuilder.ScanMode;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestPackageBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestProjectBuilder;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageDirTMSConfig;
@@ -62,6 +61,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageParameter;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.TMSValidator;
 
 /**
@@ -1055,7 +1055,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         private static final String OPT_EXPORT_PATH = "exportPath";
         private static final String OPT_CREDENTIALS_ID = "credentialsId";
 
-        private final List<ExportConfig> exportConfigs = new ArrayList<ExportConfig>();
+        private final List<TMSConfig> exportConfigs = new ArrayList<TMSConfig>();
 
         /**
          * Validator to check export package related DSL options.

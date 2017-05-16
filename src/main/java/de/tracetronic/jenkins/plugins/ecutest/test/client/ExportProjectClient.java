@@ -41,8 +41,8 @@ import jenkins.security.MasterToSlaveCallable;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageAttributeConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportProjectAttributeConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
 import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
@@ -51,33 +51,33 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
 
 /**
- * Client to export ECU-TEST packages via COM interface.
+ * Client to export ECU-TEST projects via COM interface.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ExportPackageClient extends AbstractTMSClient {
+public class ExportProjectClient extends AbstractTMSClient {
 
     private final TMSConfig exportConfig;
 
     /**
-     * Instantiates a new {@link ExportPackageClient}.
+     * Instantiates a new {@link ExportProjectClient}.
      *
      * @param exportConfig
      *            the export configuration
      */
-    public ExportPackageClient(final TMSConfig exportConfig) {
+    public ExportProjectClient(final TMSConfig exportConfig) {
         this.exportConfig = exportConfig;
     }
 
     /**
-     * @return the export package configuration
+     * @return the export project configuration
      */
     public TMSConfig getExportConfig() {
         return exportConfig;
     }
 
     /**
-     * Exports a package according to given export configuration.
+     * Exports a project according to given export configuration.
      *
      * @param workspace
      *            the workspace
@@ -91,7 +91,7 @@ public class ExportPackageClient extends AbstractTMSClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    public boolean exportPackage(final FilePath workspace, final Launcher launcher, final TaskListener listener)
+    public boolean exportProject(final FilePath workspace, final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
@@ -104,10 +104,10 @@ public class ExportPackageClient extends AbstractTMSClient {
         boolean isExported = false;
         if (isTMSAvailable(launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = ((ExportPackageConfig) exportConfig)
+                final StandardUsernamePasswordCredentials credentials = ((ExportProjectConfig) exportConfig)
                         .getCredentials();
                 if (login(credentials, launcher, listener)) {
-                    isExported = exportPackageToTMS(launcher, listener);
+                    isExported = exportProjectToTMS(launcher, listener);
                 }
             } finally {
                 logout(launcher, listener);
@@ -117,7 +117,7 @@ public class ExportPackageClient extends AbstractTMSClient {
     }
 
     /**
-     * Exports package attributes according to given export configuration.
+     * Exports project attributes according to given export configuration.
      *
      * @param workspace
      *            the workspace
@@ -131,9 +131,9 @@ public class ExportPackageClient extends AbstractTMSClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    public boolean exportPackageAttributes(final FilePath workspace, final Launcher launcher,
+    public boolean exportProjectAttributes(final FilePath workspace, final Launcher launcher,
             final TaskListener listener)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -145,10 +145,10 @@ public class ExportPackageClient extends AbstractTMSClient {
         boolean isExported = false;
         if (isTMSAvailable(launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = ((ExportPackageAttributeConfig) exportConfig)
+                final StandardUsernamePasswordCredentials credentials = ((ExportProjectAttributeConfig) exportConfig)
                         .getCredentials();
                 if (login(credentials, launcher, listener)) {
-                    isExported = exportPackageAttributesToTMS(launcher, listener);
+                    isExported = exportProjectAttributesToTMS(launcher, listener);
                 }
             } finally {
                 logout(launcher, listener);
@@ -158,7 +158,7 @@ public class ExportPackageClient extends AbstractTMSClient {
     }
 
     /**
-     * Exports a package to test management service.
+     * Exports a project to test management service.
      *
      * @param launcher
      *            the launcher
@@ -170,14 +170,14 @@ public class ExportPackageClient extends AbstractTMSClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private boolean exportPackageToTMS(final Launcher launcher, final TaskListener listener)
+    private boolean exportProjectToTMS(final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
         return launcher.getChannel().call(
-                new ExportPackageCallable((ExportPackageConfig) exportConfig, listener));
+                new ExportProjectCallable((ExportProjectConfig) exportConfig, listener));
     }
 
     /**
-     * Exports package attributes to test management service.
+     * Exports project attributes to test management service.
      *
      * @param launcher
      *            the launcher
@@ -189,31 +189,31 @@ public class ExportPackageClient extends AbstractTMSClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private boolean exportPackageAttributesToTMS(final Launcher launcher, final TaskListener listener)
+    private boolean exportProjectAttributesToTMS(final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
         return launcher.getChannel().call(
-                new ExportPackageAttributeCallable((ExportPackageAttributeConfig) exportConfig, listener));
+                new ExportProjectAttributeCallable((ExportProjectAttributeConfig) exportConfig, listener));
     }
 
     /**
-     * {@link Callable} providing remote access to export a package to test management system via COM.
+     * {@link Callable} providing remote access to export a project to test management system via COM.
      */
-    private static final class ExportPackageCallable extends MasterToSlaveCallable<Boolean, IOException> {
+    private static final class ExportProjectCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
-        private final ExportPackageConfig exportConfig;
+        private final ExportProjectConfig exportConfig;
         private final TaskListener listener;
 
         /**
-         * Instantiates a new {@link ExportPackageCallable}.
+         * Instantiates a new {@link ExportProjectCallable}.
          *
          * @param exportConfig
          *            the export configuration
          * @param listener
          *            the listener
          */
-        ExportPackageCallable(final ExportPackageConfig exportConfig, final TaskListener listener) {
+        ExportProjectCallable(final ExportProjectConfig exportConfig, final TaskListener listener) {
             this.exportConfig = exportConfig;
             this.listener = listener;
         }
@@ -222,42 +222,42 @@ public class ExportPackageClient extends AbstractTMSClient {
         public Boolean call() throws IOException {
             boolean isExported = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            logger.logInfo(String.format("- Exporting package %s to test management system...",
+            logger.logInfo(String.format("- Exporting project %s to test management system...",
                     exportConfig.getFilePath()));
             final String progId = ETComProgId.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
-                if (isExported = tm.exportPackage(exportConfig.getFilePath(), exportConfig.getExportPath(),
+                if (isExported = tm.exportProject(exportConfig.getFilePath(), exportConfig.getExportPath(),
                         exportConfig.getParsedTimeout())) {
-                    logger.logInfo(String.format("-> Package exported successfully to target directory %s.",
+                    logger.logInfo(String.format("-> Project exported successfully to target directory %s.",
                             exportConfig.getExportPath()));
                 }
             } catch (final ETComException e) {
-                logger.logError("-> Exporting package failed: " + e.getMessage());
+                logger.logError("-> Exporting project failed: " + e.getMessage());
             }
             return isExported;
         }
     }
 
     /**
-     * {@link Callable} providing remote access to export package attributes to test management system via COM.
+     * {@link Callable} providing remote access to export project attributes to test management system via COM.
      */
-    private static final class ExportPackageAttributeCallable extends MasterToSlaveCallable<Boolean, IOException> {
+    private static final class ExportProjectAttributeCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
-        private final ExportPackageAttributeConfig exportConfig;
+        private final ExportProjectAttributeConfig exportConfig;
         private final TaskListener listener;
 
         /**
-         * Instantiates a new {@link ExportPackageAttributeCallable}.
+         * Instantiates a new {@link ExportProjectAttributeCallable}.
          *
          * @param exportConfig
          *            the export configuration
          * @param listener
          *            the listener
          */
-        ExportPackageAttributeCallable(final ExportPackageAttributeConfig exportConfig, final TaskListener listener) {
+        ExportProjectAttributeCallable(final ExportProjectAttributeConfig exportConfig, final TaskListener listener) {
             this.exportConfig = exportConfig;
             this.listener = listener;
         }
@@ -266,17 +266,17 @@ public class ExportPackageClient extends AbstractTMSClient {
         public Boolean call() throws IOException {
             boolean isExported = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            logger.logInfo(String.format("- Exporting attributes of package %s to test management system...",
+            logger.logInfo(String.format("- Exporting attributes of project %s to test management system...",
                     exportConfig.getFilePath()));
             final String progId = ETComProgId.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
-                if (isExported = tm.exportPackageAttributes(exportConfig.getFilePath(),
+                if (isExported = tm.exportProjectAttributes(exportConfig.getFilePath(),
                         exportConfig.getParsedTimeout())) {
-                    logger.logInfo("-> Package attributes exported successfully.");
+                    logger.logInfo("-> Project attributes exported successfully.");
                 }
             } catch (final ETComException e) {
-                logger.logError("-> Exporting package attributes failed: " + e.getMessage());
+                logger.logError("-> Exporting project attributes failed: " + e.getMessage());
             }
             return isExported;
         }

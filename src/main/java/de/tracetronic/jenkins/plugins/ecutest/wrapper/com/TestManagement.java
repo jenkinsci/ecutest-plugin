@@ -280,6 +280,52 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     }
 
     /**
+     * Same as {@link #exportPackageAttributes(String, int)} but without timeout.
+     *
+     * @param filePath
+     *            the file path of the package whose attributes have to be exported
+     *            (relative to package directory or absolute)
+     * @return {@code true} if export succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    public boolean exportPackageAttributes(final String filePath) throws ETComException {
+        return exportPackageAttributes(filePath, 0);
+    }
+
+    @Override
+    public boolean exportPackageAttributes(final String filePath, final int timeout) throws ETComException {
+        if (timeout == 0) {
+            return performRequest("ExportPackageAttributes", new Variant(filePath)).getBoolean();
+        } else {
+            return performRequest("ExportPackageAttributes", new Variant(filePath), new Variant(timeout)).getBoolean();
+        }
+    }
+
+    /**
+     * Same as {@link #exportProjectAttributes(String, int)} but without timeout.
+     *
+     * @param filePath
+     *            the file path of the project whose attributes have to be exported
+     *            (relative to package directory or absolute)
+     * @return {@code true} if export succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    public boolean exportProjectAttributes(final String filePath) throws ETComException {
+        return exportProjectAttributes(filePath, 0);
+    }
+
+    @Override
+    public boolean exportProjectAttributes(final String filePath, final int timeout) throws ETComException {
+        if (timeout == 0) {
+            return performRequest("ExportProjectAttributes", new Variant(filePath)).getBoolean();
+        } else {
+            return performRequest("ExportProjectAttributes", new Variant(filePath), new Variant(timeout)).getBoolean();
+        }
+    }
+
+    /**
      * Same as {@link #exportReport(String, String, int)} but without archive path.
      *
      * @param filePath

@@ -60,7 +60,7 @@ public class ExportProjectBuilder extends AbstractExportBuilder {
      *            the list of configured project exporters
      */
     @DataBoundConstructor
-    public ExportProjectBuilder(@CheckForNull final List<ExportConfig> exportConfigs) {
+    public ExportProjectBuilder(@CheckForNull final List<TMSConfig> exportConfigs) {
         super(exportConfigs);
     }
 

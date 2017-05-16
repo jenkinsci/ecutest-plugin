@@ -104,8 +104,8 @@ public abstract class ExportConfig extends TMSConfig {
                     && (exportPath == null ? thatExportPath == null : exportPath.equals(thatExportPath))
                     && createNewPath == that.isCreateNewPath()
                     && (getCredentialsId() == null ? that.getCredentialsId() == null :
-                            getCredentialsId().equals(that.getCredentialsId()))
-                    && (getTimeout() == null ? that.getTimeout() == null :
+                        getCredentialsId().equals(that.getCredentialsId()))
+                        && (getTimeout() == null ? that.getTimeout() == null :
                             getTimeout().equals(that.getTimeout()));
         }
         return result;
@@ -129,9 +129,7 @@ public abstract class ExportConfig extends TMSConfig {
          *            the file path to export
          * @return the form validation
          */
-        public FormValidation doCheckFilePath(@QueryParameter final String value) {
-            return tmsValidator.validatePackageFile(value);
-        }
+        public abstract FormValidation doCheckFilePath(@QueryParameter String value);
 
         /**
          * Validates the export target path.

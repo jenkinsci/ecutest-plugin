@@ -31,8 +31,10 @@ package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
 import hudson.EnvVars;
 import hudson.Extension;
+import hudson.util.FormValidation;
 
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 
 import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
 import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
@@ -72,8 +74,13 @@ public class ExportProjectAttributeConfig extends ExportAttributeConfig {
     /**
      * DescriptorImpl for {@link ExportProjectAttributeConfig}.
      */
-    @Extension(ordinal = 2)
+    @Extension(ordinal = 1)
     public static class DescriptorImpl extends ExportConfig.DescriptorImpl {
+
+        @Override
+        public FormValidation doCheckFilePath(@QueryParameter final String value) {
+            return tmsValidator.validateProjectFile(value);
+        }
 
         @Override
         public String getDisplayName() {

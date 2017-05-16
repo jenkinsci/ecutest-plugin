@@ -57,8 +57,14 @@ import org.kohsuke.stapler.DataBoundSetter;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.ExportPackageClient;
+import de.tracetronic.jenkins.plugins.ecutest.test.client.ExportProjectClient;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportAttributeConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageAttributeConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportProjectAttributeConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 
 /**
@@ -69,7 +75,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 public class AbstractExportBuilder extends AbstractTestHelper implements SimpleBuildStep {
 
     @Nonnull
-    private final List<ExportConfig> exportConfigs;
+    private final List<TMSConfig> exportConfigs;
 
     /**
      * Instantiates a new {@link AbstractExportBuilder}.
@@ -78,8 +84,8 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
      *            the list of configured test exporters
      */
     @DataBoundConstructor
-    public AbstractExportBuilder(@CheckForNull final List<ExportConfig> exportConfigs) {
-        this.exportConfigs = (List<ExportConfig>) (exportConfigs == null ? new ArrayList<ExportConfig>()
+    public AbstractExportBuilder(@CheckForNull final List<TMSConfig> exportConfigs) {
+        this.exportConfigs = (List<TMSConfig>) (exportConfigs == null ? new ArrayList<TMSConfig>()
                 : removeEmptyConfigs(exportConfigs));
     }
 
@@ -87,7 +93,7 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
      * @return the list of configured test exporters
      */
     @Nonnull
-    public List<ExportConfig> getExportConfigs() {
+    public List<TMSConfig> getExportConfigs() {
         return Collections.unmodifiableList(exportConfigs);
     }
 
@@ -96,7 +102,7 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
      *            the list of configured test exporters
      */
     @DataBoundSetter
-    public void setExportConfigs(@CheckForNull final List<ExportConfig> exportConfigs) {
+    public void setExportConfigs(@CheckForNull final List<TMSConfig> exportConfigs) {
         this.exportConfigs.addAll(exportConfigs);
     }
 
@@ -107,12 +113,20 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
      *            the export configurations
      * @return the list of valid export configurations
      */
-    private static List<ExportConfig> removeEmptyConfigs(final List<ExportConfig> exportConfigs) {
-        final List<ExportConfig> validConfigs = new ArrayList<ExportConfig>();
-        for (final ExportConfig config : exportConfigs) {
-            if (StringUtils.isNotBlank(config.getFilePath())
-                    && StringUtils.isNotBlank(config.getExportPath())) {
-                validConfigs.add(config);
+    private static List<TMSConfig> removeEmptyConfigs(final List<TMSConfig> exportConfigs) {
+        final List<TMSConfig> validConfigs = new ArrayList<TMSConfig>();
+        for (final TMSConfig config : exportConfigs) {
+            if (config instanceof ExportConfig) {
+                final ExportConfig pkgConfig = (ExportConfig) config;
+                if (StringUtils.isNotBlank(pkgConfig.getFilePath())
+                        && StringUtils.isNotBlank(pkgConfig.getExportPath())) {
+                    validConfigs.add(config);
+                }
+            } else if (config instanceof ExportAttributeConfig) {
+                final ExportAttributeConfig pkgAttrConfig = (ExportAttributeConfig) config;
+                if (StringUtils.isNotBlank(pkgAttrConfig.getFilePath())) {
+                    validConfigs.add(config);
+                }
             }
         }
         return validConfigs;
@@ -169,15 +183,35 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
             return false;
         }
 
-        for (final ExportConfig exportConfig : exportConfigs) {
+        for (final TMSConfig exportConfig : exportConfigs) {
             // Expand export configuration
             final EnvVars buildEnv = run.getEnvironment(listener);
-            final ExportConfig expExportConfig = (ExportConfig) exportConfig.expand(buildEnv);
-
-            // Export package
+            final TMSConfig expExportConfig = (TMSConfig) exportConfig.expand(buildEnv);
             if (exportConfig instanceof ExportPackageConfig) {
+                // Export package
                 final ExportPackageClient exportClient = new ExportPackageClient((ExportPackageConfig) expExportConfig);
                 if (!exportClient.exportPackage(workspace, launcher, listener)) {
+                    return false;
+                }
+            } else if (exportConfig instanceof ExportPackageAttributeConfig) {
+                // Export package attributes
+                final ExportPackageClient exportClient = new ExportPackageClient(
+                        (ExportPackageAttributeConfig) expExportConfig);
+                if (!exportClient.exportPackageAttributes(workspace, launcher, listener)) {
+                    return false;
+                }
+            } else if (exportConfig instanceof ExportProjectConfig) {
+                // Export project
+                final ExportProjectClient exportClient = new ExportProjectClient(
+                        (ExportProjectConfig) expExportConfig);
+                if (!exportClient.exportProject(workspace, launcher, listener)) {
+                    return false;
+                }
+            } else if (exportConfig instanceof ExportProjectAttributeConfig) {
+                // Export project attributes
+                final ExportProjectClient exportClient = new ExportProjectClient(
+                        (ExportProjectAttributeConfig) expExportConfig);
+                if (!exportClient.exportProjectAttributes(workspace, launcher, listener)) {
                     return false;
                 }
             }
