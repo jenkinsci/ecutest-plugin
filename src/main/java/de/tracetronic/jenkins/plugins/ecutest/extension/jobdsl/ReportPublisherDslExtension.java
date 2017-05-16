@@ -53,8 +53,8 @@ import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.tms.TMSPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.ImportTestValidator;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ReportGeneratorValidator;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.TMSValidator;
 
 /**
  * Class providing report related DSL extensions.
@@ -591,7 +591,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         /**
          * Validator to check report project import related DSL options.
          */
-        protected final ImportTestValidator importValidator = new ImportTestValidator();
+        protected final TMSValidator tmsValidator = new TMSValidator();
 
         private String timeout;
 
@@ -602,7 +602,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
          *            the value
          */
         public void timeout(final String value) {
-            final FormValidation validation = importValidator.validateTimeout(value, TMSPublisher.getDefaultTimeout());
+            final FormValidation validation = tmsValidator.validateTimeout(value, TMSPublisher.getDefaultTimeout());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
             timeout = value;
         }

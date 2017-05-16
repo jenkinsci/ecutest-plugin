@@ -184,7 +184,7 @@ public class ImportPackageTMSConfig extends ImportPackageConfig {
 
         @Override
         public FormValidation doCheckPackagePath(@QueryParameter final String value) {
-            return importValidator.validateTestPath(value);
+            return tmsValidator.validateTestPath(value);
         }
 
         /**
@@ -195,7 +195,7 @@ public class ImportPackageTMSConfig extends ImportPackageConfig {
          * @return the form validation
          */
         public FormValidation doCheckTimeout(@QueryParameter final String value) {
-            return importValidator.validateTimeout(value, getDefaultTimeout());
+            return tmsValidator.validateTimeout(value, getDefaultTimeout());
         }
 
         @Override

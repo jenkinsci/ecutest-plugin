@@ -72,7 +72,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.ImportTestValidator;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.TMSValidator;
 
 /**
  * Publisher providing the export of reports to a test management system.
@@ -253,7 +253,7 @@ public class TMSPublisher extends AbstractReportPublisher {
         /**
          * Validator to check form fields.
          */
-        private final ImportTestValidator importValidator = new ImportTestValidator();
+        private final TMSValidator tmsValidator = new TMSValidator();
 
         /**
          * Instantiates a new {@link DescriptorImpl}.
@@ -277,7 +277,7 @@ public class TMSPublisher extends AbstractReportPublisher {
          * @return the form validation
          */
         public FormValidation doCheckTimeout(@QueryParameter final String value) {
-            return importValidator.validateTimeout(value, getDefaultTimeout());
+            return tmsValidator.validateTimeout(value, getDefaultTimeout());
         }
 
         /**

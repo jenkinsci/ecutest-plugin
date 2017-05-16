@@ -53,7 +53,7 @@ import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.ImportTestValidator;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.TMSValidator;
 
 /**
  * Common base class for {@link ImportProjectArchiveConfig}, {@link ImportProjectTMSConfig} and
@@ -129,7 +129,7 @@ public abstract class ImportProjectConfig implements Describable<ImportProjectCo
         /**
          * Validator to check form fields.
          */
-        protected final ImportTestValidator importValidator = new ImportTestValidator();
+        protected final TMSValidator tmsValidator = new TMSValidator();
 
         /**
          * Validates the project path to import.
@@ -148,7 +148,7 @@ public abstract class ImportProjectConfig implements Describable<ImportProjectCo
          * @return the form validation
          */
         public FormValidation doCheckImportPath(@QueryParameter final String value) {
-            return importValidator.validateImportPath(value);
+            return tmsValidator.validateImportPath(value);
         }
 
         /**

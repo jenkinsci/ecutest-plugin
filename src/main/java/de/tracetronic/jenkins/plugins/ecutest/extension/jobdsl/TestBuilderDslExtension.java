@@ -42,12 +42,15 @@ import javaposse.jobdsl.plugin.DslExtensionMethod;
 import com.google.common.base.Preconditions;
 
 import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.test.ExportPackageBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.ImportPackageBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.ImportProjectBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestFolderBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestFolderBuilder.ScanMode;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestPackageBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestProjectBuilder;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageDirTMSConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageTMSConfig;
@@ -59,7 +62,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageParameter;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.ImportTestValidator;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.TMSValidator;
 
 /**
  * Class providing test related DSL extensions.
@@ -184,7 +187,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
      *
      * @param closure
      *            the nested Groovy closure
-     * @return the instance of a {@link ImportProjectBuilder}
+     * @return the instance of a {@link ImportPackageBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
     public Object importPackages(final Runnable closure) {
@@ -196,9 +199,9 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
     }
 
     /**
-     * {@link DslExtensionMethod} providing the import of packages test management system with default settings.
+     * {@link DslExtensionMethod} providing the import of packages from test management system with default settings.
      *
-     * @return the instance of a {@link ReportGeneratorPublisher}
+     * @return the instance of a {@link ImportPackageBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
     public Object importPackages() {
@@ -225,11 +228,37 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
      * {@link DslExtensionMethod} providing the import of projects from archive
      * and test management system with default settings.
      *
-     * @return the instance of a {@link ReportGeneratorPublisher}
+     * @return the instance of a {@link ImportProjectBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
     public Object importProjects() {
         return importProjects(null);
+    }
+
+    /**
+     * {@link DslExtensionMethod} providing the export of packages to test management system.
+     *
+     * @param closure
+     *            the nested Groovy closure
+     * @return the instance of a {@link ExportPackageBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object exportPackages(final Runnable closure) {
+        final ExportPackageContext context = new ExportPackageContext();
+        executeInContext(closure, context);
+
+        final ExportPackageBuilder builder = new ExportPackageBuilder(context.exportConfigs);
+        return builder;
+    }
+
+    /**
+     * {@link DslExtensionMethod} providing the export of packages to test management system with default settings.
+     *
+     * @return the instance of a {@link ReportGeneratorPublisher}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object exportPackages() {
+        return exportPackages(null);
     }
 
     /**
@@ -523,7 +552,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         /**
          * Validator to check import package related DSL options.
          */
-        protected final ImportTestValidator validator = new ImportTestValidator();
+        protected final TMSValidator validator = new TMSValidator();
 
         /**
          * Option defining the import package from test management system configuration.
@@ -725,7 +754,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         /**
          * Validator to check import project related DSL options.
          */
-        protected final ImportTestValidator validator = new ImportTestValidator();
+        protected final TMSValidator validator = new TMSValidator();
 
         /**
          * Option defining the import project from archive configuration.
@@ -1013,6 +1042,123 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
              */
             public void importMissingPackages(final boolean value) {
                 importMissingPackages = value;
+            }
+        }
+    }
+
+    /**
+     * {@link Context} class providing export package methods for the nested DSL context.
+     */
+    public class ExportPackageContext extends AbstractTestContext {
+
+        private static final String OPT_PACKAGE_PATH = "packagePath";
+        private static final String OPT_EXPORT_PATH = "exportPath";
+        private static final String OPT_CREDENTIALS_ID = "credentialsId";
+
+        private final List<ExportConfig> exportConfigs = new ArrayList<ExportConfig>();
+
+        /**
+         * Validator to check export package related DSL options.
+         */
+        protected final TMSValidator validator = new TMSValidator();
+
+        /**
+         * Option defining the export package from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param exportPath
+         *            the export path
+         * @param createNewPath
+         *            specifies whether missing export path will be created
+         * @param timeout
+         *            the export timeout
+         */
+        public void exportFromTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final CharSequence exportPath, final boolean createNewPath, final CharSequence timeout) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(packagePath, NOT_NULL_MSG, OPT_PACKAGE_PATH);
+            Preconditions.checkNotNull(exportPath, NOT_NULL_MSG, OPT_EXPORT_PATH);
+            Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_TIMEOUT);
+
+            FormValidation validation = validator.validatePackageFile(packagePath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            validation = validator.validateExportPath(exportPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            exportConfigs.add(new ExportPackageConfig(packagePath.toString(), exportPath.toString(), createNewPath,
+                    credentialsId.toString(), timeout.toString()));
+        }
+
+        /**
+         * Option defining the export package from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param exportPath
+         *            the export path
+         * @param timeout
+         *            the export timeout
+         */
+        public void exportFromTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final CharSequence exportPath, final int timeout) {
+            exportFromTMS(credentialsId, packagePath, exportPath, false, String.valueOf(timeout));
+        }
+
+        /**
+         * {@link Context} class providing common export package methods for the nested DSL context.
+         */
+        public class AbstractExportPackageContext implements Context {
+
+            /**
+             * The export path.
+             */
+            protected String exportPath;
+
+            /**
+             * Option defining the export path.
+             *
+             * @param value
+             *            the value
+             */
+            public void exportPath(final String value) {
+                final FormValidation validation = validator.validateExportPath(value);
+                Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+                exportPath = value;
+            }
+        }
+
+        /**
+         * {@link Context} class providing the export from test management system methods for the nested DSL context.
+         */
+        public class ExportTMSContext extends AbstractExportPackageContext {
+
+            private String timeout = String.valueOf(ExportPackageConfig.getDefaultTimeout());
+
+            /**
+             * Option defining the export timeout.
+             *
+             * @param value
+             *            the value
+             */
+            public void timeout(final String value) {
+                final FormValidation validation = validator.validateTimeout(value,
+                        ExportPackageConfig.getDefaultTimeout());
+                Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+                timeout = value;
+            }
+
+            /**
+             * Option defining the export timeout.
+             *
+             * @param value
+             *            the value as Integer
+             */
+            public void timeout(final int value) {
+                timeout(String.valueOf((Object) value));
             }
         }
     }

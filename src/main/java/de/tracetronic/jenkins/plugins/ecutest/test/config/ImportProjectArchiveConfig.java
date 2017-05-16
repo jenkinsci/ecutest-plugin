@@ -125,7 +125,7 @@ public class ImportProjectArchiveConfig extends ImportProjectConfig {
 
         @Override
         public FormValidation doCheckProjectPath(@QueryParameter final String value) {
-            return importValidator.validateArchivePath(value);
+            return tmsValidator.validateArchivePath(value);
         }
 
         /**
@@ -136,7 +136,7 @@ public class ImportProjectArchiveConfig extends ImportProjectConfig {
          * @return the form validation
          */
         public FormValidation doCheckImportConfigPath(@QueryParameter final String value) {
-            return importValidator.validateImportConfigPath(value);
+            return tmsValidator.validateImportConfigPath(value);
         }
 
         @Override

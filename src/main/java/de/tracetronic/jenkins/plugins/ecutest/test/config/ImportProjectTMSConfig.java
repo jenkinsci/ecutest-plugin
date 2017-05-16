@@ -200,7 +200,7 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
 
         @Override
         public FormValidation doCheckProjectPath(@QueryParameter final String value) {
-            return importValidator.validateTestPath(value);
+            return tmsValidator.validateTestPath(value);
         }
 
         /**
@@ -211,7 +211,7 @@ public class ImportProjectTMSConfig extends ImportProjectConfig {
          * @return the form validation
          */
         public FormValidation doCheckTimeout(@QueryParameter final String value) {
-            return importValidator.validateTimeout(value, getDefaultTimeout());
+            return tmsValidator.validateTimeout(value, getDefaultTimeout());
         }
 
         @Override

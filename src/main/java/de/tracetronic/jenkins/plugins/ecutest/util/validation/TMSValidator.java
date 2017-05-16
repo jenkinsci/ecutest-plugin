@@ -40,7 +40,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ExportTestValidator extends AbstractValidator {
+public class TMSValidator extends AbstractValidator {
 
     /**
      * Validates the package file.
@@ -70,5 +70,57 @@ public class ExportTestValidator extends AbstractValidator {
      */
     public FormValidation validateExportPath(final String exportPath) {
         return validateRequiredParamValue(exportPath);
+    }
+
+    /**
+     * Validates the test path to import.
+     *
+     * @param testPath
+     *            the test path to import
+     * @return the form validation
+     */
+    public FormValidation validateTestPath(final String testPath) {
+        return validateRequiredParamValue(testPath);
+    }
+
+    /**
+     * Validates the project archive path to import.
+     *
+     * @param archivePath
+     *            the project archive to import
+     * @return the form validation
+     */
+    public FormValidation validateArchivePath(final String archivePath) {
+        FormValidation returnValue = FormValidation.ok();
+        if (StringUtils.isBlank(archivePath)) {
+            returnValue = FormValidation.validateRequired(archivePath);
+        } else if (archivePath.contains(PARAMETER)) {
+            returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
+        } else if (!archivePath.endsWith(".prz")) {
+            returnValue = FormValidation.error(Messages.ImportProjectBuilder_PrzFileExtension());
+        }
+        return returnValue;
+    }
+
+    /**
+     * Validates the import target path.
+     *
+     * @param importPath
+     *            the import path
+     * @return the form validation
+     */
+    public FormValidation validateImportPath(final String importPath) {
+        return validateParameterizedValue(importPath);
+    }
+
+    /**
+     * Validates the import configuration target path.
+     *
+     * @param importConfigPath
+     *            the import configuration path
+     * @return the form validation
+     */
+    public FormValidation validateImportConfigPath(final String importConfigPath) {
+        return validateParameterizedValue(importConfigPath);
     }
 }
