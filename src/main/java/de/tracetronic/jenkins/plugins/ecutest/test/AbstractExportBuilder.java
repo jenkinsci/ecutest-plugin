@@ -30,14 +30,12 @@
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
 import hudson.AbortException;
-import hudson.DescriptorExtensionList;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
 import hudson.model.TaskListener;
 import hudson.model.AbstractProject;
-import hudson.model.Descriptor;
 import hudson.model.Run;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
@@ -206,21 +204,6 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
         @Override
         public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
             return true;
-        }
-
-        /**
-         * Gets the applicable test exporters.
-         *
-         * @return the applicable test exporters
-         */
-        public List<Descriptor<? extends ExportConfig>> getApplicableExporters() {
-            final List<Descriptor<? extends ExportConfig>> list = new ArrayList<>();
-            final DescriptorExtensionList<ExportConfig, Descriptor<ExportConfig>> configs =
-                    ExportConfig.all();
-            if (configs != null) {
-                list.addAll(configs);
-            }
-            return list;
         }
     }
 }
