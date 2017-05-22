@@ -133,7 +133,7 @@ public class ExportProjectClient extends AbstractTMSClient {
      */
     public boolean exportProjectAttributes(final FilePath workspace, final Launcher launcher,
             final TaskListener listener)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -228,7 +228,7 @@ public class ExportProjectClient extends AbstractTMSClient {
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 if (isExported = tm.exportProject(exportConfig.getFilePath(), exportConfig.getExportPath(),
-                        exportConfig.getParsedTimeout())) {
+                        exportConfig.isCreateNewPath(), exportConfig.getParsedTimeout())) {
                     logger.logInfo(String.format("-> Project exported successfully to target directory %s.",
                             exportConfig.getExportPath()));
                 }

@@ -101,6 +101,8 @@ public class ExportPackageClient extends AbstractTMSClient {
             return false;
         }
 
+        // TODO: Check ET version
+
         boolean isExported = false;
         if (isTMSAvailable(launcher, listener)) {
             try {
@@ -228,7 +230,7 @@ public class ExportPackageClient extends AbstractTMSClient {
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 if (isExported = tm.exportPackage(exportConfig.getFilePath(), exportConfig.getExportPath(),
-                        exportConfig.getParsedTimeout())) {
+                        exportConfig.isCreateNewPath(), exportConfig.getParsedTimeout())) {
                     logger.logInfo(String.format("-> Package exported successfully to target directory %s.",
                             exportConfig.getExportPath()));
                 }
