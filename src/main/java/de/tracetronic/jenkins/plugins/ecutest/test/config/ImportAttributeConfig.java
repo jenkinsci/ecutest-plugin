@@ -36,33 +36,33 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.QueryParameter;
 
 /**
- * Common base class for {@link ExportPackageAttributeConfig} and {@link ExportProjectAttributeConfig}.
+ * Common base class for {@link ImportPackageAttributeConfig} and {@link ImportProjectAttributeConfig}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class ExportAttributeConfig extends TMSConfig {
+public abstract class ImportAttributeConfig extends TMSConfig {
 
     private static final long serialVersionUID = 1L;
 
     private final String filePath;
 
     /**
-     * Instantiates a new {@link ExportAttributeConfig}.
+     * Instantiates a new {@link ImportAttributeConfig}.
      *
      * @param filePath
-     *            the test file path whose attributes to export
+     *            the test file path whose attributes to import
      * @param credentialsId
      *            the credentials id
      * @param timeout
-     *            the export timeout
+     *            the import timeout
      */
-    public ExportAttributeConfig(final String filePath, final String credentialsId, final String timeout) {
+    public ImportAttributeConfig(final String filePath, final String credentialsId, final String timeout) {
         super(credentialsId, timeout);
         this.filePath = StringUtils.trimToEmpty(filePath);
     }
 
     /**
-     * @return the test file path whose attributes to export
+     * @return the test file path whose attributes to import
      */
     public String getFilePath() {
         return filePath;
@@ -71,8 +71,8 @@ public abstract class ExportAttributeConfig extends TMSConfig {
     @Override
     public final boolean equals(final Object other) {
         boolean result = false;
-        if (other instanceof ExportAttributeConfig) {
-            final ExportAttributeConfig that = (ExportAttributeConfig) other;
+        if (other instanceof ImportAttributeConfig) {
+            final ImportAttributeConfig that = (ImportAttributeConfig) other;
             final String filePath = getFilePath();
             final String thatFilePath = that.getFilePath();
             result = (filePath == null ? thatFilePath == null : filePath.equals(thatFilePath))
@@ -91,15 +91,15 @@ public abstract class ExportAttributeConfig extends TMSConfig {
     }
 
     /**
-     * DescriptorImpl for {@link ExportAttributeConfig}.
+     * DescriptorImpl for {@link ImportAttributeConfig}.
      */
     public abstract static class DescriptorImpl extends TMSConfig.DescriptorImpl {
 
         /**
-         * Validates the file path to export.
+         * Validates the file path to import.
          *
          * @param value
-         *            the file path to export
+         *            the file path to import
          * @return the form validation
          */
         public FormValidation doCheckFilePath(@QueryParameter final String value) {
@@ -107,14 +107,14 @@ public abstract class ExportAttributeConfig extends TMSConfig {
         }
 
         /**
-         * Validates the export target path.
+         * Validates the import target path.
          *
          * @param value
-         *            the export path
+         *            the import path
          * @return the form validation
          */
-        public FormValidation doCheckExportPath(@QueryParameter final String value) {
-            return tmsValidator.validateExportPath(value);
+        public FormValidation doCheckImportPath(@QueryParameter final String value) {
+            return tmsValidator.validateImportPath(value);
         }
     }
 }
