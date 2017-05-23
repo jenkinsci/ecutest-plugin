@@ -190,6 +190,52 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     }
 
     /**
+     * Same as {@link #importPackageAttributes(String, int)} but without timeout.
+     *
+     * @param filePath
+     *            the file path of the package whose attributes have to be imported
+     *            (relative to package directory or absolute)
+     * @return {@code true} if import succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    public boolean importPackageAttributes(final String filePath) throws ETComException {
+        return importPackageAttributes(filePath, 0);
+    }
+
+    @Override
+    public boolean importPackageAttributes(final String filePath, final int timeout) throws ETComException {
+        if (timeout == 0) {
+            return performRequest("ImportPackageAttributes", new Variant(filePath)).getBoolean();
+        } else {
+            return performRequest("ImportPackageAttributes", new Variant(filePath), new Variant(timeout)).getBoolean();
+        }
+    }
+
+    /**
+     * Same as {@link #importProjectAttributes(String, int)} but without timeout.
+     *
+     * @param filePath
+     *            the file path of the project whose attributes have to be imported
+     *            (relative to package directory or absolute)
+     * @return {@code true} if import succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    public boolean importProjectAttributes(final String filePath) throws ETComException {
+        return importProjectAttributes(filePath, 0);
+    }
+
+    @Override
+    public boolean importProjectAttributes(final String filePath, final int timeout) throws ETComException {
+        if (timeout == 0) {
+            return performRequest("ImportProjectAttributes", new Variant(filePath)).getBoolean();
+        } else {
+            return performRequest("ImportProjectAttributes", new Variant(filePath), new Variant(timeout)).getBoolean();
+        }
+    }
+
+    /**
      * Same as {@link #exportPackage(String, String, boolean, int)} but without timeout.
      *
      * @param filePath

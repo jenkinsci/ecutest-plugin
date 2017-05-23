@@ -41,12 +41,12 @@ import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ImportProjectDirTMSConfig extends ImportProjectTMSConfig {
+public class ImportProjectDirConfig extends ImportProjectConfig {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * Instantiates a new {@link ImportProjectDirTMSConfig}.
+     * Instantiates a new {@link ImportProjectDirConfig}.
      *
      * @param projectPath
      *            the project directory path in test management system
@@ -58,27 +58,27 @@ public class ImportProjectDirTMSConfig extends ImportProjectTMSConfig {
      *            the import timeout
      */
     @DataBoundConstructor
-    public ImportProjectDirTMSConfig(final String projectPath, final String importPath, final String credentialsId,
+    public ImportProjectDirConfig(final String projectPath, final String importPath, final String credentialsId,
             final String timeout) {
         super(projectPath, importPath, false, credentialsId, timeout);
     }
 
     @Override
-    public ImportProjectDirTMSConfig expand(final EnvVars envVars) {
-        final ImportProjectTMSConfig config = super.expand(envVars);
-        return new ImportProjectDirTMSConfig(config.getProjectPath(), config.getImportPath(),
+    public ImportProjectDirConfig expand(final EnvVars envVars) {
+        final ImportProjectConfig config = super.expand(envVars);
+        return new ImportProjectDirConfig(config.getTmsPath(), config.getImportPath(),
                 config.getCredentialsId(), config.getTimeout());
     }
 
     /**
-     * DescriptorImpl for {@link ImportProjectDirTMSConfig}.
+     * DescriptorImpl for {@link ImportProjectDirConfig}.
      */
     @Extension(ordinal = 1)
-    public static class DescriptorImpl extends ImportProjectTMSConfig.DescriptorImpl {
+    public static class DescriptorImpl extends ImportProjectConfig.DescriptorImpl {
 
         @Override
         public String getDisplayName() {
-            return Messages.ImportProjectDirTMSConfig_DisplayName();
+            return Messages.ImportProjectDirConfig_DisplayName();
         }
     }
 }

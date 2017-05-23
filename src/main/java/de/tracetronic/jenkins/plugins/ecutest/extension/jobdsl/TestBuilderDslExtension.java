@@ -51,12 +51,10 @@ import de.tracetronic.jenkins.plugins.ecutest.test.TestPackageBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestProjectBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageDirTMSConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageTMSConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageDirConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirTMSConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectTMSConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageParameter;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
@@ -547,7 +545,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         private static final String OPT_IMPORT_PATH = "importPath";
         private static final String OPT_CREDENTIALS_ID = "credentialsId";
 
-        private final List<ImportPackageConfig> importConfigs = new ArrayList<ImportPackageConfig>();
+        private final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
 
         /**
          * Validator to check import package related DSL options.
@@ -577,7 +575,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
             validation = validator.validateImportPath(importPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            importConfigs.add(new ImportPackageTMSConfig(packagePath.toString(), importPath.toString(),
+            importConfigs.add(new ImportPackageConfig(packagePath.toString(), importPath.toString(),
                     credentialsId.toString(), timeout.toString()));
         }
 
@@ -614,7 +612,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             Preconditions.checkNotNull(packagePath, NOT_NULL_MSG, OPT_PACKAGE_PATH);
             final ImportTMSContext context = new ImportTMSContext();
             executeInContext(closure, context);
-            importConfigs.add(new ImportPackageTMSConfig(packagePath.toString(), context.importPath,
+            importConfigs.add(new ImportPackageConfig(packagePath.toString(), context.importPath,
                     credentialsId.toString(), context.timeout));
         }
 
@@ -641,7 +639,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
             validation = validator.validateImportPath(importPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            importConfigs.add(new ImportPackageDirTMSConfig(packageDirPath.toString(), importPath.toString(),
+            importConfigs.add(new ImportPackageDirConfig(packageDirPath.toString(), importPath.toString(),
                     credentialsId.toString(), timeout.toString()));
         }
 
@@ -678,7 +676,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             Preconditions.checkNotNull(packagePath, NOT_NULL_MSG, OPT_PACKAGE_DIR_PATH);
             final ImportTMSContext context = new ImportTMSContext();
             executeInContext(closure, context);
-            importConfigs.add(new ImportPackageDirTMSConfig(packagePath.toString(), context.importPath,
+            importConfigs.add(new ImportPackageDirConfig(packagePath.toString(), context.importPath,
                     credentialsId.toString(), context.timeout));
         }
 
@@ -710,7 +708,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          */
         public class ImportTMSContext extends AbstractImportProjectContext {
 
-            private String timeout = String.valueOf(ImportProjectTMSConfig.getDefaultTimeout());
+            private String timeout = String.valueOf(ImportProjectConfig.getDefaultTimeout());
 
             /**
              * Option defining the import timeout.
@@ -720,7 +718,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
              */
             public void timeout(final String value) {
                 final FormValidation validation = validator.validateTimeout(value,
-                        ImportProjectTMSConfig.getDefaultTimeout());
+                        ImportProjectConfig.getDefaultTimeout());
                 Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
                 timeout = value;
             }
@@ -749,7 +747,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         private static final String OPT_IMPORT_CONFIG_PATH = "importConfigPath";
         private static final String OPT_CREDENTIALS_ID = "credentialsId";
 
-        private final List<ImportProjectConfig> importConfigs = new ArrayList<ImportProjectConfig>();
+        private final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
 
         /**
          * Validator to check import project related DSL options.
@@ -825,7 +823,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
             validation = validator.validateImportPath(importPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            importConfigs.add(new ImportProjectTMSConfig(projectPath.toString(), importPath.toString(),
+            importConfigs.add(new ImportProjectConfig(projectPath.toString(), importPath.toString(),
                     importMissingPackages, credentialsId.toString(), timeout.toString()));
         }
 
@@ -881,7 +879,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             Preconditions.checkNotNull(projectPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
             final ImportTMSContext context = new ImportTMSContext();
             executeInContext(closure, context);
-            importConfigs.add(new ImportProjectTMSConfig(projectPath.toString(), context.importPath,
+            importConfigs.add(new ImportProjectConfig(projectPath.toString(), context.importPath,
                     context.importMissingPackages, credentialsId.toString(), context.timeout));
         }
 
@@ -908,7 +906,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
             validation = validator.validateImportPath(importPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            importConfigs.add(new ImportProjectDirTMSConfig(projectDirPath.toString(), importPath.toString(),
+            importConfigs.add(new ImportProjectDirConfig(projectDirPath.toString(), importPath.toString(),
                     credentialsId.toString(), timeout.toString()));
         }
 
@@ -945,7 +943,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             Preconditions.checkNotNull(projectDirPath, NOT_NULL_MSG, OPT_PROJECT_DIR_PATH);
             final ImportTMSContext context = new ImportTMSContext();
             executeInContext(closure, context);
-            importConfigs.add(new ImportProjectDirTMSConfig(projectDirPath.toString(), context.importPath,
+            importConfigs.add(new ImportProjectDirConfig(projectDirPath.toString(), context.importPath,
                     credentialsId.toString(), context.timeout));
         }
 
@@ -1008,7 +1006,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          */
         public class ImportTMSContext extends AbstractImportProjectContext {
 
-            private String timeout = String.valueOf(ImportProjectTMSConfig.getDefaultTimeout());
+            private String timeout = String.valueOf(ImportProjectConfig.getDefaultTimeout());
             private boolean importMissingPackages;
 
             /**
@@ -1019,7 +1017,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
              */
             public void timeout(final String value) {
                 final FormValidation validation = validator.validateTimeout(value,
-                        ImportProjectTMSConfig.getDefaultTimeout());
+                        ImportProjectConfig.getDefaultTimeout());
                 Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
                 timeout = value;
             }

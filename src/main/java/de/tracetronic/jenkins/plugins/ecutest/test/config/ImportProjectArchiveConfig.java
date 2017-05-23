@@ -45,7 +45,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ImportProjectArchiveConfig extends ImportProjectConfig {
+public class ImportProjectArchiveConfig extends ImportConfig {
 
     private static final long serialVersionUID = 1L;
 
@@ -56,18 +56,18 @@ public class ImportProjectArchiveConfig extends ImportProjectConfig {
      * Instantiates a new {@link ImportProjectArchiveConfig}.
      *
      * @param projectPath
-     *            the archive path
+     *            the project path
      * @param importPath
      *            the import path
      * @param importConfigPath
-     *            the import configuration path
+     *            the import config path
      * @param replaceFiles
-     *            specifies whether to replace files
+     *            the replace files
      */
     @DataBoundConstructor
-    public ImportProjectArchiveConfig(final String projectPath, final String importPath, final String importConfigPath,
-            final boolean replaceFiles) {
-        super(projectPath, importPath);
+    public ImportProjectArchiveConfig(final String projectPath, final String importPath,
+            final String importConfigPath, final boolean replaceFiles) {
+        super(projectPath, importPath, null, null);
         this.importConfigPath = StringUtils.trimToEmpty(importConfigPath);
         this.replaceFiles = replaceFiles;
     }
@@ -88,7 +88,7 @@ public class ImportProjectArchiveConfig extends ImportProjectConfig {
 
     @Override
     public ImportProjectArchiveConfig expand(final EnvVars envVars) {
-        final String expProjectPath = envVars.expand(getProjectPath());
+        final String expProjectPath = envVars.expand(getTmsPath());
         final String expImportPath = envVars.expand(getImportPath());
         final String expImportConfigPath = envVars.expand(getImportConfigPath());
         return new ImportProjectArchiveConfig(expProjectPath, expImportPath, expImportConfigPath, isReplaceFiles());
@@ -99,21 +99,23 @@ public class ImportProjectArchiveConfig extends ImportProjectConfig {
         boolean result = false;
         if (other instanceof ImportProjectArchiveConfig) {
             final ImportProjectArchiveConfig that = (ImportProjectArchiveConfig) other;
-            final String projectPath = getProjectPath();
-            final String importPath = getImportPath();
-            final String thatProjectPath = that.getProjectPath();
-            final String thatImportPath = that.getImportPath();
-            result = (projectPath == null ? thatProjectPath == null : projectPath.equals(thatProjectPath))
-                    && (importPath == null ? thatImportPath == null : importPath.equals(thatImportPath))
+            result = that.canEqual(this)
+                    && super.equals(that)
                     && (importConfigPath == null ? that.importConfigPath == null : importConfigPath
-                    .equals(that.importConfigPath)) && replaceFiles == that.replaceFiles;
+                            .equals(that.importConfigPath))
+                    && replaceFiles == that.replaceFiles;
         }
         return result;
     }
 
     @Override
+    public final boolean canEqual(final Object other) {
+        return other instanceof ImportProjectArchiveConfig;
+    }
+
+    @Override
     public final int hashCode() {
-        return new HashCodeBuilder(17, 31).append(getProjectPath()).append(getImportPath())
+        return new HashCodeBuilder(17, 31).append(super.hashCode())
                 .append(importConfigPath).append(replaceFiles).toHashCode();
     }
 
@@ -121,10 +123,10 @@ public class ImportProjectArchiveConfig extends ImportProjectConfig {
      * DescriptorImpl for {@link ImportProjectArchiveConfig}.
      */
     @Extension(ordinal = 3)
-    public static class DescriptorImpl extends ImportProjectConfig.DescriptorImpl {
+    public static class DescriptorImpl extends ImportConfig.DescriptorImpl {
 
         @Override
-        public FormValidation doCheckProjectPath(@QueryParameter final String value) {
+        public FormValidation doCheckTmsPath(@QueryParameter final String value) {
             return tmsValidator.validateArchivePath(value);
         }
 

@@ -29,137 +29,66 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
-import hudson.DescriptorExtensionList;
-import hudson.model.Describable;
-import hudson.model.Descriptor;
-import hudson.security.ACL;
+import hudson.EnvVars;
+import hudson.Extension;
 import hudson.util.FormValidation;
-import hudson.util.ListBoxModel;
 
-import java.io.Serializable;
-import java.util.Collections;
-
-import javax.annotation.CheckForNull;
-
-import jenkins.model.Jenkins;
-
-import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import com.cloudbees.plugins.credentials.CredentialsMatchers;
-import com.cloudbees.plugins.credentials.CredentialsProvider;
-import com.cloudbees.plugins.credentials.common.StandardCredentials;
-import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
-import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-import com.cloudbees.plugins.credentials.domains.DomainRequirement;
-
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.TMSValidator;
+import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
+import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
 
 /**
- * Common base class for {@link ImportPackageTMSConfig} and {@link ImportPackageDirTMSConfig}.
+ * Class holding the configuration for importing a package from test management system.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class ImportPackageConfig implements Describable<ImportPackageConfig>, Serializable, ExpandableConfig {
+public class ImportPackageConfig extends ImportConfig {
 
     private static final long serialVersionUID = 1L;
-
-    private final String packagePath;
-    private final String importPath;
 
     /**
      * Instantiates a new {@link ImportPackageConfig}.
      *
      * @param packagePath
-     *            the package path
+     *            the package path in test management system
      * @param importPath
      *            the import path
+     * @param credentialsId
+     *            the credentials id
+     * @param timeout
+     *            the import timeout
      */
-    public ImportPackageConfig(final String packagePath, final String importPath) {
-        super();
-        this.packagePath = StringUtils.trimToEmpty(packagePath);
-        this.importPath = StringUtils.trimToEmpty(importPath);
+    @DataBoundConstructor
+    public ImportPackageConfig(final String packagePath, final String importPath,
+            final String credentialsId, final String timeout) {
+        super(packagePath, importPath, credentialsId, timeout);
     }
 
-    /**
-     * @return the package path to import
-     */
-    public String getPackagePath() {
-        return packagePath;
-    }
-
-    /**
-     * @return the import target path
-     */
-    public String getImportPath() {
-        return importPath;
-    }
-
-    @CheckForNull
-    @SuppressWarnings("unchecked")
     @Override
-    public Descriptor<ImportPackageConfig> getDescriptor() {
-        final Jenkins instance = Jenkins.getInstance();
-        if (instance != null) {
-            return (Descriptor<ImportPackageConfig>) instance.getDescriptor(getClass());
-        }
-        return null;
-    }
-
-    /**
-     * Gets all descriptors of {@link ImportPackageConfig} type.
-     *
-     * @return the descriptor extension list
-     */
-    @CheckForNull
-    public static DescriptorExtensionList<ImportPackageConfig, Descriptor<ImportPackageConfig>> all() {
-        final Jenkins instance = Jenkins.getInstance();
-        if (instance != null) {
-            return instance.getDescriptorList(ImportPackageConfig.class);
-        }
-        return null;
+    public ImportPackageConfig expand(final EnvVars envVars) {
+        final String expPackagePath = envVars.expand(getTmsPath());
+        final String expImportPath = envVars.expand(getImportPath());
+        final String expCredentialsId = envVars.expand(getCredentialsId());
+        final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars, String.valueOf(DEFAULT_TIMEOUT));
+        return new ImportPackageConfig(expPackagePath, expImportPath, expCredentialsId, expTimeout);
     }
 
     /**
      * DescriptorImpl for {@link ImportPackageConfig}.
      */
-    public abstract static class DescriptorImpl extends Descriptor<ImportPackageConfig> {
+    @Extension(ordinal = 2)
+    public static class DescriptorImpl extends ImportConfig.DescriptorImpl {
 
-        /**
-         * Validator to check form fields.
-         */
-        protected final TMSValidator tmsValidator = new TMSValidator();
-
-        /**
-         * Validates the package path to import.
-         *
-         * @param value
-         *            the package to import
-         * @return the form validation
-         */
-        public abstract FormValidation doCheckPackagePath(@QueryParameter String value);
-
-        /**
-         * Validates the import target path.
-         *
-         * @param value
-         *            the import path
-         * @return the form validation
-         */
-        public FormValidation doCheckImportPath(@QueryParameter final String value) {
-            return tmsValidator.validateImportPath(value);
+        @Override
+        public FormValidation doCheckTmsPath(@QueryParameter final String value) {
+            return tmsValidator.validateTestPath(value);
         }
 
-        /**
-         * Fills the credentials drop-down menu.
-         *
-         * @return the credentials items
-         */
-        public ListBoxModel doFillCredentialsIdItems() {
-            return new StandardListBoxModel().withEmptySelection().withMatching(
-                    CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class),
-                    CredentialsProvider.lookupCredentials(StandardCredentials.class, Jenkins.getInstance(), ACL.SYSTEM,
-                            Collections.<DomainRequirement> emptyList()));
+        @Override
+        public String getDisplayName() {
+            return Messages.ImportPackageConfig_DisplayName();
         }
     }
 }

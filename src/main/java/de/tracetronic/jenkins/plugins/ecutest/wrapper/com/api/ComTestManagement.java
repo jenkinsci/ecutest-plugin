@@ -132,6 +132,34 @@ public interface ComTestManagement {
     boolean importProjectDirectory(String tmDirectoryPath, String importPath, int timeout) throws ETComException;
 
     /**
+     * Imports the attributes of given package to test management system.
+     *
+     * @param filePath
+     *            the file path of the package whose attributes have to be imported
+     *            (relative to package directory or absolute)
+     * @param timeout
+     *            the timeout in seconds to wait for export to be finished
+     * @return {@code true} if import succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    boolean importPackageAttributes(String filePath, int timeout) throws ETComException;
+
+    /**
+     * Imports the attributes of given project to test management system.
+     *
+     * @param filePath
+     *            the file path of the project whose attributes have to be imported
+     *            (relative to package directory or absolute)
+     * @param timeout
+     *            the timeout in seconds to wait for export to be finished
+     * @return {@code true} if import succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    boolean importProjectAttributes(String filePath, int timeout) throws ETComException;
+
+    /**
      * Exports the given package to test management system.
      * The exportPath is needed to specify where the package should be placed at.
      *

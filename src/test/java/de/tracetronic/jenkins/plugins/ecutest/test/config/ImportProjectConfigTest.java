@@ -39,33 +39,33 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link ImportProjectTMSConfig}.
+ * Unit tests for {@link ImportProjectConfig}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ImportProjectTMSConfigTest {
+public class ImportProjectConfigTest {
 
     @Test
     public void testNullConstructor() {
-        final ImportProjectTMSConfig config = new ImportProjectTMSConfig(null, null, false, null, null);
-        assertThat(config.getProjectPath(), is(""));
+        final ImportProjectConfig config = new ImportProjectConfig(null, null, false, null, null);
+        assertThat(config.getTmsPath(), is(""));
         assertThat(config.getImportPath(), is(""));
         assertFalse(config.isImportMissingPackages());
         assertThat(config.getCredentialsId(), is(""));
-        assertThat(config.getTimeout(), is(String.valueOf(ImportProjectTMSConfig.getDefaultTimeout())));
+        assertThat(config.getTimeout(), is(String.valueOf(ImportProjectConfig.getDefaultTimeout())));
     }
 
     @Test
     public void testExpand() {
-        final ImportProjectTMSConfig config = new ImportProjectTMSConfig("${PROJECT_PATH}", "${IMPORT_PATH}",
+        final ImportProjectConfig config = new ImportProjectConfig("${PROJECT_PATH}", "${IMPORT_PATH}",
                 true, "${CREDENTIALS_ID}", "${TIMEOUT}");
         final EnvVars envVars = new EnvVars();
         envVars.put("PROJECT_PATH", "project");
         envVars.put("IMPORT_PATH", "import");
         envVars.put("CREDENTIALS_ID", "credentialsId");
         envVars.put("TIMEOUT", "600");
-        final ImportProjectTMSConfig expConfig = config.expand(envVars);
-        assertThat(expConfig.getProjectPath(), is("project"));
+        final ImportProjectConfig expConfig = config.expand(envVars);
+        assertThat(expConfig.getTmsPath(), is("project"));
         assertThat(expConfig.getImportPath(), is("import"));
         assertTrue(config.isImportMissingPackages());
         assertThat(expConfig.getCredentialsId(), is("credentialsId"));
@@ -74,6 +74,6 @@ public class ImportProjectTMSConfigTest {
 
     @Test
     public void testHashCodeAndEquals() {
-        EqualsVerifier.forClass(ImportProjectTMSConfig.class).verify();
+        EqualsVerifier.forClass(ImportProjectConfig.class).withRedefinedSuperclass().verify();
     }
 }

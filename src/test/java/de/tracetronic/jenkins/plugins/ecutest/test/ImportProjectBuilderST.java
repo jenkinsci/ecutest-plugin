@@ -56,8 +56,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.SystemTestBase;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirTMSConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectTMSConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -370,7 +370,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
      * @return the configured builder
      */
     private ImportProjectBuilder createImportArchiveBuilder() {
-        final List<ImportProjectConfig> importConfigs = new ArrayList<ImportProjectConfig>();
+        final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
         final ImportProjectArchiveConfig archiveConfig = new ImportProjectArchiveConfig("test.prz", "import", "import",
                 true);
         importConfigs.add(archiveConfig);
@@ -378,26 +378,26 @@ public class ImportProjectBuilderST extends SystemTestBase {
     }
 
     /**
-     * Creates an {@link ImportProjectBuilder} containing a {@link ImportProjectTMSConfig} configuration.
+     * Creates an {@link ImportProjectBuilder} containing a {@link ImportProjectConfig} configuration.
      *
      * @return the configured builder
      */
     private ImportProjectBuilder createImportTMSBuilder() {
-        final List<ImportProjectConfig> importConfigs = new ArrayList<ImportProjectConfig>();
-        final ImportProjectTMSConfig tmsConfig = new ImportProjectTMSConfig("project", "import", true,
+        final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
+        final ImportProjectConfig tmsConfig = new ImportProjectConfig("project", "import", true,
                 "credentialsId", "600");
         importConfigs.add(tmsConfig);
         return new ImportProjectBuilder(importConfigs);
     }
 
     /**
-     * Creates an {@link ImportProjectBuilder} containing a {@link ImportProjectDirTMSConfig} configuration.
+     * Creates an {@link ImportProjectBuilder} containing a {@link ImportProjectDirConfig} configuration.
      *
      * @return the configured builder
      */
     private ImportProjectBuilder createImportTMSDirBuilder() {
-        final List<ImportProjectConfig> importConfigs = new ArrayList<ImportProjectConfig>();
-        final ImportProjectDirTMSConfig tmsDirConfig = new ImportProjectDirTMSConfig(
+        final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
+        final ImportProjectDirConfig tmsDirConfig = new ImportProjectDirConfig(
                 "projectDir", "import", "credentialsId", "600");
         importConfigs.add(tmsDirConfig);
         return new ImportProjectBuilder(importConfigs);

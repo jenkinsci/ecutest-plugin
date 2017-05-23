@@ -29,56 +29,47 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import hudson.EnvVars;
-import hudson.Extension;
+import nl.jqno.equalsverifier.EqualsVerifier;
 
-import org.kohsuke.stapler.DataBoundConstructor;
-
-import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
+import org.junit.Test;
 
 /**
- * Class holding the configuration for importing a project directory from test management system.
+ * Unit tests for {@link ImportProjectDirConfig}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ImportPackageDirTMSConfig extends ImportPackageTMSConfig {
+public class ImportProjectDirConfigTest {
 
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Instantiates a new {@link ImportPackageDirTMSConfig}.
-     *
-     * @param packagePath
-     *            the package directory path in test management system
-     * @param importPath
-     *            the import path
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the import timeout
-     */
-    @DataBoundConstructor
-    public ImportPackageDirTMSConfig(final String packagePath, final String importPath,
-            final String credentialsId, final String timeout) {
-        super(packagePath, importPath, credentialsId, timeout);
+    @Test
+    public void testNullConstructor() {
+        final ImportProjectDirConfig config = new ImportProjectDirConfig(null, null, null, null);
+        assertThat(config.getTmsPath(), is(""));
+        assertThat(config.getImportPath(), is(""));
+        assertThat(config.getCredentialsId(), is(""));
+        assertThat(config.getTimeout(), is(String.valueOf(ImportProjectDirConfig.getDefaultTimeout())));
     }
 
-    @Override
-    public ImportPackageDirTMSConfig expand(final EnvVars envVars) {
-        final ImportPackageTMSConfig config = super.expand(envVars);
-        return new ImportPackageDirTMSConfig(config.getPackagePath(), config.getImportPath(),
-                config.getCredentialsId(), config.getTimeout());
+    @Test
+    public void testExpand() {
+        final ImportProjectDirConfig config = new ImportProjectDirConfig("${PROJECT_DIR_PATH}", "${IMPORT_PATH}",
+                "${CREDENTIALS_ID}", "${TIMEOUT}");
+        final EnvVars envVars = new EnvVars();
+        envVars.put("PROJECT_DIR_PATH", "projectDir");
+        envVars.put("IMPORT_PATH", "import");
+        envVars.put("CREDENTIALS_ID", "credentialsId");
+        envVars.put("TIMEOUT", "600");
+        final ImportProjectDirConfig expConfig = config.expand(envVars);
+        assertThat(expConfig.getTmsPath(), is("projectDir"));
+        assertThat(expConfig.getImportPath(), is("import"));
+        assertThat(expConfig.getCredentialsId(), is("credentialsId"));
+        assertThat(expConfig.getTimeout(), is("600"));
     }
 
-    /**
-     * DescriptorImpl for {@link ImportPackageDirTMSConfig}.
-     */
-    @Extension(ordinal = 1)
-    public static class DescriptorImpl extends ImportPackageTMSConfig.DescriptorImpl {
-
-        @Override
-        public String getDisplayName() {
-            return Messages.ImportPackageDirTMSConfig_DisplayName();
-        }
+    @Test
+    public void testHashCodeAndEquals() {
+        EqualsVerifier.forClass(ImportProjectDirConfig.class).verify();
     }
 }

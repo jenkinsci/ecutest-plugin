@@ -75,8 +75,7 @@ public class ImportPackageAttributeConfig extends ImportAttributeConfig {
      * DescriptorImpl for {@link ImportPackageAttributeConfig}.
      */
     @Extension(ordinal = 1)
-    // FIXME: ImportConfig
-    public static class DescriptorImpl extends ExportConfig.DescriptorImpl {
+    public static class DescriptorImpl extends ImportAttributeConfig.DescriptorImpl {
 
         @Override
         public FormValidation doCheckFilePath(@QueryParameter final String value) {

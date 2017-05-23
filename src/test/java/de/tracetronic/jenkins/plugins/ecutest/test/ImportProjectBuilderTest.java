@@ -41,7 +41,7 @@ import java.util.List;
 import org.junit.Test;
 
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -53,7 +53,7 @@ public class ImportProjectBuilderTest {
 
     @Test
     public void testDefaultStep() throws IOException {
-        final List<ImportProjectConfig> importConfigs = new ArrayList<ImportProjectConfig>();
+        final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
         final ImportProjectBuilder builder = new ImportProjectBuilder(importConfigs);
         assertTrue(builder.getImportConfigs().isEmpty());
     }
@@ -67,7 +67,7 @@ public class ImportProjectBuilderTest {
 
     @Test
     public void testConstructor() {
-        final List<ImportProjectConfig> importConfigs = new ArrayList<ImportProjectConfig>();
+        final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
         final ImportProjectArchiveConfig archiveConfig = new ImportProjectArchiveConfig("test.prz", "import", "import",
                 true);
         importConfigs.add(archiveConfig);
@@ -78,7 +78,7 @@ public class ImportProjectBuilderTest {
 
     @Test
     public void testEmptyImportConfigs() {
-        final List<ImportProjectConfig> importConfigs = new ArrayList<ImportProjectConfig>();
+        final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
         importConfigs.add(new ImportProjectArchiveConfig(" ", null, null, false));
         final ImportProjectBuilder builder = new ImportProjectBuilder(importConfigs);
         assertTrue(builder.getImportConfigs().isEmpty());
