@@ -30,9 +30,14 @@
 package de.tracetronic.jenkins.plugins.ecutest;
 
 import hudson.Plugin;
+import hudson.init.InitMilestone;
+import hudson.init.Initializer;
+import hudson.model.Items;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,6 +49,10 @@ import org.jenkins.ui.icon.IconSet;
 import org.jenkins.ui.icon.IconType;
 
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher.DescriptorImpl;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageDirConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirConfig;
 
 /**
  * Main entry point to this plugin for the {@link Jenkins} instance.
@@ -239,6 +248,24 @@ public class ETPlugin extends Plugin {
                     String.format("ecutest/icons/48x48/%s.png", name),
                     Icon.ICON_XLARGE_STYLE, IconType.PLUGIN)
                     );
+        }
+    }
+
+    /**
+     * Retains backward compatibility for renamed classes.
+     */
+    @SuppressWarnings("rawtypes")
+    @Initializer(before = InitMilestone.PLUGINS_STARTED)
+    public static void addAliases() {
+        final String configPath = "de.tracetronic.jenkins.plugins.ecutest.test.config.";
+        final HashMap<String, Class> classMap = new HashMap<String, Class>();
+        classMap.put(configPath + "ImportPackageTMSConfig", ImportPackageConfig.class);
+        classMap.put(configPath + "ImportPackageTMSDirConfig", ImportPackageDirConfig.class);
+        classMap.put(configPath + "ImportProjectTMSConfig", ImportProjectConfig.class);
+        classMap.put(configPath + "ImportProjectTMSDirConfig", ImportProjectDirConfig.class);
+
+        for (final Entry<String, Class> entry : classMap.entrySet()) {
+            Items.XSTREAM2.addCompatibilityAlias(entry.getKey(), entry.getValue());
         }
     }
 

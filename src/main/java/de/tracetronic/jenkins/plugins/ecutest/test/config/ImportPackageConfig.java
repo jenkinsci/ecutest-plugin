@@ -49,9 +49,15 @@ public class ImportPackageConfig extends ImportConfig {
     private static final long serialVersionUID = 1L;
 
     /**
+     * @deprecated since 1.17
+     */
+    @Deprecated
+    private transient String packagePath;
+
+    /**
      * Instantiates a new {@link ImportPackageConfig}.
      *
-     * @param packagePath
+     * @param tmsPath
      *            the package path in test management system
      * @param importPath
      *            the import path
@@ -61,18 +67,30 @@ public class ImportPackageConfig extends ImportConfig {
      *            the import timeout
      */
     @DataBoundConstructor
-    public ImportPackageConfig(final String packagePath, final String importPath,
+    public ImportPackageConfig(final String tmsPath, final String importPath,
             final String credentialsId, final String timeout) {
-        super(packagePath, importPath, credentialsId, timeout);
+        super(tmsPath, importPath, credentialsId, timeout);
+    }
+
+    /**
+     * Convert legacy configuration into the new class structure.
+     *
+     * @return an instance of this class with all the new fields transferred from the old structure to the new one
+     */
+    public final Object readResolve() {
+        if (packagePath != null) {
+            return new ImportPackageConfig(packagePath, getImportPath(), getCredentialsId(), getTimeout());
+        }
+        return this;
     }
 
     @Override
     public ImportPackageConfig expand(final EnvVars envVars) {
-        final String expPackagePath = envVars.expand(getTmsPath());
+        final String expTmsPath = envVars.expand(getTmsPath());
         final String expImportPath = envVars.expand(getImportPath());
         final String expCredentialsId = envVars.expand(getCredentialsId());
         final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars, String.valueOf(DEFAULT_TIMEOUT));
-        return new ImportPackageConfig(expPackagePath, expImportPath, expCredentialsId, expTimeout);
+        return new ImportPackageConfig(expTmsPath, expImportPath, expCredentialsId, expTimeout);
     }
 
     @Override

@@ -55,6 +55,12 @@ public class ImportProjectConfig extends ImportConfig {
     private final boolean importMissingPackages;
 
     /**
+     * @deprecated since 1.17
+     */
+    @Deprecated
+    private transient String projectPath;
+
+    /**
      * Instantiates a new {@link ImportProjectConfig}.
      *
      * @param tmsPath
@@ -76,6 +82,19 @@ public class ImportProjectConfig extends ImportConfig {
     }
 
     /**
+     * Convert legacy configuration into the new class structure.
+     *
+     * @return an instance of this class with all the new fields transferred from the old structure to the new one
+     */
+    public final Object readResolve() {
+        if (projectPath != null) {
+            return new ImportProjectConfig(projectPath, getImportPath(),
+                    isImportMissingPackages(), getCredentialsId(), getTimeout());
+        }
+        return this;
+    }
+
+    /**
      * @return specifies whether to import missing packages
      */
     public boolean isImportMissingPackages() {
@@ -84,11 +103,11 @@ public class ImportProjectConfig extends ImportConfig {
 
     @Override
     public ImportProjectConfig expand(final EnvVars envVars) {
-        final String expProjectPath = envVars.expand(getTmsPath());
+        final String expTmsPath = envVars.expand(getTmsPath());
         final String expImportPath = envVars.expand(getImportPath());
         final String expCredentialsId = envVars.expand(getCredentialsId());
         final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars, String.valueOf(DEFAULT_TIMEOUT));
-        return new ImportProjectConfig(expProjectPath, expImportPath, isImportMissingPackages(),
+        return new ImportProjectConfig(expTmsPath, expImportPath, isImportMissingPackages(),
                 expCredentialsId, expTimeout);
     }
 

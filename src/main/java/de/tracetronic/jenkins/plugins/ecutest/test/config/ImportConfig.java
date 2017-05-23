@@ -93,8 +93,8 @@ public abstract class ImportConfig extends TMSConfig {
                     && (tmsPath == null ? thatFilePath == null : tmsPath.equals(thatFilePath))
                     && (importPath == null ? thatImportPath == null : importPath.equals(thatImportPath))
                     && (getCredentialsId() == null ? that.getCredentialsId() == null :
-                        getCredentialsId().equals(that.getCredentialsId()))
-                        && (getTimeout() == null ? that.getTimeout() == null :
+                            getCredentialsId().equals(that.getCredentialsId()))
+                    && (getTimeout() == null ? that.getTimeout() == null :
                             getTimeout().equals(that.getTimeout()));
         }
         return result;

@@ -41,7 +41,7 @@ import javax.annotation.CheckForNull;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageAttributeConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
@@ -84,9 +84,9 @@ public class ImportPackageBuilder extends AbstractImportBuilder {
          *
          * @return the applicable test importers
          */
-        public List<Descriptor<? extends TMSConfig>> getApplicableExporters() {
+        public List<Descriptor<? extends TMSConfig>> getApplicableImporters() {
             final List<Descriptor<? extends TMSConfig>> list = new ArrayList<>();
-            final DescriptorExtensionList<TMSConfig, Descriptor<TMSConfig>> configs = ExportConfig.all();
+            final DescriptorExtensionList<TMSConfig, Descriptor<TMSConfig>> configs = ImportConfig.all();
             if (configs != null) {
                 for (final Descriptor<TMSConfig> config : configs) {
                     if (config.isSubTypeOf(ImportPackageConfig.class) ||

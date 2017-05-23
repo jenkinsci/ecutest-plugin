@@ -33,7 +33,7 @@
     <f:entry title="${%credentialsId.title}" description="${%credentialsId.description}" field="credentialsId">
         <c:select />
     </f:entry>
-    <f:entry title="${%projectPath.title}" description="${%projectPath.description}" field="projectPath">
+    <f:entry title="${%projectPath.title}" description="${%projectPath.description}" field="tmsPath">
         <f:textbox />
     </f:entry>
     <f:entry title="${%importPath.title}" description="${%importPath.description}" field="importPath">
