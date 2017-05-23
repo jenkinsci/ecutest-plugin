@@ -104,8 +104,8 @@ public abstract class ExportConfig extends TMSConfig {
                     && (exportPath == null ? thatExportPath == null : exportPath.equals(thatExportPath))
                     && createNewPath == that.isCreateNewPath()
                     && (getCredentialsId() == null ? that.getCredentialsId() == null :
-                        getCredentialsId().equals(that.getCredentialsId()))
-                        && (getTimeout() == null ? that.getTimeout() == null :
+                            getCredentialsId().equals(that.getCredentialsId()))
+                    && (getTimeout() == null ? that.getTimeout() == null :
                             getTimeout().equals(that.getTimeout()));
         }
         return result;
@@ -113,8 +113,8 @@ public abstract class ExportConfig extends TMSConfig {
 
     @Override
     public final int hashCode() {
-        return new HashCodeBuilder(17, 31).append(getFilePath()).append(getExportPath()).append(getCredentialsId())
-                .append(getTimeout()).toHashCode();
+        return new HashCodeBuilder(17, 31).append(getFilePath()).append(getExportPath())
+                .append(isCreateNewPath()).append(getCredentialsId()).append(getTimeout()).toHashCode();
     }
 
     /**

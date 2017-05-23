@@ -36,7 +36,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link ImportTestValidator}.
+ * Unit tests for {@link TMSValidator}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
@@ -49,7 +49,7 @@ public class TMSValidatorTest {
         tmsValidator = new TMSValidator();
     }
 
-    // Validation of test path
+    // Validation of TMS test path
     @Test
     public void testEmptyTestPath() {
         final FormValidation validation = tmsValidator.validateTestPath("");
@@ -133,25 +133,112 @@ public class TMSValidatorTest {
     // Validation of import configuration path
     @Test
     public void testEmptyImportConfigPath() {
-        final FormValidation validation = tmsValidator.validateImportPath("");
+        final FormValidation validation = tmsValidator.validateImportConfigPath("");
         assertEquals("Valid if empty import config path", FormValidation.Kind.OK, validation.kind);
     }
 
     @Test
     public void testNullImportConfigPath() {
-        final FormValidation validation = tmsValidator.validateImportPath(null);
+        final FormValidation validation = tmsValidator.validateImportConfigPath(null);
         assertEquals("Valid if null import config path", FormValidation.Kind.OK, validation.kind);
     }
 
     @Test
     public void testParameterizedImportConfigPath() {
-        final FormValidation validation = tmsValidator.validateImportPath("${IMPORT_CONFIG_PATH}");
+        final FormValidation validation = tmsValidator.validateImportConfigPath("${IMPORT_CONFIG_PATH}");
         assertEquals("Warning if parameterized import config path", FormValidation.Kind.WARNING, validation.kind);
     }
 
     @Test
     public void testValidImportConfigPath() {
-        final FormValidation validation = tmsValidator.validateImportPath("import");
+        final FormValidation validation = tmsValidator.validateImportConfigPath("import");
         assertEquals("Valid import config path", FormValidation.Kind.OK, validation.kind);
+    }
+
+    // Validation of import path
+    @Test
+    public void testEmptyExportPath() {
+        final FormValidation validation = tmsValidator.validateExportPath("");
+        assertEquals("Error if empty export path", FormValidation.Kind.ERROR, validation.kind);
+    }
+
+    @Test
+    public void testNullExportPath() {
+        final FormValidation validation = tmsValidator.validateExportPath(null);
+        assertEquals("Error if null export path", FormValidation.Kind.ERROR, validation.kind);
+    }
+
+    @Test
+    public void testParameterizedExportPath() {
+        final FormValidation validation = tmsValidator.validateExportPath("${EXPORT_PATH}");
+        assertEquals("Warning if parameterized export path", FormValidation.Kind.WARNING, validation.kind);
+    }
+
+    @Test
+    public void testValidExportPath() {
+        final FormValidation validation = tmsValidator.validateExportPath("export");
+        assertEquals("Valid export path", FormValidation.Kind.OK, validation.kind);
+    }
+
+    // Validation of package file
+    @Test
+    public void testEmptyPackageFile() {
+        final FormValidation validation = tmsValidator.validatePackageFile("");
+        assertEquals("Error if empty package file", FormValidation.Kind.ERROR, validation.kind);
+    }
+
+    @Test
+    public void testNullPackageFile() {
+        final FormValidation validation = tmsValidator.validatePackageFile(null);
+        assertEquals("Error if package file not defined", FormValidation.Kind.ERROR, validation.kind);
+    }
+
+    @Test
+    public void testParameterizedPackageFile() {
+        final FormValidation validation = tmsValidator.validatePackageFile("${TEST}");
+        assertEquals("Warning if parameterized package file", FormValidation.Kind.WARNING, validation.kind);
+    }
+
+    @Test
+    public void testValidPackageFile() {
+        final FormValidation validation = tmsValidator.validatePackageFile("test.pkg");
+        assertEquals("Valid package file has .pkg extension", FormValidation.Kind.OK, validation.kind);
+    }
+
+    @Test
+    public void testInvalidPackageFile() {
+        final FormValidation validation = tmsValidator.validatePackageFile("test");
+        assertEquals("Error if invalid package file", FormValidation.Kind.ERROR, validation.kind);
+    }
+
+    // Validation of project file
+    @Test
+    public void testEmptyProjectFile() {
+        final FormValidation validation = tmsValidator.validateProjectFile("");
+        assertEquals("Error if empty project file", FormValidation.Kind.ERROR, validation.kind);
+    }
+
+    @Test
+    public void testNullProjectFile() {
+        final FormValidation validation = tmsValidator.validateProjectFile(null);
+        assertEquals("Error if project file not defined", FormValidation.Kind.ERROR, validation.kind);
+    }
+
+    @Test
+    public void testParameterizedProjectFile() {
+        final FormValidation validation = tmsValidator.validateProjectFile("${TEST}");
+        assertEquals("Warning if parameterized project file", FormValidation.Kind.WARNING, validation.kind);
+    }
+
+    @Test
+    public void testValidProjectFile() {
+        final FormValidation validation = tmsValidator.validateProjectFile("test.prj");
+        assertEquals("Valid project file has .prj extension", FormValidation.Kind.OK, validation.kind);
+    }
+
+    @Test
+    public void testInvalidProjectFile() {
+        final FormValidation validation = tmsValidator.validateProjectFile("test");
+        assertEquals("Error if invalid project file", FormValidation.Kind.ERROR, validation.kind);
     }
 }

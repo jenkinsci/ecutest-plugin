@@ -64,7 +64,7 @@ public class ExportPackageAttributeConfig extends ExportAttributeConfig {
     }
 
     @Override
-    public ExportAttributeConfig expand(final EnvVars envVars) {
+    public ExportPackageAttributeConfig expand(final EnvVars envVars) {
         final String expFilePath = envVars.expand(getFilePath());
         final String expCredentialsId = envVars.expand(getCredentialsId());
         final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars, String.valueOf(DEFAULT_TIMEOUT));

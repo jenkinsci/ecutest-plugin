@@ -43,44 +43,6 @@ import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
 public class TMSValidator extends AbstractValidator {
 
     /**
-     * Validates the package file.
-     *
-     * @param testFile
-     *            the test file
-     * @return the form validation
-     */
-    public FormValidation validatePackageFile(final String testFile) {
-        FormValidation returnValue = FormValidation.ok();
-        if (StringUtils.isBlank(testFile)) {
-            returnValue = FormValidation.validateRequired(testFile);
-        } else if (testFile.contains(PARAMETER)) {
-            returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
-        } else if (!testFile.endsWith(".pkg")) {
-            returnValue = FormValidation.error(Messages.TestBuilder_PkgFileExtension());
-        }
-        return returnValue;
-    }
-
-    /**
-     * Validates the project file.
-     *
-     * @param testFile
-     *            the test file
-     * @return the form validation
-     */
-    public FormValidation validateProjectFile(final String testFile) {
-        FormValidation returnValue = FormValidation.ok();
-        if (StringUtils.isBlank(testFile)) {
-            returnValue = FormValidation.validateRequired(testFile);
-        } else if (testFile.contains(PARAMETER)) {
-            returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
-        } else if (!testFile.endsWith(".prj")) {
-            returnValue = FormValidation.error(Messages.TestBuilder_PrjFileExtension());
-        }
-        return returnValue;
-    }
-
-    /**
      * Validates the export target path.
      *
      * @param exportPath

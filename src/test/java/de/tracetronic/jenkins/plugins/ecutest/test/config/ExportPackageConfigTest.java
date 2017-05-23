@@ -29,61 +29,51 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import hudson.EnvVars;
-import hudson.Extension;
+import nl.jqno.equalsverifier.EqualsVerifier;
 
-import org.kohsuke.stapler.DataBoundConstructor;
-
-import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
+import org.junit.Test;
 
 /**
- * Class holding the configuration for importing a project directory from test management system.
+ * Unit tests for {@link ExportPackageConfig}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ImportPackageDirConfig extends ImportPackageConfig {
+public class ExportPackageConfigTest {
 
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Instantiates a new {@link ImportPackageDirConfig}.
-     *
-     * @param packagePath
-     *            the package directory path in test management system
-     * @param importPath
-     *            the import path
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the import timeout
-     */
-    @DataBoundConstructor
-    public ImportPackageDirConfig(final String packagePath, final String importPath,
-            final String credentialsId, final String timeout) {
-        super(packagePath, importPath, credentialsId, timeout);
+    @Test
+    public void testNullConstructor() {
+        final ExportPackageConfig config = new ExportPackageConfig(null, null, false, null, null);
+        assertThat(config.getFilePath(), is(""));
+        assertThat(config.getExportPath(), is(""));
+        assertFalse(config.isCreateNewPath());
+        assertThat(config.getCredentialsId(), is(""));
+        assertThat(config.getTimeout(), is(String.valueOf(ExportPackageConfig.getDefaultTimeout())));
     }
 
-    @Override
-    public ImportPackageDirConfig expand(final EnvVars envVars) {
-        final ImportPackageConfig config = (ImportPackageConfig) super.expand(envVars);
-        return new ImportPackageDirConfig(config.getTmsPath(), config.getImportPath(),
-                config.getCredentialsId(), config.getTimeout());
+    @Test
+    public void testExpand() {
+        final ExportPackageConfig config = new ExportPackageConfig("${FILE_PATH}", "${EXPORT_PATH}",
+                true, "${CREDENTIALS_ID}", "${TIMEOUT}");
+        final EnvVars envVars = new EnvVars();
+        envVars.put("FILE_PATH", "test.pkg");
+        envVars.put("EXPORT_PATH", "export");
+        envVars.put("CREDENTIALS_ID", "credentialsId");
+        envVars.put("TIMEOUT", "600");
+        final ExportPackageConfig expConfig = config.expand(envVars);
+        assertThat(expConfig.getFilePath(), is("test.pkg"));
+        assertThat(expConfig.getExportPath(), is("export"));
+        assertTrue(config.isCreateNewPath());
+        assertThat(expConfig.getCredentialsId(), is("credentialsId"));
+        assertThat(expConfig.getTimeout(), is("600"));
     }
 
-    @Override
-    public final boolean canEqual(final Object other) {
-        return other instanceof ImportPackageDirConfig;
-    }
-
-    /**
-     * DescriptorImpl for {@link ImportPackageDirConfig}.
-     */
-    @Extension(ordinal = 1)
-    public static class DescriptorImpl extends ImportPackageConfig.DescriptorImpl {
-
-        @Override
-        public String getDisplayName() {
-            return Messages.ImportPackageDirConfig_DisplayName();
-        }
+    @Test
+    public void testHashCodeAndEquals() {
+        EqualsVerifier.forClass(ExportPackageConfig.class).verify();
     }
 }

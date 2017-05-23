@@ -83,7 +83,7 @@ public abstract class ImportConfig extends TMSConfig {
     @Override
     public boolean equals(final Object other) {
         boolean result = false;
-        if (other instanceof ImportConfig) {
+        if (canEqual(other) && other instanceof ImportConfig) {
             final ImportConfig that = (ImportConfig) other;
             final String tmsPath = getTmsPath();
             final String importPath = getImportPath();

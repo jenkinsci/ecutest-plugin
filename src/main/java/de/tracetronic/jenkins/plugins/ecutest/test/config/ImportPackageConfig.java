@@ -75,6 +75,21 @@ public class ImportPackageConfig extends ImportConfig {
         return new ImportPackageConfig(expPackagePath, expImportPath, expCredentialsId, expTimeout);
     }
 
+    @Override
+    public final boolean equals(final Object other) {
+        return super.equals(other);
+    }
+
+    @Override
+    public boolean canEqual(final Object other) {
+        return other instanceof ImportPackageConfig;
+    }
+
+    @Override
+    public final int hashCode() {
+        return super.hashCode();
+    }
+
     /**
      * DescriptorImpl for {@link ImportPackageConfig}.
      */
