@@ -360,7 +360,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     @SuppressWarnings("rawtypes")
     @Symbol("publishATX")
-    @Extension(ordinal = 1005)
+    @Extension(ordinal = 10005)
     public static class DescriptorImpl extends AbstractReportDescriptor {
 
         @CopyOnWrite

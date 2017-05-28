@@ -411,7 +411,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link ReportGeneratorPublisher}.
      */
     @Symbol("publishGenerators")
-    @Extension(ordinal = 1002)
+    @Extension(ordinal = 10002)
     public static class DescriptorImpl extends AbstractReportDescriptor {
 
         @Override

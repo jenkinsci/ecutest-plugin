@@ -116,7 +116,7 @@ public class StopETBuilder extends AbstractToolBuilder {
      * DescriptorImpl for {@link StopETBuilder}.
      */
     @Symbol("stopET")
-    @Extension(ordinal = 1006)
+    @Extension(ordinal = 10009)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
 
         @Override

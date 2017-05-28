@@ -68,7 +68,7 @@ public class ImportPackageBuilder extends AbstractImportBuilder {
      * DescriptorImpl for {@link ImportPackageBuilder}.
      */
     @Symbol("importPackages")
-    @Extension(ordinal = 1003)
+    @Extension(ordinal = 10006)
     public static final class DescriptorImpl extends AbstractImportBuilder.DescriptorImpl {
 
         /**

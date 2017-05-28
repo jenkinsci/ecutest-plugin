@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -353,7 +353,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
      * DescriptorImpl for {@link TestFolderBuilder}.
      */
     @Symbol("testFolder")
-    @Extension(ordinal = 1000)
+    @Extension(ordinal = 10000)
     public static final class DescriptorImpl extends AbstractTestDescriptor {
 
         /**

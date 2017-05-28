@@ -68,7 +68,7 @@ public class ExportPackageBuilder extends AbstractExportBuilder {
      * DescriptorImpl for {@link ExportPackageBuilder}.
      */
     @Symbol("exportPackages")
-    @Extension(ordinal = 1003)
+    @Extension(ordinal = 10005)
     public static final class DescriptorImpl extends AbstractExportBuilder.DescriptorImpl {
 
         /**

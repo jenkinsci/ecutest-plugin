@@ -247,7 +247,7 @@ public class TMSPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link TMSPublisher}.
      */
     @Symbol("publishTMS")
-    @Extension(ordinal = 1000)
+    @Extension(ordinal = 10000)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         /**

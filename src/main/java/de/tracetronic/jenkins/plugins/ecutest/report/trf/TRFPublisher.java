@@ -298,7 +298,7 @@ public class TRFPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link TRFPublisher}.
      */
     @Symbol("publishTRF")
-    @Extension(ordinal = 1004)
+    @Extension(ordinal = 10004)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         @Override

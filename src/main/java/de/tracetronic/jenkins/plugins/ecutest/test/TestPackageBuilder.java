@@ -144,7 +144,7 @@ public class TestPackageBuilder extends AbstractTestBuilder {
      * DescriptorImpl for {@link TestPackageBuilder}.
      */
     @Symbol("testPackage")
-    @Extension(ordinal = 1002)
+    @Extension(ordinal = 10002)
     public static final class DescriptorImpl extends AbstractTestDescriptor {
 
         /**

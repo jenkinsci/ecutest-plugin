@@ -69,7 +69,7 @@ public class ImportProjectBuilder extends AbstractImportBuilder {
      * DescriptorImpl for {@link ImportProjectBuilder}.
      */
     @Symbol("importProjects")
-    @Extension(ordinal = 1003)
+    @Extension(ordinal = 10004)
     public static final class DescriptorImpl extends AbstractImportBuilder.DescriptorImpl {
 
         /**
