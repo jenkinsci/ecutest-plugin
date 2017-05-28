@@ -284,6 +284,24 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
+     * Gets the COM version of currently running ECU-TEST instance.
+     *
+     * @param launcher
+     *            the launcher
+     * @param listener
+     *            the listener
+     * @return the COM version
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the current thread is interrupted while waiting for the completion
+     */
+    public static String getComVersion(final Launcher launcher, final TaskListener listener)
+            throws IOException, InterruptedException {
+        return launcher.getChannel().call(new VersionCallable(listener));
+    }
+
+    /**
      * {@link Callable} providing remote access to establish a COM connection.
      */
     private static final class StartCallable extends MasterToSlaveCallable<String, IOException> {
@@ -396,6 +414,39 @@ public class ETClient extends AbstractToolClient {
         @Override
         public List<String> call() throws IOException {
             return ProcessUtil.checkETProcesses(kill);
+        }
+    }
+
+    /**
+     * {@link Callable} providing remote access to request the COM version of currently running ECU-TEST instance.
+     */
+    private static final class VersionCallable extends MasterToSlaveCallable<String, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final TaskListener listener;
+
+        /**
+         * Instantiates a new {@link VersionCallable}.
+         *
+         * @param listener
+         *            the listener
+         */
+        VersionCallable(final TaskListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public String call() throws IOException {
+            String comVersion = "";
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId)) {
+                comVersion = comClient.getVersion();
+            } catch (final ETComException e) {
+                logger.logError("-> Caught COM exception: " + e.getMessage());
+            }
+            return comVersion;
         }
     }
 }

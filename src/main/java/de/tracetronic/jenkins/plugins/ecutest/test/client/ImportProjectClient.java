@@ -40,13 +40,13 @@ import jenkins.security.MasterToSlaveCallable;
 
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectAttributeConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
-import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
@@ -58,6 +58,16 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ImportProjectClient extends AbstractTMSClient {
+
+    /**
+     * Defines the minimum required ECU-TEST version for this client to import project.
+     */
+    private static final ToolVersion ET_MIN_VERSION = new ToolVersion(6, 5, 0, 0);
+
+    /**
+     * Defines the minimum required ECU-TEST version for this client to import project attributes.
+     */
+    private static final ToolVersion ET_MIN_ATTR_VERSION = new ToolVersion(6, 6, 0, 0);
 
     private final TMSConfig importConfig;
 
@@ -95,35 +105,24 @@ public class ImportProjectClient extends AbstractTMSClient {
      */
     public boolean importProject(final FilePath workspace, final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
-
-        // Load JACOB library
-        if (!DllUtil.loadLibrary(workspace.toComputer())) {
-            logger.logError("Could not load JACOB library!");
-            return false;
-        }
-
         boolean isImported = false;
         if (importConfig instanceof ImportProjectArchiveConfig) {
             isImported = importProjectArchive(launcher, listener);
-        } else if (importConfig instanceof ImportProjectConfig) {
-            if (isTMSAvailable(launcher, listener)) {
-                try {
-                    final StandardUsernamePasswordCredentials credentials = ((ImportProjectConfig) importConfig)
-                            .getCredentials();
-                    if (login(credentials, launcher, listener)) {
-                        if (importConfig instanceof ImportProjectDirConfig) {
-                            isImported = importProjectDirFromTMS(launcher, listener);
-                        } else {
-                            isImported = importProjectFromTMS(launcher, listener);
-                        }
+        } else if (importConfig instanceof ImportProjectConfig
+                && isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
+            try {
+                final StandardUsernamePasswordCredentials credentials = ((ImportProjectConfig) importConfig)
+                        .getCredentials();
+                if (login(credentials, launcher, listener)) {
+                    if (importConfig instanceof ImportProjectDirConfig) {
+                        isImported = importProjectDirFromTMS(launcher, listener);
+                    } else {
+                        isImported = importProjectFromTMS(launcher, listener);
                     }
-                } finally {
-                    logout(launcher, listener);
                 }
+            } finally {
+                logout(launcher, listener);
             }
-        } else {
-            logger.logError("Unsupported import configuration of type:" + importConfig.getClass());
         }
         return isImported;
     }
@@ -144,18 +143,9 @@ public class ImportProjectClient extends AbstractTMSClient {
      *             if the build gets interrupted
      */
     public boolean importProjectAttributes(final FilePath workspace, final Launcher launcher,
-            final TaskListener listener)
-            throws IOException, InterruptedException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
-
-        // Load JACOB library
-        if (!DllUtil.loadLibrary(workspace.toComputer())) {
-            logger.logError("Could not load JACOB library!");
-            return false;
-        }
-
+            final TaskListener listener) throws IOException, InterruptedException {
         boolean isImported = false;
-        if (isTMSAvailable(launcher, listener)) {
+        if (isCompatible(ET_MIN_ATTR_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = ((ImportProjectConfig) importConfig)
                         .getCredentials();

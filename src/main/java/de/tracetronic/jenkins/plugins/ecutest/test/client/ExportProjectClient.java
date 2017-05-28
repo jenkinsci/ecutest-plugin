@@ -40,11 +40,11 @@ import jenkins.security.MasterToSlaveCallable;
 
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportProjectAttributeConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
-import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
@@ -56,6 +56,16 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ExportProjectClient extends AbstractTMSClient {
+
+    /**
+     * Defines the minimum required ECU-TEST version for this client to export project.
+     */
+    private static final ToolVersion ET_MIN_VERSION = new ToolVersion(6, 5, 0, 0);
+
+    /**
+     * Defines the minimum required ECU-TEST version for this client to export project attributes.
+     */
+    private static final ToolVersion ET_MIN_ATTR_VERSION = new ToolVersion(6, 6, 0, 0);
 
     private final TMSConfig exportConfig;
 
@@ -93,16 +103,8 @@ public class ExportProjectClient extends AbstractTMSClient {
      */
     public boolean exportProject(final FilePath workspace, final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
-
-        // Load JACOB library
-        if (!DllUtil.loadLibrary(workspace.toComputer())) {
-            logger.logError("Could not load JACOB library!");
-            return false;
-        }
-
         boolean isExported = false;
-        if (isTMSAvailable(launcher, listener)) {
+        if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = ((ExportProjectConfig) exportConfig)
                         .getCredentials();
@@ -132,18 +134,9 @@ public class ExportProjectClient extends AbstractTMSClient {
      *             if the build gets interrupted
      */
     public boolean exportProjectAttributes(final FilePath workspace, final Launcher launcher,
-            final TaskListener listener)
-            throws IOException, InterruptedException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
-
-        // Load JACOB library
-        if (!DllUtil.loadLibrary(workspace.toComputer())) {
-            logger.logError("Could not load JACOB library!");
-            return false;
-        }
-
+            final TaskListener listener) throws IOException, InterruptedException {
         boolean isExported = false;
-        if (isTMSAvailable(launcher, listener)) {
+        if (isCompatible(ET_MIN_ATTR_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = ((ExportProjectAttributeConfig) exportConfig)
                         .getCredentials();

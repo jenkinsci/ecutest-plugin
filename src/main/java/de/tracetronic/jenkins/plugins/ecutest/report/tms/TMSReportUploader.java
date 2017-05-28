@@ -49,6 +49,7 @@ import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFReport;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTMSClient;
@@ -65,6 +66,11 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
 public class TMSReportUploader extends AbstractTMSClient {
 
     /**
+     * Defines the minimum required ECU-TEST version for this client to work properly.
+     */
+    private static final ToolVersion ET_MIN_VERSION = new ToolVersion(6, 5, 0, 0);
+
+    /**
      * Uploads the reports to the test management system.
      *
      * @param reportFiles
@@ -73,6 +79,8 @@ public class TMSReportUploader extends AbstractTMSClient {
      *            the credentials id
      * @param timeout
      *            the export timeout
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @param listener
@@ -84,9 +92,10 @@ public class TMSReportUploader extends AbstractTMSClient {
      *             if the build gets interrupted
      */
     public boolean upload(final List<FilePath> reportFiles, final String credentialsId, final String timeout,
-            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
+            final FilePath workspace, final Launcher launcher, final TaskListener listener)
+                    throws IOException, InterruptedException {
         boolean isUploaded = false;
-        if (isTMSAvailable(launcher, listener)) {
+        if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = getCredentials(credentialsId);
                 if (login(credentials, launcher, listener)) {

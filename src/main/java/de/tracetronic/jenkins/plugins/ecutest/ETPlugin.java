@@ -34,6 +34,7 @@ import hudson.init.InitMilestone;
 import hudson.init.Initializer;
 import hudson.model.Items;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -81,7 +82,9 @@ public class ETPlugin extends Plugin {
      * enable or disable plugin features by comparing {@link ETPlugin#ET_MIN_VERSION} with the configured ECU-TEST
      * version.
      */
-    public static final class ToolVersion implements Comparable<ToolVersion> {
+    public static final class ToolVersion implements Comparable<ToolVersion>, Serializable {
+
+        private static final long serialVersionUID = 1L;
 
         private final int major;
         private final int minor;

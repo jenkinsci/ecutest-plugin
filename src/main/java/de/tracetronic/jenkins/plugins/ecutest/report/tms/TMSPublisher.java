@@ -189,7 +189,7 @@ public class TMSPublisher extends AbstractReportPublisher {
 
         // Start ECU-TEST if necessary
         if (isETRunning) {
-            isPublished = publishReports(reportFiles, launcher, listener);
+            isPublished = publishReports(reportFiles, workspace, launcher, listener);
         } else {
             // Get selected ECU-TEST installation
             final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
@@ -201,7 +201,7 @@ public class TMSPublisher extends AbstractReportPublisher {
             final ETClient etClient = new ETClient(expandedToolName, installPath, workspaceDir, settingsDir,
                     StartETBuilder.DEFAULT_TIMEOUT, false);
             if (etClient.start(false, workspace, launcher, listener)) {
-                isPublished = publishReports(reportFiles, launcher, listener);
+                isPublished = publishReports(reportFiles, workspace, launcher, listener);
             } else {
                 logger.logError(String.format("Starting %s failed.", toolName));
             }
@@ -223,6 +223,8 @@ public class TMSPublisher extends AbstractReportPublisher {
      *
      * @param reportFiles
      *            the report files
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @param listener
@@ -233,9 +235,9 @@ public class TMSPublisher extends AbstractReportPublisher {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private boolean publishReports(final List<FilePath> reportFiles, final Launcher launcher,
+    private boolean publishReports(final List<FilePath> reportFiles, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws IOException, InterruptedException {
-        return new TMSReportUploader().upload(reportFiles, credentialsId, timeout, launcher, listener);
+        return new TMSReportUploader().upload(reportFiles, credentialsId, timeout, workspace, launcher, listener);
     }
 
     @Override

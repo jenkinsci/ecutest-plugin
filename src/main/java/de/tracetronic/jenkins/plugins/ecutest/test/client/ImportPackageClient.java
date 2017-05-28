@@ -40,12 +40,12 @@ import jenkins.security.MasterToSlaveCallable;
 
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageAttributeConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageDirConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
-import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
@@ -57,6 +57,11 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ImportPackageClient extends AbstractTMSClient {
+
+    /**
+     * Defines the minimum required ECU-TEST version for this client to work properly.
+     */
+    private static final ToolVersion ET_MIN_VERSION = new ToolVersion(6, 6, 0, 0);
 
     private final TMSConfig importConfig;
 
@@ -94,16 +99,8 @@ public class ImportPackageClient extends AbstractTMSClient {
      */
     public boolean importPackage(final FilePath workspace, final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
-
-        // Load JACOB library
-        if (!DllUtil.loadLibrary(workspace.toComputer())) {
-            logger.logError("Could not load JACOB library!");
-            return false;
-        }
-
         boolean isImported = false;
-        if (isTMSAvailable(launcher, listener)) {
+        if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = ((ImportPackageConfig) importConfig)
                         .getCredentials();
@@ -137,18 +134,9 @@ public class ImportPackageClient extends AbstractTMSClient {
      *             if the build gets interrupted
      */
     public boolean importPackageAttributes(final FilePath workspace, final Launcher launcher,
-            final TaskListener listener)
-                    throws IOException, InterruptedException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
-
-        // Load JACOB library
-        if (!DllUtil.loadLibrary(workspace.toComputer())) {
-            logger.logError("Could not load JACOB library!");
-            return false;
-        }
-
+            final TaskListener listener) throws IOException, InterruptedException {
         boolean isImported = false;
-        if (isTMSAvailable(launcher, listener)) {
+        if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = ((ImportPackageConfig) importConfig)
                         .getCredentials();
