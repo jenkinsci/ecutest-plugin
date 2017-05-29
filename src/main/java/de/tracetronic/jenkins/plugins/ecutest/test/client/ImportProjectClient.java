@@ -397,8 +397,7 @@ public class ImportProjectClient extends AbstractTMSClient {
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 isImported = tm.importProjectAttributes(importConfig.getFilePath(), importConfig.getParsedTimeout());
-                logger.logInfo(String.format("-> Project attributes imported successfully.",
-                        importConfig.getFilePath()));
+                logger.logInfo("-> Project attributes imported successfully.");
             } catch (final ETComException e) {
                 logger.logError("-> Importing project attributes failed: " + e.getMessage());
             }

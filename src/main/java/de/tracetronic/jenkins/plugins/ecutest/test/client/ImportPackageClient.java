@@ -327,8 +327,7 @@ public class ImportPackageClient extends AbstractTMSClient {
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 isImported = tm.importPackageAttributes(importConfig.getFilePath(), importConfig.getParsedTimeout());
-                logger.logInfo(String.format("-> Package attributes imported successfully.",
-                        importConfig.getFilePath()));
+                logger.logInfo("-> Package attributes imported successfully.");
             } catch (final ETComException e) {
                 logger.logError("-> Importing package attributes failed: " + e.getMessage());
             }
