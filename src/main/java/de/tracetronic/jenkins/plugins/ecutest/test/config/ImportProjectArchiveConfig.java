@@ -55,7 +55,7 @@ public class ImportProjectArchiveConfig extends ImportConfig {
     /**
      * Instantiates a new {@link ImportProjectArchiveConfig}.
      *
-     * @param projectPath
+     * @param tmsPath
      *            the project path
      * @param importPath
      *            the import path
@@ -65,11 +65,25 @@ public class ImportProjectArchiveConfig extends ImportConfig {
      *            the replace files
      */
     @DataBoundConstructor
-    public ImportProjectArchiveConfig(final String projectPath, final String importPath,
+    public ImportProjectArchiveConfig(final String tmsPath, final String importPath,
             final String importConfigPath, final boolean replaceFiles) {
-        super(projectPath, importPath, null, null);
+        super(tmsPath, importPath, null, null);
         this.importConfigPath = StringUtils.trimToEmpty(importConfigPath);
         this.replaceFiles = replaceFiles;
+    }
+
+    /**
+     * Convert legacy configuration into the new class structure.
+     *
+     * @return an instance of this class with all the new fields transferred from the old structure to the new one
+     */
+    @SuppressWarnings("deprecation")
+    public final Object readResolve() {
+        if (getProjectPath() != null) {
+            return new ImportProjectArchiveConfig(getProjectPath(), getImportPath(), getImportConfigPath(),
+                    isReplaceFiles());
+        }
+        return this;
     }
 
     /**
@@ -102,7 +116,7 @@ public class ImportProjectArchiveConfig extends ImportConfig {
             result = that.canEqual(this)
                     && super.equals(that)
                     && (importConfigPath == null ? that.importConfigPath == null : importConfigPath
-                            .equals(that.importConfigPath))
+                    .equals(that.importConfigPath))
                     && replaceFiles == that.replaceFiles;
         }
         return result;

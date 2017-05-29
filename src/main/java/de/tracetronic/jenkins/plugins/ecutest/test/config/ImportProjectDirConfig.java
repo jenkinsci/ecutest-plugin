@@ -48,7 +48,7 @@ public class ImportProjectDirConfig extends ImportProjectConfig {
     /**
      * Instantiates a new {@link ImportProjectDirConfig}.
      *
-     * @param projectPath
+     * @param tmsPath
      *            the project directory path in test management system
      * @param importPath
      *            the import path
@@ -58,9 +58,9 @@ public class ImportProjectDirConfig extends ImportProjectConfig {
      *            the import timeout
      */
     @DataBoundConstructor
-    public ImportProjectDirConfig(final String projectPath, final String importPath, final String credentialsId,
+    public ImportProjectDirConfig(final String tmsPath, final String importPath, final String credentialsId,
             final String timeout) {
-        super(projectPath, importPath, false, credentialsId, timeout);
+        super(tmsPath, importPath, false, credentialsId, timeout);
     }
 
     @Override

@@ -118,8 +118,7 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
         for (final TMSConfig config : importConfigs) {
             if (config instanceof ImportConfig) {
                 final ImportConfig pkgConfig = (ImportConfig) config;
-                if (StringUtils.isNotBlank(pkgConfig.getTmsPath())
-                        && StringUtils.isNotBlank(pkgConfig.getImportPath())) {
+                if (StringUtils.isNotBlank(pkgConfig.getTmsPath())) {
                     validConfigs.add(config);
                 }
             } else if (config instanceof ImportAttributeConfig) {

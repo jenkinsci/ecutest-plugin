@@ -55,12 +55,6 @@ public class ImportProjectConfig extends ImportConfig {
     private final boolean importMissingPackages;
 
     /**
-     * @deprecated since 1.17
-     */
-    @Deprecated
-    private transient String projectPath;
-
-    /**
      * Instantiates a new {@link ImportProjectConfig}.
      *
      * @param tmsPath
@@ -86,10 +80,11 @@ public class ImportProjectConfig extends ImportConfig {
      *
      * @return an instance of this class with all the new fields transferred from the old structure to the new one
      */
+    @SuppressWarnings("deprecation")
     public final Object readResolve() {
-        if (projectPath != null) {
-            return new ImportProjectConfig(projectPath, getImportPath(),
-                    isImportMissingPackages(), getCredentialsId(), getTimeout());
+        if (getProjectPath() != null) {
+            return new ImportProjectConfig(getProjectPath(), getImportPath(), isImportMissingPackages(),
+                    getCredentialsId(), getTimeout());
         }
         return this;
     }

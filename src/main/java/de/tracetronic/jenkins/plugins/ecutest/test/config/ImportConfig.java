@@ -48,6 +48,12 @@ public abstract class ImportConfig extends TMSConfig {
     private final String importPath;
 
     /**
+     * @deprecated since 1.17
+     */
+    @Deprecated
+    private transient String projectPath;
+
+    /**
      * Instantiates a new {@link ImportConfig}.
      *
      * @param tmsPath
@@ -64,6 +70,15 @@ public abstract class ImportConfig extends TMSConfig {
         super(credentialsId, timeout);
         this.tmsPath = StringUtils.trimToEmpty(tmsPath);
         this.importPath = StringUtils.trimToEmpty(importPath);
+    }
+
+    /**
+     * @deprecated since 1.17
+     * @return the project path
+     */
+    @Deprecated
+    public String getProjectPath() {
+        return projectPath;
     }
 
     /**
@@ -94,8 +109,8 @@ public abstract class ImportConfig extends TMSConfig {
                     && (tmsPath == null ? thatFilePath == null : tmsPath.equals(thatFilePath))
                     && (importPath == null ? thatImportPath == null : importPath.equals(thatImportPath))
                     && (getCredentialsId() == null ? that.getCredentialsId() == null :
-                            getCredentialsId().equals(that.getCredentialsId()))
-                    && (getTimeout() == null ? that.getTimeout() == null :
+                        getCredentialsId().equals(that.getCredentialsId()))
+                        && (getTimeout() == null ? that.getTimeout() == null :
                             getTimeout().equals(that.getTimeout()));
         }
         return result;
