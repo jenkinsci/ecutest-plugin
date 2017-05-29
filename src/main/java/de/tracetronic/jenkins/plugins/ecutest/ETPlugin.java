@@ -70,12 +70,12 @@ public class ETPlugin extends Plugin {
     /**
      * Defines the maximum allowed ECU-TEST version supported by this plugin.
      */
-    public static final ToolVersion ET_MAX_VERSION = new ToolVersion(6, 5, 0, 0);
+    public static final ToolVersion ET_MAX_VERSION = new ToolVersion(6, 6, 0, 0);
 
     /**
      * Defines the TEST-GUIDE version that the provided ATX configuration is based on.
      */
-    public static final ToolVersion ATX_VERSION = new ToolVersion(1, 41, 0, 0);
+    public static final ToolVersion ATX_VERSION = new ToolVersion(1, 44, 0, 0);
 
     /**
      * Helper class to easily compare tool versions defined by major, minor, micro and qualifier version. Mainly used to
