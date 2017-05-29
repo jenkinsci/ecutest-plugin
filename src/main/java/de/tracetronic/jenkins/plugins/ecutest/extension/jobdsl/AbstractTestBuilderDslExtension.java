@@ -40,7 +40,10 @@ import com.google.common.base.Preconditions;
 
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.GlobalConstant;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.TMSValidator;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 
 /**
@@ -59,6 +62,11 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
      * Validator to check test related DSL options.
      */
     protected final TestValidator validator = new TestValidator();
+
+    /**
+     * Validator to check TMS related DSL options.
+     */
+    protected final TMSValidator tmsValidator = new TMSValidator();
 
     /**
      * {@link Context} class providing common test related methods for the nested DSL context.
@@ -314,6 +322,179 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
              */
             public void checkTestFile(final boolean value) {
                 checkTestFile = value;
+            }
+        }
+    }
+
+    /**
+     * {@link Context} class providing common import methods for the nested DSL context.
+     */
+    public class AbstractImportContext implements Context {
+
+        /**
+         * Option name for the import path.
+         */
+        protected static final String OPT_IMPORT_PATH = "importPath";
+
+        /**
+         * Option name for the credentials id.
+         */
+        protected static final String OPT_CREDENTIALS_ID = "credentialsId";
+
+        /**
+         * The list of configured test importerts.
+         */
+        protected final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
+
+        /**
+         * The import path.
+         */
+        protected String importPath;
+
+        /**
+         * Option defining the import path.
+         *
+         * @param value
+         *            the value
+         */
+        public void importPath(final String value) {
+            final FormValidation validation = tmsValidator.validateImportPath(value);
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            importPath = value;
+        }
+
+        /**
+         * {@link Context} class providing the import from test management system methods for the nested DSL context.
+         */
+        public class ImportTMSContext extends AbstractImportContext {
+
+            /**
+             * The import timeout.
+             */
+            protected String timeout = String.valueOf(ImportProjectConfig.getDefaultTimeout());
+            /**
+             * Specifies whether to import missing packages.
+             */
+            protected boolean importMissingPackages;
+
+            /**
+             * Option defining the import timeout.
+             *
+             * @param value
+             *            the value
+             */
+            public void timeout(final String value) {
+                final FormValidation validation = tmsValidator.validateTimeout(value,
+                        ImportProjectConfig.getDefaultTimeout());
+                Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+                timeout = value;
+            }
+
+            /**
+             * Option defining the import timeout.
+             *
+             * @param value
+             *            the value as Integer
+             */
+            public void timeout(final int value) {
+                timeout(String.valueOf((Object) value));
+            }
+
+            /**
+             * Option defining whether to import missing packages.
+             *
+             * @param value
+             *            the value
+             */
+            public void importMissingPackages(final boolean value) {
+                importMissingPackages = value;
+            }
+        }
+    }
+
+    /**
+     * {@link Context} class providing common export methods for the nested DSL context.
+     */
+    public class AbstractExportContext implements Context {
+
+        /**
+         * Option name for the export path.
+         */
+        protected static final String OPT_EXPORT_PATH = "exportPath";
+
+        /**
+         * Option name for the credentials id.
+         */
+        protected static final String OPT_CREDENTIALS_ID = "credentialsId";
+
+        /**
+         * The list of configured test exporters.
+         */
+        protected final List<TMSConfig> exportConfigs = new ArrayList<TMSConfig>();
+
+        /**
+         * The export path.
+         */
+        protected String exportPath;
+
+        /**
+         * Option defining the export path.
+         *
+         * @param value
+         *            the value
+         */
+        public void exportPath(final String value) {
+            final FormValidation validation = tmsValidator.validateExportPath(value);
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            exportPath = value;
+        }
+
+        /**
+         * {@link Context} class providing the export to test management system methods for the nested DSL context.
+         */
+        public class ExportTMSContext extends AbstractExportContext {
+
+            /**
+             * The export timeout.
+             */
+            protected String timeout = String.valueOf(TMSConfig.getDefaultTimeout());
+
+            /**
+             * Specifies whether missing export path will be created.
+             */
+            protected boolean createNewPath;
+
+            /**
+             * Option defining the export timeout.
+             *
+             * @param value
+             *            the value
+             */
+            public void timeout(final String value) {
+                final FormValidation validation = tmsValidator.validateTimeout(value,
+                        TMSConfig.getDefaultTimeout());
+                Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+                timeout = value;
+            }
+
+            /**
+             * Option defining the export timeout.
+             *
+             * @param value
+             *            the value as Integer
+             */
+            public void timeout(final int value) {
+                timeout(String.valueOf((Object) value));
+            }
+
+            /**
+             * Option defining whether missing export path will be created.
+             *
+             * @param value
+             *            the value
+             */
+            public void createNewPath(final boolean value) {
+                createNewPath = value;
             }
         }
     }

@@ -108,6 +108,10 @@ freeStyleJob("testBuilder") {
                 importPath("import")
                 timeout(600)
             }
+            importAttributesFromTMS("credentialsId", "test.pkg", "600")
+            importAttributesFromTMS("credentialsId", "test.pkg") {
+                timeout(600)
+            }
         }
         importProjects {
             importFromArchive("test.prz", "import", "import", false)
@@ -124,7 +128,35 @@ freeStyleJob("testBuilder") {
             }
             importFromTMSDir("credentialsId", "Root/TestDir", "import", "600")
             importFromTMSDir("credentialsId", "Root/TestDir") {
-                importPath("import")6.6
+                importPath("import")
+                timeout(600)
+            }
+            importAttributesFromTMS("credentialsId", "test.prj", "600")
+            importAttributesFromTMS("credentialsId", "test.prj") {
+                timeout(600)
+            }
+        }
+        exportPackages {
+            exportToTMS("credentialsId", "test.pkg", "Subject/Test", true, "600")
+            exportToTMS("credentialsId", "test.pkg") {
+                exportPath("Subject/Test")
+                createNewPath(true)
+                timeout(600)
+            }
+            exportAttributesToTMS("credentialsId", "test.pkg", "600")
+            exportAttributesToTMS("credentialsId", "test.pkg") {
+                timeout(600)
+            }
+        }
+        exportProjects {
+            exportToTMS("credentialsId", "test.prj", "Root/Test", true, "600")
+            exportToTMS("credentialsId", "test.prj") {
+                exportPath("Root/Test")
+                createNewPath(true)
+                timeout(600)
+            }
+            exportAttributesToTMS("credentialsId", "test.prj", "600")
+            exportAttributesToTMS("credentialsId", "test.prj") {
                 timeout(600)
             }
         }

@@ -29,6 +29,7 @@ def strScanMode = 'PACKAGES_ONLY'
 def bRecursiveScan = true
 def strArchivePath = 'test.prz'
 def strImportPath = 'import'
+def strExportPath = 'export'
 def bReplaceFiles = false
 def strCredentialsId = 'credentialsId'
 def strPackagePath = 'Subject/Test'
@@ -36,6 +37,7 @@ def strPackageDirPath = 'Subject/TestDir'
 def strProjectPath = 'Root/Test'
 def strProjectDirPath = 'Root/TestDir'
 def bImportMissingPackages = true
+def bCreateNewPath = true
 
 freeStyleJob("${strJobName}") {
     steps {
@@ -147,6 +149,10 @@ freeStyleJob("${strJobName}") {
                 importPath("${strImportPath}")
                 timeout(intTimeout)
             }
+            importAttributesFromTMS("${strCredentialsId}", "${strPkgFile}", "${strTimeout}")
+            importAttributesFromTMS("${strCredentialsId}", "${strPkgFile}") {
+                timeout(intTimeout)
+            }
         }
         importProjects {
             importFromArchive("${strArchivePath}", "${strImportPath}", "${strImportPath}", bReplaceFiles)
@@ -164,6 +170,34 @@ freeStyleJob("${strJobName}") {
             importFromTMSDir("${strCredentialsId}", "${strProjectDirPath}", "${strImportPath}", "${strTimeout}")
             importFromTMSDir("${strCredentialsId}", "${strProjectDirPath}") {
                 importPath("${strImportPath}")
+                timeout(intTimeout)
+            }
+            importAttributesFromTMS("${strCredentialsId}", "${strPrjFile}", "${strTimeout}")
+            importAttributesFromTMS("${strCredentialsId}", "${strPrjFile}") {
+                timeout(intTimeout)
+            }
+        }
+        exportPackages {
+            exportToTMS("${strCredentialsId}", "${strPkgFile}", "${strPackagePath}", bCreateNewPath, "${strTimeout}")
+            exportToTMS("${strCredentialsId}", "${strPkgFile}") {
+                exportPath("${strPackagePath}")
+                createNewPath(bCreateNewPath)
+                timeout(intTimeout)
+            }
+            exportAttributesToTMS("${strCredentialsId}", "${strPkgFile}", "${strTimeout}")
+            exportAttributesToTMS("${strCredentialsId}", "${strPkgFile}") {
+                timeout(intTimeout)
+            }
+        }
+        exportProjects {
+            exportToTMS("${strCredentialsId}", "${strPrjFile}", "${strProjectPath}", bCreateNewPath, "${strTimeout}")
+            exportToTMS("${strCredentialsId}", "${strPrjFile}") {
+                exportPath("${strProjectPath}")
+                createNewPath(bCreateNewPath)
+                timeout(intTimeout)
+            }
+            exportAttributesToTMS("${strCredentialsId}", "${strPrjFile}", "${strTimeout}")
+            exportAttributesToTMS("${strCredentialsId}", "${strPrjFile}") {
                 timeout(intTimeout)
             }
         }
