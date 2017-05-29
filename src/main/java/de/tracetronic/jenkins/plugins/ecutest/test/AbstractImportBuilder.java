@@ -206,6 +206,8 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
                 final ImportProjectClient importClient = new ImportProjectClient(
                         (ImportProjectAttributeConfig) expImportConfig);
                 isImported = importClient.importProjectAttributes(workspace, launcher, listener);
+            } else {
+                logger.logError("Unsupported import configuration of type:" + importConfig.getClass());
             }
             if (!isImported) {
                 return false;

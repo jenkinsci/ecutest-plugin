@@ -49,6 +49,12 @@ public class ImportPackageConfig extends ImportConfig {
     private static final long serialVersionUID = 1L;
 
     /**
+     * @deprecated since 1.17
+     */
+    @Deprecated
+    private transient String packagePath;
+
+    /**
      * Instantiates a new {@link ImportPackageConfig}.
      *
      * @param tmsPath
@@ -71,10 +77,9 @@ public class ImportPackageConfig extends ImportConfig {
      *
      * @return an instance of this class with all the new fields transferred from the old structure to the new one
      */
-    @SuppressWarnings("deprecation")
     public final Object readResolve() {
-        if (getProjectPath() != null) {
-            return new ImportPackageConfig(getProjectPath(), getImportPath(), getCredentialsId(), getTimeout());
+        if (packagePath != null) {
+            return new ImportPackageConfig(packagePath, getImportPath(), getCredentialsId(), getTimeout());
         }
         return this;
     }
@@ -106,7 +111,7 @@ public class ImportPackageConfig extends ImportConfig {
     /**
      * DescriptorImpl for {@link ImportPackageConfig}.
      */
-    @Extension(ordinal = 2)
+    @Extension(ordinal = 3)
     public static class DescriptorImpl extends ImportConfig.DescriptorImpl {
 
         @Override

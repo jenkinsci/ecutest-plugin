@@ -147,7 +147,7 @@ public class ImportProjectClient extends AbstractTMSClient {
         boolean isImported = false;
         if (isCompatible(ET_MIN_ATTR_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = ((ImportProjectConfig) importConfig)
+                final StandardUsernamePasswordCredentials credentials = ((ImportProjectAttributeConfig) importConfig)
                         .getCredentials();
                 if (login(credentials, launcher, listener)) {
                     isImported = importProjectAttributesFromTMS(launcher, listener);
@@ -391,13 +391,13 @@ public class ImportProjectClient extends AbstractTMSClient {
         public Boolean call() throws IOException {
             boolean isImported = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            logger.logInfo(String.format("- Importing project attributes to %s from test management system...",
+            logger.logInfo(String.format("- Importing attributes of project %s from test management system...",
                     importConfig.getFilePath()));
             final String progId = ETComProgId.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 isImported = tm.importProjectAttributes(importConfig.getFilePath(), importConfig.getParsedTimeout());
-                logger.logInfo(String.format("-> Project attributes imported successfully to %s.",
+                logger.logInfo(String.format("-> Project attributes imported successfully.",
                         importConfig.getFilePath()));
             } catch (final ETComException e) {
                 logger.logError("-> Importing project attributes failed: " + e.getMessage());

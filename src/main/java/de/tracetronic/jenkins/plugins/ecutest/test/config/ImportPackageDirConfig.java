@@ -48,7 +48,7 @@ public class ImportPackageDirConfig extends ImportPackageConfig {
     /**
      * Instantiates a new {@link ImportPackageDirConfig}.
      *
-     * @param packagePath
+     * @param tmsPath
      *            the package directory path in test management system
      * @param importPath
      *            the import path
@@ -58,9 +58,9 @@ public class ImportPackageDirConfig extends ImportPackageConfig {
      *            the import timeout
      */
     @DataBoundConstructor
-    public ImportPackageDirConfig(final String packagePath, final String importPath,
+    public ImportPackageDirConfig(final String tmsPath, final String importPath,
             final String credentialsId, final String timeout) {
-        super(packagePath, importPath, credentialsId, timeout);
+        super(tmsPath, importPath, credentialsId, timeout);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ImportPackageDirConfig extends ImportPackageConfig {
     /**
      * DescriptorImpl for {@link ImportPackageDirConfig}.
      */
-    @Extension(ordinal = 1)
+    @Extension(ordinal = 2)
     public static class DescriptorImpl extends ImportPackageConfig.DescriptorImpl {
 
         @Override

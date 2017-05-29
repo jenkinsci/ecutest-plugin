@@ -73,7 +73,7 @@ public class ImportProjectDirConfig extends ImportProjectConfig {
     /**
      * DescriptorImpl for {@link ImportProjectDirConfig}.
      */
-    @Extension(ordinal = 1)
+    @Extension(ordinal = 2)
     public static class DescriptorImpl extends ImportProjectConfig.DescriptorImpl {
 
         @Override

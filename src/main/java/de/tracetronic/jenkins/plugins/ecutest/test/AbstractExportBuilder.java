@@ -207,6 +207,8 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
                 final ExportProjectClient exportClient = new ExportProjectClient(
                         (ExportProjectAttributeConfig) expExportConfig);
                 isExported = exportClient.exportProjectAttributes(workspace, launcher, listener);
+            } else {
+                logger.logError("Unsupported export configuration of type:" + exportConfig.getClass());
             }
             if (!isExported) {
                 return false;

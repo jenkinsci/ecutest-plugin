@@ -138,7 +138,7 @@ public class ImportPackageClient extends AbstractTMSClient {
         boolean isImported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = ((ImportPackageConfig) importConfig)
+                final StandardUsernamePasswordCredentials credentials = ((ImportPackageAttributeConfig) importConfig)
                         .getCredentials();
                 if (login(credentials, launcher, listener)) {
                     isImported = importPackageAttributesFromTMS(launcher, listener);
@@ -321,13 +321,13 @@ public class ImportPackageClient extends AbstractTMSClient {
         public Boolean call() throws IOException {
             boolean isImported = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            logger.logInfo(String.format("- Importing package attributes to %s from test management system...",
+            logger.logInfo(String.format("- Importing attributes of package %s from test management system...",
                     importConfig.getFilePath()));
             final String progId = ETComProgId.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 isImported = tm.importPackageAttributes(importConfig.getFilePath(), importConfig.getParsedTimeout());
-                logger.logInfo(String.format("-> Package attributes imported successfully to %s.",
+                logger.logInfo(String.format("-> Package attributes imported successfully.",
                         importConfig.getFilePath()));
             } catch (final ETComException e) {
                 logger.logError("-> Importing package attributes failed: " + e.getMessage());

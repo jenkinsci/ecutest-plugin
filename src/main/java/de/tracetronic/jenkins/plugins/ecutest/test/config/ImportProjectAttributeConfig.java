@@ -79,7 +79,7 @@ public class ImportProjectAttributeConfig extends ImportAttributeConfig {
 
         @Override
         public FormValidation doCheckFilePath(@QueryParameter final String value) {
-            return tmsValidator.validatePackageFile(value);
+            return tmsValidator.validateProjectFile(value);
         }
 
         @Override

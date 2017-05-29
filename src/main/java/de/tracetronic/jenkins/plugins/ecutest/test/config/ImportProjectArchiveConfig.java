@@ -53,6 +53,12 @@ public class ImportProjectArchiveConfig extends ImportConfig {
     private final boolean replaceFiles;
 
     /**
+     * @deprecated since 1.17
+     */
+    @Deprecated
+    private transient String projectPath;
+
+    /**
      * Instantiates a new {@link ImportProjectArchiveConfig}.
      *
      * @param tmsPath
@@ -77,11 +83,9 @@ public class ImportProjectArchiveConfig extends ImportConfig {
      *
      * @return an instance of this class with all the new fields transferred from the old structure to the new one
      */
-    @SuppressWarnings("deprecation")
     public final Object readResolve() {
-        if (getProjectPath() != null) {
-            return new ImportProjectArchiveConfig(getProjectPath(), getImportPath(), getImportConfigPath(),
-                    isReplaceFiles());
+        if (projectPath != null) {
+            return new ImportProjectArchiveConfig(projectPath, getImportPath(), getImportConfigPath(), isReplaceFiles());
         }
         return this;
     }
@@ -136,7 +140,7 @@ public class ImportProjectArchiveConfig extends ImportConfig {
     /**
      * DescriptorImpl for {@link ImportProjectArchiveConfig}.
      */
-    @Extension(ordinal = 3)
+    @Extension(ordinal = 4)
     public static class DescriptorImpl extends ImportConfig.DescriptorImpl {
 
         @Override

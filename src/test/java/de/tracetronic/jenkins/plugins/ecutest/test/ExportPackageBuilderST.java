@@ -147,7 +147,7 @@ public class ExportPackageBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  step([$class: 'ExportPackageBuilder', "
-                + "        importConfigs: [[$class: 'ExportPackageConfig', filePath: 'test.pkg',"
+                + "        exportConfigs: [[$class: 'ExportPackageConfig', filePath: 'test.pkg',"
                 + "        exportPath: 'export', createNewPath: false,"
                 + "        credentialsId: 'credentialsId', timeout: '600']]])\n"
                 + "}";
@@ -159,7 +159,7 @@ public class ExportPackageBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  step([$class: 'ExportPackageBuilder', "
-                + "        importConfigs: [[$class: 'ExportPackageConfig', filePath: 'test.pkg']]])\n"
+                + "        exportConfigs: [[$class: 'ExportPackageConfig', filePath: 'test.pkg']]])\n"
                 + "}";
         assertPipelineStep(script);
     }
@@ -171,7 +171,7 @@ public class ExportPackageBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  exportPackages "
-                + "     importConfigs: [[$class: 'ExportPackageConfig', filePath: 'test.pkg',"
+                + "     exportConfigs: [[$class: 'ExportPackageConfig', filePath: 'test.pkg',"
                 + "        exportPath: 'export', createNewPath: false, "
                 + "        credentialsId: 'credentialsId', timeout: '600']]\n"
                 + "}";
@@ -185,7 +185,7 @@ public class ExportPackageBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  exportPackages "
-                + "     importConfigs: [[$class: 'ExportPackageConfig', filePath: 'test.pkg']]\n"
+                + "     exportConfigs: [[$class: 'ExportPackageConfig', filePath: 'test.pkg']]\n"
                 + "}";
         assertPipelineStep(script);
     }
@@ -195,7 +195,7 @@ public class ExportPackageBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  step([$class: 'ExportPackageBuilder', "
-                + "        importConfigs: [[$class: 'ExportPackageAttributeConfig', filePath: 'test.pkg',"
+                + "        exportConfigs: [[$class: 'ExportPackageAttributeConfig', filePath: 'test.pkg',"
                 + "        credentialsId: 'credentialsId', timeout: '600']]])\n"
                 + "}";
         assertPipelineStep(script);
@@ -206,7 +206,7 @@ public class ExportPackageBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  step([$class: 'ExportPackageBuilder', "
-                + "        importConfigs: [[$class: 'ExportPackageAttributeConfig', filePath: 'test.pkg']]])\n"
+                + "        exportConfigs: [[$class: 'ExportPackageAttributeConfig', filePath: 'test.pkg']]])\n"
                 + "}";
         assertPipelineStep(script);
     }
@@ -218,7 +218,7 @@ public class ExportPackageBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  exportPackages "
-                + "     importConfigs: [[$class: 'ExportPackageAttributeConfig', filePath: 'test.pkg',"
+                + "     exportConfigs: [[$class: 'ExportPackageAttributeConfig', filePath: 'test.pkg',"
                 + "        credentialsId: 'credentialsId', timeout: '600']]\n"
                 + "}";
         assertPipelineStep(script);
@@ -231,7 +231,7 @@ public class ExportPackageBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  exportPackages "
-                + "     importConfigs: [[$class: 'ExportPackageAttributeConfig', filePath: 'test.pkg']]\n"
+                + "     exportConfigs: [[$class: 'ExportPackageAttributeConfig', filePath: 'test.pkg']]\n"
                 + "}";
         assertPipelineStep(script);
     }
@@ -287,7 +287,7 @@ public class ExportPackageBuilderST extends SystemTestBase {
         assertThat(delegate, instanceOf(ExportPackageBuilder.class));
 
         final ExportPackageBuilder after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "importConfigs");
+        jenkins.assertEqualBeans(before, after, "exportConfigs");
     }
 
     /**
@@ -296,11 +296,11 @@ public class ExportPackageBuilderST extends SystemTestBase {
      * @return the configured builder
      */
     private ExportPackageBuilder createExportPackageBuilder() {
-        final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
+        final List<TMSConfig> exportConfigs = new ArrayList<TMSConfig>();
         final ExportPackageConfig tmsConfig = new ExportPackageConfig("test.pkg", "export", true,
                 "credentialsId", "600");
-        importConfigs.add(tmsConfig);
-        return new ExportPackageBuilder(importConfigs);
+        exportConfigs.add(tmsConfig);
+        return new ExportPackageBuilder(exportConfigs);
     }
 
     /**
@@ -309,10 +309,10 @@ public class ExportPackageBuilderST extends SystemTestBase {
      * @return the configured builder
      */
     private ExportPackageBuilder createExportPackageAttributeBuilder() {
-        final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
+        final List<TMSConfig> exportConfigs = new ArrayList<TMSConfig>();
         final ExportPackageAttributeConfig attributeConfig = new ExportPackageAttributeConfig("test.pkg",
                 "credentialsId", "600");
-        importConfigs.add(attributeConfig);
-        return new ExportPackageBuilder(importConfigs);
+        exportConfigs.add(attributeConfig);
+        return new ExportPackageBuilder(exportConfigs);
     }
 }
