@@ -85,7 +85,8 @@ public class ImportProjectArchiveConfig extends ImportConfig {
      */
     public final Object readResolve() {
         if (projectPath != null) {
-            return new ImportProjectArchiveConfig(projectPath, getImportPath(), getImportConfigPath(), isReplaceFiles());
+            return new ImportProjectArchiveConfig(projectPath, getImportPath(),
+                    getImportConfigPath(), isReplaceFiles());
         }
         return this;
     }
@@ -120,7 +121,7 @@ public class ImportProjectArchiveConfig extends ImportConfig {
             result = that.canEqual(this)
                     && super.equals(that)
                     && (importConfigPath == null ? that.importConfigPath == null : importConfigPath
-                    .equals(that.importConfigPath))
+                            .equals(that.importConfigPath))
                     && replaceFiles == that.replaceFiles;
         }
         return result;

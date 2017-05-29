@@ -172,7 +172,7 @@ public class ImportProjectClient extends AbstractTMSClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private boolean importProjectArchive(final Launcher launcher, final TaskListener listener)
+    public boolean importProjectArchive(final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
         return launcher.getChannel().call(
                 new ImportProjectArchiveCallable((ImportProjectArchiveConfig) importConfig, listener));

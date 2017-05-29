@@ -70,11 +70,11 @@ public class ExportProjectConfig extends ExportConfig {
 
     @Override
     public ExportProjectConfig expand(final EnvVars envVars) {
-        final String expPackagePath = envVars.expand(getFilePath());
+        final String expFilePath = envVars.expand(getFilePath());
         final String expExportPath = envVars.expand(getExportPath());
         final String expCredentialsId = envVars.expand(getCredentialsId());
         final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars, String.valueOf(DEFAULT_TIMEOUT));
-        return new ExportProjectConfig(expPackagePath, expExportPath, isCreateNewPath(), expCredentialsId, expTimeout);
+        return new ExportProjectConfig(expFilePath, expExportPath, isCreateNewPath(), expCredentialsId, expTimeout);
     }
 
     /**

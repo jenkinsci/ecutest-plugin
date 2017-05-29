@@ -62,6 +62,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportAttributeConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageAttributeConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectAttributeConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
@@ -206,8 +207,13 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
                 final ImportProjectClient importClient = new ImportProjectClient(
                         (ImportProjectAttributeConfig) expImportConfig);
                 isImported = importClient.importProjectAttributes(workspace, launcher, listener);
+            } else if (importConfig instanceof ImportProjectArchiveConfig) {
+                // Import project archive
+                final ImportProjectClient importClient = new ImportProjectClient(
+                        (ImportProjectArchiveConfig) expImportConfig);
+                isImported = importClient.importProjectArchive(launcher, listener);
             } else {
-                logger.logError("Unsupported import configuration of type:" + importConfig.getClass());
+                logger.logError("Unsupported import configuration of type: " + importConfig.getClass());
             }
             if (!isImported) {
                 return false;
