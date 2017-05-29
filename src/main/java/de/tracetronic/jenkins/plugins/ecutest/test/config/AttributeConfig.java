@@ -29,58 +29,61 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
-import hudson.util.FormValidation;
-
-import org.kohsuke.stapler.QueryParameter;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * Common base class for {@link ExportPackageAttributeConfig} and {@link ExportProjectAttributeConfig}.
+ * Common base class for {@link ExportAttributeConfig} and {@link ImportAttributeConfig}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class ExportAttributeConfig extends AttributeConfig {
+public abstract class AttributeConfig extends TMSConfig {
 
     private static final long serialVersionUID = 1L;
 
+    private final String filePath;
+
     /**
-     * Instantiates a new {@link ExportAttributeConfig}.
+     * Instantiates a new {@link AttributeConfig}.
      *
      * @param filePath
-     *            the test file path whose attributes to export
+     *            the test file path whose attributes to import or export
      * @param credentialsId
      *            the credentials id
      * @param timeout
      *            the export timeout
      */
-    public ExportAttributeConfig(final String filePath, final String credentialsId, final String timeout) {
-        super(filePath, credentialsId, timeout);
+    public AttributeConfig(final String filePath, final String credentialsId, final String timeout) {
+        super(credentialsId, timeout);
+        this.filePath = StringUtils.trimToEmpty(filePath);
     }
 
     /**
-     * DescriptorImpl for {@link ExportAttributeConfig}.
+     * @return the test file path whose attributes to import or export
      */
-    public abstract static class DescriptorImpl extends TMSConfig.DescriptorImpl {
+    public String getFilePath() {
+        return filePath;
+    }
 
-        /**
-         * Validates the file path to export.
-         *
-         * @param value
-         *            the file path to export
-         * @return the form validation
-         */
-        public FormValidation doCheckFilePath(@QueryParameter final String value) {
-            return tmsValidator.validatePackageFile(value);
+    @Override
+    public final boolean equals(final Object other) {
+        boolean result = false;
+        if (other instanceof AttributeConfig) {
+            final AttributeConfig that = (AttributeConfig) other;
+            final String filePath = getFilePath();
+            final String thatFilePath = that.getFilePath();
+            result = (filePath == null ? thatFilePath == null : filePath.equals(thatFilePath))
+                    && (getCredentialsId() == null ? that.getCredentialsId() == null :
+                        getCredentialsId().equals(that.getCredentialsId()))
+                        && (getTimeout() == null ? that.getTimeout() == null :
+                            getTimeout().equals(that.getTimeout()));
         }
+        return result;
+    }
 
-        /**
-         * Validates the export target path.
-         *
-         * @param value
-         *            the export path
-         * @return the form validation
-         */
-        public FormValidation doCheckExportPath(@QueryParameter final String value) {
-            return tmsValidator.validateExportPath(value);
-        }
+    @Override
+    public final int hashCode() {
+        return new HashCodeBuilder(17, 31).append(getFilePath()).append(getCredentialsId()).append(getTimeout())
+                .toHashCode();
     }
 }

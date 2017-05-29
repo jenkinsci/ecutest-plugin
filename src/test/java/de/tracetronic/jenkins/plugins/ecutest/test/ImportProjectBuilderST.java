@@ -149,7 +149,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
         WebAssert.assertTextPresent(page, Messages.ImportProjectBuilder_DisplayName());
         jenkins.assertXPath(page, "//select[@name='_.credentialsId']");
         jenkins.assertXPath(page, "//option[@value='credentialsId']");
-        jenkins.assertXPath(page, "//input[@name='_.projectPath' and @value='project']");
+        jenkins.assertXPath(page, "//input[@name='_.tmsPath' and @value='project']");
         jenkins.assertXPath(page, "//input[@name='_.importPath' and @value='import']");
         jenkins.assertXPath(page, "//input[@name='_.importMissingPackages' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.timeout' and @value='600']");
@@ -165,7 +165,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
         WebAssert.assertTextPresent(page, Messages.ImportProjectBuilder_DisplayName());
         jenkins.assertXPath(page, "//select[@name='_.credentialsId']");
         jenkins.assertXPath(page, "//option[@value='credentialsId']");
-        jenkins.assertXPath(page, "//input[@name='_.projectPath' and @value='projectDir']");
+        jenkins.assertXPath(page, "//input[@name='_.tmsPath' and @value='projectDir']");
         jenkins.assertXPath(page, "//input[@name='_.importPath' and @value='import']");
         jenkins.assertXPath(page, "//input[@name='_.timeout' and @value='600']");
     }
@@ -221,7 +221,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
-                + "        importConfigs: [[$class: 'ImportProjectTMSConfig', projectPath: 'project',"
+                + "        importConfigs: [[$class: 'ImportProjectTMSConfig', tmsPath: 'project',"
                 + "        importPath: 'import', importMissingPackages: false,"
                 + "        credentialsId: 'credentialsId', timeout: '600']]])\n"
                 + "}";
@@ -233,7 +233,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
-                + "        importConfigs: [[$class: 'ImportProjectTMSConfig', projectPath: 'project']]])\n"
+                + "        importConfigs: [[$class: 'ImportProjectTMSConfig', tmsPath: 'project']]])\n"
                 + "}";
         assertPipelineStep(script);
     }
@@ -245,7 +245,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  importProjects "
-                + "     importConfigs: [[$class: 'ImportProjectTMSConfig', projectPath: projectPath: 'project',"
+                + "     importConfigs: [[$class: 'ImportProjectTMSConfig', tmsPath: projectPath: 'project',"
                 + "        importPath: 'import', importMissingPackages: false, "
                 + "        credentialsId: 'credentialsId', timeout: '600']]\n"
                 + "}";
@@ -259,7 +259,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  importProjects "
-                + "     importConfigs: [[$class: 'ImportProjectTMSConfig', projectPath: 'project']]\n"
+                + "     importConfigs: [[$class: 'ImportProjectTMSConfig', tmsPath: 'project']]\n"
                 + "}";
         assertPipelineStep(script);
     }
@@ -269,7 +269,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
-                + "        importConfigs: [[$class: 'ImportProjectDirTMSConfig', projectPath: 'projectDir',"
+                + "        importConfigs: [[$class: 'ImportProjectDirTMSConfig', tmsPath: 'projectDir',"
                 + "        importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]])\n"
                 + "}";
         assertPipelineStep(script);
@@ -280,7 +280,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
-                + "        importConfigs: [[$class: 'ImportProjectDirTMSConfig', projectPath: 'projectDir']]])\n"
+                + "        importConfigs: [[$class: 'ImportProjectDirTMSConfig', tmsPath: 'projectDir']]])\n"
                 + "}";
         assertPipelineStep(script);
     }
@@ -292,7 +292,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  importProjects "
-                + "     importConfigs: [[$class: 'ImportProjectDirTMSConfig', projectPath: projectPath: 'projectDir',"
+                + "     importConfigs: [[$class: 'ImportProjectDirTMSConfig', tmsPath: projectPath: 'projectDir',"
                 + "        importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]\n"
                 + "}";
         assertPipelineStep(script);
@@ -305,7 +305,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  importProjects "
-                + "     importConfigs: [[$class: 'ImportProjectDirTMSConfig', projectPath: 'projectDir']]\n"
+                + "     importConfigs: [[$class: 'ImportProjectDirTMSConfig', tmsPath: 'projectDir']]\n"
                 + "}";
         assertPipelineStep(script);
     }

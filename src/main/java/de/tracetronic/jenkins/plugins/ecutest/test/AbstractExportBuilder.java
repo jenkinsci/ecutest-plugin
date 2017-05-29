@@ -183,6 +183,7 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
             return false;
         }
 
+        boolean isExported = false;
         for (final TMSConfig exportConfig : exportConfigs) {
             // Expand export configuration
             final EnvVars buildEnv = run.getEnvironment(listener);
@@ -190,30 +191,25 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
             if (exportConfig instanceof ExportPackageConfig) {
                 // Export package
                 final ExportPackageClient exportClient = new ExportPackageClient((ExportPackageConfig) expExportConfig);
-                if (!exportClient.exportPackage(workspace, launcher, listener)) {
-                    return false;
-                }
+                isExported = exportClient.exportPackage(workspace, launcher, listener);
             } else if (exportConfig instanceof ExportPackageAttributeConfig) {
                 // Export package attributes
                 final ExportPackageClient exportClient = new ExportPackageClient(
                         (ExportPackageAttributeConfig) expExportConfig);
-                if (!exportClient.exportPackageAttributes(workspace, launcher, listener)) {
-                    return false;
-                }
+                isExported = exportClient.exportPackageAttributes(workspace, launcher, listener);
             } else if (exportConfig instanceof ExportProjectConfig) {
                 // Export project
                 final ExportProjectClient exportClient = new ExportProjectClient(
                         (ExportProjectConfig) expExportConfig);
-                if (!exportClient.exportProject(workspace, launcher, listener)) {
-                    return false;
-                }
+                isExported = exportClient.exportProject(workspace, launcher, listener);
             } else if (exportConfig instanceof ExportProjectAttributeConfig) {
                 // Export project attributes
                 final ExportProjectClient exportClient = new ExportProjectClient(
                         (ExportProjectAttributeConfig) expExportConfig);
-                if (!exportClient.exportProjectAttributes(workspace, launcher, listener)) {
-                    return false;
-                }
+                isExported = exportClient.exportProjectAttributes(workspace, launcher, listener);
+            }
+            if (!isExported) {
+                return false;
             }
         }
         return true;

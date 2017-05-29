@@ -81,6 +81,7 @@ public abstract class ImportConfig extends TMSConfig {
     }
 
     @Override
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     public boolean equals(final Object other) {
         boolean result = false;
         if (canEqual(other) && other instanceof ImportConfig) {

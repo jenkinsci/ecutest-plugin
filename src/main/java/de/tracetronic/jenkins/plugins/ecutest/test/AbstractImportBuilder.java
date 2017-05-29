@@ -183,6 +183,7 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
             return false;
         }
 
+        boolean isImported = false;
         for (final TMSConfig importConfig : importConfigs) {
             // Expand import configuration
             final EnvVars buildEnv = run.getEnvironment(listener);
@@ -190,30 +191,25 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
             if (importConfig instanceof ImportPackageConfig) {
                 // Import package
                 final ImportPackageClient importClient = new ImportPackageClient((ImportPackageConfig) expImportConfig);
-                if (!importClient.importPackage(workspace, launcher, listener)) {
-                    return false;
-                }
+                isImported = importClient.importPackage(workspace, launcher, listener);
             } else if (importConfig instanceof ImportPackageAttributeConfig) {
                 // Import package attributes
                 final ImportPackageClient importClient = new ImportPackageClient(
                         (ImportPackageAttributeConfig) expImportConfig);
-                if (!importClient.importPackageAttributes(workspace, launcher, listener)) {
-                    return false;
-                }
+                isImported = importClient.importPackageAttributes(workspace, launcher, listener);
             } else if (importConfig instanceof ImportProjectConfig) {
                 // Import project
                 final ImportProjectClient importClient = new ImportProjectClient(
                         (ImportProjectConfig) expImportConfig);
-                if (!importClient.importProject(workspace, launcher, listener)) {
-                    return false;
-                }
+                isImported = importClient.importProject(workspace, launcher, listener);
             } else if (importConfig instanceof ImportProjectAttributeConfig) {
                 // Import project attributes
                 final ImportProjectClient importClient = new ImportProjectClient(
                         (ImportProjectAttributeConfig) expImportConfig);
-                if (!importClient.importProjectAttributes(workspace, launcher, listener)) {
-                    return false;
-                }
+                isImported = importClient.importProjectAttributes(workspace, launcher, listener);
+            }
+            if (!isImported) {
+                return false;
             }
         }
         return true;

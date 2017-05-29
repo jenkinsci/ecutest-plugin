@@ -31,8 +31,6 @@ package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
 import hudson.util.FormValidation;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.QueryParameter;
 
 /**
@@ -40,11 +38,9 @@ import org.kohsuke.stapler.QueryParameter;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class ImportAttributeConfig extends TMSConfig {
+public abstract class ImportAttributeConfig extends AttributeConfig {
 
     private static final long serialVersionUID = 1L;
-
-    private final String filePath;
 
     /**
      * Instantiates a new {@link ImportAttributeConfig}.
@@ -57,37 +53,7 @@ public abstract class ImportAttributeConfig extends TMSConfig {
      *            the import timeout
      */
     public ImportAttributeConfig(final String filePath, final String credentialsId, final String timeout) {
-        super(credentialsId, timeout);
-        this.filePath = StringUtils.trimToEmpty(filePath);
-    }
-
-    /**
-     * @return the test file path whose attributes to import
-     */
-    public String getFilePath() {
-        return filePath;
-    }
-
-    @Override
-    public final boolean equals(final Object other) {
-        boolean result = false;
-        if (other instanceof ImportAttributeConfig) {
-            final ImportAttributeConfig that = (ImportAttributeConfig) other;
-            final String filePath = getFilePath();
-            final String thatFilePath = that.getFilePath();
-            result = (filePath == null ? thatFilePath == null : filePath.equals(thatFilePath))
-                    && (getCredentialsId() == null ? that.getCredentialsId() == null :
-                        getCredentialsId().equals(that.getCredentialsId()))
-                        && (getTimeout() == null ? that.getTimeout() == null :
-                            getTimeout().equals(that.getTimeout()));
-        }
-        return result;
-    }
-
-    @Override
-    public final int hashCode() {
-        return new HashCodeBuilder(17, 31).append(getFilePath()).append(getCredentialsId()).append(getTimeout())
-                .toHashCode();
+        super(filePath, credentialsId, timeout);
     }
 
     /**
