@@ -55,6 +55,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import de.tracetronic.jenkins.plugins.ecutest.SystemTestBase;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectAttributeConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
@@ -90,13 +91,19 @@ public class ImportProjectBuilderST extends SystemTestBase {
 
     @Test
     public void testDefaultTMSConfigRoundTripStep() throws Exception {
-        final ImportProjectBuilder before = createImportTMSBuilder();
+        final ImportProjectBuilder before = createImportProjectBuilder();
         testDefaultConfigRoundTripStep(before);
     }
 
     @Test
     public void testDefaultTMSDirConfigRoundTripStep() throws Exception {
-        final ImportProjectBuilder before = createImportTMSDirBuilder();
+        final ImportProjectBuilder before = createImportProjectDirBuilder();
+        testDefaultConfigRoundTripStep(before);
+    }
+
+    @Test
+    public void testDefaultProjectAttributeConfigRoundTripStep() throws Exception {
+        final ImportProjectBuilder before = createImportProjectAttributeBuilder();
         testDefaultConfigRoundTripStep(before);
     }
 
@@ -114,14 +121,20 @@ public class ImportProjectBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testTMSConfigRoundTripStep() throws Exception {
-        final ImportProjectBuilder before = createImportTMSBuilder();
+    public void testProjectConfigRoundTripStep() throws Exception {
+        final ImportProjectBuilder before = createImportProjectBuilder();
         testConfigRoundTripStep(before);
     }
 
     @Test
-    public void testTMSDirConfigRoundTripStep() throws Exception {
-        final ImportProjectBuilder before = createImportTMSDirBuilder();
+    public void testProjectDirConfigRoundTripStep() throws Exception {
+        final ImportProjectBuilder before = createImportProjectDirBuilder();
+        testConfigRoundTripStep(before);
+    }
+
+    @Test
+    public void testProjectAttributeConfigRoundTripStep() throws Exception {
+        final ImportProjectBuilder before = createImportProjectAttributeBuilder();
         testConfigRoundTripStep(before);
     }
 
@@ -140,9 +153,9 @@ public class ImportProjectBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testTMSConfigView() throws Exception {
+    public void testProjectConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ImportProjectBuilder builder = createImportTMSBuilder();
+        final ImportProjectBuilder builder = createImportProjectBuilder();
         project.getBuildersList().add(builder);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
@@ -156,9 +169,9 @@ public class ImportProjectBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testTMSDirConfigView() throws Exception {
+    public void testProjectDirConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ImportProjectBuilder builder = createImportTMSDirBuilder();
+        final ImportProjectBuilder builder = createImportProjectDirBuilder();
         project.getBuildersList().add(builder);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
@@ -167,6 +180,20 @@ public class ImportProjectBuilderST extends SystemTestBase {
         jenkins.assertXPath(page, "//option[@value='credentialsId']");
         jenkins.assertXPath(page, "//input[@name='_.tmsPath' and @value='projectDir']");
         jenkins.assertXPath(page, "//input[@name='_.importPath' and @value='import']");
+        jenkins.assertXPath(page, "//input[@name='_.timeout' and @value='600']");
+    }
+
+    @Test
+    public void testProjectAttributeConfigView() throws Exception {
+        final FreeStyleProject project = jenkins.createFreeStyleProject();
+        final ImportProjectBuilder builder = createImportProjectAttributeBuilder();
+        project.getBuildersList().add(builder);
+
+        final HtmlPage page = getWebClient().getPage(project, "configure");
+        WebAssert.assertTextPresent(page, Messages.ImportProjectAttributeConfig_DisplayName());
+        jenkins.assertXPath(page, "//select[@name='_.credentialsId']");
+        jenkins.assertXPath(page, "//option[@value='credentialsId']");
+        jenkins.assertXPath(page, "//input[@name='_.filePath' and @value='test.prj']");
         jenkins.assertXPath(page, "//input[@name='_.timeout' and @value='600']");
     }
 
@@ -217,7 +244,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testTMSPipelineStep() throws Exception {
+    public void testProjectPipelineStep() throws Exception {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
@@ -229,7 +256,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testDefaultTMSPipelineStep() throws Exception {
+    public void testDefaultProjectPipelineStep() throws Exception {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
@@ -239,7 +266,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testSymbolAnnotatedTMSPipelineStep() throws Exception {
+    public void testSymbolAnnotatedProjectPipelineStep() throws Exception {
         assumeSymbolDependencies();
 
         final String script = ""
@@ -253,7 +280,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testSymbolAnnotatedDefaultTMSPipelineStep() throws Exception {
+    public void testSymbolAnnotatedDefaultProjectPipelineStep() throws Exception {
         assumeSymbolDependencies();
 
         final String script = ""
@@ -265,7 +292,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testTMSDirPipelineStep() throws Exception {
+    public void testProjectDirPipelineStep() throws Exception {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
@@ -276,7 +303,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testDefaultTMSDirPipelineStep() throws Exception {
+    public void testDefaultProjectDirPipelineStep() throws Exception {
         final String script = ""
                 + "node('slaves') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
@@ -286,7 +313,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testSymbolAnnotatedTMSDirPipelineStep() throws Exception {
+    public void testSymbolAnnotatedProjectDirPipelineStep() throws Exception {
         assumeSymbolDependencies();
 
         final String script = ""
@@ -299,13 +326,59 @@ public class ImportProjectBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testSymbolAnnotatedDefaultTMSDirPipelineStep() throws Exception {
+    public void testSymbolAnnotatedDefaultProjectDirPipelineStep() throws Exception {
         assumeSymbolDependencies();
 
         final String script = ""
                 + "node('slaves') {\n"
                 + "  importProjects "
                 + "     importConfigs: [[$class: 'ImportProjectDirConfig', tmsPath: 'projectDir']]\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
+    @Test
+    public void testProjectAttributePipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'ImportProjectBuilder', "
+                + "        importConfigs: [[$class: 'ImportProjectAttributeConfig', filePath: 'test.prj',"
+                + "        credentialsId: 'credentialsId', timeout: '600']]])\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
+    @Test
+    public void testDefaultProjectAttributePipelineStep() throws Exception {
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  step([$class: 'ImportProjectBuilder', "
+                + "        importConfigs: [[$class: 'ImportProjectAttributeConfig', filePath: 'test.prj']]])\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
+    @Test
+    public void testSymbolAnnotatedProjectAttributePipelineStep() throws Exception {
+        assumeSymbolDependencies();
+
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  importProjects "
+                + "     importConfigs: [[$class: 'ImportProjectAttributeConfig', filePath: 'test.prj',"
+                + "        credentialsId: 'credentialsId', timeout: '600']]\n"
+                + "}";
+        assertPipelineStep(script);
+    }
+
+    @Test
+    public void testSymbolAnnotatedDefaultProjectAttributePipelineStep() throws Exception {
+        assumeSymbolDependencies();
+
+        final String script = ""
+                + "node('slaves') {\n"
+                + "  importProjects "
+                + "     importConfigs: [[$class: 'ImportProjectAttributeConfig', filePath: 'test.prj']]\n"
                 + "}";
         assertPipelineStep(script);
     }
@@ -382,7 +455,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
      *
      * @return the configured builder
      */
-    private ImportProjectBuilder createImportTMSBuilder() {
+    private ImportProjectBuilder createImportProjectBuilder() {
         final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
         final ImportProjectConfig tmsConfig = new ImportProjectConfig("project", "import", true,
                 "credentialsId", "600");
@@ -395,11 +468,24 @@ public class ImportProjectBuilderST extends SystemTestBase {
      *
      * @return the configured builder
      */
-    private ImportProjectBuilder createImportTMSDirBuilder() {
+    private ImportProjectBuilder createImportProjectDirBuilder() {
         final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
         final ImportProjectDirConfig tmsDirConfig = new ImportProjectDirConfig(
                 "projectDir", "import", "credentialsId", "600");
         importConfigs.add(tmsDirConfig);
+        return new ImportProjectBuilder(importConfigs);
+    }
+
+    /**
+     * Creates an {@link ImportProjectBuilder} containing a {@link ImportProjectAttributeConfig} configuration.
+     *
+     * @return the configured builder
+     */
+    private ImportProjectBuilder createImportProjectAttributeBuilder() {
+        final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
+        final ImportProjectAttributeConfig attributeConfig = new ImportProjectAttributeConfig("test.prj",
+                "credentialsId", "600");
+        importConfigs.add(attributeConfig);
         return new ImportProjectBuilder(importConfigs);
     }
 }
