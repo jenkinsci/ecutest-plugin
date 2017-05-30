@@ -34,7 +34,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>2.28</version>
+        <version>2.29</version>
         <relativePath />
     </parent>
 
@@ -86,7 +86,7 @@
         <matrix-project.version>1.4</matrix-project.version>
         <icon-shim.version>2.0.2</icon-shim.version>
         <junit.version>1.20</junit.version>
-        <structs.version>1.7</structs.version>
+        <structs.version>1.6</structs.version>
         <job-dsl.version>1.38</job-dsl.version>
         <credentials.version>1.28</credentials.version>
         <jquery-plugin.version>1.11.2-0</jquery-plugin.version>
