@@ -373,7 +373,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
      * DescriptorImpl for {@link JUnitPublisher}.
      */
     @Symbol("publishUNIT")
-    @Extension(ordinal = 10003)
+    @Extension(ordinal = 10003, optional = true)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         private final JUnitValidator unitValidator;
