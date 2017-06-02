@@ -53,6 +53,7 @@ import org.kohsuke.stapler.QueryParameter;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.PackageClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.ProjectClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
@@ -252,16 +253,17 @@ public class TestFolderBuilder extends AbstractTestBuilder {
             final PackageClient testClient = new PackageClient(pkgFile, testConfig, packageConfig, executionConfig);
             logger.logInfo(String.format("Executing package %s...", pkgFile));
             if (testClient.runTestCase(workspace, launcher, listener)) {
-                logger.logInfo("Package executed successfully.");
+                addBuildAction(run, testClient);
+                if (testClient.isAborted()) {
+                    logger.logWarn("Package execution aborted!");
+                    return false;
+                } else {
+                    logger.logInfo("Package executed successfully.");
+                }
             } else {
                 logger.logError("Executing package failed!");
                 return false;
             }
-
-            // Add action for injecting environment variables
-            final int testId = getTestId(run);
-            final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(testId, testClient);
-            run.addAction(envAction);
         }
 
         // Expand project configuration
@@ -272,19 +274,34 @@ public class TestFolderBuilder extends AbstractTestBuilder {
             final ProjectClient testClient = new ProjectClient(prjFile, testConfig, projectConfig, executionConfig);
             logger.logInfo(String.format("Executing project %s...", prjFile));
             if (testClient.runTestCase(workspace, launcher, listener)) {
-                logger.logInfo("Project executed successfully.");
+                addBuildAction(run, testClient);
+                if (testClient.isAborted()) {
+                    logger.logWarn("Project execution aborted!");
+                    return false;
+                } else {
+                    logger.logInfo("Project executed successfully.");
+                }
             } else {
                 logger.logError("Executing project failed!");
                 return false;
             }
-
-            // Add action for injecting environment variables
-            final int testId = getTestId(run);
-            final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(testId, testClient);
-            run.addAction(envAction);
         }
 
         return true;
+    }
+
+    /**
+     * Adds the build action holding test information by injecting environment variables.
+     *
+     * @param run
+     *            the run
+     * @param testClient
+     *            the test client
+     */
+    private void addBuildAction(final Run<?, ?> run, final AbstractTestClient testClient) {
+        final int builderId = getTestId(run);
+        final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(builderId, testClient);
+        run.addAction(envAction);
     }
 
     /**

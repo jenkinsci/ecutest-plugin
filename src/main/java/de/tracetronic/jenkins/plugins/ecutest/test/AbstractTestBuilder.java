@@ -169,7 +169,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
                         logger.logInfo("-> No running Tool-Server instance found.");
                     }
                 }
-                throw new AbortException("Test execution failed!");
+                throw new AbortException("Test executions aborted!");
             }
         } catch (final IOException e) {
             Util.displayIOException(e, listener);

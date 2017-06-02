@@ -126,18 +126,32 @@ public class TestPackageBuilder extends AbstractTestBuilder {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo(String.format("Executing package %s...", testFile));
         if (testClient.runTestCase(workspace, launcher, listener)) {
-            logger.logInfo("Package executed successfully.");
+            addBuildAction(run, testClient);
+            if (testClient.isAborted()) {
+                logger.logWarn("Package execution aborted!");
+                return false;
+            } else {
+                logger.logInfo("Package executed successfully.");
+            }
         } else {
             logger.logError("Executing package failed!");
             return false;
         }
+        return true;
+    }
 
-        // Add action for injecting environment variables
+    /**
+     * Adds the build action holding test information by injecting environment variables.
+     *
+     * @param run
+     *            the run
+     * @param testClient
+     *            the package client
+     */
+    private void addBuildAction(final Run<?, ?> run, final PackageClient testClient) {
         final int builderId = getTestId(run);
         final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(builderId, testClient);
         run.addAction(envAction);
-
-        return true;
     }
 
     /**

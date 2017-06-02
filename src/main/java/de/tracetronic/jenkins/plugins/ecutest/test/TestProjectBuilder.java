@@ -126,7 +126,13 @@ public class TestProjectBuilder extends AbstractTestBuilder {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo(String.format("Executing project %s...", testFile));
         if (testClient.runTestCase(workspace, launcher, listener)) {
-            logger.logInfo("Project executed successfully.");
+            addBuildAction(run, testClient);
+            if (testClient.isAborted()) {
+                logger.logWarn("Project execution aborted!");
+                return false;
+            } else {
+                logger.logInfo("Project executed successfully.");
+            }
         } else {
             logger.logError("Executing project failed!");
             return false;
@@ -138,6 +144,20 @@ public class TestProjectBuilder extends AbstractTestBuilder {
         run.addAction(envAction);
 
         return true;
+    }
+
+    /**
+     * Adds the build action holding test information by injecting environment variables.
+     *
+     * @param run
+     *            the run
+     * @param testClient
+     *            the project client
+     */
+    private void addBuildAction(final Run<?, ?> run, final ProjectClient testClient) {
+        final int builderId = getTestId(run);
+        final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(builderId, testClient);
+        run.addAction(envAction);
     }
 
     /**
