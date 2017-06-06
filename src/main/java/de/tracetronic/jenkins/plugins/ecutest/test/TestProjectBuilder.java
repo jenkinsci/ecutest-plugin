@@ -138,11 +138,6 @@ public class TestProjectBuilder extends AbstractTestBuilder {
             return false;
         }
 
-        // Add action for injecting environment variables
-        final int builderId = getTestId(run);
-        final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(builderId, testClient);
-        run.addAction(envAction);
-
         return true;
     }
 
