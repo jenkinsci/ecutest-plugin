@@ -148,12 +148,22 @@ public class ETClient extends AbstractToolClient {
             }
         }
 
-        // Check ECU-TEST location and launch process
+        // Check ECU-TEST location and architecture
         if (StringUtils.isEmpty(getInstallPath())) {
             logger.logError("ECU-TEST executable could not be found!");
             return false;
-        } else if (!launchProcess(launcher, listener)) {
-            return false;
+        } else {
+            // Check architecture compatibility between JVM and ECU-TEST
+            final boolean is64BitJVM = ProcessUtil.is64BitJVM(workspace.toComputer());
+            if (!checkProcessArchitecture(getInstallPath(), is64BitJVM, launcher)) {
+                logger.logError("The configured ECU-TEST executable is not compatible with running Java VM! "
+                        + "Please install a 64-bit JRE which supports 64-bit ECU-TEST installation!");
+                return false;
+            }
+            // Launch process
+            if (!launchProcess(launcher, listener)) {
+                return false;
+            }
         }
 
         // Initialize COM connection
@@ -177,7 +187,7 @@ public class ETClient extends AbstractToolClient {
             logger.logWarn(String.format(
                     "The configured ECU-TEST version %s might be incompatible with this plugin. "
                             + "Currently supported versions: %s up to %s", comVersion,
-                    ETPlugin.ET_MIN_VERSION.toMinorString(), ETPlugin.ET_MAX_VERSION.toMinorString()));
+                            ETPlugin.ET_MIN_VERSION.toMinorString(), ETPlugin.ET_MAX_VERSION.toMinorString()));
         } else if (comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
             logger.logError(String.format(
                     "The configured ECU-TEST version %s is not compatible with this plugin. "
@@ -299,6 +309,27 @@ public class ETClient extends AbstractToolClient {
     public static String getComVersion(final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
         return launcher.getChannel().call(new VersionCallable(listener));
+    }
+
+    /**
+     * Checks the process architecture compatibility between ECU-TEST and underlying JVM that runs the slave.
+     * A 64-bit JVM supports both 32-bit and 64-bit ECU-TEST, while 32-bit JVM is only compatible with 32-bit ECU-TEST.
+     *
+     * @param processPath
+     *            the full process path
+     * @param is64BitJVM
+     *            specifies whether the JVM supports 64-bit architecture
+     * @param launcher
+     *            the launcher
+     * @return {@code true} if architectures are compatible, {@code false} otherwise
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the current thread is interrupted while waiting for the completion
+     */
+    public boolean checkProcessArchitecture(final String processPath, final boolean is64BitJVM,
+            final Launcher launcher) throws IOException, InterruptedException {
+        return launcher.getChannel().call(new CheckProcessArchitectureCallable(processPath, is64BitJVM));
     }
 
     /**
@@ -447,6 +478,36 @@ public class ETClient extends AbstractToolClient {
                 logger.logError("-> Caught COM exception: " + e.getMessage());
             }
             return comVersion;
+        }
+    }
+
+    /**
+     * {@link Callable} providing remote access to check architecture of ECU-TEST process against JVM architecture.
+     */
+    private static final class CheckProcessArchitectureCallable extends MasterToSlaveCallable<Boolean, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final String processPath;
+        private final boolean is64BitJVM;
+
+        /**
+         * Instantiates a new {@link CheckProcessArchitectureCallable}.
+         *
+         * @param processPath
+         *            the full process file path
+         * @param is64BitJVM
+         *            specifies whether the JVM supports 64-bit architecture
+         */
+        CheckProcessArchitectureCallable(final String processPath, final boolean is64BitJVM) {
+            this.processPath = processPath;
+            this.is64BitJVM = is64BitJVM;
+        }
+
+        @Override
+        public Boolean call() throws IOException {
+            final boolean is64BitProc = ProcessUtil.is64BitExecutable(processPath);
+            return is64BitJVM || !is64BitProc;
         }
     }
 }
