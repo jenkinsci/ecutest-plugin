@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,7 +29,9 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Test;
@@ -88,11 +90,37 @@ public class ToolVersionTest {
     }
 
     @Test
-    public void testCompareWithouQualifier() {
+    public void testCompareWithoutMicro() {
+        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, 4);
+        final ToolVersion sameToolVersion = new ToolVersion(1, 2, 0, 0);
+        assertEquals("Tool versions compare without micro to equals", 0,
+                sameToolVersion.compareWithoutMicroTo(toolVersion));
+    }
+
+    @Test
+    public void testCompareWithoutQualifier() {
         final ToolVersion toolVersion = new ToolVersion(1, 2, 3, 4);
         final ToolVersion sameToolVersion = new ToolVersion(1, 2, 3, 0);
         assertEquals("Tool versions compare without qualifier to equals", 0,
                 sameToolVersion.compareWithoutQualifierTo(toolVersion));
+    }
+
+    @Test
+    public void testToString() {
+        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, 4);
+        assertThat(toolVersion.toString(), is("1.2.3.4"));
+    }
+
+    @Test
+    public void testToMicroString() {
+        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, 4);
+        assertThat(toolVersion.toMicroString(), is("1.2.3"));
+    }
+
+    @Test
+    public void testToMinorString() {
+        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, 4);
+        assertThat(toolVersion.toMinorString(), is("1.2"));
     }
 
     @Test

@@ -552,7 +552,7 @@ public class ATXPublisher extends AbstractReportPublisher {
          * @return the related ATX version
          */
         public static String getATXVersion() {
-            return ETPlugin.ATX_VERSION.toShortString();
+            return ETPlugin.ATX_VERSION.toMicroString();
         }
 
         /**

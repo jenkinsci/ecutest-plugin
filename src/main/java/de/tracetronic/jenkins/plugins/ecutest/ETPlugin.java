@@ -132,6 +132,24 @@ public class ETPlugin extends Plugin {
         }
 
         /**
+         * Compares two {@link ToolVersion}s but ignoring micro and qualifier.
+         *
+         * @param version
+         *            the version to be compared
+         * @return integer indicating comparison result
+         * @see ToolVersion#compareTo(ToolVersion)
+         */
+        public int compareWithoutMicroTo(final ToolVersion version) {
+            if (major != version.major) {
+                return Integer.compare(major, version.major);
+            }
+            if (minor != version.minor) {
+                return Integer.compare(minor, version.minor);
+            }
+            return 0;
+        }
+
+        /**
          * Compares two {@link ToolVersion}s but ignoring the qualifier.
          *
          * @param version
@@ -158,12 +176,21 @@ public class ETPlugin extends Plugin {
         }
 
         /**
-         * Returns an shorter string representation without the qualifier version.
+         * Returns a shorter string representation without the qualifier version.
          *
          * @return the short version string
          */
-        public String toShortString() {
+        public String toMicroString() {
             return String.format("%d.%d.%d", major, minor, micro);
+        }
+
+        /**
+         * Returns a shorter string representation without the micro and qualifier version.
+         *
+         * @return the short version string
+         */
+        public String toMinorString() {
+            return String.format("%d.%d", major, minor);
         }
 
         @Override

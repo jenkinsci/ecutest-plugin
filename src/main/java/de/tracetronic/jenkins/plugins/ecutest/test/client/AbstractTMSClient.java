@@ -159,7 +159,7 @@ public abstract class AbstractTMSClient {
                 if (comToolVersion.compareTo(minVersion) < 0) {
                     logger.logError(String.format(
                             "The configured ECU-TEST version %s does not support this test management method. "
-                                    + "Please use at least ECU-TEST %s!", comVersion, minVersion.toShortString()));
+                                    + "Please use at least ECU-TEST %s!", comVersion, minVersion.toMicroString()));
                 } else if (comClient.getTestManagement() != null) {
                     isAvailable = true;
                 }
