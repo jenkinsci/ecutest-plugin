@@ -166,6 +166,7 @@ public final class ProcessUtil {
      * @throws IOException
      *             if there is a problem reading the file or the file does not end in .exe.
      */
+    @SuppressWarnings("checkstyle:booleanExpressionComplexity")
     public static boolean is64BitExecutable(final String filePath) throws IOException {
         if (!filePath.endsWith(".exe")) {
             throw new IOException(String.format("%s is not a Windows .exe file.", filePath));
@@ -199,6 +200,9 @@ public final class ProcessUtil {
      *             if the build gets interrupted
      */
     public static boolean is64BitJVM(final Computer computer) throws IOException, InterruptedException {
+        if (computer == null) {
+            throw new IOException("Could not access node properties!");
+        }
         return "amd64".equals(computer.getSystemProperties().get("os.arch"));
     }
 }

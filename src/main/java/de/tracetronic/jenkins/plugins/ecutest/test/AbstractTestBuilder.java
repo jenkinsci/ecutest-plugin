@@ -197,6 +197,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
      * @throws InterruptedException
      *             if the build gets interrupted
      */
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private boolean performTest(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
@@ -299,7 +300,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
      */
     protected abstract boolean runTest(String testFile, TestConfig testConfig, ExecutionConfig executionConfig,
             Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
-            throws IOException, InterruptedException;
+                    throws IOException, InterruptedException;
 
     @Override
     public BuildStepMonitor getRequiredMonitorService() {
