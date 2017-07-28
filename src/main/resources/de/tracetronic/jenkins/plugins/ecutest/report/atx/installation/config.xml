@@ -256,17 +256,13 @@
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
 						<DVALUE xsi:type="unicode">True, wenn nur dann die 'misc files'
-							archiviert werden sollen, wenn sich der ausgewählt Testreport im
-							Testreport-Verzeichnis des aktuellen Workspaces befindet,
-							sonst
-							False.</DVALUE>
+							archiviert werden sollen, wenn sich der ausgewählt Testreport in einem
+							ECU-TEST Testreport-Verzeichnis befindet, sonst False.</DVALUE>
 					</ELEMENT>
 					<ELEMENT dkey="en_US">
 						<DVALUE xsi:type="unicode">True, if you only want archive 'misc
-							files'
-							which are in the workspace 'test report directory' of the
-							given test report,
-							otherwise False.</DVALUE>
+							files' which are in a ECU-TEST 'test report directory' of the
+							given test report, otherwise False.</DVALUE>
 					</ELEMENT>
 				</MULTILANGDATA>
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
