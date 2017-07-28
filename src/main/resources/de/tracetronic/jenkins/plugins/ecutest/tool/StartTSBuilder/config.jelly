@@ -41,5 +41,8 @@
         <f:entry title="${%timeout.title}" description="${%timeout.description}" field="timeout">
             <f:textbox default="${descriptor.defaultTimeout}" />
         </f:entry>
+        <f:entry title="${%keepInstance.title}" description="${%keepInstance.description}" field="keepInstance">
+            <f:checkbox />
+        </f:entry>
     </f:advanced>
 </j:jelly>

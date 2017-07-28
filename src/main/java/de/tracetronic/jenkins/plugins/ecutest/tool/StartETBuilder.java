@@ -40,6 +40,7 @@ import hudson.model.Run;
 import hudson.util.FormValidation;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -52,8 +53,10 @@ import org.kohsuke.stapler.QueryParameter;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
+import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
+import de.tracetronic.jenkins.plugins.ecutest.tool.client.TSClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.PathUtil;
@@ -78,6 +81,10 @@ public class StartETBuilder extends AbstractToolBuilder {
     @CheckForNull
     private String settingsDir;
     private boolean debugMode;
+    /**
+     * @since 1.18
+     */
+    private boolean keepInstance;
 
     /**
      * Instantiates a new {@link StartETBuilder}.
@@ -177,6 +184,13 @@ public class StartETBuilder extends AbstractToolBuilder {
     }
 
     /**
+     * @return specifies whether to reuse the previous instance
+     */
+    public boolean isKeepInstance() {
+        return keepInstance;
+    }
+
+    /**
      * @param workspaceDir
      *            the workspace directory
      */
@@ -203,49 +217,64 @@ public class StartETBuilder extends AbstractToolBuilder {
         this.debugMode = debugMode;
     }
 
+    /**
+     * @param keepInstance
+     *            the specifies whether to reuse the previous instance
+     */
+    @DataBoundSetter
+    public void setKeepInstance(final boolean keepInstance) {
+        this.keepInstance = keepInstance;
+    }
+
     @Override
     public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
-        // Expand build parameters
-        final EnvVars buildEnvVars = run.getEnvironment(listener);
-        final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
-                String.valueOf(DEFAULT_TIMEOUT)));
+        final List<String> foundProcesses = TSClient.checkProcesses(launcher, false);
+        if (isKeepInstance() && !foundProcesses.isEmpty()) {
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            logger.logInfo("Re-using already running ECU-TEST instance...");
+        } else {
+            // Expand build parameters
+            final EnvVars buildEnvVars = run.getEnvironment(listener);
+            final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
+                    String.valueOf(DEFAULT_TIMEOUT)));
 
-        // Absolutize ECU-TEST workspace directory, if not absolute assume relative to build workspace
-        String expWorkspaceDir = EnvUtil.expandEnvVar(getWorkspaceDir(), buildEnvVars, workspace.getRemote());
-        expWorkspaceDir = PathUtil.makeAbsolutePath(expWorkspaceDir, workspace);
-        String expSettingsDir = EnvUtil.expandEnvVar(getSettingsDir(), buildEnvVars, workspace.getRemote());
-        expSettingsDir = PathUtil.makeAbsolutePath(expSettingsDir, workspace);
+            // Absolutize ECU-TEST workspace directory, if not absolute assume relative to build workspace
+            String expWorkspaceDir = EnvUtil.expandEnvVar(getWorkspaceDir(), buildEnvVars, workspace.getRemote());
+            expWorkspaceDir = PathUtil.makeAbsolutePath(expWorkspaceDir, workspace);
+            String expSettingsDir = EnvUtil.expandEnvVar(getSettingsDir(), buildEnvVars, workspace.getRemote());
+            expSettingsDir = PathUtil.makeAbsolutePath(expSettingsDir, workspace);
 
-        // Check workspace validity
-        final FilePath expWorkspacePath = new FilePath(launcher.getChannel(), expWorkspaceDir);
-        final FilePath expSettingsPath = new FilePath(launcher.getChannel(), expSettingsDir);
-        checkWorkspace(expWorkspacePath, expSettingsPath);
+            // Check workspace validity
+            final FilePath expWorkspacePath = new FilePath(launcher.getChannel(), expWorkspaceDir);
+            final FilePath expSettingsPath = new FilePath(launcher.getChannel(), expSettingsDir);
+            checkWorkspace(expWorkspacePath, expSettingsPath);
 
-        // Delete logs if log publisher is present
-        final Object parent = run.getParent();
-        if (parent instanceof Project
-                && ((Project<?, ?>) run.getParent()).getPublishersList().get(ETLogPublisher.class) != null) {
-            ETLogPublisher.RunListenerImpl.onStarted(expSettingsPath, listener);
+            // Delete logs if log publisher is present
+            final Object parent = run.getParent();
+            if (parent instanceof Project
+                    && ((Project<?, ?>) run.getParent()).getPublishersList().get(ETLogPublisher.class) != null) {
+                ETLogPublisher.RunListenerImpl.onStarted(expSettingsPath, listener);
+            }
+
+            // Get selected ECU-TEST installation
+            final ETInstallation installation = configureToolInstallation(workspace.toComputer(), listener,
+                    run.getEnvironment(listener));
+
+            // Start selected ECU-TEST
+            final String toolName = run.getEnvironment(listener).expand(installation.getName());
+            final String installPath = installation.getExecutable(launcher);
+            final ETClient etClient = new ETClient(toolName, installPath, expWorkspaceDir, expSettingsDir,
+                    expTimeout, isDebugMode());
+            if (!etClient.start(true, workspace, launcher, listener)) {
+                throw new ETPluginException(String.format("Starting %s failed!", toolName));
+            }
+
+            // Add action for injecting environment variables
+            final int toolId = getToolId(run);
+            final ToolEnvInvisibleAction envAction = new ToolEnvInvisibleAction(toolId, etClient);
+            run.addAction(envAction);
         }
-
-        // Get selected ECU-TEST installation
-        final ETInstallation installation = configureToolInstallation(workspace.toComputer(), listener,
-                run.getEnvironment(listener));
-
-        // Start selected ECU-TEST
-        final String toolName = run.getEnvironment(listener).expand(installation.getName());
-        final String installPath = installation.getExecutable(launcher);
-        final ETClient etClient = new ETClient(toolName, installPath, expWorkspaceDir, expSettingsDir,
-                expTimeout, isDebugMode());
-        if (!etClient.start(true, workspace, launcher, listener)) {
-            throw new ETPluginException(String.format("Starting %s failed!", toolName));
-        }
-
-        // Add action for injecting environment variables
-        final int toolId = getToolId(run);
-        final ToolEnvInvisibleAction envAction = new ToolEnvInvisibleAction(toolId, etClient);
-        run.addAction(envAction);
     }
 
     /**
