@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -61,6 +61,7 @@ public class StartETBuilderTest {
         builder.setSettingsDir(null);
         builder.setTimeout(null);
         builder.setDebugMode(false);
+        builder.setKeepInstance(false);
         assertBuilder(builder);
     }
 
@@ -103,5 +104,6 @@ public class StartETBuilderTest {
         assertNotNull(builder.getTimeout());
         assertEquals(String.valueOf(builder.getDefaultTimeout()), builder.getTimeout());
         assertFalse(builder.isDebugMode());
+        assertFalse(builder.isKeepInstance());
     }
 }

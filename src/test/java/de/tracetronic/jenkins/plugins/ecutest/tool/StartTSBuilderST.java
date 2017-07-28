@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -94,6 +94,7 @@ public class StartTSBuilderST extends SystemTestBase {
         before.setToolLibsIni("C:\\ToolLibs.ini");
         before.setTcpPort("5017");
         before.setTimeout("120");
+        before.setKeepInstance(false);
 
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
@@ -101,7 +102,7 @@ public class StartTSBuilderST extends SystemTestBase {
         assertThat(delegate, instanceOf(StartTSBuilder.class));
 
         final StartTSBuilder after = (StartTSBuilder) delegate;
-        jenkins.assertEqualBeans(before, after, "toolLibsIni,tcpPort,timeout");
+        jenkins.assertEqualBeans(before, after, "toolLibsIni,tcpPort,timeout,keepInstance");
     }
 
     @Deprecated
@@ -109,7 +110,7 @@ public class StartTSBuilderST extends SystemTestBase {
     public void testConfigRoundTrip() throws Exception {
         final StartTSBuilder before = new StartTSBuilder("ECU-TEST", "120", "C:\\ToolLibs.ini", "5017");
         final StartTSBuilder after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "toolLibsIni,tcpPort,timeout");
+        jenkins.assertEqualBeans(before, after, "toolLibsIni,tcpPort,timeout,keepInstance");
     }
 
     @Test
@@ -119,6 +120,7 @@ public class StartTSBuilderST extends SystemTestBase {
         builder.setToolLibsIni("C:\\ToolLibs.ini");
         builder.setTcpPort("5017");
         builder.setTimeout("120");
+        builder.setKeepInstance(true);
         project.getBuildersList().add(builder);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
@@ -131,6 +133,7 @@ public class StartTSBuilderST extends SystemTestBase {
         WebAssert.assertInputContainsValue(page, "_.toolLibsIni", "C:\\ToolLibs.ini");
         WebAssert.assertInputPresent(page, "_.tcpPort");
         WebAssert.assertInputContainsValue(page, "_.tcpPort", "5017");
+        jenkins.assertXPath(page, "//input[@name='_.keepInstance' and @checked='true']");
     }
 
     @Test
@@ -170,7 +173,7 @@ public class StartTSBuilderST extends SystemTestBase {
                 + "  writeFile file: 'ToolLibs.ini', text: ''\n"
                 + "  step([$class: 'StartTSBuilder', toolName: 'ECU-TEST',"
                 + "        toolLibsIni: pwd() + '\\\\ToolLibs.ini',"
-                + "        tcpPort: '5017', timeout: '120'])\n"
+                + "        tcpPort: '5017', timeout: '120', keepInstance: true])\n"
                 + "}";
         assertPipelineStep(script);
     }
@@ -193,7 +196,7 @@ public class StartTSBuilderST extends SystemTestBase {
                 + "  writeFile file: 'ToolLibs.ini', text: ''\n"
                 + "  startTS toolName: 'ECU-TEST',"
                 + "  toolLibsIni: pwd() + '\\\\ToolLibs.ini',"
-                + "  tcpPort: '5017', timeout: '120'\n"
+                + "  tcpPort: '5017', timeout: '120', keepInstance: true\n"
                 + "}";
         assertPipelineStep(script);
     }

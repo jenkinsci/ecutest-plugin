@@ -184,7 +184,7 @@ public class StartETBuilder extends AbstractToolBuilder {
     }
 
     /**
-     * @return specifies whether to reuse the previous instance
+     * @return specifies whether to re-use the previous instance
      */
     public boolean isKeepInstance() {
         return keepInstance;
@@ -219,7 +219,7 @@ public class StartETBuilder extends AbstractToolBuilder {
 
     /**
      * @param keepInstance
-     *            the specifies whether to reuse the previous instance
+     *            the specifies whether to re-use the previous instance
      */
     @DataBoundSetter
     public void setKeepInstance(final boolean keepInstance) {

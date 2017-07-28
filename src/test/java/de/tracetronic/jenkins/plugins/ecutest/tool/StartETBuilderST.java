@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -95,6 +95,7 @@ public class StartETBuilderST extends SystemTestBase {
         before.setSettingsDir("settings");
         before.setTimeout("120");
         before.setDebugMode(false);
+        before.setKeepInstance(false);
 
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
@@ -102,7 +103,7 @@ public class StartETBuilderST extends SystemTestBase {
         assertThat(delegate, instanceOf(StartETBuilder.class));
 
         final StartETBuilder after = (StartETBuilder) delegate;
-        jenkins.assertEqualBeans(before, after, "workspaceDir,settingsDir,timeout,debugMode");
+        jenkins.assertEqualBeans(before, after, "workspaceDir,settingsDir,timeout,debugMode,keepInstance");
     }
 
     @Deprecated
@@ -110,7 +111,7 @@ public class StartETBuilderST extends SystemTestBase {
     public void testConfigRoundTrip() throws Exception {
         final StartETBuilder before = new StartETBuilder("ECU-TEST", "workspace", "settings", "120", false);
         final StartETBuilder after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "workspaceDir,settingsDir,timeout,debugMode");
+        jenkins.assertEqualBeans(before, after, "workspaceDir,settingsDir,timeout,debugMode,keepInstance");
     }
 
     @Test
@@ -121,6 +122,7 @@ public class StartETBuilderST extends SystemTestBase {
         builder.setSettingsDir("settings");
         builder.setTimeout("120");
         builder.setDebugMode(true);
+        builder.setKeepInstance(true);
         project.getBuildersList().add(builder);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
@@ -134,6 +136,7 @@ public class StartETBuilderST extends SystemTestBase {
         WebAssert.assertInputPresent(page, "_.timeout");
         WebAssert.assertInputContainsValue(page, "_.timeout", "120");
         jenkins.assertXPath(page, "//input[@name='_.debugMode' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.keepInstance' and @checked='true']");
     }
 
     @Test
@@ -172,7 +175,7 @@ public class StartETBuilderST extends SystemTestBase {
                 + "node('slaves') {\n"
                 + "  step([$class: 'StartETBuilder', toolName: 'ECU-TEST',"
                 + "        workspaceDir: '', settingsDir: 'settings',"
-                + "        timeout: '60', debugMode: true])\n"
+                + "        timeout: '60', debugMode: true, keepInstance: true])\n"
                 + "}";
         assertPipelineStep(script);
     }
@@ -194,7 +197,7 @@ public class StartETBuilderST extends SystemTestBase {
                 + "node('slaves') {\n"
                 + "  startET toolName: 'ECU-TEST',"
                 + "  workspaceDir: '', settingsDir: 'settings',"
-                + "  timeout: '60', debugMode: true\n"
+                + "  timeout: '60', debugMode: true, keepInstance: true\n"
                 + "}";
         assertPipelineStep(script);
     }
