@@ -166,7 +166,7 @@ public final class ProcessUtil {
      * @throws IOException
      *             if there is a problem reading the file or the file does not end in .exe.
      */
-    @SuppressWarnings("checkstyle:booleanExpressionComplexity")
+    @SuppressWarnings("checkstyle:booleanexpressioncomplexity")
     public static boolean is64BitExecutable(final String filePath) throws IOException {
         if (!filePath.endsWith(".exe")) {
             throw new IOException(String.format("%s is not a Windows .exe file.", filePath));
