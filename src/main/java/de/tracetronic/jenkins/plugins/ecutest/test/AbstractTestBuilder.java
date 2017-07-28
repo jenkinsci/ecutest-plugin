@@ -233,32 +233,37 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
             return false;
         }
 
-        // Get test configuration file paths
-        String expTbcConfigDir = null;
-        String expTcfConfigDir = null;
-        final String tbcFile = expTestConfig.getTbcFile();
-        final String tcfFile = expTestConfig.getTcfFile();
-        if (!IOUtils.isAbsolute(tbcFile) || !IOUtils.isAbsolute(tcfFile)) {
-            // Determine configuration directory by COM API
-            final String configDir = getConfigDir(launcher, listener);
+        // Configurations not relevant if previous ones used
+        String expTbcFilePath = null;
+        String expTcfFilePath = null;
+        if (!expTestConfig.isKeepConfig()) {
+            // Get test configuration file paths
+            String expTbcConfigDir = null;
+            String expTcfConfigDir = null;
+            final String tbcFile = expTestConfig.getTbcFile();
+            final String tcfFile = expTestConfig.getTcfFile();
+            if (!IOUtils.isAbsolute(tbcFile) || !IOUtils.isAbsolute(tcfFile)) {
+                // Determine configuration directory by COM API
+                final String configDir = getConfigDir(launcher, listener);
 
-            // Absolutize configuration directory, if not absolute assume relative to ECU-TEST workspace
-            final String expConfigDir = PathUtil.makeAbsolutePath(configDir, workspace);
-            expTbcConfigDir = IOUtils.isAbsolute(tbcFile) ? null : expConfigDir;
-            expTcfConfigDir = IOUtils.isAbsolute(tcfFile) ? null : expConfigDir;
-        }
+                // Absolutize configuration directory, if not absolute assume relative to ECU-TEST workspace
+                final String expConfigDir = PathUtil.makeAbsolutePath(configDir, workspace);
+                expTbcConfigDir = IOUtils.isAbsolute(tbcFile) ? null : expConfigDir;
+                expTcfConfigDir = IOUtils.isAbsolute(tcfFile) ? null : expConfigDir;
+            }
 
-        // Configure test bench configuration file
-        final String expTbcFilePath = getConfigFilePath(expTestConfig.getTbcFile(),
-                expTbcConfigDir, launcher, listener);
+            // Configure test bench configuration file
+            expTbcFilePath = getConfigFilePath(expTestConfig.getTbcFile(),
+                    expTbcConfigDir, launcher, listener);
 
-        // Configure test configuration file
-        final String expTcfFilePath = getConfigFilePath(expTestConfig.getTcfFile(),
-                expTcfConfigDir, launcher, listener);
+            // Configure test configuration file
+            expTcfFilePath = getConfigFilePath(expTestConfig.getTcfFile(),
+                    expTcfConfigDir, launcher, listener);
 
-        // Check configuration file existence
-        if (expTbcFilePath == null || expTcfFilePath == null) {
-            return false;
+            // Check configuration file existence
+            if (expTbcFilePath == null || expTcfFilePath == null) {
+                return false;
+            }
         }
 
         // Set expanded test configuration
