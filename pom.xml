@@ -102,6 +102,8 @@
         <workflow-cps.version>1.4.3</workflow-cps.version>
         <workflow-step-api.version>1.4.3</workflow-step-api.version>
         <concurrency>2</concurrency>
+        <skipUTs>false</skipUTs>
+        <skipITs>true</skipITs>
 
         <!-- JACOB -->
         <jacob.version>1.18</jacob.version>
@@ -265,6 +267,7 @@
                         <exclude>InjectedTest.java</exclude>
                     </excludes>
                     <argLine>@{argLine}</argLine>
+                    <skipTests>${skipUTs}</skipTests>
                 </configuration>
             </plugin>
             <plugin>
@@ -278,6 +281,7 @@
                     <argLine>@{argLine}</argLine>
                     <reuseForks>true</reuseForks>
                     <forkCount>${concurrency}</forkCount>
+                    <skipITs>${skipITs}</skipITs>
                 </configuration>
                 <executions>
                     <execution>
