@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -35,7 +35,6 @@ import hudson.model.TaskListener;
 import hudson.model.Run;
 import hudson.remoting.Callable;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -202,9 +201,9 @@ public class JUnitReportGenerator {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                 for (final FilePath dbFile : dbFiles) {
                     logger.logInfo(String.format("-> Generating UNIT report: %s", dbFile.getRemote()));
-                    final File outDir = new File(dbFile.getParent().getRemote(), UNIT_TEMPLATE_NAME);
+                    final FilePath outDir = dbFile.getParent().child(UNIT_TEMPLATE_NAME);
                     if (!testEnv.generateTestReportDocumentFromDB(dbFile.getRemote(),
-                            outDir.getAbsolutePath(), UNIT_TEMPLATE_NAME, true)) {
+                            outDir.getRemote(), UNIT_TEMPLATE_NAME, true)) {
                         isGenerated = false;
                         logger.logError("Generating UNIT report failed!");
                     }
