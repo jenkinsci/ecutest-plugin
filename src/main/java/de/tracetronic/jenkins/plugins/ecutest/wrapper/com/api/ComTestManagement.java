@@ -241,4 +241,5 @@ public interface ComTestManagement {
      *             in case of a COM exception
      */
     boolean exportReport(String filePath, String archivePath, int timeout) throws ETComException;
+
 }

@@ -42,6 +42,7 @@ import com.jacob.com.Variant;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComApplication;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComPackage;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComProject;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestBenchConfiguration;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestConfiguration;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestManagement;
@@ -316,6 +317,11 @@ public class ETComClient implements ComApplication, AutoCloseable {
     }
 
     @Override
+    public ComTestBenchConfiguration getCurrentTestBenchConfiguration() throws ETComException {
+        return new TestBenchConfiguration(dispatch.performRequest("GetCurrentTestbenchConfiguration").toDispatch());
+    }
+
+    @Override
     public boolean waitForIdle(final int timeout) throws ETComException {
         if (timeout == 0) {
             return dispatch.performRequest("WaitForIdle").getBoolean();
@@ -323,4 +329,5 @@ public class ETComClient implements ComApplication, AutoCloseable {
             return dispatch.performRequest("WaitForIdle", new Variant(timeout)).getBoolean();
         }
     }
+
 }
