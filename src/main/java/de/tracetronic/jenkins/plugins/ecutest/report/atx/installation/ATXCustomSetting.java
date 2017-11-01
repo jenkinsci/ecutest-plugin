@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -37,8 +37,6 @@ import hudson.util.FormValidation;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.annotation.CheckForNull;
 
 import jenkins.model.Jenkins;
 
@@ -115,15 +113,10 @@ public abstract class ATXCustomSetting implements Serializable, Cloneable, Descr
         return new HashCodeBuilder(17, 31).append(name).toHashCode();
     }
 
-    @CheckForNull
     @SuppressWarnings("unchecked")
     @Override
     public Descriptor<ATXCustomSetting> getDescriptor() {
-        final Jenkins instance = Jenkins.getInstance();
-        if (instance != null) {
-            return (Descriptor<ATXCustomSetting>) instance.getDescriptor(getClass());
-        }
-        return null;
+        return (Descriptor<ATXCustomSetting>) Jenkins.getInstance().getDescriptor(getClass());
     }
 
     /**
@@ -131,13 +124,8 @@ public abstract class ATXCustomSetting implements Serializable, Cloneable, Descr
      *
      * @return the descriptor extension list
      */
-    @CheckForNull
     public static DescriptorExtensionList<ATXCustomSetting, Descriptor<ATXCustomSetting>> all() {
-        final Jenkins instance = Jenkins.getInstance();
-        if (instance != null) {
-            return instance.getDescriptorList(ATXCustomSetting.class);
-        }
-        return null;
+        return Jenkins.getInstance().getDescriptorList(ATXCustomSetting.class);
     }
 
     /**

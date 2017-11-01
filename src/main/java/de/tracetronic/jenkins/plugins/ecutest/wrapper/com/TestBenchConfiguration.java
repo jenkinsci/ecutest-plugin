@@ -55,7 +55,7 @@ public class TestBenchConfiguration extends ETComDispatch implements ComTestBenc
     }
 
     @Override
-    public String getFilename() throws ETComException {
+    public String getFileName() throws ETComException {
         return performRequest("GetFileName").getString();
     }
 }

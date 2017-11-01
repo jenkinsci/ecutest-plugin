@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -37,6 +37,7 @@ import javaposse.jobdsl.plugin.LookupStrategy;
 import javaposse.jobdsl.plugin.RemovedJobAction;
 import javaposse.jobdsl.plugin.RemovedViewAction;
 import javaposse.jobdsl.plugin.ExecuteDslScripts;
+import javaposse.jobdsl.plugin.GlobalJobDslSecurityConfiguration;
 
 import org.apache.commons.io.IOUtils;
 
@@ -89,16 +90,13 @@ public abstract class AbstractDslExtensionST extends SystemTestBase {
      */
     private FreeStyleProject buildSeedJob(final String dslScript) throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        project.getBuildersList().add(
-                new ExecuteDslScripts(
-                        new ExecuteDslScripts.ScriptLocation(null, null,
-                                IOUtils.toString(this.getClass().getResourceAsStream(dslScript))),
-                        false,
-                        RemovedJobAction.DELETE,
-                        RemovedViewAction.DELETE,
-                        LookupStrategy.JENKINS_ROOT
-                )
-                );
+        final ExecuteDslScripts builder = new ExecuteDslScripts();
+        builder.setScriptText(IOUtils.toString(this.getClass().getResourceAsStream(dslScript)));
+        builder.setRemovedJobAction(RemovedJobAction.DELETE);
+        builder.setRemovedViewAction(RemovedViewAction.DELETE);
+        builder.setLookupStrategy(LookupStrategy.JENKINS_ROOT);
+        project.getBuildersList().add(builder);
+        jenkins.getInstance().getDescriptorByType(GlobalJobDslSecurityConfiguration.class).setUseScriptSecurity(false);
 
         jenkins.buildAndAssertSuccess(project);
         return project;

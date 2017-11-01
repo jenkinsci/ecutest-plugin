@@ -92,7 +92,12 @@ public abstract class AbstractReportAction extends AbstractRequestHandler implem
 
     @Override
     protected VirtualFile getArchiveTargetDir(final File rootDir) {
-        return VirtualFile.forFile(new File(rootDir, getUrlName()));
+        final String urlName = getUrlName();
+        if (urlName != null) {
+            return VirtualFile.forFile(new File(rootDir, urlName));
+        } else {
+            return VirtualFile.forFile(rootDir);
+        }
     }
 
     /**

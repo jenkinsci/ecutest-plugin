@@ -114,7 +114,7 @@ public class TTConsoleLogger {
      */
     public void logComException(final String message) {
         logError(String
-                .format("Caught ComException: %s\n"
+                .format("Caught ComException: %s%n"
                         + "For further information see FAQ: "
                         + "https://wiki.jenkins-ci.org/x/joLtB#TraceTronicECU-TESTPlugin-FAQ",
                         message));

@@ -133,14 +133,9 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
         return CredentialsMatchers.firstOrNull(credentials, CredentialsMatchers.withId(credentialsId));
     }
 
-    @CheckForNull
     @Override
     public DescriptorImpl getDescriptor() {
-        final Jenkins instance = Jenkins.getInstance();
-        if (instance != null) {
-            return (DescriptorImpl) instance.getDescriptor(getClass());
-        }
-        return null;
+        return (DescriptorImpl) Jenkins.getInstance().getDescriptor(getClass());
     }
 
     /**
@@ -148,13 +143,8 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
      *
      * @return the descriptor extension list
      */
-    @CheckForNull
     public static DescriptorExtensionList<TMSConfig, Descriptor<TMSConfig>> all() {
-        final Jenkins instance = Jenkins.getInstance();
-        if (instance != null) {
-            return instance.getDescriptorList(TMSConfig.class);
-        }
-        return null;
+        return Jenkins.getInstance().getDescriptorList(TMSConfig.class);
     }
 
     /**

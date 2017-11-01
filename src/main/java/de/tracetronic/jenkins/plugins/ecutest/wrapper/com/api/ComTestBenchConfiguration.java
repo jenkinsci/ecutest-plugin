@@ -45,6 +45,6 @@ public interface ComTestBenchConfiguration {
      * @throws ETComException
      *             in case of a COM exception
      */
-    String getFilename() throws ETComException;
+    String getFileName() throws ETComException;
 
 }

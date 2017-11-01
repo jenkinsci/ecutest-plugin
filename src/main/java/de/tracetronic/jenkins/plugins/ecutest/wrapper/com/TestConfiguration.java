@@ -77,7 +77,7 @@ public class TestConfiguration extends ETComDispatch implements ComTestConfigura
     }
 
     @Override
-    public String getFilename() throws ETComException {
+    public String getFileName() throws ETComException {
         return performRequest("GetFileName").getString();
     }
 }

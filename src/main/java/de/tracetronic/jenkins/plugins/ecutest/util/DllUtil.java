@@ -137,7 +137,7 @@ public final class DllUtil {
     private static FilePath getLocalLibrary(final Computer computer) throws IOException, InterruptedException {
         FilePath localLib = null;
         final String libFile = getLibraryFile(computer);
-        final Jenkins instance = Jenkins.getInstance();
+        final Jenkins instance = Jenkins.getInstanceOrNull();
         if (instance == null) {
             return new FilePath(FilePath.localChannel, libFile);
         }
@@ -204,7 +204,7 @@ public final class DllUtil {
      *             if the current thread is interrupted while waiting for the completion
      */
     private static boolean copyLibrary(final FilePath src, final FilePath dest) throws IOException,
-            InterruptedException {
+    InterruptedException {
         return PathUtil.copyRemoteFile(src, dest);
     }
 
@@ -223,7 +223,7 @@ public final class DllUtil {
 
         @Override
         public Boolean invoke(final File libFile, final VirtualChannel channel) throws IOException,
-        InterruptedException {
+                InterruptedException {
             if (libFile.exists() && libFile.isFile()) {
                 final String libProperty = System.getProperty(LibraryLoader.JACOB_DLL_PATH);
                 if (!StringUtils.isBlank(libProperty)) {

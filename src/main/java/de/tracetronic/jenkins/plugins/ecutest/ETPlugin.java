@@ -302,13 +302,10 @@ public class ETPlugin extends Plugin {
     @Override
     public void postInitialize() throws Exception {
         super.postInitialize();
-        final Jenkins instance = Jenkins.getInstance();
-        if (instance != null) {
-            // Synchronize current ATX configuration with the default one.
-            final DescriptorImpl descriptor = instance.getDescriptorByType(DescriptorImpl.class);
-            if (descriptor != null) {
-                descriptor.syncWithDefaultConfig();
-            }
+        // Synchronize current ATX configuration with the default one.
+        final DescriptorImpl descriptor = Jenkins.getInstance().getDescriptorByType(DescriptorImpl.class);
+        if (descriptor != null) {
+            descriptor.syncWithDefaultConfig();
         }
     }
 
