@@ -156,6 +156,7 @@ public class ETClient extends AbstractToolClient {
         return lastTcf;
     }
 
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
     public boolean start(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws IOException, InterruptedException {
@@ -209,7 +210,7 @@ public class ETClient extends AbstractToolClient {
             logger.logWarn(String.format(
                     "The configured ECU-TEST version %s might be incompatible with this plugin. "
                             + "Currently supported versions: %s up to %s", comVersion,
-                    ETPlugin.ET_MIN_VERSION.toMinorString(), ETPlugin.ET_MAX_VERSION.toMinorString()));
+                            ETPlugin.ET_MIN_VERSION.toMinorString(), ETPlugin.ET_MAX_VERSION.toMinorString()));
         } else if (comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
             logger.logError(String.format(
                     "The configured ECU-TEST version %s is not compatible with this plugin. "
