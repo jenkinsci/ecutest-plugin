@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -60,13 +60,6 @@ public class ProjectConfigTest {
         final EnvVars envVars = new EnvVars();
         envVars.put("FILTER", "filter");
         assertThat(config.expand(envVars).getFilterExpression(), is("filter"));
-    }
-
-    @SuppressWarnings("deprecation")
-    @Test
-    public void testCompatibility() {
-        final ProjectConfig config = new ProjectConfig(true, null, 0);
-        assertThat(config.getJobExecMode(), is(JobExecutionMode.NO_EXECUTION));
     }
 
     @Test

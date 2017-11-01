@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -70,13 +70,6 @@ public class ExecutionConfigTest {
         final EnvVars envVars = new EnvVars();
         envVars.put("TIMEOUT", "60");
         assertThat(config.expand(envVars).getParsedTimeout(), is(60));
-    }
-
-    @SuppressWarnings("deprecation")
-    @Test
-    public void testCompatibility() {
-        final ExecutionConfig config = new ExecutionConfig(60, true);
-        assertTrue(config.isCheckTestFile());
     }
 
     @Test

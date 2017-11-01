@@ -100,15 +100,6 @@ public class TestConfigTest {
         assertThat(expConfig.getConstants().get(0).getValue(), is("value"));
     }
 
-    @SuppressWarnings("deprecation")
-    @Test
-    public void testCompatibility() {
-        final TestConfig config = new TestConfig(null, null, null);
-        assertFalse(config.isForceReload());
-        assertFalse(config.isLoadOnly());
-        assertFalse(config.isKeepConfig());
-    }
-
     @Test
     public void testHashCodeAndEquals() {
         EqualsVerifier.forClass(TestConfig.class).verify();
