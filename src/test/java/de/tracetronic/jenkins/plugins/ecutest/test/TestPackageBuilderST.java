@@ -97,17 +97,6 @@ public class TestPackageBuilderST extends SystemTestBase {
         jenkins.assertEqualBeans(before, after, "testFile,testConfig,packageConfig,executionConfig");
     }
 
-    @Deprecated
-    @Test
-    public void testConfigRoundTrip() throws Exception {
-        final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true, true);
-        final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
-        final TestPackageBuilder before = new TestPackageBuilder("test.pkg", testConfig, packageConfig, executionConfig);
-        final TestPackageBuilder after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "testFile,testConfig,packageConfig,executionConfig");
-    }
-
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();

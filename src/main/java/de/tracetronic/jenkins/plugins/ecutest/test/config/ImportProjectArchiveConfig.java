@@ -53,12 +53,6 @@ public class ImportProjectArchiveConfig extends ImportConfig {
     private final boolean replaceFiles;
 
     /**
-     * @deprecated since 1.17
-     */
-    @Deprecated
-    private transient String projectPath;
-
-    /**
      * Instantiates a new {@link ImportProjectArchiveConfig}.
      *
      * @param tmsPath
@@ -76,19 +70,6 @@ public class ImportProjectArchiveConfig extends ImportConfig {
         super(tmsPath, importPath, null, null);
         this.importConfigPath = StringUtils.trimToEmpty(importConfigPath);
         this.replaceFiles = replaceFiles;
-    }
-
-    /**
-     * Convert legacy configuration into the new class structure.
-     *
-     * @return an instance of this class with all the new fields transferred from the old structure to the new one
-     */
-    public final Object readResolve() {
-        if (projectPath != null) {
-            return new ImportProjectArchiveConfig(projectPath, getImportPath(),
-                    getImportConfigPath(), isReplaceFiles());
-        }
-        return this;
     }
 
     /**
@@ -121,7 +102,7 @@ public class ImportProjectArchiveConfig extends ImportConfig {
             result = that.canEqual(this)
                     && super.equals(that)
                     && (importConfigPath == null ? that.importConfigPath == null : importConfigPath
-                            .equals(that.importConfigPath))
+                    .equals(that.importConfigPath))
                     && replaceFiles == that.replaceFiles;
         }
         return result;

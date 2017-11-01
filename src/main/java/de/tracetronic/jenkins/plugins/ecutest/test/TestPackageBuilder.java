@@ -76,26 +76,6 @@ public class TestPackageBuilder extends AbstractTestBuilder {
     }
 
     /**
-     * Instantiates a new {@link TestPackageBuilder}.
-     *
-     * @param testFile
-     *            the package file
-     * @param testConfig
-     *            the test configuration
-     * @param packageConfig
-     *            the package configuration
-     * @param executionConfig
-     *            the execution configuration
-     * @deprecated since 1.11 use {@link #TestPackageBuilder(String)}
-     */
-    @Deprecated
-    public TestPackageBuilder(final String testFile, final TestConfig testConfig,
-            final PackageConfig packageConfig, final ExecutionConfig executionConfig) {
-        super(testFile, testConfig, executionConfig);
-        this.packageConfig = packageConfig == null ? PackageConfig.newInstance() : packageConfig;
-    }
-
-    /**
      * @return the package configuration
      */
     @Nonnull

@@ -55,12 +55,6 @@ public class ImportProjectConfig extends ImportConfig {
     private final boolean importMissingPackages;
 
     /**
-     * @deprecated since 1.17
-     */
-    @Deprecated
-    private transient String projectPath;
-
-    /**
      * Instantiates a new {@link ImportProjectConfig}.
      *
      * @param tmsPath
@@ -79,19 +73,6 @@ public class ImportProjectConfig extends ImportConfig {
             final boolean importMissingPackages, final String credentialsId, final String timeout) {
         super(tmsPath, importPath, credentialsId, timeout);
         this.importMissingPackages = importMissingPackages;
-    }
-
-    /**
-     * Convert legacy configuration into the new class structure.
-     *
-     * @return an instance of this class with all the new fields transferred from the old structure to the new one
-     */
-    public final Object readResolve() {
-        if (projectPath != null) {
-            return new ImportProjectConfig(projectPath, getImportPath(), isImportMissingPackages(),
-                    getCredentialsId(), getTimeout());
-        }
-        return this;
     }
 
     /**

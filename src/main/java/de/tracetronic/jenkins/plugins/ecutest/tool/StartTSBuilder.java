@@ -94,27 +94,6 @@ public class StartTSBuilder extends AbstractToolBuilder {
     }
 
     /**
-     * Instantiates a new {@link StartTSBuilder}.
-     *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param timeout
-     *            the timeout
-     * @param toolLibsIni
-     *            the alternative ToolLibs.ini path
-     * @param tcpPort
-     *            the alternative TCP port
-     * @deprecated since 1.11 use {@link #StartTSBuilder(String)}
-     */
-    @Deprecated
-    public StartTSBuilder(final String toolName, final String timeout, final String toolLibsIni,
-            final String tcpPort) {
-        super(toolName, StringUtils.defaultIfEmpty(timeout, String.valueOf(DEFAULT_TIMEOUT)));
-        this.toolLibsIni = StringUtils.trimToEmpty(toolLibsIni);
-        this.tcpPort = StringUtils.defaultIfEmpty(tcpPort, String.valueOf(DEFAULT_TCP_PORT));
-    }
-
-    /**
      * @return the default timeout
      */
     @Override

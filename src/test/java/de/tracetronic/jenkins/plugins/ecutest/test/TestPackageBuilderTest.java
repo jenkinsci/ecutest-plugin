@@ -72,26 +72,6 @@ public class TestPackageBuilderTest {
         assertBuilder(builder);
     }
 
-    @Deprecated
-    @Test
-    public void testDefault() {
-        final TestConfig testConfig = new TestConfig("", "");
-        final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig("", true, true);
-        final TestPackageBuilder builder = new TestPackageBuilder("", testConfig, packageConfig, executionConfig);
-        assertBuilder(builder);
-    }
-
-    @Deprecated
-    @Test
-    public void testNull() {
-        final TestConfig testConfig = new TestConfig(null, null, false, false, false, null);
-        final PackageConfig packageConfig = new PackageConfig(true, true, null);
-        final ExecutionConfig executionConfig = new ExecutionConfig(null, true, true);
-        final TestPackageBuilder builder = new TestPackageBuilder(null, testConfig, packageConfig, executionConfig);
-        assertBuilder(builder);
-    }
-
     /**
      * Asserts the builder properties.
      *

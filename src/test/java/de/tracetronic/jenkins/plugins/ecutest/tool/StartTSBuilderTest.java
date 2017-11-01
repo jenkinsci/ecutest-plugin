@@ -62,20 +62,6 @@ public class StartTSBuilderTest {
         assertBuilder(builder);
     }
 
-    @Deprecated
-    @Test
-    public void testDefault() {
-        final StartTSBuilder builder = new StartTSBuilder("", "", "", "");
-        assertBuilder(builder);
-    }
-
-    @Deprecated
-    @Test
-    public void testNull() {
-        final StartTSBuilder builder = new StartTSBuilder(null, null, null, null);
-        assertBuilder(builder);
-    }
-
     /**
      * Asserts the builder properties.
      *

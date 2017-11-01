@@ -76,26 +76,6 @@ public class TestProjectBuilder extends AbstractTestBuilder {
     }
 
     /**
-     * Instantiates a new {@link TestProjectBuilder}.
-     *
-     * @param testFile
-     *            the project file
-     * @param testConfig
-     *            the test configuration
-     * @param projectConfig
-     *            the project configuration
-     * @param executionConfig
-     *            the execution configuration
-     * @deprecated since 1.11 use {@link #TestProjectBuilder(String)}
-     */
-    @Deprecated
-    public TestProjectBuilder(final String testFile, final TestConfig testConfig,
-            final ProjectConfig projectConfig, final ExecutionConfig executionConfig) {
-        super(testFile, testConfig, executionConfig);
-        this.projectConfig = projectConfig == null ? ProjectConfig.newInstance() : projectConfig;
-    }
-
-    /**
      * @return the project configuration
      */
     @Nonnull

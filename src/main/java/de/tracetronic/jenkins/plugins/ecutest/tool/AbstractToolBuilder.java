@@ -83,22 +83,6 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     }
 
     /**
-     * Instantiates a {@link AbstractToolBuilder}.
-     *
-     * @param toolName
-     *            the tool name
-     * @param timeout
-     *            the timeout
-     * @deprecated since 1.11 use {@link #AbstractToolBuilder(String)}
-     */
-    @Deprecated
-    public AbstractToolBuilder(final String toolName, final String timeout) {
-        super();
-        this.toolName = StringUtils.trimToEmpty(toolName);
-        this.timeout = StringUtils.trimToEmpty(timeout);
-    }
-
-    /**
      * @return the tool name
      */
     @Nonnull

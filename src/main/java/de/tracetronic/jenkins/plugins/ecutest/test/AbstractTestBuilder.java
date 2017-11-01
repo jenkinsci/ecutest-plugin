@@ -82,26 +82,6 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     }
 
     /**
-     * Instantiates a new {@link AbstractTestBuilder}.
-     *
-     * @param testFile
-     *            the test file
-     * @param testConfig
-     *            the test configuration
-     * @param executionConfig
-     *            the execution configuration
-     * @deprecated since 1.11 use {@link #AbstractTestBuilder(String)}
-     */
-    @Deprecated
-    public AbstractTestBuilder(final String testFile, final TestConfig testConfig,
-            final ExecutionConfig executionConfig) {
-        super();
-        this.testFile = StringUtils.trimToEmpty(testFile);
-        this.testConfig = testConfig == null ? TestConfig.newInstance() : testConfig;
-        this.executionConfig = executionConfig == null ? ExecutionConfig.newInstance() : executionConfig;
-    }
-
-    /**
      * @return the test file path
      */
     @Nonnull
@@ -300,7 +280,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
      */
     protected abstract boolean runTest(String testFile, TestConfig testConfig, ExecutionConfig executionConfig,
             Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
-                    throws IOException, InterruptedException;
+            throws IOException, InterruptedException;
 
     @Override
     public BuildStepMonitor getRequiredMonitorService() {

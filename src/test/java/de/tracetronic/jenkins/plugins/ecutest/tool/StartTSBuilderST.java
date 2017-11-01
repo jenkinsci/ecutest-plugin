@@ -105,14 +105,6 @@ public class StartTSBuilderST extends SystemTestBase {
         jenkins.assertEqualBeans(before, after, "toolLibsIni,tcpPort,timeout,keepInstance");
     }
 
-    @Deprecated
-    @Test
-    public void testConfigRoundTrip() throws Exception {
-        final StartTSBuilder before = new StartTSBuilder("ECU-TEST", "120", "C:\\ToolLibs.ini", "5017");
-        final StartTSBuilder after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "toolLibsIni,tcpPort,timeout,keepInstance");
-    }
-
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();

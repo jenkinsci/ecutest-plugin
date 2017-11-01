@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -106,14 +106,6 @@ public class JUnitPublisherST extends SystemTestBase {
         final SimpleBuildStep delegate = step.delegate;
         assertThat(delegate, instanceOf(JUnitPublisher.class));
 
-        final JUnitPublisher after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "unstableThreshold,failedThreshold,allowMissing,runOnFailed");
-    }
-
-    @Deprecated
-    @Test
-    public void testConfigRoundTrip() throws Exception {
-        final JUnitPublisher before = new JUnitPublisher("ECU-TEST", 0, 0, false, false, true, true);
         final JUnitPublisher after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after, "unstableThreshold,failedThreshold,allowMissing,runOnFailed");
     }

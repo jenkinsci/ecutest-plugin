@@ -106,14 +106,6 @@ public class StartETBuilderST extends SystemTestBase {
         jenkins.assertEqualBeans(before, after, "workspaceDir,settingsDir,timeout,debugMode,keepInstance");
     }
 
-    @Deprecated
-    @Test
-    public void testConfigRoundTrip() throws Exception {
-        final StartETBuilder before = new StartETBuilder("ECU-TEST", "workspace", "settings", "120", false);
-        final StartETBuilder after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "workspaceDir,settingsDir,timeout,debugMode,keepInstance");
-    }
-
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();

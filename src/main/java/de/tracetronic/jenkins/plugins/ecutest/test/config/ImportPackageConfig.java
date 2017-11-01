@@ -49,12 +49,6 @@ public class ImportPackageConfig extends ImportConfig {
     private static final long serialVersionUID = 1L;
 
     /**
-     * @deprecated since 1.17
-     */
-    @Deprecated
-    private transient String packagePath;
-
-    /**
      * Instantiates a new {@link ImportPackageConfig}.
      *
      * @param tmsPath
@@ -70,18 +64,6 @@ public class ImportPackageConfig extends ImportConfig {
     public ImportPackageConfig(final String tmsPath, final String importPath,
             final String credentialsId, final String timeout) {
         super(tmsPath, importPath, credentialsId, timeout);
-    }
-
-    /**
-     * Convert legacy configuration into the new class structure.
-     *
-     * @return an instance of this class with all the new fields transferred from the old structure to the new one
-     */
-    public final Object readResolve() {
-        if (packagePath != null) {
-            return new ImportPackageConfig(packagePath, getImportPath(), getCredentialsId(), getTimeout());
-        }
-        return this;
     }
 
     @Override

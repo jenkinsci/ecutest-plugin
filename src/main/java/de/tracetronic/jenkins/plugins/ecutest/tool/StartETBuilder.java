@@ -97,61 +97,6 @@ public class StartETBuilder extends AbstractToolBuilder {
     }
 
     /**
-     * Instantiates a new {@link StartETBuilder}.
-     *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param workspaceDir
-     *            the ECU-TEST workspace directory
-     * @param settingsDir
-     *            the ECU-TEST settings directory
-     * @param timeout
-     *            the timeout
-     * @param debugMode
-     *            the debug mode
-     * @deprecated since 1.11 use {@link #StartETBuilder(String)}
-     */
-    @Deprecated
-    public StartETBuilder(final String toolName, final String workspaceDir, final String settingsDir,
-            final String timeout, final boolean debugMode) {
-        super(toolName, StringUtils.defaultIfEmpty(timeout, String.valueOf(DEFAULT_TIMEOUT)));
-        this.workspaceDir = StringUtils.trimToEmpty(workspaceDir);
-        this.settingsDir = StringUtils.trimToEmpty(settingsDir);
-        this.debugMode = debugMode;
-    }
-
-    /**
-     * Instantiates a new {@link StartETBuilder}.
-     *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param workspaceDir
-     *            the ECU-TEST workspace directory
-     * @param timeout
-     *            the timeout
-     * @param debugMode
-     *            the debug mode
-     * @deprecated since 1.5 use {@link #StartETBuilder(String, String, String, String, boolean)}
-     */
-    @Deprecated
-    public StartETBuilder(final String toolName, final String workspaceDir, final String timeout,
-            final boolean debugMode) {
-        this(toolName, workspaceDir, null, timeout, debugMode);
-    }
-
-    /**
-     * Convert legacy configuration into the new class structure.
-     *
-     * @return an instance of this class with all the new fields transferred from the old structure to the new one
-     */
-    public final Object readResolve() {
-        if (settingsDir == null) {
-            return new StartETBuilder(getToolName(), workspaceDir, null, getTimeout(), debugMode);
-        }
-        return this;
-    }
-
-    /**
      * @return the default timeout
      */
     @Override
@@ -291,7 +236,7 @@ public class StartETBuilder extends AbstractToolBuilder {
      *             in case of an invalid workspace
      */
     private void checkWorkspace(final FilePath workspacePath, final FilePath settingsPath) throws IOException,
-    InterruptedException, ETPluginException {
+            InterruptedException, ETPluginException {
         if (!workspacePath.exists()) {
             throw new ETPluginException(String.format("ECU-TEST workspace at %s does not exist!",
                     workspacePath.getRemote()));

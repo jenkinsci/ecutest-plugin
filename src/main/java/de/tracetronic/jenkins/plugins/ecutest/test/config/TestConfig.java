@@ -128,22 +128,6 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
     }
 
     /**
-     * Instantiates a new {@link TestConfig}.
-     *
-     * @param tbcFile
-     *            the test bench configuration file
-     * @param tcfFile
-     *            the test configuration file
-     * @param constants
-     *            the list of global constants
-     * @deprecated since 1.4, use {@link #TestConfig(String, String, boolean, boolean, boolean, List)}
-     */
-    @Deprecated
-    public TestConfig(final String tbcFile, final String tcfFile, final List<GlobalConstant> constants) {
-        this(tbcFile, tcfFile, false, false, false, constants);
-    }
-
-    /**
      * @return the TBC file path
      */
     public String getTbcFile() {

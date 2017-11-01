@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -103,14 +103,6 @@ public class StopETBuilderST extends SystemTestBase {
         jenkins.assertEqualBeans(before, after, "timeout");
     }
 
-    @Deprecated
-    @Test
-    public void testConfigRoundTrip() throws Exception {
-        final StopETBuilder before = new StopETBuilder("ECU-TEST", "30");
-        final StopETBuilder after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "timeout");
-    }
-
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
@@ -211,7 +203,7 @@ public class StopETBuilderST extends SystemTestBase {
         final FilePath rootPath = jenkins.jenkins.getRootPath();
         if (rootPath != null) {
             rootPath.child("\\plugins\\ecutest\\WEB-INF\\lib\\" + DllUtil.getLibraryFile(jenkins.jenkins.toComputer()))
-            .write();
+                    .write();
         }
 
         final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");

@@ -40,7 +40,6 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -70,20 +69,6 @@ public class StopTSBuilder extends AbstractToolBuilder {
     @DataBoundConstructor
     public StopTSBuilder(@Nonnull final String toolName) {
         super(toolName);
-    }
-
-    /**
-     * Instantiates a new {@link StopTSBuilder}.
-     *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param timeout
-     *            the timeout
-     * @deprecated since 1.11 use {@link #StopTSBuilder(String)}
-     */
-    @Deprecated
-    public StopTSBuilder(final String toolName, final String timeout) {
-        super(toolName, StringUtils.defaultIfEmpty(timeout, String.valueOf(DEFAULT_TIMEOUT)));
     }
 
     /**

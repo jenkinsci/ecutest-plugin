@@ -65,28 +65,6 @@ public class StartETBuilderTest {
         assertBuilder(builder);
     }
 
-    @Deprecated
-    @Test
-    public void testDefault() {
-        final StartETBuilder builder = new StartETBuilder("", "", "", "", false);
-        assertBuilder(builder);
-    }
-
-    @Deprecated
-    @Test
-    public void testNull() {
-        final StartETBuilder builder = new StartETBuilder(null, null, null, null, false);
-        assertBuilder(builder);
-    }
-
-    @Deprecated
-    @Test
-    public void testCompatibility() {
-        final StartETBuilder builder = new StartETBuilder("", "", "", false);
-        assertNotNull(builder.getSettingsDir());
-        assertTrue(builder.getSettingsDir().isEmpty());
-    }
-
     /**
      * Asserts the builder properties.
      *

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -55,21 +55,6 @@ public class ATXPublisherTest {
     public void testNullStep() {
         final ATXPublisher publisher = new ATXPublisher(null);
         assertPublisher(publisher, true);
-    }
-
-    @Deprecated
-    @Test
-    public void testDefault() {
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE", false, false, true, true);
-        assertPublisher(publisher, true);
-        assertEquals("TEST-GUIDE", publisher.getAtxName());
-    }
-
-    @Deprecated
-    @Test
-    public void testNull() {
-        final ATXPublisher publisher = new ATXPublisher(null, true, true, false, false);
-        assertPublisher(publisher, false);
     }
 
     /**

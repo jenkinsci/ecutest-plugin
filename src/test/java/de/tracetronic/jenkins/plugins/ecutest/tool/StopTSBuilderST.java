@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -98,14 +98,6 @@ public class StopTSBuilderST extends SystemTestBase {
         assertThat(delegate, instanceOf(StopTSBuilder.class));
 
         final StopTSBuilder after = (StopTSBuilder) delegate;
-        jenkins.assertEqualBeans(before, after, "timeout");
-    }
-
-    @Deprecated
-    @Test
-    public void testConfigRoundTrip() throws Exception {
-        final StopTSBuilder before = new StopTSBuilder("ECU-TEST", "30");
-        final StopTSBuilder after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after, "timeout");
     }
 

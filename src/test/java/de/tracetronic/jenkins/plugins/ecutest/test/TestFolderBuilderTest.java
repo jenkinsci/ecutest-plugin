@@ -77,30 +77,6 @@ public class TestFolderBuilderTest {
         assertBuilder(builder);
     }
 
-    @Deprecated
-    @Test
-    public void testDefault() {
-        final TestConfig testConfig = new TestConfig("", "");
-        final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig("", true, true);
-        final TestFolderBuilder builder = new TestFolderBuilder("", TestFolderBuilder.DEFAULT_SCANMODE, false,
-                testConfig, packageConfig, projectConfig, executionConfig);
-        assertBuilder(builder);
-    }
-
-    @Deprecated
-    @Test
-    public void testNull() {
-        final TestConfig testConfig = new TestConfig(null, null, false, false, false, null);
-        final PackageConfig packageConfig = new PackageConfig(true, true, null);
-        final ProjectConfig projectConfig = new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(null, true, true);
-        final TestFolderBuilder builder = new TestFolderBuilder(null, TestFolderBuilder.DEFAULT_SCANMODE, false,
-                testConfig, packageConfig, projectConfig, executionConfig);
-        assertBuilder(builder);
-    }
-
     /**
      * Asserts the builder properties.
      *

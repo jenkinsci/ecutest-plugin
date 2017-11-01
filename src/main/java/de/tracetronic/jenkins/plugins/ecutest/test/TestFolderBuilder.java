@@ -118,36 +118,6 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     }
 
     /**
-     * Instantiates a new {@link TestFolderBuilder}.
-     *
-     * @param testFile
-     *            the test folder
-     * @param scanMode
-     *            the scan mode
-     * @param recursiveScan
-     *            specifies whether to scan recursively
-     * @param testConfig
-     *            the test configuration
-     * @param packageConfig
-     *            the package configuration
-     * @param projectConfig
-     *            the project configuration
-     * @param executionConfig
-     *            the execution configuration
-     * @deprecated since 1.11 use {@link #TestFolderBuilder(String)}
-     */
-    @Deprecated
-    public TestFolderBuilder(final String testFile, final ScanMode scanMode, final boolean recursiveScan,
-            final TestConfig testConfig, final PackageConfig packageConfig, final ProjectConfig projectConfig,
-            final ExecutionConfig executionConfig) {
-        super(testFile, testConfig, executionConfig);
-        this.scanMode = scanMode;
-        this.recursiveScan = recursiveScan;
-        this.packageConfig = packageConfig == null ? PackageConfig.newInstance() : packageConfig;
-        this.projectConfig = projectConfig == null ? ProjectConfig.newInstance() : projectConfig;
-    }
-
-    /**
      * @return the scanMode
      */
     @Nonnull

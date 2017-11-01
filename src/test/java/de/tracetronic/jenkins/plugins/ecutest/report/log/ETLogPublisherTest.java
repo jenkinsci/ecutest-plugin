@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -58,13 +58,6 @@ public class ETLogPublisherTest {
         final ETLogPublisher publisher = new ETLogPublisher();
         assertPublisher(publisher);
 
-    }
-
-    @Deprecated
-    @Test
-    public void testConstructor() {
-        final ETLogPublisher publisher = new ETLogPublisher(false, false, false, false, false, true, true);
-        assertPublisher(publisher);
     }
 
     @Test
