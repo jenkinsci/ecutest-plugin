@@ -393,7 +393,7 @@ public class ETClient extends AbstractToolClient {
                     version = comClient.getVersion();
                 }
             } catch (final ETComException e) {
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
             }
             return version;
         }
@@ -438,7 +438,7 @@ public class ETClient extends AbstractToolClient {
                     logger.logError("ECU-TEST COM instance is not ready to use!");
                 }
             } catch (final ETComException e) {
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
             } finally {
                 if (checkProcesses) {
                     final List<String> foundProcesses = ProcessUtil.checkETProcesses(true);

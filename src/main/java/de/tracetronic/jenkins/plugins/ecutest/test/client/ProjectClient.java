@@ -216,7 +216,7 @@ public class ProjectClient extends AbstractTestClient {
             } catch (final ETComException e) {
                 isOpened = false;
                 logger.logError("-> Opening project failed!");
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
             }
             return isOpened;
         }
@@ -286,7 +286,7 @@ public class ProjectClient extends AbstractTestClient {
                 testInfo = getTestInfo(execInfo, isAborted, logger);
                 postExecution(timeout, comClient, logger);
             } catch (final ETComException e) {
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
             } catch (final InterruptedException e) {
                 testInfo = abortTestExecution(timeout, progId, logger);
             }
@@ -399,7 +399,7 @@ public class ProjectClient extends AbstractTestClient {
                     logger.logError("-> Closing project failed!");
                 }
             } catch (final ETComException e) {
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
             }
             return isClosed;
         }

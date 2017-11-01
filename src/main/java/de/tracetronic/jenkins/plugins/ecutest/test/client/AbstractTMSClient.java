@@ -166,7 +166,7 @@ public abstract class AbstractTMSClient {
             } catch (final ETComException e) {
                 logger.logError("The test management module is not available in running ECU-TEST instance! "
                         + "Enable it by setting the feature flag 'TEST-MANAGEMENT-SERVICE'.");
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
             }
             return isAvailable;
         }

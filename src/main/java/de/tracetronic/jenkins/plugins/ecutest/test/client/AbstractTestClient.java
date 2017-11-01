@@ -265,7 +265,7 @@ public abstract class AbstractTestClient implements TestClient {
                     }
                 }
             } catch (final ETComException e) {
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
                 isLoaded = false;
             }
             return isLoaded;

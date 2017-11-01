@@ -135,6 +135,26 @@ public class TTConsoleLoggerST extends SystemTestBase {
     }
 
     @Test
+    public void testComExceptionLogger() throws Exception {
+        final FreeStyleProject project = jenkins.createFreeStyleProject();
+        project.getBuildersList().add(new TestBuilder() {
+
+            @Override
+            public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
+                    final BuildListener listener) throws InterruptedException, IOException {
+                final TTConsoleLogger logger = new TTConsoleLogger(listener);
+                logger.logComException("TTConsoleLogger");
+                return true;
+            }
+        });
+
+        final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
+        final HtmlPage consoleLog = getWebClient().getPage(build, "console");
+        assertTrue("Annotated error log output should be present in build console log",
+                consoleLog.asText().contains("[TT] ERROR: Caught ComException: TTConsoleLogger"));
+    }
+
+    @Test
     public void testEnabledDebugTextLogger() throws Exception {
         System.setProperty("ecutest.debugLog", "true");
         final HtmlPage consoleLog = logDebug();

@@ -467,7 +467,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 }
             } catch (final ETComException e) {
                 isUploaded = false;
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
             }
             return isUploaded;
         }

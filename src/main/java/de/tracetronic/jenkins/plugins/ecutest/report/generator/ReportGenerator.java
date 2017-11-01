@@ -142,7 +142,7 @@ public class ReportGenerator {
                 }
             } catch (final ETComException e) {
                 isGenerated = false;
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
             }
             return isGenerated;
         }
