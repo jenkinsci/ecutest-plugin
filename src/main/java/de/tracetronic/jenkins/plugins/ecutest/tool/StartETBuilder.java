@@ -56,7 +56,6 @@ import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
-import de.tracetronic.jenkins.plugins.ecutest.tool.client.TSClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.PathUtil;
@@ -229,7 +228,7 @@ public class StartETBuilder extends AbstractToolBuilder {
     @Override
     public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
-        final List<String> foundProcesses = TSClient.checkProcesses(launcher, false);
+        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
         if (isKeepInstance() && !foundProcesses.isEmpty()) {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("Re-using already running ECU-TEST instance...");
@@ -292,7 +291,7 @@ public class StartETBuilder extends AbstractToolBuilder {
      *             in case of an invalid workspace
      */
     private void checkWorkspace(final FilePath workspacePath, final FilePath settingsPath) throws IOException,
-            InterruptedException, ETPluginException {
+    InterruptedException, ETPluginException {
         if (!workspacePath.exists()) {
             throw new ETPluginException(String.format("ECU-TEST workspace at %s does not exist!",
                     workspacePath.getRemote()));

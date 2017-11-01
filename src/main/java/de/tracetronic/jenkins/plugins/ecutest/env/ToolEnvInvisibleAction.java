@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -48,6 +48,8 @@ public class ToolEnvInvisibleAction extends InvisibleAction {
     private final String toolSettings;
     private final int timeout;
     private final boolean debug;
+    private final String lastTbc;
+    private final String lastTcf;
 
     /**
      * Instantiates a new {@link ToolEnvInvisibleAction}.
@@ -68,6 +70,8 @@ public class ToolEnvInvisibleAction extends InvisibleAction {
         toolSettings = toolClient.getSettingsDir();
         timeout = toolClient.getTimeout();
         debug = toolClient.isDebug();
+        lastTbc = toolClient.getLastTbc();
+        lastTcf = toolClient.getLastTcf();
     }
 
     /**
@@ -124,5 +128,19 @@ public class ToolEnvInvisibleAction extends InvisibleAction {
      */
     public boolean isDebug() {
         return debug;
+    }
+
+    /**
+     * @return the last loaded TBC file path
+     */
+    public String getLastTbc() {
+        return lastTbc;
+    }
+
+    /**
+     * @return the last loaded TCF file path
+     */
+    public String getLastTcf() {
+        return lastTcf;
     }
 }

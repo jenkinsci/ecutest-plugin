@@ -52,6 +52,8 @@ import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestBenchConfiguration;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestConfiguration;
 
 /**
  * Client to start and stop ECU-TEST by either COM or XML-RPC communication.
@@ -64,6 +66,8 @@ public class ETClient extends AbstractToolClient {
     private final String settingsDir;
     private final boolean debug;
     private String version;
+    private String lastTbc;
+    private String lastTcf;
 
     /**
      * Instantiates a new {@link ETClient}.
@@ -88,6 +92,8 @@ public class ETClient extends AbstractToolClient {
         this.settingsDir = StringUtils.trimToEmpty(settingsDir);
         this.debug = debug;
         version = "";
+        lastTbc = "";
+        lastTcf = "";
     }
 
     /**
@@ -104,6 +110,8 @@ public class ETClient extends AbstractToolClient {
         settingsDir = "";
         debug = false;
         version = "";
+        lastTbc = "";
+        lastTcf = "";
     }
 
     /**
@@ -132,6 +140,20 @@ public class ETClient extends AbstractToolClient {
      */
     public String getVersion() {
         return version;
+    }
+
+    /**
+     * @return the last loaded TBC file path
+     */
+    public String getLastTbc() {
+        return lastTbc;
+    }
+
+    /**
+     * @return the last loaded TCF file path
+     */
+    public String getLastTcf() {
+        return lastTcf;
     }
 
     @Override
@@ -195,6 +217,12 @@ public class ETClient extends AbstractToolClient {
             // Close ECU-TEST
             stop(checkProcesses, workspace, launcher, listener);
             return false;
+        }
+
+        // Read currently loaded configurations
+        if (comToolVersion.compareWithoutMicroTo(new ToolVersion(7, 0, 0, 0)) >= 0) {
+            lastTbc = launcher.getChannel().call(new LastTbcCallable(listener));
+            lastTcf = launcher.getChannel().call(new LastTcfCallable(listener));
         }
 
         logger.logInfo(String.format("%s started successfully.", getToolName()));
@@ -478,6 +506,75 @@ public class ETClient extends AbstractToolClient {
                 logger.logError("-> Caught COM exception: " + e.getMessage());
             }
             return comVersion;
+        }
+    }
+
+    /**
+     * {@link Callable} providing remote access to request the last loaded TBC of currently running ECU-TEST instance.
+     */
+    private static final class LastTbcCallable extends MasterToSlaveCallable<String, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final TaskListener listener;
+
+        /**
+         * Instantiates a new {@link LastTbcCallable}.
+         *
+         * @param listener
+         *            the listener
+         */
+        LastTbcCallable(final TaskListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public String call() throws IOException {
+            String tbcFilePath = "";
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId);
+                    TestBenchConfiguration tbc = (TestBenchConfiguration)
+                            comClient.getCurrentTestBenchConfiguration()) {
+                tbcFilePath = tbc.getFilename();
+            } catch (final ETComException e) {
+                logger.logError("-> Caught COM exception: " + e.getMessage());
+            }
+            return tbcFilePath;
+        }
+    }
+
+    /**
+     * {@link Callable} providing remote access to request the last loaded TCF of currently running ECU-TEST instance.
+     */
+    private static final class LastTcfCallable extends MasterToSlaveCallable<String, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final TaskListener listener;
+
+        /**
+         * Instantiates a new {@link LastTcfCallable}.
+         *
+         * @param listener
+         *            the listener
+         */
+        LastTcfCallable(final TaskListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public String call() throws IOException {
+            String tcfFilePath = "";
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId);
+                    TestConfiguration tcf = (TestConfiguration) comClient.getCurrentTestConfiguration()) {
+                tcfFilePath = tcf.getFilename();
+            } catch (final ETComException e) {
+                logger.logError("-> Caught COM exception: " + e.getMessage());
+            }
+            return tcfFilePath;
         }
     }
 
