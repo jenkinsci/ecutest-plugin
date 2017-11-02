@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -55,20 +55,6 @@ public class StopETBuilderTest {
     public void testNullStep() {
         final StopETBuilder builder = new StopETBuilder(null);
         builder.setTimeout(null);
-        assertBuilder(builder);
-    }
-
-    @Deprecated
-    @Test
-    public void testDefault() {
-        final StopETBuilder builder = new StopETBuilder("", "");
-        assertBuilder(builder);
-    }
-
-    @Deprecated
-    @Test
-    public void testNull() {
-        final StopETBuilder builder = new StopETBuilder(null, null);
         assertBuilder(builder);
     }
 

@@ -41,21 +41,29 @@ import javaposse.jobdsl.plugin.DslExtensionMethod;
 
 import com.google.common.base.Preconditions;
 
-import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.test.ExportPackageBuilder;
+import de.tracetronic.jenkins.plugins.ecutest.test.ExportProjectBuilder;
+import de.tracetronic.jenkins.plugins.ecutest.test.ImportPackageBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.ImportProjectBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestFolderBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestFolderBuilder.ScanMode;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestPackageBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.TestProjectBuilder;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageAttributeConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportProjectAttributeConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageAttributeConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageDirConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectAttributeConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirTMSConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectTMSConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageParameter;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.ImportProjectValidator;
 
 /**
  * Class providing test related DSL extensions.
@@ -176,6 +184,32 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
     }
 
     /**
+     * {@link DslExtensionMethod} providing the import of packages from test management system.
+     *
+     * @param closure
+     *            the nested Groovy closure
+     * @return the instance of a {@link ImportPackageBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object importPackages(final Runnable closure) {
+        final ImportPackageContext context = new ImportPackageContext();
+        executeInContext(closure, context);
+
+        final ImportPackageBuilder builder = new ImportPackageBuilder(context.importConfigs);
+        return builder;
+    }
+
+    /**
+     * {@link DslExtensionMethod} providing the import of packages from test management system with default settings.
+     *
+     * @return the instance of a {@link ImportPackageBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object importPackages() {
+        return importPackages(null);
+    }
+
+    /**
      * {@link DslExtensionMethod} providing the import of projects from archive and test management system.
      *
      * @param closure
@@ -195,11 +229,63 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
      * {@link DslExtensionMethod} providing the import of projects from archive
      * and test management system with default settings.
      *
-     * @return the instance of a {@link ReportGeneratorPublisher}
+     * @return the instance of a {@link ImportProjectBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
     public Object importProjects() {
         return importProjects(null);
+    }
+
+    /**
+     * {@link DslExtensionMethod} providing the export of packages to test management system.
+     *
+     * @param closure
+     *            the nested Groovy closure
+     * @return the instance of a {@link ExportPackageBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object exportPackages(final Runnable closure) {
+        final ExportPackageContext context = new ExportPackageContext();
+        executeInContext(closure, context);
+
+        final ExportPackageBuilder builder = new ExportPackageBuilder(context.exportConfigs);
+        return builder;
+    }
+
+    /**
+     * {@link DslExtensionMethod} providing the export of packages to test management system with default settings.
+     *
+     * @return the instance of a {@link ExportPackageBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object exportPackages() {
+        return exportPackages(null);
+    }
+
+    /**
+     * {@link DslExtensionMethod} providing the export of projects to test management system.
+     *
+     * @param closure
+     *            the nested Groovy closure
+     * @return the instance of a {@link ExportProjectBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object exportProjects(final Runnable closure) {
+        final ExportProjectContext context = new ExportProjectContext();
+        executeInContext(closure, context);
+
+        final ExportProjectBuilder builder = new ExportProjectBuilder(context.exportConfigs);
+        return builder;
+    }
+
+    /**
+     * {@link DslExtensionMethod} providing the export of projects to test management system with default settings.
+     *
+     * @return the instance of a {@link ExportProjectBuilder}
+     */
+    @DslExtensionMethod(context = StepContext.class)
+    public Object exportProjects() {
+        return exportProjects(null);
     }
 
     /**
@@ -479,23 +565,208 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
     }
 
     /**
+     * {@link Context} class providing import package methods for the nested DSL context.
+     */
+    public class ImportPackageContext extends AbstractImportContext {
+
+        private static final String OPT_PACKAGE_PATH = "packagePath";
+        private static final String OPT_PACKAGE_DIR_PATH = "packageDirPath";
+
+        /**
+         * Option defining the import package from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param importPath
+         *            the import path
+         * @param timeout
+         *            the import timeout
+         */
+        public void importFromTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final CharSequence importPath, final CharSequence timeout) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(packagePath, NOT_NULL_MSG, OPT_PACKAGE_PATH);
+            Preconditions.checkNotNull(importPath, NOT_NULL_MSG, OPT_IMPORT_PATH);
+            Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_TIMEOUT);
+
+            FormValidation validation = tmsValidator.validateTestPath(packagePath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            validation = tmsValidator.validateImportPath(importPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            importConfigs.add(new ImportPackageConfig(packagePath.toString(), importPath.toString(),
+                    credentialsId.toString(), timeout.toString()));
+        }
+
+        /**
+         * Option defining the import package from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param importPath
+         *            the import path
+         * @param timeout
+         *            the import timeout
+         */
+        public void importFromTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final CharSequence importPath, final int timeout) {
+            importFromTMS(credentialsId, packagePath, importPath, String.valueOf(timeout));
+        }
+
+        /**
+         * Option defining the import package from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param closure
+         *            the nested Groovy closure
+         */
+        public void importFromTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final Runnable closure) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(packagePath, NOT_NULL_MSG, OPT_PACKAGE_PATH);
+            final ImportTMSContext context = new ImportTMSContext();
+            executeInContext(closure, context);
+            importConfigs.add(new ImportPackageConfig(packagePath.toString(), context.importPath,
+                    credentialsId.toString(), context.timeout));
+        }
+
+        /**
+         * Option defining the import package directory from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packageDirPath
+         *            the package directory path
+         * @param importPath
+         *            the import path
+         * @param timeout
+         *            the import timeout
+         */
+        public void importFromTMSDir(final CharSequence credentialsId, final CharSequence packageDirPath,
+                final CharSequence importPath, final CharSequence timeout) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(packageDirPath, NOT_NULL_MSG, OPT_PACKAGE_DIR_PATH);
+            Preconditions.checkNotNull(importPath, NOT_NULL_MSG, OPT_PACKAGE_PATH);
+            Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_PACKAGE_PATH);
+
+            FormValidation validation = tmsValidator.validateTestPath(packageDirPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            validation = tmsValidator.validateImportPath(importPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            importConfigs.add(new ImportPackageDirConfig(packageDirPath.toString(), importPath.toString(),
+                    credentialsId.toString(), timeout.toString()));
+        }
+
+        /**
+         * Option defining the import package directory from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packageDirPath
+         *            the package directory path
+         * @param importPath
+         *            the import path
+         * @param timeout
+         *            the import timeout
+         */
+        public void importFromTMSDir(final CharSequence credentialsId, final CharSequence packageDirPath,
+                final CharSequence importPath, final int timeout) {
+            importFromTMSDir(credentialsId, packageDirPath, importPath, String.valueOf(timeout));
+        }
+
+        /**
+         * Option defining the import package directory from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param closure
+         *            the nested Groovy closure
+         */
+        public void importFromTMSDir(final CharSequence credentialsId, final CharSequence packagePath,
+                final Runnable closure) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(packagePath, NOT_NULL_MSG, OPT_PACKAGE_DIR_PATH);
+            final ImportTMSContext context = new ImportTMSContext();
+            executeInContext(closure, context);
+            importConfigs.add(new ImportPackageDirConfig(packagePath.toString(), context.importPath,
+                    credentialsId.toString(), context.timeout));
+        }
+
+        /**
+         * Option defining the import package attributes from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param timeout
+         *            the export timeout
+         */
+        public void importAttributesFromTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final CharSequence timeout) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(packagePath, NOT_NULL_MSG, OPT_PACKAGE_PATH);
+            Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_TIMEOUT);
+
+            final FormValidation validation = tmsValidator.validatePackageFile(packagePath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            importConfigs.add(new ImportPackageAttributeConfig(packagePath.toString(), credentialsId.toString(),
+                    timeout.toString()));
+        }
+
+        /**
+         * Option defining the import package attributes from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param timeout
+         *            the export timeout
+         */
+        public void importAttributesFromTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final int timeout) {
+            importAttributesFromTMS(credentialsId, packagePath, String.valueOf(timeout));
+        }
+
+        /**
+         * Option defining the import package attributes from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param closure
+         *            the nested Groovy closure
+         */
+        public void importAttributesFromTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final Runnable closure) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(packagePath, NOT_NULL_MSG, OPT_PACKAGE_PATH);
+            final ImportTMSContext context = new ImportTMSContext();
+            executeInContext(closure, context);
+            importConfigs.add(new ImportPackageAttributeConfig(packagePath.toString(), credentialsId.toString(),
+                    context.timeout));
+        }
+    }
+
+    /**
      * {@link Context} class providing import project methods for the nested DSL context.
      */
-    public class ImportProjectContext extends AbstractTestContext {
+    public class ImportProjectContext extends AbstractImportContext {
 
         private static final String OPT_ARCHIVE_PATH = "archivePath";
         private static final String OPT_PROJECT_PATH = "projectPath";
         private static final String OPT_PROJECT_DIR_PATH = "projectDirPath";
-        private static final String OPT_IMPORT_PATH = "importPath";
         private static final String OPT_IMPORT_CONFIG_PATH = "importConfigPath";
-        private static final String OPT_CREDENTIALS_ID = "credentialsId";
-
-        private final List<ImportProjectConfig> importConfigs = new ArrayList<ImportProjectConfig>();
-
-        /**
-         * Validator to check import project related DSL options.
-         */
-        protected final ImportProjectValidator validator = new ImportProjectValidator();
 
         /**
          * Option defining the import project from archive configuration.
@@ -515,11 +786,11 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             Preconditions.checkNotNull(importPath, NOT_NULL_MSG, OPT_IMPORT_PATH);
             Preconditions.checkNotNull(importConfigPath, NOT_NULL_MSG, OPT_IMPORT_CONFIG_PATH);
 
-            FormValidation validation = validator.validateArchivePath(archivePath.toString());
+            FormValidation validation = tmsValidator.validateArchivePath(archivePath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            validation = validator.validateImportPath(importPath.toString());
+            validation = tmsValidator.validateImportPath(importPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            validation = validator.validateImportPath(importConfigPath.toString());
+            validation = tmsValidator.validateImportConfigPath(importConfigPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
             importConfigs.add(new ImportProjectArchiveConfig(archivePath.toString(), importPath.toString(),
                     importConfigPath.toString(), replaceFiles));
@@ -550,22 +821,24 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          *            the project path
          * @param importPath
          *            the import path
+         * @param importMissingPackages
+         *            specifies whether to import missing packages
          * @param timeout
          *            the import timeout
          */
         public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
-                final CharSequence importPath, final CharSequence timeout) {
+                final CharSequence importPath, final boolean importMissingPackages, final CharSequence timeout) {
             Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
             Preconditions.checkNotNull(projectPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
             Preconditions.checkNotNull(importPath, NOT_NULL_MSG, OPT_IMPORT_PATH);
             Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_TIMEOUT);
 
-            FormValidation validation = validator.validateProjectPath(projectPath.toString());
+            FormValidation validation = tmsValidator.validateTestPath(projectPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            validation = validator.validateImportPath(importPath.toString());
+            validation = tmsValidator.validateImportPath(importPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            importConfigs.add(new ImportProjectTMSConfig(projectPath.toString(), importPath.toString(),
-                    credentialsId.toString(), timeout.toString()));
+            importConfigs.add(new ImportProjectConfig(projectPath.toString(), importPath.toString(),
+                    importMissingPackages, credentialsId.toString(), timeout.toString()));
         }
 
         /**
@@ -582,7 +855,26 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          */
         public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
                 final CharSequence importPath, final int timeout) {
-            importFromTMS(credentialsId, projectPath, importPath, String.valueOf(timeout));
+            importFromTMS(credentialsId, projectPath, importPath, false, String.valueOf(timeout));
+        }
+
+        /**
+         * Option defining the import project from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectPath
+         *            the project path
+         * @param importPath
+         *            the import path
+         * @param importMissingPackages
+         *            specifies whether to import missing packages
+         * @param timeout
+         *            the import timeout
+         */
+        public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
+                final CharSequence importPath, final boolean importMissingPackages, final int timeout) {
+            importFromTMS(credentialsId, projectPath, importPath, importMissingPackages, String.valueOf(timeout));
         }
 
         /**
@@ -601,8 +893,8 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             Preconditions.checkNotNull(projectPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
             final ImportTMSContext context = new ImportTMSContext();
             executeInContext(closure, context);
-            importConfigs.add(new ImportProjectTMSConfig(projectPath.toString(), context.importPath,
-                    credentialsId.toString(), context.timeout));
+            importConfigs.add(new ImportProjectConfig(projectPath.toString(), context.importPath,
+                    context.importMissingPackages, credentialsId.toString(), context.timeout));
         }
 
         /**
@@ -624,11 +916,11 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             Preconditions.checkNotNull(importPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
             Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_PROJECT_PATH);
 
-            FormValidation validation = validator.validateProjectPath(projectDirPath.toString());
+            FormValidation validation = tmsValidator.validateTestPath(projectDirPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            validation = validator.validateImportPath(importPath.toString());
+            validation = tmsValidator.validateImportPath(importPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-            importConfigs.add(new ImportProjectDirTMSConfig(projectDirPath.toString(), importPath.toString(),
+            importConfigs.add(new ImportProjectDirConfig(projectDirPath.toString(), importPath.toString(),
                     credentialsId.toString(), timeout.toString()));
         }
 
@@ -665,37 +957,71 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             Preconditions.checkNotNull(projectDirPath, NOT_NULL_MSG, OPT_PROJECT_DIR_PATH);
             final ImportTMSContext context = new ImportTMSContext();
             executeInContext(closure, context);
-            importConfigs.add(new ImportProjectDirTMSConfig(projectDirPath.toString(), context.importPath,
+            importConfigs.add(new ImportProjectDirConfig(projectDirPath.toString(), context.importPath,
                     credentialsId.toString(), context.timeout));
         }
 
         /**
-         * {@link Context} class providing common import project methods for the nested DSL context.
+         * Option defining the import project attributes from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectPath
+         *            the project path
+         * @param timeout
+         *            the export timeout
          */
-        public class AbstractImportProjectContext implements Context {
+        public void importAttributesFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
+                final CharSequence timeout) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(projectPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
+            Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_TIMEOUT);
 
-            /**
-             * The import path.
-             */
-            protected String importPath;
+            final FormValidation validation = tmsValidator.validateProjectFile(projectPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            importConfigs.add(new ImportProjectAttributeConfig(projectPath.toString(), credentialsId.toString(),
+                    timeout.toString()));
+        }
 
-            /**
-             * Option defining the import path.
-             *
-             * @param value
-             *            the value
-             */
-            public void importPath(final String value) {
-                final FormValidation validation = validator.validateImportPath(value);
-                Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-                importPath = value;
-            }
+        /**
+         * Option defining the import project attributes from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectPath
+         *            the project path
+         * @param timeout
+         *            the export timeout
+         */
+        public void importAttributesFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
+                final int timeout) {
+            importAttributesFromTMS(credentialsId, projectPath, String.valueOf(timeout));
+        }
+
+        /**
+         * Option defining the import project attributes from test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectPath
+         *            the project path
+         * @param closure
+         *            the nested Groovy closure
+         */
+        public void importAttributesFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
+                final Runnable closure) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(projectPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
+            final ImportTMSContext context = new ImportTMSContext();
+            executeInContext(closure, context);
+            importConfigs.add(new ImportProjectAttributeConfig(projectPath.toString(), credentialsId.toString(),
+                    context.timeout));
         }
 
         /**
          * {@link Context} class providing the import from archive methods for the nested DSL context.
          */
-        public class ImportArchiveContext extends AbstractImportProjectContext {
+        public class ImportArchiveContext extends AbstractImportContext {
 
             private String importConfigPath;
             private boolean replaceFiles = true;
@@ -707,7 +1033,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
              *            the value
              */
             public void importConfigPath(final String value) {
-                final FormValidation validation = validator.validateImportConfigPath(value);
+                final FormValidation validation = tmsValidator.validateImportConfigPath(value);
                 Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
                 importConfigPath = value;
             }
@@ -722,36 +1048,267 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
                 replaceFiles = value;
             }
         }
+    }
+
+    /**
+     * {@link Context} class providing export package methods for the nested DSL context.
+     */
+    public class ExportPackageContext extends AbstractExportContext {
+
+        private static final String OPT_PACKAGE_PATH = "packagePath";
 
         /**
-         * {@link Context} class providing the import from test management system methods for the nested DSL context.
+         * Option defining the export package to test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param exportPath
+         *            the export path
+         * @param createNewPath
+         *            specifies whether missing export path will be created
+         * @param timeout
+         *            the export timeout
          */
-        public class ImportTMSContext extends AbstractImportProjectContext {
+        public void exportToTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final CharSequence exportPath, final boolean createNewPath, final CharSequence timeout) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(packagePath, NOT_NULL_MSG, OPT_PACKAGE_PATH);
+            Preconditions.checkNotNull(exportPath, NOT_NULL_MSG, OPT_EXPORT_PATH);
+            Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_TIMEOUT);
 
-            private String timeout = String.valueOf(ImportProjectTMSConfig.getDefaultTimeout());
+            FormValidation validation = tmsValidator.validatePackageFile(packagePath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            validation = tmsValidator.validateExportPath(exportPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            exportConfigs.add(new ExportPackageConfig(packagePath.toString(), exportPath.toString(), createNewPath,
+                    credentialsId.toString(), timeout.toString()));
+        }
 
-            /**
-             * Option defining the import timeout.
-             *
-             * @param value
-             *            the value
-             */
-            public void timeout(final String value) {
-                final FormValidation validation = validator.validateTimeout(value,
-                        ImportProjectTMSConfig.getDefaultTimeout());
-                Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-                timeout = value;
-            }
+        /**
+         * Option defining the export package to test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param exportPath
+         *            the export path
+         * @param timeout
+         *            the export timeout
+         */
+        public void exportToTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final CharSequence exportPath, final int timeout) {
+            exportToTMS(credentialsId, packagePath, exportPath, false, String.valueOf(timeout));
+        }
 
-            /**
-             * Option defining the import timeout.
-             *
-             * @param value
-             *            the value as Integer
-             */
-            public void timeout(final int value) {
-                timeout(String.valueOf((Object) value));
-            }
+        /**
+         * Option defining the export package to test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param closure
+         *            the nested Groovy closure
+         */
+        public void exportToTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final Runnable closure) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(packagePath, NOT_NULL_MSG, OPT_PACKAGE_PATH);
+            final ExportTMSContext context = new ExportTMSContext();
+            executeInContext(closure, context);
+            exportConfigs.add(new ExportPackageConfig(packagePath.toString(), context.exportPath,
+                    context.createNewPath, credentialsId.toString(), context.timeout));
+        }
+
+        /**
+         * Option defining the export package attributes to test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param timeout
+         *            the export timeout
+         */
+        public void exportAttributesToTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final CharSequence timeout) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(packagePath, NOT_NULL_MSG, OPT_PACKAGE_PATH);
+            Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_TIMEOUT);
+
+            final FormValidation validation = tmsValidator.validatePackageFile(packagePath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            exportConfigs.add(new ExportPackageAttributeConfig(packagePath.toString(), credentialsId.toString(),
+                    timeout.toString()));
+        }
+
+        /**
+         * Option defining the export package attributes to test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param timeout
+         *            the export timeout
+         */
+        public void exportAttributesToTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final int timeout) {
+            exportAttributesToTMS(credentialsId, packagePath, String.valueOf(timeout));
+        }
+
+        /**
+         * Option defining the export package attributes to test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param packagePath
+         *            the package path
+         * @param closure
+         *            the nested Groovy closure
+         */
+        public void exportAttributesToTMS(final CharSequence credentialsId, final CharSequence packagePath,
+                final Runnable closure) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(packagePath, NOT_NULL_MSG, OPT_PACKAGE_PATH);
+            final ExportTMSContext context = new ExportTMSContext();
+            executeInContext(closure, context);
+            exportConfigs.add(new ExportPackageAttributeConfig(packagePath.toString(), credentialsId.toString(),
+                    context.timeout));
+        }
+    }
+
+    /**
+     * {@link Context} class providing export project methods for the nested DSL context.
+     */
+    public class ExportProjectContext extends AbstractExportContext {
+
+        private static final String OPT_PROJECT_PATH = "projectPath";
+
+        /**
+         * Option defining the export project to test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectPath
+         *            the project path
+         * @param exportPath
+         *            the export path
+         * @param createNewPath
+         *            specifies whether missing export path will be created
+         * @param timeout
+         *            the export timeout
+         */
+        public void exportToTMS(final CharSequence credentialsId, final CharSequence projectPath,
+                final CharSequence exportPath, final boolean createNewPath, final CharSequence timeout) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(projectPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
+            Preconditions.checkNotNull(exportPath, NOT_NULL_MSG, OPT_EXPORT_PATH);
+            Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_TIMEOUT);
+
+            FormValidation validation = validator.validateProjectFile(projectPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            validation = tmsValidator.validateExportPath(exportPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            exportConfigs.add(new ExportProjectConfig(projectPath.toString(), exportPath.toString(), createNewPath,
+                    credentialsId.toString(), timeout.toString()));
+        }
+
+        /**
+         * Option defining the export project to test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectPath
+         *            the project path
+         * @param exportPath
+         *            the export path
+         * @param timeout
+         *            the export timeout
+         */
+        public void exportToTMS(final CharSequence credentialsId, final CharSequence projectPath,
+                final CharSequence exportPath, final int timeout) {
+            exportToTMS(credentialsId, projectPath, exportPath, false, String.valueOf(timeout));
+        }
+
+        /**
+         * Option defining the export package to test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectPath
+         *            the project path
+         * @param closure
+         *            the nested Groovy closure
+         */
+        public void exportToTMS(final CharSequence credentialsId, final CharSequence projectPath,
+                final Runnable closure) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(projectPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
+            final ExportTMSContext context = new ExportTMSContext();
+            executeInContext(closure, context);
+            exportConfigs.add(new ExportProjectConfig(projectPath.toString(), context.exportPath,
+                    context.createNewPath, credentialsId.toString(), context.timeout));
+        }
+
+        /**
+         * Option defining the export project attributes to test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectPath
+         *            the project path
+         * @param timeout
+         *            the export timeout
+         */
+        public void exportAttributesToTMS(final CharSequence credentialsId, final CharSequence projectPath,
+                final CharSequence timeout) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(projectPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
+            Preconditions.checkNotNull(timeout, NOT_NULL_MSG, OPT_TIMEOUT);
+
+            final FormValidation validation = tmsValidator.validateProjectFile(projectPath.toString());
+            Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+            exportConfigs.add(new ExportProjectAttributeConfig(projectPath.toString(), credentialsId.toString(),
+                    timeout.toString()));
+        }
+
+        /**
+         * Option defining the export project attributes to test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectPath
+         *            the project path
+         * @param timeout
+         *            the export timeout
+         */
+        public void exportAttributesToTMS(final CharSequence credentialsId, final CharSequence projectPath,
+                final int timeout) {
+            exportAttributesToTMS(credentialsId, projectPath, String.valueOf(timeout));
+        }
+
+        /**
+         * Option defining the export project attributes to test management system configuration.
+         *
+         * @param credentialsId
+         *            the credentials id
+         * @param projectPath
+         *            the project path
+         * @param closure
+         *            the nested Groovy closure
+         */
+        public void exportAttributesToTMS(final CharSequence credentialsId, final CharSequence projectPath,
+                final Runnable closure) {
+            Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
+            Preconditions.checkNotNull(projectPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
+            final ExportTMSContext context = new ExportTMSContext();
+            executeInContext(closure, context);
+            exportConfigs.add(new ExportProjectAttributeConfig(projectPath.toString(), credentialsId.toString(),
+                    context.timeout));
         }
     }
 }

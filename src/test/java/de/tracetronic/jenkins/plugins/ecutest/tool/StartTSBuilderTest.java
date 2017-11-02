@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,6 +30,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.tool;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -57,20 +58,7 @@ public class StartTSBuilderTest {
         builder.setToolLibsIni(null);
         builder.setTcpPort(null);
         builder.setTimeout(null);
-        assertBuilder(builder);
-    }
-
-    @Deprecated
-    @Test
-    public void testDefault() {
-        final StartTSBuilder builder = new StartTSBuilder("", "", "", "");
-        assertBuilder(builder);
-    }
-
-    @Deprecated
-    @Test
-    public void testNull() {
-        final StartTSBuilder builder = new StartTSBuilder(null, null, null, null);
+        builder.setKeepInstance(false);
         assertBuilder(builder);
     }
 
@@ -90,5 +78,6 @@ public class StartTSBuilderTest {
         assertTrue(builder.getToolLibsIni().isEmpty());
         assertNotNull(builder.getTcpPort());
         assertEquals(String.valueOf(builder.getDefaultTcpPort()), builder.getTcpPort());
+        assertFalse(builder.isKeepInstance());
     }
 }

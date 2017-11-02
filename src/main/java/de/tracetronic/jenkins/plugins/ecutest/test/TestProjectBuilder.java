@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -76,26 +76,6 @@ public class TestProjectBuilder extends AbstractTestBuilder {
     }
 
     /**
-     * Instantiates a new {@link TestProjectBuilder}.
-     *
-     * @param testFile
-     *            the project file
-     * @param testConfig
-     *            the test configuration
-     * @param projectConfig
-     *            the project configuration
-     * @param executionConfig
-     *            the execution configuration
-     * @deprecated since 1.11 use {@link #TestProjectBuilder(String)}
-     */
-    @Deprecated
-    public TestProjectBuilder(final String testFile, final TestConfig testConfig,
-            final ProjectConfig projectConfig, final ExecutionConfig executionConfig) {
-        super(testFile, testConfig, executionConfig);
-        this.projectConfig = projectConfig == null ? ProjectConfig.newInstance() : projectConfig;
-    }
-
-    /**
      * @return the project configuration
      */
     @Nonnull
@@ -126,25 +106,40 @@ public class TestProjectBuilder extends AbstractTestBuilder {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo(String.format("Executing project %s...", testFile));
         if (testClient.runTestCase(workspace, launcher, listener)) {
-            logger.logInfo("Project executed successfully.");
+            addBuildAction(run, testClient);
+            if (testClient.isAborted()) {
+                logger.logWarn("Project execution aborted!");
+                return false;
+            } else {
+                logger.logInfo("Project executed successfully.");
+            }
         } else {
             logger.logError("Executing project failed!");
             return false;
         }
 
-        // Add action for injecting environment variables
+        return true;
+    }
+
+    /**
+     * Adds the build action holding test information by injecting environment variables.
+     *
+     * @param run
+     *            the run
+     * @param testClient
+     *            the project client
+     */
+    private void addBuildAction(final Run<?, ?> run, final ProjectClient testClient) {
         final int builderId = getTestId(run);
         final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(builderId, testClient);
         run.addAction(envAction);
-
-        return true;
     }
 
     /**
      * DescriptorImpl for {@link TestProjectBuilder}.
      */
     @Symbol("testProject")
-    @Extension(ordinal = 1001)
+    @Extension(ordinal = 10001)
     public static final class DescriptorImpl extends AbstractTestDescriptor {
 
         /**

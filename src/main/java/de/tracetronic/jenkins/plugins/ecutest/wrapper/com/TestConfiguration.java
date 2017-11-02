@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -74,5 +74,10 @@ public class TestConfiguration extends ETComDispatch implements ComTestConfigura
     @Override
     public ComConstants getGlobalConstants() throws ETComException {
         return new Constants(performRequest("GetGlobalConstants").toDispatch());
+    }
+
+    @Override
+    public String getFileName() throws ETComException {
+        return performRequest("GetFileName").getString();
     }
 }

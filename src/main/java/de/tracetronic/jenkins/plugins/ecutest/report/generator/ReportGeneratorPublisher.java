@@ -92,70 +92,6 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Instantiates a new {@link ReportGeneratorPublisher}.
-     *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param generators
-     *            the report generators
-     * @param customGenerators
-     *            the custom generators
-     * @param allowMissing
-     *            specifies whether missing reports are allowed
-     * @param runOnFailed
-     *            specifies whether this publisher even runs on a failed build
-     * @param archiving
-     *            specifies whether archiving artifacts is enabled
-     * @param keepAll
-     *            specifies whether artifacts are archived for all successful builds,
-     *            otherwise only the most recent
-     * @deprecated since 1.11 use {@link #ReportGeneratorPublisher(String)}
-     */
-    @Deprecated
-    public ReportGeneratorPublisher(final String toolName, final List<ReportGeneratorConfig> generators,
-            final List<ReportGeneratorConfig> customGenerators, final boolean allowMissing, final boolean runOnFailed,
-            final boolean archiving, final boolean keepAll) {
-        super(allowMissing, runOnFailed, archiving, keepAll);
-        this.toolName = StringUtils.trimToEmpty(toolName);
-        this.generators = generators == null ? new ArrayList<ReportGeneratorConfig>()
-                : removeEmptyGenerators(generators);
-        this.customGenerators = customGenerators == null ? new ArrayList<ReportGeneratorConfig>()
-                : removeEmptyGenerators(customGenerators);
-    }
-
-    /**
-     * Instantiates a new {@link ReportGeneratorPublisher}.
-     *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param generators
-     *            the report generators
-     * @param customGenerators
-     *            the custom generators
-     * @param allowMissing
-     *            specifies whether missing reports are allowed
-     * @param runOnFailed
-     *            specifies whether this publisher even runs on a failed build
-     * @deprecated since 1.9, use
-     *             {@link #ReportGeneratorPublisher(String, List, List, boolean, boolean, boolean, boolean)}
-     */
-    @Deprecated
-    public ReportGeneratorPublisher(final String toolName, final List<ReportGeneratorConfig> generators,
-            final List<ReportGeneratorConfig> customGenerators, final boolean allowMissing, final boolean runOnFailed) {
-        this(toolName, generators, customGenerators, allowMissing, runOnFailed, true, true);
-    }
-
-    /**
-     * Convert legacy configuration into the new class structure.
-     *
-     * @return an instance of this class with all the new fields transferred from the old structure to the new one
-     */
-    public final Object readResolve() {
-        return new ReportGeneratorPublisher(toolName, generators, customGenerators, isAllowMissing(), isRunOnFailed(),
-                isArchiving() == null ? true : isArchiving(), isKeepAll() == null ? true : isKeepAll());
-    }
-
-    /**
      * @return the {@link ETInstallation} name
      */
     @Nonnull
@@ -409,7 +345,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link ReportGeneratorPublisher}.
      */
     @Symbol("publishGenerators")
-    @Extension(ordinal = 1002)
+    @Extension(ordinal = 10002)
     public static class DescriptorImpl extends AbstractReportDescriptor {
 
         @Override

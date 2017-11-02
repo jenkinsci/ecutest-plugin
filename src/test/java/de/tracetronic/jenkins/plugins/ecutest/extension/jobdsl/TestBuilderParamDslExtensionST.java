@@ -72,6 +72,11 @@ public class TestBuilderParamDslExtensionST extends TestBuilderDslExtensionST {
     }
 
     @Test
+    public void testImportPackageWithParamDsl() throws Exception {
+        testImportPackageWithDsl();
+    }
+
+    @Test
     public void testImportProjectWithParamDsl() throws Exception {
         testImportProjectWithDsl();
     }

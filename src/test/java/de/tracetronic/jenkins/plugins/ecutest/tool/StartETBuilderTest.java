@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -61,29 +61,8 @@ public class StartETBuilderTest {
         builder.setSettingsDir(null);
         builder.setTimeout(null);
         builder.setDebugMode(false);
+        builder.setKeepInstance(false);
         assertBuilder(builder);
-    }
-
-    @Deprecated
-    @Test
-    public void testDefault() {
-        final StartETBuilder builder = new StartETBuilder("", "", "", "", false);
-        assertBuilder(builder);
-    }
-
-    @Deprecated
-    @Test
-    public void testNull() {
-        final StartETBuilder builder = new StartETBuilder(null, null, null, null, false);
-        assertBuilder(builder);
-    }
-
-    @Deprecated
-    @Test
-    public void testCompatibility() {
-        final StartETBuilder builder = new StartETBuilder("", "", "", false);
-        assertNotNull(builder.getSettingsDir());
-        assertTrue(builder.getSettingsDir().isEmpty());
     }
 
     /**
@@ -103,5 +82,6 @@ public class StartETBuilderTest {
         assertNotNull(builder.getTimeout());
         assertEquals(String.valueOf(builder.getDefaultTimeout()), builder.getTimeout());
         assertFalse(builder.isDebugMode());
+        assertFalse(builder.isKeepInstance());
     }
 }

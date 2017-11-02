@@ -70,6 +70,14 @@
                         <td>${action.getToolSettings()}</td>
                     </tr>
                     <tr class="child-${toolId}">
+                        <td class="tooltip" tooltip="${%lastTbc}">TT_TOOL_LAST_TBC_${toolId}</td>
+                        <td>${action.getLastTbc()}</td>
+                    </tr>
+                    <tr class="child-${toolId}">
+                        <td class="tooltip" tooltip="${%lastTcf}">TT_TOOL_LAST_TCF_${toolId}</td>
+                        <td>${action.getLastTcf()}</td>
+                    </tr>
+                    <tr class="child-${toolId}">
                         <td class="tooltip" tooltip="${%debug}">TT_TOOL_DEBUG_${toolId}</td>
                         <td>${action.isDebug()}</td>
                     </tr>

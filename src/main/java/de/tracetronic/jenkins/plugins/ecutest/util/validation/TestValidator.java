@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -51,44 +51,6 @@ import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestValidator extends AbstractValidator {
-
-    /**
-     * Validates the package file.
-     *
-     * @param testFile
-     *            the test file
-     * @return the form validation
-     */
-    public FormValidation validatePackageFile(final String testFile) {
-        FormValidation returnValue = FormValidation.ok();
-        if (StringUtils.isBlank(testFile)) {
-            returnValue = FormValidation.validateRequired(testFile);
-        } else if (testFile.contains(PARAMETER)) {
-            returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
-        } else if (!testFile.endsWith(".pkg")) {
-            returnValue = FormValidation.error(Messages.TestBuilder_PkgFileExtension());
-        }
-        return returnValue;
-    }
-
-    /**
-     * Validates the project file.
-     *
-     * @param testFile
-     *            the test file
-     * @return the form validation
-     */
-    public FormValidation validateProjectFile(final String testFile) {
-        FormValidation returnValue = FormValidation.ok();
-        if (StringUtils.isBlank(testFile)) {
-            returnValue = FormValidation.validateRequired(testFile);
-        } else if (testFile.contains(PARAMETER)) {
-            returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
-        } else if (!testFile.endsWith(".prj")) {
-            returnValue = FormValidation.error(Messages.TestBuilder_PrjFileExtension());
-        }
-        return returnValue;
-    }
 
     /**
      * Validates the test folder.

@@ -48,7 +48,7 @@ public class ImportProjectArchiveConfigTest {
     @Test
     public void testNullConstructor() {
         final ImportProjectArchiveConfig config = new ImportProjectArchiveConfig(null, null, null, false);
-        assertThat(config.getProjectPath(), is(""));
+        assertThat(config.getTmsPath(), is(""));
         assertThat(config.getImportPath(), is(""));
         assertThat(config.getImportConfigPath(), is(""));
         assertFalse(config.isReplaceFiles());
@@ -63,7 +63,7 @@ public class ImportProjectArchiveConfigTest {
         envVars.put("IMPORT_PATH", "import");
         envVars.put("IMPORT_CONFIG_PATH", "import");
         final ImportProjectArchiveConfig expConfig = config.expand(envVars);
-        assertThat(expConfig.getProjectPath(), is("test.prz"));
+        assertThat(expConfig.getTmsPath(), is("test.prz"));
         assertThat(expConfig.getImportPath(), is("import"));
         assertThat(expConfig.getImportConfigPath(), is("import"));
         assertTrue(config.isReplaceFiles());
@@ -71,6 +71,6 @@ public class ImportProjectArchiveConfigTest {
 
     @Test
     public void testHashCodeAndEquals() {
-        EqualsVerifier.forClass(ImportProjectArchiveConfig.class).verify();
+        EqualsVerifier.forClass(ImportProjectArchiveConfig.class).withRedefinedSuperclass().verify();
     }
 }

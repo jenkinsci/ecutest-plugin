@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -70,6 +70,7 @@ public abstract class AbstractTestClient implements TestClient {
     private String testDescription;
     private String testReportDir;
     private String testResult;
+    private boolean isAborted;
 
     /**
      * Instantiates a new {@link AbstractTestClient}.
@@ -90,6 +91,7 @@ public abstract class AbstractTestClient implements TestClient {
         testDescription = "";
         testReportDir = "";
         testResult = "";
+        isAborted = false;
     }
 
     /**
@@ -174,6 +176,21 @@ public abstract class AbstractTestClient implements TestClient {
     }
 
     /**
+     * @return specifies whether the test execution is aborted
+     */
+    public boolean isAborted() {
+        return isAborted;
+    }
+
+    /**
+     * @param isAborted
+     *            the test abort status
+     */
+    public void setAborted(final boolean isAborted) {
+        this.isAborted = isAborted;
+    }
+
+    /**
      * {@link Callable} providing remote access to load configurations via COM.
      */
     protected static final class LoadConfigCallable extends MasterToSlaveCallable<Boolean, IOException> {
@@ -248,7 +265,7 @@ public abstract class AbstractTestClient implements TestClient {
                     }
                 }
             } catch (final ETComException e) {
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
                 isLoaded = false;
             }
             return isLoaded;
@@ -354,6 +371,7 @@ public abstract class AbstractTestClient implements TestClient {
 
         private final String testResult;
         private final String testReportDir;
+        private final boolean isAborted;
 
         /**
          * Instantiates a new {@link TestInfoHolder}.
@@ -362,10 +380,13 @@ public abstract class AbstractTestClient implements TestClient {
          *            the test result
          * @param testReportDir
          *            the test report directory
+         * @param isAborted
+         *            specifies whether test execution is aborted
          */
-        public TestInfoHolder(final String testResult, final String testReportDir) {
+        public TestInfoHolder(final String testResult, final String testReportDir, final boolean isAborted) {
             this.testResult = testResult;
             this.testReportDir = testReportDir;
+            this.isAborted = isAborted;
         }
 
         /**
@@ -380,6 +401,13 @@ public abstract class AbstractTestClient implements TestClient {
          */
         public String getTestReportDir() {
             return testReportDir;
+        }
+
+        /**
+         * @return specifies whether test execution is aborted
+         */
+        public boolean isAborted() {
+            return isAborted;
         }
     }
 

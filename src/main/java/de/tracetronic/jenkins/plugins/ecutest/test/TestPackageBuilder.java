@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -76,26 +76,6 @@ public class TestPackageBuilder extends AbstractTestBuilder {
     }
 
     /**
-     * Instantiates a new {@link TestPackageBuilder}.
-     *
-     * @param testFile
-     *            the package file
-     * @param testConfig
-     *            the test configuration
-     * @param packageConfig
-     *            the package configuration
-     * @param executionConfig
-     *            the execution configuration
-     * @deprecated since 1.11 use {@link #TestPackageBuilder(String)}
-     */
-    @Deprecated
-    public TestPackageBuilder(final String testFile, final TestConfig testConfig,
-            final PackageConfig packageConfig, final ExecutionConfig executionConfig) {
-        super(testFile, testConfig, executionConfig);
-        this.packageConfig = packageConfig == null ? PackageConfig.newInstance() : packageConfig;
-    }
-
-    /**
      * @return the package configuration
      */
     @Nonnull
@@ -126,25 +106,39 @@ public class TestPackageBuilder extends AbstractTestBuilder {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo(String.format("Executing package %s...", testFile));
         if (testClient.runTestCase(workspace, launcher, listener)) {
-            logger.logInfo("Package executed successfully.");
+            addBuildAction(run, testClient);
+            if (testClient.isAborted()) {
+                logger.logWarn("Package execution aborted!");
+                return false;
+            } else {
+                logger.logInfo("Package executed successfully.");
+            }
         } else {
             logger.logError("Executing package failed!");
             return false;
         }
+        return true;
+    }
 
-        // Add action for injecting environment variables
+    /**
+     * Adds the build action holding test information by injecting environment variables.
+     *
+     * @param run
+     *            the run
+     * @param testClient
+     *            the package client
+     */
+    private void addBuildAction(final Run<?, ?> run, final PackageClient testClient) {
         final int builderId = getTestId(run);
         final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(builderId, testClient);
         run.addAction(envAction);
-
-        return true;
     }
 
     /**
      * DescriptorImpl for {@link TestPackageBuilder}.
      */
     @Symbol("testPackage")
-    @Extension(ordinal = 1002)
+    @Extension(ordinal = 10002)
     public static final class DescriptorImpl extends AbstractTestDescriptor {
 
         /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -53,6 +53,7 @@ import org.kohsuke.stapler.QueryParameter;
 
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.PackageClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.ProjectClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
@@ -114,36 +115,6 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     @DataBoundConstructor
     public TestFolderBuilder(@Nonnull final String testFile) {
         super(testFile);
-    }
-
-    /**
-     * Instantiates a new {@link TestFolderBuilder}.
-     *
-     * @param testFile
-     *            the test folder
-     * @param scanMode
-     *            the scan mode
-     * @param recursiveScan
-     *            specifies whether to scan recursively
-     * @param testConfig
-     *            the test configuration
-     * @param packageConfig
-     *            the package configuration
-     * @param projectConfig
-     *            the project configuration
-     * @param executionConfig
-     *            the execution configuration
-     * @deprecated since 1.11 use {@link #TestFolderBuilder(String)}
-     */
-    @Deprecated
-    public TestFolderBuilder(final String testFile, final ScanMode scanMode, final boolean recursiveScan,
-            final TestConfig testConfig, final PackageConfig packageConfig, final ProjectConfig projectConfig,
-            final ExecutionConfig executionConfig) {
-        super(testFile, testConfig, executionConfig);
-        this.scanMode = scanMode;
-        this.recursiveScan = recursiveScan;
-        this.packageConfig = packageConfig == null ? PackageConfig.newInstance() : packageConfig;
-        this.projectConfig = projectConfig == null ? ProjectConfig.newInstance() : projectConfig;
     }
 
     /**
@@ -252,16 +223,17 @@ public class TestFolderBuilder extends AbstractTestBuilder {
             final PackageClient testClient = new PackageClient(pkgFile, testConfig, packageConfig, executionConfig);
             logger.logInfo(String.format("Executing package %s...", pkgFile));
             if (testClient.runTestCase(workspace, launcher, listener)) {
-                logger.logInfo("Package executed successfully.");
+                addBuildAction(run, testClient);
+                if (testClient.isAborted()) {
+                    logger.logWarn("Package execution aborted!");
+                    return false;
+                } else {
+                    logger.logInfo("Package executed successfully.");
+                }
             } else {
                 logger.logError("Executing package failed!");
                 return false;
             }
-
-            // Add action for injecting environment variables
-            final int testId = getTestId(run);
-            final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(testId, testClient);
-            run.addAction(envAction);
         }
 
         // Expand project configuration
@@ -272,19 +244,34 @@ public class TestFolderBuilder extends AbstractTestBuilder {
             final ProjectClient testClient = new ProjectClient(prjFile, testConfig, projectConfig, executionConfig);
             logger.logInfo(String.format("Executing project %s...", prjFile));
             if (testClient.runTestCase(workspace, launcher, listener)) {
-                logger.logInfo("Project executed successfully.");
+                addBuildAction(run, testClient);
+                if (testClient.isAborted()) {
+                    logger.logWarn("Project execution aborted!");
+                    return false;
+                } else {
+                    logger.logInfo("Project executed successfully.");
+                }
             } else {
                 logger.logError("Executing project failed!");
                 return false;
             }
-
-            // Add action for injecting environment variables
-            final int testId = getTestId(run);
-            final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(testId, testClient);
-            run.addAction(envAction);
         }
 
         return true;
+    }
+
+    /**
+     * Adds the build action holding test information by injecting environment variables.
+     *
+     * @param run
+     *            the run
+     * @param testClient
+     *            the test client
+     */
+    private void addBuildAction(final Run<?, ?> run, final AbstractTestClient testClient) {
+        final int builderId = getTestId(run);
+        final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(builderId, testClient);
+        run.addAction(envAction);
     }
 
     /**
@@ -353,7 +340,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
      * DescriptorImpl for {@link TestFolderBuilder}.
      */
     @Symbol("testFolder")
-    @Extension(ordinal = 1000)
+    @Extension(ordinal = 10000)
     public static final class DescriptorImpl extends AbstractTestDescriptor {
 
         /**

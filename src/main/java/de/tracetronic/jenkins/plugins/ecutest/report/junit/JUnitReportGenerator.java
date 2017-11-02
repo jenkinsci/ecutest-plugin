@@ -35,7 +35,6 @@ import hudson.model.TaskListener;
 import hudson.model.Run;
 import hudson.remoting.Callable;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -81,7 +80,7 @@ public class JUnitReportGenerator {
      */
     public boolean generate(final ETInstallation installation, final List<FilePath> reportFiles,
             final Run<?, ?> run, final FilePath workspace, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         boolean isGenerated = false;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
@@ -197,16 +196,16 @@ public class JUnitReportGenerator {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                 for (final FilePath dbFile : dbFiles) {
                     logger.logInfo(String.format("-> Generating UNIT report: %s", dbFile.getRemote()));
-                    final File outDir = new File(dbFile.getParent().getRemote(), JUnitPublisher.UNIT_TEMPLATE_NAME);
+                    final FilePath outDir = dbFile.getParent().child(JUnitPublisher.UNIT_TEMPLATE_NAME);
                     if (!testEnv.generateTestReportDocumentFromDB(dbFile.getRemote(),
-                            outDir.getAbsolutePath(), JUnitPublisher.UNIT_TEMPLATE_NAME, true)) {
+                            outDir.getRemote(), JUnitPublisher.UNIT_TEMPLATE_NAME, true)) {
                         isGenerated = false;
                         logger.logError("Generating UNIT report failed!");
                     }
                 }
             } catch (final ETComException e) {
                 isGenerated = false;
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
             }
             return isGenerated;
         }

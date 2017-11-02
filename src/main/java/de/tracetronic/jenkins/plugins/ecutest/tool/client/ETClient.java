@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -52,6 +52,8 @@ import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestBenchConfiguration;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestConfiguration;
 
 /**
  * Client to start and stop ECU-TEST by either COM or XML-RPC communication.
@@ -64,6 +66,8 @@ public class ETClient extends AbstractToolClient {
     private final String settingsDir;
     private final boolean debug;
     private String version;
+    private String lastTbc;
+    private String lastTcf;
 
     /**
      * Instantiates a new {@link ETClient}.
@@ -88,6 +92,8 @@ public class ETClient extends AbstractToolClient {
         this.settingsDir = StringUtils.trimToEmpty(settingsDir);
         this.debug = debug;
         version = "";
+        lastTbc = "";
+        lastTcf = "";
     }
 
     /**
@@ -104,6 +110,8 @@ public class ETClient extends AbstractToolClient {
         settingsDir = "";
         debug = false;
         version = "";
+        lastTbc = "";
+        lastTcf = "";
     }
 
     /**
@@ -134,6 +142,21 @@ public class ETClient extends AbstractToolClient {
         return version;
     }
 
+    /**
+     * @return the last loaded TBC file path
+     */
+    public String getLastTbc() {
+        return lastTbc;
+    }
+
+    /**
+     * @return the last loaded TCF file path
+     */
+    public String getLastTcf() {
+        return lastTcf;
+    }
+
+    @SuppressWarnings({ "checkstyle:cyclomaticcomplexity", "checkstyle:npathcomplexity" })
     @Override
     public boolean start(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws IOException, InterruptedException {
@@ -148,12 +171,22 @@ public class ETClient extends AbstractToolClient {
             }
         }
 
-        // Check ECU-TEST location and launch process
+        // Check ECU-TEST location and architecture
         if (StringUtils.isEmpty(getInstallPath())) {
             logger.logError("ECU-TEST executable could not be found!");
             return false;
-        } else if (!launchProcess(launcher, listener)) {
-            return false;
+        } else {
+            // Check architecture compatibility between JVM and ECU-TEST
+            final boolean is64BitJVM = ProcessUtil.is64BitJVM(workspace.toComputer());
+            if (!checkProcessArchitecture(getInstallPath(), is64BitJVM, launcher)) {
+                logger.logError("The configured ECU-TEST executable is not compatible with running Java VM! "
+                        + "Please install a 64-bit JRE which supports 64-bit ECU-TEST installation!");
+                return false;
+            }
+            // Launch process
+            if (!launchProcess(launcher, listener)) {
+                return false;
+            }
         }
 
         // Initialize COM connection
@@ -167,22 +200,30 @@ public class ETClient extends AbstractToolClient {
             return false;
         } else {
             version = comVersion;
+            logger.logDebug("COM ProgID: " + ETComProgId.getInstance().getProgId());
+            logger.logDebug("COM version: " + comVersion);
         }
 
         // Check ECU-TEST version
         final ToolVersion comToolVersion = ToolVersion.parse(comVersion);
-        if (comToolVersion.compareWithoutQualifierTo(ETPlugin.ET_MAX_VERSION) > 0) {
+        if (comToolVersion.compareWithoutMicroTo(ETPlugin.ET_MAX_VERSION) > 0) {
             logger.logWarn(String.format(
                     "The configured ECU-TEST version %s might be incompatible with this plugin. "
                             + "Currently supported versions: %s up to %s", comVersion,
-                    ETPlugin.ET_MIN_VERSION.toShortString(), ETPlugin.ET_MAX_VERSION.toShortString()));
+                    ETPlugin.ET_MIN_VERSION.toMinorString(), ETPlugin.ET_MAX_VERSION.toMinorString()));
         } else if (comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
             logger.logError(String.format(
                     "The configured ECU-TEST version %s is not compatible with this plugin. "
-                            + "Please use at least ECU-TEST %s!", comVersion, ETPlugin.ET_MIN_VERSION.toShortString()));
+                            + "Please use at least ECU-TEST %s!", comVersion, ETPlugin.ET_MIN_VERSION.toMicroString()));
             // Close ECU-TEST
             stop(checkProcesses, workspace, launcher, listener);
             return false;
+        }
+
+        // Read currently loaded configurations
+        if (comToolVersion.compareWithoutMicroTo(new ToolVersion(7, 0, 0, 0)) >= 0) {
+            lastTbc = launcher.getChannel().call(new LastTbcCallable(listener));
+            lastTcf = launcher.getChannel().call(new LastTcfCallable(listener));
         }
 
         logger.logInfo(String.format("%s started successfully.", getToolName()));
@@ -282,6 +323,45 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
+     * Gets the COM version of currently running ECU-TEST instance.
+     *
+     * @param launcher
+     *            the launcher
+     * @param listener
+     *            the listener
+     * @return the COM version
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the current thread is interrupted while waiting for the completion
+     */
+    public static String getComVersion(final Launcher launcher, final TaskListener listener)
+            throws IOException, InterruptedException {
+        return launcher.getChannel().call(new VersionCallable(listener));
+    }
+
+    /**
+     * Checks the process architecture compatibility between ECU-TEST and underlying JVM that runs the slave.
+     * A 64-bit JVM supports both 32-bit and 64-bit ECU-TEST, while 32-bit JVM is only compatible with 32-bit ECU-TEST.
+     *
+     * @param processPath
+     *            the full process path
+     * @param is64BitJVM
+     *            specifies whether the JVM supports 64-bit architecture
+     * @param launcher
+     *            the launcher
+     * @return {@code true} if architectures are compatible, {@code false} otherwise
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the current thread is interrupted while waiting for the completion
+     */
+    public boolean checkProcessArchitecture(final String processPath, final boolean is64BitJVM,
+            final Launcher launcher) throws IOException, InterruptedException {
+        return launcher.getChannel().call(new CheckProcessArchitectureCallable(processPath, is64BitJVM));
+    }
+
+    /**
      * {@link Callable} providing remote access to establish a COM connection.
      */
     private static final class StartCallable extends MasterToSlaveCallable<String, IOException> {
@@ -314,7 +394,7 @@ public class ETClient extends AbstractToolClient {
                     version = comClient.getVersion();
                 }
             } catch (final ETComException e) {
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
             }
             return version;
         }
@@ -359,7 +439,7 @@ public class ETClient extends AbstractToolClient {
                     logger.logError("ECU-TEST COM instance is not ready to use!");
                 }
             } catch (final ETComException e) {
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
             } finally {
                 if (checkProcesses) {
                     final List<String> foundProcesses = ProcessUtil.checkETProcesses(true);
@@ -394,6 +474,138 @@ public class ETClient extends AbstractToolClient {
         @Override
         public List<String> call() throws IOException {
             return ProcessUtil.checkETProcesses(kill);
+        }
+    }
+
+    /**
+     * {@link Callable} providing remote access to request the COM version of currently running ECU-TEST instance.
+     */
+    private static final class VersionCallable extends MasterToSlaveCallable<String, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final TaskListener listener;
+
+        /**
+         * Instantiates a new {@link VersionCallable}.
+         *
+         * @param listener
+         *            the listener
+         */
+        VersionCallable(final TaskListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public String call() throws IOException {
+            String comVersion = "";
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId)) {
+                comVersion = comClient.getVersion();
+            } catch (final ETComException e) {
+                logger.logError("-> Caught COM exception: " + e.getMessage());
+            }
+            return comVersion;
+        }
+    }
+
+    /**
+     * {@link Callable} providing remote access to request the last loaded TBC of currently running ECU-TEST instance.
+     */
+    private static final class LastTbcCallable extends MasterToSlaveCallable<String, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final TaskListener listener;
+
+        /**
+         * Instantiates a new {@link LastTbcCallable}.
+         *
+         * @param listener
+         *            the listener
+         */
+        LastTbcCallable(final TaskListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public String call() throws IOException {
+            String tbcFilePath = "";
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId);
+                    TestBenchConfiguration tbc = (TestBenchConfiguration)
+                            comClient.getCurrentTestBenchConfiguration()) {
+                tbcFilePath = tbc.getFileName();
+            } catch (final ETComException e) {
+                logger.logError("-> Caught COM exception: " + e.getMessage());
+            }
+            return tbcFilePath;
+        }
+    }
+
+    /**
+     * {@link Callable} providing remote access to request the last loaded TCF of currently running ECU-TEST instance.
+     */
+    private static final class LastTcfCallable extends MasterToSlaveCallable<String, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final TaskListener listener;
+
+        /**
+         * Instantiates a new {@link LastTcfCallable}.
+         *
+         * @param listener
+         *            the listener
+         */
+        LastTcfCallable(final TaskListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public String call() throws IOException {
+            String tcfFilePath = "";
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final String progId = ETComProgId.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId);
+                    TestConfiguration tcf = (TestConfiguration) comClient.getCurrentTestConfiguration()) {
+                tcfFilePath = tcf.getFileName();
+            } catch (final ETComException e) {
+                logger.logError("-> Caught COM exception: " + e.getMessage());
+            }
+            return tcfFilePath;
+        }
+    }
+
+    /**
+     * {@link Callable} providing remote access to check architecture of ECU-TEST process against JVM architecture.
+     */
+    private static final class CheckProcessArchitectureCallable extends MasterToSlaveCallable<Boolean, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final String processPath;
+        private final boolean is64BitJVM;
+
+        /**
+         * Instantiates a new {@link CheckProcessArchitectureCallable}.
+         *
+         * @param processPath
+         *            the full process file path
+         * @param is64BitJVM
+         *            specifies whether the JVM supports 64-bit architecture
+         */
+        CheckProcessArchitectureCallable(final String processPath, final boolean is64BitJVM) {
+            this.processPath = processPath;
+            this.is64BitJVM = is64BitJVM;
+        }
+
+        @Override
+        public Boolean call() throws IOException {
+            final boolean is64BitProc = ProcessUtil.is64BitExecutable(processPath);
+            return is64BitJVM || !is64BitProc;
         }
     }
 }

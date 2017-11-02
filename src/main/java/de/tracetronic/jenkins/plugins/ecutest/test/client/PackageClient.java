@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -102,7 +102,7 @@ public class PackageClient extends AbstractTestClient {
         }
 
         // Load test configuration
-        if (!launcher.getChannel().call(
+        if (!getTestConfig().isKeepConfig() && !launcher.getChannel().call(
                 new LoadConfigCallable(getTestConfig(), getExecutionConfig(), listener))) {
             return false;
         }
@@ -128,6 +128,7 @@ public class PackageClient extends AbstractTestClient {
             if (testInfo != null) {
                 setTestResult(testInfo.getTestResult());
                 setTestReportDir(testInfo.getTestReportDir());
+                setAborted(testInfo.isAborted());
             } else {
                 return false;
             }
@@ -265,6 +266,7 @@ public class PackageClient extends AbstractTestClient {
                     TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                     TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.executePackage(packageFile,
                             runTraceAnalysis, runTest, paramMap)) {
+                boolean isAborted = false;
                 int tickCounter = 0;
                 final long endTimeMillis = System.currentTimeMillis() + Long.valueOf(timeout) * 1000L;
                 while ("RUNNING".equals(execInfo.getState())) {
@@ -273,26 +275,20 @@ public class PackageClient extends AbstractTestClient {
                     }
                     if (timeout > 0 && System.currentTimeMillis() > endTimeMillis) {
                         logger.logWarn(String.format("-> Test execution timeout of %d seconds reached! "
-                                + "Aborting now...", timeout));
+                                + "Aborting package now...", timeout));
+                        isAborted = true;
                         execInfo.abort();
                         break;
                     }
                     Thread.sleep(1000L);
                     tickCounter++;
                 }
-
-                final String testResult = execInfo.getResult();
-                logger.logInfo(String.format("-> Package execution completed with result: %s", testResult));
-                final String testReportDir = new File(execInfo.getReportDb()).getParentFile()
-                        .getAbsolutePath();
-                logger.logInfo(String.format("-> Test report directory: %s", testReportDir));
-                testInfo = new TestInfoHolder(testResult, testReportDir);
-
-                if (!comClient.waitForIdle(timeout)) {
-                    logger.logWarn(String.format("-> Post-execution timeout of %d seconds reached!", timeout));
-                }
+                testInfo = getTestInfo(execInfo, isAborted, logger);
+                postExecution(timeout, comClient, logger);
             } catch (final ETComException e) {
                 logger.logError("Caught ComException: " + e.getMessage());
+            } catch (final InterruptedException e) {
+                testInfo = abortTestExecution(timeout, progId, logger);
             }
             return testInfo;
         }
@@ -308,6 +304,74 @@ public class PackageClient extends AbstractTestClient {
                 paramMap.put(param.getName(), param.getValue());
             }
             return paramMap;
+        }
+
+        /**
+         * Gets the information of the executed package.
+         *
+         * @param execInfo
+         *            the execution info
+         * @param isAborted
+         *            specifies whether the package execution is aborted
+         * @param logger
+         *            the logger
+         * @return the test information
+         * @throws ETComException
+         *             in case of a COM exception
+         */
+        private TestInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
+                final TTConsoleLogger logger) throws ETComException {
+            final String testResult = execInfo.getResult();
+            logger.logInfo(String.format("-> Package execution completed with result: %s", testResult));
+            final String testReportDir = new File(execInfo.getReportDb()).getParentFile().getAbsolutePath();
+            logger.logInfo(String.format("-> Test report directory: %s", testReportDir));
+            return new TestInfoHolder(testResult, testReportDir, isAborted);
+        }
+
+        /**
+         * Aborts the test execution.
+         *
+         * @param timeout
+         *            the timeout
+         * @param progId
+         *            the programmatic id
+         * @param logger
+         *            the logger
+         * @return the test information
+         */
+        private TestInfoHolder abortTestExecution(final int timeout, final String progId,
+                final TTConsoleLogger logger) {
+            TestInfoHolder testInfo = null;
+            try (ETComClient comClient = new ETComClient(progId);
+                    TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
+                    TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {
+                logger.logWarn(String.format("-> Build interrupted! Aborting test exection..."));
+                execInfo.abort();
+                testInfo = getTestInfo(execInfo, true, logger);
+                postExecution(timeout, comClient, logger);
+            } catch (final ETComException exc) {
+                logger.logError("Caught ComException: " + exc.getMessage());
+            }
+            return testInfo;
+        }
+
+        /**
+         * Timeout handling for post execution.
+         *
+         * @param timeout
+         *            the timeout
+         * @param comClient
+         *            the COM client
+         * @param logger
+         *            the logger
+         * @throws ETComException
+         *             in case of a COM exception
+         */
+        private void postExecution(final int timeout, final ETComClient comClient, final TTConsoleLogger logger)
+                throws ETComException {
+            if (!comClient.waitForIdle(timeout)) {
+                logger.logWarn(String.format("-> Post-execution timeout of %d seconds reached!", timeout));
+            }
         }
     }
 

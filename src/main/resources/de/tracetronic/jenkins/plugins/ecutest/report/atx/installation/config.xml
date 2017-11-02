@@ -250,6 +250,24 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
+		<SETTING name="archiveMiscFilesOnlyInTestReportDir" default="True"
+			xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">True, wenn nur dann die 'misc files'
+							archiviert werden sollen, wenn sich der ausgewählt Testreport in einem
+							ECU-TEST Testreport-Verzeichnis befindet, sonst False.</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">True, if you only want archive 'misc
+							files' which are in a ECU-TEST 'test report directory' of the
+							given test report, otherwise False.</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
 		<!-- Attributeinstellungen -->
 		<SETTING name="coveredAttributes"
 			default="Testlevel;Designer;Execution Priority;Estimated Duration [min];"
@@ -513,7 +531,7 @@
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
-						<DVALUE xsi:type="unicode">Legt die Tiefe fest, bis in welche
+						<DVALUE xsi:type="unicode">Legt die Tiefe fest, bis in welche die
 							SubPackages als Testfälle
 							erfasst werden sollen. Bei 0
 							(Standardwert) werden keine SubPackages

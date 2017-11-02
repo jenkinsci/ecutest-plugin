@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -89,18 +89,11 @@ public class TestPackageBuilderST extends SystemTestBase {
         final SimpleBuildStep delegate = step.delegate;
         assertThat(delegate, instanceOf(TestPackageBuilder.class));
 
-        final TestPackageBuilder after = (TestPackageBuilder) delegate;
-        jenkins.assertEqualBeans(before, after, "testFile,testConfig,packageConfig,executionConfig");
-    }
+        // Need to flip keepConfig property due to inverted UI behavior
+        final TestConfig testConfig2 = new TestConfig("test.tbc", "test.tcf", true, true, true, null);
+        before.setTestConfig(testConfig2);
 
-    @Deprecated
-    @Test
-    public void testConfigRoundTrip() throws Exception {
-        final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
-        final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
-        final TestPackageBuilder before = new TestPackageBuilder("test.pkg", testConfig, packageConfig, executionConfig);
-        final TestPackageBuilder after = jenkins.configRoundtrip(before);
+        final TestPackageBuilder after = (TestPackageBuilder) delegate;
         jenkins.assertEqualBeans(before, after, "testFile,testConfig,packageConfig,executionConfig");
     }
 

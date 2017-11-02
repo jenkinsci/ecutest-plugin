@@ -33,8 +33,10 @@ import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
+import net.sf.json.JSONObject;
 
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
 
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 
@@ -75,4 +77,19 @@ public abstract class AbstractTestDescriptor extends BuildStepDescriptor<Builder
      * @return the form validation
      */
     public abstract FormValidation doCheckTestFile(@QueryParameter String value);
+
+    @Override
+    @SuppressWarnings("deprecation")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(
+            value = "NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE",
+            justification = "False positive")
+    public Builder newInstance(final StaplerRequest req, final JSONObject json) throws FormException {
+        final JSONObject testConfig = json.optJSONObject("testConfig");
+        if (testConfig != null) {
+            // Flip value due to inverted UI behavior
+            final boolean keepConfig = testConfig.optBoolean("keepConfig");
+            testConfig.put("keepConfig", !keepConfig);
+        }
+        return req.bindJSON(clazz, json);
+    }
 }

@@ -109,55 +109,6 @@ public class ATXPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Instantiates a new {@link ATXPublisher}.
-     *
-     * @param atxName
-     *            the tool name identifying the {@link ATXInstallation} to be used
-     * @param allowMissing
-     *            specifies whether missing reports are allowed
-     * @param runOnFailed
-     *            specifies whether this publisher even runs on a failed build
-     * @param archiving
-     *            specifies whether archiving artifacts is enabled
-     * @param keepAll
-     *            specifies whether artifacts are archived for all successful builds,
-     *            otherwise only the most recent
-     * @deprecated since 1.11 use {@link #ATXPublisher(String)}
-     */
-    @Deprecated
-    public ATXPublisher(final String atxName, final boolean allowMissing, final boolean runOnFailed,
-            final boolean archiving, final boolean keepAll) {
-        super(allowMissing, runOnFailed, archiving, keepAll);
-        this.atxName = StringUtils.trimToEmpty(atxName);
-    }
-
-    /**
-     * Instantiates a new {@link ATXPublisher}.
-     *
-     * @param atxName
-     *            the tool name identifying the {@link ATXInstallation} to be used
-     * @param allowMissing
-     *            specifies whether missing reports are allowed
-     * @param runOnFailed
-     *            specifies whether this publisher even runs on a failed build
-     * @deprecated since 1.9, use {@link #ATXPublisher(String, boolean, boolean, boolean, boolean)}
-     */
-    @Deprecated
-    public ATXPublisher(final String atxName, final boolean allowMissing, final boolean runOnFailed) {
-        this(atxName, allowMissing, runOnFailed, true, true);
-    }
-
-    /**
-     * Convert legacy configuration into the new class structure.
-     *
-     * @return an instance of this class with all the new fields transferred from the old structure to the new one
-     */
-    public final Object readResolve() {
-        return new ATXPublisher(atxName, isAllowMissing(), isRunOnFailed(), isArchiving() == null ? true
-                : isArchiving(), isKeepAll() == null ? true : isKeepAll());
-    }
-
-    /**
      * @return the {@link ATXInstallation} name
      */
     @Nonnull
@@ -239,8 +190,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      *             if the build gets interrupted
      */
     private boolean publishReports(final ATXInstallation installation, final Run<?, ?> run, final FilePath workspace,
-            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {        final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
         final boolean isUploadEnabled = isUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, launcher, run.getEnvironment(listener));
@@ -363,7 +313,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     @SuppressWarnings("rawtypes")
     @Symbol("publishATX")
-    @Extension(ordinal = 1005)
+    @Extension(ordinal = 10005)
     public static class DescriptorImpl extends AbstractReportDescriptor {
 
         @CopyOnWrite
@@ -555,7 +505,7 @@ public class ATXPublisher extends AbstractReportPublisher {
          * @return the related ATX version
          */
         public static String getATXVersion() {
-            return ETPlugin.ATX_VERSION.toShortString();
+            return ETPlugin.ATX_VERSION.toMicroString();
         }
 
         /**

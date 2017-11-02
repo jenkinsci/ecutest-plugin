@@ -93,50 +93,6 @@ public class TRFPublisher extends AbstractReportPublisher {
         super();
     }
 
-    /**
-     * Instantiates a new {@link TRFPublisher}.
-     *
-     * @param allowMissing
-     *            specifies whether missing reports are allowed
-     * @param runOnFailed
-     *            specifies whether this publisher even runs on a failed build
-     * @param archiving
-     *            specifies whether archiving artifacts is enabled
-     * @param keepAll
-     *            specifies whether artifacts are archived for all successful builds,
-     *            otherwise only the most recent
-     * @deprecated since 1.11 use {@link #TRFPublisher()}
-     */
-    @Deprecated
-    public TRFPublisher(final boolean allowMissing, final boolean runOnFailed, final boolean archiving,
-            final boolean keepAll) {
-        super(allowMissing, runOnFailed, archiving, keepAll);
-    }
-
-    /**
-     * Instantiates a new {@link TRFPublisher}.
-     *
-     * @param allowMissing
-     *            specifies whether missing reports are allowed
-     * @param runOnFailed
-     *            specifies whether this publisher even runs on a failed build
-     * @deprecated since 1.9, use {@link #TRFPublisher(boolean, boolean, boolean, boolean)}
-     */
-    @Deprecated
-    public TRFPublisher(final boolean allowMissing, final boolean runOnFailed) {
-        this(allowMissing, runOnFailed, true, true);
-    }
-
-    /**
-     * Convert legacy configuration into the new class structure.
-     *
-     * @return an instance of this class with all the new fields transferred from the old structure to the new one
-     */
-    public final Object readResolve() {
-        return new TRFPublisher(isAllowMissing(), isRunOnFailed(), isArchiving() == null ? true
-                : isArchiving(), isKeepAll() == null ? true : isKeepAll());
-    }
-
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
@@ -296,7 +252,7 @@ public class TRFPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link TRFPublisher}.
      */
     @Symbol("publishTRF")
-    @Extension(ordinal = 1004)
+    @Extension(ordinal = 10004)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         @Override

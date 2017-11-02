@@ -73,6 +73,17 @@ public abstract class AbstractValidator {
     }
 
     /**
+     * Validates required form value.
+     *
+     * @param value
+     *            the form value
+     * @return the form validation
+     */
+    protected FormValidation validateRequiredValue(final String value) {
+        return FormValidation.validateRequired(value);
+    }
+
+    /**
      * Validates parameterized form value.
      *
      * @param value
@@ -83,6 +94,61 @@ public abstract class AbstractValidator {
         FormValidation returnValue = FormValidation.ok();
         if (!StringUtils.isEmpty(value) && value.contains(PARAMETER)) {
             returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
+        }
+        return returnValue;
+    }
+
+    /**
+     * Validates required and parameterized form value.
+     *
+     * @param value
+     *            the form value
+     * @return the form validation
+     */
+    protected FormValidation validateRequiredParamValue(final String value) {
+        FormValidation returnValue = FormValidation.ok();
+        if (StringUtils.isBlank(value)) {
+            returnValue = FormValidation.validateRequired(value);
+        } else if (value.contains(PARAMETER)) {
+            returnValue = validateParameterizedValue(value);
+        }
+        return returnValue;
+    }
+
+    /**
+     * Validates the package file.
+     *
+     * @param testFile
+     *            the test file
+     * @return the form validation
+     */
+    public FormValidation validatePackageFile(final String testFile) {
+        FormValidation returnValue = FormValidation.ok();
+        if (StringUtils.isBlank(testFile)) {
+            returnValue = FormValidation.validateRequired(testFile);
+        } else if (testFile.contains(PARAMETER)) {
+            returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
+        } else if (!testFile.endsWith(".pkg")) {
+            returnValue = FormValidation.error(Messages.TestBuilder_PkgFileExtension());
+        }
+        return returnValue;
+    }
+
+    /**
+     * Validates the project file.
+     *
+     * @param testFile
+     *            the test file
+     * @return the form validation
+     */
+    public FormValidation validateProjectFile(final String testFile) {
+        FormValidation returnValue = FormValidation.ok();
+        if (StringUtils.isBlank(testFile)) {
+            returnValue = FormValidation.validateRequired(testFile);
+        } else if (testFile.contains(PARAMETER)) {
+            returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
+        } else if (!testFile.endsWith(".prj")) {
+            returnValue = FormValidation.error(Messages.TestBuilder_PrjFileExtension());
         }
         return returnValue;
     }

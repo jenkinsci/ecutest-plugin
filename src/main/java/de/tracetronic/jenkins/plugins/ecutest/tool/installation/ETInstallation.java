@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -254,18 +254,15 @@ public class ETInstallation extends AbstractToolInstallation {
             final XStream2 stream = new XStream2();
             stream.addCompatibilityAlias(oldClass.getName(), getClass());
 
-            final Jenkins instance = Jenkins.getInstance();
-            if (instance != null) {
-                final XmlFile file = new XmlFile(stream,
-                        new File(instance.getRootDir(), oldClass.getEnclosingClass().getName() + ".xml"));
-                if (file.exists()) {
-                    try {
-                        file.unmarshal(this);
-                    } catch (final IOException e) {
-                        LOGGER.log(Level.WARNING, "Failed to migrate ECU-TEST installations from: " + file, e);
-                    } finally {
-                        file.delete();
-                    }
+            final XmlFile file = new XmlFile(stream,
+                    new File(Jenkins.getInstance().getRootDir(), oldClass.getEnclosingClass().getName() + ".xml"));
+            if (file.exists()) {
+                try {
+                    file.unmarshal(this);
+                } catch (final IOException e) {
+                    LOGGER.log(Level.WARNING, "Failed to migrate ECU-TEST installations from: " + file, e);
+                } finally {
+                    file.delete();
                 }
             }
         }

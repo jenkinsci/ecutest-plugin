@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -115,14 +115,6 @@ public class ATXPublisherST extends SystemTestBase {
         final SimpleBuildStep delegate = step.delegate;
         assertThat(delegate, instanceOf(ATXPublisher.class));
 
-        final ATXPublisher after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "allowMissing,runOnFailed,archiving,keepAll");
-    }
-
-    @Deprecated
-    @Test
-    public void testConfigRoundTrip() throws Exception {
-        final ATXPublisher before = new ATXPublisher("TEST-GUIDE", false, false, true, true);
         final ATXPublisher after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after, "allowMissing,runOnFailed,archiving,keepAll");
     }

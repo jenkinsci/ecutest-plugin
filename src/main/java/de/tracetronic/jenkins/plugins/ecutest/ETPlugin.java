@@ -30,9 +30,15 @@
 package de.tracetronic.jenkins.plugins.ecutest;
 
 import hudson.Plugin;
+import hudson.init.InitMilestone;
+import hudson.init.Initializer;
+import hudson.model.Items;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,6 +50,10 @@ import org.jenkins.ui.icon.IconSet;
 import org.jenkins.ui.icon.IconType;
 
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher.DescriptorImpl;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageDirConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirConfig;
 
 /**
  * Main entry point to this plugin for the {@link Jenkins} instance.
@@ -60,19 +70,21 @@ public class ETPlugin extends Plugin {
     /**
      * Defines the maximum allowed ECU-TEST version supported by this plugin.
      */
-    public static final ToolVersion ET_MAX_VERSION = new ToolVersion(6, 5, 0, 0);
+    public static final ToolVersion ET_MAX_VERSION = new ToolVersion(6, 6, 0, 0);
 
     /**
      * Defines the TEST-GUIDE version that the provided ATX configuration is based on.
      */
-    public static final ToolVersion ATX_VERSION = new ToolVersion(1, 41, 0, 0);
+    public static final ToolVersion ATX_VERSION = new ToolVersion(1, 46, 0, 0);
 
     /**
      * Helper class to easily compare tool versions defined by major, minor, micro and qualifier version. Mainly used to
      * enable or disable plugin features by comparing {@link ETPlugin#ET_MIN_VERSION} with the configured ECU-TEST
      * version.
      */
-    public static final class ToolVersion implements Comparable<ToolVersion> {
+    public static final class ToolVersion implements Comparable<ToolVersion>, Serializable {
+
+        private static final long serialVersionUID = 1L;
 
         private final int major;
         private final int minor;
@@ -120,6 +132,24 @@ public class ETPlugin extends Plugin {
         }
 
         /**
+         * Compares two {@link ToolVersion}s but ignoring micro and qualifier.
+         *
+         * @param version
+         *            the version to be compared
+         * @return integer indicating comparison result
+         * @see ToolVersion#compareTo(ToolVersion)
+         */
+        public int compareWithoutMicroTo(final ToolVersion version) {
+            if (major != version.major) {
+                return Integer.compare(major, version.major);
+            }
+            if (minor != version.minor) {
+                return Integer.compare(minor, version.minor);
+            }
+            return 0;
+        }
+
+        /**
          * Compares two {@link ToolVersion}s but ignoring the qualifier.
          *
          * @param version
@@ -146,12 +176,21 @@ public class ETPlugin extends Plugin {
         }
 
         /**
-         * Returns an shorter string representation without the qualifier version.
+         * Returns a shorter string representation without the qualifier version.
          *
          * @return the short version string
          */
-        public String toShortString() {
+        public String toMicroString() {
             return String.format("%d.%d.%d", major, minor, micro);
+        }
+
+        /**
+         * Returns a shorter string representation without the micro and qualifier version.
+         *
+         * @return the short version string
+         */
+        public String toMinorString() {
+            return String.format("%d.%d", major, minor);
         }
 
         @Override
@@ -242,16 +281,31 @@ public class ETPlugin extends Plugin {
         }
     }
 
+    /**
+     * Retains backward compatibility for renamed classes.
+     */
+    @SuppressWarnings("rawtypes")
+    @Initializer(before = InitMilestone.PLUGINS_STARTED)
+    public static void addAliases() {
+        final String configPath = "de.tracetronic.jenkins.plugins.ecutest.test.config.";
+        final HashMap<String, Class> classMap = new HashMap<String, Class>();
+        classMap.put(configPath + "ImportPackageTMSConfig", ImportPackageConfig.class);
+        classMap.put(configPath + "ImportPackageTMSDirConfig", ImportPackageDirConfig.class);
+        classMap.put(configPath + "ImportProjectTMSConfig", ImportProjectConfig.class);
+        classMap.put(configPath + "ImportProjectTMSDirConfig", ImportProjectDirConfig.class);
+
+        for (final Entry<String, Class> entry : classMap.entrySet()) {
+            Items.XSTREAM2.addCompatibilityAlias(entry.getKey(), entry.getValue());
+        }
+    }
+
     @Override
     public void postInitialize() throws Exception {
         super.postInitialize();
-        final Jenkins instance = Jenkins.getInstance();
-        if (instance != null) {
-            // Synchronize current ATX configuration with the default one.
-            final DescriptorImpl descriptor = instance.getDescriptorByType(DescriptorImpl.class);
-            if (descriptor != null) {
-                descriptor.syncWithDefaultConfig();
-            }
+        // Synchronize current ATX configuration with the default one.
+        final DescriptorImpl descriptor = Jenkins.getInstance().getDescriptorByType(DescriptorImpl.class);
+        if (descriptor != null) {
+            descriptor.syncWithDefaultConfig();
         }
     }
 

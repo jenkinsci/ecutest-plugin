@@ -86,6 +86,16 @@ public class ToolEnvContributor extends EnvironmentContributor {
      */
     public static final String TOOL_DEBUG = "TOOL_DEBUG_";
 
+    /**
+     * Build environment variable part for the last loaded TBC file path.
+     */
+    public static final String TOOL_LAST_TBC = "TOOL_LAST_TBC_";
+
+    /**
+     * Build environment variable part for the last loaded TCF file path.
+     */
+    public static final String TOOL_LAST_TCF = "TOOL_LAST_TCF_";
+
     @Override
     @SuppressWarnings("rawtypes")
     public void buildEnvironmentFor(final Run r, final EnvVars envs, final TaskListener listener)
@@ -105,6 +115,8 @@ public class ToolEnvContributor extends EnvironmentContributor {
             envs.put(PREFIX + TOOL_SETTINGS + id, action.getToolSettings());
             envs.put(PREFIX + TOOL_TIMEOUT + id, String.valueOf(action.getTimeout()));
             envs.put(PREFIX + TOOL_DEBUG + id, action.isDebug() ? "true" : "false");
+            envs.put(PREFIX + TOOL_LAST_TBC + id, action.getLastTbc());
+            envs.put(PREFIX + TOOL_LAST_TCF + id, action.getLastTcf());
         }
     }
 }

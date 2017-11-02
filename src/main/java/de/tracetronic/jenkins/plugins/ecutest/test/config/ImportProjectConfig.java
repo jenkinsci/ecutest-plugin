@@ -29,138 +29,122 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
-import hudson.DescriptorExtensionList;
-import hudson.model.Describable;
-import hudson.model.Descriptor;
-import hudson.security.ACL;
+import hudson.EnvVars;
+import hudson.Extension;
 import hudson.util.FormValidation;
-import hudson.util.ListBoxModel;
 
-import java.io.Serializable;
-import java.util.Collections;
-
-import javax.annotation.CheckForNull;
-
-import jenkins.model.Jenkins;
-
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import com.cloudbees.plugins.credentials.CredentialsMatchers;
-import com.cloudbees.plugins.credentials.CredentialsProvider;
-import com.cloudbees.plugins.credentials.common.StandardCredentials;
-import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
-import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-import com.cloudbees.plugins.credentials.domains.DomainRequirement;
-
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.ImportProjectValidator;
+import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
+import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
 
 /**
- * Common base class for {@link ImportProjectArchiveConfig}, {@link ImportProjectTMSConfig} and
- * {@link ImportProjectDirTMSConfig}.
+ * Class holding the configuration for importing a project from test management system.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class ImportProjectConfig implements Describable<ImportProjectConfig>, Serializable, ExpandableConfig {
+public class ImportProjectConfig extends ImportConfig {
 
     private static final long serialVersionUID = 1L;
 
-    private final String projectPath;
-    private final String importPath;
+    /**
+     * @since 1.17
+     */
+    private final boolean importMissingPackages;
 
     /**
      * Instantiates a new {@link ImportProjectConfig}.
      *
-     * @param projectPath
-     *            the project path
+     * @param tmsPath
+     *            the project path in test management system
      * @param importPath
      *            the import path
+     * @param importMissingPackages
+     *            specifies whether to import missing packages
+     * @param credentialsId
+     *            the credentials id
+     * @param timeout
+     *            the import timeout
      */
-    public ImportProjectConfig(final String projectPath, final String importPath) {
-        super();
-        this.projectPath = StringUtils.trimToEmpty(projectPath);
-        this.importPath = StringUtils.trimToEmpty(importPath);
+    @DataBoundConstructor
+    public ImportProjectConfig(final String tmsPath, final String importPath,
+            final boolean importMissingPackages, final String credentialsId, final String timeout) {
+        super(tmsPath, importPath, credentialsId, timeout);
+        this.importMissingPackages = importMissingPackages;
     }
 
     /**
-     * @return the project path to import
+     * @return specifies whether to import missing packages
      */
-    public String getProjectPath() {
-        return projectPath;
+    public boolean isImportMissingPackages() {
+        return importMissingPackages;
     }
 
-    /**
-     * @return the import target path
-     */
-    public String getImportPath() {
-        return importPath;
-    }
-
-    @CheckForNull
-    @SuppressWarnings("unchecked")
     @Override
-    public Descriptor<ImportProjectConfig> getDescriptor() {
-        final Jenkins instance = Jenkins.getInstance();
-        if (instance != null) {
-            return (Descriptor<ImportProjectConfig>) instance.getDescriptor(getClass());
-        }
-        return null;
+    public ImportProjectConfig expand(final EnvVars envVars) {
+        final String expTmsPath = envVars.expand(getTmsPath());
+        final String expImportPath = envVars.expand(getImportPath());
+        final String expCredentialsId = envVars.expand(getCredentialsId());
+        final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars, String.valueOf(DEFAULT_TIMEOUT));
+        return new ImportProjectConfig(expTmsPath, expImportPath, isImportMissingPackages(),
+                expCredentialsId, expTimeout);
     }
 
-    /**
-     * Gets all descriptors of {@link ImportProjectConfig} type.
-     *
-     * @return the descriptor extension list
-     */
-    @CheckForNull
-    public static DescriptorExtensionList<ImportProjectConfig, Descriptor<ImportProjectConfig>> all() {
-        final Jenkins instance = Jenkins.getInstance();
-        if (instance != null) {
-            return instance.getDescriptorList(ImportProjectConfig.class);
+    @Override
+    public final boolean equals(final Object other) {
+        boolean result = false;
+        if (other instanceof ImportProjectConfig) {
+            final ImportProjectConfig that = (ImportProjectConfig) other;
+            result = that.canEqual(this) && super.equals(that) && importMissingPackages == that.importMissingPackages;
         }
-        return null;
+        return result;
+    }
+
+    @Override
+    public final boolean canEqual(final Object other) {
+        return other instanceof ImportProjectConfig;
+    }
+
+    @Override
+    public final int hashCode() {
+        return new HashCodeBuilder(17, 31).append(super.hashCode()).append(importMissingPackages).toHashCode();
     }
 
     /**
      * DescriptorImpl for {@link ImportProjectConfig}.
      */
-    public abstract static class DescriptorImpl extends Descriptor<ImportProjectConfig> {
+    @Extension(ordinal = 3)
+    public static class DescriptorImpl extends ImportConfig.DescriptorImpl {
 
         /**
-         * Validator to check form fields.
+         * @return the default timeout
          */
-        protected final ImportProjectValidator importValidator = new ImportProjectValidator();
+        public static int getDefaultTimeout() {
+            return DEFAULT_TIMEOUT;
+        }
 
-        /**
-         * Validates the project path to import.
-         *
-         * @param value
-         *            the project to import
-         * @return the form validation
-         */
-        public abstract FormValidation doCheckProjectPath(@QueryParameter String value);
-
-        /**
-         * Validates the import target path.
-         *
-         * @param value
-         *            the import path
-         * @return the form validation
-         */
-        public FormValidation doCheckImportPath(@QueryParameter final String value) {
-            return importValidator.validateImportPath(value);
+        @Override
+        public FormValidation doCheckTmsPath(@QueryParameter final String value) {
+            return tmsValidator.validateTestPath(value);
         }
 
         /**
-         * Fills the credentials drop-down menu.
+         * Validates the timeout.
          *
-         * @return the credentials items
+         * @param value
+         *            the timeout
+         * @return the form validation
          */
-        public ListBoxModel doFillCredentialsIdItems() {
-            return new StandardListBoxModel().withEmptySelection().withMatching(
-                    CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class),
-                    CredentialsProvider.lookupCredentials(StandardCredentials.class, Jenkins.getInstance(), ACL.SYSTEM,
-                            Collections.<DomainRequirement> emptyList()));
+        @Override
+        public FormValidation doCheckTimeout(@QueryParameter final String value) {
+            return tmsValidator.validateTimeout(value, getDefaultTimeout());
+        }
+
+        @Override
+        public String getDisplayName() {
+            return Messages.ImportProjectConfig_DisplayName();
         }
     }
 }

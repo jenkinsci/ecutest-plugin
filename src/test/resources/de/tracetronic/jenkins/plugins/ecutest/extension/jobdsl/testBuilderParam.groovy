@@ -6,6 +6,7 @@ def strTbcFile = 'test.tbc'
 def strTcfFile = 'test.tcf'
 def bForceReload = true
 def bLoadOnly = true
+def bkeepConfig = true
 def strConstantName = 'test'
 def strConstantValue = '123'
 def strConstantName2 = 'test2'
@@ -28,10 +29,15 @@ def strScanMode = 'PACKAGES_ONLY'
 def bRecursiveScan = true
 def strArchivePath = 'test.prz'
 def strImportPath = 'import'
+def strExportPath = 'export'
 def bReplaceFiles = false
 def strCredentialsId = 'credentialsId'
+def strPackagePath = 'Subject/Test'
+def strPackageDirPath = 'Subject/TestDir'
 def strProjectPath = 'Root/Test'
 def strProjectDirPath = 'Root/TestDir'
+def bImportMissingPackages = true
+def bCreateNewPath = true
 
 freeStyleJob("${strJobName}") {
     steps {
@@ -41,6 +47,7 @@ freeStyleJob("${strJobName}") {
                 tcfFile("${strTcfFile}")
                 forceReload(bForceReload)
                 loadOnly(bLoadOnly)
+                keepConfig(bkeepConfig)
                 constants {
                     constant("${strConstantName}", "${strConstantValue}")
                     constant {
@@ -72,6 +79,7 @@ freeStyleJob("${strJobName}") {
                 tcfFile("${strTcfFile}")
                 forceReload(bForceReload)
                 loadOnly(bLoadOnly)
+                keepConfig(bkeepConfig)
                 constants {
                     constant("${strConstantName}", "${strConstantValue}")
                     constant {
@@ -99,6 +107,7 @@ freeStyleJob("${strJobName}") {
                 tcfFile("${strTcfFile}")
                 forceReload(bForceReload)
                 loadOnly(bLoadOnly)
+                keepConfig(bkeepConfig)
                 constants {
                     constant("${strConstantName}", "${strParamValue}")
                     constant {
@@ -129,6 +138,22 @@ freeStyleJob("${strJobName}") {
                 checkTestFile(bCheckTestFile)
             }
         }
+        importPackages {
+            importFromTMS("${strCredentialsId}", "${strPackagePath}", "${strImportPath}", "${strTimeout}")
+            importFromTMS("${strCredentialsId}", "${strPackagePath}") {
+                importPath("${strImportPath}")
+                timeout(intTimeout)
+            }
+            importFromTMSDir("${strCredentialsId}", "${strPackageDirPath}", "${strImportPath}", "${strTimeout}")
+            importFromTMSDir("${strCredentialsId}", "${strPackageDirPath}") {
+                importPath("${strImportPath}")
+                timeout(intTimeout)
+            }
+            importAttributesFromTMS("${strCredentialsId}", "${strPkgFile}", "${strTimeout}")
+            importAttributesFromTMS("${strCredentialsId}", "${strPkgFile}") {
+                timeout(intTimeout)
+            }
+        }
         importProjects {
             importFromArchive("${strArchivePath}", "${strImportPath}", "${strImportPath}", bReplaceFiles)
             importFromArchive("${strArchivePath}") {
@@ -136,14 +161,43 @@ freeStyleJob("${strJobName}") {
                 importConfigPath("${strImportPath}")
                 replaceFiles(bReplaceFiles)
             }
-            importFromTMS("${strCredentialsId}", "${strProjectPath}", "${strImportPath}", "${strTimeout}")
+            importFromTMS("${strCredentialsId}", "${strProjectPath}", "${strImportPath}", bImportMissingPackages, "${strTimeout}")
             importFromTMS("${strCredentialsId}", "${strProjectPath}") {
                 importPath("${strImportPath}")
+                importMissingPackages(bImportMissingPackages)
                 timeout(intTimeout)
             }
             importFromTMSDir("${strCredentialsId}", "${strProjectDirPath}", "${strImportPath}", "${strTimeout}")
             importFromTMSDir("${strCredentialsId}", "${strProjectDirPath}") {
                 importPath("${strImportPath}")
+                timeout(intTimeout)
+            }
+            importAttributesFromTMS("${strCredentialsId}", "${strPrjFile}", "${strTimeout}")
+            importAttributesFromTMS("${strCredentialsId}", "${strPrjFile}") {
+                timeout(intTimeout)
+            }
+        }
+        exportPackages {
+            exportToTMS("${strCredentialsId}", "${strPkgFile}", "${strPackagePath}", bCreateNewPath, "${strTimeout}")
+            exportToTMS("${strCredentialsId}", "${strPkgFile}") {
+                exportPath("${strPackagePath}")
+                createNewPath(bCreateNewPath)
+                timeout(intTimeout)
+            }
+            exportAttributesToTMS("${strCredentialsId}", "${strPkgFile}", "${strTimeout}")
+            exportAttributesToTMS("${strCredentialsId}", "${strPkgFile}") {
+                timeout(intTimeout)
+            }
+        }
+        exportProjects {
+            exportToTMS("${strCredentialsId}", "${strPrjFile}", "${strProjectPath}", bCreateNewPath, "${strTimeout}")
+            exportToTMS("${strCredentialsId}", "${strPrjFile}") {
+                exportPath("${strProjectPath}")
+                createNewPath(bCreateNewPath)
+                timeout(intTimeout)
+            }
+            exportAttributesToTMS("${strCredentialsId}", "${strPrjFile}", "${strTimeout}")
+            exportAttributesToTMS("${strCredentialsId}", "${strPrjFile}") {
                 timeout(intTimeout)
             }
         }

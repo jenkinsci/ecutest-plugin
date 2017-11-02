@@ -97,7 +97,7 @@ public class TTConsoleLogger {
     }
 
     /**
-     * Log error message.
+     * Logs error message.
      *
      * @param message
      *            the message to log
@@ -107,13 +107,31 @@ public class TTConsoleLogger {
     }
 
     /**
-     * Log debug message.
+     * Logs error message caused by COM exception.
      *
      * @param message
      *            the message to log
      */
+    public void logComException(final String message) {
+        logError(String
+                .format("Caught ComException: %s%n"
+                        + "For further information see FAQ: "
+                        + "https://wiki.jenkins-ci.org/x/joLtB#TraceTronicECU-TESTPlugin-FAQ",
+                        message));
+    }
+
+    /**
+     * Logs debug message. Can be enabled either by
+     * providing -Decutest.debugLog=true to Jenkins master JVM or
+     * setting system property ecutest.debugLog directly.
+     * 
+     * @param message
+     *            the message to log
+     */
     public void logDebug(final String message) {
-        logAnnot("[TT] DEBUG: ", message);
+        if (Boolean.getBoolean("ecutest.debugLog")) {
+            logAnnot("[TT] DEBUG: ", message);
+        }
     }
 
     /**

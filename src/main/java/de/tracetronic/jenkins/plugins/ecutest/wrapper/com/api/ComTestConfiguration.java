@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -60,5 +60,14 @@ public interface ComTestConfiguration {
      *             in case of a COM exception
      */
     ComConstants getGlobalConstants() throws ETComException;
+
+    /**
+     * Returns the full path of this test configuration.
+     *
+     * @return the TCF file path
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    String getFileName() throws ETComException;
 
 }

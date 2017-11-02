@@ -97,89 +97,6 @@ public class ETLogPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Instantiates a new {@link ETLogPublisher}.
-     *
-     * @param unstableOnWarning
-     *            specifies whether to mark the build as unstable if warnings found
-     * @param failedOnError
-     *            specifies whether to mark the build as failed if errors found
-     * @param testSpecific
-     *            specifies whether to parse the test-specific log files
-     * @param allowMissing
-     *            specifies whether missing reports are allowed
-     * @param runOnFailed
-     *            specifies whether this publisher even runs on a failed build
-     * @param archiving
-     *            specifies whether archiving artifacts is enabled
-     * @param keepAll
-     *            specifies whether artifacts are archived for all successful builds,
-     *            otherwise only the most recent
-     * @deprecated since 1.11 use {@link #ETLogPublisher()}
-     */
-    @Deprecated
-    public ETLogPublisher(final boolean unstableOnWarning, final boolean failedOnError, final boolean testSpecific,
-            final boolean allowMissing, final boolean runOnFailed, final boolean archiving, final boolean keepAll) {
-        super(allowMissing, runOnFailed, archiving, keepAll);
-        this.unstableOnWarning = unstableOnWarning;
-        this.failedOnError = failedOnError;
-        this.testSpecific = testSpecific;
-    }
-
-    /**
-     * Instantiates a new {@link ETLogPublisher}.
-     *
-     * @param unstableOnWarning
-     *            specifies whether to mark the build as unstable if warnings found
-     * @param failedOnError
-     *            specifies whether to mark the build as failed if errors found
-     * @param allowMissing
-     *            specifies whether missing reports are allowed
-     * @param runOnFailed
-     *            specifies whether this publisher even runs on a failed build
-     * @param archiving
-     *            specifies whether archiving artifacts is enabled
-     * @param keepAll
-     *            specifies whether artifacts are archived for all successful builds,
-     *            otherwise only the most recent
-     * @deprecated since 1.10, use {@link #ETLogPublisher(boolean, boolean, boolean, boolean, boolean,boolean, boolean)}
-     */
-    @Deprecated
-    public ETLogPublisher(final boolean unstableOnWarning, final boolean failedOnError, final boolean allowMissing,
-            final boolean runOnFailed, final boolean archiving, final boolean keepAll) {
-        this(unstableOnWarning, failedOnError, false, allowMissing, runOnFailed, archiving, keepAll);
-    }
-
-    /**
-     * Instantiates a new {@link ETLogPublisher}.
-     *
-     * @param allowMissing
-     *            specifies whether missing reports are allowed
-     * @param runOnFailed
-     *            specifies whether this publisher even runs on a failed build
-     * @param unstableOnWarning
-     *            specifies whether to mark the build as unstable if warnings found
-     * @param failedOnError
-     *            specifies whether to mark the build as failed if errors found
-     * @deprecated since 1.9, use {@link #ETLogPublisher(boolean, boolean, boolean, boolean,boolean, boolean)}
-     */
-    @Deprecated
-    public ETLogPublisher(final boolean unstableOnWarning, final boolean failedOnError, final boolean allowMissing,
-            final boolean runOnFailed) {
-        this(unstableOnWarning, failedOnError, allowMissing, runOnFailed, true, true);
-    }
-
-    /**
-     * Convert legacy configuration into the new class structure.
-     *
-     * @return an instance of this class with all the new fields transferred from the old structure to the new one
-     */
-    public final Object readResolve() {
-        return new ETLogPublisher(unstableOnWarning, failedOnError, isTestSpecific(), isAllowMissing(),
-                isRunOnFailed(),
-                isArchiving() == null ? true : isArchiving(), isKeepAll() == null ? true : isKeepAll());
-    }
-
-    /**
      * @return whether to mark the build as unstable if warnings found
      */
     public boolean isUnstableOnWarning() {
@@ -645,7 +562,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link ETLogPublisher}.
      */
     @Symbol("publishETLogs")
-    @Extension(ordinal = 1001)
+    @Extension(ordinal = 10001)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         @Override

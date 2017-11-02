@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -69,26 +69,6 @@ public class ReportGeneratorPublisherTest {
         publisher.setArchiving(true);
         publisher.setKeepAll(true);
         assertPublisher(publisher);
-    }
-
-    @Deprecated
-    @Test
-    public void testDefault() {
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("", null, null, false, false, true,
-                true);
-        assertPublisher(publisher);
-        assertTrue(publisher.getGenerators().isEmpty());
-        assertTrue(publisher.getCustomGenerators().isEmpty());
-    }
-
-    @Deprecated
-    @Test
-    public void testNull() {
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher(null, null, null, false, false, true,
-                true);
-        assertPublisher(publisher);
-        assertTrue(publisher.getGenerators().isEmpty());
-        assertTrue(publisher.getCustomGenerators().isEmpty());
     }
 
     @Test

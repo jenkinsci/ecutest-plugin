@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -75,6 +75,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         builder.setSettingsDir(context.settingsDir);
         builder.setTimeout(context.timeout);
         builder.setDebugMode(context.debugMode);
+        builder.setKeepInstance(context.keepInstance);
         checkToolInstallation(toolName.toString(), builder);
         return builder;
     }
@@ -145,6 +146,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         builder.setToolLibsIni(context.toolLibsIni);
         builder.setTcpPort(context.tcpPort);
         builder.setTimeout(context.timeout);
+        builder.setKeepInstance(context.keepInstance);
         checkToolInstallation(toolName.toString(), builder);
         return builder;
     }
@@ -203,6 +205,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         private String workspaceDir;
         private String settingsDir;
         private boolean debugMode;
+        private boolean keepInstance;
 
         @Override
         protected int getDefaultTimeout() {
@@ -244,6 +247,16 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         public void debugMode(final boolean value) {
             debugMode = value;
         }
+
+        /**
+         * Option defining whether to re-use the previous instance.
+         *
+         * @param value
+         *            the value
+         */
+        public void keepInstance(final boolean value) {
+            keepInstance = value;
+        }
     }
 
     /**
@@ -267,6 +280,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
 
         private String toolLibsIni;
         private String tcpPort;
+        private boolean keepInstance;
 
         @Override
         protected int getDefaultTimeout() {
@@ -307,6 +321,16 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
          */
         public void tcpPort(final int value) {
             tcpPort(String.valueOf((Object) value));
+        }
+
+        /**
+         * Option defining whether to re-use the previous instance.
+         *
+         * @param value
+         *            the value
+         */
+        public void keepInstance(final boolean value) {
+            keepInstance = value;
         }
     }
 

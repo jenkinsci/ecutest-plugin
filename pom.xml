@@ -34,19 +34,17 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>2.25</version>
+        <version>2.29</version>
         <relativePath />
     </parent>
 
     <groupId>de.tracetronic.jenkins.plugins</groupId>
     <artifactId>ecutest</artifactId>
-    <version>1.17-SNAPSHOT</version>
+    <version>1.19-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
     <name>TraceTronic ECU-TEST Plugin</name>
-    <description>
-        <![CDATA[<div>This plugin integrates Jenkins with <a href="https://www.tracetronic.com/products/ecu-test/">ECU-TEST</a> and generates reports on automated test execution.</div>]]>
-    </description>
+    <description>This plugin integrates Jenkins with ECU-TEST and generates reports on automated test execution.</description>
     <url>https://wiki.jenkins-ci.org/display/JENKINS/TraceTronic+ECU-TEST+Plugin</url>
     <inceptionYear>2015</inceptionYear>
     <organization>
@@ -79,38 +77,40 @@
 
     <properties>
         <!-- Jenkins base -->
-        <jenkins.version>1.580.1</jenkins.version>
-        <jenkins-test-harness.version>1.580.1</jenkins-test-harness.version>
+        <jenkins.version>2.7.1</jenkins.version>
+        <jenkins-test-harness.version>2.22</jenkins-test-harness.version>
         
         <!-- Jenkins plugins -->
-        <matrix-project.version>1.4</matrix-project.version>
-        <icon-shim.version>2.0.2</icon-shim.version>
-        <junit.version>1.3</junit.version>
-        <structs.version>1.5</structs.version>
-        <job-dsl.version>1.38</job-dsl.version>
-        <credentials.version>1.28</credentials.version>
-        <jquery-plugin.version>1.11.2-0</jquery-plugin.version>
+        <matrix-project.version>1.5</matrix-project.version>
+        <icon-shim.version>2.0.3</icon-shim.version>
+        <junit.version>1.21</junit.version>
+        <structs.version>1.10</structs.version>
+        <job-dsl.version>1.66</job-dsl.version>
+        <credentials.version>2.1.16</credentials.version>
+        <jquery-plugin.version>1.12.4-0</jquery-plugin.version>
 
         <!-- Static code analysis -->
         <maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
-        <maven-pmd-plugin.version>3.7</maven-pmd-plugin.version>
+        <maven-pmd-plugin.version>3.8</maven-pmd-plugin.version>
 
         <!-- Test scope -->
-        <equalsverifier.version>2.2.1</equalsverifier.version>
-        <mockito-core.version>2.7.18</mockito-core.version>
+        <equalsverifier.version>2.3.3</equalsverifier.version>
+        <mockito-core.version>2.11.0</mockito-core.version>
         <jacoco.version>0.7.9</jacoco.version>
-        <workflow-aggregator.version>1.4.3</workflow-aggregator.version>
-        <workflow-basic-steps.version>1.4.3</workflow-basic-steps.version>
-        <workflow-cps.version>1.4.3</workflow-cps.version>
-        <workflow-step-api.version>1.4.3</workflow-step-api.version>
+        <workflow-aggregator.version>2.5</workflow-aggregator.version>
+        <workflow-basic-steps.version>2.6</workflow-basic-steps.version>
+        <workflow-cps.version>2.41</workflow-cps.version>
+        <workflow-step-api.version>2.13</workflow-step-api.version>
         <concurrency>2</concurrency>
+        <skipUTs>false</skipUTs>
+        <skipITs>true</skipITs>
 
         <!-- JACOB -->
         <jacob.version>1.18</jacob.version>
 
         <!-- ANTLR -->
-        <antlr4-maven-plugin.version>4.6</antlr4-maven-plugin.version>
-        <antlr4-runtime.version>4.6</antlr4-runtime.version>
+        <antlr4-maven-plugin.version>4.7</antlr4-maven-plugin.version>
+        <antlr4-runtime.version>4.7</antlr4-runtime.version>
     </properties>
 
     <repositories>
@@ -179,6 +179,11 @@
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>credentials</artifactId>
+            <version>${credentials.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <optional>true</optional>
@@ -187,12 +192,6 @@
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>job-dsl</artifactId>
             <version>${job-dsl.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>credentials</artifactId>
-            <version>${credentials.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -268,6 +267,7 @@
                         <exclude>InjectedTest.java</exclude>
                     </excludes>
                     <argLine>@{argLine}</argLine>
+                    <skipTests>${skipUTs}</skipTests>
                 </configuration>
             </plugin>
             <plugin>
@@ -281,6 +281,7 @@
                     <argLine>@{argLine}</argLine>
                     <reuseForks>true</reuseForks>
                     <forkCount>${concurrency}</forkCount>
+                    <skipITs>${skipITs}</skipITs>
                 </configuration>
                 <executions>
                     <execution>

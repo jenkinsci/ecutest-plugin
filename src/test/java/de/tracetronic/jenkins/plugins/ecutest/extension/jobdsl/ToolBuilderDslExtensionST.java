@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -99,6 +99,7 @@ public class ToolBuilderDslExtensionST extends AbstractDslExtensionST {
         assertThat(builder.getSettingsDir(), is("settings"));
         assertThat(builder.getTimeout(), is("60"));
         assertThat(builder.isDebugMode(), is(true));
+        assertThat(builder.isKeepInstance(), is(true));
     }
 
     @Test
@@ -123,6 +124,7 @@ public class ToolBuilderDslExtensionST extends AbstractDslExtensionST {
         assertThat(builder.getTimeout(), is("60"));
         assertThat(builder.getTcpPort(), is("5000"));
         assertThat(builder.getToolLibsIni(), is("C:\\ToolLibs.ini"));
+        assertThat(builder.isKeepInstance(), is(true));
     }
 
     @Test

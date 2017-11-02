@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,6 @@ import hudson.Launcher;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -134,16 +133,16 @@ public class ReportGenerator {
                 logger.logInfo(String.format("- Generating %s test reports...", templateName));
                 for (final FilePath dbFile : dbFiles) {
                     logger.logInfo(String.format("-> Generating %s report: %s", templateName, dbFile.getRemote()));
-                    final File outDir = new File(dbFile.getParent().getRemote(), templateName);
+                    final FilePath outDir = dbFile.getParent().child(templateName);
                     if (!testEnv.generateTestReportDocumentFromDB(dbFile.getRemote(),
-                            outDir.getAbsolutePath(), templateName, true, configMap)) {
+                            outDir.getRemote(), templateName, true, configMap)) {
                         isGenerated = false;
                         logger.logError(String.format("Generating %s report failed!", templateName));
                     }
                 }
             } catch (final ETComException e) {
                 isGenerated = false;
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
             }
             return isGenerated;
         }

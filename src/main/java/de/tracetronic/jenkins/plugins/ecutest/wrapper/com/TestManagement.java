@@ -65,6 +65,59 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     }
 
     /**
+     * Same as {@link #importPackage(String, String, int)} but without timeout.
+     *
+     * @param tmProjectPath
+     *            the path specifying the package in the test management system
+     * @param importPath
+     *            the directory to save the package (relative to package directory or absolute)
+     * @return {@code true} if import succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    public boolean importPackage(final String tmProjectPath, final String importPath) throws ETComException {
+        return importPackage(tmProjectPath, importPath, 0);
+    }
+
+    @Override
+    public boolean importPackage(final String tmProjectPath, final String importPath, final int timeout)
+            throws ETComException {
+        if (timeout == 0) {
+            return performRequest("ImportPackage", new Variant(tmProjectPath), new Variant(importPath)).getBoolean();
+        } else {
+            return performRequest("ImportPackage", new Variant(tmProjectPath), new Variant(importPath),
+                    new Variant(timeout)).getBoolean();
+        }
+    }
+
+    /**
+     * Same as {@link #importPackageDirectory(String, String, int)} but without timeout.
+     *
+     * @param tmDirectoryPath
+     *            the path specifying the package in the test management system
+     * @param importPath
+     *            the directory to save the package (relative to package directory or absolute)
+     * @return {@code true} if import succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    public boolean importPackageDirectory(final String tmDirectoryPath, final String importPath) throws ETComException {
+        return importPackageDirectory(tmDirectoryPath, importPath, 0);
+    }
+
+    @Override
+    public boolean importPackageDirectory(final String tmDirectoryPath, final String importPath, final int timeout)
+            throws ETComException {
+        if (timeout == 0) {
+            return performRequest("ImportPackageDirectory", new Variant(tmDirectoryPath),
+                    new Variant(importPath)).getBoolean();
+        } else {
+            return performRequest("ImportPackageDirectory", new Variant(tmDirectoryPath), new Variant(importPath),
+                    new Variant(timeout)).getBoolean();
+        }
+    }
+
+    /**
      * Same as {@link #importProject(String, String, boolean, int)} but without timeout.
      *
      * @param tmProjectPath
@@ -137,6 +190,97 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     }
 
     /**
+     * Same as {@link #importPackageAttributes(String, int)} but without timeout.
+     *
+     * @param filePath
+     *            the file path of the package whose attributes have to be imported
+     *            (relative to package directory or absolute)
+     * @return {@code true} if import succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    public boolean importPackageAttributes(final String filePath) throws ETComException {
+        return importPackageAttributes(filePath, 0);
+    }
+
+    @Override
+    public boolean importPackageAttributes(final String filePath, final int timeout) throws ETComException {
+        if (timeout == 0) {
+            return performRequest("ImportPackageAttributes", new Variant(filePath)).getBoolean();
+        } else {
+            return performRequest("ImportPackageAttributes", new Variant(filePath), new Variant(timeout)).getBoolean();
+        }
+    }
+
+    /**
+     * Same as {@link #importProjectAttributes(String, int)} but without timeout.
+     *
+     * @param filePath
+     *            the file path of the project whose attributes have to be imported
+     *            (relative to package directory or absolute)
+     * @return {@code true} if import succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    public boolean importProjectAttributes(final String filePath) throws ETComException {
+        return importProjectAttributes(filePath, 0);
+    }
+
+    @Override
+    public boolean importProjectAttributes(final String filePath, final int timeout) throws ETComException {
+        if (timeout == 0) {
+            return performRequest("ImportProjectAttributes", new Variant(filePath)).getBoolean();
+        } else {
+            return performRequest("ImportProjectAttributes", new Variant(filePath), new Variant(timeout)).getBoolean();
+        }
+    }
+
+    /**
+     * Same as {@link #exportPackage(String, String, boolean, int)} but without timeout.
+     *
+     * @param filePath
+     *            the file path of the package to be exported (relative to package directory or absolute)
+     * @param exportPath
+     *            the path specifying where the package should be placed at
+     * @return {@code true} if export succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    public boolean exportPackage(final String filePath, final String exportPath) throws ETComException {
+        return exportPackage(filePath, exportPath, false, 0);
+    }
+
+    /**
+     * Same as {@link #exportPackage(String, String, boolean, int)} but without timeout and default optional parameter.
+     *
+     * @param filePath
+     *            the file path of the package to be exported (relative to package directory or absolute)
+     * @param exportPath
+     *            the path specifying where the package should be placed at
+     * @param timeout
+     *            the timeout in seconds to wait for export to be finished
+     * @return {@code true} if export succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    public boolean exportPackage(final String filePath, final String exportPath, final int timeout)
+            throws ETComException {
+        return exportPackage(filePath, exportPath, false, timeout);
+    }
+
+    @Override
+    public boolean exportPackage(final String filePath, final String exportPath, final boolean createNewPath,
+            final int timeout) throws ETComException {
+        if (timeout == 0) {
+            return performRequest("ExportPackage", new Variant(filePath), new Variant(exportPath),
+                    new Variant(createNewPath)).getBoolean();
+        } else {
+            return performRequest("ExportPackage", new Variant(filePath), new Variant(exportPath),
+                    new Variant(createNewPath), new Variant(timeout)).getBoolean();
+        }
+    }
+
+    /**
      * Same as {@link #exportProject(String, String, boolean, int)} but without timeout.
      *
      * @param filePath
@@ -178,6 +322,52 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
         } else {
             return performRequest("ExportProject", new Variant(filePath), new Variant(exportPath),
                     new Variant(createNewPath), new Variant(timeout)).getBoolean();
+        }
+    }
+
+    /**
+     * Same as {@link #exportPackageAttributes(String, int)} but without timeout.
+     *
+     * @param filePath
+     *            the file path of the package whose attributes have to be exported
+     *            (relative to package directory or absolute)
+     * @return {@code true} if export succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    public boolean exportPackageAttributes(final String filePath) throws ETComException {
+        return exportPackageAttributes(filePath, 0);
+    }
+
+    @Override
+    public boolean exportPackageAttributes(final String filePath, final int timeout) throws ETComException {
+        if (timeout == 0) {
+            return performRequest("ExportPackageAttributes", new Variant(filePath)).getBoolean();
+        } else {
+            return performRequest("ExportPackageAttributes", new Variant(filePath), new Variant(timeout)).getBoolean();
+        }
+    }
+
+    /**
+     * Same as {@link #exportProjectAttributes(String, int)} but without timeout.
+     *
+     * @param filePath
+     *            the file path of the project whose attributes have to be exported
+     *            (relative to package directory or absolute)
+     * @return {@code true} if export succeeded, {@code false} otherwise
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    public boolean exportProjectAttributes(final String filePath) throws ETComException {
+        return exportProjectAttributes(filePath, 0);
+    }
+
+    @Override
+    public boolean exportProjectAttributes(final String filePath, final int timeout) throws ETComException {
+        if (timeout == 0) {
+            return performRequest("ExportProjectAttributes", new Variant(filePath)).getBoolean();
+        } else {
+            return performRequest("ExportProjectAttributes", new Variant(filePath), new Variant(timeout)).getBoolean();
         }
     }
 

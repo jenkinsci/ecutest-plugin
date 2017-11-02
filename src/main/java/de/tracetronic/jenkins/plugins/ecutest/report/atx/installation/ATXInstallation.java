@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -100,7 +100,7 @@ public class ATXInstallation implements Serializable {
      * @return all available installations, never {@code null}
      */
     public static final ATXInstallation[] all() {
-        final Jenkins instance = Jenkins.getInstance();
+        final Jenkins instance = Jenkins.getInstanceOrNull();
         if (instance == null) {
             return new ATXInstallation[0];
         }

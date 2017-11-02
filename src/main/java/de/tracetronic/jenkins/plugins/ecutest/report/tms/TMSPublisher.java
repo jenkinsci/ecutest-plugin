@@ -72,7 +72,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.ImportProjectValidator;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.TMSValidator;
 
 /**
  * Publisher providing the export of reports to a test management system.
@@ -189,7 +189,7 @@ public class TMSPublisher extends AbstractReportPublisher {
 
         // Start ECU-TEST if necessary
         if (isETRunning) {
-            isPublished = publishReports(reportFiles, launcher, listener);
+            isPublished = publishReports(reportFiles, workspace, launcher, listener);
         } else {
             // Get selected ECU-TEST installation
             final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
@@ -201,7 +201,7 @@ public class TMSPublisher extends AbstractReportPublisher {
             final ETClient etClient = new ETClient(expandedToolName, installPath, workspaceDir, settingsDir,
                     StartETBuilder.DEFAULT_TIMEOUT, false);
             if (etClient.start(false, workspace, launcher, listener)) {
-                isPublished = publishReports(reportFiles, launcher, listener);
+                isPublished = publishReports(reportFiles, workspace, launcher, listener);
             } else {
                 logger.logError(String.format("Starting %s failed.", toolName));
             }
@@ -223,6 +223,8 @@ public class TMSPublisher extends AbstractReportPublisher {
      *
      * @param reportFiles
      *            the report files
+     * @param workspace
+     *            the workspace
      * @param launcher
      *            the launcher
      * @param listener
@@ -233,9 +235,9 @@ public class TMSPublisher extends AbstractReportPublisher {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private boolean publishReports(final List<FilePath> reportFiles, final Launcher launcher,
+    private boolean publishReports(final List<FilePath> reportFiles, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws IOException, InterruptedException {
-        return new TMSReportUploader().upload(reportFiles, credentialsId, timeout, launcher, listener);
+        return new TMSReportUploader().upload(reportFiles, credentialsId, timeout, workspace, launcher, listener);
     }
 
     @Override
@@ -247,13 +249,13 @@ public class TMSPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link TMSPublisher}.
      */
     @Symbol("publishTMS")
-    @Extension(ordinal = 1000)
+    @Extension(ordinal = 10000)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         /**
          * Validator to check form fields.
          */
-        private final ImportProjectValidator importValidator = new ImportProjectValidator();
+        private final TMSValidator tmsValidator = new TMSValidator();
 
         /**
          * Instantiates a new {@link DescriptorImpl}.
@@ -277,7 +279,7 @@ public class TMSPublisher extends AbstractReportPublisher {
          * @return the form validation
          */
         public FormValidation doCheckTimeout(@QueryParameter final String value) {
-            return importValidator.validateTimeout(value, getDefaultTimeout());
+            return tmsValidator.validateTimeout(value, getDefaultTimeout());
         }
 
         /**

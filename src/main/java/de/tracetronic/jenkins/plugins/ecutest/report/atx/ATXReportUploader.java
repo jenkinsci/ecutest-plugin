@@ -36,7 +36,6 @@ import hudson.model.TaskListener;
 import hudson.model.Run;
 import hudson.remoting.Callable;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -282,7 +281,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      */
     private int traverseSubReports(final ATXReport atxReport, final FilePath testReportDir, int id,
             final String baseUrl, final String from, final String to, final String projectName, final String projectId)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         for (final FilePath subDir : testReportDir.listDirectories()) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(subDir);
             if (reportFile != null && reportFile.exists()) {
@@ -444,12 +443,13 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                         comClient.waitForIdle(0);
 
                         // Check error log file and abort the upload if any
-                        final File errorFile = new File(outDir.getRemote(), ERROR_FILE_NAME);
-                        if (errorFile.exists()) {
-                            isUploaded = false;
-                            logger.logError("Error while uploading ATX report:");
-                            try {
-                                final JSONObject jsonObject = (JSONObject) new JsonSlurper().parse(errorFile);
+                        final FilePath errorFile = outDir.child(ERROR_FILE_NAME);
+                        try {
+                            if (errorFile.exists()) {
+                                isUploaded = false;
+                                logger.logError("Error while uploading ATX report:");
+                                final JSONObject jsonObject = (JSONObject) new JsonSlurper()
+                                .parseText(errorFile.readToString());
                                 final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
                                 if (jsonArray != null) {
                                     for (int i = 0; i < jsonArray.size(); i++) {
@@ -459,15 +459,15 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                                         logger.logError(String.format("%s: %s - %s", status, file, text));
                                     }
                                 }
-                            } catch (final JSONException e) {
-                                logger.logError("-> Could not parse JSON response: " + e.getMessage());
                             }
+                        } catch (final JSONException | InterruptedException e) {
+                            logger.logError("-> Could not parse ATX JSON response: " + e.getMessage());
                         }
                     }
                 }
             } catch (final ETComException e) {
                 isUploaded = false;
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
             }
             return isUploaded;
         }

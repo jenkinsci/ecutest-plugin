@@ -242,6 +242,15 @@ public interface ComApplication {
     ComTestConfiguration getCurrentTestConfiguration() throws ETComException;
 
     /**
+     * Provides access to settings of the currently active test bench configuration file.
+     *
+     * @return the {@link ComTestBenchConfiguration} dispatch
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    ComTestBenchConfiguration getCurrentTestBenchConfiguration() throws ETComException;
+
+    /**
      * Waits until the job count in the task manager reaches zero. The timeout parameter specifies the maximum waiting
      * time in seconds.
      *

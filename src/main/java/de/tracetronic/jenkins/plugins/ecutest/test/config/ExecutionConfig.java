@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -50,8 +50,8 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig> implements Serializable,
-ExpandableConfig {
+public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
+        implements Serializable, ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 
@@ -99,36 +99,6 @@ ExpandableConfig {
      */
     public ExecutionConfig(final int timeout, final boolean stopOnError, final boolean checkTestFile) {
         this(String.valueOf(timeout), stopOnError, checkTestFile);
-    }
-
-    /**
-     * Instantiates a new {@link ExecutionConfig}.
-     *
-     * @param timeout
-     *            the timeout to run the test
-     * @param stopOnError
-     *            specifies whether to stop ECU-TEST and
-     *            Tool-Server instances if an error occurred
-     * @deprecated since 1.4, use {@link #ExecutionConfig(String, boolean, boolean)}
-     */
-    @Deprecated
-    public ExecutionConfig(final String timeout, final boolean stopOnError) {
-        this(timeout, stopOnError, true);
-    }
-
-    /**
-     * Instantiates a new {@link ExecutionConfig}.
-     *
-     * @param timeout
-     *            the timeout to run the test
-     * @param stopOnError
-     *            specifies whether to stop ECU-TEST and
-     *            Tool-Server instances if an error occurred
-     * @deprecated since 1.4, use {@link #ExecutionConfig(int, boolean, boolean)}
-     */
-    @Deprecated
-    public ExecutionConfig(final int timeout, final boolean stopOnError) {
-        this(timeout, stopOnError, true);
     }
 
     /**

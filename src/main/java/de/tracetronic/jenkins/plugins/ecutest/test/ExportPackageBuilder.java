@@ -1,0 +1,106 @@
+/*
+ * Copyright (c) 2015-2017 TraceTronic GmbH
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ *   1. Redistributions of source code must retain the above copyright notice, this
+ *      list of conditions and the following disclaimer.
+ *
+ *   2. Redistributions in binary form must reproduce the above copyright notice, this
+ *      list of conditions and the following disclaimer in the documentation and/or
+ *      other materials provided with the distribution.
+ *
+ *   3. Neither the name of TraceTronic GmbH nor the names of its
+ *      contributors may be used to endorse or promote products derived from
+ *      this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package de.tracetronic.jenkins.plugins.ecutest.test;
+
+import hudson.DescriptorExtensionList;
+import hudson.Extension;
+import hudson.model.Descriptor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.CheckForNull;
+
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageAttributeConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
+
+/**
+ * Builder providing the export of one or multiple ECU-TEST packages.
+ *
+ * @author Christian Pönisch <christian.poenisch@tracetronic.de>
+ */
+public class ExportPackageBuilder extends AbstractExportBuilder {
+
+    /**
+     * Instantiates a new {@link ExportPackageBuilder}.
+     *
+     * @param exportConfigs
+     *            the list of configured package exporters
+     */
+    @DataBoundConstructor
+    public ExportPackageBuilder(@CheckForNull final List<TMSConfig> exportConfigs) {
+        super(exportConfigs);
+    }
+
+    /**
+     * DescriptorImpl for {@link ExportPackageBuilder}.
+     */
+    @Symbol("exportPackages")
+    @Extension(ordinal = 10005)
+    public static final class DescriptorImpl extends AbstractExportBuilder.DescriptorImpl {
+
+        /**
+         * Instantiates a new {@link DescriptorImpl}.
+         */
+        public DescriptorImpl() {
+            super(ExportPackageBuilder.class);
+            load();
+        }
+
+        /**
+         * Gets the applicable test exporters.
+         *
+         * @return the applicable test exporters
+         */
+        public List<Descriptor<? extends TMSConfig>> getApplicableExporters() {
+            final List<Descriptor<? extends TMSConfig>> list = new ArrayList<>();
+            final DescriptorExtensionList<TMSConfig, Descriptor<TMSConfig>> configs = ExportConfig.all();
+            if (configs != null) {
+                for (final Descriptor<TMSConfig> config : configs) {
+                    if (config.isSubTypeOf(ExportPackageConfig.class) ||
+                            config.isSubTypeOf(ExportPackageAttributeConfig.class)) {
+                        list.add(config);
+                    }
+                }
+            }
+            return list;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return Messages.ExportPackageBuilder_DisplayName();
+        }
+    }
+}

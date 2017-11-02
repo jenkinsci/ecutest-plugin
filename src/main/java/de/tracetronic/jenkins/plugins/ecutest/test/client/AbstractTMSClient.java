@@ -29,6 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
@@ -41,6 +42,7 @@ import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredenti
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
@@ -52,24 +54,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTMSClient {
-
-    /**
-     * Checks whether the test management module is available in current running ECU-TEST instance.
-     *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
-     * @return {@code true}, if TMS is available, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
-     */
-    public boolean isTMSAvailable(final Launcher launcher, final TaskListener listener) throws IOException,
-    InterruptedException {
-        return launcher.getChannel().call(new TMSAvailableCallable(listener));
-    }
 
     /**
      * Logs in to preconfigured test management service in ECU-TEST.
@@ -104,29 +88,62 @@ public abstract class AbstractTMSClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    public boolean logout(final Launcher launcher, final TaskListener listener) throws IOException,
-            InterruptedException {
+    public boolean logout(final Launcher launcher, final TaskListener listener)
+            throws IOException, InterruptedException {
         return launcher.getChannel().call(new LogoutTMSCallable(listener));
+    }
+
+    /**
+     * Checks the currently running ECU-TEST version for compatibility reasons and
+     * tests whether the test management module is available.
+     *
+     * @param minVersion
+     *            the minimum required ECU-TEST version
+     * @param workspace
+     *            the workspace
+     * @param launcher
+     *            the launcher
+     * @param listener
+     *            the listener
+     * @return {@code true} if compatible, {@code false} otherwise
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the build gets interrupted
+     */
+    protected boolean isCompatible(final ToolVersion minVersion, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws IOException, InterruptedException {
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        // Load JACOB library
+        if (!DllUtil.loadLibrary(workspace.toComputer())) {
+            logger.logError("Could not load JACOB library!");
+            return false;
+        }
+        return launcher.getChannel().call(new CompatibleTMSCallable(minVersion, listener));
     }
 
     /**
      * {@link Callable} providing remote access to determine whether the test management module is available in
      * ECU-TEST.
      */
-    private static final class TMSAvailableCallable extends MasterToSlaveCallable<Boolean, IOException> {
+    private static final class CompatibleTMSCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
         private final TaskListener listener;
+        private final ToolVersion minVersion;
 
         /**
-         * Instantiates a {@link TMSAvailableCallable}.
+         * Instantiates a {@link CompatibleTMSCallable}.
          *
+         * @param minVersion
+         *            the minimum required ECU-TEST version
          * @param listener
          *            the listener
          */
-        TMSAvailableCallable(final TaskListener listener) {
+        CompatibleTMSCallable(final ToolVersion minVersion, final TaskListener listener) {
             this.listener = listener;
+            this.minVersion = minVersion;
         }
 
         @Override
@@ -139,18 +156,17 @@ public abstract class AbstractTMSClient {
             try (ETComClient comClient = new ETComClient(progId)) {
                 final String comVersion = comClient.getVersion();
                 final ToolVersion comToolVersion = ToolVersion.parse(comVersion);
-                final ToolVersion minToolVersion = new ToolVersion(6, 5, 0, 0);
-                if (comToolVersion.compareTo(minToolVersion) < 0) {
+                if (comToolVersion.compareTo(minVersion) < 0) {
                     logger.logError(String.format(
-                            "The configured ECU-TEST version %s does not support the test management module. "
-                                    + "Please use at least ECU-TEST %s!", comVersion, minToolVersion));
+                            "The configured ECU-TEST version %s does not support this test management method. "
+                                    + "Please use at least ECU-TEST %s!", comVersion, minVersion.toMicroString()));
                 } else if (comClient.getTestManagement() != null) {
                     isAvailable = true;
                 }
             } catch (final ETComException e) {
                 logger.logError("The test management module is not available in running ECU-TEST instance! "
                         + "Enable it by setting the feature flag 'TEST-MANAGEMENT-SERVICE'.");
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e.getMessage());
             }
             return isAvailable;
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -94,15 +94,6 @@ public class ETLogPublisherST extends SystemTestBase {
         final SimpleBuildStep delegate = step.delegate;
         assertThat(delegate, instanceOf(ETLogPublisher.class));
 
-        final ETLogPublisher after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after,
-                "unstableOnWarning,failedOnError,testSpecific,allowMissing,runOnFailed,archiving,keepAll");
-    }
-
-    @Deprecated
-    @Test
-    public void testRoundTripConfig() throws Exception {
-        final ETLogPublisher before = new ETLogPublisher(false, false, false, false, false, true, true);
         final ETLogPublisher after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after,
                 "unstableOnWarning,failedOnError,testSpecific,allowMissing,runOnFailed,archiving,keepAll");

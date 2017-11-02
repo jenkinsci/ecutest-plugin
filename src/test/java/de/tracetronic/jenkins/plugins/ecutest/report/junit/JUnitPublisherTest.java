@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -63,20 +63,6 @@ public class JUnitPublisherTest {
         publisher.setRunOnFailed(false);
         publisher.setArchiving(true);
         publisher.setKeepAll(true);
-        assertPublisher(publisher);
-    }
-
-    @Deprecated
-    @Test
-    public void testDefault() {
-        final JUnitPublisher publisher = new JUnitPublisher("", 0, 0, false, false, true, true);
-        assertPublisher(publisher);
-    }
-
-    @Deprecated
-    @Test
-    public void testNull() {
-        final JUnitPublisher publisher = new JUnitPublisher(null, 0, 0, false, false, true, true);
         assertPublisher(publisher);
     }
 

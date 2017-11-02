@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -52,7 +52,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implements Serializable,
-        ExpandableConfig {
+ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 
@@ -143,12 +143,6 @@ public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implem
     private final JobExecutionMode jobExecMode;
 
     /**
-     * @deprecated since 1.2
-     */
-    @Deprecated
-    private transient int jobExecutionMode;
-
-    /**
      * Instantiates a new {@link ProjectConfig}.
      *
      * @param execInCurrentPkgDir
@@ -165,36 +159,6 @@ public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implem
         this.execInCurrentPkgDir = execInCurrentPkgDir;
         this.filterExpression = StringUtils.defaultIfBlank(filterExpression, "");
         this.jobExecMode = jobExecMode;
-    }
-
-    /**
-     * Instantiates a new {@link ProjectConfig}.
-     *
-     * @param execInCurrentPkgDir
-     *            specifies whether to search the references in the current package directory
-     * @param filterExpression
-     *            the filter expression to filter the package and project references
-     * @param jobExecutionMode
-     *            the analysis job execution mode
-     * @deprecated since 1.2, use {@link #ProjectConfig(boolean, String, JobExecutionMode)}
-     */
-    @Deprecated
-    public ProjectConfig(final boolean execInCurrentPkgDir, final String filterExpression,
-            final int jobExecutionMode) {
-        this(execInCurrentPkgDir, filterExpression, JobExecutionMode.fromValue(jobExecutionMode));
-    }
-
-    /**
-     * Convert legacy configuration into the new class structure.
-     *
-     * @return an instance of this class with all the new fields transferred from the old structure to the new one
-     */
-    public final Object readResolve() {
-        if (jobExecMode == null) {
-            return new ProjectConfig(execInCurrentPkgDir, filterExpression,
-                    JobExecutionMode.fromValue(jobExecutionMode));
-        }
-        return this;
     }
 
     /**
