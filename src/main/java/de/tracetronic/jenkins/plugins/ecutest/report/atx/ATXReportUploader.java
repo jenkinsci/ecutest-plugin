@@ -37,12 +37,19 @@ import hudson.model.Run;
 import hudson.remoting.Callable;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import jenkins.security.MasterToSlaveCallable;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
@@ -120,7 +127,6 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         }
 
         int index = 0;
-        // TODO: replace with getReportDirs()
         for (final FilePath reportDir : reportDirs) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(reportDir);
             if (reportFile != null && reportFile.exists()) {
@@ -130,8 +136,10 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 final String from = String.valueOf(run.getTimeInMillis());
                 final String to = from;
                 final String title = reportFile.getParent().getName();
-                final String testName = reportFile.getBaseName();// TODO: testEnvAction.getTestName();
-                final TestType testType = TestType.PROJECT;// TODO: testEnvAction.getTestType();
+                final TestInfoHolder testInfo = launcher.getChannel().call(
+                        new ParseTRFCallable(reportFile.getRemote()));
+                final String testName = testInfo.getTestName();
+                final TestType testType = testInfo.getTestType();
                 index = traverseReports(atxReports, reportDir, index, title, baseUrl, from, to,
                         testName, testType, projectId);
             } else {
@@ -470,6 +478,102 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 logger.logComException(e.getMessage());
             }
             return isUploaded;
+        }
+    }
+
+    /**
+     * {@link Callable} parsing the test name and type of a TRF remotely.
+     */
+    private static final class ParseTRFCallable extends MasterToSlaveCallable<TestInfoHolder, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final String trfFile;
+
+        /**
+         * Instantiates a new {@link ParseTRFCallable}.
+         *
+         * @param trfFile
+         *            the TRF file path
+         */
+        ParseTRFCallable(final String trfFile) {
+            this.trfFile = trfFile;
+        }
+
+        @Override
+        public TestInfoHolder call() throws IOException {
+            final String prjQuery = "SELECT name FROM prj";
+            final String prjName = queryTest(prjQuery);
+            if ("$$$_PACKAGE_$$$".equals(prjName)) {
+                final String pkgQuery = "SELECT name FROM pkg";
+                final String pkgName = queryTest(pkgQuery);
+                return new TestInfoHolder(pkgName, TestType.PACKAGE);
+            } else {
+                return new TestInfoHolder(prjName, TestType.PROJECT);
+            }
+        }
+
+        /**
+         * Queries the TRF as SQLite database with given request.
+         *
+         * @param query
+         *            the query statement
+         * @return the query result
+         * @throws IOException
+         *             ignals that an I/O exception has occurred
+         */
+        private String queryTest(final String query) throws IOException {
+            try {
+                Class.forName("org.sqlite.JDBC");
+            } catch (final ClassNotFoundException e) {
+                throw new IOException(e);
+            }
+            try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + trfFile);
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(query)) {
+                return rs.getString("name");
+            } catch (final SQLException e) {
+                throw new IOException(e);
+            }
+        }
+    }
+
+    /**
+     * Helper class storing information about the test name and type.
+     * Used as data model for {@link ParseTRFCallable}.
+     */
+    private static final class TestInfoHolder implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        private final String testName;
+        private final TestType testType;
+
+        /**
+         * Instantiates a new {@link TestInfoHolder}.
+         *
+         * @param testName
+         *            the test name
+         * @param testType
+         *            the test type
+         */
+        TestInfoHolder(final String testName, final TestType testType) {
+            this.testName = testName;
+            this.testType = testType;
+        }
+
+        /**
+         * @return the test name
+         */
+        public String getTestName() {
+            return testName;
+        }
+
+        /**
+         * @return the test type
+         */
+        public TestType getTestType() {
+            return testType;
         }
     }
 }

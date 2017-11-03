@@ -111,6 +111,9 @@
         <!-- ANTLR -->
         <antlr4-maven-plugin.version>4.7</antlr4-maven-plugin.version>
         <antlr4-runtime.version>4.7</antlr4-runtime.version>
+        
+        <!-- SQLite -->
+        <sqlite-jdbc.version>3.20.1</sqlite-jdbc.version>
     </properties>
 
     <repositories>
@@ -208,6 +211,11 @@
                     <artifactId>xpp3_min</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>${sqlite-jdbc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
