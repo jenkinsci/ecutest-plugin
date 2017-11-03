@@ -47,7 +47,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.PackageClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
@@ -118,20 +117,6 @@ public class TestPackageBuilder extends AbstractTestBuilder {
             return false;
         }
         return true;
-    }
-
-    /**
-     * Adds the build action holding test information by injecting environment variables.
-     *
-     * @param run
-     *            the run
-     * @param testClient
-     *            the package client
-     */
-    private void addBuildAction(final Run<?, ?> run, final PackageClient testClient) {
-        final int builderId = getTestId(run);
-        final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(builderId, testClient);
-        run.addAction(envAction);
     }
 
     /**

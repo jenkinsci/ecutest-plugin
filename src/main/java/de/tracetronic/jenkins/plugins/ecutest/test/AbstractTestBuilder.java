@@ -50,7 +50,9 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundSetter;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
+import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 import de.tracetronic.jenkins.plugins.ecutest.util.PathUtil;
@@ -256,6 +258,20 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     }
 
     /**
+     * Adds the build action holding test information by injecting environment variables.
+     *
+     * @param run
+     *            the run
+     * @param testClient
+     *            the test client
+     */
+    protected void addBuildAction(final Run<?, ?> run, final AbstractTestClient testClient) {
+        final int builderId = getTestId(run);
+        final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(builderId, testClient);
+        run.addAction(envAction);
+    }
+
+    /**
      * Run the test with given configurations within a defined timeout.
      *
      * @param testFile
@@ -280,7 +296,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
      */
     protected abstract boolean runTest(String testFile, TestConfig testConfig, ExecutionConfig executionConfig,
             Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
-            throws IOException, InterruptedException;
+                    throws IOException, InterruptedException;
 
     @Override
     public BuildStepMonitor getRequiredMonitorService() {

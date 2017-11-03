@@ -51,9 +51,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.PackageClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.ProjectClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
@@ -258,20 +256,6 @@ public class TestFolderBuilder extends AbstractTestBuilder {
         }
 
         return true;
-    }
-
-    /**
-     * Adds the build action holding test information by injecting environment variables.
-     *
-     * @param run
-     *            the run
-     * @param testClient
-     *            the test client
-     */
-    private void addBuildAction(final Run<?, ?> run, final AbstractTestClient testClient) {
-        final int builderId = getTestId(run);
-        final TestEnvInvisibleAction envAction = new TestEnvInvisibleAction(builderId, testClient);
-        run.addAction(envAction);
     }
 
     /**
