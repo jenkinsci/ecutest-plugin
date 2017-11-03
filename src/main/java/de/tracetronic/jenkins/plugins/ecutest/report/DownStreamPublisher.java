@@ -54,11 +54,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.report.tms.TMSPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 
 /**
  * Class holding the downstream configuration.
@@ -135,7 +130,7 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
     /**
      * DescriptorImpl for {@link DownStreamPublisher}.
      */
-    @Symbol("downstreamReportGen")
+    @Symbol("downstreamPublisher")
     @Extension(ordinal = 999)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
@@ -144,17 +139,13 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
          *
          * @return the applicable publishers
          */
-        @SuppressWarnings("checkstyle:booleanexpressioncomplexity")
         public List<Descriptor<? extends Publisher>> getApplicablePublishers() {
             final List<Descriptor<? extends Publisher>> list = new ArrayList<>();
             final DescriptorExtensionList<Publisher, Descriptor<Publisher>> publishers = AbstractReportPublisher.all();
             if (publishers != null) {
                 for (final Descriptor<Publisher> publisher : publishers) {
-                    if (publisher instanceof ATXPublisher.DescriptorImpl
-                            || publisher instanceof ReportGeneratorPublisher.DescriptorImpl
-                            || publisher instanceof JUnitPublisher.DescriptorImpl
-                            || publisher instanceof TMSPublisher.DescriptorImpl
-                            || publisher instanceof TRFPublisher.DescriptorImpl) {
+                    if (publisher instanceof AbstractReportDescriptor &&
+                            !(publisher instanceof DownStreamPublisher.DescriptorImpl)) {
                         list.add(publisher);
                     }
                 }
