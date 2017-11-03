@@ -51,8 +51,6 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
-import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
-import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction.TestType;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
@@ -192,7 +190,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
                     }
                 }
             } else {
-                final List<FilePath> logFiles = getLogFiles(run, workspace, launcher);
+                final List<FilePath> logFiles = getCompleteLogFiles(run, workspace, launcher);
                 for (final FilePath logFile : logFiles) {
                     final FilePath targetFile = archiveTarget.child(logFile.getName());
                     try {
@@ -348,7 +346,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
      */
     private int traverseSubReports(final ETLogReport logReport, final FilePath testReportDir,
             final FilePath subTestReportDir, int id)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
             FilePath logFile = subDir.child(ERROR_LOG_NAME);
             if (logFile.exists()) {
@@ -420,32 +418,6 @@ public class ETLogPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Builds a list of ECU-TEST log files for archiving, either all test-specific logs or the complete logs.
-     *
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @return the list of log files
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
-     */
-    private List<FilePath> getLogFiles(final Run<?, ?> run, final FilePath workspace, final Launcher launcher)
-            throws IOException, InterruptedException {
-        final List<FilePath> archiveFiles = new ArrayList<FilePath>();
-        if (isTestSpecific()) {
-            archiveFiles.addAll(getTestSpecificLogFiles(run, launcher));
-        } else {
-            archiveFiles.addAll(getCompleteLogFiles(run, workspace, launcher));
-        }
-        return archiveFiles;
-    }
-
-    /**
      * Builds a list of the entire ECU-TEST log files for archiving.
      *
      * @param run
@@ -462,10 +434,12 @@ public class ETLogPublisher extends AbstractReportPublisher {
      */
     private List<FilePath> getCompleteLogFiles(final Run<?, ?> run, final FilePath workspace, final Launcher launcher)
             throws IOException, InterruptedException {
-        final List<FilePath> archiveFiles = new ArrayList<FilePath>();
+        final List<FilePath> logFiles = new ArrayList<FilePath>();
         FilePath workspacePath;
         final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
-        if (toolEnvAction != null) {
+        if (isDownstream()) {
+            workspacePath = workspace.child(getWorkspace());
+        } else if (toolEnvAction != null) {
             workspacePath = new FilePath(launcher.getChannel(), toolEnvAction.getToolSettings());
         } else {
             workspacePath = workspace;
@@ -473,48 +447,11 @@ public class ETLogPublisher extends AbstractReportPublisher {
         if (workspacePath != null && workspacePath.exists()) {
             final String includes = String.format("%s,%s", INFO_LOG_NAME, ERROR_LOG_NAME);
             for (final String includeFile : workspacePath.act(new ListFilesCallable(includes, ""))) {
-                final FilePath archiveFile = new FilePath(launcher.getChannel(), includeFile);
-                archiveFiles.add(archiveFile);
+                final FilePath logFile = new FilePath(launcher.getChannel(), includeFile);
+                logFiles.add(logFile);
             }
         }
-        return archiveFiles;
-    }
-
-    /**
-     * Builds a list of all test-specific ECU-TEST log files for archiving.
-     *
-     * @param run
-     *            the run
-     * @param launcher
-     *            the launcher
-     * @return the list of log files
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
-     */
-    private List<FilePath> getTestSpecificLogFiles(final Run<?, ?> run, final Launcher launcher)
-            throws IOException, InterruptedException {
-        final List<FilePath> archiveFiles = new ArrayList<FilePath>();
-        // TODO: replace with getReportDirs()
-        final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
-        for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-            final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-            if (testReportDir.exists()) {
-                String includes;
-                if (testEnvAction.getTestType() == TestType.PACKAGE) {
-                    includes = String.format("%s/%s,%s/%s", testEnvAction.getTestName(), INFO_LOG_NAME,
-                            testEnvAction.getTestName(), ERROR_LOG_NAME);
-                } else {
-                    includes = String.format("%s,%s", INFO_LOG_NAME, ERROR_LOG_NAME);
-                }
-                for (final String includeFile : testReportDir.act(new ListFilesCallable(includes, ""))) {
-                    final FilePath archiveFile = new FilePath(launcher.getChannel(), includeFile);
-                    archiveFiles.add(archiveFile);
-                }
-            }
-        }
-        return archiveFiles;
+        return logFiles;
     }
 
     /**
@@ -542,7 +479,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
 
         @Override
         public List<String> invoke(final File baseDir, final VirtualChannel channel) throws IOException,
-                InterruptedException {
+        InterruptedException {
             final List<String> files = new ArrayList<String>();
             for (final String includedFile : Util.createFileSet(baseDir, includes, excludes)
                     .getDirectoryScanner().getIncludedFiles()) {
