@@ -70,15 +70,12 @@
 						<DVALUE xsi:type="unicode">Authentifizierungsschlüssel für den Upload
 							zum Server (nur bei aktivierter Authentifizierung notwendig).
 							Kann im TEST-GUIDE unter dem Benutzerprofil abgerufen werden.
-							Wird kein Schlüssel hinterlegt wird der Guest-Benutzer
-							automatisch verwendet.
 						</DVALUE>
 					</ELEMENT>
 					<ELEMENT dkey="en_US">
 						<DVALUE xsi:type="unicode">Authentication key for upload to the
 							server (only by activated authentication required). Can be found
-							under the user profile in the TEST GUIDE. If no key is set the
-							Guest user is automatically used.</DVALUE>
+							under the user profile in the TEST GUIDE.</DVALUE>
 					</ELEMENT>
 				</MULTILANGDATA>
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
