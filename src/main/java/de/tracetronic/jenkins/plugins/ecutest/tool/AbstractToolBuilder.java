@@ -117,10 +117,6 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     @Override
     public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException {
-        // FIXME: workaround because pipeline node allocation does not create the actual workspace directory
-        if (!workspace.exists()) {
-            workspace.mkdirs();
-        }
 
         try {
             ProcessUtil.checkOS(launcher);

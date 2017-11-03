@@ -190,7 +190,8 @@ public class ATXPublisher extends AbstractReportPublisher {
      *             if the build gets interrupted
      */
     private boolean publishReports(final ATXInstallation installation, final Run<?, ?> run, final FilePath workspace,
-            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
         final boolean isUploadEnabled = isUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, launcher, run.getEnvironment(listener));
