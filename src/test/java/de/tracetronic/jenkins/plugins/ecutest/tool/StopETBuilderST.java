@@ -151,7 +151,7 @@ public class StopETBuilderST extends SystemTestBase {
     @Test
     public void testPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'StopETBuilder', toolName: 'ECU-TEST', timeout: '120'])\n"
                 + "}";
         assertPipelineStep(script);
@@ -160,7 +160,7 @@ public class StopETBuilderST extends SystemTestBase {
     @Test
     public void testDefaultPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'StopETBuilder', toolName: 'ECU-TEST'])\n"
                 + "}";
         assertPipelineStep(script);
@@ -168,10 +168,8 @@ public class StopETBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  stopET toolName: 'ECU-TEST', timeout: '120'\n"
                 + "}";
         assertPipelineStep(script);
@@ -179,10 +177,8 @@ public class StopETBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedDefaultPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  stopET toolName: 'ECU-TEST'\n"
                 + "}";
         assertPipelineStep(script);
@@ -206,7 +202,7 @@ public class StopETBuilderST extends SystemTestBase {
                     .write();
         }
 
-        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
+        final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));

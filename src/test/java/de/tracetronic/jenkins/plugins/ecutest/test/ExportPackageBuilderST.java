@@ -145,7 +145,7 @@ public class ExportPackageBuilderST extends SystemTestBase {
     @Test
     public void testExportPackagePipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ExportPackageBuilder', "
                 + "        exportConfigs: [[$class: 'ExportPackageConfig', filePath: 'test.pkg',"
                 + "        exportPath: 'export', createNewPath: false,"
@@ -157,7 +157,7 @@ public class ExportPackageBuilderST extends SystemTestBase {
     @Test
     public void testDefaultExportPackagePipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ExportPackageBuilder', "
                 + "        exportConfigs: [[$class: 'ExportPackageConfig', filePath: 'test.pkg']]])\n"
                 + "}";
@@ -166,10 +166,8 @@ public class ExportPackageBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedExportPackagePipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  exportPackages "
                 + "     exportConfigs: [[$class: 'ExportPackageConfig', filePath: 'test.pkg',"
                 + "        exportPath: 'export', createNewPath: false, "
@@ -180,10 +178,8 @@ public class ExportPackageBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedDefaultExportPackagePipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  exportPackages "
                 + "     exportConfigs: [[$class: 'ExportPackageConfig', filePath: 'test.pkg']]\n"
                 + "}";
@@ -193,7 +189,7 @@ public class ExportPackageBuilderST extends SystemTestBase {
     @Test
     public void testExportPackageAttributePipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ExportPackageBuilder', "
                 + "        exportConfigs: [[$class: 'ExportPackageAttributeConfig', filePath: 'test.pkg',"
                 + "        credentialsId: 'credentialsId', timeout: '600']]])\n"
@@ -204,7 +200,7 @@ public class ExportPackageBuilderST extends SystemTestBase {
     @Test
     public void testDefaultExportPackageAttributePipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ExportPackageBuilder', "
                 + "        exportConfigs: [[$class: 'ExportPackageAttributeConfig', filePath: 'test.pkg']]])\n"
                 + "}";
@@ -213,10 +209,8 @@ public class ExportPackageBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedExportPackageAttributePipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  exportPackages "
                 + "     exportConfigs: [[$class: 'ExportPackageAttributeConfig', filePath: 'test.pkg',"
                 + "        credentialsId: 'credentialsId', timeout: '600']]\n"
@@ -226,10 +220,8 @@ public class ExportPackageBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedDefaultExportPackageAttributePipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  exportPackages "
                 + "     exportConfigs: [[$class: 'ExportPackageAttributeConfig', filePath: 'test.pkg']]\n"
                 + "}";
@@ -247,7 +239,7 @@ public class ExportPackageBuilderST extends SystemTestBase {
     private void assertPipelineStep(final String script) throws Exception {
         assumeWindowsSlave();
 
-        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
+        final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());

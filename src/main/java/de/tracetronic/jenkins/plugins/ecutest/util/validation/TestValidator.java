@@ -238,6 +238,7 @@ public class TestValidator extends AbstractValidator {
         /**
          * Validates the expression by checking lexical and parser errors.
          */
+        @SuppressWarnings("deprecation")
         public void validate() {
             isValid = true;
 

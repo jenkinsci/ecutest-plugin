@@ -195,63 +195,40 @@ public class TMSPublisherST extends SystemTestBase {
 
     @Test
     public void testPipelineStep() throws Exception {
-        final String script = ""
-                + "node('slaves') {\n"
-                + "  step([$class: 'TMSPublisher', toolName: 'ECU-TEST',"
-                + "        credentialsId: 'credentialsId', timeout: '600',"
-                + "        allowMissing: true, runOnFailed: true])\n"
-                + "}";
-        assertPipelineStep(script, false);
+        assertPipelineStep("classicStep.groovy", false);
     }
 
     @Test
     public void testDefaultPipelineStep() throws Exception {
-        final String script = ""
-                + "node('slaves') {\n"
-                + "  step([$class: 'TMSPublisher', toolName: 'ECU-TEST', credentialsId: 'credentialsId'])\n"
-                + "}";
-        assertPipelineStep(script, true);
+        assertPipelineStep("classicDefaultStep.groovy", true);
     }
 
     @Test
     public void testSymbolAnnotatedPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
-        final String script = ""
-                + "node('slaves') {\n"
-                + "  publishTMS toolName: 'ECU-TEST',"
-                + "  credentialsId: 'credentialsId', timeout: '600',"
-                + "  allowMissing: true, runOnFailed: true\n"
-                + "}";
-        assertPipelineStep(script, false);
+        assertPipelineStep("symbolStep.groovy", false);
     }
 
     @Test
     public void testSymbolAnnotatedDefaultPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
-        final String script = ""
-                + "node('slaves') {\n"
-                + "  publishTMS toolName: 'ECU-TEST', credentialsId: 'credentialsId'\n"
-                + "}";
-        assertPipelineStep(script, true);
+        assertPipelineStep("symbolDefaultStep.groovy", true);
     }
 
     /**
      * Asserts the pipeline step execution.
      *
-     * @param script
-     *            the script
+     * @param scriptName
+     *            the script name
      * @param emptyResults
      *            if results are expected
      * @throws Exception
      *             the exception
      */
-    private void assertPipelineStep(final String script, final boolean emptyResults) throws Exception {
+    private void assertPipelineStep(final String scriptName, final boolean emptyResults) throws Exception {
         assumeWindowsSlave();
 
-        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
-        job.setDefinition(new CpsFlowDefinition(script, true));
+        final String script = loadPipelineScript(scriptName);
+        final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
+        job.setDefinition(new CpsFlowDefinition(script));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
         jenkins.assertLogContains("Publishing reports to test management system...", run);
@@ -260,5 +237,16 @@ public class TMSPublisherST extends SystemTestBase {
         } else {
             jenkins.assertLogContains("Empty test results are not allowed, setting build status to FAILURE!", run);
         }
+    }
+
+    /**
+     * Loads given pipeline script from test resources.
+     *
+     * @param name
+     *            the file name
+     * @return the pipeline content
+     */
+    private String loadPipelineScript(final String name) {
+        return loadPipelineScript(name, this.getClass());
     }
 }

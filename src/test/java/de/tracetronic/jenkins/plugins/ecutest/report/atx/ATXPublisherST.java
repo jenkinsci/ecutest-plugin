@@ -258,64 +258,52 @@ public class ATXPublisherST extends SystemTestBase {
 
     @Test
     public void testPipelineStep() throws Exception {
-        final String script = ""
-                + "node('slaves') {\n"
-                + "  step([$class: 'ATXPublisher', atxName: 'TEST-GUIDE',"
-                + "        allowMissing: true, runOnFailed: true,"
-                + "        archiving: false, keepAll: false])\n"
-                + "}";
-        assertPipelineStep(script);
+        assertPipelineStep("classicStep.groovy");
     }
 
     @Test
     public void testDefaultPipelineStep() throws Exception {
-        final String script = ""
-                + "node('slaves') {\n"
-                + "  step([$class: 'ATXPublisher', atxName: 'TEST-GUIDE'])\n"
-                + "}";
-        assertPipelineStep(script);
+        assertPipelineStep("classicDefaultStep.groovy");
     }
 
     @Test
     public void testSymbolAnnotatedPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
-        final String script = ""
-                + "node('slaves') {\n"
-                + "  publishATX atxName: 'TEST-GUIDE',"
-                + "  allowMissing: true, runOnFailed: true,"
-                + "  archiving: false, keepAll: false\n"
-                + "}";
-        assertPipelineStep(script);
+        assertPipelineStep("symbolStep.groovy");
     }
 
     @Test
     public void testSymbolAnnotatedDefaultPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
-        final String script = ""
-                + "node('slaves') {\n"
-                + "  publishATX atxName: 'TEST-GUIDE'\n"
-                + "}";
-        assertPipelineStep(script);
+        assertPipelineStep("symbolDefaultStep.groovy");
     }
 
     /**
      * Asserts the pipeline step execution.
      *
-     * @param script
-     *            the script
+     * @param scriptName
+     *            the script name
      * @throws Exception
      *             the exception
      */
-    private void assertPipelineStep(final String script) throws Exception {
+    private void assertPipelineStep(final String scriptName) throws Exception {
         assumeWindowsSlave();
 
-        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
-        job.setDefinition(new CpsFlowDefinition(script, true));
+        final String script = loadPipelineScript(scriptName);
+        final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
+        job.setDefinition(new CpsFlowDefinition(script));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
         jenkins.assertLogContains("Publishing ATX reports...", run);
         jenkins.assertLogContains("Starting ECU-TEST failed.", run);
+    }
+
+    /**
+     * Loads given pipeline script from test resources.
+     *
+     * @param name
+     *            the file name
+     * @return the pipeline content
+     */
+    private String loadPipelineScript(final String name) {
+        return loadPipelineScript(name, this.getClass());
     }
 }

@@ -94,7 +94,7 @@ public class TRFPublisher extends AbstractReportPublisher {
         super();
     }
 
-    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
+    @SuppressWarnings({ "checkstyle:cyclomaticcomplexity", "checkstyle:npathcomplexity" })
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException {

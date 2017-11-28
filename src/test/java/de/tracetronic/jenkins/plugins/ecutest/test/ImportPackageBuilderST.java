@@ -172,7 +172,7 @@ public class ImportPackageBuilderST extends SystemTestBase {
     @Test
     public void testPackagePipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ImportPackageBuilder', "
                 + "        importConfigs: [[$class: 'ImportPackageConfig', tmsPath: 'package',"
                 + "        importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]])\n"
@@ -183,7 +183,7 @@ public class ImportPackageBuilderST extends SystemTestBase {
     @Test
     public void testDefaultPackagePipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ImportPackageBuilder', "
                 + "        importConfigs: [[$class: 'ImportPackageConfig', tmsPath: 'package']]])\n"
                 + "}";
@@ -192,10 +192,8 @@ public class ImportPackageBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedPackagePipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  importPackages "
                 + "     importConfigs: [[$class: 'ImportPackageConfig', tmsPath: 'package',"
                 + "        importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]\n"
@@ -205,10 +203,8 @@ public class ImportPackageBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedDefaultPackagePipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  importPackages "
                 + "     importConfigs: [[$class: 'ImportPackageConfig', tmsPath: 'package']]\n"
                 + "}";
@@ -218,7 +214,7 @@ public class ImportPackageBuilderST extends SystemTestBase {
     @Test
     public void testPackageDirPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ImportPackageBuilder', "
                 + "        importConfigs: [[$class: 'ImportPackageDirConfig', tmsPath: 'packageDir',"
                 + "        importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]])\n"
@@ -229,7 +225,7 @@ public class ImportPackageBuilderST extends SystemTestBase {
     @Test
     public void testDefaultPackageDirPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ImportPackageBuilder', "
                 + "        importConfigs: [[$class: 'ImportPackageDirConfig', tmsPath: 'packageDir']]])\n"
                 + "}";
@@ -238,12 +234,10 @@ public class ImportPackageBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedPackageDirPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  importPackages "
-                + "     importConfigs: [[$class: 'ImportPackageDirConfig', tmsPath: tmsPath: 'packageDir',"
+                + "     importConfigs: [[$class: 'ImportPackageDirConfig', tmsPath: 'packageDir',"
                 + "        importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]\n"
                 + "}";
         assertPipelineStep(script);
@@ -251,10 +245,8 @@ public class ImportPackageBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedDefaultPackageDirPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  importPackages "
                 + "     importConfigs: [[$class: 'ImportPackageDirConfig', tmsPath: 'packageDir']]\n"
                 + "}";
@@ -264,7 +256,7 @@ public class ImportPackageBuilderST extends SystemTestBase {
     @Test
     public void testPackageAttributePipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ImportPackageBuilder', "
                 + "        importConfigs: [[$class: 'ImportPackageAttributeConfig', filePath: 'test.pkg',"
                 + "        credentialsId: 'credentialsId', timeout: '600']]])\n"
@@ -275,7 +267,7 @@ public class ImportPackageBuilderST extends SystemTestBase {
     @Test
     public void testDefaultPackageAttributePipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ImportPackageBuilder', "
                 + "        importConfigs: [[$class: 'ImportPackageAttributeConfig', filePath: 'test.pkg']]])\n"
                 + "}";
@@ -284,10 +276,8 @@ public class ImportPackageBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedPackageAttributePipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  importPackages "
                 + "     importConfigs: [[$class: 'ImportPackageAttributeConfig', filePath: 'test.pkg',"
                 + "        credentialsId: 'credentialsId', timeout: '600']]\n"
@@ -297,10 +287,8 @@ public class ImportPackageBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedDefaultPackageAttributePipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  importPackages "
                 + "     importConfigs: [[$class: 'ImportPackageAttributeConfig', filePath: 'test.pkg']]\n"
                 + "}";
@@ -318,7 +306,7 @@ public class ImportPackageBuilderST extends SystemTestBase {
     private void assertPipelineStep(final String script) throws Exception {
         assumeWindowsSlave();
 
-        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
+        final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());

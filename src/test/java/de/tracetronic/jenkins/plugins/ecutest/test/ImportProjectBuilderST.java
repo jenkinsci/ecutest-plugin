@@ -200,7 +200,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     @Test
     public void testArchivePipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
                 + "        importConfigs: [[$class: 'ImportProjectArchiveConfig', tmsPath: 'test.prz',"
                 + "        importPath: 'import', importConfigPath: 'import', replaceFiles: true]]])\n"
@@ -211,7 +211,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     @Test
     public void testDefaultArchivePipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
                 + "        importConfigs: [[$class: 'ImportProjectArchiveConfig', tmsPath: 'test.prz']]])\n"
                 + "}";
@@ -220,10 +220,8 @@ public class ImportProjectBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedArchivePipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  importProjects "
                 + "     importConfigs: [[$class: 'ImportProjectArchiveConfig', tmsPath: 'test.prz',"
                 + "        importPath: 'import', importConfigPath: 'import', replaceFiles: true]]\n"
@@ -233,10 +231,8 @@ public class ImportProjectBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedDefaultArchivePipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  importProjects "
                 + "     importConfigs: [[$class: 'ImportProjectArchiveConfig', tmsPath: 'test.prz']]\n"
                 + "}";
@@ -246,7 +242,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     @Test
     public void testProjectPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
                 + "        importConfigs: [[$class: 'ImportProjectConfig', tmsPath: 'project',"
                 + "        importPath: 'import', importMissingPackages: false,"
@@ -258,7 +254,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     @Test
     public void testDefaultProjectPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
                 + "        importConfigs: [[$class: 'ImportProjectConfig', tmsPath: 'project']]])\n"
                 + "}";
@@ -267,10 +263,8 @@ public class ImportProjectBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedProjectPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  importProjects "
                 + "     importConfigs: [[$class: 'ImportProjectConfig', tmsPath: 'project',"
                 + "        importPath: 'import', importMissingPackages: false, "
@@ -281,10 +275,8 @@ public class ImportProjectBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedDefaultProjectPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  importProjects "
                 + "     importConfigs: [[$class: 'ImportProjectConfig', tmsPath: 'project']]\n"
                 + "}";
@@ -294,7 +286,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     @Test
     public void testProjectDirPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
                 + "        importConfigs: [[$class: 'ImportProjectDirConfig', tmsPath: 'projectDir',"
                 + "        importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]])\n"
@@ -305,7 +297,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     @Test
     public void testDefaultProjectDirPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
                 + "        importConfigs: [[$class: 'ImportProjectDirConfig', tmsPath: 'projectDir']]])\n"
                 + "}";
@@ -314,25 +306,20 @@ public class ImportProjectBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedProjectDirPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  importProjects "
-                + "     importConfigs: [[$class: 'ImportProjectDirConfig', tmsPath: tmsPath: 'projectDir',"
-                + "        importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]\n"
+                + "    importConfigs: [[$class: 'ImportProjectDirConfig', tmsPath: 'projectDir', importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]\n"
                 + "}";
         assertPipelineStep(script);
     }
 
     @Test
     public void testSymbolAnnotatedDefaultProjectDirPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  importProjects "
-                + "     importConfigs: [[$class: 'ImportProjectDirConfig', tmsPath: 'projectDir']]\n"
+                + "    importConfigs: [[$class: 'ImportProjectDirConfig', tmsPath: 'projectDir']]\n"
                 + "}";
         assertPipelineStep(script);
     }
@@ -340,7 +327,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     @Test
     public void testProjectAttributePipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
                 + "        importConfigs: [[$class: 'ImportProjectAttributeConfig', filePath: 'test.prj',"
                 + "        credentialsId: 'credentialsId', timeout: '600']]])\n"
@@ -351,7 +338,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     @Test
     public void testDefaultProjectAttributePipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ImportProjectBuilder', "
                 + "        importConfigs: [[$class: 'ImportProjectAttributeConfig', filePath: 'test.prj']]])\n"
                 + "}";
@@ -360,10 +347,8 @@ public class ImportProjectBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedProjectAttributePipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  importProjects "
                 + "     importConfigs: [[$class: 'ImportProjectAttributeConfig', filePath: 'test.prj',"
                 + "        credentialsId: 'credentialsId', timeout: '600']]\n"
@@ -373,10 +358,8 @@ public class ImportProjectBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedDefaultProjectAttributePipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  importProjects "
                 + "     importConfigs: [[$class: 'ImportProjectAttributeConfig', filePath: 'test.prj']]\n"
                 + "}";
@@ -394,7 +377,7 @@ public class ImportProjectBuilderST extends SystemTestBase {
     private void assertPipelineStep(final String script) throws Exception {
         assumeWindowsSlave();
 
-        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
+        final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());

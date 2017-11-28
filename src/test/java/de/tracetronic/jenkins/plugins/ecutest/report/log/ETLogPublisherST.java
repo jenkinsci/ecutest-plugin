@@ -188,63 +188,40 @@ public class ETLogPublisherST extends SystemTestBase {
 
     @Test
     public void testPipelineStep() throws Exception {
-        final String script = ""
-                + "node('slaves') {\n"
-                + "  step([$class: 'ETLogPublisher',"
-                + "        testSpecific: true, unstableOnWarning: true, failedOnError: true,"
-                + "        allowMissing: true, runOnFailed: true, archiving: false, keepAll: false])\n"
-                + "}";
-        assertPipelineStep(script, true);
+        assertPipelineStep("classicStep.groovy", true);
     }
 
     @Test
     public void testDefaultPipelineStep() throws Exception {
-        final String script = ""
-                + "node('slaves') {\n"
-                + "  step([$class: 'ETLogPublisher'])\n"
-                + "}";
-        assertPipelineStep(script, false);
+        assertPipelineStep("classicDefaultStep.groovy", false);
     }
 
     @Test
     public void testSymbolAnnotatedPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
-        final String script = ""
-                + "node('slaves') {\n"
-                + "  publishETLogs "
-                + "  testSpecific: true, unstableOnWarning: true, failedOnError: true,"
-                + "  allowMissing: true, runOnFailed: true, archiving: false, keepAll: false\n"
-                + "}";
-        assertPipelineStep(script, true);
+        assertPipelineStep("symbolStep.groovy", true);
     }
 
     @Test
     public void testSymbolAnnotatedDefaultPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
-        final String script = ""
-                + "node('slaves') {\n"
-                + "  publishETLogs\n"
-                + "}";
-        assertPipelineStep(script, false);
+        assertPipelineStep("symbolDefaultStep.groovy", false);
     }
 
     /**
      * Asserts the pipeline step execution.
      *
-     * @param script
-     *            the script
+     * @param scriptName
+     *            the script name
      * @param status
      *            the expected build status
      * @throws Exception
      *             the exception
      */
-    private void assertPipelineStep(final String script, final boolean status) throws Exception {
+    private void assertPipelineStep(final String scriptName, final boolean status) throws Exception {
         assumeWindowsSlave();
 
-        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
-        job.setDefinition(new CpsFlowDefinition(script, true));
+        final String script = loadPipelineScript(scriptName);
+        final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
+        job.setDefinition(new CpsFlowDefinition(script));
 
         if (status == true) {
             final WorkflowRun run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
@@ -255,5 +232,16 @@ public class ETLogPublisherST extends SystemTestBase {
             jenkins.assertLogContains("Publishing ECU-TEST logs...", run);
             jenkins.assertLogContains("Empty log results are not allowed, setting build status to FAILURE!", run);
         }
+    }
+
+    /**
+     * Loads given pipeline script from test resources.
+     *
+     * @param name
+     *            the file name
+     * @return the pipeline content
+     */
+    private String loadPipelineScript(final String name) {
+        return loadPipelineScript(name, this.getClass());
     }
 }

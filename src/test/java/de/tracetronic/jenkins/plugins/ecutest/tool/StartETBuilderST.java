@@ -164,7 +164,7 @@ public class StartETBuilderST extends SystemTestBase {
     @Test
     public void testPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'StartETBuilder', toolName: 'ECU-TEST',"
                 + "        workspaceDir: '', settingsDir: 'settings',"
                 + "        timeout: '60', debugMode: true, keepInstance: true])\n"
@@ -175,7 +175,7 @@ public class StartETBuilderST extends SystemTestBase {
     @Test
     public void testDefaultPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'StartETBuilder', toolName: 'ECU-TEST'])\n"
                 + "}";
         assertPipelineStep(script);
@@ -183,10 +183,8 @@ public class StartETBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  startET toolName: 'ECU-TEST',"
                 + "  workspaceDir: '', settingsDir: 'settings',"
                 + "  timeout: '60', debugMode: true, keepInstance: true\n"
@@ -196,10 +194,8 @@ public class StartETBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedDefaultPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  startET toolName: 'ECU-TEST'\n"
                 + "}";
         assertPipelineStep(script);
@@ -216,7 +212,7 @@ public class StartETBuilderST extends SystemTestBase {
     private void assertPipelineStep(final String script) throws Exception {
         assumeWindowsSlave();
 
-        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
+        final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());

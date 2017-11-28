@@ -89,10 +89,6 @@ public class TestPackageBuilderST extends SystemTestBase {
         final SimpleBuildStep delegate = step.delegate;
         assertThat(delegate, instanceOf(TestPackageBuilder.class));
 
-        // Need to flip keepConfig property due to inverted UI behavior
-        final TestConfig testConfig2 = new TestConfig("test.tbc", "test.tcf", true, true, true, null);
-        before.setTestConfig(testConfig2);
-
         final TestPackageBuilder after = (TestPackageBuilder) delegate;
         jenkins.assertEqualBeans(before, after, "testFile,testConfig,packageConfig,executionConfig");
     }
@@ -142,7 +138,7 @@ public class TestPackageBuilderST extends SystemTestBase {
     @Test
     public void testPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'TestPackageBuilder',"
                 + "        testFile: 'test.pkg',"
                 + "        testConfig: [constants: [], forceReload: true, loadOnly: true, tbcFile: 'test.tbc', tcfFile: 'test.tcf'],"
@@ -155,7 +151,7 @@ public class TestPackageBuilderST extends SystemTestBase {
     @Test
     public void testDefaultPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'TestPackageBuilder', testFile: 'test.pkg'])\n"
                 + "}";
         assertPipelineStep(script);
@@ -163,10 +159,8 @@ public class TestPackageBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  testPackage "
                 + "        testFile: 'test.pkg',"
                 + "        testConfig: [constants: [], forceReload: true, loadOnly: true, tbcFile: 'test.tbc', tcfFile: 'test.tcf'],"
@@ -178,10 +172,8 @@ public class TestPackageBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedDefaultPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  testPackage testFile: 'test.pkg'\n"
                 + "}";
         assertPipelineStep(script);
@@ -198,7 +190,7 @@ public class TestPackageBuilderST extends SystemTestBase {
     private void assertPipelineStep(final String script) throws Exception {
         assumeWindowsSlave();
 
-        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
+        final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());

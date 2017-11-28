@@ -87,5 +87,9 @@ public class ToolEnvContributorST extends SystemTestBase {
                 envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_TIMEOUT + toolId));
         assertEquals("TT_TOOL_DEBUG_0 should match env action", toolEnvAction.isDebug() ? "true" : "false",
                 envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_DEBUG + toolId));
+        assertEquals("TT_TOOL_LAST_TBC_0 should match env action", String.valueOf(toolEnvAction.getLastTbc()),
+                envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_LAST_TBC + toolId));
+        assertEquals("TT_TOOL_LAST_TCF_0 should match env action", String.valueOf(toolEnvAction.getLastTcf()),
+                envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_LAST_TCF + toolId));
     }
 }

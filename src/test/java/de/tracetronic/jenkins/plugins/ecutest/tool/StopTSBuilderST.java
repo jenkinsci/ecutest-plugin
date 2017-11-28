@@ -29,7 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool;
 
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -149,7 +149,7 @@ public class StopTSBuilderST extends SystemTestBase {
     @Test
     public void testPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'StopTSBuilder', toolName: 'ECU-TEST', timeout: '120'])\n"
                 + "}";
         assertPipelineStep(script);
@@ -158,7 +158,7 @@ public class StopTSBuilderST extends SystemTestBase {
     @Test
     public void testDefaultPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'StopTSBuilder', toolName: 'ECU-TEST'])\n"
                 + "}";
         assertPipelineStep(script);
@@ -166,10 +166,8 @@ public class StopTSBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  stopTS toolName: 'ECU-TEST', timeout: '120'\n"
                 + "}";
         assertPipelineStep(script);
@@ -177,10 +175,8 @@ public class StopTSBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedDefaultPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  stopTS toolName: 'ECU-TEST'\n"
                 + "}";
         assertPipelineStep(script);
@@ -197,7 +193,7 @@ public class StopTSBuilderST extends SystemTestBase {
     private void assertPipelineStep(final String script) throws Exception {
         assumeWindowsSlave();
 
-        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
+        final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));

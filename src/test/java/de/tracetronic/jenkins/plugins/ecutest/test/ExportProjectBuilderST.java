@@ -145,7 +145,7 @@ public class ExportProjectBuilderST extends SystemTestBase {
     @Test
     public void testProjectPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ExportProjectBuilder', "
                 + "        exportConfigs: [[$class: 'ExportProjectConfig', filePath: 'test.prj',"
                 + "        exportPath: 'export', createNewPath: false,"
@@ -157,7 +157,7 @@ public class ExportProjectBuilderST extends SystemTestBase {
     @Test
     public void testDefaultProjectPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ExportProjectBuilder', "
                 + "        exportConfigs: [[$class: 'ExportProjectConfig', filePath: 'test.prj']]])\n"
                 + "}";
@@ -166,10 +166,8 @@ public class ExportProjectBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedProjectPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  exportProjects "
                 + "     exportConfigs: [[$class: 'ExportProjectConfig', filePath: 'test.prj',"
                 + "        exportPath: 'export', createNewPath: false, "
@@ -180,10 +178,8 @@ public class ExportProjectBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedDefaultProjectPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  exportProjects "
                 + "     exportConfigs: [[$class: 'ExportProjectConfig', filePath: 'test.prj']]\n"
                 + "}";
@@ -193,7 +189,7 @@ public class ExportProjectBuilderST extends SystemTestBase {
     @Test
     public void testProjectAttributePipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ExportProjectBuilder', "
                 + "        exportConfigs: [[$class: 'ExportProjectAttributeConfig', filePath: 'test.prj',"
                 + "        credentialsId: 'credentialsId', timeout: '600']]])\n"
@@ -204,7 +200,7 @@ public class ExportProjectBuilderST extends SystemTestBase {
     @Test
     public void testDefaultProjectAttributePipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'ExportProjectBuilder', "
                 + "        exportConfigs: [[$class: 'ExportProjectAttributeConfig', filePath: 'test.prj']]])\n"
                 + "}";
@@ -213,10 +209,8 @@ public class ExportProjectBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedProjectAttributePipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  exportProjects "
                 + "     exportConfigs: [[$class: 'ExportProjectAttributeConfig', filePath: 'test.prj',"
                 + "        credentialsId: 'credentialsId', timeout: '600']]\n"
@@ -226,10 +220,8 @@ public class ExportProjectBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedDefaultProjectAttributePipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  exportProjects "
                 + "     exportConfigs: [[$class: 'ExportProjectAttributeConfig', filePath: 'test.prj']]\n"
                 + "}";
@@ -247,7 +239,7 @@ public class ExportProjectBuilderST extends SystemTestBase {
     private void assertPipelineStep(final String script) throws Exception {
         assumeWindowsSlave();
 
-        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
+        final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());

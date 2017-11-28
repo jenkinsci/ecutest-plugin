@@ -161,7 +161,7 @@ public class StartTSBuilderST extends SystemTestBase {
     @Test
     public void testPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  writeFile file: 'ToolLibs.ini', text: ''\n"
                 + "  step([$class: 'StartTSBuilder', toolName: 'ECU-TEST',"
                 + "        toolLibsIni: pwd() + '\\\\ToolLibs.ini',"
@@ -173,7 +173,7 @@ public class StartTSBuilderST extends SystemTestBase {
     @Test
     public void testDefaultPipelineStep() throws Exception {
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  step([$class: 'StartTSBuilder', toolName: 'ECU-TEST'])\n"
                 + "}";
         assertPipelineStep(script);
@@ -181,10 +181,8 @@ public class StartTSBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  writeFile file: 'ToolLibs.ini', text: ''\n"
                 + "  startTS toolName: 'ECU-TEST',"
                 + "  toolLibsIni: pwd() + '\\\\ToolLibs.ini',"
@@ -195,10 +193,8 @@ public class StartTSBuilderST extends SystemTestBase {
 
     @Test
     public void testSymbolAnnotatedDefaultPipelineStep() throws Exception {
-        assumeSymbolDependencies();
-
         final String script = ""
-                + "node('slaves') {\n"
+                + "node('windows') {\n"
                 + "  startTS toolName: 'ECU-TEST'\n"
                 + "}";
         assertPipelineStep(script);
@@ -215,8 +211,8 @@ public class StartTSBuilderST extends SystemTestBase {
     private void assertPipelineStep(final String script) throws Exception {
         assumeWindowsSlave();
 
-        final WorkflowJob job = jenkins.jenkins.createProject(WorkflowJob.class, "pipeline");
-        job.setDefinition(new CpsFlowDefinition(script, true));
+        final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
+        job.setDefinition(new CpsFlowDefinition(script, false));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
         jenkins.assertLogContains("Starting Tool-Server...", run);
