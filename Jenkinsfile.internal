@@ -58,7 +58,7 @@ timestamps {
 // Run Maven from tool "mvn"
 void mvn(def args) {
     // Get JDK tool installation
-    def jdkHome = tool name: 'JDK7', type: 'hudson.model.JDK'
+    def jdkHome = tool name: 'JDK8', type: 'hudson.model.JDK'
 
     // Get Maven tool installation
     def mvnHome = tool name: 'M3', type: 'hudson.tasks.Maven$MavenInstallation'
