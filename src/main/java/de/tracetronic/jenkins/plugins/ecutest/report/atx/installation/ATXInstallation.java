@@ -65,7 +65,7 @@ public class ATXInstallation implements Serializable {
      */
     @DataBoundConstructor
     public ATXInstallation(final String name, final String toolName, final ATXConfig config) {
-        this.name = name;
+        this.name = StringUtils.trimToEmpty(name);
         this.toolName = toolName;
         this.config = config == null ? new ATXConfig() : config;
 
