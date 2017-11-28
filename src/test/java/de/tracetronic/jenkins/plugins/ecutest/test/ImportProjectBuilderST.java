@@ -68,10 +68,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public class ImportProjectBuilderST extends SystemTestBase {
 
-    @Override
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         SystemCredentialsProvider.getInstance().getCredentials().add(new UsernamePasswordCredentialsImpl(
                 CredentialsScope.GLOBAL, "credentialsId", "test", "user", "password"));
     }

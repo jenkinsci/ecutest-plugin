@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -70,10 +70,8 @@ public class ToolBuilderParamInstallDslExtensionST extends AbstractDslExtensionS
         return SCRIPT_NAME;
     }
 
-    @Override
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
                 .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));

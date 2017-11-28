@@ -67,10 +67,8 @@ import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
  */
 public class StopETBuilderST extends SystemTestBase {
 
-    @Override
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
                 .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
@@ -199,7 +197,7 @@ public class StopETBuilderST extends SystemTestBase {
         final FilePath rootPath = jenkins.jenkins.getRootPath();
         if (rootPath != null) {
             rootPath.child("\\plugins\\ecutest\\WEB-INF\\lib\\" + DllUtil.getLibraryFile(jenkins.jenkins.toComputer()))
-                    .write();
+            .write();
         }
 
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");

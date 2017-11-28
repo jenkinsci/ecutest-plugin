@@ -71,10 +71,8 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
  */
 public class JUnitPublisherST extends SystemTestBase {
 
-    @Override
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
                 .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));

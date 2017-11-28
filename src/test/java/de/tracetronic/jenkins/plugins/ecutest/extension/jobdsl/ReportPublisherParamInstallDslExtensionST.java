@@ -75,11 +75,8 @@ public class ReportPublisherParamInstallDslExtensionST extends AbstractDslExtens
         return SCRIPT_NAME;
     }
 
-    @Override
     @Before
     public void setUp() throws Exception {
-        super.setUp();
-
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
                 .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
