@@ -129,5 +129,10 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
             save();
             return true;
         }
+
+        @Override
+        public String getDisplayName() {
+            return Messages.ETToolProperty_DisplayName();
+        }
     }
 }
