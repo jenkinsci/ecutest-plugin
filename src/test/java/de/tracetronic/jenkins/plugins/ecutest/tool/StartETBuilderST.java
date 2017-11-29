@@ -161,55 +161,36 @@ public class StartETBuilderST extends SystemTestBase {
 
     @Test
     public void testPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'StartETBuilder', toolName: 'ECU-TEST',"
-                + "        workspaceDir: '', settingsDir: 'settings',"
-                + "        timeout: '60', debugMode: true, keepInstance: true])\n"
-                + "}";
-        assertPipelineStep(script);
+        assertPipelineStep("classicStep.groovy");
     }
 
     @Test
     public void testDefaultPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'StartETBuilder', toolName: 'ECU-TEST'])\n"
-                + "}";
-        assertPipelineStep(script);
+        assertPipelineStep("classicDefaultStep.groovy");
     }
 
     @Test
     public void testSymbolAnnotatedPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  startET toolName: 'ECU-TEST',"
-                + "  workspaceDir: '', settingsDir: 'settings',"
-                + "  timeout: '60', debugMode: true, keepInstance: true\n"
-                + "}";
-        assertPipelineStep(script);
+        assertPipelineStep("symbolStep.groovy");
     }
 
     @Test
     public void testSymbolAnnotatedDefaultPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  startET toolName: 'ECU-TEST'\n"
-                + "}";
-        assertPipelineStep(script);
+        assertPipelineStep("symbolDefaultStep.groovy");
     }
 
     /**
      * Asserts the pipeline step execution.
      *
-     * @param script
-     *            the script
+     * @param scriptName
+     *            the script name
      * @throws Exception
      *             the exception
      */
-    private void assertPipelineStep(final String script) throws Exception {
+    private void assertPipelineStep(final String scriptName) throws Exception {
         assumeWindowsSlave();
 
+        final String script = loadPipelineScript(scriptName);
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
