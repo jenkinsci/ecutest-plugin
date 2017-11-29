@@ -150,61 +150,36 @@ public class TestFolderBuilderST extends SystemTestBase {
 
     @Test
     public void testPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'TestFolderBuilder',"
-                + "        testFile: 'tests', recursiveScan: true, scanMode: 'PACKAGES_ONLY',"
-                + "        testConfig: [constants: [], forceReload: true, loadOnly: true, tbcFile: 'test.tbc', tcfFile: 'test.tcf'],"
-                + "        packageConfig: [parameters: [], runTest: false, runTraceAnalysis: false],"
-                + "        projectConfig: [execInCurrentPkgDir: true, filterExpression: 'Name=\"test\"', jobExecMode: 'SEPARATE_SEQUENTIAL_EXECUTION'],"
-                + "        executionConfig: [checkTestFile: false, stopOnError: false, timeout: '0']])\n"
-                + "}";
-        assertPipelineStep(script);
+        assertPipelineStep("classicStep.groovy");
     }
 
     @Test
     public void testDefaultPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'TestFolderBuilder', testFile: 'tests'])\n"
-                + "}";
-        assertPipelineStep(script);
+        assertPipelineStep("classicDefaultStep.groovy");
     }
 
     @Test
     public void testSymbolAnnotatedPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  testFolder "
-                + "        testFile: 'tests', recursiveScan: true, scanMode: 'PACKAGES_ONLY',"
-                + "        testConfig: [constants: [], forceReload: true, loadOnly: true, tbcFile: 'test.tbc', tcfFile: 'test.tcf'],"
-                + "        packageConfig: [parameters: [], runTest: false, runTraceAnalysis: false],"
-                + "        projectConfig: [execInCurrentPkgDir: true, filterExpression: 'Name=\"test\"', jobExecMode: 'SEPARATE_SEQUENTIAL_EXECUTION'],"
-                + "        executionConfig: [checkTestFile: false, stopOnError: false, timeout: '0']\n"
-                + "}";
-        assertPipelineStep(script);
+        assertPipelineStep("symbolStep.groovy");
     }
 
     @Test
     public void testSymbolAnnotatedDefaultPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  testFolder testFile: 'tests'\n"
-                + "}";
-        assertPipelineStep(script);
+        assertPipelineStep("symbolDefaultStep.groovy");
     }
 
     /**
      * Asserts the pipeline step execution.
      *
-     * @param script
-     *            the script
+     * @param scriptName
+     *            the script name
      * @throws Exception
      *             the exception
      */
-    private void assertPipelineStep(final String script) throws Exception {
+    private void assertPipelineStep(final String scriptName) throws Exception {
         assumeWindowsSlave();
 
+        final String script = loadPipelineScript(scriptName);
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 

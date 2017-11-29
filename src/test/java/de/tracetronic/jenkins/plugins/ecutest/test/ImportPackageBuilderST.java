@@ -168,142 +168,77 @@ public class ImportPackageBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testPackagePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ImportPackageBuilder', "
-                + "        importConfigs: [[$class: 'ImportPackageConfig', tmsPath: 'package',"
-                + "        importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testImportPackagePipelineStep() throws Exception {
+        assertPipelineStep("classicStep.groovy");
     }
 
     @Test
-    public void testDefaultPackagePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ImportPackageBuilder', "
-                + "        importConfigs: [[$class: 'ImportPackageConfig', tmsPath: 'package']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testImportDefaultPackagePipelineStep() throws Exception {
+        assertPipelineStep("classicDefaultStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedPackagePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  importPackages "
-                + "     importConfigs: [[$class: 'ImportPackageConfig', tmsPath: 'package',"
-                + "        importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedImportPackagePipelineStep() throws Exception {
+        assertPipelineStep("symbolStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedDefaultPackagePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  importPackages "
-                + "     importConfigs: [[$class: 'ImportPackageConfig', tmsPath: 'package']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedDefaultImportPackagePipelineStep() throws Exception {
+        assertPipelineStep("symbolDefaultStep.groovy");
     }
 
     @Test
-    public void testPackageDirPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ImportPackageBuilder', "
-                + "        importConfigs: [[$class: 'ImportPackageDirConfig', tmsPath: 'packageDir',"
-                + "        importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testImportPackageDirPipelineStep() throws Exception {
+        assertPipelineStep("classicDirStep.groovy");
     }
 
     @Test
-    public void testDefaultPackageDirPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ImportPackageBuilder', "
-                + "        importConfigs: [[$class: 'ImportPackageDirConfig', tmsPath: 'packageDir']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testImportDefaultPackageDiripelineStep() throws Exception {
+        assertPipelineStep("classicDefaultDirStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedPackageDirPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  importPackages "
-                + "     importConfigs: [[$class: 'ImportPackageDirConfig', tmsPath: 'packageDir',"
-                + "        importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedImportPackageDirPipelineStep() throws Exception {
+        assertPipelineStep("symbolDirStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedDefaultPackageDirPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  importPackages "
-                + "     importConfigs: [[$class: 'ImportPackageDirConfig', tmsPath: 'packageDir']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedDefaultImportPackageDirPipelineStep() throws Exception {
+        assertPipelineStep("symbolDefaultDirStep.groovy");
     }
 
     @Test
-    public void testPackageAttributePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ImportPackageBuilder', "
-                + "        importConfigs: [[$class: 'ImportPackageAttributeConfig', filePath: 'test.pkg',"
-                + "        credentialsId: 'credentialsId', timeout: '600']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testImportPackageAttributePipelineStep() throws Exception {
+        assertPipelineStep("classicAttributeStep.groovy");
     }
 
     @Test
-    public void testDefaultPackageAttributePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ImportPackageBuilder', "
-                + "        importConfigs: [[$class: 'ImportPackageAttributeConfig', filePath: 'test.pkg']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testImportDefaultPackageAttributePipelineStep() throws Exception {
+        assertPipelineStep("classicDefaultAttributeStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedPackageAttributePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  importPackages "
-                + "     importConfigs: [[$class: 'ImportPackageAttributeConfig', filePath: 'test.pkg',"
-                + "        credentialsId: 'credentialsId', timeout: '600']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedImportPackageAttributePipelineStep() throws Exception {
+        assertPipelineStep("symbolAttributeStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedDefaultPackageAttributePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  importPackages "
-                + "     importConfigs: [[$class: 'ImportPackageAttributeConfig', filePath: 'test.pkg']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedDefaultImportPackageAttribbutePipelineStep() throws Exception {
+        assertPipelineStep("symbolDefaultAttributeStep.groovy");
     }
 
     /**
      * Asserts the pipeline step execution.
      *
-     * @param script
-     *            the script
+     * @param scriptName
+     *            the script name
      * @throws Exception
      *             the exception
      */
-    private void assertPipelineStep(final String script) throws Exception {
+    private void assertPipelineStep(final String scriptName) throws Exception {
         assumeWindowsSlave();
 
+        final String script = loadPipelineScript(scriptName);
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 

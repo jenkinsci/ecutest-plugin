@@ -106,13 +106,12 @@ public class SystemTestBase {
      *
      * @param name
      *            the file name
-     * @param clazz
-     *            the test class
      * @return the pipeline content
      */
-    protected String loadPipelineScript(final String name, final Class<? extends SystemTestBase> clazz) {
+    protected String loadPipelineScript(final String name) {
         try {
-            return new String(IOUtils.toByteArray(clazz.getResourceAsStream(name)), "UTF-8");
+            return new String(IOUtils.toByteArray(
+                    getClass().getResourceAsStream(getClass().getSimpleName() + "/" + name)), "UTF-8");
         } catch (final Throwable t) {
             throw new RuntimeException("Could not read resource: [" + name + "].");
         }

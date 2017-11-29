@@ -188,15 +188,4 @@ public class TRFPublisherST extends SystemTestBase {
             jenkins.assertLogContains("Empty test results are not allowed, setting build status to FAILURE!", run);
         }
     }
-
-    /**
-     * Loads given pipeline script from test resources.
-     *
-     * @param name
-     *            the file name
-     * @return the pipeline content
-     */
-    private String loadPipelineScript(final String name) {
-        return loadPipelineScript(name, this.getClass());
-    }
 }

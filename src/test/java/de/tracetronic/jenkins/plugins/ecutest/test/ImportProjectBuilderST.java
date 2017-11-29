@@ -196,185 +196,97 @@ public class ImportProjectBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testArchivePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ImportProjectBuilder', "
-                + "        importConfigs: [[$class: 'ImportProjectArchiveConfig', tmsPath: 'test.prz',"
-                + "        importPath: 'import', importConfigPath: 'import', replaceFiles: true]]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testImportProjectPipelineStep() throws Exception {
+        assertPipelineStep("classicStep.groovy");
     }
 
     @Test
-    public void testDefaultArchivePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ImportProjectBuilder', "
-                + "        importConfigs: [[$class: 'ImportProjectArchiveConfig', tmsPath: 'test.prz']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testImportDefaultProjectPipelineStep() throws Exception {
+        assertPipelineStep("classicDefaultStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedArchivePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  importProjects "
-                + "     importConfigs: [[$class: 'ImportProjectArchiveConfig', tmsPath: 'test.prz',"
-                + "        importPath: 'import', importConfigPath: 'import', replaceFiles: true]]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedImportProjectPipelineStep() throws Exception {
+        assertPipelineStep("symbolStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedDefaultArchivePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  importProjects "
-                + "     importConfigs: [[$class: 'ImportProjectArchiveConfig', tmsPath: 'test.prz']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedDefaultImportProjectPipelineStep() throws Exception {
+        assertPipelineStep("symbolDefaultStep.groovy");
     }
 
     @Test
-    public void testProjectPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ImportProjectBuilder', "
-                + "        importConfigs: [[$class: 'ImportProjectConfig', tmsPath: 'project',"
-                + "        importPath: 'import', importMissingPackages: false,"
-                + "        credentialsId: 'credentialsId', timeout: '600']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testImportProjectArchivePipelineStep() throws Exception {
+        assertPipelineStep("classicArchiveStep.groovy");
     }
 
     @Test
-    public void testDefaultProjectPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ImportProjectBuilder', "
-                + "        importConfigs: [[$class: 'ImportProjectConfig', tmsPath: 'project']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testImportDefaultProjectArchivePipelineStep() throws Exception {
+        assertPipelineStep("classicDefaultArchiveStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedProjectPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  importProjects "
-                + "     importConfigs: [[$class: 'ImportProjectConfig', tmsPath: 'project',"
-                + "        importPath: 'import', importMissingPackages: false, "
-                + "        credentialsId: 'credentialsId', timeout: '600']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedImportProjectArchivePipelineStep() throws Exception {
+        assertPipelineStep("symbolArchiveStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedDefaultProjectPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  importProjects "
-                + "     importConfigs: [[$class: 'ImportProjectConfig', tmsPath: 'project']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedDefaultImportProjectArchivePipelineStep() throws Exception {
+        assertPipelineStep("symbolDefaultArchiveStep.groovy");
     }
 
     @Test
-    public void testProjectDirPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ImportProjectBuilder', "
-                + "        importConfigs: [[$class: 'ImportProjectDirConfig', tmsPath: 'projectDir',"
-                + "        importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testImportProjectDirPipelineStep() throws Exception {
+        assertPipelineStep("classicDirStep.groovy");
     }
 
     @Test
-    public void testDefaultProjectDirPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ImportProjectBuilder', "
-                + "        importConfigs: [[$class: 'ImportProjectDirConfig', tmsPath: 'projectDir']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testImportDefaultProjectDiripelineStep() throws Exception {
+        assertPipelineStep("classicDefaultDirStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedProjectDirPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  importProjects "
-                + "    importConfigs: [[$class: 'ImportProjectDirConfig', tmsPath: 'projectDir', importPath: 'import', credentialsId: 'credentialsId', timeout: '600']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedImportProjectDirPipelineStep() throws Exception {
+        assertPipelineStep("symbolDirStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedDefaultProjectDirPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  importProjects "
-                + "    importConfigs: [[$class: 'ImportProjectDirConfig', tmsPath: 'projectDir']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedDefaultImportProjectDirPipelineStep() throws Exception {
+        assertPipelineStep("symbolDefaultDirStep.groovy");
     }
 
     @Test
-    public void testProjectAttributePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ImportProjectBuilder', "
-                + "        importConfigs: [[$class: 'ImportProjectAttributeConfig', filePath: 'test.prj',"
-                + "        credentialsId: 'credentialsId', timeout: '600']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testImportProjectAttributePipelineStep() throws Exception {
+        assertPipelineStep("classicAttributeStep.groovy");
     }
 
     @Test
-    public void testDefaultProjectAttributePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ImportProjectBuilder', "
-                + "        importConfigs: [[$class: 'ImportProjectAttributeConfig', filePath: 'test.prj']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testImportDefaultProjectAttributePipelineStep() throws Exception {
+        assertPipelineStep("classicDefaultAttributeStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedProjectAttributePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  importProjects "
-                + "     importConfigs: [[$class: 'ImportProjectAttributeConfig', filePath: 'test.prj',"
-                + "        credentialsId: 'credentialsId', timeout: '600']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedImportProjectAttributePipelineStep() throws Exception {
+        assertPipelineStep("symbolAttributeStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedDefaultProjectAttributePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  importProjects "
-                + "     importConfigs: [[$class: 'ImportProjectAttributeConfig', filePath: 'test.prj']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedDefaultImportProjectAttribbutePipelineStep() throws Exception {
+        assertPipelineStep("symbolDefaultAttributeStep.groovy");
     }
 
     /**
      * Asserts the pipeline step execution.
      *
-     * @param script
-     *            the script
+     * @param scriptName
+     *            the script name
      * @throws Exception
      *             the exception
      */
-    private void assertPipelineStep(final String script) throws Exception {
+    private void assertPipelineStep(final String scriptName) throws Exception {
         assumeWindowsSlave();
 
+        final String script = loadPipelineScript(scriptName);
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 

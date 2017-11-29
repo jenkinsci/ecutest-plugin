@@ -221,7 +221,7 @@ public class ETLogPublisherST extends SystemTestBase {
 
         final String script = loadPipelineScript(scriptName);
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
-        job.setDefinition(new CpsFlowDefinition(script));
+        job.setDefinition(new CpsFlowDefinition(script, true));
 
         if (status == true) {
             final WorkflowRun run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
@@ -232,16 +232,5 @@ public class ETLogPublisherST extends SystemTestBase {
             jenkins.assertLogContains("Publishing ECU-TEST logs...", run);
             jenkins.assertLogContains("Empty log results are not allowed, setting build status to FAILURE!", run);
         }
-    }
-
-    /**
-     * Loads given pipeline script from test resources.
-     *
-     * @param name
-     *            the file name
-     * @return the pipeline content
-     */
-    private String loadPipelineScript(final String name) {
-        return loadPipelineScript(name, this.getClass());
     }
 }

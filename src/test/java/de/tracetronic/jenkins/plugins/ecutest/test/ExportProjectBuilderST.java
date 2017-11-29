@@ -141,102 +141,57 @@ public class ExportProjectBuilderST extends SystemTestBase {
     }
 
     @Test
-    public void testProjectPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ExportProjectBuilder', "
-                + "        exportConfigs: [[$class: 'ExportProjectConfig', filePath: 'test.prj',"
-                + "        exportPath: 'export', createNewPath: false,"
-                + "        credentialsId: 'credentialsId', timeout: '600']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testExportProjectPipelineStep() throws Exception {
+        assertPipelineStep("classicStep.groovy");
     }
 
     @Test
-    public void testDefaultProjectPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ExportProjectBuilder', "
-                + "        exportConfigs: [[$class: 'ExportProjectConfig', filePath: 'test.prj']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testExportDefaultProjectPipelineStep() throws Exception {
+        assertPipelineStep("classicDefaultStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedProjectPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  exportProjects "
-                + "     exportConfigs: [[$class: 'ExportProjectConfig', filePath: 'test.prj',"
-                + "        exportPath: 'export', createNewPath: false, "
-                + "        credentialsId: 'credentialsId', timeout: '600']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedExporProjectPipelineStep() throws Exception {
+        assertPipelineStep("symbolStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedDefaultProjectPipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  exportProjects "
-                + "     exportConfigs: [[$class: 'ExportProjectConfig', filePath: 'test.prj']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedDefaultExportProjectPipelineStep() throws Exception {
+        assertPipelineStep("symbolDefaultStep.groovy");
     }
 
     @Test
-    public void testProjectAttributePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ExportProjectBuilder', "
-                + "        exportConfigs: [[$class: 'ExportProjectAttributeConfig', filePath: 'test.prj',"
-                + "        credentialsId: 'credentialsId', timeout: '600']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testExportProjectAttributePipelineStep() throws Exception {
+        assertPipelineStep("classicAttributeStep.groovy");
     }
 
     @Test
-    public void testDefaultProjectAttributePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  step([$class: 'ExportProjectBuilder', "
-                + "        exportConfigs: [[$class: 'ExportProjectAttributeConfig', filePath: 'test.prj']]])\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testExportDefaultProjectAttributePipelineStep() throws Exception {
+        assertPipelineStep("classicDefaultAttributeStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedProjectAttributePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  exportProjects "
-                + "     exportConfigs: [[$class: 'ExportProjectAttributeConfig', filePath: 'test.prj',"
-                + "        credentialsId: 'credentialsId', timeout: '600']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedExportProjectAttributePipelineStep() throws Exception {
+        assertPipelineStep("symbolAttributeStep.groovy");
     }
 
     @Test
-    public void testSymbolAnnotatedDefaultProjectAttributePipelineStep() throws Exception {
-        final String script = ""
-                + "node('windows') {\n"
-                + "  exportProjects "
-                + "     exportConfigs: [[$class: 'ExportProjectAttributeConfig', filePath: 'test.prj']]\n"
-                + "}";
-        assertPipelineStep(script);
+    public void testSymbolAnnotatedDefaultExportPackageAttribbutePipelineStep() throws Exception {
+        assertPipelineStep("symbolDefaultAttributeStep.groovy");
     }
 
     /**
      * Asserts the pipeline step execution.
      *
-     * @param script
-     *            the script
+     * @param scriptName
+     *            the script name
      * @throws Exception
      *             the exception
      */
-    private void assertPipelineStep(final String script) throws Exception {
+    private void assertPipelineStep(final String scriptName) throws Exception {
         assumeWindowsSlave();
 
+        final String script = loadPipelineScript(scriptName);
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
