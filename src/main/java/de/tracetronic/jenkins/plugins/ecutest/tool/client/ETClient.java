@@ -210,7 +210,7 @@ public class ETClient extends AbstractToolClient {
             logger.logWarn(String.format(
                     "The configured ECU-TEST version %s might be incompatible with this plugin. "
                             + "Currently supported versions: %s up to %s", comVersion,
-                    ETPlugin.ET_MIN_VERSION.toMinorString(), ETPlugin.ET_MAX_VERSION.toMinorString()));
+                            ETPlugin.ET_MIN_VERSION.toMinorString(), ETPlugin.ET_MAX_VERSION.toMinorString()));
         } else if (comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
             logger.logError(String.format(
                     "The configured ECU-TEST version %s is not compatible with this plugin. "
@@ -537,7 +537,7 @@ public class ETClient extends AbstractToolClient {
             try (ETComClient comClient = new ETComClient(progId);
                     TestBenchConfiguration tbc = (TestBenchConfiguration)
                             comClient.getCurrentTestBenchConfiguration()) {
-                tbcFilePath = tbc.getFileName();
+                tbcFilePath = StringUtils.trimToEmpty(tbc.getFileName());
             } catch (final ETComException e) {
                 logger.logError("-> Caught COM exception: " + e.getMessage());
             }
@@ -571,7 +571,7 @@ public class ETClient extends AbstractToolClient {
             final String progId = ETComProgId.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
                     TestConfiguration tcf = (TestConfiguration) comClient.getCurrentTestConfiguration()) {
-                tcfFilePath = tcf.getFileName();
+                tcfFilePath = StringUtils.trimToEmpty(tcf.getFileName());
             } catch (final ETComException e) {
                 logger.logError("-> Caught COM exception: " + e.getMessage());
             }
