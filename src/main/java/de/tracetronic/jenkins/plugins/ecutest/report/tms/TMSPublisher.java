@@ -178,7 +178,7 @@ public class TMSPublisher extends AbstractReportPublisher {
             return;
         }
 
-        final List<FilePath> reportFiles = getReportFiles(run, launcher);
+        final List<FilePath> reportFiles = getReportFiles(run, workspace, launcher);
         if (reportFiles.isEmpty() && !isAllowMissing()) {
             throw new ETPluginException("Empty test results are not allowed, setting build status to FAILURE!");
         }

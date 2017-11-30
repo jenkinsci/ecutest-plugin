@@ -44,7 +44,6 @@ import java.util.List;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
@@ -111,21 +110,20 @@ public class TRFPublisher extends AbstractReportPublisher {
             int index = 0;
             final List<TRFReport> trfReports = new ArrayList<TRFReport>();
             final FilePath archiveTarget = getArchiveTarget(run);
-            final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
 
             // Removing old artifacts at project level
-            if (!testEnvActions.isEmpty() && !isKeepAll()) {
+            final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
+            if (!reportDirs.isEmpty() && !isKeepAll()) {
                 archiveTarget.deleteRecursive();
                 removePreviousReports(run, TRFBuildAction.class);
             }
-            for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-                final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-                final FilePath archiveTargetDir = archiveTarget.child(testReportDir.getName());
-                final FilePath reportFile = getFirstReportFile(testReportDir);
+            for (final FilePath reportDir : reportDirs) {
+                final FilePath archiveTargetDir = archiveTarget.child(reportDir.getName());
+                final FilePath reportFile = getFirstReportFile(reportDir);
                 if (reportFile != null && reportFile.exists()) {
                     try {
                         logger.logInfo(String.format("- Archiving TRF report: %s", reportFile));
-                        final int copiedFiles = testReportDir.copyRecursiveTo(TRF_INCLUDES, TRF_EXCLUDES,
+                        final int copiedFiles = reportDir.copyRecursiveTo(TRF_INCLUDES, TRF_EXCLUDES,
                                 archiveTargetDir);
                         if (copiedFiles == 0) {
                             continue;

@@ -57,11 +57,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 public class JUnitReportGenerator {
 
     /**
-     * Defines the path name containing the UNIT reports inside of the test report directory.
-     */
-    protected static final String UNIT_TEMPLATE_NAME = "UNIT";
-
-    /**
      * Generates UNIT reports by invoking the startup of ECU-TEST if not already running, otherwise using the current
      * instance without closing when finished.
      *
@@ -85,7 +80,7 @@ public class JUnitReportGenerator {
      */
     public boolean generate(final ETInstallation installation, final List<FilePath> reportFiles,
             final Run<?, ?> run, final FilePath workspace, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         boolean isGenerated = false;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
@@ -201,9 +196,9 @@ public class JUnitReportGenerator {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                 for (final FilePath dbFile : dbFiles) {
                     logger.logInfo(String.format("-> Generating UNIT report: %s", dbFile.getRemote()));
-                    final FilePath outDir = dbFile.getParent().child(UNIT_TEMPLATE_NAME);
+                    final FilePath outDir = dbFile.getParent().child(JUnitPublisher.UNIT_TEMPLATE_NAME);
                     if (!testEnv.generateTestReportDocumentFromDB(dbFile.getRemote(),
-                            outDir.getRemote(), UNIT_TEMPLATE_NAME, true)) {
+                            outDir.getRemote(), JUnitPublisher.UNIT_TEMPLATE_NAME, true)) {
                         isGenerated = false;
                         logger.logError("Generating UNIT report failed!");
                     }

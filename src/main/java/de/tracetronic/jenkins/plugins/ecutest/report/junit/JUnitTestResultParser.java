@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,9 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 
 import hudson.FilePath;
 import hudson.FilePath.FileCallable;
-import hudson.Launcher;
 import hudson.model.TaskListener;
-import hudson.model.Run;
 import hudson.remoting.VirtualChannel;
 import hudson.tasks.junit.TestResult;
 import hudson.tasks.test.TestResultParser;
@@ -41,15 +39,9 @@ import hudson.tasks.test.TestResultParser;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import jenkins.MasterToSlaveFileCallable;
-import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 
 /**
@@ -62,9 +54,31 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
     private static final long serialVersionUID = 1L;
 
     /**
-     * File name of the UNIT report file.
+     * Parses the given JUnit test report files and builds a {@link TestResult} object that represents them.
+     *
+     * @param xmlFiles
+     *            the JUnit report files
+     * @param listener
+     *            the listener
+     * @return the {@link TestResult} instance
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             the interrupted exception
      */
-    private static final String JUNIT_REPORT_FILE = "junit-report.xml";
+    public TestResult parseResult(final List<FilePath> xmlFiles, final TaskListener listener)
+            throws IOException, InterruptedException {
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        TestResult testResult = new TestResult(false);
+        for (final FilePath xmlFile : xmlFiles) {
+            if (xmlFile.exists()) {
+                logger.logInfo(String.format("- Processing UNIT test results: %s", xmlFile));
+                testResult = xmlFile.act(new ParseTestResultCallable(testResult));
+                testResult.tally();
+            }
+        }
+        return testResult;
+    }
 
     @Override
     public String getDisplayName() {
@@ -74,51 +88,6 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
     @Override
     public String getTestResultLocationMessage() {
         return "UNIT XML reports:";
-    }
-
-    @Override
-    public TestResult parseResult(final String junitDir, final Run<?, ?> run, @Nonnull final FilePath workspace,
-            final Launcher launcher, final TaskListener listener) throws InterruptedException, IOException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
-        TestResult testResult = new TestResult(false);
-        final List<FilePath> reportFiles = getReportFiles(junitDir, run, launcher);
-        for (final FilePath reportFile : reportFiles) {
-            logger.logInfo(String.format("- Processing UNIT test results: %s", reportFile));
-            testResult = reportFile.act(new ParseTestResultCallable(testResult));
-            testResult.tally();
-        }
-        return testResult;
-    }
-
-    /**
-     * Builds a list of report files for parsing the test results.
-     * Includes the test results generated during separate sub-project execution.
-     *
-     * @param junitDir
-     *            the UNIT directory
-     * @param run
-     *            the run
-     * @param launcher
-     *            the launcher
-     * @return the list of report files
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
-     */
-    private List<FilePath> getReportFiles(final String junitDir, final Run<?, ?> run,
-            final Launcher launcher) throws IOException, InterruptedException {
-        final List<FilePath> reportFiles = new ArrayList<FilePath>();
-        final List<TestEnvInvisibleAction> testEnvActions = run.getActions(TestEnvInvisibleAction.class);
-        for (final TestEnvInvisibleAction testEnvAction : testEnvActions) {
-            final FilePath testReportDir = new FilePath(launcher.getChannel(), testEnvAction.getTestReportDir());
-            if (testReportDir.exists()) {
-                reportFiles.addAll(Arrays.asList(testReportDir.list(
-                        String.format("**/%s/%s", junitDir, JUNIT_REPORT_FILE))));
-            }
-        }
-        Collections.reverse(reportFiles);
-        return reportFiles;
     }
 
     /**
@@ -142,7 +111,7 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
 
         @Override
         public TestResult invoke(final File file, final VirtualChannel channel) throws IOException,
-                InterruptedException {
+        InterruptedException {
             testResult.parse(file);
             return testResult;
         }

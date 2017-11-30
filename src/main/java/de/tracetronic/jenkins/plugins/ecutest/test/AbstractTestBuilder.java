@@ -128,10 +128,6 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     @Override
     public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException {
-        // FIXME: workaround because pipeline node allocation does not create the actual workspace directory
-        if (!workspace.exists()) {
-            workspace.mkdirs();
-        }
 
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         try {
