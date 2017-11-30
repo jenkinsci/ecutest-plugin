@@ -181,10 +181,17 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
          * @return the credentials items
          */
         public ListBoxModel doFillCredentialsIdItems() {
-            return new StandardListBoxModel().withEmptySelection().withMatching(
-                    CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class),
-                    CredentialsProvider.lookupCredentials(StandardCredentials.class, Jenkins.getInstance(), ACL.SYSTEM,
-                            Collections.<DomainRequirement> emptyList()));
+            return new StandardListBoxModel().includeMatchingAs(ACL.SYSTEM,
+                    Jenkins.getInstance(), StandardCredentials.class,
+                    Collections.<DomainRequirement> emptyList(),
+                    CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class));
+
+            /*
+             * return new StandardListBoxModel().withEmptySelection().withMatching(
+             * CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class),
+             * CredentialsProvider.lookupCredentials(StandardCredentials.class, Jenkins.getInstance(), ACL.SYSTEM,
+             * Collections.<DomainRequirement> emptyList()));
+             */
         }
     }
 }

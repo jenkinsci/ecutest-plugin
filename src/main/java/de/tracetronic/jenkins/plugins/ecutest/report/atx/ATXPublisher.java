@@ -425,7 +425,7 @@ public class ATXPublisher extends AbstractReportPublisher {
          * Synchronizes current ATX configuration with default configuration
          * by overriding their current values and saving them as new ATX installation.
          *
-         * This method will be automatically called by {@link ETPlugin#postInitialize()} to
+         * This method will be automatically called by {@link ETPlugin#syncATXConfiguration()} to
          * avoid circular dependencies while loading other plugins.
          */
         @SuppressWarnings("unchecked")

@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest;
 
-import hudson.Plugin;
 import hudson.init.InitMilestone;
 import hudson.init.Initializer;
 import hudson.model.Items;
@@ -60,7 +59,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirConfig
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ETPlugin extends Plugin {
+public class ETPlugin {
 
     /**
      * Defines the minimum required ECU-TEST version supported by this plugin.
@@ -235,10 +234,40 @@ public class ETPlugin extends Plugin {
         }
     }
 
-    @Override
-    public void start() throws Exception {
-        super.start();
+    /**
+     * Retains backward compatibility for renamed classes.
+     */
+    @SuppressWarnings("rawtypes")
+    @Initializer(before = InitMilestone.PLUGINS_STARTED)
+    public static void addAliases() {
+        final String configPath = "de.tracetronic.jenkins.plugins.ecutest.test.config.";
+        final HashMap<String, Class> classMap = new HashMap<String, Class>();
+        classMap.put(configPath + "ImportPackageTMSConfig", ImportPackageConfig.class);
+        classMap.put(configPath + "ImportPackageTMSDirConfig", ImportPackageDirConfig.class);
+        classMap.put(configPath + "ImportProjectTMSConfig", ImportProjectConfig.class);
+        classMap.put(configPath + "ImportProjectTMSDirConfig", ImportProjectDirConfig.class);
 
+        for (final Entry<String, Class> entry : classMap.entrySet()) {
+            Items.XSTREAM2.addCompatibilityAlias(entry.getKey(), entry.getValue());
+        }
+    }
+
+    /**
+     * Synchronizes the current ATX configuration with the default one.
+     */
+    @Initializer(after = InitMilestone.PLUGINS_STARTED)
+    public void syncATXConfiguration() {
+        final DescriptorImpl descriptor = Jenkins.getInstance().getDescriptorByType(DescriptorImpl.class);
+        if (descriptor != null) {
+            descriptor.syncWithDefaultConfig();
+        }
+    }
+
+    /**
+     * Registers the plugin icons to global icon set.
+     */
+    @Initializer(after = InitMilestone.JOB_LOADED)
+    public void registerIcons() {
         for (final String name : new String[] {
                 "atx-report",
                 "atx-trend",
@@ -278,34 +307,6 @@ public class ETPlugin extends Plugin {
                     String.format("ecutest/icons/48x48/%s.png", name),
                     Icon.ICON_XLARGE_STYLE, IconType.PLUGIN)
                     );
-        }
-    }
-
-    /**
-     * Retains backward compatibility for renamed classes.
-     */
-    @SuppressWarnings("rawtypes")
-    @Initializer(before = InitMilestone.PLUGINS_STARTED)
-    public static void addAliases() {
-        final String configPath = "de.tracetronic.jenkins.plugins.ecutest.test.config.";
-        final HashMap<String, Class> classMap = new HashMap<String, Class>();
-        classMap.put(configPath + "ImportPackageTMSConfig", ImportPackageConfig.class);
-        classMap.put(configPath + "ImportPackageTMSDirConfig", ImportPackageDirConfig.class);
-        classMap.put(configPath + "ImportProjectTMSConfig", ImportProjectConfig.class);
-        classMap.put(configPath + "ImportProjectTMSDirConfig", ImportProjectDirConfig.class);
-
-        for (final Entry<String, Class> entry : classMap.entrySet()) {
-            Items.XSTREAM2.addCompatibilityAlias(entry.getKey(), entry.getValue());
-        }
-    }
-
-    @Override
-    public void postInitialize() throws Exception {
-        super.postInitialize();
-        // Synchronize current ATX configuration with the default one.
-        final DescriptorImpl descriptor = Jenkins.getInstance().getDescriptorByType(DescriptorImpl.class);
-        if (descriptor != null) {
-            descriptor.syncWithDefaultConfig();
         }
     }
 

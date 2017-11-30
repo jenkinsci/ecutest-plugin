@@ -110,9 +110,9 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
         }
 
         @Override
-        public TestResult invoke(final File file, final VirtualChannel channel) throws IOException,
-        InterruptedException {
-            testResult.parse(file);
+        public TestResult invoke(final File file, final VirtualChannel channel)
+                throws IOException, InterruptedException {
+            testResult.parse(file, null);
             return testResult;
         }
     }

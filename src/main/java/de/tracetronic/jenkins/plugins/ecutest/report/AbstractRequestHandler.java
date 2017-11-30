@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report;
 
-import hudson.Util;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Job;
@@ -216,7 +215,7 @@ public abstract class AbstractRequestHandler {
 
             final InputStream in = file.open();
             try {
-                Util.copyStream(in, zos);
+                IOUtils.copy(in, zos);
             } finally {
                 IOUtils.closeQuietly(in);
             }

@@ -51,8 +51,6 @@ import org.apache.commons.lang.StringUtils;
 
 import com.jacob.com.LibraryLoader;
 
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
-
 /**
  * Utility class providing library operations, especially for JACOB COM Bridge.
  *
@@ -142,7 +140,7 @@ public final class DllUtil {
             return new FilePath(FilePath.localChannel, libFile);
         }
         final File rootDir = instance.getRootDir();
-        final PluginWrapper wrapper = instance.getPluginManager().getPlugin(ETPlugin.class);
+        final PluginWrapper wrapper = instance.getPluginManager().getPlugin("ecutest");
         if (wrapper != null) {
             localLib = new FilePath(FilePath.localChannel, rootDir.getAbsolutePath() + "/plugins/"
                     + wrapper.getShortName() + "/WEB-INF/lib/" + libFile);
@@ -204,7 +202,7 @@ public final class DllUtil {
      *             if the current thread is interrupted while waiting for the completion
      */
     private static boolean copyLibrary(final FilePath src, final FilePath dest) throws IOException,
-    InterruptedException {
+            InterruptedException {
         return PathUtil.copyRemoteFile(src, dest);
     }
 
@@ -223,7 +221,7 @@ public final class DllUtil {
 
         @Override
         public Boolean invoke(final File libFile, final VirtualChannel channel) throws IOException,
-                InterruptedException {
+        InterruptedException {
             if (libFile.exists() && libFile.isFile()) {
                 final String libProperty = System.getProperty(LibraryLoader.JACOB_DLL_PATH);
                 if (!StringUtils.isBlank(libProperty)) {

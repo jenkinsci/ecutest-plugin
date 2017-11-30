@@ -57,7 +57,6 @@ import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
 import com.cloudbees.plugins.credentials.CredentialsMatchers;
-import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.common.StandardCredentials;
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
@@ -288,10 +287,10 @@ public class TMSPublisher extends AbstractReportPublisher {
          * @return the credentials items
          */
         public ListBoxModel doFillCredentialsIdItems() {
-            return new StandardListBoxModel().withEmptySelection().withMatching(
-                    CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class),
-                    CredentialsProvider.lookupCredentials(StandardCredentials.class, Jenkins.getInstance(), ACL.SYSTEM,
-                            Collections.<DomainRequirement> emptyList()));
+            return new StandardListBoxModel().includeMatchingAs(ACL.SYSTEM,
+                    Jenkins.getInstance(), StandardCredentials.class,
+                    Collections.<DomainRequirement> emptyList(),
+                    CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class));
         }
 
         @Override
