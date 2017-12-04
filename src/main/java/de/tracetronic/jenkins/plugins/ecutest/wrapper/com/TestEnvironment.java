@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -175,9 +175,9 @@ public class TestEnvironment extends ETComDispatch implements ComTestEnvironment
     @Override
     public boolean generateTestReportDocumentFromDB(final String dbFile, final String reportDir,
             final String reportFormat, final boolean waitUntilFinished, final Map<String, String> parameters)
-            throws ETComException {
+                    throws ETComException {
         final Object[][] settings = getArrayFromMap(parameters, false);
-        return performRequest("GenerateTestReportDocumentFromDB", new Variant(dbFile),
+        return performDirectRequest("GenerateTestReportDocumentFromDB", new Variant(dbFile),
                 new Variant(reportDir), new Variant(reportFormat), new Variant(waitUntilFinished), settings)
                 .getBoolean();
     }

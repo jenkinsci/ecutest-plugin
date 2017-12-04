@@ -83,9 +83,10 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     public boolean importPackage(final String tmProjectPath, final String importPath, final int timeout)
             throws ETComException {
         if (timeout == 0) {
-            return performRequest("ImportPackage", new Variant(tmProjectPath), new Variant(importPath)).getBoolean();
+            return performDirectRequest("ImportPackage", new Variant(tmProjectPath), new Variant(importPath))
+                    .getBoolean();
         } else {
-            return performRequest("ImportPackage", new Variant(tmProjectPath), new Variant(importPath),
+            return performDirectRequest("ImportPackage", new Variant(tmProjectPath), new Variant(importPath),
                     new Variant(timeout)).getBoolean();
         }
     }
@@ -109,10 +110,11 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     public boolean importPackageDirectory(final String tmDirectoryPath, final String importPath, final int timeout)
             throws ETComException {
         if (timeout == 0) {
-            return performRequest("ImportPackageDirectory", new Variant(tmDirectoryPath),
+            return performDirectRequest("ImportPackageDirectory", new Variant(tmDirectoryPath),
                     new Variant(importPath)).getBoolean();
         } else {
-            return performRequest("ImportPackageDirectory", new Variant(tmDirectoryPath), new Variant(importPath),
+            return performDirectRequest("ImportPackageDirectory", new Variant(tmDirectoryPath),
+                    new Variant(importPath),
                     new Variant(timeout)).getBoolean();
         }
     }
@@ -154,10 +156,10 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     public boolean importProject(final String tmProjectPath, final String importPath,
             final boolean importMissingPackages, final int timeout) throws ETComException {
         if (timeout == 0) {
-            return performRequest("ImportProject", new Variant(tmProjectPath), new Variant(importPath),
+            return performDirectRequest("ImportProject", new Variant(tmProjectPath), new Variant(importPath),
                     new Variant(importMissingPackages)).getBoolean();
         } else {
-            return performRequest("ImportProject", new Variant(tmProjectPath), new Variant(importPath),
+            return performDirectRequest("ImportProject", new Variant(tmProjectPath), new Variant(importPath),
                     new Variant(importMissingPackages), new Variant(timeout)).getBoolean();
         }
     }
@@ -181,10 +183,11 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     public boolean importProjectDirectory(final String tmDirectoryPath, final String importPath, final int timeout)
             throws ETComException {
         if (timeout == 0) {
-            return performRequest("ImportProjectDirectory", new Variant(tmDirectoryPath),
+            return performDirectRequest("ImportProjectDirectory", new Variant(tmDirectoryPath),
                     new Variant(importPath)).getBoolean();
         } else {
-            return performRequest("ImportProjectDirectory", new Variant(tmDirectoryPath), new Variant(importPath),
+            return performDirectRequest("ImportProjectDirectory", new Variant(tmDirectoryPath),
+                    new Variant(importPath),
                     new Variant(timeout)).getBoolean();
         }
     }
@@ -206,9 +209,10 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     @Override
     public boolean importPackageAttributes(final String filePath, final int timeout) throws ETComException {
         if (timeout == 0) {
-            return performRequest("ImportPackageAttributes", new Variant(filePath)).getBoolean();
+            return performDirectRequest("ImportPackageAttributes", new Variant(filePath)).getBoolean();
         } else {
-            return performRequest("ImportPackageAttributes", new Variant(filePath), new Variant(timeout)).getBoolean();
+            return performDirectRequest("ImportPackageAttributes", new Variant(filePath), new Variant(timeout))
+                    .getBoolean();
         }
     }
 
@@ -229,9 +233,10 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     @Override
     public boolean importProjectAttributes(final String filePath, final int timeout) throws ETComException {
         if (timeout == 0) {
-            return performRequest("ImportProjectAttributes", new Variant(filePath)).getBoolean();
+            return performDirectRequest("ImportProjectAttributes", new Variant(filePath)).getBoolean();
         } else {
-            return performRequest("ImportProjectAttributes", new Variant(filePath), new Variant(timeout)).getBoolean();
+            return performDirectRequest("ImportProjectAttributes", new Variant(filePath), new Variant(timeout))
+                    .getBoolean();
         }
     }
 
@@ -272,10 +277,10 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     public boolean exportPackage(final String filePath, final String exportPath, final boolean createNewPath,
             final int timeout) throws ETComException {
         if (timeout == 0) {
-            return performRequest("ExportPackage", new Variant(filePath), new Variant(exportPath),
+            return performDirectRequest("ExportPackage", new Variant(filePath), new Variant(exportPath),
                     new Variant(createNewPath)).getBoolean();
         } else {
-            return performRequest("ExportPackage", new Variant(filePath), new Variant(exportPath),
+            return performDirectRequest("ExportPackage", new Variant(filePath), new Variant(exportPath),
                     new Variant(createNewPath), new Variant(timeout)).getBoolean();
         }
     }
@@ -317,10 +322,10 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     public boolean exportProject(final String filePath, final String exportPath, final boolean createNewPath,
             final int timeout) throws ETComException {
         if (timeout == 0) {
-            return performRequest("ExportProject", new Variant(filePath), new Variant(exportPath),
+            return performDirectRequest("ExportProject", new Variant(filePath), new Variant(exportPath),
                     new Variant(createNewPath)).getBoolean();
         } else {
-            return performRequest("ExportProject", new Variant(filePath), new Variant(exportPath),
+            return performDirectRequest("ExportProject", new Variant(filePath), new Variant(exportPath),
                     new Variant(createNewPath), new Variant(timeout)).getBoolean();
         }
     }
@@ -342,9 +347,10 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     @Override
     public boolean exportPackageAttributes(final String filePath, final int timeout) throws ETComException {
         if (timeout == 0) {
-            return performRequest("ExportPackageAttributes", new Variant(filePath)).getBoolean();
+            return performDirectRequest("ExportPackageAttributes", new Variant(filePath)).getBoolean();
         } else {
-            return performRequest("ExportPackageAttributes", new Variant(filePath), new Variant(timeout)).getBoolean();
+            return performDirectRequest("ExportPackageAttributes", new Variant(filePath), new Variant(timeout))
+                    .getBoolean();
         }
     }
 
@@ -365,9 +371,10 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     @Override
     public boolean exportProjectAttributes(final String filePath, final int timeout) throws ETComException {
         if (timeout == 0) {
-            return performRequest("ExportProjectAttributes", new Variant(filePath)).getBoolean();
+            return performDirectRequest("ExportProjectAttributes", new Variant(filePath)).getBoolean();
         } else {
-            return performRequest("ExportProjectAttributes", new Variant(filePath), new Variant(timeout)).getBoolean();
+            return performDirectRequest("ExportProjectAttributes", new Variant(filePath), new Variant(timeout))
+                    .getBoolean();
         }
     }
 
@@ -405,9 +412,9 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     public boolean exportReport(final String filePath, final String archivePath, final int timeout)
             throws ETComException {
         if (timeout == 0) {
-            return performRequest("ExportReport", new Variant(filePath), new Variant(archivePath)).getBoolean();
+            return performDirectRequest("ExportReport", new Variant(filePath), new Variant(archivePath)).getBoolean();
         } else {
-            return performRequest("ExportReport", new Variant(filePath), new Variant(archivePath),
+            return performDirectRequest("ExportReport", new Variant(filePath), new Variant(archivePath),
                     new Variant(timeout)).getBoolean();
         }
     }

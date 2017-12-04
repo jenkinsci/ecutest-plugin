@@ -29,14 +29,12 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.Thread.UncaughtExceptionHandler;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;
-import com.jacob.com.JacobException;
 import com.jacob.com.Variant;
 
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComApplication;
@@ -57,28 +55,27 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestManagement;
  */
 public class ETComClient implements ComApplication, AutoCloseable {
 
-    private static final Logger LOGGER = Logger.getLogger(ETComClient.class.getName());
-
     /**
-     * Default connection timeout in seconds.
+     * The COMApplication dispatch.
      */
-    private static final int DEFAULT_TIMOUT = 120;
+    private ETComDispatch dispatch;
 
     /**
-     * COMApplication dispatch.
+     * Holds the status when to release the dispatch.
      */
-    protected ETComDispatch dispatch;
+    private boolean releaseDispatch;
 
     /**
-     * Instantiates a new {@link ETComClient} by initializing the {@link ETComDispatch} and waits for connection within
-     * the default timeout.
+     * Instantiates a new {@link ETComClient} by initializing the {@link ETComDispatch} with the configured COM
+     * settings.
      *
      * @throws ETComException
      *             in case of a COM exception or if the timeout is reached
      */
     public ETComClient() throws ETComException {
-        initDispatch(ETComProgId.DEFAULT_PROG_ID);
-        waitForConnection(DEFAULT_TIMOUT);
+        final ETComProperty properties = ETComProperty.getInstance();
+        initDispatch(properties.getProgId());
+        waitForConnection(properties.getTimeout());
     }
 
     /**
@@ -92,7 +89,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
      */
     public ETComClient(final String progId) throws ETComException {
         initDispatch(progId);
-        waitForConnection(DEFAULT_TIMOUT);
+        waitForConnection(ETComProperty.DEFAULT_TIMEOUT);
     }
 
     /**
@@ -105,7 +102,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
      *             in case of a COM exception or if the timeout is reached
      */
     public ETComClient(final int timeout) throws ETComException {
-        initDispatch(ETComProgId.DEFAULT_PROG_ID);
+        initDispatch(ETComProperty.DEFAULT_PROG_ID);
         waitForConnection(timeout);
     }
 
@@ -125,16 +122,6 @@ public class ETComClient implements ComApplication, AutoCloseable {
         waitForConnection(timeout);
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        try {
-            releaseDispatch();
-        } finally {
-            ComThread.Release();
-            super.finalize();
-        }
-    }
-
     /**
      * Initializes the a single-threaded {@link COMThread} and sets the {@link ETComDispatch} instance using the default
      * program id returned from the {@link ActiveXComponent}.
@@ -146,39 +133,28 @@ public class ETComClient implements ComApplication, AutoCloseable {
      */
     private void initDispatch(final String progId) throws ETComException {
         try {
-            ComThread.InitSTA();
-            final ActiveXComponent component = new ActiveXComponent(StringUtils.isEmpty(progId) ?
-                    ETComProgId.DEFAULT_PROG_ID : progId);
-            dispatch = new ETComDispatch(component.getObject());
-        } catch (final JacobException e) {
-            throw new ETComException(e.getMessage(), e);
-        }
-    }
+            ComThread.InitMTA();
+            releaseDispatch = false;
+            final InitDispatch initDispatch = new InitDispatch(progId);
+            final InitDispatchExceptionHandler exceptionHandler = new InitDispatchExceptionHandler();
+            initDispatch.setUncaughtExceptionHandler(exceptionHandler);
+            initDispatch.start();
 
-    /**
-     * Releases the {@link Dispatch}.
-     *
-     * @throws ETComException
-     *             in case of a COM exception
-     */
-    private void releaseDispatch() throws ETComException {
-        if (dispatch != null) {
-            try {
-                dispatch.safeRelease();
-            } catch (final JacobException e) {
-                throw new ETComException(e.getMessage(), e);
+            final int timeout = ETComProperty.DEFAULT_TIMEOUT;
+            final long endTimeMillis = System.currentTimeMillis() + Long.valueOf(timeout) * 1000L;
+            while (timeout <= 0 || System.currentTimeMillis() < endTimeMillis) {
+                if (dispatch != null && dispatch.isAttached()) {
+                    return;
+                }
+                if (releaseDispatch) {
+                    throw new ETComException(exceptionHandler.getThrowable());
+                }
+                Thread.sleep(100L);
             }
-        }
-    }
-
-    @Override
-    public void close() {
-        try {
-            releaseDispatch();
-        } catch (final ETComException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
-        } finally {
-            ComThread.Release();
+            throw new ETComTimeoutException(String.format(
+                    "Maximum timeout of %d seconds exceeded: COM server not available!", timeout));
+        } catch (final InterruptedException e) {
+            throw new ETComException(e.getMessage(), e);
         }
     }
 
@@ -200,27 +176,36 @@ public class ETComClient implements ComApplication, AutoCloseable {
                     Thread.sleep(1000L);
                 }
             } catch (final ETComException e) {
+                if (e instanceof ETComTimeoutException) {
+                    return;
+                }
                 try {
                     Thread.sleep(1000L);
-                } catch (final InterruptedException e1) {
+                } catch (final InterruptedException ex) {
                     throw new ETComException(e.getMessage(), e);
                 }
             } catch (final InterruptedException e) {
                 throw new ETComException(e.getMessage(), e);
             }
         }
-        throw new ETComException(String.format("Timeout of %d seconds reached: COM server not available!",
-                timeout));
+        throw new ETComTimeoutException(
+                String.format("Maximum timeout of %d seconds exceeded: COM server not available!", timeout));
+    }
+
+    @Override
+    public void close() {
+        releaseDispatch = true;
+        ComThread.quitMainSTA();
     }
 
     @Override
     public ComTestEnvironment start() throws ETComException {
-        return new TestEnvironment(dispatch.performRequest("Start").toDispatch());
+        return new TestEnvironment(dispatch.performDirectRequest("Start").toDispatch());
     }
 
     @Override
     public ComTestEnvironment stop() throws ETComException {
-        return new TestEnvironment(dispatch.performRequest("Stop").toDispatch());
+        return new TestEnvironment(dispatch.performDirectRequest("Stop").toDispatch());
     }
 
     @Override
@@ -297,7 +282,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
     @Override
     public boolean importProject(final String path, final String importPath, final String importConfigPath,
             final boolean replaceFiles) throws ETComException {
-        return dispatch.performRequest("ImportProject", new Variant(path), new Variant(replaceFiles),
+        return dispatch.performDirectRequest("ImportProject", new Variant(path), new Variant(replaceFiles),
                 new Variant(false), new Variant(importPath), new Variant(importConfigPath)).getBoolean();
     }
 
@@ -324,10 +309,76 @@ public class ETComClient implements ComApplication, AutoCloseable {
     @Override
     public boolean waitForIdle(final int timeout) throws ETComException {
         if (timeout == 0) {
-            return dispatch.performRequest("WaitForIdle").getBoolean();
+            return dispatch.performDirectRequest("WaitForIdle").getBoolean();
         } else {
-            return dispatch.performRequest("WaitForIdle", new Variant(timeout)).getBoolean();
+            return dispatch.performDirectRequest("WaitForIdle", new Variant(timeout)).getBoolean();
         }
     }
 
+    /**
+     * Separate MTA COM thread that initializes and keeps the COM dispatch alive until the client gets closed.
+     * Calling methods to this dispatch can be made from main or other MTA threads.
+     */
+    private final class InitDispatch extends Thread {
+
+        private final String progId;
+
+        /**
+         * Instantiates a new {@link InitDispatch}.
+         *
+         * @param progId
+         *            the programmatic identifier
+         */
+        InitDispatch(final String progId) {
+            super();
+            this.progId = StringUtils.isEmpty(progId) ? ETComProperty.DEFAULT_PROG_ID : progId;
+        }
+
+        @Override
+        public void run() {
+            ActiveXComponent component = null;
+            try {
+                ComThread.InitMTA();
+                component = new ActiveXComponent(progId);
+                dispatch = new ETComDispatch(component.getObject());
+                while (!dispatch.isAttached()) {
+                    sleep(100L);
+                }
+                while (!releaseDispatch) {
+                    sleep(100L);
+                }
+            } catch (final InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                if (component != null) {
+                    component.safeRelease();
+                }
+                if (dispatch != null) {
+                    dispatch.safeRelease();
+                }
+                ComThread.Release();
+            }
+        }
+    }
+
+    /**
+     * Handles uncaught exceptions from {@link InitDispatch} thread.
+     */
+    private final class InitDispatchExceptionHandler implements UncaughtExceptionHandler {
+
+        private Throwable throwable;
+
+        /**
+         * @return the throwable from failing thread
+         */
+        public Throwable getThrowable() {
+            return throwable;
+        }
+
+        @Override
+        public void uncaughtException(final Thread t, final Throwable e) {
+            throwable = e;
+            releaseDispatch = true;
+        }
+    }
 }
