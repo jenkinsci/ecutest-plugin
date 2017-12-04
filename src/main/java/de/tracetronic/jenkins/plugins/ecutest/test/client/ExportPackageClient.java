@@ -47,7 +47,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
 
 /**
@@ -212,7 +212,7 @@ public class ExportPackageClient extends AbstractTMSClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo(String.format("- Exporting package %s to test management system...",
                     exportConfig.getFilePath()));
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 if (isExported = tm.exportPackage(exportConfig.getFilePath(), exportConfig.getExportPath(),
@@ -256,7 +256,7 @@ public class ExportPackageClient extends AbstractTMSClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo(String.format("- Exporting attributes of package %s to test management system...",
                     exportConfig.getFilePath()));
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 if (isExported = tm.exportPackageAttributes(exportConfig.getFilePath(),

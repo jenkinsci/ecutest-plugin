@@ -51,7 +51,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestBenchConfiguration;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestConfiguration;
 
@@ -200,7 +200,7 @@ public class ETClient extends AbstractToolClient {
             return false;
         } else {
             version = comVersion;
-            logger.logDebug("COM ProgID: " + ETComProgId.getInstance().getProgId());
+            logger.logDebug("COM ProgID: " + ETComProperty.getInstance().getProgId());
             logger.logDebug("COM version: " + comVersion);
         }
 
@@ -388,7 +388,7 @@ public class ETClient extends AbstractToolClient {
         public String call() throws IOException {
             String version = "";
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId, timeout)) {
                 if (comClient.isApplicationRunning()) {
                     version = comClient.getVersion();
@@ -431,7 +431,7 @@ public class ETClient extends AbstractToolClient {
         public Boolean call() throws IOException {
             boolean isTerminated = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId, timeout)) {
                 if (comClient.isApplicationRunning()) {
                     isTerminated = comClient.quit() || comClient.exit();
@@ -500,7 +500,7 @@ public class ETClient extends AbstractToolClient {
         public String call() throws IOException {
             String comVersion = "";
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 comVersion = comClient.getVersion();
             } catch (final ETComException e) {
@@ -533,7 +533,7 @@ public class ETClient extends AbstractToolClient {
         public String call() throws IOException {
             String tbcFilePath = "";
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
                     TestBenchConfiguration tbc = (TestBenchConfiguration)
                             comClient.getCurrentTestBenchConfiguration()) {
@@ -568,7 +568,7 @@ public class ETClient extends AbstractToolClient {
         public String call() throws IOException {
             String tcfFilePath = "";
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
                     TestConfiguration tcf = (TestConfiguration) comClient.getCurrentTestConfiguration()) {
                 tcfFilePath = StringUtils.trimToEmpty(tcf.getFileName());

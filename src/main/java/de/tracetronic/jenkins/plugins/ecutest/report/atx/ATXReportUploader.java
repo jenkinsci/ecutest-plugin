@@ -64,7 +64,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 
 /**
@@ -435,7 +435,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             boolean isUploaded = true;
             final TTConsoleLogger logger = new TTConsoleLogger(getListener());
             final Map<String, String> configMap = getConfigMap(true);
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                 final List<FilePath> uploadFiles = getReportFiles();

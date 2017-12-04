@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,11 +34,11 @@ import java.io.Serializable;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Serializable singleton class holding the current COM specific programmatic identifier.
+ * Serializable singleton class holding the current COM properties.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public final class ETComProgId implements Serializable {
+public final class ETComProperty implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -47,7 +47,13 @@ public final class ETComProgId implements Serializable {
      */
     public static final String DEFAULT_PROG_ID = "ECU-TEST.Application";
 
+    /**
+     * Default COM response timeout in seconds.
+     */
+    public static final int DEFAULT_TIMEOUT = 120;
+
     private String progId = DEFAULT_PROG_ID;
+    private int timeout = DEFAULT_TIMEOUT;
 
     /**
      * Gets the current COM specific programmatic identifier set by latest ECU-TEST startup.
@@ -69,13 +75,32 @@ public final class ETComProgId implements Serializable {
     }
 
     /**
-     * Private constructor.
+     * Gets the current COM response timeout set by latest ECU-TEST startup.
+     * 
+     * @return the timeout
      */
-    private ETComProgId() {
+    public int getTimeout() {
+        return timeout;
     }
 
     /**
-     * Ensures to not impact the state of object in which it was serialized.
+     * Sets the COM response timeout.
+     * 
+     * @param timeout
+     *            the timeout to set
+     */
+    public void setTimeout(final int timeout) {
+        this.timeout = timeout;
+    }
+
+    /**
+     * Private constructor.
+     */
+    private ETComProperty() {
+    }
+
+    /**
+     * Ensures not to impact the state of object in which it was serialized.
      *
      * @return the singleton instance
      */
@@ -88,7 +113,7 @@ public final class ETComProgId implements Serializable {
      */
     private static final class SingletonHolder {
 
-        private static final ETComProgId INSTANCE = new ETComProgId();
+        private static final ETComProperty INSTANCE = new ETComProperty();
 
         /**
          * Private constructor.
@@ -99,11 +124,11 @@ public final class ETComProgId implements Serializable {
     }
 
     /**
-     * Returns the current instance of {@link ETComProgId}.
+     * Returns the current instance of {@link ETComProperty}.
      *
      * @return the singleton instance
      */
-    public static ETComProgId getInstance() {
+    public static ETComProperty getInstance() {
         return SingletonHolder.INSTANCE;
     }
 }

@@ -45,7 +45,7 @@ import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
 
 /**
@@ -150,7 +150,7 @@ public abstract class AbstractTMSClient {
         public Boolean call() throws IOException {
             boolean isAvailable = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
 
             // Check ECU-TEST version and TMS module
             try (ETComClient comClient = new ETComClient(progId)) {
@@ -203,7 +203,7 @@ public abstract class AbstractTMSClient {
             if (credentials == null) {
                 logger.logError("-> No credentials provided!");
             } else {
-                final String progId = ETComProgId.getInstance().getProgId();
+                final String progId = ETComProperty.getInstance().getProgId();
                 try (ETComClient comClient = new ETComClient(progId)) {
                     final TestManagement tm = (TestManagement) comClient.getTestManagement();
                     logger.logInfo("-- Authenticating with user name: " + credentials.getUsername());
@@ -244,7 +244,7 @@ public abstract class AbstractTMSClient {
             boolean isLogout = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Log out from test management system...");
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 if (isLogout = tm.logout()) {

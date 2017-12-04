@@ -45,7 +45,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 
 /**
  * Contributes additional settings for the {@link ETInstallation}.
@@ -57,17 +57,21 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
     private static final long serialVersionUID = 1L;
 
     private final String progId;
+    private final int timeout;
 
     /**
      * Instantiates a new {@link ETToolProperty}.
      *
      * @param progId
      *            the programmatic identifier
+     * @param timeout
+     *            the timeout
      */
     @DataBoundConstructor
-    public ETToolProperty(final String progId) {
+    public ETToolProperty(final String progId, final int timeout) {
         super();
-        this.progId = StringUtils.defaultIfBlank(progId, String.valueOf(ETComProgId.DEFAULT_PROG_ID));
+        this.progId = StringUtils.defaultIfBlank(progId, String.valueOf(ETComProperty.DEFAULT_PROG_ID));
+        this.timeout = timeout;
     }
 
     /**
@@ -77,6 +81,15 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
      */
     public String getProgId() {
         return progId;
+    }
+
+    /**
+     * Gets the current maximum COM response timeout.
+     * 
+     * @return the timeout
+     */
+    public int getTimeout() {
+        return timeout;
     }
 
     @Override
@@ -102,7 +115,14 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
          * @return the default COM specific programmatic identifier
          */
         public static String getDefaultProgId() {
-            return ETComProgId.DEFAULT_PROG_ID;
+            return ETComProperty.DEFAULT_PROG_ID;
+        }
+
+        /**
+         * @return the default COM response timeout
+         */
+        public static int getDefaultTimeout() {
+            return ETComProperty.DEFAULT_TIMEOUT;
         }
 
         /**

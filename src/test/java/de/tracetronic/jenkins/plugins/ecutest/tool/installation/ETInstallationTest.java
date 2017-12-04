@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -57,7 +57,7 @@ public class ETInstallationTest {
     @Test
     public void testInstallationWithCustomProgId() {
         final ETInstallation inst = new ETInstallation("ECU-TEST", "C:\\ECU-TEST",
-                Collections.singletonList(new ETToolProperty("ECU-TEST6.Application")));
+                Collections.singletonList(new ETToolProperty("ECU-TEST6.Application", 120)));
         assertNotNull(inst);
         assertEquals("ECU-TEST", inst.getName());
         assertEquals("C:\\ECU-TEST", inst.getHome());

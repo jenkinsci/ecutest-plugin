@@ -44,30 +44,43 @@ import java.io.ObjectOutputStream;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link ETComProgId}.
+ * Unit tests for {@link ETComProperty}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ETComProgIdTest {
+public class ETComPropertyTest {
 
     @Test
     public void testDefaultProgId() {
-        final ETComProgId progId = ETComProgId.getInstance();
-        assertEquals(ETComProgId.DEFAULT_PROG_ID, progId.getProgId());
+        final ETComProperty progId = ETComProperty.getInstance();
+        assertEquals(ETComProperty.DEFAULT_PROG_ID, progId.getProgId());
     }
 
     @Test
     public void testEmptyProgId() {
-        final ETComProgId progId = ETComProgId.getInstance();
+        final ETComProperty progId = ETComProperty.getInstance();
         progId.setProgId("");
-        assertEquals(ETComProgId.DEFAULT_PROG_ID, progId.getProgId());
+        assertEquals(ETComProperty.DEFAULT_PROG_ID, progId.getProgId());
     }
 
     @Test
     public void testNewProgId() {
-        final ETComProgId progId = ETComProgId.getInstance();
+        final ETComProperty progId = ETComProperty.getInstance();
         progId.setProgId("ECU-TEST6.Application");
         assertEquals("ECU-TEST6.Application", progId.getProgId());
+    }
+
+    @Test
+    public void testDefaultTimeout() {
+        final ETComProperty progId = ETComProperty.getInstance();
+        assertEquals(ETComProperty.DEFAULT_TIMEOUT, progId.getTimeout());
+    }
+
+    @Test
+    public void testNewTiemout() {
+        final ETComProperty progId = ETComProperty.getInstance();
+        progId.setTimeout(120);
+        assertEquals(120, progId.getTimeout());
     }
 
     @Test
@@ -75,14 +88,14 @@ public class ETComProgIdTest {
         final File tempFile = File.createTempFile("test", ".ser");
 
         // Serialize object to file
-        final ETComProgId progId = ETComProgId.getInstance();
+        final ETComProperty progId = ETComProperty.getInstance();
         final ObjectOutput out = new ObjectOutputStream(new FileOutputStream(tempFile));
         out.writeObject(progId);
         out.close();
 
         // Deserialize from file to object
         final ObjectInput in = new ObjectInputStream(new FileInputStream(tempFile));
-        final ETComProgId progId2 = (ETComProgId) in.readObject();
+        final ETComProperty progId2 = (ETComProperty) in.readObject();
         in.close();
 
         tempFile.delete();

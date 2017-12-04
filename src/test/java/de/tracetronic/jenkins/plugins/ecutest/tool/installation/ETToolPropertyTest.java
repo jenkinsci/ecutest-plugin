@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -42,19 +42,22 @@ public class ETToolPropertyTest {
 
     @Test
     public void testBlankConstructor() {
-        final ETToolProperty property = new ETToolProperty("");
+        final ETToolProperty property = new ETToolProperty("", 120);
         assertEquals(ETToolProperty.DescriptorImpl.getDefaultProgId(), property.getProgId());
+        assertEquals(ETToolProperty.DescriptorImpl.getDefaultTimeout(), property.getTimeout());
     }
 
     @Test
     public void testNullConstructor() {
-        final ETToolProperty property = new ETToolProperty(null);
+        final ETToolProperty property = new ETToolProperty(null, 0);
         assertEquals(ETToolProperty.DescriptorImpl.getDefaultProgId(), property.getProgId());
+        assertEquals(0, property.getTimeout());
     }
 
     @Test
     public void testConstructor() {
-        final ETToolProperty property = new ETToolProperty("ECU-TEST6.Application");
+        final ETToolProperty property = new ETToolProperty("ECU-TEST6.Application", 120);
         assertEquals("ECU-TEST6.Application", property.getProgId());
+        assertEquals(120, property.getTimeout());
     }
 }

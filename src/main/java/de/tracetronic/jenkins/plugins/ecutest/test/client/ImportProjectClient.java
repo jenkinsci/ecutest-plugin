@@ -49,7 +49,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirConfig
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
 
 /**
@@ -263,7 +263,7 @@ public class ImportProjectClient extends AbstractTMSClient {
             boolean isImported = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo(String.format("- Importing project from archive %s...", importConfig.getTmsPath()));
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 if (isImported = comClient.importProject(importConfig.getTmsPath(), importConfig.getImportPath(),
                         importConfig.getImportConfigPath(), importConfig.isReplaceFiles())) {
@@ -306,7 +306,7 @@ public class ImportProjectClient extends AbstractTMSClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo(String.format("- Importing project %s from test management system...",
                     importConfig.getTmsPath()));
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 if (isImported = tm.importProject(importConfig.getTmsPath(), importConfig.getImportPath(),
@@ -350,7 +350,7 @@ public class ImportProjectClient extends AbstractTMSClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo(String.format("- Importing project directory %s from test management system...",
                     importConfig.getTmsPath()));
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 isImported = tm.importProjectDirectory(importConfig.getTmsPath(), importConfig.getImportPath(),
@@ -393,7 +393,7 @@ public class ImportProjectClient extends AbstractTMSClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo(String.format("- Importing attributes of project %s from test management system...",
                     importConfig.getFilePath()));
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 isImported = tm.importProjectAttributes(importConfig.getFilePath(), importConfig.getParsedTimeout());

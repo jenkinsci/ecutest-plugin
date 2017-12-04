@@ -66,7 +66,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 
 /**
  * Common base class for {@link ATXPublisher}, {@link ETLogPublisher}, {@link JUnitPublisher} and {@link TRFPublisher}.
@@ -336,7 +336,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
             throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }
         // Set the COM programmatic identifier for the current ECU-TEST instance
-        ETComProgId.getInstance().setProgId(installation.getProgId());
+        ETComProperty.getInstance().setProgId(installation.getProgId());
         return installation;
     }
 

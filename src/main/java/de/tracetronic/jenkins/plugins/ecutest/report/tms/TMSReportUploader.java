@@ -55,7 +55,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFReport;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTMSClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
 
 /**
@@ -161,7 +161,7 @@ public class TMSReportUploader extends AbstractTMSClient {
         public Boolean call() throws IOException {
             boolean isUploaded = true;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 for (final FilePath reportFile : reportFiles) {

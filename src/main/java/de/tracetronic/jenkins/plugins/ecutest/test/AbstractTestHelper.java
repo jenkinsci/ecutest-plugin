@@ -47,7 +47,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.TSClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 
 /**
  * Helper class providing common used functionalities for all test related task builders.
@@ -291,7 +291,7 @@ public abstract class AbstractTestHelper extends Builder {
         @Override
         public String call() throws IOException {
             String settingValue;
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 settingValue = comClient.getSetting(settingName);
                 if ("None".equals(settingValue)) {

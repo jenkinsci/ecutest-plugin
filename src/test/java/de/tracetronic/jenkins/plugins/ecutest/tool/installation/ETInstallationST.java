@@ -110,7 +110,7 @@ public class ETInstallationST extends SystemTestBase {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
                 .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", Collections
-                .singletonList(new ETToolProperty("ECU-TEST6.Application"))));
+                .singletonList(new ETToolProperty("ECU-TEST6.Application", 120))));
 
         final ToolLocationNodeProperty property = new ToolLocationNodeProperty(
                 new ToolLocationNodeProperty.ToolLocation(etDescriptor, "ECU-TEST", "C:\\ECU-TEST"));

@@ -33,4 +33,7 @@
      <f:entry title="${%progId.title}" description="${%progId.description}" field="progId">
         <f:textbox default="${descriptor.defaultProgId}" />
     </f:entry>
+    <f:entry title="${%timeout.title}" description="${%timeout.description}" field="timeout">
+        <f:number default="${descriptor.defaultTimeout}" clazz="number" min="0" step="10" />
+    </f:entry>
 </j:jelly>

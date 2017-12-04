@@ -43,7 +43,7 @@ import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProgId;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 
 /**
@@ -127,7 +127,7 @@ public class ReportGenerator {
             final String templateName = config.getName();
             final Map<String, String> configMap = getConfigMap();
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            final String progId = ETComProgId.getInstance().getProgId();
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                 logger.logInfo(String.format("- Generating %s test reports...", templateName));
