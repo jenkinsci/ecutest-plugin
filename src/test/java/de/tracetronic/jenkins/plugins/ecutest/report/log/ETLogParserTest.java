@@ -47,7 +47,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitTestResultParser
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogAnnotation.Severity;
 
 /**
- * System tests for {@link JUnitTestResultParser}.
+ * Integration tests for {@link JUnitTestResultParser}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */

@@ -9,6 +9,6 @@
     </Match>
     <Match>
         <!-- Ignore warnings in test classes. -->
-        <Class name="~.*\.*(Test|ST)$" />
+        <Class name="~.*\.*(Test|IT)$" />
     </Match>
 </FindBugsFilter>

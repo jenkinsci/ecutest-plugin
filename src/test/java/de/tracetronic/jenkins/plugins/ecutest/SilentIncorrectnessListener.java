@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2017 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@ package de.tracetronic.jenkins.plugins.ecutest;
 import com.gargoylesoftware.htmlunit.IncorrectnessListener;
 
 /**
- * Get rid of verbose warnings in system tests.
+ * Mutes HTML incorrectness listener for integration tests.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */

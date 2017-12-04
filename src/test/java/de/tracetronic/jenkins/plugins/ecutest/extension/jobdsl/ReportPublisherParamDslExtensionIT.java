@@ -27,32 +27,62 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.tracetronic.jenkins.plugins.ecutest;
+package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
-import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.CSSParseException;
-
-import com.gargoylesoftware.htmlunit.DefaultCssErrorHandler;
+import org.junit.Test;
 
 /**
- * Mutes CSS outputs for integration tests.
+ * Integration tests for {@link ReportPublisherDslExtension}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class QuietCssErrorHandler extends DefaultCssErrorHandler {
+public class ReportPublisherParamDslExtensionIT extends ReportPublisherDslExtensionIT {
 
-    private static final long serialVersionUID = 1L;
+    public static final String JOB_NAME = "reportPublisherParam";
+    public static final String SCRIPT_NAME = "reportPublisherParam.groovy";
 
     @Override
-    public void error(final CSSParseException e) throws CSSException {
+    protected String getJobName() {
+        return JOB_NAME;
     }
 
     @Override
-    public void fatalError(final CSSParseException e) throws CSSException {
-        super.fatalError(e);
+    protected String getDslScript() {
+        return SCRIPT_NAME;
     }
 
-    @Override
-    public void warning(final CSSParseException e) throws CSSException {
+    @Test
+    public void testPublishersWithParamDsl() throws Exception {
+        testPublishersWithDsl();
+    }
+
+    @Test
+    public void testPublishATXWithParamDsl() throws Exception {
+        testPublishATXWithDsl();
+    }
+
+    @Test
+    public void testTRFPublisherWithParamDsl() throws Exception {
+        testTRFPublisherWithDsl();
+    }
+
+    @Test
+    public void testUNITPublisherWithParamDsl() throws Exception {
+        testUNITPublisherWithDsl();
+    }
+
+    @Test
+    public void testETLogPublisherWithParamDsl() throws Exception {
+        testETLogPublisherWithDsl();
+    }
+
+    @Test
+    public void testGeneratorsPublisherWithParamDsl() throws Exception {
+        testGeneratorPublisherWithDsl();
+    }
+
+    @Test
+    public void testTMSPublisherWithParamDsl() throws Exception {
+        testTMSPublisherWithDsl();
     }
 }

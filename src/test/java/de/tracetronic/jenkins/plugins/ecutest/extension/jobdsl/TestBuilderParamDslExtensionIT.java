@@ -27,32 +27,57 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.tracetronic.jenkins.plugins.ecutest;
+package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
-import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.CSSParseException;
-
-import com.gargoylesoftware.htmlunit.DefaultCssErrorHandler;
+import org.junit.Test;
 
 /**
- * Mutes CSS outputs for integration tests.
+ * Integration tests for parameterized {@link TestBuilderDslExtension}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class QuietCssErrorHandler extends DefaultCssErrorHandler {
+public class TestBuilderParamDslExtensionIT extends TestBuilderDslExtensionIT {
 
-    private static final long serialVersionUID = 1L;
+    public static final String JOB_NAME = "testBuilderParam";
+    public static final String SCRIPT_NAME = "testBuilderParam.groovy";
 
     @Override
-    public void error(final CSSParseException e) throws CSSException {
+    protected String getJobName() {
+        return JOB_NAME;
     }
 
     @Override
-    public void fatalError(final CSSParseException e) throws CSSException {
-        super.fatalError(e);
+    protected String getDslScript() {
+        return SCRIPT_NAME;
     }
 
-    @Override
-    public void warning(final CSSParseException e) throws CSSException {
+    @Test
+    public void testBuildersWithParamDsl() throws Exception {
+        testBuildersWithDsl();
+    }
+
+    @Test
+    public void testPackageWithParamDsl() throws Exception {
+        testPackageWithDsl();
+    }
+
+    @Test
+    public void testProjectWithParamDsl() throws Exception {
+        testProjectWithDsl();
+    }
+
+    @Test
+    public void testFolderWithParamDsl() throws Exception {
+        testFolderWithDsl();
+    }
+
+    @Test
+    public void testImportPackageWithParamDsl() throws Exception {
+        testImportPackageWithDsl();
+    }
+
+    @Test
+    public void testImportProjectWithParamDsl() throws Exception {
+        testImportProjectWithDsl();
     }
 }

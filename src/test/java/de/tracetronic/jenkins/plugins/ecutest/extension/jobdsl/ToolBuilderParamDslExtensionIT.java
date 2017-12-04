@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -27,32 +27,52 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.tracetronic.jenkins.plugins.ecutest;
+package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
-import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.CSSParseException;
-
-import com.gargoylesoftware.htmlunit.DefaultCssErrorHandler;
+import org.junit.Test;
 
 /**
- * Mutes CSS outputs for integration tests.
+ * Integration tests for parameterized {@link ToolBuilderDslExtension}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class QuietCssErrorHandler extends DefaultCssErrorHandler {
+public class ToolBuilderParamDslExtensionIT extends ToolBuilderDslExtensionIT {
 
-    private static final long serialVersionUID = 1L;
+    public static final String JOB_NAME = "toolBuilderParam";
+    public static final String SCRIPT_NAME = "toolBuilderParam.groovy";
 
     @Override
-    public void error(final CSSParseException e) throws CSSException {
+    protected String getJobName() {
+        return JOB_NAME;
     }
 
     @Override
-    public void fatalError(final CSSParseException e) throws CSSException {
-        super.fatalError(e);
+    protected String getDslScript() {
+        return SCRIPT_NAME;
     }
 
-    @Override
-    public void warning(final CSSParseException e) throws CSSException {
+    @Test
+    public void testBuildersWithParamDsl() throws Exception {
+        testBuildersWithDsl();
+    }
+
+    @Test
+    public void testStartETWithParamDsl() throws Exception {
+        testStartETWithDsl();
+    }
+
+    @Test
+    public void testStopETWithParamDsl() throws Exception {
+        testStopETWithDsl();
+    }
+
+    @Test
+    public void testStartTSWithParamDsl() throws Exception {
+        testStartTSWithDsl();
+    }
+
+    @Test
+    public void testStopTSWithParamDsl() throws Exception {
+        testStopTSWithDsl();
     }
 }
