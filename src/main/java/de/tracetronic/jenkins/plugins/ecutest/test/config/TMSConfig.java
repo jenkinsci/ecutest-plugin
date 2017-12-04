@@ -185,13 +185,6 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
                     Jenkins.getInstance(), StandardCredentials.class,
                     Collections.<DomainRequirement> emptyList(),
                     CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class));
-
-            /*
-             * return new StandardListBoxModel().withEmptySelection().withMatching(
-             * CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class),
-             * CredentialsProvider.lookupCredentials(StandardCredentials.class, Jenkins.getInstance(), ACL.SYSTEM,
-             * Collections.<DomainRequirement> emptyList()));
-             */
         }
     }
 }
