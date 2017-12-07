@@ -102,7 +102,7 @@ public class ProjectClient extends AbstractTestClient {
 
         // Load test configuration
         if (!getTestConfig().isKeepConfig() && !launcher.getChannel().call(
-                new LoadConfigCallable(getTestConfig(), getExecutionConfig(), listener))) {
+                new LoadConfigCallable(getTestConfig(), listener))) {
             return false;
         }
 

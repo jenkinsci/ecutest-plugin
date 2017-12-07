@@ -195,7 +195,6 @@ public abstract class AbstractTestClient implements TestClient {
         private static final long serialVersionUID = 1L;
 
         private final TestConfig testConfig;
-        private final ExecutionConfig executionConfig;
         private final TaskListener listener;
 
         /**
@@ -203,15 +202,11 @@ public abstract class AbstractTestClient implements TestClient {
          *
          * @param testConfig
          *            the test configuration
-         * @param executionConfig
-         *            the execution configuration
          * @param listener
          *            the listener
          */
-        public LoadConfigCallable(final TestConfig testConfig, final ExecutionConfig executionConfig,
-                final TaskListener listener) {
+        public LoadConfigCallable(final TestConfig testConfig, final TaskListener listener) {
             this.testConfig = testConfig;
-            this.executionConfig = executionConfig;
             this.listener = listener;
         }
 
