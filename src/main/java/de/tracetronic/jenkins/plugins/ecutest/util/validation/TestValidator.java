@@ -216,7 +216,7 @@ public class TestValidator extends AbstractValidator {
      * @return {@code true} if variable name is valid, {@code false} otherwise
      */
     private boolean isValidVariableName(final String name) {
-        final Pattern pattern = Pattern.compile("^[a-zA-Z_][\\w]+$");
+        final Pattern pattern = Pattern.compile("^[a-zA-Z_][\\w]*$");
         final Matcher matcher = pattern.matcher(name);
         return matcher.matches();
     }
