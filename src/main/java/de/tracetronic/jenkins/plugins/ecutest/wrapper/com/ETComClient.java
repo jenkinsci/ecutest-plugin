@@ -198,11 +198,10 @@ public class ETComClient implements ComApplication, AutoCloseable {
         ComThread.quitMainSTA();
     }
 
-    @SuppressWarnings("all")
+    @SuppressWarnings("checkstyle:superfinalize")
     @Override
     protected void finalize() {
         // noop to prevent JVM crash
-        return;
     }
 
     @Override

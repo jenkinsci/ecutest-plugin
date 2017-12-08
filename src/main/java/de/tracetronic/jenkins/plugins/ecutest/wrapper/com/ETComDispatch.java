@@ -214,11 +214,10 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
         safeRelease();
     }
 
-    @SuppressWarnings("all")
+    @SuppressWarnings("checkstyle:superfinalize")
     @Override
     protected void finalize() {
         // noop to prevent JVM crash
-        return;
     }
 
     /**
