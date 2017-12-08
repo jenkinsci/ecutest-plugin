@@ -214,6 +214,13 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
         safeRelease();
     }
 
+    @SuppressWarnings("all")
+    @Override
+    protected void finalize() {
+        // noop to prevent JVM crash
+        return;
+    }
+
     /**
      * {@link Callable} performing the requested method on this {@link ETComDispatch}.
      * The performing call will be canceled if the current thread gets interrupted by timeout.

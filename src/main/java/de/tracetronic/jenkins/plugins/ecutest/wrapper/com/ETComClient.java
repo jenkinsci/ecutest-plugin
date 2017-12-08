@@ -198,6 +198,13 @@ public class ETComClient implements ComApplication, AutoCloseable {
         ComThread.quitMainSTA();
     }
 
+    @SuppressWarnings("all")
+    @Override
+    protected void finalize() {
+        // noop to prevent JVM crash
+        return;
+    }
+
     @Override
     public ComTestEnvironment start() throws ETComException {
         return new TestEnvironment(dispatch.performDirectRequest("Start").toDispatch());

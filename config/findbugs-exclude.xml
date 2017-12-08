@@ -11,4 +11,10 @@
         <!-- Ignore warnings in test classes. -->
         <Class name="~.*\.*(Test|IT)$" />
     </Match>
+    <Match>
+        <Bug pattern="FI_NULLIFY_SUPER"/>
+    </Match>
+    <Match>
+        <Bug pattern="FI_EMPTY"/>
+    </Match>
 </FindBugsFilter>
