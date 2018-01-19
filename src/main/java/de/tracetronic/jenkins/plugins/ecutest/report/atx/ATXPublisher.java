@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -314,7 +314,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     @SuppressWarnings("rawtypes")
     @Symbol("publishATX")
-    @Extension(ordinal = 10005)
+    @Extension(ordinal = 10007)
     public static class DescriptorImpl extends AbstractReportDescriptor {
 
         @CopyOnWrite

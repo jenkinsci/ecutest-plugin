@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -478,8 +478,8 @@ public class ETLogPublisher extends AbstractReportPublisher {
         }
 
         @Override
-        public List<String> invoke(final File baseDir, final VirtualChannel channel) throws IOException,
-        InterruptedException {
+        public List<String> invoke(final File baseDir, final VirtualChannel channel) 
+                throws IOException, InterruptedException {
             final List<String> files = new ArrayList<String>();
             for (final String includedFile : Util.createFileSet(baseDir, includes, excludes)
                     .getDirectoryScanner().getIncludedFiles()) {
@@ -499,7 +499,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link ETLogPublisher}.
      */
     @Symbol("publishETLogs")
-    @Extension(ordinal = 10001)
+    @Extension(ordinal = 10003)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -345,7 +345,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link ReportGeneratorPublisher}.
      */
     @Symbol("publishGenerators")
-    @Extension(ordinal = 10002)
+    @Extension(ordinal = 10004)
     public static class DescriptorImpl extends AbstractReportDescriptor {
 
         @Override

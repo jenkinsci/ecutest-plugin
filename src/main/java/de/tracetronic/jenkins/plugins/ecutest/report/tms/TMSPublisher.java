@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -248,7 +248,7 @@ public class TMSPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link TMSPublisher}.
      */
     @Symbol("publishTMS")
-    @Extension(ordinal = 10000)
+    @Extension(ordinal = 10001)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         /**
