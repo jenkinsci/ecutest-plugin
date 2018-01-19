@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -42,8 +42,8 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestEnvironment
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestExecutionInfo;
 
 /**
- * COM object representing the currently started test environment. The test environment supports operations to run
- * packages and projects.
+ * COM object representing the currently started test environment.
+ * This environment supports operations to run packages and projects.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */

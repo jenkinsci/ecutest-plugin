@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -37,6 +37,7 @@ import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;
 import com.jacob.com.Variant;
 
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComAnalysisEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComApplication;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComPackage;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComProject;
@@ -217,6 +218,11 @@ public class ETComClient implements ComApplication, AutoCloseable {
     @Override
     public ComTestEnvironment getTestEnvironment() throws ETComException {
         return new TestEnvironment(dispatch.performRequest("GetTestEnvironment").toDispatch());
+    }
+
+    @Override
+    public ComAnalysisEnvironment getAnalysisEnvironment() throws ETComException {
+        return new AnalysisEnvironment(dispatch.performRequest("GetAnalysisEnvironment").toDispatch());
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -64,6 +64,15 @@ public interface ComApplication {
      *             in case of a COM exception
      */
     ComTestEnvironment getTestEnvironment() throws ETComException;
+
+    /**
+     * Returns the analysis environment.
+     *
+     * @return the {@link ComAnalysisEnvironment} dispatch
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    ComAnalysisEnvironment getAnalysisEnvironment() throws ETComException;
 
     /**
      * Returns the test management module.
