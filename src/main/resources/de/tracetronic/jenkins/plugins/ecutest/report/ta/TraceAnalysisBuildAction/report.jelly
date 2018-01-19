@@ -29,18 +29,26 @@
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
-    <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation" page="select.jelly" />
-    <f:entry title="${%mergeReports.title}" description="${%mergeReports.description}" field="mergeReports">
-        <f:checkbox default="true" />
-    </f:entry>
-    <f:entry title="${%createReportDir.title}" description="${%createReportDir.description}" field="createReportDir">
-        <f:checkbox default="true" />
-    </f:entry>
-    <f:advanced>
-        <f:entry title="${%timeout.title}" description="${%timeout.description}" field="timeout">
-            <f:textbox default="${descriptor.defaultTimeout}" />
-        </f:entry>
-    </f:advanced>
-    <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly" />
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:lsi="/shim/layout/icon">
+    <tr>
+        <td>
+            <div style="text-indent: ${indent}px;">
+                <lsi:icon class="${it.reportIconClassName} icon-sm" alt="Trace analysis report" />
+                <st:nbsp />
+                <j:if test="${owner == build}">
+                    <a href="${report.url}">${report.title}</a>
+                </j:if>
+                <j:if test="${owner != build}">
+                    <a href="${rootURL}/${build.url}${it.urlName}/${report.id}">${report.title}</a>
+                </j:if>
+            </div>
+        </td>
+        <td class="fileSize">
+            ${h.humanReadableByteSize(report.fileSize)}
+        </td>
+        <j:set var="indent" value="${indent+20}" />
+        <j:forEach var="report" items="${report.getSubReports()}">
+            <st:include page="report.jelly" />
+        </j:forEach>
+    </tr>
 </j:jelly>

@@ -86,11 +86,16 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
      */
     protected static final int DEFAULT_TIMEOUT = 3600;
 
+    /**
+     * The URL name to {@link TraceAnalysisReport}s holding by {@link AbstractTraceAnalysisAction}.
+     */
+    protected static final String URL_NAME = "trace-analysis";
+
     @Nonnull
     private final String toolName;
     private boolean mergeReports = true;
     private boolean createReportDir = true;
-    private String timeout;
+    private String timeout = String.valueOf(getDefaultTimeout());
 
     /**
      * Instantiates a new {@link TraceAnalysisPublisher}.
@@ -157,6 +162,13 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
     }
 
     /**
+     * @return the default timeout
+     */
+    public static int getDefaultTimeout() {
+        return DEFAULT_TIMEOUT;
+    }
+
+    /**
      * @param mergeReports
      *            specifies whether to merge reports of
      *            analysis job executions into a main report.
@@ -187,8 +199,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
 
     @Override
     protected void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener)
-            throws InterruptedException, IOException, ETPluginException {
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing trace analysis...");
         ProcessUtil.checkOS(launcher);
@@ -204,12 +215,13 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
             throw new ETPluginException("Empty test results are not allowed, setting build status to FAILURE!");
         }
 
+        final List<TraceAnalysisReport> reports = new ArrayList<TraceAnalysisReport>();
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
         final boolean isETRunning = !foundProcesses.isEmpty();
 
         // Start ECU-TEST if necessary
         if (isETRunning) {
-            performAnalysis(run, workspace, launcher, listener, analysisFiles);
+            reports.addAll(performAnalysis(run, workspace, launcher, listener, analysisFiles));
         } else {
             // Get selected ECU-TEST installation
             final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
@@ -221,7 +233,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
             final ETClient etClient = new ETClient(expandedToolName, installPath, workspaceDir, settingsDir,
                     StartETBuilder.DEFAULT_TIMEOUT, false);
             if (etClient.start(false, workspace, launcher, listener)) {
-                performAnalysis(run, workspace, launcher, listener, analysisFiles);
+                reports.addAll(performAnalysis(run, workspace, launcher, listener, analysisFiles));
             } else {
                 logger.logError(String.format("Starting %s failed.", toolName));
             }
@@ -230,16 +242,24 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
             }
         }
 
+        if (isArchiving()) {
+            addBuildAction(run, reports);
+        } else {
+            logger.logInfo("Archiving trace analysis reports is disabled.");
+        }
+
         logger.logInfo("Trace analysis reports published successfully.");
     }
 
-    private void performAnalysis(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+    private List<TraceAnalysisReport> performAnalysis(final Run<?, ?> run, final FilePath workspace,
+            final Launcher launcher,
             final TaskListener listener, final List<FilePath> analysisFiles) throws IOException, InterruptedException {
-        final boolean isAnalyzed = runAnalysis(analysisFiles, launcher, listener);
+        runAnalysis(analysisFiles, launcher, listener);
         if (isMergeReports()) {
             final Map<FilePath, List<FilePath>> reportFiles = getReportFileMap(run, workspace, launcher);
-            final boolean isMerged = mergeReports(reportFiles, launcher, listener);
+            mergeReports(reportFiles, launcher, listener);
         }
+        return Collections.emptyList();
     }
 
     private boolean runAnalysis(final List<FilePath> analysisFiles, final Launcher launcher,
@@ -281,6 +301,26 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
             reportFileMap.put(mainReport, reportFiles);
         }
         return reportFileMap;
+    }
+
+    /**
+     * Adds the {@link TraceAnalysisBuildAction} to the build holding the found {@link TraceAnalysisReport}s.
+     *
+     * @param run
+     *            the run
+     * @param analysisReports
+     *            the list of {@link TraceAnalysisReport}s to add
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     */
+    private void addBuildAction(final Run<?, ?> run, final List<TraceAnalysisReport> analysisReports)
+            throws IOException {
+        TraceAnalysisBuildAction action = run.getAction(TraceAnalysisBuildAction.class);
+        if (action == null) {
+            action = new TraceAnalysisBuildAction(!isKeepAll());
+            run.addAction(action);
+        }
+        action.addAll(analysisReports);
     }
 
     @Override

@@ -90,6 +90,13 @@ public class AnalysisEnvironment extends ETComDispatch implements ComAnalysisEnv
         return performRequest("MergeJobReports", new Variant(mainReportFilename), jobList).getBoolean();
     }
 
+    /**
+     * Gets an 1-dimensional object array from a String-based list.
+     *
+     * @param list
+     *            the list
+     * @return the converted object array
+     */
     private Object[] getArrayFromList(final List<String> list) {
         final Object[] params = new Object[list.size()];
         int index = 0;

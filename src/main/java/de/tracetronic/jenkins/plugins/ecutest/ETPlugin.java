@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -279,6 +279,8 @@ public class ETPlugin {
                 "test-param",
                 "tool-param",
                 "trf-report",
+                "trace-check",
+                "trace-report"
         }) {
             // Register small (16x16) icons
             IconSet.icons.addIcon(new Icon(
