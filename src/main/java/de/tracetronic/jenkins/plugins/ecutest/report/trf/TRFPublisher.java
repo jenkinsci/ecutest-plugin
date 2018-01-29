@@ -231,10 +231,8 @@ public class TRFPublisher extends AbstractReportPublisher {
      *            the run
      * @param trfReports
      *            the list of {@link TRFReport}s to add
-     * @throws IOException
-     *             signals that an I/O exception has occurred
      */
-    private void addBuildAction(final Run<?, ?> run, final List<TRFReport> trfReports) throws IOException {
+    private void addBuildAction(final Run<?, ?> run, final List<TRFReport> trfReports) {
         TRFBuildAction action = run.getAction(TRFBuildAction.class);
         if (action == null) {
             action = new TRFBuildAction(!isKeepAll());

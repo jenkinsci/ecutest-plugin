@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -50,7 +50,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 
 /**
- * The Class JUnitReportGenerator.
+ * Class providing the generation of JUnit reports with ECU-TEST.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
@@ -80,7 +80,7 @@ public class JUnitReportGenerator {
      */
     public boolean generate(final ETInstallation installation, final List<FilePath> reportFiles,
             final Run<?, ?> run, final FilePath workspace, final Launcher launcher, final TaskListener listener)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         boolean isGenerated = false;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);

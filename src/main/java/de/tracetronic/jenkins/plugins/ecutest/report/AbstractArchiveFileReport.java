@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -129,7 +129,7 @@ public abstract class AbstractArchiveFileReport extends AbstractTestReport {
         final File rootDir = isProjectLevel ? build.getParent().getRootDir() : build.getRootDir();
         final File archiveFile = new File(new File(rootDir, getArchiveDir()), getFileName());
         if (!archiveFile.exists()) {
-            LOGGER.warning(String.format("Archive file does not exists: %s for %s", getFileName(),
+            LOGGER.warning(String.format("Archive file does not exist: %s for %s", getFileName(),
                     build.getFullDisplayName()));
             rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
