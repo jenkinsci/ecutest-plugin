@@ -35,10 +35,8 @@ import hudson.Launcher;
 import hudson.model.Result;
 import hudson.model.TaskListener;
 import hudson.model.Run;
-import hudson.remoting.Callable;
 import hudson.util.FormValidation;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,9 +48,6 @@ import java.util.Map.Entry;
 
 import javax.annotation.Nonnull;
 
-import jenkins.security.MasterToSlaveCallable;
-
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -63,16 +58,9 @@ import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.AnalysisEnvironment;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.AnalysisExecutionInfo;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 
 /**
  * Class holding the trace analysis configuration.
@@ -94,7 +82,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
     @Nonnull
     private final String toolName;
     private boolean mergeReports = true;
-    private boolean createReportDir = true;
+    private boolean createReportDir = false;
     private String timeout = String.valueOf(getDefaultTimeout());
 
     /**
@@ -200,40 +188,25 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
     @Override
     protected void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        final TTConsoleLogger logger = getLogger();
         logger.logInfo("Publishing trace analysis...");
-        ProcessUtil.checkOS(launcher);
 
-        final Result buildResult = run.getResult();
-        if (buildResult != null && !canContinue(buildResult)) {
-            logger.logInfo(String.format("Skipping publisher since build result is %s", buildResult));
+        if (isSkipped(run, launcher)) {
             return;
         }
 
-        final List<FilePath> analysisFiles = getAnalysisFiles(run, workspace, launcher);
+        final Map<FilePath, List<FilePath>> analysisFiles = getAnalysisFiles(run, workspace, launcher);
         if (analysisFiles.isEmpty() && !isAllowMissing()) {
-            throw new ETPluginException("Empty test results are not allowed, setting build status to FAILURE!");
+            throw new ETPluginException("Empty analysis results are not allowed, setting build status to FAILURE!");
         }
 
         final List<TraceAnalysisReport> reports = new ArrayList<TraceAnalysisReport>();
-        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
-        final boolean isETRunning = !foundProcesses.isEmpty();
-
-        // Start ECU-TEST if necessary
-        if (isETRunning) {
-            reports.addAll(performAnalysis(run, workspace, launcher, listener, analysisFiles));
+        if (isETRunning(launcher)) {
+            reports.addAll(performAnalysis(analysisFiles, run, launcher, listener));
         } else {
-            // Get selected ECU-TEST installation
-            final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
-                    run.getEnvironment(listener));
-            final String installPath = installation.getExecutable(launcher);
-            final String workspaceDir = getWorkspaceDir(run);
-            final String settingsDir = getSettingsDir(run);
-            final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
-            final ETClient etClient = new ETClient(expandedToolName, installPath, workspaceDir, settingsDir,
-                    StartETBuilder.DEFAULT_TIMEOUT, false);
+            final ETClient etClient = getToolClient(toolName, run, workspace, launcher, listener);
             if (etClient.start(false, workspace, launcher, listener)) {
-                reports.addAll(performAnalysis(run, workspace, launcher, listener, analysisFiles));
+                reports.addAll(performAnalysis(analysisFiles, run, launcher, listener));
             } else {
                 logger.logError(String.format("Starting %s failed.", toolName));
             }
@@ -251,56 +224,182 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
         logger.logInfo("Trace analysis reports published successfully.");
     }
 
-    private List<TraceAnalysisReport> performAnalysis(final Run<?, ?> run, final FilePath workspace,
-            final Launcher launcher,
-            final TaskListener listener, final List<FilePath> analysisFiles) throws IOException, InterruptedException {
-        runAnalysis(analysisFiles, launcher, listener);
-        if (isMergeReports()) {
-            final Map<FilePath, List<FilePath>> reportFiles = getReportFileMap(run, workspace, launcher);
-            mergeReports(reportFiles, launcher, listener);
+    /**
+     * Performs the trace analysis.
+     *
+     * @param analysisFiles
+     *            the analysis files
+     * @param run
+     *            the run
+     * @param launcher
+     *            the launcher
+     * @param listener
+     *            the listener
+     * @return the list of trace analysis reports
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             if the build gets interrupted
+     */
+    private List<TraceAnalysisReport> performAnalysis(final Map<FilePath, List<FilePath>> analysisFiles,
+            final Run<?, ?> run, final Launcher launcher, final TaskListener listener)
+                    throws IOException, InterruptedException {
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        final List<TraceAnalysisReport> reports = new ArrayList<TraceAnalysisReport>();
+
+        int index = 0;
+        final FilePath archiveTarget = prepareArchive(run);
+        for (final Entry<FilePath, List<FilePath>> analysisEntry : analysisFiles.entrySet()) {
+            final FilePath reportDir = analysisEntry.getKey();
+            final List<FilePath> jobFiles = analysisEntry.getValue();
+            final FilePath archiveTargetDir = archiveTarget.child(reportDir.getBaseName());
+
+            // Run trace analysis
+            final TraceAnalysisRunner runner = new TraceAnalysisRunner();
+            final List<FilePath> reportFiles = runner.runAnalysis(jobFiles, isCreateReportDir(),
+                    getParsedTimeout(), launcher, listener);
+
+            if (reportFiles.isEmpty() && !isAllowMissing()) {
+                logger.logError(String
+                        .format("-> Empty analysis results are not allowed, setting build status to FAILURE!"));
+                run.setResult(Result.FAILURE);
+            }
+
+            if (isMergeReports()) {
+                // Merge reports
+                final FilePath mainReport = getFirstReportFile(reportDir);
+                final boolean isMerged = runner.mergeReports(mainReport, reportFiles, launcher, listener);
+
+                if (!isMerged) {
+                    logger.logError(String
+                            .format("-> Failed merging analysis reports, setting build status to FAILURE!"));
+                    run.setResult(Result.FAILURE);
+                }
+
+                if (isArchiving()) {
+                    logger.logInfo(String.format("- Archiving main report: %s", mainReport));
+                    archiveReport(mainReport, archiveTargetDir, run, logger);
+                    index = addReport(reports, index, reportDir, mainReport);
+                }
+            } else if (isArchiving()) {
+                for (final FilePath reportFile : reportFiles) {
+                    logger.logInfo(String.format("- Archiving analysis report: %s", reportFile));
+                    FilePath targetDir;
+                    if (isCreateReportDir()) {
+                        targetDir = archiveTargetDir.getParent().child(reportFile.getParent().getName());
+                    } else {
+                        targetDir = archiveTargetDir.child(reportFile.getParent().getName());
+                    }
+                    archiveReport(reportFile, targetDir, run, logger);
+                    index = addReport(reports, index, reportDir, reportFile);
+                }
+            }
         }
-        return Collections.emptyList();
+
+        return reports;
     }
 
-    private boolean runAnalysis(final List<FilePath> analysisFiles, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
-        return launcher.getChannel().call(
-                new TraceAnalysisCallable(analysisFiles, createReportDir, getParsedTimeout(), listener));
-    }
-
-    private boolean mergeReports(final Map<FilePath, List<FilePath>> reportFileMap, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
-        boolean isMerged = true;
-        for (final Entry<FilePath, List<FilePath>> reportFiles : reportFileMap.entrySet()) {
-            isMerged = launcher.getChannel().call(
-                    new MergeReportsCallable(reportFiles.getKey(), reportFiles.getValue(), listener));
+    /**
+     * Prepares the target archive directory and removes old artifacts
+     * at project level when keeping the most recent artifacts only.
+     *
+     * @param run
+     *            the run
+     * @return the archive file path
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             the interrupted exception
+     */
+    private FilePath prepareArchive(final Run<?, ?> run) throws IOException, InterruptedException {
+        final FilePath archiveTarget = getArchiveTarget(run);
+        archiveTarget.mkdirs();
+        if (!isKeepAll()) {
+            archiveTarget.deleteRecursive();
+            removePreviousReports(run, TraceAnalysisBuildAction.class);
         }
-        return isMerged;
+        return archiveTarget;
     }
 
-    private List<FilePath> getAnalysisFiles(final Run<?, ?> run,
-            final FilePath workspace, final Launcher launcher) throws IOException, InterruptedException {
-        final List<FilePath> analysisFiles = new ArrayList<FilePath>();
+    /**
+     * Archives the analysis report on master.
+     *
+     * @param reportFile
+     *            the report file
+     * @param archiveTarget
+     *            the archive target
+     * @param run
+     *            the run
+     * @param logger
+     *            the logger
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             the interrupted exception
+     */
+    private void archiveReport(final FilePath reportFile, final FilePath archiveTarget, final Run<?, ?> run,
+            final TTConsoleLogger logger) throws IOException, InterruptedException {
+        if (reportFile.exists()) {
+            reportFile.copyTo(archiveTarget.child(reportFile.getName()));
+        } else if (!isAllowMissing()) {
+            logger.logError(String.format("-> Specified report file '%s' does not exist.",
+                    reportFile.getName()));
+            run.setResult(Result.FAILURE);
+        }
+    }
+
+    /**
+     * Adds an analysis report to list of reports.
+     *
+     * @param reports
+     *            the reports
+     * @param index
+     *            the current report index
+     * @param targetDir
+     *            the target directory
+     * @param report
+     *            the report to add
+     * @return the increased report index
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             the interrupted exception
+     */
+    private int addReport(final List<TraceAnalysisReport> reports, int index, final FilePath targetDir,
+            final FilePath report) throws IOException, InterruptedException {
+        final String relFilePath = targetDir.getParent().toURI().relativize(report.toURI()).getPath();
+        final TraceAnalysisReport trfReport = new TraceAnalysisReport(String.format("%d", ++index),
+                report.getParent().getName(), relFilePath, report.length());
+        reports.add(trfReport);
+        return index;
+    }
+
+    /**
+     * Collects the analysis job files from all report directories.
+     *
+     * @param run
+     *            the run
+     * @param workspace
+     *            the workspace
+     * @param launcher
+     *            the launcher
+     * @return the analysis files
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             the interrupted exception
+     */
+    private Map<FilePath, List<FilePath>> getAnalysisFiles(final Run<?, ?> run, final FilePath workspace,
+            final Launcher launcher)
+            throws IOException, InterruptedException {
+        final Map<FilePath, List<FilePath>> analysisFiles = new LinkedHashMap<FilePath, List<FilePath>>();
         final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
         for (final FilePath reportDir : reportDirs) {
-            analysisFiles.addAll(Arrays.asList(reportDir.list("**/Job_*.ajob")));
+            final List<FilePath> jobFiles = Arrays.asList(reportDir.list("**/Job_*.ajob"));
+            Collections.reverse(jobFiles);
+            analysisFiles.put(reportDir, jobFiles);
         }
-        Collections.reverse(analysisFiles);
         return analysisFiles;
-    }
-
-    private Map<FilePath, List<FilePath>> getReportFileMap(final Run<?, ?> run,
-            final FilePath workspace, final Launcher launcher) throws IOException, InterruptedException {
-        final Map<FilePath, List<FilePath>> reportFileMap = new LinkedHashMap<FilePath, List<FilePath>>();
-        final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
-        for (final FilePath reportDir : reportDirs) {
-            final FilePath mainReport = getFirstReportFile(reportDir);
-            final List<FilePath> reportFiles = new ArrayList<FilePath>();
-            reportFiles.addAll(Arrays.asList(reportDir.list("**/Job_*.trf")));
-            Collections.reverse(reportFiles);
-            reportFileMap.put(mainReport, reportFiles);
-        }
-        return reportFileMap;
     }
 
     /**
@@ -310,11 +409,8 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
      *            the run
      * @param analysisReports
      *            the list of {@link TraceAnalysisReport}s to add
-     * @throws IOException
-     *             signals that an I/O exception has occurred
      */
-    private void addBuildAction(final Run<?, ?> run, final List<TraceAnalysisReport> analysisReports)
-            throws IOException {
+    private void addBuildAction(final Run<?, ?> run, final List<TraceAnalysisReport> analysisReports) {
         TraceAnalysisBuildAction action = run.getAction(TraceAnalysisBuildAction.class);
         if (action == null) {
             action = new TraceAnalysisBuildAction(!isKeepAll());
@@ -325,7 +421,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
 
     @Override
     protected String getUrlName() {
-        throw new NotImplementedException();
+        return URL_NAME;
     }
 
     /**
@@ -361,153 +457,6 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
         @Override
         public String getDisplayName() {
             return Messages.TraceAnalysisPublisher_DisplayName();
-        }
-    }
-
-    /**
-     * {@link Callable} enabling executing the trace analysis of job files remotely.
-     */
-    private static final class TraceAnalysisCallable extends MasterToSlaveCallable<Boolean, IOException> {
-
-        private static final long serialVersionUID = 1L;
-
-        private final List<FilePath> jobFiles;
-        private final boolean createReportDir;
-        private final int timeout;
-        private final TaskListener listener;
-
-        /**
-         * Instantiates a new {@link TraceAnalysisCallable}.
-         *
-         * @param jobFiles
-         *            the list of analysis files
-         * @param createReportDir
-         *            specifies whether to create a new report directory
-         * @param timeout
-         *            the timeout running each trace analysis
-         * @param listener
-         *            the listener
-         */
-        TraceAnalysisCallable(final List<FilePath> jobFiles, final boolean createReportDir,
-                final int timeout, final TaskListener listener) {
-            this.jobFiles = jobFiles;
-            this.createReportDir = createReportDir;
-            this.timeout = timeout;
-            this.listener = listener;
-        }
-
-        @Override
-        public Boolean call() throws IOException {
-            boolean isAnalyzed = true;
-            final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            final String progId = ETComProperty.getInstance().getProgId();
-            try (ETComClient comClient = new ETComClient(progId);
-                    AnalysisEnvironment analysisEnv = (AnalysisEnvironment) comClient.getAnalysisEnvironment()) {
-                for (final FilePath jobFile : jobFiles) {
-                    logger.logInfo(String.format("- Running trace analysis: %s", jobFile.getRemote()));
-                    final AnalysisExecutionInfo execInfo =
-                            (AnalysisExecutionInfo) analysisEnv.executeJob(jobFile.getRemote(), createReportDir);
-                    int tickCounter = 0;
-                    final long endTimeMillis = System.currentTimeMillis() + Long.valueOf(timeout) * 1000L;
-                    while ("RUNNING".equals(execInfo.getState())) {
-                        if (tickCounter % 60 == 0) {
-                            logger.logInfo("-- tick...");
-                        }
-                        if (timeout > 0 && System.currentTimeMillis() > endTimeMillis) {
-                            logger.logWarn(String.format("-> Analysis execution timeout of %d seconds reached! "
-                                    + "Aborting trace analysis now...", timeout));
-                            execInfo.abort();
-                            break;
-                        }
-                        Thread.sleep(1000L);
-                        tickCounter++;
-                    }
-                    getTestInfo(execInfo, logger);
-                }
-            } catch (final ETComException | InterruptedException e) {
-                isAnalyzed = false;
-                logger.logError("Caught ComException: " + e.getMessage());
-            }
-            return isAnalyzed;
-        }
-
-        /**
-         * Gets the information of the executed package.
-         *
-         * @param execInfo
-         *            the execution info
-         * @param logger
-         *            the logger
-         * @throws ETComException
-         *             in case of a COM exception
-         */
-        private void getTestInfo(final AnalysisExecutionInfo execInfo, final TTConsoleLogger logger)
-                throws ETComException {
-            final String testResult = execInfo.getResult();
-            logger.logInfo(String.format("-> Analysis execution completed with result: %s", testResult));
-            final String testReportDir = new File(execInfo.getReportDb()).getParentFile().getAbsolutePath();
-            logger.logInfo(String.format("-> Test report directory: %s", testReportDir));
-        }
-    }
-
-    /**
-     * {@link Callable} enabling merging the analysis reports into the main report remotely.
-     */
-    private static final class MergeReportsCallable extends MasterToSlaveCallable<Boolean, IOException> {
-
-        private static final long serialVersionUID = 1L;
-
-        private final FilePath mainReport;
-        private final List<FilePath> jobReports;
-        private final TaskListener listener;
-
-        /**
-         * Instantiates a new {@link MergeReportsCallable}.
-         *
-         * @param mainReport
-         *            the main report
-         * @param jobReports
-         *            the job reports
-         * @param listener
-         *            the listener
-         */
-        MergeReportsCallable(final FilePath mainReport, final List<FilePath> jobReports, final TaskListener listener) {
-            this.mainReport = mainReport;
-            this.jobReports = jobReports;
-            this.listener = listener;
-        }
-
-        @Override
-        public Boolean call() throws IOException {
-            boolean isMerged = true;
-            final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            final String progId = ETComProperty.getInstance().getProgId();
-            try (ETComClient comClient = new ETComClient(progId);
-                    AnalysisEnvironment analysisEnv = (AnalysisEnvironment) comClient.getAnalysisEnvironment()) {
-                final List<String> jobFiles = getJobFiles(jobReports);
-                logger.logInfo(String.format("- Merging analysis reports into main report: %s",
-                        mainReport.getRemote()));
-                isMerged = analysisEnv.mergeJobReports(mainReport.getRemote(), jobFiles);
-            } catch (final ETComException e) {
-                isMerged = false;
-                logger.logError("Caught ComException: " + e.getMessage());
-            }
-            return isMerged;
-        }
-
-        /**
-         * Gets the list job files with their absolute file paths.
-         *
-         * @param jobReports
-         *            the job reports
-         * @return the list of job files
-         */
-        private List<String> getJobFiles(final List<FilePath> jobReports) {
-            final List<String> jobFiles = new ArrayList<String>();
-            for (final FilePath jobReport : jobReports) {
-                jobFiles.add(jobReport.getRemote());
-            }
-            return jobFiles;
         }
     }
 }

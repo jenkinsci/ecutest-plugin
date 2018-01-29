@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -65,7 +65,10 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
+import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 
 /**
@@ -92,6 +95,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
 
     private transient boolean downstream;
     private transient String workspace;
+    private transient TTConsoleLogger logger;
 
     /**
      * Instantiates a new {@link AbstractReportPublisher}.
@@ -255,13 +259,13 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException {
         try {
+            initLogger(listener);
             performReport(run, workspace, launcher, listener);
         } catch (final IOException e) {
             Util.displayIOException(e, listener);
             throw e;
         } catch (final ETPluginException e) {
-            final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            logger.logError(e.getMessage());
+            getLogger().logError(e.getMessage());
             throw new AbortException(e.getMessage());
         }
     }
@@ -288,6 +292,47 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
             throws InterruptedException, IOException, ETPluginException;
 
     /**
+     * Gets the logger instance.
+     *
+     * @return the logger
+     */
+    protected TTConsoleLogger getLogger() {
+        return logger != null ? logger : new TTConsoleLogger(TaskListener.NULL);
+    }
+
+    /**
+     * Initializes the logger.
+     *
+     * @param listener
+     *            the listener
+     */
+    private void initLogger(final TaskListener listener) {
+        logger = new TTConsoleLogger(listener);
+    }
+
+    /**
+     * Determines whether this publisher will be skipped
+     * depending on OS architecture and current build result.
+     *
+     * @param run
+     *            the run
+     * @param launcher
+     *            the launcher
+     * @return {@code true} when to skip, {@code false} otherwise
+     * @throws ETPluginException
+     *             if Unix-based launcher
+     */
+    protected boolean isSkipped(final Run<?, ?> run, final Launcher launcher) throws ETPluginException {
+        ProcessUtil.checkOS(launcher);
+        final Result buildResult = run.getResult();
+        if (buildResult != null && !canContinue(buildResult)) {
+            getLogger().logInfo(String.format("Skipping publisher since build result is %s", buildResult));
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Returns whether this publisher can continue processing. Returns {@code true} if the property {@code runOnFailed}
      * is set or if the build is not aborted or failed.
      *
@@ -301,6 +346,56 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         } else {
             return result.isBetterThan(Result.FAILURE);
         }
+    }
+
+    /**
+     * Checks whether an ECU-TEST instance is still running.
+     *
+     * @param launcher
+     *            the launcher
+     * @return {@code true} if ECU-TEST is running, {@code false} otherwise
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             the interrupted exception
+     */
+    protected boolean isETRunning(final Launcher launcher) throws IOException, InterruptedException {
+        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
+        return !foundProcesses.isEmpty();
+    }
+
+    /**
+     * Configures an ECU-TEST client with given workspace settings.
+     *
+     * @param toolName
+     *            the tool name
+     * @param run
+     *            the run
+     * @param workspace
+     *            the workspace
+     * @param launcher
+     *            the launcher
+     * @param listener
+     *            the listener
+     * @return the ECU-TEST client
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             the interrupted exception
+     * @throws ETPluginException
+     *             in case of a COM exception
+     */
+    protected ETClient getToolClient(final String toolName, final Run<?, ?> run, final FilePath workspace,
+            final Launcher launcher, final TaskListener listener)
+            throws IOException, InterruptedException, ETPluginException {
+        final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
+                run.getEnvironment(listener));
+        final String installPath = installation.getExecutable(launcher);
+        final String workspaceDir = getWorkspaceDir(run);
+        final String settingsDir = getSettingsDir(run);
+        final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
+        return new ETClient(expandedToolName, installPath, workspaceDir,
+                settingsDir, StartETBuilder.DEFAULT_TIMEOUT, false);
     }
 
     /**
@@ -524,6 +619,41 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         }
         Collections.reverse(reportFiles);
         return reportFiles;
+    }
+
+    /**
+     * Gets the size of given file.
+     *
+     * @param file
+     *            the file
+     * @return the file size
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             the interrupted exception
+     */
+    protected long getFileSize(final FilePath file) throws IOException, InterruptedException {
+        return file.length();
+    }
+
+    /**
+     * Gets the total size of given directory recursively.
+     *
+     * @param directory
+     *            the directory
+     * @return the directory size
+     * @throws IOException
+     *             signals that an I/O exception has occurred
+     * @throws InterruptedException
+     *             the interrupted exception
+     */
+    protected long getDirectorySize(final FilePath directory) throws IOException, InterruptedException {
+        long size = 0;
+        final FilePath[] files = directory.list("**");
+        for (final FilePath file : files) {
+            size += file.length();
+        }
+        return size;
     }
 
     /**

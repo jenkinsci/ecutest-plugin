@@ -271,26 +271,6 @@ public class ETLogPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Gets the total size of given directory recursively.
-     *
-     * @param directory
-     *            the directory
-     * @return the file size
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
-     */
-    private long getFileSize(final FilePath directory) throws IOException, InterruptedException {
-        long size = 0;
-        final FilePath[] files = directory.list("**");
-        for (final FilePath file : files) {
-            size += file.length();
-        }
-        return size;
-    }
-
-    /**
      * Creates the main report and adds the sub-reports by traversing them recursively.
      *
      * @param logReports
@@ -308,7 +288,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
     private int traverseReports(final List<ETLogReport> logReports, final FilePath archiveTargetDir, int id)
             throws IOException, InterruptedException {
         final ETLogReport logReport = new ETLogReport(String.format("%d", ++id),
-                archiveTargetDir.getName(), archiveTargetDir.getName(), getFileSize(archiveTargetDir),
+                archiveTargetDir.getName(), archiveTargetDir.getName(), getDirectorySize(archiveTargetDir),
                 Collections.<ETLogAnnotation> emptyList(), 0, 0);
         logReports.add(logReport);
 
@@ -346,7 +326,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
      */
     private int traverseSubReports(final ETLogReport logReport, final FilePath testReportDir,
             final FilePath subTestReportDir, int id)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
             FilePath logFile = subDir.child(ERROR_LOG_NAME);
             if (logFile.exists()) {
@@ -478,7 +458,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
         }
 
         @Override
-        public List<String> invoke(final File baseDir, final VirtualChannel channel) 
+        public List<String> invoke(final File baseDir, final VirtualChannel channel)
                 throws IOException, InterruptedException {
             final List<String> files = new ArrayList<String>();
             for (final String includedFile : Util.createFileSet(baseDir, includes, excludes)

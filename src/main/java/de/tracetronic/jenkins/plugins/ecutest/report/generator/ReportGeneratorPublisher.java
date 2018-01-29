@@ -244,7 +244,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private List<GeneratorReport> generateReports(final List<FilePath> reportFiles, final Run<?, ?> run,
             final FilePath workspace, final Launcher launcher, final TaskListener listener)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<GeneratorReport> reports = new ArrayList<GeneratorReport>();
         final FilePath archiveTarget = getArchiveTarget(run);
@@ -284,12 +284,12 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
                 // Collect reports
                 if (archiveTargetDir.exists()) {
                     final GeneratorReport report = new GeneratorReport(String.format("%d", ++index), templateName,
-                            templateName, getFileSize(archiveTargetDir));
+                            templateName, getDirectorySize(archiveTargetDir));
                     reports.add(report);
                     for (final FilePath testReportDir : archiveTargetDir.listDirectories()) {
                         final GeneratorReport subReport = new GeneratorReport(String.format("%d", ++index),
                                 testReportDir.getBaseName(), String.format("%s/%s", templateName,
-                                        testReportDir.getBaseName()), getFileSize(testReportDir));
+                                        testReportDir.getBaseName()), getDirectorySize(testReportDir));
                         report.addSubReport(subReport);
                     }
                 }
@@ -297,26 +297,6 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
         }
 
         return reports;
-    }
-
-    /**
-     * Gets the total size of given directory recursively.
-     *
-     * @param directory
-     *            the directory
-     * @return the file size
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
-     */
-    private long getFileSize(final FilePath directory) throws IOException, InterruptedException {
-        long size = 0;
-        final FilePath[] files = directory.list("**");
-        for (final FilePath file : files) {
-            size += file.length();
-        }
-        return size;
     }
 
     /**
