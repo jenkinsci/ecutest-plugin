@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.tms;
 
-import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -66,11 +65,8 @@ import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.TMSValidator;
 
 /**
@@ -146,34 +142,13 @@ public class TMSPublisher extends AbstractReportPublisher {
         return DEFAULT_TIMEOUT;
     }
 
-    /**
-     * Gets the tool installation by descriptor and tool name.
-     *
-     * @param envVars
-     *            the environment variables
-     * @return the tool installation
-     */
-    @CheckForNull
-    public AbstractToolInstallation getToolInstallation(final EnvVars envVars) {
-        final String expToolName = envVars.expand(toolName);
-        for (final AbstractToolInstallation installation : getDescriptor().getToolDescriptor().getInstallations()) {
-            if (StringUtils.equals(expToolName, installation.getName())) {
-                return installation;
-            }
-        }
-        return null;
-    }
-
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        final TTConsoleLogger logger = getLogger();
         logger.logInfo("Publishing reports to test management system...");
-        ProcessUtil.checkOS(launcher);
 
-        final Result buildResult = run.getResult();
-        if (buildResult != null && !canContinue(buildResult)) {
-            logger.logInfo(String.format("Skipping publisher since build result is %s", buildResult));
+        if (isSkipped(true, run, launcher)) {
             return;
         }
 
@@ -183,22 +158,10 @@ public class TMSPublisher extends AbstractReportPublisher {
         }
 
         boolean isPublished = false;
-        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
-        final boolean isETRunning = !foundProcesses.isEmpty();
-
-        // Start ECU-TEST if necessary
-        if (isETRunning) {
+        if (isETRunning(launcher)) {
             isPublished = publishReports(reportFiles, workspace, launcher, listener);
         } else {
-            // Get selected ECU-TEST installation
-            final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
-                    run.getEnvironment(listener));
-            final String installPath = installation.getExecutable(launcher);
-            final String workspaceDir = getWorkspaceDir(run);
-            final String settingsDir = getSettingsDir(run);
-            final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
-            final ETClient etClient = new ETClient(expandedToolName, installPath, workspaceDir, settingsDir,
-                    StartETBuilder.DEFAULT_TIMEOUT, false);
+            final ETClient etClient = getToolClient(toolName, run, workspace, launcher, listener);
             if (etClient.start(false, workspace, launcher, listener)) {
                 isPublished = publishReports(reportFiles, workspace, launcher, listener);
             } else {

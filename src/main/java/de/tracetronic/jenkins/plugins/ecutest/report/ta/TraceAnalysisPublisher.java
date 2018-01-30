@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.StringUtils;
@@ -181,8 +182,8 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
      *            the timeout running each trace analysis
      */
     @DataBoundSetter
-    public void setTimeout(final String timeout) {
-        this.timeout = timeout;
+    public void setTimeout(@CheckForNull final String timeout) {
+        this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(getDefaultTimeout()));
     }
 
     @Override
@@ -191,7 +192,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
         final TTConsoleLogger logger = getLogger();
         logger.logInfo("Publishing trace analysis...");
 
-        if (isSkipped(run, launcher)) {
+        if (isSkipped(true, run, launcher)) {
             return;
         }
 
@@ -200,13 +201,16 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
             throw new ETPluginException("Empty analysis results are not allowed, setting build status to FAILURE!");
         }
 
+        boolean isPublished = false;
         final List<TraceAnalysisReport> reports = new ArrayList<TraceAnalysisReport>();
         if (isETRunning(launcher)) {
             reports.addAll(performAnalysis(analysisFiles, run, launcher, listener));
+            isPublished = true;
         } else {
             final ETClient etClient = getToolClient(toolName, run, workspace, launcher, listener);
             if (etClient.start(false, workspace, launcher, listener)) {
                 reports.addAll(performAnalysis(analysisFiles, run, launcher, listener));
+                isPublished = true;
             } else {
                 logger.logError(String.format("Starting %s failed.", toolName));
             }
@@ -221,7 +225,12 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
             logger.logInfo("Archiving trace analysis reports is disabled.");
         }
 
-        logger.logInfo("Trace analysis reports published successfully.");
+        if (isPublished) {
+            logger.logInfo("Trace analysis reports published successfully.");
+        } else {
+            logger.logInfo("Failed publishing trace analysis reports.");
+            run.setResult(Result.FAILURE);
+        }
     }
 
     /**
@@ -244,7 +253,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
     private List<TraceAnalysisReport> performAnalysis(final Map<FilePath, List<FilePath>> analysisFiles,
             final Run<?, ?> run, final Launcher launcher, final TaskListener listener)
                     throws IOException, InterruptedException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        final TTConsoleLogger logger = getLogger();
         final List<TraceAnalysisReport> reports = new ArrayList<TraceAnalysisReport>();
 
         int index = 0;
@@ -390,8 +399,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
      *             the interrupted exception
      */
     private Map<FilePath, List<FilePath>> getAnalysisFiles(final Run<?, ?> run, final FilePath workspace,
-            final Launcher launcher)
-            throws IOException, InterruptedException {
+            final Launcher launcher) throws IOException, InterruptedException {
         final Map<FilePath, List<FilePath>> analysisFiles = new LinkedHashMap<FilePath, List<FilePath>>();
         final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
         for (final FilePath reportDir : reportDirs) {

@@ -51,6 +51,7 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
@@ -145,13 +146,11 @@ public class ETLogPublisher extends AbstractReportPublisher {
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
+        final TTConsoleLogger logger = getLogger();
         logger.logInfo("Publishing ECU-TEST logs...");
 
-        final Result buildResult = run.getResult();
-        if (buildResult != null && !canContinue(buildResult)) {
-            logger.logInfo(String.format("Skipping publisher since build result is %s", buildResult));
+        if (isSkipped(false, run, launcher)) {
             return;
         }
 
@@ -227,7 +226,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
                 }
             } else {
                 addBuildAction(run, logReports);
-                setBuildResult(run, listener, logReports);
+                setBuildResult(run, logReports);
             }
         } else {
             logger.logInfo("Archiving ECU-TEST logs is disabled.");
@@ -366,14 +365,11 @@ public class ETLogPublisher extends AbstractReportPublisher {
      *
      * @param run
      *            the run
-     * @param listener
-     *            the listener
      * @param logReports
      *            the log reports
      */
-    private void setBuildResult(final Run<?, ?> run, final TaskListener listener,
-            final List<ETLogReport> logReports) {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+    private void setBuildResult(final Run<?, ?> run, final List<ETLogReport> logReports) {
+        final TTConsoleLogger logger = getLogger();
         int totalWarnings = 0;
         int totalErrors = 0;
         for (final ETLogReport logReport : logReports) {

@@ -74,9 +74,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
-import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
@@ -119,39 +117,25 @@ public class ATXPublisher extends AbstractReportPublisher {
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        final TTConsoleLogger logger = getLogger();
         logger.logInfo("Publishing ATX reports...");
         ProcessUtil.checkOS(launcher);
 
-        final Result buildResult = run.getResult();
-        if (buildResult != null && !canContinue(buildResult)) {
-            logger.logInfo(String.format("Skipping publisher since build result is %s", buildResult));
+        if (isSkipped(true, run, launcher)) {
             return;
         }
 
-        // Get selected TEST-GUIDE installation
         final ATXInstallation installation = getInstallation(run.getEnvironment(listener));
         if (installation == null) {
             throw new ETPluginException("Selected TEST-GUIDE installation is not configured!");
         }
 
         boolean isPublished = false;
-        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
-        final boolean isETRunning = !foundProcesses.isEmpty();
-
-        // Start ECU-TEST if necessary and publish the ATX reports
-        if (isETRunning) {
+        if (isETRunning(launcher)) {
             isPublished = publishReports(installation, run, workspace, launcher, listener);
         } else {
-            String toolName = installation.getToolName();
-            final ETInstallation etInstallation = configureToolInstallation(toolName, workspace.toComputer(), listener,
-                    run.getEnvironment(listener));
-            final String installPath = etInstallation.getExecutable(launcher);
-            final String workspaceDir = getWorkspaceDir(run);
-            final String settingsDir = getSettingsDir(run);
-            toolName = run.getEnvironment(listener).expand(etInstallation.getName());
-            final ETClient etClient = new ETClient(toolName, installPath, workspaceDir, settingsDir,
-                    StartETBuilder.DEFAULT_TIMEOUT, false);
+            final String toolName = installation.getToolName();
+            final ETClient etClient = getToolClient(toolName, run, workspace, launcher, listener);
             if (etClient.start(false, workspace, launcher, listener)) {
                 isPublished = publishReports(installation, run, workspace, launcher, listener);
             } else {
@@ -191,7 +175,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean publishReports(final ATXInstallation installation, final Run<?, ?> run, final FilePath workspace,
             final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        final TTConsoleLogger logger = getLogger();
         final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
         final boolean isUploadEnabled = isUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, launcher, run.getEnvironment(listener));

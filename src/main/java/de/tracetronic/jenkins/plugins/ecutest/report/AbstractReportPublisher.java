@@ -314,6 +314,8 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * Determines whether this publisher will be skipped
      * depending on OS architecture and current build result.
      *
+     * @param checkOS
+     *            specifies whether to check OS
      * @param run
      *            the run
      * @param launcher
@@ -322,8 +324,11 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * @throws ETPluginException
      *             if Unix-based launcher
      */
-    protected boolean isSkipped(final Run<?, ?> run, final Launcher launcher) throws ETPluginException {
-        ProcessUtil.checkOS(launcher);
+    protected boolean isSkipped(final boolean checkOS, final Run<?, ?> run, final Launcher launcher)
+            throws ETPluginException {
+        if (checkOS) {
+            ProcessUtil.checkOS(launcher);
+        }
         final Result buildResult = run.getResult();
         if (buildResult != null && !canContinue(buildResult)) {
             getLogger().logInfo(String.format("Skipping publisher since build result is %s", buildResult));
@@ -387,7 +392,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      */
     protected ETClient getToolClient(final String toolName, final Run<?, ?> run, final FilePath workspace,
             final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException, ETPluginException {
+                    throws IOException, InterruptedException, ETPluginException {
         final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
                 run.getEnvironment(listener));
         final String installPath = installation.getExecutable(launcher);

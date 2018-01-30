@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -93,7 +93,7 @@ public class TMSReportUploader extends AbstractTMSClient {
      */
     public boolean upload(final List<FilePath> reportFiles, final String credentialsId, final String timeout,
             final FilePath workspace, final Launcher launcher, final TaskListener listener)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         boolean isUploaded = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
@@ -121,8 +121,8 @@ public class TMSReportUploader extends AbstractTMSClient {
      *             the interrupted exception
      */
     @CheckForNull
-    public StandardUsernamePasswordCredentials getCredentials(final String credentialsId) throws IOException,
-            InterruptedException {
+    private StandardUsernamePasswordCredentials getCredentials(final String credentialsId)
+            throws IOException, InterruptedException {
         final List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider.lookupCredentials(
                 StandardUsernamePasswordCredentials.class, Jenkins.getInstance(), ACL.SYSTEM,
                 Collections.<DomainRequirement> emptyList());
