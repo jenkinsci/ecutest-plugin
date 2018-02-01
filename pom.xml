@@ -34,7 +34,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.0</version>
+        <version>3.3</version>
         <relativePath />
     </parent>
 
@@ -77,13 +77,14 @@
 
     <properties>
         <!-- Jenkins base -->
-        <jenkins.version>2.60.1</jenkins.version>
+        <jenkins.version>2.60.3</jenkins.version>
+        <java.level>8</java.level>
         
         <!-- Jenkins plugins -->
         <matrix-project.version>1.12</matrix-project.version>
         <icon-shim.version>2.0.3</icon-shim.version>
         <junit.version>1.23</junit.version>
-        <structs.version>1.10</structs.version>
+        <structs.version>1.12</structs.version>
         <job-dsl.version>1.66</job-dsl.version>
         <credentials.version>2.1.16</credentials.version>
         <jquery-plugin.version>1.12.4-0</jquery-plugin.version>
@@ -240,25 +241,25 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>script-security</artifactId>
-            <version>1.39</version>
+            <version>1.40</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-job</artifactId>
-            <version>2.12.2</version>
+            <version>2.17</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-cps</artifactId>
-            <version>2.41</version>
+            <version>2.44</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-support</artifactId>
-            <version>2.14</version>
+            <version>2.17</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -270,13 +271,13 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-durable-task-step</artifactId>
-            <version>2.16</version>
+            <version>2.18</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-api</artifactId>
-            <version>2.23.1</version>
+            <version>2.25</version>
             <scope>test</scope>
         </dependency>
         <dependency>
