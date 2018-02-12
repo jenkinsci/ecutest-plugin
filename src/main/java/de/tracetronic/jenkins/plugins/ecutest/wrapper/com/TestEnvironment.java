@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -51,20 +51,22 @@ public class TestEnvironment extends ETComDispatch implements ComTestEnvironment
 
     /**
      * Instantiates a new {@link TestEnvironment}.
-     *
+     * 
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
      *
      * @param dispatch
      *            the dispatch
+     * @param useTimeout
+     *            specifies whether to apply timeout
      */
-    public TestEnvironment(final Dispatch dispatch) {
-        super(dispatch);
+    public TestEnvironment(final Dispatch dispatch, final boolean useTimeout) {
+        super(dispatch, useTimeout);
     }
 
     @Override
     public ComTestExecutionInfo getTestExecutionInfo() throws ETComException {
-        return new TestExecutionInfo(performRequest("GetTestExecutionInfo").toDispatch());
+        return new TestExecutionInfo(performRequest("GetTestExecutionInfo").toDispatch(), useTimeout());
     }
 
     /**
@@ -105,7 +107,7 @@ public class TestEnvironment extends ETComDispatch implements ComTestEnvironment
             final boolean runTest, final Map<String, String> parameters) throws ETComException {
         final Object[][] params = getArrayFromMap(parameters, true);
         return new TestExecutionInfo(performRequest("ExecutePackage", new Variant(path),
-                new Variant(runTraceAnalysis), new Variant(runTest), params).toDispatch());
+                new Variant(runTraceAnalysis), new Variant(runTest), params).toDispatch(), useTimeout());
     }
 
     /**
@@ -125,7 +127,7 @@ public class TestEnvironment extends ETComDispatch implements ComTestEnvironment
     public ComTestExecutionInfo executeProject(final String path, final boolean closeProgressDialog,
             final int jobExecutionMode) throws ETComException {
         return new TestExecutionInfo(performRequest("ExecuteProject", new Variant(path),
-                new Variant(closeProgressDialog), new Variant(jobExecutionMode)).toDispatch());
+                new Variant(closeProgressDialog), new Variant(jobExecutionMode)).toDispatch(), useTimeout());
     }
 
     /**

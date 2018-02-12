@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -193,8 +193,9 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
         } else {
             throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }
-        // Set the COM programmatic identifier for the current ECU-TEST instance
+        // Set the COM settings for the current ECU-TEST instance
         ETComProperty.getInstance().setProgId(installation.getProgId());
+        ETComProperty.getInstance().setTimeout(installation.getTimeout());
         return installation;
     }
 

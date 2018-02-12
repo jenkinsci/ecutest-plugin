@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -38,8 +38,8 @@ import hudson.Util;
 import hudson.XmlFile;
 import hudson.model.TaskListener;
 import hudson.model.Node;
-import hudson.tools.ToolProperty;
 import hudson.tools.ToolDescriptor;
+import hudson.tools.ToolProperty;
 import hudson.util.FormValidation;
 import hudson.util.XStream2;
 
@@ -203,6 +203,22 @@ public class ETInstallation extends AbstractToolInstallation {
             progId = ETToolProperty.DescriptorImpl.getDefaultProgId();
         }
         return progId;
+    }
+
+    /**
+     * Gets the programmatic identifier from tool properties.
+     *
+     * @return the progId, default progId if tool property does not exist
+     */
+    public int getTimeout() {
+        int timeout;
+        final ETToolProperty toolProperty = getProperties().get(ETToolProperty.class);
+        if (toolProperty != null) {
+            timeout = toolProperty.getTimeout();
+        } else {
+            timeout = ETToolProperty.DescriptorImpl.getDefaultTimeout();
+        }
+        return timeout;
     }
 
     /**

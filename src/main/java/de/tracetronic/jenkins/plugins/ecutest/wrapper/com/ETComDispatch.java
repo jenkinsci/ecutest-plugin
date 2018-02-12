@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -37,6 +37,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
 import com.jacob.com.JacobException;
 import com.jacob.com.Variant;
@@ -52,11 +53,17 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
 
     private static final Object[] NO_PARAMS = new Object[0];
 
+    private final boolean useTimeout;
+
     /**
      * Instantiates a new {@link ETComDispatch} with default programmatic identifier.
+     *
+     * @param useTimeout
+     *            specifies whether to apply timeout
      */
-    public ETComDispatch() {
+    public ETComDispatch(final boolean useTimeout) {
         super(ETComProperty.getInstance().getProgId());
+        this.useTimeout = useTimeout;
     }
 
     /**
@@ -67,9 +74,19 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      *
      * @param dispatch
      *            the dispatch
+     * @param useTimeout
+     *            specifies whether to apply timeout
      */
-    public ETComDispatch(final Dispatch dispatch) {
+    public ETComDispatch(final Dispatch dispatch, final boolean useTimeout) {
         super(dispatch);
+        this.useTimeout = useTimeout;
+    }
+
+    /**
+     * @return {@code true} if positive timeout is set, {@code false} otherwise
+     */
+    public boolean useTimeout() {
+        return useTimeout;
     }
 
     /**
@@ -132,14 +149,14 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      */
     protected Variant performRequest(final String method, final int timeout, final Object... params)
             throws ETComException {
+        if (timeout == 0) {
+            return performDirectRequest(method, params);
+        }
+
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final Future<Variant> future = executor.submit(new DispatchCallable(method, params));
         try {
-            if (timeout == 0) {
-                return future.get();
-            } else {
-                return future.get(Long.valueOf(timeout), TimeUnit.SECONDS);
-            }
+            return future.get(Long.valueOf(timeout), TimeUnit.SECONDS);
         } catch (final TimeoutException e) {
             future.cancel(true);
             throw new ETComTimeoutException(String.format("Request timeout of %d seconds exceeded!", timeout), e);
@@ -207,17 +224,42 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     }
 
     /**
+     * Releases this {@link ETComDispatch}.
+     *
+     * @throws ETComException
+     *             the underlying {@link JacobException}
+     */
+    private void releaseDispatch() throws ETComException {
+        try {
+            safeRelease();
+        } catch (final JacobException e) {
+            throw new ETComException(e.getMessage(), e);
+        }
+    }
+
+    /**
      * Closes this {@link ETComDispatch} quietly.
      */
     @Override
     public void close() {
-        safeRelease();
+        try {
+            releaseDispatch();
+        } catch (final ETComException e) {
+            // noop
+        } finally {
+            if (!useTimeout) {
+                ComThread.Release();
+            }
+        }
     }
 
     @SuppressWarnings("checkstyle:superfinalize")
     @Override
     protected void finalize() {
-        // noop to prevent JVM crash
+        if (useTimeout) {
+            return;
+            // noop to prevent JVM crash
+        }
     }
 
     /**

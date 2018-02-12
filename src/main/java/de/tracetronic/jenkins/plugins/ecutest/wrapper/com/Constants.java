@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -44,15 +44,17 @@ public class Constants extends AbstractTestObject implements ComConstants {
 
     /**
      * Instantiates a new {@link Constants}.
-     *
+     * 
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
      *
      * @param dispatch
      *            the dispatch
+     * @param useTimeout
+     *            specifies whether to apply timeout
      */
-    public Constants(final Dispatch dispatch) {
-        super(dispatch);
+    public Constants(final Dispatch dispatch, final boolean useTimeout) {
+        super(dispatch, useTimeout);
     }
 
     @Override
@@ -62,12 +64,12 @@ public class Constants extends AbstractTestObject implements ComConstants {
 
     @Override
     public ComConstant item(final int id) throws ETComException {
-        return new Constant(performRequest("Item", new Variant(id)).toDispatch());
+        return new Constant(performRequest("Item", new Variant(id)).toDispatch(), useTimeout());
     }
 
     @Override
     public ComConstant item(final String name) throws ETComException {
-        return new Constant(performRequest("Item", new Variant(name)).toDispatch());
+        return new Constant(performRequest("Item", new Variant(name)).toDispatch(), useTimeout());
     }
 
 }

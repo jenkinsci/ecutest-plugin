@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -35,6 +35,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;
+import com.jacob.com.JacobException;
 import com.jacob.com.Variant;
 
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComApplication;
@@ -64,6 +65,8 @@ public class ETComClient implements ComApplication, AutoCloseable {
      * Holds the status when to release the dispatch.
      */
     private boolean releaseDispatch;
+
+    private boolean timeoutEnabled;
 
     /**
      * Instantiates a new {@link ETComClient} by initializing the {@link ETComDispatch} with the configured COM
@@ -132,6 +135,47 @@ public class ETComClient implements ComApplication, AutoCloseable {
      *             in case of a COM exception
      */
     private void initDispatch(final String progId) throws ETComException {
+        final ETComProperty properties = ETComProperty.getInstance();
+        final int timeout = properties.getTimeout();
+        if (timeout == 0) {
+            timeoutEnabled = false;
+            initSTA(progId);
+        } else {
+            timeoutEnabled = true;
+            initMTA(progId);
+        }
+    }
+
+    /**
+     * Initializes the a single-threaded {@link COMThread} and sets the {@link ETComDispatch} instance using the default
+     * program id returned from the {@link ActiveXComponent}.
+     *
+     * @param progId
+     *            the programmatic identifier
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    private void initSTA(final String progId) throws ETComException {
+        try {
+            ComThread.InitSTA();
+            final ActiveXComponent component = new ActiveXComponent(StringUtils.isEmpty(progId) ?
+                    ETComProperty.DEFAULT_PROG_ID : progId);
+            dispatch = new ETComDispatch(component.getObject(), false);
+        } catch (final JacobException e) {
+            throw new ETComException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Initializes the a single-threaded {@link COMThread} and sets the {@link ETComDispatch} instance using the default
+     * program id returned from the {@link ActiveXComponent}.
+     *
+     * @param progId
+     *            the programmatic identifier
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    private void initMTA(final String progId) throws ETComException {
         try {
             ComThread.InitMTA();
             releaseDispatch = false;
@@ -194,34 +238,67 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     @Override
     public void close() {
-        releaseDispatch = true;
-        ComThread.quitMainSTA();
+        if (timeoutEnabled) {
+            releaseDispatch = true;
+            ComThread.quitMainSTA();
+        } else {
+            try {
+                releaseDispatch();
+            } catch (final ETComException e) {
+                // noop
+            } finally {
+                ComThread.Release();
+            }
+        }
     }
 
     @SuppressWarnings("checkstyle:superfinalize")
     @Override
-    protected void finalize() {
-        // noop to prevent JVM crash
+    protected void finalize() throws Throwable {
+        if (!timeoutEnabled) {
+            try {
+                releaseDispatch();
+            } finally {
+                ComThread.Release();
+                super.finalize();
+            }
+        } // else noop to prevent JVM crash
+    }
+
+    /**
+     * Releases the {@link Dispatch}.
+     *
+     * @throws ETComException
+     *             in case of a COM exception
+     */
+    private void releaseDispatch() throws ETComException {
+        if (dispatch != null) {
+            try {
+                dispatch.safeRelease();
+            } catch (final JacobException e) {
+                throw new ETComException(e.getMessage(), e);
+            }
+        }
     }
 
     @Override
     public ComTestEnvironment start() throws ETComException {
-        return new TestEnvironment(dispatch.performDirectRequest("Start").toDispatch());
+        return new TestEnvironment(dispatch.performDirectRequest("Start").toDispatch(), timeoutEnabled);
     }
 
     @Override
     public ComTestEnvironment stop() throws ETComException {
-        return new TestEnvironment(dispatch.performDirectRequest("Stop").toDispatch());
+        return new TestEnvironment(dispatch.performDirectRequest("Stop").toDispatch(), timeoutEnabled);
     }
 
     @Override
     public ComTestEnvironment getTestEnvironment() throws ETComException {
-        return new TestEnvironment(dispatch.performRequest("GetTestEnvironment").toDispatch());
+        return new TestEnvironment(dispatch.performRequest("GetTestEnvironment").toDispatch(), timeoutEnabled);
     }
 
     @Override
     public ComTestManagement getTestManagement() throws ETComException {
-        return new TestManagement(dispatch.performRequest("GetTestManagementModule").toDispatch());
+        return new TestManagement(dispatch.performRequest("GetTestManagementModule").toDispatch(), timeoutEnabled);
     }
 
     @Override
@@ -251,7 +328,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     @Override
     public ComPackage openPackage(final String path) throws ETComException {
-        return new Package(dispatch.performRequest("OpenPackage", new Variant(path)).toDispatch());
+        return new Package(dispatch.performRequest("OpenPackage", new Variant(path)).toDispatch(), timeoutEnabled);
     }
 
     @Override
@@ -277,7 +354,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
     public ComProject openProject(final String path, final boolean execInCurrentPkgDir,
             final String filterExpression) throws ETComException {
         return new Project(dispatch.performRequest("OpenProject", new Variant(path),
-                new Variant(execInCurrentPkgDir), new Variant(filterExpression)).toDispatch());
+                new Variant(execInCurrentPkgDir), new Variant(filterExpression)).toDispatch(), timeoutEnabled);
     }
 
     @Override
@@ -304,12 +381,14 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     @Override
     public ComTestConfiguration getCurrentTestConfiguration() throws ETComException {
-        return new TestConfiguration(dispatch.performRequest("GetCurrentTestConfiguration").toDispatch());
+        return new TestConfiguration(dispatch.performRequest("GetCurrentTestConfiguration").toDispatch(),
+                timeoutEnabled);
     }
 
     @Override
     public ComTestBenchConfiguration getCurrentTestBenchConfiguration() throws ETComException {
-        return new TestBenchConfiguration(dispatch.performRequest("GetCurrentTestbenchConfiguration").toDispatch());
+        return new TestBenchConfiguration(dispatch.performRequest("GetCurrentTestbenchConfiguration").toDispatch(),
+                timeoutEnabled);
     }
 
     @Override
@@ -346,7 +425,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
             try {
                 ComThread.InitMTA();
                 component = new ActiveXComponent(progId);
-                dispatch = new ETComDispatch(component.getObject());
+                dispatch = new ETComDispatch(component.getObject(), true);
                 while (!dispatch.isAttached()) {
                     sleep(100L);
                 }

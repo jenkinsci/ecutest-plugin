@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -42,15 +42,17 @@ public class TestExecutionInfo extends ETComDispatch implements ComTestExecution
 
     /**
      * Instantiates a new {@link TestExecutionInfo}.
-     *
+     * 
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
      *
      * @param dispatch
      *            the dispatch
+     * @param useTimeout
+     *            specifies whether to apply timeout
      */
-    public TestExecutionInfo(final Dispatch dispatch) {
-        super(dispatch);
+    public TestExecutionInfo(final Dispatch dispatch, final boolean useTimeout) {
+        super(dispatch, useTimeout);
     }
 
     @Override
