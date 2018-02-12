@@ -66,7 +66,10 @@ public class ETComClient implements ComApplication, AutoCloseable {
      */
     private boolean releaseDispatch;
 
-    private boolean timeoutEnabled;
+    /**
+     * Specifies whether to apply the configured COM timeout.
+     */
+    private boolean useTimeout;
 
     /**
      * Instantiates a new {@link ETComClient} by initializing the {@link ETComDispatch} with the configured COM
@@ -138,10 +141,10 @@ public class ETComClient implements ComApplication, AutoCloseable {
         final ETComProperty properties = ETComProperty.getInstance();
         final int timeout = properties.getTimeout();
         if (timeout == 0) {
-            timeoutEnabled = false;
+            useTimeout = false;
             initSTA(progId);
         } else {
-            timeoutEnabled = true;
+            useTimeout = true;
             initMTA(progId);
         }
     }
@@ -238,7 +241,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     @Override
     public void close() {
-        if (timeoutEnabled) {
+        if (useTimeout) {
             releaseDispatch = true;
             ComThread.quitMainSTA();
         } else {
@@ -255,7 +258,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
     @SuppressWarnings("checkstyle:superfinalize")
     @Override
     protected void finalize() throws Throwable {
-        if (!timeoutEnabled) {
+        if (!useTimeout) {
             try {
                 releaseDispatch();
             } finally {
@@ -283,22 +286,22 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     @Override
     public ComTestEnvironment start() throws ETComException {
-        return new TestEnvironment(dispatch.performDirectRequest("Start").toDispatch(), timeoutEnabled);
+        return new TestEnvironment(dispatch.performDirectRequest("Start").toDispatch(), useTimeout);
     }
 
     @Override
     public ComTestEnvironment stop() throws ETComException {
-        return new TestEnvironment(dispatch.performDirectRequest("Stop").toDispatch(), timeoutEnabled);
+        return new TestEnvironment(dispatch.performDirectRequest("Stop").toDispatch(), useTimeout);
     }
 
     @Override
     public ComTestEnvironment getTestEnvironment() throws ETComException {
-        return new TestEnvironment(dispatch.performRequest("GetTestEnvironment").toDispatch(), timeoutEnabled);
+        return new TestEnvironment(dispatch.performRequest("GetTestEnvironment").toDispatch(), useTimeout);
     }
 
     @Override
     public ComTestManagement getTestManagement() throws ETComException {
-        return new TestManagement(dispatch.performRequest("GetTestManagementModule").toDispatch(), timeoutEnabled);
+        return new TestManagement(dispatch.performRequest("GetTestManagementModule").toDispatch(), useTimeout);
     }
 
     @Override
@@ -328,7 +331,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     @Override
     public ComPackage openPackage(final String path) throws ETComException {
-        return new Package(dispatch.performRequest("OpenPackage", new Variant(path)).toDispatch(), timeoutEnabled);
+        return new Package(dispatch.performRequest("OpenPackage", new Variant(path)).toDispatch(), useTimeout);
     }
 
     @Override
@@ -354,7 +357,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
     public ComProject openProject(final String path, final boolean execInCurrentPkgDir,
             final String filterExpression) throws ETComException {
         return new Project(dispatch.performRequest("OpenProject", new Variant(path),
-                new Variant(execInCurrentPkgDir), new Variant(filterExpression)).toDispatch(), timeoutEnabled);
+                new Variant(execInCurrentPkgDir), new Variant(filterExpression)).toDispatch(), useTimeout);
     }
 
     @Override
@@ -382,13 +385,13 @@ public class ETComClient implements ComApplication, AutoCloseable {
     @Override
     public ComTestConfiguration getCurrentTestConfiguration() throws ETComException {
         return new TestConfiguration(dispatch.performRequest("GetCurrentTestConfiguration").toDispatch(),
-                timeoutEnabled);
+                useTimeout);
     }
 
     @Override
     public ComTestBenchConfiguration getCurrentTestBenchConfiguration() throws ETComException {
         return new TestBenchConfiguration(dispatch.performRequest("GetCurrentTestbenchConfiguration").toDispatch(),
-                timeoutEnabled);
+                useTimeout);
     }
 
     @Override
