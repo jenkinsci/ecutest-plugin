@@ -392,12 +392,12 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      */
     protected ETClient getToolClient(final String toolName, final Run<?, ?> run, final FilePath workspace,
             final Launcher launcher, final TaskListener listener)
-                    throws IOException, InterruptedException, ETPluginException {
+            throws IOException, InterruptedException, ETPluginException {
         final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
                 run.getEnvironment(listener));
         final String installPath = installation.getExecutable(launcher);
-        final String workspaceDir = getWorkspaceDir(run);
-        final String settingsDir = getSettingsDir(run);
+        final String workspaceDir = getWorkspaceDir(run, workspace);
+        final String settingsDir = getSettingsDir(run, workspace);
         final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
         return new ETClient(expandedToolName, installPath, workspaceDir,
                 settingsDir, StartETBuilder.DEFAULT_TIMEOUT, false);
@@ -468,13 +468,19 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      *
      * @param run
      *            the run
+     * @param workspace
+     *            the workspace
      * @return the workspace directory
      */
-    protected String getWorkspaceDir(final Run<?, ?> run) {
-        String workspaceDir = "";
+    protected String getWorkspaceDir(final Run<?, ?> run, final FilePath workspace) {
+        String workspaceDir;
         final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
         if (toolEnvAction != null) {
             workspaceDir = toolEnvAction.getToolWorkspace();
+        } else if (isDownstream()) {
+            workspaceDir = workspace.child(getWorkspace()).getRemote();
+        } else {
+            workspaceDir = "";
         }
         return workspaceDir;
     }
@@ -484,13 +490,19 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      *
      * @param run
      *            the run
+     * @param workspace
+     *            the workspace
      * @return the settings directory
      */
-    protected String getSettingsDir(final Run<?, ?> run) {
-        String settingsDir = "";
+    protected String getSettingsDir(final Run<?, ?> run, final FilePath workspace) {
+        String settingsDir;
         final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
         if (toolEnvAction != null) {
             settingsDir = toolEnvAction.getToolSettings();
+        } else if (isDownstream()) {
+            settingsDir = workspace.child(getWorkspace()).getRemote();
+        } else {
+            settingsDir = "";
         }
         return settingsDir;
     }
