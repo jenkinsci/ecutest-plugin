@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -43,9 +43,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +59,6 @@ import net.sf.json.groovy.JsonSlurper;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction.TestType;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
@@ -133,13 +134,13 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 uploadFiles.addAll(Arrays.asList(
                         reportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
                 // Prepare ATX report links
-                final String from = String.valueOf(run.getTimeInMillis());
-                final String to = from;
                 final String title = reportFile.getParent().getName();
                 final TestInfoHolder testInfo = launcher.getChannel().call(
                         new ParseTRFCallable(reportFile.getRemote()));
                 final String testName = testInfo.getTestName();
                 final TestType testType = testInfo.getTestType();
+                final String from = String.valueOf(testInfo.getFrom());
+                final String to = String.valueOf(testInfo.getTo());
                 index = traverseReports(atxReports, reportDir, index, title, baseUrl, from, to,
                         testName, testType, projectId);
             } else {
@@ -161,45 +162,10 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         final boolean isUploaded = launcher.getChannel().call(
                 new UploadReportCallable(config, uploadFiles, envVars, listener));
         if (isUploaded) {
-            // FIXME: hackish way to fix the upload end date
-            final String to = String.valueOf(Calendar.getInstance().getTimeInMillis());
-            updateReportUrls(atxReports, to);
             addBuildAction(run, atxReports);
         }
 
         return isUploaded;
-    }
-
-    /**
-     * Updates the end date of all report URLs.
-     *
-     * @param reports
-     *            the ATX reports
-     * @param to
-     *            the new end date
-     */
-    private void updateReportUrls(final List<? extends AbstractTestReport> reports, final String to) {
-        for (final AbstractTestReport report : reports) {
-            if (report instanceof ATXReport) {
-                final ATXReport atxReport = (ATXReport) report;
-                final String reportUrl = updateEndDate(atxReport.getReportUrl(), to);
-                atxReport.setReportUrl(reportUrl);
-                updateReportUrls(atxReport.getSubReports(), to);
-            }
-        }
-    }
-
-    /**
-     * Replaces the end date of the report URL.
-     *
-     * @param reportUrl
-     *            the report URL
-     * @param to
-     *            the new end date
-     * @return the replaced report URL
-     */
-    private String updateEndDate(final String reportUrl, final String to) {
-        return reportUrl.replaceFirst("dateTo=\\d+", "dateTo=" + to);
     }
 
     /**
@@ -289,7 +255,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      */
     private int traverseSubReports(final ATXReport atxReport, final FilePath testReportDir, int id,
             final String baseUrl, final String from, final String to, final String projectName, final String projectId)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         for (final FilePath subDir : testReportDir.listDirectories()) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(subDir);
             if (reportFile != null && reportFile.exists()) {
@@ -482,7 +448,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     }
 
     /**
-     * {@link Callable} parsing the test name and type of a TRF remotely.
+     * {@link Callable} parsing the test name, type and execution times of a TRF remotely.
      */
     private static final class ParseTRFCallable extends MasterToSlaveCallable<TestInfoHolder, IOException> {
 
@@ -502,38 +468,74 @@ public class ATXReportUploader extends AbstractATXReportHandler {
 
         @Override
         public TestInfoHolder call() throws IOException {
-            final String prjQuery = "SELECT name FROM prj";
-            final String prjName = queryTest(prjQuery);
-            if ("$$$_PACKAGE_$$$".equals(prjName)) {
-                final String pkgQuery = "SELECT name FROM pkg";
-                final String pkgName = queryTest(pkgQuery);
-                return new TestInfoHolder(pkgName, TestType.PACKAGE);
-            } else {
-                return new TestInfoHolder(prjName, TestType.PROJECT);
+            try (SQLite sql = new SQLite(trfFile)) {
+                ResultSet rs = sql.query("SELECT execution_time, duration from info");
+                final String execTime = rs.getString("execution_time");
+                final SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                final Date date = fmt.parse(execTime);
+                final float duration = rs.getFloat("duration") * 1000.0f;
+                final long from = (long) date.getTime();
+                final long to = from + (long) duration;
+
+                rs = sql.query("SELECT name FROM prj");
+                final String prjName = rs.getString("name");
+                if ("$$$_PACKAGE_$$$".equals(prjName)) {
+                    rs = sql.query("SELECT name FROM pkg");
+                    final String pkgName = rs.getString("name");
+                    return new TestInfoHolder(pkgName, TestType.PACKAGE, from, to);
+                } else {
+                    return new TestInfoHolder(prjName, TestType.PROJECT, from, to);
+                }
+            } catch (final ClassNotFoundException | SQLException | ParseException e) {
+                throw new IOException(e);
             }
         }
 
         /**
-         * Queries the TRF as SQLite database with given request.
-         *
-         * @param query
-         *            the query statement
-         * @return the query result
-         * @throws IOException
-         *             ignals that an I/O exception has occurred
+         * Parser for SQLite databases like TRF reports.
          */
-        private String queryTest(final String query) throws IOException {
-            try {
+        private static class SQLite implements AutoCloseable {
+
+            private final Connection connection;
+            private final Statement statement;
+
+            /**
+             * Instantiates a new {@link SQLite}.
+             *
+             * @param sqlFile
+             *            the path to database file
+             * @throws ClassNotFoundException
+             *             in case the JDBC class cannot be located
+             * @throws SQLException
+             *             in case of a SQL exception
+             */
+            SQLite(final String sqlFile) throws ClassNotFoundException, SQLException {
                 Class.forName("org.sqlite.JDBC");
-            } catch (final ClassNotFoundException e) {
-                throw new IOException(e);
+                connection = DriverManager.getConnection("jdbc:sqlite:" + sqlFile);
+                statement = connection.createStatement();
             }
-            try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + trfFile);
-                    Statement stmt = conn.createStatement();
-                    ResultSet rs = stmt.executeQuery(query)) {
-                return rs.getString("name");
-            } catch (final SQLException e) {
-                throw new IOException(e);
+
+            /**
+             * Queries the database with given SQL statement.
+             *
+             * @param sql
+             *            the SQL statement
+             * @return the result set
+             * @throws SQLException
+             *             in case of a SQL exception
+             */
+            public ResultSet query(final String sql) throws SQLException {
+                return statement.executeQuery(sql);
+            }
+
+            @Override
+            public void close() throws SQLException {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
             }
         }
     }
@@ -548,6 +550,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
 
         private final String testName;
         private final TestType testType;
+        private final long from;
+        private final long to;
 
         /**
          * Instantiates a new {@link TestInfoHolder}.
@@ -556,10 +560,16 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          *            the test name
          * @param testType
          *            the test type
+         * @param from
+         *            the starting execution time
+         * @param to
+         *            the finishing execution time
          */
-        TestInfoHolder(final String testName, final TestType testType) {
+        TestInfoHolder(final String testName, final TestType testType, final long from, final long to) {
             this.testName = testName;
             this.testType = testType;
+            this.from = from;
+            this.to = to;
         }
 
         /**
@@ -574,6 +584,20 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          */
         public TestType getTestType() {
             return testType;
+        }
+
+        /**
+         * @return the from date
+         */
+        public long getFrom() {
+            return from;
+        }
+
+        /**
+         * @return the to date
+         */
+        public long getTo() {
+            return to;
         }
     }
 }
