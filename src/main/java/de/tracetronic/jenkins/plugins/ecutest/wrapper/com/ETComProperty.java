@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -50,7 +50,7 @@ public final class ETComProperty implements Serializable {
     /**
      * Default COM response timeout in seconds.
      */
-    public static final int DEFAULT_TIMEOUT = 120;
+    public static final int DEFAULT_TIMEOUT = 0;
 
     private String progId = DEFAULT_PROG_ID;
     private int timeout = DEFAULT_TIMEOUT;

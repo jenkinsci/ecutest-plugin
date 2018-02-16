@@ -206,9 +206,9 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
-     * Gets the programmatic identifier from tool properties.
+     * Gets the COM timeout from tool properties.
      *
-     * @return the progId, default progId if tool property does not exist
+     * @return the COM timeout, default timeout if tool property does not exist
      */
     public int getTimeout() {
         int timeout;
