@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,6 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
-import hudson.model.Result;
 import hudson.model.TaskListener;
 import hudson.model.Run;
 
@@ -42,7 +41,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.StringUtils;
@@ -54,11 +52,8 @@ import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 
 /**
  * Publisher providing links to saved {@link GeneratorReport}s.
@@ -150,34 +145,13 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
         return validGenerators;
     }
 
-    /**
-     * Gets the tool installation by descriptor and tool name.
-     *
-     * @param envVars
-     *            the environment variables
-     * @return the tool installation
-     */
-    @CheckForNull
-    public AbstractToolInstallation getToolInstallation(final EnvVars envVars) {
-        final String expToolName = envVars.expand(toolName);
-        for (final AbstractToolInstallation installation : getDescriptor().getToolDescriptor().getInstallations()) {
-            if (StringUtils.equals(expToolName, installation.getName())) {
-                return installation;
-            }
-        }
-        return null;
-    }
-
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        final TTConsoleLogger logger = getLogger();
         logger.logInfo("Publishing generator reports...");
-        ProcessUtil.checkOS(launcher);
 
-        final Result buildResult = run.getResult();
-        if (buildResult != null && !canContinue(buildResult)) {
-            logger.logInfo(String.format("Skipping publisher since build result is %s", buildResult));
+        if (isSkipped(true, run, launcher)) {
             return;
         }
 
@@ -187,22 +161,10 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
         }
 
         final List<GeneratorReport> reports = new ArrayList<GeneratorReport>();
-        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
-        final boolean isETRunning = !foundProcesses.isEmpty();
-
-        // Start ECU-TEST if necessary
-        if (isETRunning) {
+        if (isETRunning(launcher)) {
             reports.addAll(generateReports(reportFiles, run, workspace, launcher, listener));
         } else {
-            // Get selected ECU-TEST installation
-            final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
-                    run.getEnvironment(listener));
-            final String installPath = installation.getExecutable(launcher);
-            final String workspaceDir = getWorkspaceDir(run);
-            final String settingsDir = getSettingsDir(run);
-            final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
-            final ETClient etClient = new ETClient(expandedToolName, installPath, workspaceDir, settingsDir,
-                    StartETBuilder.DEFAULT_TIMEOUT, false);
+            final ETClient etClient = getToolClient(toolName, run, workspace, launcher, listener);
             if (etClient.start(false, workspace, launcher, listener)) {
                 reports.addAll(generateReports(reportFiles, run, workspace, launcher, listener));
             } else {
@@ -244,8 +206,8 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private List<GeneratorReport> generateReports(final List<FilePath> reportFiles, final Run<?, ?> run,
             final FilePath workspace, final Launcher launcher, final TaskListener listener)
-                    throws IOException, InterruptedException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            throws IOException, InterruptedException {
+        final TTConsoleLogger logger = getLogger();
         final List<GeneratorReport> reports = new ArrayList<GeneratorReport>();
         final FilePath archiveTarget = getArchiveTarget(run);
         final List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
@@ -284,12 +246,12 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
                 // Collect reports
                 if (archiveTargetDir.exists()) {
                     final GeneratorReport report = new GeneratorReport(String.format("%d", ++index), templateName,
-                            templateName, getFileSize(archiveTargetDir));
+                            templateName, getDirectorySize(archiveTargetDir));
                     reports.add(report);
                     for (final FilePath testReportDir : archiveTargetDir.listDirectories()) {
                         final GeneratorReport subReport = new GeneratorReport(String.format("%d", ++index),
                                 testReportDir.getBaseName(), String.format("%s/%s", templateName,
-                                        testReportDir.getBaseName()), getFileSize(testReportDir));
+                                        testReportDir.getBaseName()), getDirectorySize(testReportDir));
                         report.addSubReport(subReport);
                     }
                 }
@@ -297,26 +259,6 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
         }
 
         return reports;
-    }
-
-    /**
-     * Gets the total size of given directory recursively.
-     *
-     * @param directory
-     *            the directory
-     * @return the file size
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
-     */
-    private long getFileSize(final FilePath directory) throws IOException, InterruptedException {
-        long size = 0;
-        final FilePath[] files = directory.list("**");
-        for (final FilePath file : files) {
-            size += file.length();
-        }
-        return size;
     }
 
     /**
@@ -345,7 +287,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link ReportGeneratorPublisher}.
      */
     @Symbol("publishGenerators")
-    @Extension(ordinal = 10002)
+    @Extension(ordinal = 10004)
     public static class DescriptorImpl extends AbstractReportDescriptor {
 
         @Override

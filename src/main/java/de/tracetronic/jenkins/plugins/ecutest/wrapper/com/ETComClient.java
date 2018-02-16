@@ -38,6 +38,7 @@ import com.jacob.com.ComThread;
 import com.jacob.com.JacobException;
 import com.jacob.com.Variant;
 
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComAnalysisEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComApplication;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComPackage;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComProject;
@@ -297,6 +298,11 @@ public class ETComClient implements ComApplication, AutoCloseable {
     @Override
     public ComTestEnvironment getTestEnvironment() throws ETComException {
         return new TestEnvironment(dispatch.performRequest("GetTestEnvironment").toDispatch(), useTimeout);
+    }
+
+    @Override
+    public ComAnalysisEnvironment getAnalysisEnvironment() throws ETComException {
+        return new AnalysisEnvironment(dispatch.performRequest("GetAnalysisEnvironment").toDispatch());
     }
 
     @Override

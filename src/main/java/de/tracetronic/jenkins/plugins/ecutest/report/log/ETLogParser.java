@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -49,7 +49,7 @@ import org.apache.commons.lang.StringUtils;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogAnnotation.Severity;
 
 /**
- * Parser for the ECU-TEST log files.
+ * Class providing a parser for the ECU-TEST log files.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */

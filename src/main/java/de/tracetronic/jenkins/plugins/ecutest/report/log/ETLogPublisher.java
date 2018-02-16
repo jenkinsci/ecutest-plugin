@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -51,6 +51,7 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
@@ -145,13 +146,11 @@ public class ETLogPublisher extends AbstractReportPublisher {
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
+        final TTConsoleLogger logger = getLogger();
         logger.logInfo("Publishing ECU-TEST logs...");
 
-        final Result buildResult = run.getResult();
-        if (buildResult != null && !canContinue(buildResult)) {
-            logger.logInfo(String.format("Skipping publisher since build result is %s", buildResult));
+        if (isSkipped(false, run, launcher)) {
             return;
         }
 
@@ -227,7 +226,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
                 }
             } else {
                 addBuildAction(run, logReports);
-                setBuildResult(run, listener, logReports);
+                setBuildResult(run, logReports);
             }
         } else {
             logger.logInfo("Archiving ECU-TEST logs is disabled.");
@@ -271,26 +270,6 @@ public class ETLogPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Gets the total size of given directory recursively.
-     *
-     * @param directory
-     *            the directory
-     * @return the file size
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
-     */
-    private long getFileSize(final FilePath directory) throws IOException, InterruptedException {
-        long size = 0;
-        final FilePath[] files = directory.list("**");
-        for (final FilePath file : files) {
-            size += file.length();
-        }
-        return size;
-    }
-
-    /**
      * Creates the main report and adds the sub-reports by traversing them recursively.
      *
      * @param logReports
@@ -308,7 +287,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
     private int traverseReports(final List<ETLogReport> logReports, final FilePath archiveTargetDir, int id)
             throws IOException, InterruptedException {
         final ETLogReport logReport = new ETLogReport(String.format("%d", ++id),
-                archiveTargetDir.getName(), archiveTargetDir.getName(), getFileSize(archiveTargetDir),
+                archiveTargetDir.getName(), archiveTargetDir.getName(), getDirectorySize(archiveTargetDir),
                 Collections.<ETLogAnnotation> emptyList(), 0, 0);
         logReports.add(logReport);
 
@@ -346,7 +325,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
      */
     private int traverseSubReports(final ETLogReport logReport, final FilePath testReportDir,
             final FilePath subTestReportDir, int id)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
             FilePath logFile = subDir.child(ERROR_LOG_NAME);
             if (logFile.exists()) {
@@ -386,14 +365,11 @@ public class ETLogPublisher extends AbstractReportPublisher {
      *
      * @param run
      *            the run
-     * @param listener
-     *            the listener
      * @param logReports
      *            the log reports
      */
-    private void setBuildResult(final Run<?, ?> run, final TaskListener listener,
-            final List<ETLogReport> logReports) {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+    private void setBuildResult(final Run<?, ?> run, final List<ETLogReport> logReports) {
+        final TTConsoleLogger logger = getLogger();
         int totalWarnings = 0;
         int totalErrors = 0;
         for (final ETLogReport logReport : logReports) {
@@ -478,8 +454,8 @@ public class ETLogPublisher extends AbstractReportPublisher {
         }
 
         @Override
-        public List<String> invoke(final File baseDir, final VirtualChannel channel) throws IOException,
-        InterruptedException {
+        public List<String> invoke(final File baseDir, final VirtualChannel channel)
+                throws IOException, InterruptedException {
             final List<String> files = new ArrayList<String>();
             for (final String includedFile : Util.createFileSet(baseDir, includes, excludes)
                     .getDirectoryScanner().getIncludedFiles()) {
@@ -499,7 +475,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link ETLogPublisher}.
      */
     @Symbol("publishETLogs")
-    @Extension(ordinal = 10001)
+    @Extension(ordinal = 10003)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         @Override

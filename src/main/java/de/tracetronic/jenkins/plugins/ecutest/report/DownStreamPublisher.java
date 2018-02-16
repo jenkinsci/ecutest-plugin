@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -131,7 +131,7 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
      * DescriptorImpl for {@link DownStreamPublisher}.
      */
     @Symbol("downstreamPublisher")
-    @Extension(ordinal = 999)
+    @Extension(ordinal = 10000)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,7 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 
-import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -49,7 +48,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.NotImplementedException;
@@ -63,9 +61,7 @@ import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.AbstractToolInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
 
 /**
@@ -143,24 +139,6 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
         this.failedThreshold = convertToPercentage(failedThreshold);
     }
 
-    /**
-     * Gets the tool installation by descriptor and tool name.
-     *
-     * @param envVars
-     *            the environment variables
-     * @return the tool installation
-     */
-    @CheckForNull
-    public AbstractToolInstallation getToolInstallation(final EnvVars envVars) {
-        final String expToolName = envVars.expand(toolName);
-        for (final AbstractToolInstallation installation : getDescriptor().getToolDescriptor().getInstallations()) {
-            if (StringUtils.equals(expToolName, installation.getName())) {
-                return installation;
-            }
-        }
-        return null;
-    }
-
     @Override
     public MatrixAggregator createAggregator(final MatrixBuild build, final Launcher launcher,
             final BuildListener listener) {
@@ -170,15 +148,13 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        final TTConsoleLogger logger = getLogger();
         logger.logInfo("Publishing UNIT reports...");
-        ProcessUtil.checkOS(launcher);
 
-        final Result buildResult = run.getResult();
-        if (buildResult != null && !canContinue(buildResult)) {
-            logger.logInfo(String.format("Skipping publisher since build result is %s", buildResult));
+        if (isSkipped(true, run, launcher)) {
             return;
         }
+
         final List<FilePath> reportFiles = getReportFiles(run, workspace, launcher);
         if (reportFiles.isEmpty() && !isAllowMissing()) {
             throw new ETPluginException("Empty test results are not allowed, setting build status to FAILURE!");
@@ -214,7 +190,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
         testResult.freeze(action);
 
         // Change build result if thresholds exceeded
-        if (setBuildResult(run, listener, testResult)) {
+        if (setBuildResult(run, testResult)) {
             logger.logInfo("UNIT reports published successfully.");
         }
     }
@@ -224,15 +200,12 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
      *
      * @param run
      *            the run
-     * @param listener
-     *            the listener
      * @param testResult
      *            the test result
      * @return {@code true} if test results exist and could be published
      */
-    private boolean setBuildResult(final Run<?, ?> run, final TaskListener listener,
-            final TestResult testResult) {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+    private boolean setBuildResult(final Run<?, ?> run, final TestResult testResult) {
+        final TTConsoleLogger logger = getLogger();
         if (testResult.getTotalCount() == 0) {
             logger.logInfo("-> No UNIT test results found.");
             if (!isAllowMissing()) {
@@ -272,7 +245,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
      *            the total count
      * @return the unstable percentage
      */
-    public static double getFailedPercentage(final int failedCount, final int totalCount) {
+    static double getFailedPercentage(final int failedCount, final int totalCount) {
         if (totalCount == 0) {
             return 0;
         }
@@ -322,7 +295,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
      * DescriptorImpl for {@link JUnitPublisher}.
      */
     @Symbol("publishUNIT")
-    @Extension(ordinal = 10003, optional = true)
+    @Extension(ordinal = 10005, optional = true)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         private final JUnitValidator unitValidator;

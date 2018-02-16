@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -44,6 +44,7 @@ import java.util.List;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
@@ -96,13 +97,11 @@ public class TRFPublisher extends AbstractReportPublisher {
     @SuppressWarnings({ "checkstyle:cyclomaticcomplexity", "checkstyle:npathcomplexity" })
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
-        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
+        final TTConsoleLogger logger = getLogger();
         logger.logInfo("Publishing TRF reports...");
 
-        final Result buildResult = run.getResult();
-        if (buildResult != null && !canContinue(buildResult)) {
-            logger.logInfo(String.format("Skipping publisher since build result is %s", buildResult));
+        if (isSkipped(false, run, launcher)) {
             return;
         }
 
@@ -231,10 +230,8 @@ public class TRFPublisher extends AbstractReportPublisher {
      *            the run
      * @param trfReports
      *            the list of {@link TRFReport}s to add
-     * @throws IOException
-     *             signals that an I/O exception has occurred
      */
-    private void addBuildAction(final Run<?, ?> run, final List<TRFReport> trfReports) throws IOException {
+    private void addBuildAction(final Run<?, ?> run, final List<TRFReport> trfReports) {
         TRFBuildAction action = run.getAction(TRFBuildAction.class);
         if (action == null) {
             action = new TRFBuildAction(!isKeepAll());
@@ -252,7 +249,7 @@ public class TRFPublisher extends AbstractReportPublisher {
      * DescriptorImpl for {@link TRFPublisher}.
      */
     @Symbol("publishTRF")
-    @Extension(ordinal = 10004)
+    @Extension(ordinal = 10006)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         @Override

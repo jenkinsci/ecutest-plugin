@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -183,7 +183,8 @@ public class JUnitPublisherIT extends IntegrationTestBase {
                     }
                 }));
 
-        assertEquals("Tool name should be resolved", "ECU-TEST", publisher.getToolInstallation(envVars).getName());
+        assertEquals("Tool name should be resolved", "ECU-TEST",
+                publisher.getToolInstallation(publisher.getToolName(), envVars).getName());
     }
 
     @Test

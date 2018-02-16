@@ -27,7 +27,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.tracetronic.jenkins.plugins.ecutest.report.generator;
+package de.tracetronic.jenkins.plugins.ecutest.report.ta;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
@@ -43,10 +43,8 @@ import hudson.model.FreeStyleProject;
 import hudson.slaves.DumbSlave;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 import jenkins.tasks.SimpleBuildStep;
 
@@ -67,11 +65,11 @@ import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 
 /**
- * Integration tests for {@link ReportGeneratorPublisher}.
+ * Integration tests for {@link TraceAnalysisPublisher}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ReportGeneratorPublisherIT extends IntegrationTestBase {
+public class TraceAnalysisPublisherIT extends IntegrationTestBase {
 
     @Before
     public void setUp() throws Exception {
@@ -82,46 +80,42 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
 
     @Test
     public void testDefaultConfigRoundTripStep() throws Exception {
-        final ReportGeneratorPublisher before = new ReportGeneratorPublisher("ECU-TEST");
+        final TraceAnalysisPublisher before = new TraceAnalysisPublisher("ECU-TEST");
 
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
         final SimpleBuildStep delegate = step.delegate;
-        assertThat(delegate, instanceOf(ReportGeneratorPublisher.class));
+        assertThat(delegate, instanceOf(TraceAnalysisPublisher.class));
 
-        final ReportGeneratorPublisher after = (ReportGeneratorPublisher) delegate;
+        final TraceAnalysisPublisher after = (TraceAnalysisPublisher) delegate;
         jenkins.assertEqualDataBoundBeans(before, after);
     }
 
     @Test
     public void testConfigRoundTripStep() throws Exception {
-        final ReportGeneratorPublisher before = new ReportGeneratorPublisher("ECU-TEST");
-        before.setAllowMissing(true);
-        before.setRunOnFailed(true);
-        before.setArchiving(true);
-        before.setKeepAll(true);
+        final TraceAnalysisPublisher before = new TraceAnalysisPublisher("ECU-TEST");
+        before.setTimeout("600");
+        before.setAllowMissing(false);
+        before.setRunOnFailed(false);
+        before.setMergeReports(false);
+        before.setCreateReportDir(true);
 
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
         final SimpleBuildStep delegate = step.delegate;
-        assertThat(delegate, instanceOf(ReportGeneratorPublisher.class));
+        assertThat(delegate, instanceOf(TraceAnalysisPublisher.class));
 
-        final ReportGeneratorPublisher after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "allowMissing,runOnFailed,archiving,keepAll");
+        final TraceAnalysisPublisher after = jenkins.configRoundtrip(before);
+        jenkins.assertEqualBeans(before, after, "timeout,allowMissing,runOnFailed");
     }
 
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final List<ReportGeneratorSetting> settings = new ArrayList<ReportGeneratorSetting>();
-        settings.add(new ReportGeneratorSetting("name", "value"));
-        final List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
-        generators.add(new ReportGeneratorConfig("HTML", settings));
-        final List<ReportGeneratorConfig> customGenerators = new ArrayList<ReportGeneratorConfig>();
-        customGenerators.add(new ReportGeneratorConfig("Custom", settings));
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
-        publisher.setGenerators(generators);
-        publisher.setCustomGenerators(customGenerators);
+        final TraceAnalysisPublisher publisher = new TraceAnalysisPublisher("ECU-TEST");
+        publisher.setTimeout("600");
+        publisher.setMergeReports(true);
+        publisher.setCreateReportDir(true);
         publisher.setAllowMissing(true);
         publisher.setRunOnFailed(true);
         publisher.setArchiving(true);
@@ -129,17 +123,15 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
         project.getPublishersList().add(publisher);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
-        WebAssert.assertTextPresent(page, Messages.ReportGeneratorPublisher_DisplayName());
+        WebAssert.assertTextPresent(page, Messages.TraceAnalysisPublisher_DisplayName());
         jenkins.assertXPath(page, "//select[@name='toolName']");
         jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
-        jenkins.assertXPath(page, "//select[@name='_.name' and @value='HTML']");
-        jenkins.assertXPath(page, "//input[@name='_.name' and @value='Custom']");
-        jenkins.assertXPath(page, "//input[@name='_.name' and @value='name']");
-        jenkins.assertXPath(page, "//input[@name='_.value' and @value='value']");
+        WebAssert.assertInputPresent(page, "_.timeout");
+        WebAssert.assertInputContainsValue(page, "_.timeout", "600");
+        jenkins.assertXPath(page, "//input[@name='_.mergeReports' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.createReportDir' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.allowMissing' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runOnFailed' and @checked='true']");
-        jenkins.assertXPath(page, "//input[@name='_.archiving']");
-        jenkins.assertXPath(page, "//input[@name='_.keepAll']");
     }
 
     @Test
@@ -148,7 +140,7 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.setAssignedNode(slave);
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
+        final TraceAnalysisPublisher publisher = new TraceAnalysisPublisher("ECU-TEST");
         publisher.setAllowMissing(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -169,7 +161,7 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
                 return false;
             }
         });
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
+        final TraceAnalysisPublisher publisher = new TraceAnalysisPublisher("ECU-TEST");
         publisher.setRunOnFailed(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -181,7 +173,7 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
     @Test
     public void testParameterizedToolName() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("${ECUTEST}");
+        final TraceAnalysisPublisher publisher = new TraceAnalysisPublisher("${ECUTEST}");
         project.getPublishersList().add(publisher);
 
         final EnvVars envVars = new EnvVars(
@@ -234,14 +226,12 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
+        final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
+        jenkins.assertLogContains("Publishing trace analysis...", run);
         if (emptyResults == false) {
-            final WorkflowRun run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
-            jenkins.assertLogContains("Publishing generator reports...", run);
             jenkins.assertLogContains("Starting ECU-TEST failed.", run);
         } else {
-            final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
-            jenkins.assertLogContains("Publishing generator reports...", run);
-            jenkins.assertLogContains("Empty test results are not allowed, setting build status to FAILURE!", run);
+            jenkins.assertLogContains("Empty analysis results are not allowed, setting build status to FAILURE!", run);
         }
     }
 }
