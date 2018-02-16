@@ -96,7 +96,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
      */
     public ETComClient(final String progId) throws ETComException {
         initDispatch(progId);
-        waitForConnection(ETComProperty.DEFAULT_TIMEOUT);
+        waitForConnection(ETComProperty.DEFAULT_CONNECTION_TIMEOUT);
     }
 
     /**
@@ -188,7 +188,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
             initDispatch.setUncaughtExceptionHandler(exceptionHandler);
             initDispatch.start();
 
-            final int timeout = ETComProperty.DEFAULT_TIMEOUT;
+            final int timeout = ETComProperty.DEFAULT_CONNECTION_TIMEOUT;
             final long endTimeMillis = System.currentTimeMillis() + Long.valueOf(timeout) * 1000L;
             while (timeout <= 0 || System.currentTimeMillis() < endTimeMillis) {
                 if (dispatch != null && dispatch.isAttached()) {

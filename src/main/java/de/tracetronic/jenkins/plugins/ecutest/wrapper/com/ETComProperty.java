@@ -52,6 +52,11 @@ public final class ETComProperty implements Serializable {
      */
     public static final int DEFAULT_TIMEOUT = 0;
 
+    /**
+     * Default COM connection timeout in seconds.
+     */
+    public static final int DEFAULT_CONNECTION_TIMEOUT = 120;
+
     private String progId = DEFAULT_PROG_ID;
     private int timeout = DEFAULT_TIMEOUT;
 
