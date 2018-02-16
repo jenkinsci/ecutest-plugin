@@ -15,6 +15,9 @@
         <Bug pattern="FI_NULLIFY_SUPER"/>
     </Match>
     <Match>
-        <Bug pattern="FI_EMPTY"/>
+        <Bug pattern="FI_MISSING_SUPER_CALL"/>
     </Match>
+    <Match>
+        <Bug pattern="FI_EMPTY"/>
+    </Match>    
 </FindBugsFilter>
