@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -42,7 +42,7 @@ public class ETToolPropertyTest {
 
     @Test
     public void testBlankConstructor() {
-        final ETToolProperty property = new ETToolProperty("", 120);
+        final ETToolProperty property = new ETToolProperty("", 0);
         assertEquals(ETToolProperty.DescriptorImpl.getDefaultProgId(), property.getProgId());
         assertEquals(ETToolProperty.DescriptorImpl.getDefaultTimeout(), property.getTimeout());
     }

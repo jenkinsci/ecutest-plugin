@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -52,35 +52,36 @@ public class ETComPropertyTest {
 
     @Test
     public void testDefaultProgId() {
-        final ETComProperty progId = ETComProperty.getInstance();
-        assertEquals(ETComProperty.DEFAULT_PROG_ID, progId.getProgId());
+        final ETComProperty prop = ETComProperty.getInstance();
+        assertEquals(ETComProperty.DEFAULT_PROG_ID, prop.getProgId());
     }
 
     @Test
     public void testEmptyProgId() {
-        final ETComProperty progId = ETComProperty.getInstance();
-        progId.setProgId("");
-        assertEquals(ETComProperty.DEFAULT_PROG_ID, progId.getProgId());
+        final ETComProperty prop = ETComProperty.getInstance();
+        prop.setProgId("");
+        assertEquals(ETComProperty.DEFAULT_PROG_ID, prop.getProgId());
     }
 
     @Test
     public void testNewProgId() {
-        final ETComProperty progId = ETComProperty.getInstance();
-        progId.setProgId("ECU-TEST6.Application");
-        assertEquals("ECU-TEST6.Application", progId.getProgId());
+        final ETComProperty prop = ETComProperty.getInstance();
+        prop.setProgId("ECU-TEST6.Application");
+        assertEquals("ECU-TEST6.Application", prop.getProgId());
     }
 
     @Test
     public void testDefaultTimeout() {
-        final ETComProperty progId = ETComProperty.getInstance();
-        assertEquals(ETComProperty.DEFAULT_TIMEOUT, progId.getTimeout());
+        final ETComProperty prop = ETComProperty.getInstance();
+        assertEquals(ETComProperty.DEFAULT_TIMEOUT, prop.getTimeout());
     }
 
     @Test
-    public void testNewTiemout() {
-        final ETComProperty progId = ETComProperty.getInstance();
-        progId.setTimeout(120);
-        assertEquals(120, progId.getTimeout());
+    public void testNewTimeout() {
+        final ETComProperty prop = ETComProperty.getInstance();
+        prop.setTimeout(120);
+        assertEquals(120, prop.getTimeout());
+        prop.setTimeout(ETComProperty.DEFAULT_TIMEOUT);
     }
 
     @Test
@@ -88,18 +89,18 @@ public class ETComPropertyTest {
         final File tempFile = File.createTempFile("test", ".ser");
 
         // Serialize object to file
-        final ETComProperty progId = ETComProperty.getInstance();
+        final ETComProperty prop = ETComProperty.getInstance();
         final ObjectOutput out = new ObjectOutputStream(new FileOutputStream(tempFile));
-        out.writeObject(progId);
+        out.writeObject(prop);
         out.close();
 
         // Deserialize from file to object
         final ObjectInput in = new ObjectInputStream(new FileInputStream(tempFile));
-        final ETComProperty progId2 = (ETComProperty) in.readObject();
+        final ETComProperty prop2 = (ETComProperty) in.readObject();
         in.close();
 
         tempFile.delete();
 
-        assertEquals("HashCode of both instance must match", progId.hashCode(), progId2.hashCode());
+        assertEquals("HashCode of both instance must match", prop.hashCode(), prop2.hashCode());
     }
 }
