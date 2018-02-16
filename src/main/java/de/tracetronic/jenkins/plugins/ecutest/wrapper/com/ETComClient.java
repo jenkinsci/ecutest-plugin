@@ -302,7 +302,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     @Override
     public ComAnalysisEnvironment getAnalysisEnvironment() throws ETComException {
-        return new AnalysisEnvironment(dispatch.performRequest("GetAnalysisEnvironment").toDispatch());
+        return new AnalysisEnvironment(dispatch.performRequest("GetAnalysisEnvironment").toDispatch(), useTimeout);
     }
 
     @Override

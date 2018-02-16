@@ -48,9 +48,11 @@ public class AnalysisExecutionInfo extends ETComDispatch implements ComAnalysisE
      *
      * @param dispatch
      *            the dispatch
+     * @param useTimeout
+     *            specifies whether to apply timeout
      */
-    public AnalysisExecutionInfo(final Dispatch dispatch) {
-        super(dispatch);
+    public AnalysisExecutionInfo(final Dispatch dispatch, final boolean useTimeout) {
+        super(dispatch, useTimeout);
     }
 
     @Override

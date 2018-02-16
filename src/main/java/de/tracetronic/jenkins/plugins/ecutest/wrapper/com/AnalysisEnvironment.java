@@ -53,14 +53,16 @@ public class AnalysisEnvironment extends ETComDispatch implements ComAnalysisEnv
      *
      * @param dispatch
      *            the dispatch
+     * @param useTimeout
+     *            specifies whether to apply timeout
      */
-    public AnalysisEnvironment(final Dispatch dispatch) {
-        super(dispatch);
+    public AnalysisEnvironment(final Dispatch dispatch, final boolean useTimeout) {
+        super(dispatch, useTimeout);
     }
 
     @Override
     public ComAnalysisExecutionInfo getAnalysisExecutionInfo() throws ETComException {
-        return new AnalysisExecutionInfo(performRequest("GetAnalysisExecutionInfo").toDispatch());
+        return new AnalysisExecutionInfo(performRequest("GetAnalysisExecutionInfo").toDispatch(), useTimeout());
     }
 
     /**
@@ -80,7 +82,7 @@ public class AnalysisEnvironment extends ETComDispatch implements ComAnalysisEnv
     public ComAnalysisExecutionInfo executeJob(final String jobFile, final boolean createReportDir)
             throws ETComException {
         return new AnalysisExecutionInfo(performRequest("ExecuteJob", new Variant(jobFile),
-                new Variant(createReportDir)).toDispatch());
+                new Variant(createReportDir)).toDispatch(), useTimeout());
     }
 
     @Override
