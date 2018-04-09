@@ -98,6 +98,30 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
+		<SETTING name="compressUpload" default="False" xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">True, wenn die Daten vor dem Upload (bei
+							minimaler Bandbreite) extra
+							komprimiert werden sollen, sonst
+							False. Achtung: Bei Aktivierung
+							dauert die Generierung der ATX-Zip
+							länger und auch die
+							Verarbeitungsdauer auf TEST-GUIDE Seite nimmt
+							zu.</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">True, if the data is to be extra
+							compressed before uploading (at minimum bandwidth), otherwise
+							False. Attention: With activation the generation of the ATX-Zip
+							takes longer and also the processing time on the TEST-GUIDE side
+							increases.</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
 		<SETTING name="cleanAfterSuccessUpload" default="True"
 			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
@@ -253,7 +277,8 @@
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
 						<DVALUE xsi:type="unicode">True, wenn nur dann die 'misc files'
-							archiviert werden sollen, wenn sich der ausgewählt Testreport in einem
+							archiviert werden sollen, wenn sich der ausgewählt Testreport in
+							einem
 							ECU-TEST Testreport-Verzeichnis befindet, sonst False.</DVALUE>
 					</ELEMENT>
 					<ELEMENT dkey="en_US">
