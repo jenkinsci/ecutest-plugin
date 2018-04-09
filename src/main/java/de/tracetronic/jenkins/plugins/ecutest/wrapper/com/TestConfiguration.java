@@ -60,17 +60,18 @@ public class TestConfiguration extends ETComDispatch implements ComTestConfigura
         super(dispatch, useTimeout);
     }
 
+    @SuppressWarnings("checkstyle:BooleanExpressionComplexity")
     @Override
     public void setGlobalConstant(final String name, final String value) throws ETComException {
         Object objValue;
         if (StringUtils.isNotEmpty(value)
                 && (StringUtils.isNumeric(value) ||
-                        value.startsWith("[") && value.endsWith("]") ||
-                        value.startsWith("{") && value.endsWith("}") ||
-                        value.startsWith("(") && value.endsWith(")") ||
-                        value.startsWith("'") && value.endsWith("'") ||
-                        value.startsWith("\"") && value.endsWith("\"") ||
-                        value.equals("True") || value.equals("False"))) {
+                        startsAndEndsWith(value, "[", "]") ||
+                        startsAndEndsWith(value, "{", "}") ||
+                        startsAndEndsWith(value, "(", ")") ||
+                        startsAndEndsWith(value, "'", "'") ||
+                        startsAndEndsWith(value, "\"", "\"") ||
+                        "True".equals(value) || "False".equals(value))) {
             // Assume Python integer, list, dictionary, tuple, string or boolean literal
             objValue = value;
         } else {
@@ -78,6 +79,21 @@ public class TestConfiguration extends ETComDispatch implements ComTestConfigura
             objValue = String.format("'%s'", value);
         }
         performRequest("SetGlobalConstant", new Variant(name), new Variant(objValue));
+    }
+
+    /**
+     * Checks whether the given value starts with prefix and ends with suffix.
+     *
+     * @param value
+     *            the value
+     * @param prefix
+     *            the prefix
+     * @param suffix
+     *            the suffix
+     * @return {@code true} if check passed, {@code false} otherwise
+     */
+    private boolean startsAndEndsWith(final String value, final String prefix, final String suffix) {
+        return value.startsWith(prefix) && value.endsWith(suffix);
     }
 
     @Override
