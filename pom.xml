@@ -381,6 +381,7 @@
                     <minimumTokens>120</minimumTokens>
                     <targetJdk>${java-target.version}</targetJdk>
                     <failOnViolation>false</failOnViolation>
+                    <analysisCache>true</analysisCache>
                 </configuration>
             </plugin>
             <plugin>
