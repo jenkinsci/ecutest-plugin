@@ -63,8 +63,15 @@ public class TestConfiguration extends ETComDispatch implements ComTestConfigura
     @Override
     public void setGlobalConstant(final String name, final String value) throws ETComException {
         Object objValue;
-        if (StringUtils.isNotEmpty(value) && StringUtils.isNumeric(value)) {
-            // Assume Python integer literal
+        if (StringUtils.isNotEmpty(value)
+                && (StringUtils.isNumeric(value) ||
+                        value.startsWith("[") && value.endsWith("]") ||
+                        value.startsWith("{") && value.endsWith("}") ||
+                        value.startsWith("(") && value.endsWith(")") ||
+                        value.startsWith("'") && value.endsWith("'") ||
+                        value.startsWith("\"") && value.endsWith("\"") ||
+                        value.equals("True") || value.equals("False"))) {
+            // Assume Python integer, list, dictionary, tuple, string or boolean literal
             objValue = value;
         } else {
             // Convert to Python string literal
