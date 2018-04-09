@@ -34,7 +34,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.3</version>
+        <version>3.7</version>
         <relativePath />
     </parent>
 
@@ -45,7 +45,7 @@
 
     <name>TraceTronic ECU-TEST Plugin</name>
     <description>This plugin integrates Jenkins with ECU-TEST and generates reports on automated test execution.</description>
-    <url>https://wiki.jenkins-ci.org/display/JENKINS/TraceTronic+ECU-TEST+Plugin</url>
+    <url>https://wiki.jenkins.io/display/JENKINS/TraceTronic+ECU-TEST+Plugin</url>
     <inceptionYear>2015</inceptionYear>
     <organization>
         <name>TraceTronic GmbH</name>
@@ -62,7 +62,7 @@
     <developers>
         <developer>
             <id>cpoenisch</id>
-            <name><![CDATA[Christian P&ouml;nisch]]></name>
+            <name>Christian Pönisch></name>
             <email>christian.poenisch@tracetronic.de</email>
             <timezone>+1</timezone>
         </developer>
@@ -84,18 +84,18 @@
         <matrix-project.version>1.12</matrix-project.version>
         <icon-shim.version>2.0.3</icon-shim.version>
         <junit.version>1.24</junit.version>
-        <structs.version>1.13</structs.version>
+        <structs.version>1.14</structs.version>
         <job-dsl.version>1.67</job-dsl.version>
         <credentials.version>2.1.16</credentials.version>
         <jquery-plugin.version>1.12.4-0</jquery-plugin.version>
 
         <!-- Static code analysis -->
-        <maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
-        <maven-pmd-plugin.version>3.8</maven-pmd-plugin.version>
+        <maven-checkstyle-plugin.version>3.0</maven-checkstyle-plugin.version>
+        <maven-pmd-plugin.version>3.9.0</maven-pmd-plugin.version>
 
         <!-- Test scope -->
-        <equalsverifier.version>2.4</equalsverifier.version>
-        <mockito-core.version>2.13.0</mockito-core.version>        
+        <equalsverifier.version>2.4.5</equalsverifier.version>
+        <mockito-core.version>2.18.0</mockito-core.version>        
         <concurrency>2</concurrency>
         <skipUTs>false</skipUTs>
         <skipITs>true</skipITs>
