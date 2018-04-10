@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -256,7 +256,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
     /**
      * {@link Callable} enabling generating ATX reports remotely.
      */
-    private static final class GenerateReportCallable extends AbstractReportCallable {
+    private static final class GenerateReportCallable extends AbstractReportCallable<Boolean> {
 
         private static final long serialVersionUID = 1L;
 

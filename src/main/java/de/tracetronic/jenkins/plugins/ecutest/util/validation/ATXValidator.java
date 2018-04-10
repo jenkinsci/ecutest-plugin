@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -384,7 +384,7 @@ public class ATXValidator extends AbstractValidator {
      * @throws KeyManagementException
      *             the key management exception
      */
-    private static void initSSLConnection() throws NoSuchAlgorithmException, KeyManagementException {
+    public static void initSSLConnection() throws NoSuchAlgorithmException, KeyManagementException {
         // Create a trust manager that does not validate certificate chains
         final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
 

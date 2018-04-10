@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -82,8 +82,11 @@ public abstract class AbstractATXReportHandler {
 
     /**
      * Common {@link Callable} enabling generating and uploading ATX reports remotely.
+     *
+     * @param <T>
+     *            the generic {@code Callable} return type
      */
-    protected abstract static class AbstractReportCallable extends MasterToSlaveCallable<Boolean, IOException> {
+    protected abstract static class AbstractReportCallable<T> extends MasterToSlaveCallable<T, IOException> {
 
         private static final long serialVersionUID = 1L;
 

@@ -38,6 +38,14 @@ import hudson.remoting.Callable;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -48,8 +56,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import jenkins.security.MasterToSlaveCallable;
 import net.sf.json.JSONArray;
@@ -63,6 +74,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
@@ -114,7 +126,6 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<ATXReport> atxReports = new ArrayList<ATXReport>();
-        final List<FilePath> uploadFiles = new ArrayList<FilePath>();
 
         // Prepare ATX report information
         final EnvVars envVars = run.getEnvironment(listener);
@@ -131,12 +142,18 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         for (final FilePath reportDir : reportDirs) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(reportDir);
             if (reportFile != null && reportFile.exists()) {
-                uploadFiles.addAll(Arrays.asList(
-                        reportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
+                final List<FilePath> uploadFiles = Arrays.asList(
+                        reportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES));
+
+                // Upload ATX reports
+                TestInfoHolder testInfo = launcher.getChannel().call(
+                        new UploadReportCallable(config, uploadFiles, envVars, listener));
+
                 // Prepare ATX report links
                 final String title = reportFile.getParent().getName();
-                final TestInfoHolder testInfo = launcher.getChannel().call(
-                        new ParseTRFCallable(reportFile.getRemote()));
+                if (testInfo == null) {
+                    testInfo = launcher.getChannel().call(new ParseTRFCallable(reportFile.getRemote()));
+                }
                 final String testName = testInfo.getTestName();
                 final TestType testType = testInfo.getTestType();
                 final String from = String.valueOf(testInfo.getFrom());
@@ -158,14 +175,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             return false;
         }
 
-        // Upload ATX reports
-        final boolean isUploaded = launcher.getChannel().call(
-                new UploadReportCallable(config, uploadFiles, envVars, listener));
-        if (isUploaded) {
-            addBuildAction(run, atxReports);
-        }
-
-        return isUploaded;
+        addBuildAction(run, atxReports);
+        return true;
     }
 
     /**
@@ -255,7 +266,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      */
     private int traverseSubReports(final ATXReport atxReport, final FilePath testReportDir, int id,
             final String baseUrl, final String from, final String to, final String projectName, final String projectId)
-                    throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         for (final FilePath subDir : testReportDir.listDirectories()) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(subDir);
             if (reportFile != null && reportFile.exists()) {
@@ -370,7 +381,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     /**
      * {@link Callable} enabling generating and uploading ATX reports remotely.
      */
-    private static final class UploadReportCallable extends AbstractReportCallable {
+    private static final class UploadReportCallable extends AbstractReportCallable<TestInfoHolder> {
 
         private static final long serialVersionUID = 1L;
 
@@ -378,6 +389,12 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          * File name of the error file which is created in case of an ATX upload error.
          */
         private static final String ERROR_FILE_NAME = "error.log.raw.json";
+
+        /**
+         * File name of the success file which is created in case of a regular ATX upload.
+         * Will only be written by TEST-GUIDE 1.53.0 and above.
+         */
+        private static final String SUCCESS_FILE_NAME = "success.json";
 
         /**
          * Instantiates a new {@link UploadReportCallable}.
@@ -397,8 +414,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         }
 
         @Override
-        public Boolean call() throws IOException {
-            boolean isUploaded = true;
+        public TestInfoHolder call() throws IOException {
+            TestInfoHolder testInfo = null;
             final TTConsoleLogger logger = new TTConsoleLogger(getListener());
             final Map<String, String> configMap = getConfigMap(true);
             final String progId = ETComProperty.getInstance().getProgId();
@@ -416,34 +433,180 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                                 outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
                         comClient.waitForIdle(0);
 
-                        // Check error log file and abort the upload if any
-                        final FilePath errorFile = outDir.child(ERROR_FILE_NAME);
-                        try {
-                            if (errorFile.exists()) {
-                                isUploaded = false;
-                                logger.logError("Error while uploading ATX report:");
-                                final JSONObject jsonObject = (JSONObject) new JsonSlurper()
-                                .parseText(errorFile.readToString());
-                                final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
-                                if (jsonArray != null) {
-                                    for (int i = 0; i < jsonArray.size(); i++) {
-                                        final String file = jsonArray.getJSONObject(i).getString("FILE");
-                                        final String status = jsonArray.getJSONObject(i).getString("STATUS");
-                                        final String text = jsonArray.getJSONObject(i).getString("TEXT");
-                                        logger.logError(String.format("%s: %s - %s", status, file, text));
-                                    }
-                                }
-                            }
-                        } catch (final JSONException | InterruptedException e) {
-                            logger.logError("-> Could not parse ATX JSON response: " + e.getMessage());
+                        final FilePath successFile = outDir.child(SUCCESS_FILE_NAME);
+                        if (testInfo == null) {
+                            testInfo = checkSuccessLog(successFile, uploadFile, logger);
                         }
+
+                        final FilePath errorFile = outDir.child(ERROR_FILE_NAME);
+                        checkErrorLog(errorFile, logger);
                     }
                 }
             } catch (final ETComException e) {
-                isUploaded = false;
                 logger.logComException(e.getMessage());
             }
-            return isUploaded;
+            return testInfo;
+        }
+
+        /**
+         * Checks the success log file and parse upload information.
+         * The success log file will only be written by TEST-GUIDE 1.53.0 and above.
+         *
+         * @param successFile
+         *            the success file
+         * @param uploadFile
+         *            the upload file
+         * @param logger
+         *            the logger
+         * @return the parsed test information
+         * @throws IOException
+         *             signals that an I/O exception has occurred
+         * @throws MalformedURLException
+         *             in case of a malformed URL
+         * @throws UnsupportedEncodingException
+         *             in case of an unsupported encoding
+         */
+        private TestInfoHolder checkSuccessLog(final FilePath successFile, final FilePath uploadFile,
+                final TTConsoleLogger logger) throws IOException, MalformedURLException, UnsupportedEncodingException {
+            TestInfoHolder testInfo = null;
+            try {
+                if (successFile.exists()) {
+                    logger.logDebug("Uploading ATX report succeded:");
+                    final JSONObject jsonObject = (JSONObject) new JsonSlurper()
+                            .parseText(successFile.readToString());
+                    final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
+                    if (jsonArray.size() > 0) {
+                        final String file = jsonArray.getJSONObject(0).getString("FILE");
+                        final String status = jsonArray.getJSONObject(0).getString("STATUS");
+                        final String text = jsonArray.getJSONObject(0).getString("TEXT");
+                        logger.logDebug(String.format("%s: %s - %s", status, file, text));
+
+                        final URL location = resolveRedirect(text);
+                        testInfo = parseTestInfo(location, uploadFile);
+                    }
+                }
+            } catch (final JSONException | InterruptedException | URISyntaxException
+                    | KeyManagementException | NoSuchAlgorithmException e) {
+                logger.logError("-> Could not parse ATX JSON response: " + e.getMessage());
+            }
+            return testInfo;
+        }
+
+        /**
+         * Checks the error log file and aborts the upload if any.
+         *
+         * @param errorFile
+         *            the error file
+         * @param logger
+         *            the logger
+         * @throws IOException
+         *             signals that an I/O exception has occurred
+         */
+        private void checkErrorLog(final FilePath errorFile, final TTConsoleLogger logger) throws IOException {
+            try {
+                if (errorFile.exists()) {
+                    logger.logError("Error while uploading ATX report:");
+                    final JSONObject jsonObject = (JSONObject) new JsonSlurper()
+                            .parseText(errorFile.readToString());
+                    final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
+                    if (jsonArray != null) {
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            final String file = jsonArray.getJSONObject(i).getString("FILE");
+                            final String status = jsonArray.getJSONObject(i).getString("STATUS");
+                            final String text = jsonArray.getJSONObject(i).getString("TEXT");
+                            logger.logError(String.format("%s: %s - %s", status, file, text));
+                        }
+                    }
+                }
+            } catch (final JSONException | InterruptedException e) {
+                logger.logError("-> Could not parse ATX JSON response: " + e.getMessage());
+            }
+        }
+
+        /**
+         * Parses the test information from the URL parameters.
+         *
+         * @param url
+         *            the URL location
+         * @param uploadFile
+         *            the upload file
+         * @return the test info holder
+         * @throws URISyntaxException
+         *             the URI syntax exception
+         * @throws UnsupportedEncodingException
+         *             the unsupported encoding exception
+         */
+        private TestInfoHolder parseTestInfo(final URL url, final FilePath uploadFile)
+                throws URISyntaxException, UnsupportedEncodingException {
+            final Map<String, String> params = splitQuery(url);
+            if (params.isEmpty()) {
+                return null;
+            }
+
+            String testName = params.get("testexecplan");
+            TestType testType = TestType.PROJECT;
+            if ("SinglePackageExecution".equals(testName)) {
+                testType = TestType.PACKAGE;
+                testName = uploadFile.getBaseName();
+            }
+            final long from = Long.parseLong(params.get("dateFrom"));
+            final long to = Long.parseLong(params.get("dateTo"));
+
+            return new TestInfoHolder(testName, testType, from, to);
+        }
+
+        /**
+         * Returns the URL query parameters as map.
+         *
+         * @param url
+         *            the URL
+         * @return the parameter map
+         * @throws UnsupportedEncodingException
+         *             in case of an unsupported encoding
+         */
+        private Map<String, String> splitQuery(final URL url) throws UnsupportedEncodingException {
+            final Map<String, String> queryMap = new LinkedHashMap<String, String>();
+            final String query = url.getQuery();
+            final String[] pairs = query.split("&");
+            for (final String pair : pairs) {
+                final int idx = pair.indexOf("=");
+                queryMap.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
+                        URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+            }
+            return queryMap;
+        }
+
+        /**
+         * Resolves the given URL redirect.
+         *
+         * @param redirect
+         *            the redirect URL
+         * @return the resolved URL redirect
+         * @throws MalformedURLException
+         *             in case of a malformed URL
+         * @throws NoSuchAlgorithmException
+         *             in case of a missing algorithm
+         * @throws KeyManagementException
+         *             in case of a key management exception
+         * @throws IOException
+         *             signals that an I/O exception has occurred
+         */
+        private URL resolveRedirect(final String redirect)
+                throws MalformedURLException, NoSuchAlgorithmException, KeyManagementException, IOException {
+            HttpURLConnection connection = null;
+            final URL url = new URL(redirect);
+
+            // Handle SSL connection
+            if (redirect.startsWith("https://")) {
+                ATXValidator.initSSLConnection();
+                connection = (HttpsURLConnection) url.openConnection();
+            } else {
+                connection = (HttpURLConnection) url.openConnection();
+            }
+            connection.setInstanceFollowRedirects(false);
+            connection.connect();
+            final String location = connection.getHeaderField("Location");
+            return new URL(location);
         }
     }
 
