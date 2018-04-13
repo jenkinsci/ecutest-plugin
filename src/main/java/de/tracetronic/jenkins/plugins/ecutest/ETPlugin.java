@@ -69,7 +69,7 @@ public class ETPlugin {
     /**
      * Defines the maximum allowed ECU-TEST version supported by this plugin.
      */
-    public static final ToolVersion ET_MAX_VERSION = new ToolVersion(7, 0, 2, 0);
+    public static final ToolVersion ET_MAX_VERSION = new ToolVersion(7, 1, 0, 0);
 
     /**
      * Defines the TEST-GUIDE version that the provided ATX configuration is based on.
