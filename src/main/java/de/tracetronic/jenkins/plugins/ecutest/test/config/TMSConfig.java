@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,6 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
 import hudson.DescriptorExtensionList;
 import hudson.model.Describable;
+import hudson.model.Item;
 import hudson.model.Descriptor;
 import hudson.security.ACL;
 import hudson.util.FormValidation;
@@ -46,6 +47,7 @@ import javax.annotation.CheckForNull;
 import jenkins.model.Jenkins;
 
 import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.QueryParameter;
 
 import com.cloudbees.plugins.credentials.CredentialsMatchers;
@@ -119,6 +121,8 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
     /**
      * Gets the credentials providing access to user name and password.
      *
+     * @param project
+     *            the project
      * @return the credentials
      * @throws IOException
      *             signals that an I/O exception has occurred
@@ -126,10 +130,11 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
      *             the interrupted exception
      */
     @CheckForNull
-    public StandardUsernamePasswordCredentials getCredentials() throws IOException, InterruptedException {
-        final List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider.lookupCredentials(
-                StandardUsernamePasswordCredentials.class, Jenkins.getInstance(), ACL.SYSTEM,
-                Collections.<DomainRequirement> emptyList());
+    public StandardUsernamePasswordCredentials getCredentials(final Item project) throws IOException,
+            InterruptedException {
+        final List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider
+                .lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
+                        Collections.<DomainRequirement> emptyList());
         return CredentialsMatchers.firstOrNull(credentials, CredentialsMatchers.withId(credentialsId));
     }
 
@@ -178,13 +183,30 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
         /**
          * Fills the credentials drop-down menu.
          *
+         * @param item
+         *            the item
+         * @param credentialsId
+         *            the credentials id
          * @return the credentials items
          */
-        public ListBoxModel doFillCredentialsIdItems() {
-            return new StandardListBoxModel().includeMatchingAs(ACL.SYSTEM,
-                    Jenkins.getInstance(), StandardCredentials.class,
-                    Collections.<DomainRequirement> emptyList(),
-                    CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class));
+        public ListBoxModel doFillCredentialsIdItems(@AncestorInPath final Item item,
+                @QueryParameter final String credentialsId) {
+            final StandardListBoxModel result = new StandardListBoxModel();
+            if (item == null) {
+                if (!Jenkins.getInstance().hasPermission(Jenkins.ADMINISTER)) {
+                    return result.includeCurrentValue(credentialsId);
+                }
+            } else {
+                if (!item.hasPermission(Item.EXTENDED_READ)
+                        && !item.hasPermission(CredentialsProvider.USE_ITEM)) {
+                    return result.includeCurrentValue(credentialsId);
+                }
+            }
+            return result
+                    .includeEmptyValue()
+                    .includeMatchingAs(ACL.SYSTEM, item, StandardCredentials.class,
+                            Collections.<DomainRequirement> emptyList(),
+                            CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class));
         }
     }
 }

@@ -32,6 +32,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.tms;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.model.Item;
 import hudson.model.Result;
 import hudson.model.TaskListener;
 import hudson.model.Run;
@@ -51,11 +52,13 @@ import jenkins.model.Jenkins;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
 import com.cloudbees.plugins.credentials.CredentialsMatchers;
+import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.common.StandardCredentials;
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
@@ -159,11 +162,11 @@ public class TMSPublisher extends AbstractReportPublisher {
 
         boolean isPublished = false;
         if (isETRunning(launcher)) {
-            isPublished = publishReports(reportFiles, workspace, launcher, listener);
+            isPublished = publishReports(reportFiles, run.getParent(), workspace, launcher, listener);
         } else {
             final ETClient etClient = getToolClient(toolName, run, workspace, launcher, listener);
             if (etClient.start(false, workspace, launcher, listener)) {
-                isPublished = publishReports(reportFiles, workspace, launcher, listener);
+                isPublished = publishReports(reportFiles, run.getParent(), workspace, launcher, listener);
             } else {
                 logger.logError(String.format("Starting %s failed.", toolName));
             }
@@ -185,6 +188,8 @@ public class TMSPublisher extends AbstractReportPublisher {
      *
      * @param reportFiles
      *            the report files
+     * @param project
+     *            the project
      * @param workspace
      *            the workspace
      * @param launcher
@@ -197,9 +202,10 @@ public class TMSPublisher extends AbstractReportPublisher {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    private boolean publishReports(final List<FilePath> reportFiles, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
-        return new TMSReportUploader().upload(reportFiles, credentialsId, timeout, workspace, launcher, listener);
+    private boolean publishReports(final List<FilePath> reportFiles, final Item project, final FilePath workspace,
+            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
+        return new TMSReportUploader().upload(reportFiles, credentialsId, timeout, project, workspace, launcher,
+                listener);
     }
 
     @Override
@@ -247,13 +253,30 @@ public class TMSPublisher extends AbstractReportPublisher {
         /**
          * Fills the credentials drop-down menu.
          *
+         * @param item
+         *            the item
+         * @param credentialsId
+         *            the credentials id
          * @return the credentials items
          */
-        public ListBoxModel doFillCredentialsIdItems() {
-            return new StandardListBoxModel().includeMatchingAs(ACL.SYSTEM,
-                    Jenkins.getInstance(), StandardCredentials.class,
-                    Collections.<DomainRequirement> emptyList(),
-                    CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class));
+        public ListBoxModel doFillCredentialsIdItems(@AncestorInPath final Item item,
+                @QueryParameter final String credentialsId) {
+            final StandardListBoxModel result = new StandardListBoxModel();
+            if (item == null) {
+                if (!Jenkins.getInstance().hasPermission(Jenkins.ADMINISTER)) {
+                    return result.includeCurrentValue(credentialsId);
+                }
+            } else {
+                if (!item.hasPermission(Item.EXTENDED_READ)
+                        && !item.hasPermission(CredentialsProvider.USE_ITEM)) {
+                    return result.includeCurrentValue(credentialsId);
+                }
+            }
+            return result
+                    .includeEmptyValue()
+                    .includeMatchingAs(ACL.SYSTEM, item, StandardCredentials.class,
+                            Collections.<DomainRequirement> emptyList(),
+                            CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class));
         }
 
         @Override

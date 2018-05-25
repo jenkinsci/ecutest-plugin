@@ -31,6 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.tms;
 
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.model.Item;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 import hudson.security.ACL;
@@ -41,7 +42,6 @@ import java.util.List;
 
 import javax.annotation.CheckForNull;
 
-import jenkins.model.Jenkins;
 import jenkins.security.MasterToSlaveCallable;
 
 import com.cloudbees.plugins.credentials.CredentialsMatchers;
@@ -79,6 +79,8 @@ public class TMSReportUploader extends AbstractTMSClient {
      *            the credentials id
      * @param timeout
      *            the export timeout
+     * @param project
+     *            the project
      * @param workspace
      *            the workspace
      * @param launcher
@@ -92,12 +94,12 @@ public class TMSReportUploader extends AbstractTMSClient {
      *             if the build gets interrupted
      */
     public boolean upload(final List<FilePath> reportFiles, final String credentialsId, final String timeout,
-            final FilePath workspace, final Launcher launcher, final TaskListener listener)
+            final Item project, final FilePath workspace, final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
         boolean isUploaded = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = getCredentials(credentialsId);
+                final StandardUsernamePasswordCredentials credentials = getCredentials(credentialsId, project);
                 if (login(credentials, launcher, listener)) {
                     isUploaded = launcher.getChannel().call(
                             new UploadReportCallable(reportFiles, timeout, listener));
@@ -114,6 +116,8 @@ public class TMSReportUploader extends AbstractTMSClient {
      *
      * @param credentialsId
      *            the credentials id
+     * @param project
+     *            the project
      * @return the credentials
      * @throws IOException
      *             signals that an I/O exception has occurred
@@ -121,11 +125,11 @@ public class TMSReportUploader extends AbstractTMSClient {
      *             the interrupted exception
      */
     @CheckForNull
-    private StandardUsernamePasswordCredentials getCredentials(final String credentialsId)
+    private StandardUsernamePasswordCredentials getCredentials(final String credentialsId, final Item project)
             throws IOException, InterruptedException {
-        final List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider.lookupCredentials(
-                StandardUsernamePasswordCredentials.class, Jenkins.getInstance(), ACL.SYSTEM,
-                Collections.<DomainRequirement> emptyList());
+        final List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider
+                .lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
+                        Collections.<DomainRequirement> emptyList());
         return CredentialsMatchers.firstOrNull(credentials, CredentialsMatchers.withId(credentialsId));
     }
 

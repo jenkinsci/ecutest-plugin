@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -186,22 +186,22 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
             if (importConfig instanceof ImportPackageConfig) {
                 // Import package
                 final ImportPackageClient importClient = new ImportPackageClient((ImportPackageConfig) expImportConfig);
-                isImported = importClient.importPackage(workspace, launcher, listener);
+                isImported = importClient.importPackage(run.getParent(), workspace, launcher, listener);
             } else if (importConfig instanceof ImportPackageAttributeConfig) {
                 // Import package attributes
                 final ImportPackageClient importClient = new ImportPackageClient(
                         (ImportPackageAttributeConfig) expImportConfig);
-                isImported = importClient.importPackageAttributes(workspace, launcher, listener);
+                isImported = importClient.importPackageAttributes(run.getParent(), workspace, launcher, listener);
             } else if (importConfig instanceof ImportProjectConfig) {
                 // Import project
                 final ImportProjectClient importClient = new ImportProjectClient(
                         (ImportProjectConfig) expImportConfig);
-                isImported = importClient.importProject(workspace, launcher, listener);
+                isImported = importClient.importProject(run.getParent(), workspace, launcher, listener);
             } else if (importConfig instanceof ImportProjectAttributeConfig) {
                 // Import project attributes
                 final ImportProjectClient importClient = new ImportProjectClient(
                         (ImportProjectAttributeConfig) expImportConfig);
-                isImported = importClient.importProjectAttributes(workspace, launcher, listener);
+                isImported = importClient.importProjectAttributes(run.getParent(), workspace, launcher, listener);
             } else if (importConfig instanceof ImportProjectArchiveConfig) {
                 // Import project archive
                 final ImportProjectClient importClient = new ImportProjectClient(

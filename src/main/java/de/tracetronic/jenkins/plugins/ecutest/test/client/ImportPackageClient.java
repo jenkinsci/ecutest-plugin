@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,6 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.model.Item;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 
@@ -85,6 +86,8 @@ public class ImportPackageClient extends AbstractTMSClient {
     /**
      * Imports a package according to given import configuration.
      *
+     * @param project
+     *            the project
      * @param workspace
      *            the workspace
      * @param launcher
@@ -97,13 +100,13 @@ public class ImportPackageClient extends AbstractTMSClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    public boolean importPackage(final FilePath workspace, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+    public boolean importPackage(final Item project, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws IOException, InterruptedException {
         boolean isImported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = ((ImportPackageConfig) importConfig)
-                        .getCredentials();
+                        .getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     if (importConfig instanceof ImportPackageDirConfig) {
                         isImported = importPackageDirFromTMS(launcher, listener);
@@ -121,6 +124,8 @@ public class ImportPackageClient extends AbstractTMSClient {
     /**
      * Imports a package attributes according to given import configuration.
      *
+     * @param project
+     *            the project
      * @param workspace
      *            the workspace
      * @param launcher
@@ -133,13 +138,13 @@ public class ImportPackageClient extends AbstractTMSClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    public boolean importPackageAttributes(final FilePath workspace, final Launcher launcher,
+    public boolean importPackageAttributes(final Item project, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws IOException, InterruptedException {
         boolean isImported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = ((ImportPackageAttributeConfig) importConfig)
-                        .getCredentials();
+                        .getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isImported = importPackageAttributesFromTMS(launcher, listener);
                 }

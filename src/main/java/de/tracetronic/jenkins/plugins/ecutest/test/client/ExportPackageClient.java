@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,6 +31,7 @@ package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.model.Item;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 
@@ -84,6 +85,8 @@ public class ExportPackageClient extends AbstractTMSClient {
     /**
      * Exports a package according to given export configuration.
      *
+     * @param project
+     *            the project
      * @param workspace
      *            the workspace
      * @param launcher
@@ -96,13 +99,13 @@ public class ExportPackageClient extends AbstractTMSClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    public boolean exportPackage(final FilePath workspace, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+    public boolean exportPackage(final Item project, final FilePath workspace, final Launcher launcher,
+            final TaskListener listener) throws IOException, InterruptedException {
         boolean isExported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = ((ExportPackageConfig) exportConfig)
-                        .getCredentials();
+                        .getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isExported = exportPackageToTMS(launcher, listener);
                 }
@@ -116,6 +119,8 @@ public class ExportPackageClient extends AbstractTMSClient {
     /**
      * Exports package attributes according to given export configuration.
      *
+     * @param project
+     *            the project
      * @param workspace
      *            the workspace
      * @param launcher
@@ -128,13 +133,13 @@ public class ExportPackageClient extends AbstractTMSClient {
      * @throws InterruptedException
      *             if the build gets interrupted
      */
-    public boolean exportPackageAttributes(final FilePath workspace, final Launcher launcher,
+    public boolean exportPackageAttributes(final Item project, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws IOException, InterruptedException {
         boolean isExported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = ((ExportPackageAttributeConfig) exportConfig)
-                        .getCredentials();
+                        .getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isExported = exportPackageAttributesToTMS(launcher, listener);
                 }

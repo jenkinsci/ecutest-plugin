@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -186,22 +186,22 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
             if (exportConfig instanceof ExportPackageConfig) {
                 // Export package
                 final ExportPackageClient exportClient = new ExportPackageClient((ExportPackageConfig) expExportConfig);
-                isExported = exportClient.exportPackage(workspace, launcher, listener);
+                isExported = exportClient.exportPackage(run.getParent(), workspace, launcher, listener);
             } else if (exportConfig instanceof ExportPackageAttributeConfig) {
                 // Export package attributes
                 final ExportPackageClient exportClient = new ExportPackageClient(
                         (ExportPackageAttributeConfig) expExportConfig);
-                isExported = exportClient.exportPackageAttributes(workspace, launcher, listener);
+                isExported = exportClient.exportPackageAttributes(run.getParent(), workspace, launcher, listener);
             } else if (exportConfig instanceof ExportProjectConfig) {
                 // Export project
                 final ExportProjectClient exportClient = new ExportProjectClient(
                         (ExportProjectConfig) expExportConfig);
-                isExported = exportClient.exportProject(workspace, launcher, listener);
+                isExported = exportClient.exportProject(run.getParent(), workspace, launcher, listener);
             } else if (exportConfig instanceof ExportProjectAttributeConfig) {
                 // Export project attributes
                 final ExportProjectClient exportClient = new ExportProjectClient(
                         (ExportProjectAttributeConfig) expExportConfig);
-                isExported = exportClient.exportProjectAttributes(workspace, launcher, listener);
+                isExported = exportClient.exportProjectAttributes(run.getParent(), workspace, launcher, listener);
             } else {
                 logger.logError("Unsupported export configuration of type: " + exportConfig.getClass());
             }
