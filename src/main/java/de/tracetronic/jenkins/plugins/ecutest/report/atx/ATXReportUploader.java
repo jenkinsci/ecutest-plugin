@@ -475,7 +475,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                     final JSONObject jsonObject = (JSONObject) new JsonSlurper()
                             .parseText(successFile.readToString());
                     final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
-                    if (jsonArray.size() > 0) {
+                    if (jsonArray != null && jsonArray.size() > 0) {
                         final String file = jsonArray.getJSONObject(0).getString("FILE");
                         final String status = jsonArray.getJSONObject(0).getString("STATUS");
                         final String text = jsonArray.getJSONObject(0).getString("TEXT");
