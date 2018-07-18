@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sf.jacob-project</groupId>
   <artifactId>jacob</artifactId>
-  <version>1.18</version>
+  <version>1.19</version>
   <packaging>jar</packaging>
 
   <name>JAVA-COM Bridge</name>
-  <url>http://sourceforge.net/projects/jacob-project</url>
+  <url>https://sourceforge.net/projects/jacob-project</url>
   <description>JACOB is a JAVA-COM Bridge that allows you to call COM Automation components from Java. It uses JNI to make native calls to the COM libraries. JACOB runs on x86 and x64 environments supporting 32 bit and 64 bit JVMs.</description>
   <licenses>
     <license>
@@ -17,7 +17,7 @@
     </license>
   </licenses>
   <scm>
-    <url>http://jacob-project.cvs.sourceforge.net/jacob-project</url>
+    <url>https://git.code.sf.net/p/jacob-project/code</url>
   </scm>
   
   <dependencies/>

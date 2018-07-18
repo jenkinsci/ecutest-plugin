@@ -79,7 +79,7 @@
         <!-- Jenkins base -->
         <jenkins.version>2.60.3</jenkins.version>
         <java.level>8</java.level>
-        
+
         <!-- Jenkins plugins -->
         <matrix-project.version>1.13</matrix-project.version>
         <icon-shim.version>2.0.3</icon-shim.version>
@@ -95,18 +95,18 @@
 
         <!-- Test scope -->
         <equalsverifier.version>2.4.6</equalsverifier.version>
-        <mockito-core.version>2.18.3</mockito-core.version>        
+        <mockito-core.version>2.18.3</mockito-core.version>
         <concurrency>2</concurrency>
         <skipUTs>false</skipUTs>
         <skipITs>true</skipITs>
 
         <!-- JACOB -->
-        <jacob.version>1.18</jacob.version>
+        <jacob.version>1.19</jacob.version>
 
         <!-- ANTLR -->
         <antlr4-maven-plugin.version>4.7.1</antlr4-maven-plugin.version>
         <antlr4-runtime.version>4.7.1</antlr4-runtime.version>
-        
+
         <!-- SQLite -->
         <sqlite-jdbc.version>3.7.2</sqlite-jdbc.version>
     </properties>
@@ -237,7 +237,7 @@
             <version>${equalsverifier.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- Pipeline test scope --> 
+        <!-- Pipeline test scope -->
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>script-security</artifactId>
@@ -426,7 +426,7 @@
         </plugins>
     </build>
 
-    <!-- This profile is used to store Eclipse m2e settings only. 
+    <!-- This profile is used to store Eclipse m2e settings only.
          It has no influence on the Maven build itself. -->
     <profiles>
         <profile>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -63,12 +63,12 @@ public final class DllUtil {
     /**
      * Defines the provided JACOB DLL for 32-bit systems.
      */
-    private static final String JACOB_DLL_X86 = "jacob-1.18-x86.dll";
+    private static final String JACOB_DLL_X86 = "jacob-1.19-x86.dll";
 
     /**
      * Defines the provided JACOB DLL for 64-bit systems.
      */
-    private static final String JACOB_DLL_X64 = "jacob-1.18-x64.dll";
+    private static final String JACOB_DLL_X64 = "jacob-1.19-x64.dll";
 
     /**
      * Instantiates a {@link DllUtil}.
