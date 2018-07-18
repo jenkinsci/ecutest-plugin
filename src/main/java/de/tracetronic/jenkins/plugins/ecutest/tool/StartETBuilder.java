@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -189,7 +189,7 @@ public class StartETBuilder extends AbstractToolBuilder {
             String expSettingsDir = EnvUtil.expandEnvVar(getSettingsDir(), buildEnvVars, workspace.getRemote());
             expSettingsDir = PathUtil.makeAbsolutePath(expSettingsDir, workspace);
 
-            // Check workspace validity
+            // Check existence of workspace and settings directory
             final FilePath expWorkspacePath = new FilePath(launcher.getChannel(), expWorkspaceDir);
             final FilePath expSettingsPath = new FilePath(launcher.getChannel(), expSettingsDir);
             checkWorkspace(expWorkspacePath, expSettingsPath);
@@ -222,7 +222,7 @@ public class StartETBuilder extends AbstractToolBuilder {
     }
 
     /**
-     * Verifying the ECU-TEST workspace indicated by the existence of a ".workspace" directory.
+     * Checks whether the ECU-TEST workspace and settings directory exist.
      *
      * @param workspacePath
      *            the workspace path
@@ -233,17 +233,15 @@ public class StartETBuilder extends AbstractToolBuilder {
      * @throws InterruptedException
      *             the interrupted exception
      * @throws ETPluginException
-     *             in case of an invalid workspace
+     *             in case of missing workspace or settings directory
      */
-    private void checkWorkspace(final FilePath workspacePath, final FilePath settingsPath) throws IOException,
-            InterruptedException, ETPluginException {
+    private void checkWorkspace(final FilePath workspacePath, final FilePath settingsPath)
+            throws IOException, InterruptedException, ETPluginException {
         if (!workspacePath.exists()) {
             throw new ETPluginException(String.format("ECU-TEST workspace at %s does not exist!",
                     workspacePath.getRemote()));
-        } else if (!workspacePath.child(".workspace").exists()) {
-            throw new ETPluginException(String.format("%s seems not to be a valid ECU-TEST workspace!",
-                    workspacePath.getRemote()));
-        } else if (!settingsPath.exists()) {
+        }
+        if (!settingsPath.exists()) {
             throw new ETPluginException(String.format("ECU-TEST settings directory at %s does not exist!",
                     settingsPath.getRemote()));
         }
