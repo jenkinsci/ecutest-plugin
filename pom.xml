@@ -34,7 +34,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.12</version>
+        <version>3.18</version>
         <relativePath />
     </parent>
 
@@ -86,16 +86,16 @@
         <junit.version>1.24</junit.version>
         <structs.version>1.14</structs.version>
         <job-dsl.version>1.67</job-dsl.version>
-        <credentials.version>2.1.16</credentials.version>
+        <credentials.version>2.1.17</credentials.version>
         <jquery-plugin.version>1.12.4-0</jquery-plugin.version>
 
         <!-- Static code analysis -->
         <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
-        <maven-pmd-plugin.version>3.9.0</maven-pmd-plugin.version>
+        <maven-pmd-plugin.version>3.10.0</maven-pmd-plugin.version>
 
         <!-- Test scope -->
-        <equalsverifier.version>2.4.6</equalsverifier.version>
-        <mockito-core.version>2.18.3</mockito-core.version>
+        <equalsverifier.version>2.4.8</equalsverifier.version>
+        <mockito-core.version>2.19.1</mockito-core.version>
         <concurrency>2</concurrency>
         <skipUTs>false</skipUTs>
         <skipITs>true</skipITs>
