@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<REPORT-CONFIG xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<REPORT-CONFIG
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<TYPE xsi:type="unicode">
 		PYTHON
 	</TYPE>
@@ -14,7 +15,8 @@
 	</PROJECT-TEMPLATE>
 	<SETTINGS>
 		<!-- Uploadeinstellungen -->
-		<SETTING name="uploadToServer" default="False" xsi:type="reportConfigItem">
+		<SETTING name="uploadToServer" default="False"
+			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -28,8 +30,10 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="serverURL" default="127.0.0.1" xsi:type="reportConfigItem" />
-		<SETTING name="serverLabel" default="" xsi:type="reportConfigItem">
+		<SETTING name="serverURL" default="127.0.0.1"
+			xsi:type="reportConfigItem" />
+		<SETTING name="serverLabel" default=""
+			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -44,9 +48,12 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="useHttpsConnection" default="False" xsi:type="reportConfigItem" />
-		<SETTING name="serverPort" default="8085" xsi:type="reportConfigItem" />
-		<SETTING name="serverContextPath" default="" xsi:type="reportConfigItem">
+		<SETTING name="useHttpsConnection" default="False"
+			xsi:type="reportConfigItem" />
+		<SETTING name="serverPort" default="8085"
+			xsi:type="reportConfigItem" />
+		<SETTING name="serverContextPath" default=""
+			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -81,7 +88,29 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="projectId" default="1" xsi:type="reportConfigItem">
+		<SETTING name="uploadAsync" default="True"
+			xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">True, wenn der Upload der Daten asynchron
+							mit TEST-GUIDE geschehen soll, damit die Verbindungsdauern zu
+							TEST-GUIDE kurz sind, sonst False. Die Empfehlung ist einen
+							asynchronen Upload vorzunehmen.
+						</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">True if the data upload is to be
+							asynchronous with TEST-GUIDE so that the connection times to
+							TEST-GUIDE are short, otherwise False. The recommendation is to
+							perform an asynchronous upload.</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
+		<SETTING name="projectId" default="1"
+			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -98,7 +127,8 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="compressUpload" default="False" xsi:type="reportConfigItem">
+		<SETTING name="compressUpload" default="False"
+			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -154,7 +184,8 @@
 			</DESCRIPTION>
 		</SETTING>
 		<!-- Archiveinstellungen -->
-		<SETTING name="enableArchive" default="True" xsi:type="reportConfigItem">
+		<SETTING name="enableArchive" default="True"
+			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -167,7 +198,8 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="archiveTrf" default="True" xsi:type="reportConfigItem">
+		<SETTING name="archiveTrf" default="True"
+			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -180,7 +212,8 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="archivePkg" default="False" xsi:type="reportConfigItem">
+		<SETTING name="archivePkg" default="False"
+			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -193,7 +226,8 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="archiveTcf" default="False" xsi:type="reportConfigItem">
+		<SETTING name="archiveTcf" default="False"
+			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -206,7 +240,8 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="archiveTbc" default="False" xsi:type="reportConfigItem">
+		<SETTING name="archiveTbc" default="False"
+			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -219,7 +254,24 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="archiveRecordings" default="False" xsi:type="reportConfigItem">
+		<SETTING name="archiveMapping" default="False"
+			xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">True, wenn die geladenen Mappings mit
+							archivert werden sollen, sonst False.</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">True if the loaded mappings should be
+							archived, otherwise False.</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
+		<SETTING name="archiveRecordings" default="False"
+			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -234,7 +286,8 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="archivePlots" default="True" xsi:type="reportConfigItem">
+		<SETTING name="archivePlots" default="True"
+			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -250,7 +303,8 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="archiveMiscFiles" default="" xsi:type="reportConfigItem">
+		<SETTING name="archiveMiscFiles" default=""
+			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -271,8 +325,8 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="archiveMiscFilesOnlyInTestReportDir" default="True"
-			xsi:type="reportConfigItem">
+		<SETTING name="archiveMiscFilesOnlyInTestReportDir"
+			default="True" xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -285,6 +339,23 @@
 						<DVALUE xsi:type="unicode">True, if you only want archive 'misc
 							files' which are in a ECU-TEST 'test report directory' of the
 							given test report, otherwise False.</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
+		<SETTING name="archiveBy"
+			default="NONE;SUCCESS;INCONCLUSIVE;FAILED;ERROR"
+			xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">Gibt die Package-Ergebnisse an, bei
+							welchen die Dateien für den Upload mit erfasst werden sollen.</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">Specifies the package results for which
+							the files are to be uploaded.</DVALUE>
 					</ELEMENT>
 				</MULTILANGDATA>
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
@@ -309,7 +380,8 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="attributeDelimiter" default="" xsi:type="reportConfigItem">
+		<SETTING name="attributeDelimiter" default=""
+			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -421,8 +493,8 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="mapUserDefinedReportDataAsConstant" default="True"
-			xsi:type="reportConfigItem">
+		<SETTING name="mapUserDefinedReportDataAsConstant"
+			default="True" xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -441,7 +513,8 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="setConstants" default="" xsi:type="reportConfigItem">
+		<SETTING name="setConstants" default=""
+			xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">
@@ -528,8 +601,8 @@
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
 			</DESCRIPTION>
 		</SETTING>
-		<SETTING name="mapProjectElementNameAsTestCaseName" default="False"
-			xsi:type="reportConfigItem">
+		<SETTING name="mapProjectElementNameAsTestCaseName"
+			default="False" xsi:type="reportConfigItem">
 			<DESCRIPTION xsi:type="I18NItem">
 				<MULTILANGDATA>
 					<ELEMENT dkey="de_DE">

@@ -74,7 +74,7 @@ public class ETPlugin {
     /**
      * Defines the TEST-GUIDE version that the provided ATX configuration is based on.
      */
-    public static final ToolVersion ATX_VERSION = new ToolVersion(1, 54, 0, 0);
+    public static final ToolVersion ATX_VERSION = new ToolVersion(1, 57, 1, 0);
 
     /**
      * Helper class to easily compare tool versions defined by major, minor, micro and qualifier version. Mainly used to
