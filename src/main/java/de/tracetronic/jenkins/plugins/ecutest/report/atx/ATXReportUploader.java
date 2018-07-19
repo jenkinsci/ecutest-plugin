@@ -266,7 +266,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      */
     private int traverseSubReports(final ATXReport atxReport, final FilePath testReportDir, int id,
             final String baseUrl, final String from, final String to, final String projectName, final String projectId)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         for (final FilePath subDir : testReportDir.listDirectories()) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(subDir);
             if (reportFile != null && reportFile.exists()) {
@@ -473,16 +473,21 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 if (successFile.exists()) {
                     logger.logDebug("Uploading ATX report succeded:");
                     final JSONObject jsonObject = (JSONObject) new JsonSlurper()
-                            .parseText(successFile.readToString());
+                    .parseText(successFile.readToString());
                     final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
-                    if (jsonArray != null && jsonArray.size() > 0) {
-                        final String file = jsonArray.getJSONObject(0).getString("FILE");
-                        final String status = jsonArray.getJSONObject(0).getString("STATUS");
-                        final String text = jsonArray.getJSONObject(0).getString("TEXT");
-                        logger.logDebug(String.format("%s: %s - %s", status, file, text));
+                    if (jsonArray != null) {
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            final String status = jsonArray.getJSONObject(i).getString("STATUS");
+                            if ("200".equals(status)) {
+                                final String file = jsonArray.getJSONObject(i).getString("FILE");
+                                final String text = jsonArray.getJSONObject(i).getString("TEXT");
+                                logger.logDebug(String.format("%s: %s - %s", status, file, text));
 
-                        final URL location = resolveRedirect(text);
-                        testInfo = parseTestInfo(location, uploadFile);
+                                final URL location = resolveRedirect(text);
+                                testInfo = parseTestInfo(location, uploadFile);
+                                break;
+                            }
+                        }
                     }
                 }
             } catch (final JSONException | InterruptedException | URISyntaxException
@@ -507,7 +512,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 if (errorFile.exists()) {
                     logger.logError("Error while uploading ATX report:");
                     final JSONObject jsonObject = (JSONObject) new JsonSlurper()
-                            .parseText(errorFile.readToString());
+                    .parseText(errorFile.readToString());
                     final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
                     if (jsonArray != null) {
                         for (int i = 0; i < jsonArray.size(); i++) {
@@ -569,7 +574,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             final String query = url.getQuery();
             final String[] pairs = query.split("&");
             for (final String pair : pairs) {
-                final int idx = pair.indexOf("=");
+                final int idx = pair.indexOf('=');
                 queryMap.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
                         URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
             }
