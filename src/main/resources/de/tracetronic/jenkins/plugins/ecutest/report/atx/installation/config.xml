@@ -50,6 +50,21 @@
 		</SETTING>
 		<SETTING name="useHttpsConnection" default="False"
 			xsi:type="reportConfigItem" />
+		<SETTING name="ignoreSSL" default="False"
+			xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">Verifizierung von SSL-Zertifikaten deaktivieren?
+						</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">Disable the SSL certificate verification?</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
 		<SETTING name="serverPort" default="8085"
 			xsi:type="reportConfigItem" />
 		<SETTING name="serverContextPath" default=""
@@ -527,6 +542,30 @@
 						<DVALUE xsi:type="unicode">Specifying special constants for each
 							testcase
 							by ';'. Example: myConstant=NightlyTest; Buildnumber=42</DVALUE>
+					</ELEMENT>
+				</MULTILANGDATA>
+				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+			</DESCRIPTION>
+		</SETTING>
+		<SETTING name="setAttributes" default=""
+			xsi:type="reportConfigItem">
+			<DESCRIPTION xsi:type="I18NItem">
+				<MULTILANGDATA>
+					<ELEMENT dkey="de_DE">
+						<DVALUE xsi:type="unicode">Angabe zu setzender Attribute für jeden
+							Testfall durch ';' getrennt. Beispiel: env=HiL; reqId=42 . Die
+							Attribute müssen nicht im Parameter 'coveredAttributes' extra
+							spezifiziert werden. Bei Überschneidungen zu Bestandsattributen
+							wird das Bestandsattribut übernommen.
+						</DVALUE>
+					</ELEMENT>
+					<ELEMENT dkey="en_US">
+						<DVALUE xsi:type="unicode">Specifying special attributes for each
+							testcase
+							by ';'. Example: env=HiL; reqId=42. The attributes do not
+							have to be extra specified in the'coveredAttributes' parameter.
+							If there are overlaps for existing attributes, the existing
+							attribute is copied.</DVALUE>
 					</ELEMENT>
 				</MULTILANGDATA>
 				<INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>

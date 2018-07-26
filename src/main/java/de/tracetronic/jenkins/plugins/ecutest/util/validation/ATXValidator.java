@@ -307,12 +307,14 @@ public class ATXValidator extends AbstractValidator {
      *            the server context path
      * @param useHttpsConnection
      *            if secure connection is used
+     * @param ignoreSSL
+     *            specifies whether to ignore SSL issues
      * @return the form validation
      */
     public FormValidation testConnection(final String serverUrl, final String serverPort,
-            final String serverContextPath, final boolean useHttpsConnection) {
+            final String serverContextPath, final boolean useHttpsConnection, final boolean ignoreSSL) {
         final String baseUrl = ATXUtil.getBaseUrl(serverUrl, serverPort, serverContextPath, useHttpsConnection);
-        return testConnection(baseUrl);
+        return testConnection(baseUrl, ignoreSSL);
     }
 
     /**
@@ -320,9 +322,11 @@ public class ATXValidator extends AbstractValidator {
      *
      * @param baseUrl
      *            the base server URL
+     * @param ignoreSSL
+     *            specifies whether to ignore SSL issues
      * @return the form validation
      */
-    public FormValidation testConnection(final String baseUrl) {
+    public FormValidation testConnection(final String baseUrl, final boolean ignoreSSL) {
         if (StringUtils.isBlank(baseUrl)) {
             return FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(null));
         }
@@ -338,8 +342,10 @@ public class ATXValidator extends AbstractValidator {
                 final URL url = new URL(appVersionUrl);
                 // Handle SSL connection
                 if (appVersionUrl.startsWith("https://")) {
-                    initSSLConnection();
                     connection = (HttpsURLConnection) url.openConnection();
+                    if (ignoreSSL) {
+                        ignoreSSLIssues((HttpsURLConnection) connection);
+                    }
                 } else {
                     connection = (HttpURLConnection) url.openConnection();
                 }
@@ -353,7 +359,8 @@ public class ATXValidator extends AbstractValidator {
 
                 final int httpResponse = connection.getResponseCode();
                 if (httpResponse != HttpURLConnection.HTTP_OK) {
-                    returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(baseUrl));
+                    returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(baseUrl,
+                            "Status code: " + httpResponse));
                 } else {
                     try (BufferedReader in = new BufferedReader(new InputStreamReader(
                             connection.getInputStream(), Charset.forName("UTF-8")))) {
@@ -366,7 +373,7 @@ public class ATXValidator extends AbstractValidator {
             } catch (final MalformedURLException e) {
                 returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(baseUrl));
             } catch (final IOException | NoSuchAlgorithmException | KeyManagementException e) {
-                returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(baseUrl));
+                returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(baseUrl, e.getMessage()));
             } finally {
                 if (connection != null) {
                     connection.disconnect();
@@ -377,14 +384,17 @@ public class ATXValidator extends AbstractValidator {
     }
 
     /**
-     * Initializes the SSL connection by trusting all certificates.
+     * Ignores SSL certification errors by trusting all certificates and host names.
      *
+     * @param connection
+     *            the current connection
      * @throws NoSuchAlgorithmException
      *             the no such algorithm exception
      * @throws KeyManagementException
      *             the key management exception
      */
-    public static void initSSLConnection() throws NoSuchAlgorithmException, KeyManagementException {
+    public static void ignoreSSLIssues(final HttpsURLConnection connection) 
+            throws NoSuchAlgorithmException, KeyManagementException {
         // Create a trust manager that does not validate certificate chains
         final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
 
@@ -405,7 +415,7 @@ public class ATXValidator extends AbstractValidator {
         // Install the all-trusting trust manager
         final SSLContext sslContext = SSLContext.getInstance("SSL");
         sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+        connection.setSSLSocketFactory(sslContext.getSocketFactory());
 
         // Create all-trusting host name verifier
         final HostnameVerifier allHostsValid = new HostnameVerifier() {
@@ -417,6 +427,6 @@ public class ATXValidator extends AbstractValidator {
         };
 
         // Install the all-trusting host verifier
-        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+        connection.setHostnameVerifier(allHostsValid);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -387,49 +387,49 @@ public class ATXValidatorTest {
     // Validation of test connection
     @Test
     public void testEmptyConnection() {
-        final FormValidation validation = atxValidator.testConnection("");
+        final FormValidation validation = atxValidator.testConnection("", false);
         assertEquals("Error if connection URL is empty", FormValidation.Kind.ERROR, validation.kind);
     }
 
     @Test
     public void testNullConnection() {
-        final FormValidation validation = atxValidator.testConnection(null);
+        final FormValidation validation = atxValidator.testConnection(null, false);
         assertEquals("Error if connection URL is null", FormValidation.Kind.ERROR, validation.kind);
     }
 
     @Test
     public void testMalformedConnection() {
-        final FormValidation validation = atxValidator.testConnection("null");
+        final FormValidation validation = atxValidator.testConnection("null", false);
         assertEquals("Error if connection URL is invalid", FormValidation.Kind.ERROR, validation.kind);
     }
 
     @Test
     public void testNotReachableUnsecuredConnection() {
-        final FormValidation validation = atxValidator.testConnection("http://localhost:0");
+        final FormValidation validation = atxValidator.testConnection("http://localhost:0", false);
         assertEquals("Warning if connection URL is not reachable", FormValidation.Kind.WARNING, validation.kind);
     }
 
     @Test
     public void testNotReachableSecuredConnection() {
-        final FormValidation validation = atxValidator.testConnection("https://localhost:0");
+        final FormValidation validation = atxValidator.testConnection("https://localhost:0", false);
         assertEquals("Warning if secured connection URL is not reachable", FormValidation.Kind.WARNING, validation.kind);
     }
 
     @Test
     public void testParameterizedConnection() {
-        final FormValidation validation = atxValidator.testConnection("${URL}");
+        final FormValidation validation = atxValidator.testConnection("${URL}", false);
         assertEquals("Warning if parameterized connection URL", FormValidation.Kind.WARNING, validation.kind);
     }
 
     @Test
     public void testValidConnectionBySettings() {
-        final FormValidation validation = atxValidator.testConnection("localhost", "0", "", false);
+        final FormValidation validation = atxValidator.testConnection("localhost", "0", "", false, false);
         assertEquals("Warning if connection URL is not reachable", FormValidation.Kind.WARNING, validation.kind);
     }
 
     @Test
     public void testInvalidConnectionBySettings() {
-        final FormValidation validation = atxValidator.testConnection(null, null, null, false);
+        final FormValidation validation = atxValidator.testConnection(null, null, null, false, false);
         assertEquals("Error if connection URL is invalid", FormValidation.Kind.ERROR, validation.kind);
     }
 }

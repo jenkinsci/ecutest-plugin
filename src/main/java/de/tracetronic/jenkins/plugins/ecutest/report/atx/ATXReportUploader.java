@@ -603,13 +603,14 @@ public class ATXReportUploader extends AbstractATXReportHandler {
 
             // Handle SSL connection
             if (redirect.startsWith("https://")) {
-                ATXValidator.initSSLConnection();
                 connection = (HttpsURLConnection) url.openConnection();
+                ATXValidator.ignoreSSLIssues((HttpsURLConnection) connection);
             } else {
                 connection = (HttpURLConnection) url.openConnection();
             }
             connection.setInstanceFollowRedirects(false);
             connection.connect();
+
             final String location = connection.getHeaderField("Location");
             return new URL(location);
         }

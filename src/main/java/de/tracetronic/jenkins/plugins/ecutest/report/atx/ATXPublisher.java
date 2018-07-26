@@ -70,6 +70,7 @@ import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
@@ -260,7 +261,14 @@ public class ATXPublisher extends AbstractReportPublisher {
         public Boolean call() throws IOException {
             final String baseUrl = ATXUtil.getBaseUrl(config, envVars);
             final ATXValidator validator = new ATXValidator();
-            final FormValidation validation = validator.testConnection(baseUrl);
+
+            boolean ignoreSSL = false;
+            final ATXBooleanSetting sslSetting = (ATXBooleanSetting) config.getSettingByName("ignoreSSL");
+            if (sslSetting != null) {
+                ignoreSSL = sslSetting.getCurrentValue();
+            }
+
+            final FormValidation validation = validator.testConnection(baseUrl, ignoreSSL);
             return validation.kind.equals(FormValidation.Kind.OK);
         }
     }
@@ -563,12 +571,14 @@ public class ATXPublisher extends AbstractReportPublisher {
          *            the server context path
          * @param useHttpsConnection
          *            if secure connection is used
+         * @param ignoreSSL
+         *            specifies whether to ignore SSL issues
          * @return the form validation
          */
         public FormValidation doTestConnection(@QueryParameter final String serverURL,
                 @QueryParameter final String serverPort, @QueryParameter final String serverContextPath,
-                @QueryParameter final boolean useHttpsConnection) {
-            return atxValidator.testConnection(serverURL, serverPort, serverContextPath, useHttpsConnection);
+                @QueryParameter final boolean useHttpsConnection, @QueryParameter final boolean ignoreSSL) {
+            return atxValidator.testConnection(serverURL, serverPort, serverContextPath, useHttpsConnection, ignoreSSL);
         }
     }
 }

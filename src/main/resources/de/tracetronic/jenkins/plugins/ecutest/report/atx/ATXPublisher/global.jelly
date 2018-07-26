@@ -1,5 +1,5 @@
 <!--
-    Copyright (c) 2015-2017 TraceTronic GmbH
+    Copyright (c) 2015-2018 TraceTronic GmbH
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification,
@@ -59,7 +59,7 @@
                         <f:entry title="">
                             <div align="right">
                                 <f:validateButton title="${%testConnection.title}" progress="${%testConnection.progress}"
-                                    method="testConnection" with="serverURL,serverPort,serverContextPath,useHttpsConnection" />
+                                    method="testConnection" with="serverURL,serverPort,serverContextPath,useHttpsConnection,ignoreSSL" />
                             </div>
                         </f:entry>
                     </f:section>
