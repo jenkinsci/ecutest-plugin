@@ -55,6 +55,7 @@ import java.util.Map.Entry;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
+import jenkins.model.Jenkins;
 import jenkins.security.MasterToSlaveCallable;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -64,6 +65,7 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.interceptor.RequirePOST;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
@@ -575,9 +577,11 @@ public class ATXPublisher extends AbstractReportPublisher {
          *            specifies whether to ignore SSL issues
          * @return the form validation
          */
+        @RequirePOST
         public FormValidation doTestConnection(@QueryParameter final String serverURL,
                 @QueryParameter final String serverPort, @QueryParameter final String serverContextPath,
                 @QueryParameter final boolean useHttpsConnection, @QueryParameter final boolean ignoreSSL) {
+            Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
             return atxValidator.testConnection(serverURL, serverPort, serverContextPath, useHttpsConnection, ignoreSSL);
         }
     }
