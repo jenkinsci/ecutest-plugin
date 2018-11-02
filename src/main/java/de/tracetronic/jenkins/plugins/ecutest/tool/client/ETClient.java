@@ -221,7 +221,7 @@ public class ETClient extends AbstractToolClient {
         }
 
         // Read currently loaded configurations
-        if (comToolVersion.compareWithoutMicroTo(new ToolVersion(7, 0, 0, 0)) >= 0) {
+        if (comToolVersion.compareWithoutMicroTo(new ToolVersion(7, 0, 0)) >= 0) {
             lastTbc = launcher.getChannel().call(new LastTbcCallable(listener));
             lastTcf = launcher.getChannel().call(new LastTcfCallable(listener));
         }
