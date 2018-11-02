@@ -64,17 +64,17 @@ public class ETPlugin {
     /**
      * Defines the minimum required ECU-TEST version supported by this plugin.
      */
-    public static final ToolVersion ET_MIN_VERSION = new ToolVersion(6, 3, 0, 0);
+    public static final ToolVersion ET_MIN_VERSION = new ToolVersion(6, 3, 0);
 
     /**
      * Defines the maximum allowed ECU-TEST version supported by this plugin.
      */
-    public static final ToolVersion ET_MAX_VERSION = new ToolVersion(7, 1, 0, 0);
+    public static final ToolVersion ET_MAX_VERSION = new ToolVersion(7, 1, 0);
 
     /**
      * Defines the TEST-GUIDE version that the provided ATX configuration is based on.
      */
-    public static final ToolVersion ATX_VERSION = new ToolVersion(1, 57, 1, 0);
+    public static final ToolVersion ATX_VERSION = new ToolVersion(1, 57, 1);
 
     /**
      * Helper class to easily compare tool versions defined by major, minor, micro and qualifier version. Mainly used to
@@ -88,7 +88,21 @@ public class ETPlugin {
         private final int major;
         private final int minor;
         private final int micro;
-        private final long qualifier;
+        private final String qualifier;
+
+        /**
+         * Instantiates a new {@link ToolVersion}.
+         *
+         * @param major
+         *            the major version
+         * @param minor
+         *            the minor version
+         * @param micro
+         *            the micro version
+         */
+        public ToolVersion(final int major, final int minor, final int micro) {
+            this(major, minor, micro, "");
+        }
 
         /**
          * Instantiates a new {@link ToolVersion}.
@@ -102,18 +116,20 @@ public class ETPlugin {
          * @param qualifier
          *            the qualifier version
          */
-        public ToolVersion(final int major, final int minor, final int micro, final long qualifier) {
+        public ToolVersion(final int major, final int minor, final int micro, final String qualifier) {
             super();
-            if (major < 0 || minor < 0 || micro < 0 || qualifier < 0) {
+
+            if (major < 0 || minor < 0 || micro < 0) {
                 throw new IllegalArgumentException("Versions must be greater than or equal to 0");
             }
+
             this.major = major;
             this.minor = minor;
             this.micro = micro;
             this.qualifier = qualifier;
         }
 
-        @Override
+            @Override
         public int compareTo(final ToolVersion version) {
             if (major != version.major) {
                 return Integer.compare(major, version.major);
@@ -124,9 +140,16 @@ public class ETPlugin {
             if (micro != version.micro) {
                 return Integer.compare(micro, version.micro);
             }
-            if (qualifier != version.qualifier) {
-                return Long.compare(qualifier, version.qualifier);
+            if (qualifier != null) {
+                if (version.qualifier == null) {
+                    return 1;
+                } else {
+                    return qualifier.compareTo(version.qualifier);
+                }
+            } else if (version.qualifier != null) {
+                return -1;
             }
+
             return 0;
         }
 
@@ -171,7 +194,7 @@ public class ETPlugin {
 
         @Override
         public String toString() {
-            return String.format("%d.%d.%d.%d", major, minor, micro, qualifier);
+            return String.format("%d.%d.%d.%s", major, minor, micro, qualifier);
         }
 
         /**
@@ -218,7 +241,7 @@ public class ETPlugin {
          *             if the format of the version string is invalid
          */
         public static ToolVersion parse(final String version) throws IllegalArgumentException {
-            final Pattern pattern = Pattern.compile("^(\\d+)\\.(\\d+)\\.(\\d+)(?:\\.(\\w+))?$");
+            final Pattern pattern = Pattern.compile("^(\\d+)\\.(\\d+)\\.(\\d+)(?:\\.(.*))?$");
             final Matcher matcher = pattern.matcher(version);
             if (!matcher.find() || matcher.groupCount() != 4) {
                 throw new IllegalArgumentException(
@@ -228,7 +251,7 @@ public class ETPlugin {
             final int major = Integer.parseInt(matcher.group(1));
             final int minor = Integer.parseInt(matcher.group(2));
             final int micro = Integer.parseInt(matcher.group(3));
-            final long qualifier = Long.parseLong(matcher.group(4));
+            final String qualifier = matcher.group(4);
 
             return new ToolVersion(major, minor, micro, qualifier);
         }
