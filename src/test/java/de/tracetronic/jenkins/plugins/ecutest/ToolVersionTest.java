@@ -47,18 +47,18 @@ public class ToolVersionTest {
 
     @Test
     public void testZeroConstructor() {
-        final ToolVersion toolVersion = new ToolVersion(0, 0, 0, 0);
+        final ToolVersion toolVersion = new ToolVersion(0, 0, 0, "0");
         assertEquals("Check zero-ed version", "0.0.0.0", toolVersion.toString());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNegativeConstructor() {
-        new ToolVersion(-1, -1, -1, -1);
+        new ToolVersion(-1, -1, -1);
     }
 
     @Test
     public void testParseValidToolVersion() {
-        final ToolVersion expectedToolVersion = new ToolVersion(1, 2, 3, 4);
+        final ToolVersion expectedToolVersion = new ToolVersion(1, 2, 3, "4");
         final ToolVersion parsedToolVersion = ToolVersion.parse("1.2.3.4");
         assertEquals("Check parsed version", expectedToolVersion, parsedToolVersion);
     }
@@ -70,56 +70,56 @@ public class ToolVersionTest {
 
     @Test
     public void testCompareSameToolVersions() {
-        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, 4);
-        final ToolVersion sameToolVersion = new ToolVersion(1, 2, 3, 4);
+        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, "4");
+        final ToolVersion sameToolVersion = new ToolVersion(1, 2, 3, "4");
         assertEquals("Tool versions compare to equals", 0, toolVersion.compareTo(sameToolVersion));
     }
 
     @Test
     public void testCompareLessThanToolVersions() {
-        final ToolVersion toolVersion = new ToolVersion(4, 3, 2, 1);
-        final ToolVersion lesserToolVersion = new ToolVersion(1, 2, 3, 4);
+        final ToolVersion toolVersion = new ToolVersion(4, 3, 2, "1");
+        final ToolVersion lesserToolVersion = new ToolVersion(1, 2, 3, "4");
         assertEquals("Tool versions compare to less than", -1, lesserToolVersion.compareTo(toolVersion));
     }
 
     @Test
     public void testCompareGreaterThanToolVersions() {
-        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, 4);
-        final ToolVersion greaterToolVersion = new ToolVersion(4, 3, 2, 1);
+        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, "4");
+        final ToolVersion greaterToolVersion = new ToolVersion(4, 3, 2, "1");
         assertEquals("Tool versions compare to greater than", 1, greaterToolVersion.compareTo(toolVersion));
     }
 
     @Test
     public void testCompareWithoutMicro() {
-        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, 4);
-        final ToolVersion sameToolVersion = new ToolVersion(1, 2, 0, 0);
+        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, "4");
+        final ToolVersion sameToolVersion = new ToolVersion(1, 2, 0, "0");
         assertEquals("Tool versions compare without micro to equals", 0,
                 sameToolVersion.compareWithoutMicroTo(toolVersion));
     }
 
     @Test
     public void testCompareWithoutQualifier() {
-        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, 4);
-        final ToolVersion sameToolVersion = new ToolVersion(1, 2, 3, 0);
+        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, "4");
+        final ToolVersion sameToolVersion = new ToolVersion(1, 2, 3, "0");
         assertEquals("Tool versions compare without qualifier to equals", 0,
                 sameToolVersion.compareWithoutQualifierTo(toolVersion));
     }
 
     @Test
     public void testToString() {
-        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, 4);
+        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, "4");
         assertThat(toolVersion.toString(), is("1.2.3.4"));
     }
 
     @Test
     public void testToMicroString() {
-        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, 4);
+        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, "4");
         assertThat(toolVersion.toMicroString(), is("1.2.3"));
     }
 
     @Test
     public void testToMinorString() {
-        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, 4);
+        final ToolVersion toolVersion = new ToolVersion(1, 2, 3, "4");
         assertThat(toolVersion.toMinorString(), is("1.2"));
     }
 
