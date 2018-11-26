@@ -57,6 +57,7 @@ import jenkins.model.Jenkins;
 import jenkins.security.MasterToSlaveCallable;
 
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -224,6 +225,7 @@ public class ETInstallation extends AbstractToolInstallation {
     /**
      * DescriptorImpl of {@link ETInstallation}.
      */
+    @Symbol("ecutest")
     @Extension(ordinal = 1001)
     public static class DescriptorImpl extends ToolDescriptor<ETInstallation> {
 
