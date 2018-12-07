@@ -376,7 +376,7 @@
                         <excludeRoot>target/generated-sources/antlr4</excludeRoot>
                     </excludeRoots>
                     <minimumTokens>120</minimumTokens>
-                    <targetJdk>${java.version}</targetJdk>
+                    <targetJdk>1.${java.level}</targetJdk>
                     <failOnViolation>false</failOnViolation>
                     <analysisCache>true</analysisCache>
                 </configuration>
