@@ -199,7 +199,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      */
     private int traverseReports(final List<ATXReport> atxReports, final FilePath testReportDir, int id,
             final String title, final String baseUrl, final TestInfoHolder testInfo, final String projectId)
-            throws IOException, InterruptedException {
+                    throws IOException, InterruptedException {
         // Prepare ATX report information
         String reportUrl = null;
         String trendReportUrl = null;
@@ -258,7 +258,13 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(subDir);
             if (reportFile != null && reportFile.exists()) {
                 // Prepare ATX report information for sub-report
-                final String testName = reportFile.getParent().getName().replaceFirst("^Report\\s", "");
+                String testName;
+                // Ensure compatibility with ECU-TEST 6.x using report.trf as report name
+                if ("report.trf".equals(reportFile.getName())) {
+                    testName = reportFile.getParent().getName().replaceFirst("^Report\\s", "");
+                } else {
+                    testName = reportFile.getBaseName();
+                }
                 final String subTestName = ATXUtil.getValidATXName(testName);
                 final String reportUrl = getPrjSubReportUrl(baseUrl, testInfo, subTestName, projectName, projectId);
                 final ATXReport subReport = new ATXReport(String.format("%d", ++id), testName, reportUrl);
@@ -495,13 +501,13 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          *             in case of an unsupported encoding
          */
         private TestInfoHolder checkSuccessLog(final FilePath successFile, final FilePath uploadFile,
-                final TTConsoleLogger logger) throws IOException, MalformedURLException, UnsupportedEncodingException {
+                final TTConsoleLogger logger) throws IOException {
             TestInfoHolder testInfo = null;
             try {
                 if (successFile.exists()) {
                     logger.logDebug("Uploading ATX report succeded:");
                     final JSONObject jsonObject = (JSONObject) new JsonSlurper()
-                            .parseText(successFile.readToString());
+                    .parseText(successFile.readToString());
                     final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
                     if (jsonArray != null) {
                         for (int i = 0; i < jsonArray.size(); i++) {
@@ -519,8 +525,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                         }
                     }
                 }
-            } catch (final JSONException | InterruptedException | URISyntaxException
-                    | KeyManagementException | NoSuchAlgorithmException e) {
+            } catch (final JSONException | InterruptedException | URISyntaxException | UnsupportedEncodingException |
+                    KeyManagementException | NoSuchAlgorithmException | MalformedURLException e) {
                 logger.logError("-> Could not parse ATX JSON response: " + e.getMessage());
             }
             return testInfo;
@@ -541,7 +547,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 if (errorFile.exists()) {
                     logger.logError("Error while uploading ATX report:");
                     final JSONObject jsonObject = (JSONObject) new JsonSlurper()
-                            .parseText(errorFile.readToString());
+                    .parseText(errorFile.readToString());
                     final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
                     if (jsonArray != null) {
                         for (int i = 0; i < jsonArray.size(); i++) {

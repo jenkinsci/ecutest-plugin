@@ -77,6 +77,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline.ATXPublishStep;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
@@ -96,6 +97,7 @@ public class ATXPublisher extends AbstractReportPublisher {
 
     @Nonnull
     private final String atxName;
+    private transient ATXInstallation atxInstallation;
 
     /**
      * Instantiates a new {@link ATXPublisher}.
@@ -110,6 +112,18 @@ public class ATXPublisher extends AbstractReportPublisher {
     }
 
     /**
+     * Instantiates a new {@link ATXPublisher} for direct use from {@link ATXPublishStep}.
+     *
+     * @param atxInstallation
+     *            the {@link ATXInstallation}
+     */
+    public ATXPublisher(@Nonnull final ATXInstallation atxInstallation) {
+        super();
+        atxName = StringUtils.trimToEmpty(atxInstallation.getName());
+        this.atxInstallation = atxInstallation;
+    }
+
+    /**
      * @return the {@link ATXInstallation} name
      */
     @Nonnull
@@ -121,26 +135,28 @@ public class ATXPublisher extends AbstractReportPublisher {
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = getLogger();
-        logger.logInfo("Publishing ATX reports...");
+        logger.logInfo(String.format("Publishing ATX reports to %s...", atxName));
         ProcessUtil.checkOS(launcher);
 
         if (isSkipped(true, run, launcher)) {
             return;
         }
 
-        final ATXInstallation installation = getInstallation(run.getEnvironment(listener));
-        if (installation == null) {
-            throw new ETPluginException("Selected TEST-GUIDE installation is not configured!");
+        if (atxInstallation == null) {
+            atxInstallation = getInstallation(run.getEnvironment(listener));
+            if (atxInstallation == null) {
+                throw new ETPluginException("Selected TEST-GUIDE installation is not configured!");
+            }
         }
 
         boolean isPublished = false;
         if (isETRunning(launcher)) {
-            isPublished = publishReports(installation, run, workspace, launcher, listener);
+            isPublished = publishReports(atxInstallation, run, workspace, launcher, listener);
         } else {
-            final String toolName = installation.getToolName();
+            final String toolName = atxInstallation.getToolName();
             final ETClient etClient = getToolClient(toolName, run, workspace, launcher, listener);
             if (etClient.start(false, workspace, launcher, listener)) {
-                isPublished = publishReports(installation, run, workspace, launcher, listener);
+                isPublished = publishReports(atxInstallation, run, workspace, launcher, listener);
             } else {
                 logger.logError(String.format("Starting %s failed.", toolName));
             }
