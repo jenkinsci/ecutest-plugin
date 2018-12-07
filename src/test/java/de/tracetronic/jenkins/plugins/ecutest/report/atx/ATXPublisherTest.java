@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -53,7 +53,7 @@ public class ATXPublisherTest {
     @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
     @Test
     public void testNullStep() {
-        final ATXPublisher publisher = new ATXPublisher(null);
+        final ATXPublisher publisher = new ATXPublisher("");
         assertPublisher(publisher, true);
     }
 
