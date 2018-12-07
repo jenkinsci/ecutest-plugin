@@ -225,7 +225,7 @@ public class ETInstallation extends AbstractToolInstallation {
     /**
      * DescriptorImpl of {@link ETInstallation}.
      */
-    @Symbol("ecutest")
+    @Symbol("ecu-test")
     @Extension(ordinal = 1001)
     public static class DescriptorImpl extends ToolDescriptor<ETInstallation> {
 
