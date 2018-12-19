@@ -63,8 +63,7 @@ public class ETLogParser {
     /**
      * Instantiates a new {@link ETLogParser}.
      *
-     * @param logFile
-     *            the log file
+     * @param logFile the log file
      */
     public ETLogParser(final FilePath logFile) {
         this.logFile = logFile;
@@ -78,14 +77,14 @@ public class ETLogParser {
     public List<ETLogAnnotation> parse() {
         final List<ETLogAnnotation> logReports = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(logFile.read(),
-                Charset.forName("UTF-8")))) {
+            Charset.forName("UTF-8")))) {
             String line;
             int warnLogCount = 0;
             int errorLogCount = 0;
             final int maxLogCount = AbstractETLogAction.getMaxLogSize();
             try (LineNumberReader lineReader = new LineNumberReader(reader)) {
                 while ((line = lineReader.readLine()) != null
-                        && (warnLogCount < maxLogCount || errorLogCount < maxLogCount)) {
+                    && (warnLogCount < maxLogCount || errorLogCount < maxLogCount)) {
                     ETLogAnnotation logAnnotation = null;
                     if (warnLogCount < maxLogCount && isWarningLog(line)) {
                         logAnnotation = parseLine(line, lineReader, Severity.WARNING);
@@ -101,7 +100,7 @@ public class ETLogParser {
             }
         } catch (final IOException | InterruptedException e) {
             LOGGER.log(Level.SEVERE,
-                    String.format("Failed parsing log file %s: %s", logFile.getRemote(), e.getMessage()));
+                String.format("Failed parsing log file %s: %s", logFile.getRemote(), e.getMessage()));
         }
         return logReports;
     }
@@ -109,26 +108,25 @@ public class ETLogParser {
     /**
      * Parses the total count of log messages matching the given severity.
      *
-     * @param severity
-     *            the severity to match
+     * @param severity the severity to match
      * @return the total log count by severity
      */
     public int parseLogCount(final Severity severity) {
         int logCount = 0;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(logFile.read(),
-                Charset.forName("UTF-8")))) {
+            Charset.forName("UTF-8")))) {
             String line;
             try (LineNumberReader lineReader = new LineNumberReader(reader)) {
                 while ((line = lineReader.readLine()) != null) {
                     if (severity == Severity.WARNING && isWarningLog(line)
-                            || severity == Severity.ERROR && isErrorLog(line)) {
+                        || severity == Severity.ERROR && isErrorLog(line)) {
                         logCount++;
                     }
                 }
             }
         } catch (final IOException | InterruptedException e) {
             LOGGER.log(Level.SEVERE,
-                    String.format("Failed parsing log file %s: %s", logFile.getRemote(), e.getMessage()));
+                String.format("Failed parsing log file %s: %s", logFile.getRemote(), e.getMessage()));
         }
         return logCount;
     }
@@ -136,19 +134,15 @@ public class ETLogParser {
     /**
      * Parses a single log message.
      *
-     * @param line
-     *            the current line
-     * @param lineReader
-     *            the line number reader
-     * @param severity
-     *            the severity to annotate the message.
+     * @param line       the current line
+     * @param lineReader the line number reader
+     * @param severity   the severity to annotate the message.
      * @return the annotated message, can be {@code null}
-     * @throws IOException
-     *             signals that an I/O exception has occurred
+     * @throws IOException signals that an I/O exception has occurred
      */
     @CheckForNull
     private ETLogAnnotation parseLine(String line, final LineNumberReader lineReader, final Severity severity)
-            throws IOException {
+        throws IOException {
         ETLogAnnotation logAnnotation = null;
         if (line != null) {
             final String[] lineSplit = line.split("\\s+");
@@ -167,7 +161,7 @@ public class ETLogParser {
                     lineReader.mark(4096);
                 }
                 logAnnotation = new ETLogAnnotation(lineNumber, lineSplit[0] + " "
-                        + lineSplit[1], lineSplit[3], severity, msg.toString());
+                    + lineSplit[1], lineSplit[3], severity, msg.toString());
             }
         }
         return logAnnotation;
@@ -176,8 +170,7 @@ public class ETLogParser {
     /**
      * Checks whether the given log line is a warning message.
      *
-     * @param line
-     *            the log line
+     * @param line the log line
      * @return {@code true} if warning message, {@code false} otherwise
      */
     private boolean isWarningLog(final String line) {
@@ -187,8 +180,7 @@ public class ETLogParser {
     /**
      * Checks whether the given log line is an error message.
      *
-     * @param line
-     *            the log line
+     * @param line the log line
      * @return {@code true} if error message, {@code false} otherwise
      */
     private boolean isErrorLog(final String line) {

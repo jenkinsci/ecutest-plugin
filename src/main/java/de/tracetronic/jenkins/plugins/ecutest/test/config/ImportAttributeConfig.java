@@ -44,12 +44,9 @@ public abstract class ImportAttributeConfig extends AttributeConfig {
     /**
      * Instantiates a new {@link ImportAttributeConfig}.
      *
-     * @param filePath
-     *            the test file path whose attributes to import
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the import timeout
+     * @param filePath      the test file path whose attributes to import
+     * @param credentialsId the credentials id
+     * @param timeout       the import timeout
      */
     public ImportAttributeConfig(final String filePath, final String credentialsId, final String timeout) {
         super(filePath, credentialsId, timeout);
@@ -63,8 +60,7 @@ public abstract class ImportAttributeConfig extends AttributeConfig {
         /**
          * Validates the file path to import.
          *
-         * @param value
-         *            the file path to import
+         * @param value the file path to import
          * @return the form validation
          */
         public FormValidation doCheckFilePath(@QueryParameter final String value) {
@@ -74,8 +70,7 @@ public abstract class ImportAttributeConfig extends AttributeConfig {
         /**
          * Validates the import target path.
          *
-         * @param value
-         *            the import path
+         * @param value the import path
          * @return the form validation
          */
         public FormValidation doCheckImportPath(@QueryParameter final String value) {

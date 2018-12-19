@@ -101,10 +101,26 @@ public class ETLogPublisher extends AbstractReportPublisher {
     }
 
     /**
+     * @param unstableOnWarning specifies whether to mark the build as unstable if warnings found
+     */
+    @DataBoundSetter
+    public void setUnstableOnWarning(final boolean unstableOnWarning) {
+        this.unstableOnWarning = unstableOnWarning;
+    }
+
+    /**
      * @return whether to mark the build as failed if errors found
      */
     public boolean isFailedOnError() {
         return failedOnError;
+    }
+
+    /**
+     * @param failedOnError specifies whether to mark the build as failed if errors found
+     */
+    @DataBoundSetter
+    public void setFailedOnError(final boolean failedOnError) {
+        this.failedOnError = failedOnError;
     }
 
     /**
@@ -115,26 +131,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * @param unstableOnWarning
-     *            specifies whether to mark the build as unstable if warnings found
-     */
-    @DataBoundSetter
-    public void setUnstableOnWarning(final boolean unstableOnWarning) {
-        this.unstableOnWarning = unstableOnWarning;
-    }
-
-    /**
-     * @param failedOnError
-     *            specifies whether to mark the build as failed if errors found
-     */
-    @DataBoundSetter
-    public void setFailedOnError(final boolean failedOnError) {
-        this.failedOnError = failedOnError;
-    }
-
-    /**
-     * @param testSpecific
-     *            specifies whether to parse the test-specific log files
+     * @param testSpecific specifies whether to parse the test-specific log files
      */
     @DataBoundSetter
     public void setTestSpecific(final boolean testSpecific) {
@@ -144,7 +141,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
+                              final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = getLogger();
         logger.logInfo("Publishing ECU-TEST logs...");
 
@@ -171,7 +168,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
                         try {
                             logger.logInfo(String.format("- Archiving log files: %s", reportDir));
                             final int copiedFiles = reportDir.copyRecursiveTo(
-                                    String.format("**/%s,**/%s", ERROR_LOG_NAME, INFO_LOG_NAME), archiveTargetDir);
+                                String.format("**/%s,**/%s", ERROR_LOG_NAME, INFO_LOG_NAME), archiveTargetDir);
                             if (copiedFiles == 0) {
                                 continue;
                             } else if (copiedFiles > 2) {
@@ -199,7 +196,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
                                 continue;
                             } else {
                                 logger.logError(String.format("Specified ECU-TEST log file '%s' does not exist.",
-                                        logFile));
+                                    logFile));
                                 run.setResult(Result.FAILURE);
                                 return;
                             }
@@ -236,20 +233,15 @@ public class ETLogPublisher extends AbstractReportPublisher {
     /**
      * Parses the ECU-TEST log file.
      *
-     * @param logFile
-     *            the log file
-     * @param archiveTargetDir
-     *            the archive target directory
-     * @param id
-     *            the report id
+     * @param logFile          the log file
+     * @param archiveTargetDir the archive target directory
+     * @param id               the report id
      * @return the parsed {@link ETLogReport}
-     * @throws IOException
-     *             signals that an I/O exception has occurred.
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred.
+     * @throws InterruptedException if the build gets interrupted
      */
     private ETLogReport parseLogFile(final FilePath logFile, final FilePath archiveTargetDir, final int id)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         final ETLogParser logParser = new ETLogParser(logFile);
         final List<ETLogAnnotation> logs = logParser.parse();
         final int warningLogCount = logParser.parseLogCount(Severity.WARNING);
@@ -263,29 +255,24 @@ public class ETLogPublisher extends AbstractReportPublisher {
             logTitle = logFile.getName();
         }
         return new ETLogReport(String.format("%d", id), logTitle, relLogFile,
-                logFile.length(), logs, warningLogCount, errorLogCount);
+            logFile.length(), logs, warningLogCount, errorLogCount);
     }
 
     /**
      * Creates the main report and adds the sub-reports by traversing them recursively.
      *
-     * @param logReports
-     *            the TRF reports
-     * @param archiveTargetDir
-     *            the archive target directory
-     * @param id
-     *            the report id
+     * @param logReports       the TRF reports
+     * @param archiveTargetDir the archive target directory
+     * @param id               the report id
      * @return the current report id
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private int traverseReports(final List<ETLogReport> logReports, final FilePath archiveTargetDir, int id)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         final ETLogReport logReport = new ETLogReport(String.format("%d", ++id),
-                archiveTargetDir.getName(), archiveTargetDir.getName(), getDirectorySize(archiveTargetDir),
-                Collections.emptyList(), 0, 0);
+            archiveTargetDir.getName(), archiveTargetDir.getName(), getDirectorySize(archiveTargetDir),
+            Collections.emptyList(), 0, 0);
         logReports.add(logReport);
 
         final FilePath errorLogFile = archiveTargetDir.child(ERROR_LOG_NAME);
@@ -306,23 +293,17 @@ public class ETLogPublisher extends AbstractReportPublisher {
      * Traverses the sub-report directories recursively and searches for TRF reports.
      * Includes the report files generated during separate sub-project execution.
      *
-     * @param logReport
-     *            the TRF report
-     * @param testReportDir
-     *            the main test report directory
-     * @param subTestReportDir
-     *            the sub test report directory
-     * @param id
-     *            the report id
+     * @param logReport        the TRF report
+     * @param testReportDir    the main test report directory
+     * @param subTestReportDir the sub test report directory
+     * @param id               the report id
      * @return the current report id
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private int traverseSubReports(final ETLogReport logReport, final FilePath testReportDir,
-            final FilePath subTestReportDir, int id)
-            throws IOException, InterruptedException {
+                                   final FilePath subTestReportDir, int id)
+        throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
             FilePath logFile = subDir.child(ERROR_LOG_NAME);
             if (logFile.exists()) {
@@ -343,10 +324,8 @@ public class ETLogPublisher extends AbstractReportPublisher {
     /**
      * Adds the {@link ETLogBuildAction} to the build holding the found {@link ETLogReport}s.
      *
-     * @param run
-     *            the run
-     * @param logReports
-     *            the list of {@link ETLogReport}s to add
+     * @param run        the run
+     * @param logReports the list of {@link ETLogReport}s to add
      */
     private void addBuildAction(final Run<?, ?> run, final List<ETLogReport> logReports) {
         ETLogBuildAction action = run.getAction(ETLogBuildAction.class);
@@ -360,10 +339,8 @@ public class ETLogPublisher extends AbstractReportPublisher {
     /**
      * Sets the build result in case of errors or warnings.
      *
-     * @param run
-     *            the run
-     * @param logReports
-     *            the log reports
+     * @param run        the run
+     * @param logReports the log reports
      */
     private void setBuildResult(final Run<?, ?> run, final List<ETLogReport> logReports) {
         final TTConsoleLogger logger = getLogger();
@@ -376,37 +353,32 @@ public class ETLogPublisher extends AbstractReportPublisher {
         logger.logInfo("- Parsing log files...");
         if (totalErrors > 0 && isFailedOnError()) {
             logger.logInfo(String.format(
-                    "-> %d error(s) found in the ECU-TEST logs, setting build status to FAILURE!",
-                    totalErrors));
+                "-> %d error(s) found in the ECU-TEST logs, setting build status to FAILURE!",
+                totalErrors));
             run.setResult(Result.FAILURE);
         } else if (totalWarnings > 0 && isUnstableOnWarning()) {
             logger.logInfo(String.format(
-                    "-> %d warning(s) found in the ECU-TEST logs, setting build status to UNSTABLE!",
-                    totalWarnings));
+                "-> %d warning(s) found in the ECU-TEST logs, setting build status to UNSTABLE!",
+                totalWarnings));
             run.setResult(Result.UNSTABLE);
         } else {
             logger.logInfo(String.format("-> %d warning(s) and %d error(s) found in the ECU-TEST logs.",
-                    totalWarnings, totalErrors));
+                totalWarnings, totalErrors));
         }
     }
 
     /**
      * Builds a list of the entire ECU-TEST log files for archiving.
      *
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
+     * @param run       the run
+     * @param workspace the workspace
+     * @param launcher  the launcher
      * @return the complete log files
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private List<FilePath> getCompleteLogFiles(final Run<?, ?> run, final FilePath workspace, final Launcher launcher)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         final List<FilePath> logFiles = new ArrayList<>();
         FilePath workspacePath;
         final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
@@ -427,6 +399,11 @@ public class ETLogPublisher extends AbstractReportPublisher {
         return logFiles;
     }
 
+    @Override
+    protected String getUrlName() {
+        return URL_NAME;
+    }
+
     /**
      * {@link FileCallable} providing remote file access to list included files.
      */
@@ -440,10 +417,8 @@ public class ETLogPublisher extends AbstractReportPublisher {
         /**
          * Instantiates a new {@link ListFilesCallable}.
          *
-         * @param includes
-         *            the inclusion file pattern
-         * @param excludes
-         *            the exclusion file pattern
+         * @param includes the inclusion file pattern
+         * @param excludes the exclusion file pattern
          */
         ListFilesCallable(final String includes, final String excludes) {
             this.includes = includes;
@@ -452,20 +427,15 @@ public class ETLogPublisher extends AbstractReportPublisher {
 
         @Override
         public List<String> invoke(final File baseDir, final VirtualChannel channel)
-                throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
             final List<String> files = new ArrayList<>();
             for (final String includedFile : Util.createFileSet(baseDir, includes, excludes)
-                    .getDirectoryScanner().getIncludedFiles()) {
+                .getDirectoryScanner().getIncludedFiles()) {
                 final File file = new File(baseDir, includedFile);
                 files.add(file.getPath());
             }
             return files;
         }
-    }
-
-    @Override
-    protected String getUrlName() {
-        return URL_NAME;
     }
 
     /**
@@ -490,10 +460,8 @@ public class ETLogPublisher extends AbstractReportPublisher {
         /**
          * Deletes previous ECU-TEST log files.
          *
-         * @param workspace
-         *            the ECU-TEST workspace containing log files
-         * @param listener
-         *            the listener
+         * @param workspace the ECU-TEST workspace containing log files
+         * @param listener  the listener
          */
         public static void onStarted(final FilePath workspace, final TaskListener listener) {
             if (workspace != null && listener != null) {

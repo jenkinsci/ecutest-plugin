@@ -46,8 +46,7 @@ public class ToolValidator extends AbstractValidator {
     /**
      * Validates the workspace directory.
      *
-     * @param wsDir
-     *            the workspace directory.
+     * @param wsDir the workspace directory.
      * @return the form validation
      */
     public FormValidation validateWorkspaceDir(final String wsDir) {
@@ -61,8 +60,7 @@ public class ToolValidator extends AbstractValidator {
     /**
      * Validates the settings directory.
      *
-     * @param settingsDir
-     *            the settings directory.
+     * @param settingsDir the settings directory.
      * @return the form validation
      */
     public FormValidation validateSettingsDir(final String settingsDir) {
@@ -76,8 +74,7 @@ public class ToolValidator extends AbstractValidator {
     /**
      * Validates the ToolLibs.ini path.
      *
-     * @param toolLibsIni
-     *            the ToolLibs.ini path
+     * @param toolLibsIni the ToolLibs.ini path
      * @return the form validation
      */
     public FormValidation validateToolLibsIni(final String toolLibsIni) {
@@ -97,15 +94,14 @@ public class ToolValidator extends AbstractValidator {
     /**
      * Validates the TCP port.
      *
-     * @param tcpPort
-     *            the TCP port
+     * @param tcpPort the TCP port
      * @return the form validation
      */
     public FormValidation validateTcpPort(final String tcpPort) {
         FormValidation returnValue;
         if (StringUtils.isBlank(tcpPort)) {
             returnValue = FormValidation.warning(Messages
-                    .StartTSBuilder_NoTcpPort(StartTSBuilder.DEFAULT_TCP_PORT));
+                .StartTSBuilder_NoTcpPort(StartTSBuilder.DEFAULT_TCP_PORT));
         } else if (tcpPort.contains(PARAMETER)) {
             returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
         } else {

@@ -42,8 +42,7 @@ public interface ComConstant {
      * Queries the constant name.
      *
      * @return the name of this constant
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     String getName() throws ETComException;
 
@@ -51,8 +50,7 @@ public interface ComConstant {
      * Queries the constant description.
      *
      * @return the description of this constant
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     String getDescription() throws ETComException;
 
@@ -60,8 +58,7 @@ public interface ComConstant {
      * Queries the constant value.
      *
      * @return the value of this constant
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     String getValue() throws ETComException;
 

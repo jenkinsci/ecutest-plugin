@@ -75,10 +75,10 @@ public class ATXPublisherIT extends IntegrationTestBase {
     @Before
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
-                .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
         final ATXPublisher.DescriptorImpl atxImpl = jenkins.jenkins
-                .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
+            .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
         final ATXInstallation inst = new ATXInstallation("TEST-GUIDE", "ECU-TEST", new ATXConfig());
         atxImpl.setInstallations(inst);
     }
@@ -144,7 +144,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
     @LocalData
     public void testDefaultConfig() {
         final ATXPublisher.DescriptorImpl atxImpl = jenkins.jenkins
-                .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
+            .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
         assertNotNull(atxImpl.getDefaultConfig());
     }
 
@@ -156,9 +156,9 @@ public class ATXPublisherIT extends IntegrationTestBase {
     }
 
     @Test
-    public void testFormRoundTrip() throws Exception {
+    public void testFormRoundTrip() {
         final ATXPublisher.DescriptorImpl atxImpl = jenkins.jenkins
-                .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
+            .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
         assertEquals(1, atxImpl.getInstallations().length);
 
         final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
@@ -191,7 +191,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                    final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) throws InterruptedException, IOException {
                 return false;
             }
         });
@@ -201,13 +201,13 @@ public class ATXPublisherIT extends IntegrationTestBase {
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
         assertThat("Skip message should be present in console log", build.getLog(100).toString(),
-                containsString("Skipping publisher"));
+            containsString("Skipping publisher"));
     }
 
     @Test
     public void testParameterizedATXName() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
-                .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
@@ -215,13 +215,14 @@ public class ATXPublisherIT extends IntegrationTestBase {
         project.getPublishersList().add(publisher);
 
         final EnvVars envVars = new EnvVars(
-                Collections.unmodifiableMap(new HashMap<String, String>() {
+            Collections.unmodifiableMap(new HashMap<String, String>() {
 
-                    private static final long serialVersionUID = 1L;
-                    {
-                        put("TESTGUIDE", "TEST-GUIDE");
-                    }
-                }));
+                private static final long serialVersionUID = 1L;
+
+                {
+                    put("TESTGUIDE", "TEST-GUIDE");
+                }
+            }));
 
         assertEquals("ATX name should be resolved", "TEST-GUIDE", publisher.getInstallation(envVars).getName());
     }
@@ -229,7 +230,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
     @Test
     public void testParameterizedToolName() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
-                .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
@@ -237,18 +238,19 @@ public class ATXPublisherIT extends IntegrationTestBase {
         project.getPublishersList().add(publisher);
 
         final EnvVars envVars = new EnvVars(
-                Collections.unmodifiableMap(new HashMap<String, String>() {
+            Collections.unmodifiableMap(new HashMap<String, String>() {
 
-                    private static final long serialVersionUID = 1L;
-                    {
-                        put("ECUTEST", "ECU-TEST");
-                    }
-                }));
+                private static final long serialVersionUID = 1L;
+
+                {
+                    put("ECUTEST", "ECU-TEST");
+                }
+            }));
 
         final ATXInstallation installation = publisher.getInstallation();
         assertNotNull(installation);
         assertEquals("Tool name should be resolved", "ECU-TEST",
-                publisher.getToolInstallation(installation.getToolName(), envVars).getName());
+            publisher.getToolInstallation(installation.getToolName(), envVars).getName());
     }
 
     @Test
@@ -274,10 +276,8 @@ public class ATXPublisherIT extends IntegrationTestBase {
     /**
      * Asserts the pipeline step execution.
      *
-     * @param scriptName
-     *            the script name
-     * @throws Exception
-     *             the exception
+     * @param scriptName the script name
+     * @throws Exception the exception
      */
     private void assertPipelineStep(final String scriptName) throws Exception {
         assumeWindowsSlave();

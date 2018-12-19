@@ -43,18 +43,14 @@ public class ATXBooleanSetting extends ATXSetting<Boolean> {
     /**
      * Instantiates a new {@link ATXBooleanSetting}.
      *
-     * @param name
-     *            the name of the setting
-     * @param descGerman
-     *            the German description
-     * @param descEnglish
-     *            the English description
-     * @param defaultValue
-     *            the default value
+     * @param name         the name of the setting
+     * @param descGerman   the German description
+     * @param descEnglish  the English description
+     * @param defaultValue the default value
      */
     @DataBoundConstructor
     public ATXBooleanSetting(final String name, final String descGerman, final String descEnglish,
-            final boolean defaultValue) {
+                             final boolean defaultValue) {
         super(name, descGerman, descEnglish, defaultValue);
     }
 }

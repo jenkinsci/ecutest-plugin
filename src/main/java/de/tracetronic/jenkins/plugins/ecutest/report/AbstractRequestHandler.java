@@ -61,8 +61,7 @@ public abstract class AbstractRequestHandler {
     /**
      * Gets the owner of this action.
      *
-     * @param req
-     *            the {@link StaplerRequest} used for access this action
+     * @param req the {@link StaplerRequest} used for access this action
      * @return the {@link AbstractProject} or {@link AbstractBuild} or {@code null} if no proper owner exists
      */
     @CheckForNull
@@ -85,8 +84,7 @@ public abstract class AbstractRequestHandler {
      * <p>
      * If called in a project context, returns the last build that contains report artifacts.
      *
-     * @param req
-     *            the {@link StaplerRequest} used for access this action
+     * @param req the {@link StaplerRequest} used for access this action
      * @return the build with report artifacts to handle or {@code null} if no proper build exists
      */
     @CheckForNull
@@ -95,8 +93,7 @@ public abstract class AbstractRequestHandler {
     /**
      * Gets the archive target directory for use in {@link #doZipDownload}.
      *
-     * @param rootDir
-     *            the root directory
+     * @param rootDir the root directory
      * @return the archive target directory
      */
     protected abstract VirtualFile getArchiveTargetDir(File rootDir);
@@ -104,8 +101,7 @@ public abstract class AbstractRequestHandler {
     /**
      * Resolves the build action containing the report artifacts by {@link StaplerRequest#findAncestorObject(Class)}.
      *
-     * @param req
-     *            the {@link StaplerRequest} used for access this report
+     * @param req the {@link StaplerRequest} used for access this report
      * @return the build action with report artifacts to handle or {@code null} if no proper build action exists
      */
     @CheckForNull
@@ -116,8 +112,7 @@ public abstract class AbstractRequestHandler {
     /**
      * Gets the build of this action.
      *
-     * @param req
-     *            the {@link StaplerRequest} used for access this action
+     * @param req the {@link StaplerRequest} used for access this action
      * @return the build containing this action or {@code null} if no proper project exists
      */
     @CheckForNull
@@ -128,8 +123,7 @@ public abstract class AbstractRequestHandler {
     /**
      * Gets the project of this action.
      *
-     * @param req
-     *            the {@link StaplerRequest} used for access this action
+     * @param req the {@link StaplerRequest} used for access this action
      * @return the project containing this action or {@code null} if no proper project exists
      */
     @CheckForNull
@@ -140,17 +134,13 @@ public abstract class AbstractRequestHandler {
     /**
      * Serves the compressed contents of the archive directory that is requested via HTTP.
      *
-     * @param req
-     *            the {@link StaplerRequest} used for access this report
-     * @param rsp
-     *            the {@link StaplerResponse} used for serving the file
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws ServletException
-     *             if serving the file failed
+     * @param req the {@link StaplerRequest} used for access this report
+     * @param rsp the {@link StaplerResponse} used for serving the file
+     * @throws IOException      signals that an I/O exception has occurred
+     * @throws ServletException if serving the file failed
      */
     public void doZipDownload(final StaplerRequest req, final StaplerResponse rsp)
-            throws IOException, ServletException {
+        throws IOException, ServletException {
         final Run<?, ?> build = getBuild(req);
         final AbstractReportAction action = getBuildAction(req);
         if (build == null || action == null) {
@@ -164,26 +154,26 @@ public abstract class AbstractRequestHandler {
         final VirtualFile archiveDir = getArchiveTargetDir(rootDir);
         if (!archiveDir.exists()) {
             LOGGER.warning(String.format("Archive directory does not exists: %s for %s", archiveDir.getName(),
-                    build.getFullDisplayName()));
+                build.getFullDisplayName()));
             rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
         if (!archiveDir.isDirectory()) {
             LOGGER.warning(String.format("Archive is not a directory: %s for %s", archiveDir.getName(),
-                    build.getFullDisplayName()));
+                build.getFullDisplayName()));
             rsp.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
 
         if (req.getDateHeader("If-Modified-Since") >= 0
-                && req.getDateHeader("If-Modified-Since") >= archiveDir.lastModified()) {
+            && req.getDateHeader("If-Modified-Since") >= archiveDir.lastModified()) {
             rsp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
             return;
         }
 
         // Compress and download the archive directory
         final String zipFileName = String.format("%s_%s#%d", archiveDir.getName(), build.getParent().getName(),
-                build.getNumber());
+            build.getNumber());
         rsp.setHeader("Content-Disposition", "attachment;filename=\"" + zipFileName + "\"");
         rsp.setContentType("application/zip");
         zip(rsp.getOutputStream(), archiveDir);
@@ -192,12 +182,9 @@ public abstract class AbstractRequestHandler {
     /**
      * Compresses the given archive directory and serves as download.
      *
-     * @param outputStream
-     *            the output stream
-     * @param archiveDir
-     *            the archive directory
-     * @throws IOException
-     *             signals that an I/O exception has occurred
+     * @param outputStream the output stream
+     * @param archiveDir   the archive directory
+     * @throws IOException signals that an I/O exception has occurred
      */
     private void zip(final OutputStream outputStream, final VirtualFile archiveDir) throws IOException {
         final ZipOutputStream zos = new ZipOutputStream(outputStream);

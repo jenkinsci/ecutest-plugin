@@ -59,8 +59,8 @@ public class ATXInstallationTest {
 
     @Test
     public void testEmptyConfigMap() {
-        final ATXConfig config = new ATXConfig(Collections.<String, List<ATXSetting>> emptyMap(),
-                Collections.<ATXCustomSetting> emptyList());
+        final ATXConfig config = new ATXConfig(Collections.emptyMap(),
+            Collections.emptyList());
         final ATXInstallation inst = new ATXInstallation("TG", "ET", config);
         assertNotNull(inst.getConfig());
         assertTrue(inst.getConfig().getConfigMap().isEmpty());
@@ -68,8 +68,8 @@ public class ATXInstallationTest {
 
     @Test
     public void testEmptyCustomSettings() {
-        final ATXConfig config = new ATXConfig(Collections.<String, List<ATXSetting>> emptyMap(),
-                Collections.<ATXCustomSetting> emptyList());
+        final ATXConfig config = new ATXConfig(Collections.emptyMap(),
+            Collections.emptyList());
         final ATXInstallation inst = new ATXInstallation("TG", "ET", config);
         assertNotNull(inst.getConfig());
         assertTrue(inst.getConfig().getCustomSettings().isEmpty());

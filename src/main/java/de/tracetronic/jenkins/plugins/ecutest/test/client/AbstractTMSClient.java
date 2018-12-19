@@ -55,38 +55,29 @@ public abstract class AbstractTMSClient {
     /**
      * Logs in to preconfigured test management service in ECU-TEST.
      *
-     * @param credentials
-     *            the credentials
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param credentials the credentials
+     * @param launcher    the launcher
+     * @param listener    the listener
      * @return {@code true}, if login succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean login(final StandardUsernamePasswordCredentials credentials, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                         final TaskListener listener) throws IOException, InterruptedException {
         return launcher.getChannel().call(new LoginTMSCallable(credentials, listener));
     }
 
     /**
      * Logs out from preconfigured test management service in ECU-TEST.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true}, if logout succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean logout(final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         return launcher.getChannel().call(new LogoutTMSCallable(listener));
     }
 
@@ -94,22 +85,16 @@ public abstract class AbstractTMSClient {
      * Checks the currently running ECU-TEST version for compatibility reasons and
      * tests whether the test management module is available.
      *
-     * @param minVersion
-     *            the minimum required ECU-TEST version
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param minVersion the minimum required ECU-TEST version
+     * @param workspace  the workspace
+     * @param launcher   the launcher
+     * @param listener   the listener
      * @return {@code true} if compatible, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     protected boolean isCompatible(final ToolVersion minVersion, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                   final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         // Load JACOB library
         if (!DllUtil.loadLibrary(workspace.toComputer())) {
@@ -133,10 +118,8 @@ public abstract class AbstractTMSClient {
         /**
          * Instantiates a {@link CompatibleTMSCallable}.
          *
-         * @param minVersion
-         *            the minimum required ECU-TEST version
-         * @param listener
-         *            the listener
+         * @param minVersion the minimum required ECU-TEST version
+         * @param listener   the listener
          */
         CompatibleTMSCallable(final ToolVersion minVersion, final TaskListener listener) {
             this.listener = listener;
@@ -155,14 +138,14 @@ public abstract class AbstractTMSClient {
                 final ToolVersion comToolVersion = ToolVersion.parse(comVersion);
                 if (comToolVersion.compareTo(minVersion) < 0) {
                     logger.logError(String.format(
-                            "The configured ECU-TEST version %s does not support this test management method. "
-                                    + "Please use at least ECU-TEST %s!", comVersion, minVersion.toMicroString()));
+                        "The configured ECU-TEST version %s does not support this test management method. "
+                            + "Please use at least ECU-TEST %s!", comVersion, minVersion.toMicroString()));
                 } else if (comClient.getTestManagement() != null) {
                     isAvailable = true;
                 }
             } catch (final ETComException e) {
                 logger.logError("The test management module is not available in running ECU-TEST instance! "
-                        + "Enable it by setting the feature flag 'TEST-MANAGEMENT-SERVICE'.");
+                    + "Enable it by setting the feature flag 'TEST-MANAGEMENT-SERVICE'.");
                 logger.logComException(e.getMessage());
             }
             return isAvailable;
@@ -182,10 +165,8 @@ public abstract class AbstractTMSClient {
         /**
          * Instantiates a new {@link LoginTMSCallable}.
          *
-         * @param credentials
-         *            the credentials
-         * @param listener
-         *            the listener
+         * @param credentials the credentials
+         * @param listener    the listener
          */
         LoginTMSCallable(final StandardUsernamePasswordCredentials credentials, final TaskListener listener) {
             this.credentials = credentials;
@@ -229,8 +210,7 @@ public abstract class AbstractTMSClient {
         /**
          * Instantiates a new {@link LogoutTMSCallable}.
          *
-         * @param listener
-         *            the listener
+         * @param listener the listener
          */
         LogoutTMSCallable(final TaskListener listener) {
             this.listener = listener;

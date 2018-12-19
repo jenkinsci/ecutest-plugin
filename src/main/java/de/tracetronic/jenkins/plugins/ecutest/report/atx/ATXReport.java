@@ -51,19 +51,15 @@ import java.util.logging.Logger;
 public class ATXReport extends AbstractTestReport {
 
     private static final Logger LOGGER = Logger.getLogger(ATXReport.class.getName());
-
-    private String reportUrl;
     private final boolean hasTrendReport;
+    private String reportUrl;
 
     /**
      * Instantiates a new {@link ATXReport}.
      *
-     * @param id
-     *            the id used in the report URL
-     * @param title
-     *            the report title
-     * @param reportUrl
-     *            the report URL
+     * @param id        the id used in the report URL
+     * @param title     the report title
+     * @param reportUrl the report URL
      */
     public ATXReport(final String id, final String title, final String reportUrl) {
         super(id, title);
@@ -74,14 +70,10 @@ public class ATXReport extends AbstractTestReport {
     /**
      * Instantiates a new {@link ATXReport}.
      *
-     * @param id
-     *            the id used in report URL
-     * @param title
-     *            the report title
-     * @param reportUrl
-     *            the report URL
-     * @param hasTrendReport
-     *            specifies whether the report has an additional trend report
+     * @param id             the id used in report URL
+     * @param title          the report title
+     * @param reportUrl      the report URL
+     * @param hasTrendReport specifies whether the report has an additional trend report
      */
     public ATXReport(final String id, final String title, final String reportUrl, final boolean hasTrendReport) {
         super(id, title);
@@ -99,8 +91,7 @@ public class ATXReport extends AbstractTestReport {
     /**
      * Sets the report URL.
      *
-     * @param reportUrl
-     *            the new report URL
+     * @param reportUrl the new report URL
      */
     public void setReportUrl(final String reportUrl) {
         this.reportUrl = reportUrl;
@@ -118,12 +109,9 @@ public class ATXReport extends AbstractTestReport {
     /**
      * Redirects to URL that is requested via HTTP.
      *
-     * @param req
-     *            the {@link StaplerRequest} used for access this report
-     * @param rsp
-     *            the {@link StaplerResponse} used for redirecting to the report
-     * @throws IOException
-     *             signals that an I/O exception has occurred
+     * @param req the {@link StaplerRequest} used for access this report
+     * @param rsp the {@link StaplerResponse} used for redirecting to the report
+     * @throws IOException signals that an I/O exception has occurred
      */
     public void doDynamic(final StaplerRequest req, final StaplerResponse rsp) throws IOException {
         final Run<?, ?> build = getBuild(req);

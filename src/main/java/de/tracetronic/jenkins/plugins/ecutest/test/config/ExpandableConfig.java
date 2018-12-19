@@ -42,8 +42,7 @@ public interface ExpandableConfig {
      * Expands the test configuration parameters by using
      * the current build environment variables.
      *
-     * @param envVars
-     *            the build environment variables
+     * @param envVars the build environment variables
      * @return the expanded specific configuration
      */
     ExpandableConfig expand(EnvVars envVars);

@@ -72,7 +72,7 @@ public class ExportProjectBuilderTest {
         exportConfigs.add(exportConfig);
         final ExportProjectBuilder builder = new ExportProjectBuilder(exportConfigs);
         assertThat(builder.getExportConfigs(), hasSize(1));
-        assertThat((ExportProjectConfig) builder.getExportConfigs().get(0), sameInstance(exportConfig));
+        assertThat(builder.getExportConfigs().get(0), sameInstance(exportConfig));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class ExportProjectBuilderTest {
         exportConfigs.add(attributeConfig);
         final ExportProjectBuilder builder = new ExportProjectBuilder(exportConfigs);
         assertThat(builder.getExportConfigs(), hasSize(1));
-        assertThat((ExportProjectAttributeConfig) builder.getExportConfigs().get(0), sameInstance(attributeConfig));
+        assertThat(builder.getExportConfigs().get(0), sameInstance(attributeConfig));
     }
 
     @Test

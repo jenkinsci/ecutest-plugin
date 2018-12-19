@@ -52,23 +52,16 @@ public class ETLogReport extends AbstractArchiveFileReport {
     /**
      * Instantiates a new {@link ETLogReport}.
      *
-     * @param id
-     *            the id used in the report URL
-     * @param title
-     *            the report title
-     * @param fileName
-     *            the log file name
-     * @param fileSize
-     *            the log file size
-     * @param logs
-     *            the list of annotated logs
-     * @param warningLogCount
-     *            the total count of warning logs
-     * @param errorLogCount
-     *            the total count of error logs
+     * @param id              the id used in the report URL
+     * @param title           the report title
+     * @param fileName        the log file name
+     * @param fileSize        the log file size
+     * @param logs            the list of annotated logs
+     * @param warningLogCount the total count of warning logs
+     * @param errorLogCount   the total count of error logs
      */
     public ETLogReport(final String id, final String title, final String fileName, final long fileSize,
-            final List<ETLogAnnotation> logs, final int warningLogCount, final int errorLogCount) {
+                       final List<ETLogAnnotation> logs, final int warningLogCount, final int errorLogCount) {
         super(id, title, fileName, fileSize);
         this.logs = logs == null ? new ArrayList<>() : logs;
         this.warningLogCount = warningLogCount;
@@ -103,8 +96,7 @@ public class ETLogReport extends AbstractArchiveFileReport {
     /**
      * Gets the logs by severity.
      *
-     * @param severity
-     *            the severity
+     * @param severity the severity
      * @return the list of logs matched the severity
      */
     private List<ETLogAnnotation> getLogs(final Severity severity) {

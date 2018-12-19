@@ -49,16 +49,13 @@ public final class EnvUtil {
     /**
      * Expands a variable using build environment variables or returns the default value.
      *
-     * @param envVar
-     *            the environment variable to expand
-     * @param buildEnvVars
-     *            the existing build environment variable
-     * @param defaultValue
-     *            the default value if environment variable is empty
+     * @param envVar       the environment variable to expand
+     * @param buildEnvVars the existing build environment variable
+     * @param defaultValue the default value if environment variable is empty
      * @return the expanded environment variable or default value
      */
     public static String expandEnvVar(final String envVar, final EnvVars buildEnvVars,
-            final String defaultValue) {
+                                      final String defaultValue) {
         String expandedEnvVar;
         if (StringUtils.isBlank(envVar)) {
             expandedEnvVar = defaultValue;

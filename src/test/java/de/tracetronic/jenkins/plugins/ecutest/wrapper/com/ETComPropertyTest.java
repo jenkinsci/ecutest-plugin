@@ -33,7 +33,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -85,7 +84,7 @@ public class ETComPropertyTest {
     }
 
     @Test
-    public void testSerialization() throws FileNotFoundException, IOException, ClassNotFoundException {
+    public void testSerialization() throws IOException, ClassNotFoundException {
         final File tempFile = File.createTempFile("test", ".ser");
 
         // Serialize object to file

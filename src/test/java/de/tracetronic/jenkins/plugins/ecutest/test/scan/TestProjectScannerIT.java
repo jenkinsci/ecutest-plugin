@@ -56,14 +56,14 @@ public class TestProjectScannerIT extends IntegrationTestBase {
     @WithoutJenkins
     public void testFilePattern() throws IOException {
         final TestProjectScanner scanner = new TestProjectScanner(null, false, null);
-        assertEquals("Wrong file pattern for project files", "*.prj", scanner.getFilePattern()[0]);
+        assertEquals("Wrong file pattern for project files", "*.prj", scanner.getFilePattern());
     }
 
     @Test
     @WithoutJenkins
     public void testRecursiveFilePattern() throws IOException {
         final TestProjectScanner scanner = new TestProjectScanner(null, true, null);
-        assertEquals("Wrong recursive file pattern for project files", "**/**.prj", scanner.getFilePattern()[0]);
+        assertEquals("Wrong recursive file pattern for project files", "**/**.prj", scanner.getFilePattern());
     }
 
     @Test

@@ -65,8 +65,7 @@ public class ExportPackageClient extends AbstractTMSClient {
     /**
      * Instantiates a new {@link ExportPackageClient}.
      *
-     * @param exportConfig
-     *            the export configuration
+     * @param exportConfig the export configuration
      */
     public ExportPackageClient(final TMSConfig exportConfig) {
         this.exportConfig = exportConfig;
@@ -82,27 +81,21 @@ public class ExportPackageClient extends AbstractTMSClient {
     /**
      * Exports a package according to given export configuration.
      *
-     * @param project
-     *            the project
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param project   the project
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
      * @return {@code true} if successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean exportPackage(final Item project, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                 final TaskListener listener) throws IOException, InterruptedException {
         boolean isExported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = exportConfig
-                        .getCredentials(project);
+                    .getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isExported = exportPackageToTMS(launcher, listener);
                 }
@@ -116,27 +109,21 @@ public class ExportPackageClient extends AbstractTMSClient {
     /**
      * Exports package attributes according to given export configuration.
      *
-     * @param project
-     *            the project
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param project   the project
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
      * @return {@code true} if successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean exportPackageAttributes(final Item project, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                           final TaskListener listener) throws IOException, InterruptedException {
         boolean isExported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = exportConfig
-                        .getCredentials(project);
+                    .getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isExported = exportPackageAttributesToTMS(launcher, listener);
                 }
@@ -150,39 +137,31 @@ public class ExportPackageClient extends AbstractTMSClient {
     /**
      * Exports a package to test management service.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true}, if export succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean exportPackageToTMS(final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         return launcher.getChannel().call(
-                new ExportPackageCallable((ExportPackageConfig) exportConfig, listener));
+            new ExportPackageCallable((ExportPackageConfig) exportConfig, listener));
     }
 
     /**
      * Exports package attributes to test management service.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true}, if export succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean exportPackageAttributesToTMS(final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         return launcher.getChannel().call(
-                new ExportPackageAttributeCallable((ExportPackageAttributeConfig) exportConfig, listener));
+            new ExportPackageAttributeCallable((ExportPackageAttributeConfig) exportConfig, listener));
     }
 
     /**
@@ -198,10 +177,8 @@ public class ExportPackageClient extends AbstractTMSClient {
         /**
          * Instantiates a new {@link ExportPackageCallable}.
          *
-         * @param exportConfig
-         *            the export configuration
-         * @param listener
-         *            the listener
+         * @param exportConfig the export configuration
+         * @param listener     the listener
          */
         ExportPackageCallable(final ExportPackageConfig exportConfig, final TaskListener listener) {
             this.exportConfig = exportConfig;
@@ -213,14 +190,14 @@ public class ExportPackageClient extends AbstractTMSClient {
             boolean isExported = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo(String.format("- Exporting package %s to test management system...",
-                    exportConfig.getFilePath()));
+                exportConfig.getFilePath()));
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 if (isExported = tm.exportPackage(exportConfig.getFilePath(), exportConfig.getExportPath(),
-                        exportConfig.isCreateNewPath(), exportConfig.getParsedTimeout())) {
+                    exportConfig.isCreateNewPath(), exportConfig.getParsedTimeout())) {
                     logger.logInfo(String.format("-> Package exported successfully to target directory %s.",
-                            exportConfig.getExportPath()));
+                        exportConfig.getExportPath()));
                 }
             } catch (final ETComException e) {
                 logger.logError("-> Exporting package failed: " + e.getMessage());
@@ -242,10 +219,8 @@ public class ExportPackageClient extends AbstractTMSClient {
         /**
          * Instantiates a new {@link ExportPackageAttributeCallable}.
          *
-         * @param exportConfig
-         *            the export configuration
-         * @param listener
-         *            the listener
+         * @param exportConfig the export configuration
+         * @param listener     the listener
          */
         ExportPackageAttributeCallable(final ExportPackageAttributeConfig exportConfig, final TaskListener listener) {
             this.exportConfig = exportConfig;
@@ -257,12 +232,12 @@ public class ExportPackageClient extends AbstractTMSClient {
             boolean isExported = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo(String.format("- Exporting attributes of package %s to test management system...",
-                    exportConfig.getFilePath()));
+                exportConfig.getFilePath()));
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 if (isExported = tm.exportPackageAttributes(exportConfig.getFilePath(),
-                        exportConfig.getParsedTimeout())) {
+                    exportConfig.getParsedTimeout())) {
                     logger.logInfo("-> Package attributes exported successfully.");
                 }
             } catch (final ETComException e) {

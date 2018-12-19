@@ -102,10 +102,6 @@ public class ToolEnvContributor extends EnvironmentContributor {
     public void buildEnvironmentFor(@Nonnull final Run r, @Nonnull final EnvVars envs,
                                     @Nonnull final TaskListener listener) throws IOException, InterruptedException {
         final List<ToolEnvInvisibleAction> envActions = r.getActions(ToolEnvInvisibleAction.class);
-        if (envActions.size() == 0) {
-            return;
-        }
-
         for (final ToolEnvInvisibleAction action : envActions) {
             final String id = String.valueOf(action.getToolId());
             envs.put(PREFIX + TOOL_NAME + id, action.getToolName());

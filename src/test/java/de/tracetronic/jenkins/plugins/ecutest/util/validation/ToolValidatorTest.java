@@ -46,10 +46,9 @@ import static org.junit.Assert.assertEquals;
  */
 public class ToolValidatorTest {
 
-    ToolValidator toolValidator;
-
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
+    ToolValidator toolValidator;
 
     @Before
     public void setUp() throws Exception {

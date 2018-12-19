@@ -30,14 +30,15 @@
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
-    <f:entry title="${%unstableOnWarning.title}" description="${%unstableOnWarning.description}" field="unstableOnWarning">
-        <f:checkbox />
+    <f:entry title="${%unstableOnWarning.title}" description="${%unstableOnWarning.description}"
+             field="unstableOnWarning">
+        <f:checkbox/>
     </f:entry>
     <f:entry title="${%failedOnError.title}" description="${%failedOnError.description}" field="failedOnError">
-        <f:checkbox />
+        <f:checkbox/>
     </f:entry>
     <f:entry title="${%testSpecific.title}" description="${%testSpecific.description}" field="testSpecific">
-        <f:checkbox />
+        <f:checkbox/>
     </f:entry>
-    <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly" />
+    <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly"/>
 </j:jelly>

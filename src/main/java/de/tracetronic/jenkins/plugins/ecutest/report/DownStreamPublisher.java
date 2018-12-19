@@ -66,8 +66,7 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
     /**
      * Instantiates a new {@link DownStreamPublisher}.
      *
-     * @param workspace
-     *            the downstream workspace
+     * @param workspace the downstream workspace
      */
     @DataBoundConstructor
     public DownStreamPublisher(final String workspace) {
@@ -92,8 +91,7 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
     }
 
     /**
-     * @param publishers
-     *            the report generators
+     * @param publishers the report generators
      */
     @DataBoundSetter
     public void setPublishers(final List<AbstractReportPublisher> publishers) {
@@ -143,7 +141,7 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
             if (publishers != null) {
                 for (final Descriptor<Publisher> publisher : publishers) {
                     if (publisher instanceof AbstractReportDescriptor &&
-                            !(publisher instanceof DownStreamPublisher.DescriptorImpl)) {
+                        !(publisher instanceof DownStreamPublisher.DescriptorImpl)) {
                         list.add(publisher);
                     }
                 }

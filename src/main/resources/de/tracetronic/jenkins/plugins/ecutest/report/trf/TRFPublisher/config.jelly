@@ -32,7 +32,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
     <!-- Stretch to full width -->
     <tr>
-        <td colspan="3" width="100%" />
+        <td colspan="3" width="100%"/>
     </tr>
-    <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly" />
+    <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly"/>
 </j:jelly>

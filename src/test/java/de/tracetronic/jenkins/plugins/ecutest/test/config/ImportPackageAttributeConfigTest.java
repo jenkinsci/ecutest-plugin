@@ -54,7 +54,7 @@ public class ImportPackageAttributeConfigTest {
     @Test
     public void testExpand() {
         final ImportPackageAttributeConfig config = new ImportPackageAttributeConfig("${FILE_PATH}",
-                "${CREDENTIALS_ID}", "${TIMEOUT}");
+            "${CREDENTIALS_ID}", "${TIMEOUT}");
         final EnvVars envVars = new EnvVars();
         envVars.put("FILE_PATH", "test.pkg");
         envVars.put("CREDENTIALS_ID", "credentialsId");

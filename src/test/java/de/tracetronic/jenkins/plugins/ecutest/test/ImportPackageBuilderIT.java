@@ -67,7 +67,7 @@ public class ImportPackageBuilderIT extends IntegrationTestBase {
     @Before
     public void setUp() throws Exception {
         SystemCredentialsProvider.getInstance().getCredentials().add(new UsernamePasswordCredentialsImpl(
-                CredentialsScope.GLOBAL, "credentialsId", "test", "user", "password"));
+            CredentialsScope.GLOBAL, "credentialsId", "test", "user", "password"));
     }
 
     @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
@@ -227,10 +227,8 @@ public class ImportPackageBuilderIT extends IntegrationTestBase {
     /**
      * Asserts the pipeline step execution.
      *
-     * @param scriptName
-     *            the script name
-     * @throws Exception
-     *             the exception
+     * @param scriptName the script name
+     * @throws Exception the exception
      */
     private void assertPipelineStep(final String scriptName) throws Exception {
         assumeWindowsSlave();
@@ -246,10 +244,8 @@ public class ImportPackageBuilderIT extends IntegrationTestBase {
     /**
      * Performs a default configuration round-trip testing for a {@link ImportPackageBuilder}.
      *
-     * @param before
-     *            the instance before
-     * @throws Exception
-     *             the exception
+     * @param before the instance before
+     * @throws Exception the exception
      */
     private void testDefaultConfigRoundTripStep(final ImportPackageBuilder before) throws Exception {
         CoreStep step = new CoreStep(before);
@@ -264,10 +260,8 @@ public class ImportPackageBuilderIT extends IntegrationTestBase {
     /**
      * Performs a configuration round-trip testing for a {@link ImportPackageBuilder}.
      *
-     * @param before
-     *            the instance before
-     * @throws Exception
-     *             the exception
+     * @param before the instance before
+     * @throws Exception the exception
      */
     private void testConfigRoundTripStep(final ImportPackageBuilder before) throws Exception {
         CoreStep step = new CoreStep(before);
@@ -299,7 +293,7 @@ public class ImportPackageBuilderIT extends IntegrationTestBase {
     private ImportPackageBuilder createImportPackageDirBuilder() {
         final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
         final ImportPackageDirConfig tmsDirConfig = new ImportPackageDirConfig(
-                "packageDir", "import", "credentialsId", "600");
+            "packageDir", "import", "credentialsId", "600");
         importConfigs.add(tmsDirConfig);
         return new ImportPackageBuilder(importConfigs);
     }
@@ -312,7 +306,7 @@ public class ImportPackageBuilderIT extends IntegrationTestBase {
     private ImportPackageBuilder createImportPackageAttributeBuilder() {
         final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
         final ImportPackageAttributeConfig attributeConfig = new ImportPackageAttributeConfig("test.pkg",
-                "credentialsId", "600");
+            "credentialsId", "600");
         importConfigs.add(attributeConfig);
         return new ImportPackageBuilder(importConfigs);
     }

@@ -39,9 +39,8 @@ import java.util.logging.Logger;
 /**
  * Class holding the information of a single ATX setting.
  *
+ * @param <T> the type of the setting
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
- * @param <T>
- *            the type of the setting
  */
 public abstract class ATXSetting<T> implements Serializable, Cloneable {
 
@@ -62,17 +61,13 @@ public abstract class ATXSetting<T> implements Serializable, Cloneable {
     /**
      * Instantiates a new {@link ATXSetting}.
      *
-     * @param name
-     *            the name
-     * @param descGerman
-     *            the German description
-     * @param descEnglish
-     *            the English description
-     * @param defaultValue
-     *            the default value
+     * @param name         the name
+     * @param descGerman   the German description
+     * @param descEnglish  the English description
+     * @param defaultValue the default value
      */
     public ATXSetting(final String name, final String descGerman, final String descEnglish,
-            final T defaultValue) {
+                      final T defaultValue) {
         super();
         this.name = name;
         this.descGerman = descGerman;
@@ -81,6 +76,28 @@ public abstract class ATXSetting<T> implements Serializable, Cloneable {
 
         // Initially set to default
         this.currentValue = defaultValue;
+    }
+
+    /**
+     * Converts a boolean value to Python string equivalent.
+     *
+     * @param value the value
+     * @return the string value
+     */
+    public static String toString(final boolean value) {
+        return value ? "True" : "False";
+    }
+
+    /**
+     * Converts string from CamelCase to SpaceCase representation.
+     *
+     * @param camelCase the camel case string
+     * @return the converted space case string
+     */
+    private static String toSpaceCase(final String camelCase) {
+        final String separated = camelCase.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])",
+            "(?<=[^A-Z])(?=[A-Z])", "(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
+        return Character.toString(separated.charAt(0)).toUpperCase(Locale.getDefault()) + separated.substring(1);
     }
 
     @SuppressWarnings("unchecked")
@@ -168,8 +185,7 @@ public abstract class ATXSetting<T> implements Serializable, Cloneable {
     /**
      * Sets the current value.
      *
-     * @param currentValue
-     *            the new current value
+     * @param currentValue the new current value
      */
     public void setCurrentValue(final T currentValue) {
         this.currentValue = currentValue;
@@ -182,29 +198,5 @@ public abstract class ATXSetting<T> implements Serializable, Cloneable {
      */
     public boolean isCheckbox() {
         return this instanceof ATXBooleanSetting;
-    }
-
-    /**
-     * Converts a boolean value to Python string equivalent.
-     *
-     * @param value
-     *            the value
-     * @return the string value
-     */
-    public static String toString(final boolean value) {
-        return value ? "True" : "False";
-    }
-
-    /**
-     * Converts string from CamelCase to SpaceCase representation.
-     *
-     * @param camelCase
-     *            the camel case string
-     * @return the converted space case string
-     */
-    private static String toSpaceCase(final String camelCase) {
-        final String separated = camelCase.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])",
-                "(?<=[^A-Z])(?=[A-Z])", "(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
-        return Character.toString(separated.charAt(0)).toUpperCase(Locale.getDefault()) + separated.substring(1);
     }
 }

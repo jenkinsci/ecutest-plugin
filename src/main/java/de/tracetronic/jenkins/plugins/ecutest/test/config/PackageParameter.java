@@ -50,7 +50,7 @@ import java.util.Objects;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class PackageParameter extends AbstractDescribableImpl<PackageParameter> implements Serializable,
-        ExpandableConfig {
+    ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 
@@ -60,10 +60,8 @@ public class PackageParameter extends AbstractDescribableImpl<PackageParameter> 
     /**
      * Instantiates a new {@link PackageParameter}.
      *
-     * @param name
-     *            the parameter name
-     * @param value
-     *            the parameter value
+     * @param name  the parameter name
+     * @param value the parameter value
      */
     @DataBoundConstructor
     public PackageParameter(final String name, final String value) {
@@ -98,8 +96,8 @@ public class PackageParameter extends AbstractDescribableImpl<PackageParameter> 
         boolean result = false;
         if (other instanceof PackageParameter) {
             final PackageParameter that = (PackageParameter) other;
-            result = (Objects.equals(name, that.name))
-                    && (Objects.equals(value, that.value));
+            result = Objects.equals(name, that.name)
+                && Objects.equals(value, that.value);
         }
         return result;
     }
@@ -126,8 +124,7 @@ public class PackageParameter extends AbstractDescribableImpl<PackageParameter> 
         /**
          * Validates the parameter name.
          *
-         * @param value
-         *            the value
+         * @param value the value
          * @return FormValidation
          */
         public FormValidation doCheckName(@QueryParameter final String value) {
@@ -137,8 +134,7 @@ public class PackageParameter extends AbstractDescribableImpl<PackageParameter> 
         /**
          * Validates the parameter value.
          *
-         * @param value
-         *            the value
+         * @param value the value
          * @return FormValidation
          */
         public FormValidation doCheckValue(@QueryParameter final String value) {

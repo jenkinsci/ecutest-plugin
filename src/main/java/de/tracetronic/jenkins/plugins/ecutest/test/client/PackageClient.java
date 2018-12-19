@@ -67,17 +67,13 @@ public class PackageClient extends AbstractTestClient {
     /**
      * Instantiates a new {@link PackageClient}.
      *
-     * @param testFile
-     *            the package file
-     * @param testConfig
-     *            the test configuration
-     * @param packageConfig
-     *            the package configuration
-     * @param executionConfig
-     *            the execution configuration
+     * @param testFile        the package file
+     * @param testConfig      the test configuration
+     * @param packageConfig   the package configuration
+     * @param executionConfig the execution configuration
      */
     public PackageClient(final String testFile, final TestConfig testConfig,
-            final PackageConfig packageConfig, final ExecutionConfig executionConfig) {
+                         final PackageConfig packageConfig, final ExecutionConfig executionConfig) {
         super(testFile, testConfig, executionConfig);
         this.packageConfig = packageConfig;
     }
@@ -91,7 +87,7 @@ public class PackageClient extends AbstractTestClient {
 
     @Override
     public boolean runTestCase(final FilePath workspace, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -102,13 +98,13 @@ public class PackageClient extends AbstractTestClient {
 
         // Load test configuration
         if (!getTestConfig().isKeepConfig() && !launcher.getChannel().call(
-                new LoadConfigCallable(getTestConfig(), listener))) {
+            new LoadConfigCallable(getTestConfig(), listener))) {
             return false;
         }
 
         // Open package
         final PackageInfoHolder pkgInfo = launcher.getChannel().call(
-                new OpenPackageCallable(getTestFile(), getExecutionConfig().isCheckTestFile(), listener));
+            new OpenPackageCallable(getTestFile(), getExecutionConfig().isCheckTestFile(), listener));
 
         // Set package information
         if (pkgInfo != null) {
@@ -121,7 +117,7 @@ public class PackageClient extends AbstractTestClient {
         try {
             // Run package
             final TestInfoHolder testInfo = launcher.getChannel().call(
-                    new RunPackageCallable(getTestFile(), getPackageConfig(), getExecutionConfig(), listener));
+                new RunPackageCallable(getTestFile(), getPackageConfig(), getExecutionConfig(), listener));
 
             // Set test result information
             if (testInfo != null) {
@@ -154,12 +150,9 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Instantiates a new {@link OpenPackageCallable}.
          *
-         * @param packageFile
-         *            the package file
-         * @param checkTestFile
-         *            specifies whether to check the package file
-         * @param listener
-         *            the listener
+         * @param packageFile   the package file
+         * @param checkTestFile specifies whether to check the package file
+         * @param listener      the listener
          */
         OpenPackageCallable(final String packageFile, final boolean checkTestFile, final TaskListener listener) {
             this.packageFile = packageFile;
@@ -174,7 +167,7 @@ public class PackageClient extends AbstractTestClient {
             logger.logInfo("- Opening package...");
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
-                    Package pkg = (Package) comClient.openPackage(packageFile)) {
+                 Package pkg = (Package) comClient.openPackage(packageFile)) {
                 logger.logInfo("-> Package opened successfully.");
                 pkgInfo = new PackageInfoHolder(pkg.getName(), pkg.getDescription());
                 if (checkTestFile) {
@@ -182,7 +175,7 @@ public class PackageClient extends AbstractTestClient {
                     final List<CheckInfoHolder> checks = pkg.check();
                     for (final CheckInfoHolder check : checks) {
                         final String logMessage = String.format("%s (line %s): %s", check.getFilePath(),
-                                check.getLineNumber(), check.getErrorMessage());
+                            check.getLineNumber(), check.getErrorMessage());
                         final Seriousness seriousness = check.getSeriousness();
                         switch (seriousness) {
                             case NOTE:
@@ -226,17 +219,13 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Instantiates a new {@link RunPackageCallable}.
          *
-         * @param packageFile
-         *            the package file
-         * @param packageConfig
-         *            the package configuration
-         * @param executionConfig
-         *            the execution configuration
-         * @param listener
-         *            the listener
+         * @param packageFile     the package file
+         * @param packageConfig   the package configuration
+         * @param executionConfig the execution configuration
+         * @param listener        the listener
          */
         RunPackageCallable(final String packageFile, final PackageConfig packageConfig,
-                final ExecutionConfig executionConfig, final TaskListener listener) {
+                           final ExecutionConfig executionConfig, final TaskListener listener) {
             this.packageFile = packageFile;
             this.packageConfig = packageConfig;
             this.executionConfig = executionConfig;
@@ -258,9 +247,9 @@ public class PackageClient extends AbstractTestClient {
             }
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
-                    TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
-                    TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.executePackage(packageFile,
-                            runTraceAnalysis, runTest, paramMap)) {
+                 TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
+                 TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.executePackage(packageFile,
+                     runTraceAnalysis, runTest, paramMap)) {
                 boolean isAborted = false;
                 int tickCounter = 0;
                 final long endTimeMillis = System.currentTimeMillis() + (long) timeout * 1000L;
@@ -270,7 +259,7 @@ public class PackageClient extends AbstractTestClient {
                     }
                     if (timeout > 0 && System.currentTimeMillis() > endTimeMillis) {
                         logger.logWarn(String.format("-> Test execution timeout of %d seconds reached! "
-                                + "Aborting package now...", timeout));
+                            + "Aborting package now...", timeout));
                         isAborted = true;
                         execInfo.abort();
                         break;
@@ -304,18 +293,14 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Gets the information of the executed package.
          *
-         * @param execInfo
-         *            the execution info
-         * @param isAborted
-         *            specifies whether the package execution is aborted
-         * @param logger
-         *            the logger
+         * @param execInfo  the execution info
+         * @param isAborted specifies whether the package execution is aborted
+         * @param logger    the logger
          * @return the test information
-         * @throws ETComException
-         *             in case of a COM exception
+         * @throws ETComException in case of a COM exception
          */
         private TestInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
-                final TTConsoleLogger logger) throws ETComException {
+                                           final TTConsoleLogger logger) throws ETComException {
             final String testResult = execInfo.getResult();
             logger.logInfo(String.format("-> Package execution completed with result: %s", testResult));
             final String testReportDir = new File(execInfo.getReportDb()).getParentFile().getAbsolutePath();
@@ -326,20 +311,17 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Aborts the test execution.
          *
-         * @param timeout
-         *            the timeout
-         * @param progId
-         *            the programmatic id
-         * @param logger
-         *            the logger
+         * @param timeout the timeout
+         * @param progId  the programmatic id
+         * @param logger  the logger
          * @return the test information
          */
         private TestInfoHolder abortTestExecution(final int timeout, final String progId,
-                final TTConsoleLogger logger) {
+                                                  final TTConsoleLogger logger) {
             TestInfoHolder testInfo = null;
             try (ETComClient comClient = new ETComClient(progId);
-                    TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
-                    TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {
+                 TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
+                 TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {
                 logger.logWarn("-> Build interrupted! Aborting test exection...");
                 execInfo.abort();
                 testInfo = getTestInfo(execInfo, true, logger);
@@ -353,17 +335,13 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Timeout handling for post execution.
          *
-         * @param timeout
-         *            the timeout
-         * @param comClient
-         *            the COM client
-         * @param logger
-         *            the logger
-         * @throws ETComException
-         *             in case of a COM exception
+         * @param timeout   the timeout
+         * @param comClient the COM client
+         * @param logger    the logger
+         * @throws ETComException in case of a COM exception
          */
         private void postExecution(final int timeout, final ETComClient comClient, final TTConsoleLogger logger)
-                throws ETComException {
+            throws ETComException {
             if (!comClient.waitForIdle(timeout)) {
                 logger.logWarn(String.format("-> Post-execution timeout of %d seconds reached!", timeout));
             }
@@ -383,10 +361,8 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Instantiates a new {@link ClosePackageCallable}.
          *
-         * @param packageFile
-         *            the package file
-         * @param listener
-         *            the listener
+         * @param packageFile the package file
+         * @param listener    the listener
          */
         ClosePackageCallable(final String packageFile, final TaskListener listener) {
             this.packageFile = packageFile;
@@ -426,10 +402,8 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Instantiates a new {@link PackageInfoHolder}.
          *
-         * @param testName
-         *            the test name
-         * @param testDescription
-         *            the test description
+         * @param testName        the test name
+         * @param testDescription the test description
          */
         PackageInfoHolder(final String testName, final String testDescription) {
             this.testName = testName;

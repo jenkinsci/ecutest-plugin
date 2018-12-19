@@ -38,8 +38,12 @@ import hudson.console.ConsoleNote;
 import java.util.Arrays;
 
 /**
- * Annotator which adds color highlighting. There are currently three message categories: error, staring with
- * <i>ERROR:</i> prefix, warning starting with <i>WARN:</i>and info, which starts with <i>INFO:</i> prefix.
+ * Annotator which adds color highlighting. There are currently three message categories:
+ * <ul>
+ * <li>error staring with <i>ERROR:</i> prefix</li>
+ * <li>warning starting with <i>WARN:</i> prefix</li>
+ * <li>info starting with <i>INFO:</i> prefix</li>
+ * </ul>
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
@@ -69,8 +73,7 @@ public class TTConsoleNote extends ConsoleNote<Object> {
     /**
      * Adds markup for the test result part of the console log.
      *
-     * @param text
-     *            the text
+     * @param text the text
      */
     private void addResultMarkup(final MarkupText text) {
         final String plainText = text.getText();

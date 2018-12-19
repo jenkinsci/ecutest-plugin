@@ -67,8 +67,7 @@ public class TMSPublisherTest {
     /**
      * Asserts the publisher properties.
      *
-     * @param publisher
-     *            the publisher
+     * @param publisher the publisher
      */
     private void assertPublisher(final TMSPublisher publisher) {
         assertNotNull(publisher);

@@ -97,8 +97,7 @@ public class ATXPublisher extends AbstractReportPublisher {
     /**
      * Instantiates a new {@link ATXPublisher}.
      *
-     * @param atxName
-     *            the tool name identifying the {@link ATXInstallation} to be used
+     * @param atxName the tool name identifying the {@link ATXInstallation} to be used
      */
     @DataBoundConstructor
     public ATXPublisher(@Nonnull final String atxName) {
@@ -109,8 +108,7 @@ public class ATXPublisher extends AbstractReportPublisher {
     /**
      * Instantiates a new {@link ATXPublisher} for direct use from {@link ATXPublishStep}.
      *
-     * @param atxInstallation
-     *            the {@link ATXInstallation}
+     * @param atxInstallation the {@link ATXInstallation}
      */
     public ATXPublisher(@Nonnull final ATXInstallation atxInstallation) {
         super();
@@ -128,7 +126,7 @@ public class ATXPublisher extends AbstractReportPublisher {
 
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
+                              final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = getLogger();
         logger.logInfo(String.format("Publishing ATX reports to %s...", atxName));
         ProcessUtil.checkOS(launcher);
@@ -171,24 +169,18 @@ public class ATXPublisher extends AbstractReportPublisher {
      * Publishes the ATX reports by first generating them and depending
      * on whether ATX upload is enabled also starting the upload.
      *
-     * @param installation
-     *            the installation
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param installation the installation
+     * @param run          the run
+     * @param workspace    the workspace
+     * @param launcher     the launcher
+     * @param listener     the listener
      * @return {@code true} if ATX processing is successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean publishReports(final ATXInstallation installation, final Run<?, ?> run, final FilePath workspace,
-            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
+                                   final Launcher launcher, final TaskListener listener)
+        throws IOException, InterruptedException {
         final TTConsoleLogger logger = getLogger();
         final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
         final boolean isUploadEnabled = isUploadEnabled(installation);
@@ -206,15 +198,14 @@ public class ATXPublisher extends AbstractReportPublisher {
 
             final ATXReportGenerator generator = new ATXReportGenerator(installation);
             return generator.generate(archiveTarget, reportDirs, isAllowMissing(), isArchiving(), isKeepAll(), run,
-                    launcher, listener);
+                launcher, listener);
         }
     }
 
     /**
      * Checks whether the ATX upload setting is enabled.
      *
-     * @param installation
-     *            the ATX installation
+     * @param installation the ATX installation
      * @return {@code true} if upload is possible, {@code false} otherwise
      */
     @SuppressWarnings("rawtypes")
@@ -228,23 +219,45 @@ public class ATXPublisher extends AbstractReportPublisher {
     /**
      * Checks whether the selected TEST-GUIDE server is reachable.
      *
-     * @param installation
-     *            the ATX installation
-     * @param launcher
-     *            the launcher
-     * @param envVars
-     *            the the environment variables
+     * @param installation the ATX installation
+     * @param launcher     the launcher
+     * @param envVars      the the environment variables
      * @return {@code true} if server is reachable, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean isServerReachable(final ATXInstallation installation, final Launcher launcher,
-            final EnvVars envVars) throws IOException,
-            InterruptedException {
+                                      final EnvVars envVars) throws IOException,
+        InterruptedException {
         final ATXConfig config = installation.getConfig();
         return launcher.getChannel().call(new TestConnectionCallable(config, envVars));
+    }
+
+    /**
+     * Gets the {@link ATXInstallation} by descriptor and name.
+     *
+     * @return the {@link ATXInstallation}
+     */
+    @CheckForNull
+    public ATXInstallation getInstallation() {
+        return getInstallation(new EnvVars());
+    }
+
+    /**
+     * Gets the {@link ATXInstallation} by descriptor and expanded name.
+     *
+     * @param envVars the environment variables
+     * @return the {@link ATXInstallation}
+     */
+    @CheckForNull
+    public ATXInstallation getInstallation(final EnvVars envVars) {
+        final String expandedName = envVars.expand(atxName);
+        return ATXInstallation.get(expandedName);
+    }
+
+    @Override
+    public String getUrlName() {
+        return URL_NAME;
     }
 
     /**
@@ -260,10 +273,8 @@ public class ATXPublisher extends AbstractReportPublisher {
         /**
          * Instantiates a new {@link TestConnectionCallable}.
          *
-         * @param config
-         *            the ATX configuration
-         * @param envVars
-         *            the environment variables
+         * @param config  the ATX configuration
+         * @param envVars the environment variables
          */
         TestConnectionCallable(final ATXConfig config, final EnvVars envVars) {
             this.config = config;
@@ -287,34 +298,6 @@ public class ATXPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Gets the {@link ATXInstallation} by descriptor and name.
-     *
-     * @return the {@link ATXInstallation}
-     */
-    @CheckForNull
-    public ATXInstallation getInstallation() {
-        return getInstallation(new EnvVars());
-    }
-
-    /**
-     * Gets the {@link ATXInstallation} by descriptor and expanded name.
-     *
-     * @param envVars
-     *            the environment variables
-     * @return the {@link ATXInstallation}
-     */
-    @CheckForNull
-    public ATXInstallation getInstallation(final EnvVars envVars) {
-        final String expandedName = envVars.expand(atxName);
-        return ATXInstallation.get(expandedName);
-    }
-
-    @Override
-    public String getUrlName() {
-        return URL_NAME;
-    }
-
-    /**
      * DescriptorImpl for {@link ATXPublisher}.
      */
     @SuppressWarnings("rawtypes")
@@ -322,15 +305,13 @@ public class ATXPublisher extends AbstractReportPublisher {
     @Extension(ordinal = 10007)
     public static class DescriptorImpl extends AbstractReportDescriptor {
 
-        @CopyOnWrite
-        private volatile ATXInstallation[] installations = new ATXInstallation[0];
-
         private final transient ATXConfig defaultConfig;
-
         /**
          * Validator to check form fields.
          */
         private final transient ATXValidator atxValidator;
+        @CopyOnWrite
+        private volatile ATXInstallation[] installations = new ATXInstallation[0];
 
         /**
          * Instantiates a new {@link DescriptorImpl}.
@@ -343,6 +324,15 @@ public class ATXPublisher extends AbstractReportPublisher {
         }
 
         /**
+         * Gets the ATX version that this ATX configuration is based on.
+         *
+         * @return the related ATX version
+         */
+        public static String getATXVersion() {
+            return ETPlugin.ATX_VERSION.toMicroString();
+        }
+
+        /**
          * @return the list of ATX installations
          */
         public ATXInstallation[] getInstallations() {
@@ -352,8 +342,7 @@ public class ATXPublisher extends AbstractReportPublisher {
         /**
          * Sets the installations.
          *
-         * @param installations
-         *            the new installations
+         * @param installations the new installations
          */
         public void setInstallations(final ATXInstallation... installations) {
             // Remove empty installations
@@ -398,7 +387,7 @@ public class ATXPublisher extends AbstractReportPublisher {
 
                     // Update custom settings
                     List<ATXCustomSetting> customSettings = req.bindJSONToList(ATXCustomSetting.class,
-                            instJson.get("customSettings"));
+                        instJson.get("customSettings"));
 
                     // Remove duplicates of default configuration
                     customSettings.removeIf(atxCustomSetting ->
@@ -410,7 +399,7 @@ public class ATXPublisher extends AbstractReportPublisher {
 
                     // Update current values
                     final ATXConfig config = new ATXConfig(updateCurrentValues(instJson, configMap),
-                            customSettings);
+                        customSettings);
 
                     // Fill installations
                     final ATXInstallation installation = new ATXInstallation(name, toolName, config);
@@ -425,7 +414,7 @@ public class ATXPublisher extends AbstractReportPublisher {
         /**
          * Synchronizes current ATX configuration with default configuration
          * by overriding their current values and saving them as new ATX installation.
-         *
+         * <p>
          * This method will be automatically called by {@link ETPlugin#syncATXConfiguration()} to
          * avoid circular dependencies while loading other plugins.
          */
@@ -439,10 +428,10 @@ public class ATXPublisher extends AbstractReportPublisher {
                 // Synchronize settings
                 if (currentConfig != null) {
                     for (final Entry<String, List<ATXSetting>> newConfigMap : newConfig.getConfigMap()
-                            .entrySet()) {
+                        .entrySet()) {
                         for (final ATXSetting newSetting : newConfigMap.getValue()) {
                             final ATXSetting currentSetting = currentConfig.getSettingByName(newSetting
-                                    .getName());
+                                .getName());
                             if (currentSetting != null) {
                                 newSetting.setCurrentValue(currentSetting.getCurrentValue());
                             }
@@ -455,7 +444,7 @@ public class ATXPublisher extends AbstractReportPublisher {
 
                 // Fill installations
                 final ATXInstallation inst = new ATXInstallation(installation.getName(),
-                        installation.getToolName(), newConfig);
+                    installation.getToolName(), newConfig);
                 list.add(inst);
             }
             setInstallations(list.toArray(new ATXInstallation[0]));
@@ -465,15 +454,13 @@ public class ATXPublisher extends AbstractReportPublisher {
         /**
          * Updates the current values for each ATX setting.
          *
-         * @param instJson
-         *            the JSONObject representing one installation
-         * @param configMap
-         *            the default ATX configuration
+         * @param instJson  the JSONObject representing one installation
+         * @param configMap the default ATX configuration
          * @return the updated ATX configuration
          */
         @SuppressWarnings("unchecked")
         private Map<String, List<ATXSetting>> updateCurrentValues(final JSONObject instJson,
-                final Map<String, List<ATXSetting>> configMap) {
+                                                                  final Map<String, List<ATXSetting>> configMap) {
             final Map<String, List<ATXSetting>> newConfigMap = new LinkedHashMap<>();
             for (final Entry<String, List<ATXSetting>> entry : configMap.entrySet()) {
                 final List<ATXSetting> newSettings = new ArrayList<>();
@@ -502,19 +489,9 @@ public class ATXPublisher extends AbstractReportPublisher {
         }
 
         /**
-         * Gets the ATX version that this ATX configuration is based on.
-         *
-         * @return the related ATX version
-         */
-        public static String getATXVersion() {
-            return ETPlugin.ATX_VERSION.toMicroString();
-        }
-
-        /**
          * Gets the custom settings of a given ATX installation.
          *
-         * @param installation
-         *            the installation
+         * @param installation the installation
          * @return the custom settings list
          */
         public List<ATXCustomSetting> getCustomSettings(final ATXInstallation installation) {
@@ -530,7 +507,7 @@ public class ATXPublisher extends AbstractReportPublisher {
         public List<Descriptor<? extends ATXCustomSetting>> getApplicableCustomSettings() {
             final List<Descriptor<? extends ATXCustomSetting>> list = new ArrayList<>();
             final DescriptorExtensionList<ATXCustomSetting, Descriptor<ATXCustomSetting>> settings = ATXCustomSetting
-                    .all();
+                .all();
             if (settings != null) {
                 list.addAll(settings);
             }
@@ -546,8 +523,7 @@ public class ATXPublisher extends AbstractReportPublisher {
         /**
          * Validates the TEST-GUIDE name which is a required field.
          *
-         * @param value
-         *            the name
+         * @param value the name
          * @return the form validation
          */
         public FormValidation doCheckName(@QueryParameter final String value) {
@@ -557,36 +533,31 @@ public class ATXPublisher extends AbstractReportPublisher {
         /**
          * Validates the current setting field.
          *
-         * @param name
-         *            the field name
-         * @param value
-         *            the field value
+         * @param name  the field name
+         * @param value the field value
          * @return the form validation
          */
         public FormValidation doCheckSetting(@QueryParameter final String name,
-                @QueryParameter final String value) {
+                                             @QueryParameter final String value) {
             return atxValidator.validateSetting(name, value);
         }
 
         /**
          * Tests the server connection.
          *
-         * @param serverURL
-         *            the server URL
-         * @param serverPort
-         *            the server port
-         * @param serverContextPath
-         *            the server context path
-         * @param useHttpsConnection
-         *            if secure connection is used
-         * @param ignoreSSL
-         *            specifies whether to ignore SSL issues
+         * @param serverURL          the server URL
+         * @param serverPort         the server port
+         * @param serverContextPath  the server context path
+         * @param useHttpsConnection if secure connection is used
+         * @param ignoreSSL          specifies whether to ignore SSL issues
          * @return the form validation
          */
         @RequirePOST
         public FormValidation doTestConnection(@QueryParameter final String serverURL,
-                @QueryParameter final String serverPort, @QueryParameter final String serverContextPath,
-                @QueryParameter final boolean useHttpsConnection, @QueryParameter final boolean ignoreSSL) {
+                                               @QueryParameter final String serverPort,
+                                               @QueryParameter final String serverContextPath,
+                                               @QueryParameter final boolean useHttpsConnection,
+                                               @QueryParameter final boolean ignoreSSL) {
             Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
             return atxValidator.testConnection(serverURL, serverPort, serverContextPath, useHttpsConnection, ignoreSSL);
         }

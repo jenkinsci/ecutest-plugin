@@ -59,27 +59,19 @@ public class JUnitReportGenerator {
      * Generates UNIT reports by invoking the startup of ECU-TEST if not already running, otherwise using the current
      * instance without closing when finished.
      *
-     * @param installation
-     *            the installation
-     * @param reportFiles
-     *            the report files
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param installation the installation
+     * @param reportFiles  the report files
+     * @param run          the run
+     * @param workspace    the workspace
+     * @param launcher     the launcher
+     * @param listener     the listener
      * @return {@code true} if generation succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean generate(final ETInstallation installation, final List<FilePath> reportFiles,
-            final Run<?, ?> run, final FilePath workspace, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+                            final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+                            final TaskListener listener) throws IOException, InterruptedException {
         boolean isGenerated = false;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
@@ -94,7 +86,7 @@ public class JUnitReportGenerator {
             final String workspaceDir = getWorkspaceDir(run);
             final String settingsDir = getSettingsDir(run);
             final ETClient etClient = new ETClient(toolName, installPath, workspaceDir, settingsDir,
-                    StartETBuilder.DEFAULT_TIMEOUT, false);
+                StartETBuilder.DEFAULT_TIMEOUT, false);
             if (etClient.start(false, workspace, launcher, listener)) {
                 isGenerated = generateReports(reportFiles, launcher, listener);
             } else {
@@ -111,31 +103,25 @@ public class JUnitReportGenerator {
     /**
      * Generate UNIT reports by calling the {@link GenerateUnitReportCallable}.
      *
-     * @param reportFiles
-     *            the report files
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param reportFiles the report files
+     * @param launcher    the launcher
+     * @param listener    the listener
      * @return {@code true} if generation succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean generateReports(final List<FilePath> reportFiles, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                    final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("- Generating UNIT test reports...");
         return launcher.getChannel().call(
-                new GenerateUnitReportCallable(reportFiles, listener));
+            new GenerateUnitReportCallable(reportFiles, listener));
     }
 
     /**
      * Gets the workspace directory, either previous ECU-TEST workspace or default one.
      *
-     * @param run
-     *            the run
+     * @param run the run
      * @return the workspace directory
      */
     private String getWorkspaceDir(final Run<?, ?> run) {
@@ -150,8 +136,7 @@ public class JUnitReportGenerator {
     /**
      * Gets the settings directory, either previous ECU-TEST settings or default one.
      *
-     * @param run
-     *            the run
+     * @param run the run
      * @return the settings directory
      */
     private String getSettingsDir(final Run<?, ?> run) {
@@ -176,10 +161,8 @@ public class JUnitReportGenerator {
         /**
          * Instantiates a new {@link GenerateUnitReportCallable}.
          *
-         * @param dbFiles
-         *            the list of TRF files
-         * @param listener
-         *            the listener
+         * @param dbFiles  the list of TRF files
+         * @param listener the listener
          */
         GenerateUnitReportCallable(final List<FilePath> dbFiles, final TaskListener listener) {
             this.dbFiles = dbFiles;
@@ -197,7 +180,7 @@ public class JUnitReportGenerator {
                     logger.logInfo(String.format("-> Generating UNIT report: %s", dbFile.getRemote()));
                     final FilePath outDir = dbFile.getParent().child(JUnitPublisher.UNIT_TEMPLATE_NAME);
                     if (!testEnv.generateTestReportDocumentFromDB(dbFile.getRemote(),
-                            outDir.getRemote(), JUnitPublisher.UNIT_TEMPLATE_NAME, true)) {
+                        outDir.getRemote(), JUnitPublisher.UNIT_TEMPLATE_NAME, true)) {
                         isGenerated = false;
                         logger.logError("Generating UNIT report failed!");
                     }

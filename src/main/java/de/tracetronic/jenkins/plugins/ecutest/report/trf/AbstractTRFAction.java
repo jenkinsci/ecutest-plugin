@@ -43,8 +43,7 @@ public abstract class AbstractTRFAction extends AbstractReportAction {
     /**
      * Instantiates a new {@link AbstractTRFAction}.
      *
-     * @param projectLevel
-     *            specifies whether archiving is restricted to project level only
+     * @param projectLevel specifies whether archiving is restricted to project level only
      */
     public AbstractTRFAction(final boolean projectLevel) {
         super(projectLevel);

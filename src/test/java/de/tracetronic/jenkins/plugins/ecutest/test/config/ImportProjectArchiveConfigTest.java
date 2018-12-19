@@ -57,7 +57,7 @@ public class ImportProjectArchiveConfigTest {
     @Test
     public void testExpand() {
         final ImportProjectArchiveConfig config = new ImportProjectArchiveConfig("${ARCHIVE_PATH}", "${IMPORT_PATH}",
-                "${IMPORT_CONFIG_PATH}", true);
+            "${IMPORT_CONFIG_PATH}", true);
         final EnvVars envVars = new EnvVars();
         envVars.put("ARCHIVE_PATH", "test.prz");
         envVars.put("IMPORT_PATH", "import");

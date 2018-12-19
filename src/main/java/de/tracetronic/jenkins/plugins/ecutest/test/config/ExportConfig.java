@@ -52,19 +52,14 @@ public abstract class ExportConfig extends TMSConfig {
     /**
      * Instantiates a new {@link ExportConfig}.
      *
-     * @param filePath
-     *            the file path
-     * @param exportPath
-     *            the export path
-     * @param createNewPath
-     *            specifies whether missing export path will be created
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the timeout
+     * @param filePath      the file path
+     * @param exportPath    the export path
+     * @param createNewPath specifies whether missing export path will be created
+     * @param credentialsId the credentials id
+     * @param timeout       the timeout
      */
     public ExportConfig(final String filePath, final String exportPath, final boolean createNewPath,
-            final String credentialsId, final String timeout) {
+                        final String credentialsId, final String timeout) {
         super(credentialsId, timeout);
         this.filePath = StringUtils.trimToEmpty(filePath);
         this.exportPath = StringUtils.trimToEmpty(exportPath);
@@ -101,13 +96,13 @@ public abstract class ExportConfig extends TMSConfig {
             final String exportPath = getExportPath();
             final String thatFilePath = that.getFilePath();
             final String thatExportPath = that.getExportPath();
-            result = (Objects.equals(filePath, thatFilePath))
-                    && (Objects.equals(exportPath, thatExportPath))
-                    && createNewPath == that.isCreateNewPath()
-                    && (getCredentialsId() == null ? that.getCredentialsId() == null :
-                            getCredentialsId().equals(that.getCredentialsId()))
-                    && (getTimeout() == null ? that.getTimeout() == null :
-                            getTimeout().equals(that.getTimeout()));
+            result = Objects.equals(filePath, thatFilePath)
+                && Objects.equals(exportPath, thatExportPath)
+                && createNewPath == that.isCreateNewPath()
+                && (getCredentialsId() == null ? that.getCredentialsId() == null :
+                getCredentialsId().equals(that.getCredentialsId()))
+                && (getTimeout() == null ? that.getTimeout() == null :
+                getTimeout().equals(that.getTimeout()));
         }
         return result;
     }
@@ -115,7 +110,7 @@ public abstract class ExportConfig extends TMSConfig {
     @Override
     public final int hashCode() {
         return new HashCodeBuilder(17, 31).append(getFilePath()).append(getExportPath())
-                .append(isCreateNewPath()).append(getCredentialsId()).append(getTimeout()).toHashCode();
+            .append(isCreateNewPath()).append(getCredentialsId()).append(getTimeout()).toHashCode();
     }
 
     /**
@@ -126,8 +121,7 @@ public abstract class ExportConfig extends TMSConfig {
         /**
          * Validates the file path to export.
          *
-         * @param value
-         *            the file path to export
+         * @param value the file path to export
          * @return the form validation
          */
         public abstract FormValidation doCheckFilePath(@QueryParameter String value);
@@ -135,8 +129,7 @@ public abstract class ExportConfig extends TMSConfig {
         /**
          * Validates the export target path.
          *
-         * @param value
-         *            the export path
+         * @param value the export path
          * @return the form validation
          */
         public FormValidation doCheckExportPath(@QueryParameter final String value) {

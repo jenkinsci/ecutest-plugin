@@ -41,8 +41,7 @@ public class ETPluginException extends Exception {
     /**
      * Instantiates a new {@link ETPluginException}.
      *
-     * @param cause
-     *            the cause of the {@link Exception}
+     * @param cause the cause of the {@link Exception}
      */
     public ETPluginException(final Throwable cause) {
         super(cause);
@@ -51,10 +50,8 @@ public class ETPluginException extends Exception {
     /**
      * Instantiates a new {@link ETPluginException}.
      *
-     * @param message
-     *            the message to attach to the {@link Exception}
-     * @param cause
-     *            the cause of the {@link Exception}
+     * @param message the message to attach to the {@link Exception}
+     * @param cause   the cause of the {@link Exception}
      */
     public ETPluginException(final String message, final Throwable cause) {
         super(message, cause);
@@ -63,8 +60,7 @@ public class ETPluginException extends Exception {
     /**
      * Instantiates a new {@link ETPluginException}.
      *
-     * @param message
-     *            the message to attach to the {@link Exception}
+     * @param message the message to attach to the {@link Exception}
      */
     public ETPluginException(final String message) {
         super(message);

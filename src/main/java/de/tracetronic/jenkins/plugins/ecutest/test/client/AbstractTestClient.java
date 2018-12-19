@@ -69,15 +69,12 @@ public abstract class AbstractTestClient implements TestClient {
     /**
      * Instantiates a new {@link AbstractTestClient}.
      *
-     * @param testFile
-     *            the test file
-     * @param testConfig
-     *            the test configuration
-     * @param executionConfig
-     *            the execution configuration
+     * @param testFile        the test file
+     * @param testConfig      the test configuration
+     * @param executionConfig the execution configuration
      */
     public AbstractTestClient(final String testFile, final TestConfig testConfig,
-            final ExecutionConfig executionConfig) {
+                              final ExecutionConfig executionConfig) {
         this.testFile = StringUtils.trimToEmpty(testFile);
         this.testConfig = testConfig;
         this.executionConfig = executionConfig;
@@ -117,8 +114,7 @@ public abstract class AbstractTestClient implements TestClient {
     }
 
     /**
-     * @param testName
-     *            the test name to set
+     * @param testName the test name to set
      */
     public void setTestName(final String testName) {
         this.testName = testName;
@@ -132,8 +128,7 @@ public abstract class AbstractTestClient implements TestClient {
     }
 
     /**
-     * @param testDescription
-     *            the test description to set
+     * @param testDescription the test description to set
      */
     public void setTestDescription(final String testDescription) {
         this.testDescription = testDescription;
@@ -147,8 +142,7 @@ public abstract class AbstractTestClient implements TestClient {
     }
 
     /**
-     * @param testReportDir
-     *            the test report directory to set
+     * @param testReportDir the test report directory to set
      */
     public void setTestReportDir(final String testReportDir) {
         this.testReportDir = testReportDir;
@@ -162,8 +156,7 @@ public abstract class AbstractTestClient implements TestClient {
     }
 
     /**
-     * @param testResult
-     *            the test result to set
+     * @param testResult the test result to set
      */
     public void setTestResult(final String testResult) {
         this.testResult = testResult;
@@ -177,8 +170,7 @@ public abstract class AbstractTestClient implements TestClient {
     }
 
     /**
-     * @param isAborted
-     *            the test abort status
+     * @param isAborted the test abort status
      */
     public void setAborted(final boolean isAborted) {
         this.isAborted = isAborted;
@@ -197,10 +189,8 @@ public abstract class AbstractTestClient implements TestClient {
         /**
          * Instantiates a new {@link LoadConfigCallable}.
          *
-         * @param testConfig
-         *            the test configuration
-         * @param listener
-         *            the listener
+         * @param testConfig the test configuration
+         * @param listener   the listener
          */
         public LoadConfigCallable(final TestConfig testConfig, final TaskListener listener) {
             this.testConfig = testConfig;
@@ -259,8 +249,7 @@ public abstract class AbstractTestClient implements TestClient {
         /**
          * Gets the name of the given configuration file.
          *
-         * @param configFile
-         *            the configuration file
+         * @param configFile the configuration file
          * @return the configuration name
          */
         private String getConfigName(final String configFile) {
@@ -277,15 +266,12 @@ public abstract class AbstractTestClient implements TestClient {
          * Sets the new global constants for the currently loaded test configuration.
          * This requires to start the configuration, add the constants and reload the configuration.
          *
-         * @param comClient
-         *            the COM client
-         * @param constantMap
-         *            the constants to set
-         * @throws ETComException
-         *             in case of a COM exception
+         * @param comClient   the COM client
+         * @param constantMap the constants to set
+         * @throws ETComException in case of a COM exception
          */
         private void setGlobalConstants(final ETComClient comClient, final Map<String, String> constantMap)
-                throws ETComException {
+            throws ETComException {
             comClient.start();
             final TestConfiguration testConfig = (TestConfiguration) comClient.getCurrentTestConfiguration();
             for (final Entry<String, String> newConstant : constantMap.entrySet()) {
@@ -298,8 +284,7 @@ public abstract class AbstractTestClient implements TestClient {
          * Converts the global constant list to a map.
          *
          * @return the global constant map
-         * @throws ETComException
-         *             in case of a COM exception
+         * @throws ETComException in case of a COM exception
          */
         private Map<String, String> getGlobalConstantMap() throws ETComException {
             final Map<String, String> constantMap = new LinkedHashMap<>();
@@ -324,12 +309,9 @@ public abstract class AbstractTestClient implements TestClient {
         /**
          * Instantiates a new {@link TestInfoHolder}.
          *
-         * @param testResult
-         *            the test result
-         * @param testReportDir
-         *            the test report directory
-         * @param isAborted
-         *            specifies whether test execution is aborted
+         * @param testResult    the test result
+         * @param testReportDir the test report directory
+         * @param isAborted     specifies whether test execution is aborted
          */
         public TestInfoHolder(final String testResult, final String testReportDir, final boolean isAborted) {
             this.testResult = testResult;
@@ -364,26 +346,6 @@ public abstract class AbstractTestClient implements TestClient {
      */
     public static final class CheckInfoHolder {
 
-        /**
-         * Defines the seriousness types for checks.
-         */
-        public enum Seriousness {
-            /**
-             * Seriousness indicating the check is informational only.
-             */
-            NOTE,
-
-            /**
-             * Seriousness indicating the check represents a warning.
-             */
-            WARNING,
-
-            /**
-             * Seriousness indicating the check represents an error.
-             */
-            ERROR
-        }
-
         private final String filePath;
         private final Seriousness seriousness;
         private final String errorMessage;
@@ -392,17 +354,13 @@ public abstract class AbstractTestClient implements TestClient {
         /**
          * Instantiates a new {@link CheckInfoHolder}.
          *
-         * @param filePath
-         *            the file path
-         * @param seriousness
-         *            the seriousness
-         * @param errorMessage
-         *            the error message
-         * @param lineNumber
-         *            the line number
+         * @param filePath     the file path
+         * @param seriousness  the seriousness
+         * @param errorMessage the error message
+         * @param lineNumber   the line number
          */
         public CheckInfoHolder(final String filePath, final Seriousness seriousness, final String errorMessage,
-                final String lineNumber) {
+                               final String lineNumber) {
             super();
             this.filePath = filePath;
             this.seriousness = seriousness;
@@ -436,6 +394,26 @@ public abstract class AbstractTestClient implements TestClient {
          */
         public String getLineNumber() {
             return lineNumber;
+        }
+
+        /**
+         * Defines the seriousness types for checks.
+         */
+        public enum Seriousness {
+            /**
+             * Seriousness indicating the check is informational only.
+             */
+            NOTE,
+
+            /**
+             * Seriousness indicating the check represents a warning.
+             */
+            WARNING,
+
+            /**
+             * Seriousness indicating the check represents an error.
+             */
+            ERROR
         }
     }
 }

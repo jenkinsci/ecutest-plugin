@@ -50,7 +50,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Show the tool related environment variables on a build as an action.
+ * Show the tool related environment variables as an build action.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
@@ -64,10 +64,8 @@ public class ToolEnvActionView extends InvisibleAction {
     /**
      * Instantiates a new {@link ToolEnvActionView}.
      *
-     * @param run
-     *            the build
-     * @param listener
-     *            the listener
+     * @param run      the build
+     * @param listener the listener
      */
     public ToolEnvActionView(final Run<?, ?> run, final TaskListener listener) {
         super();
@@ -76,8 +74,8 @@ public class ToolEnvActionView extends InvisibleAction {
     }
 
     /**
-     * Gets the tool related build environment variables from the {@link ToolEnvInvisibleAction} previously added to the
-     * build.
+     * Gets the tool related build environment variables from the {@link ToolEnvInvisibleAction}
+     * previously added to the build.
      *
      * @return set of {@link ParameterValue}'s to show in the build page.
      */

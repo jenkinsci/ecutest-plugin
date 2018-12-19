@@ -66,10 +66,8 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     /**
      * {@link DslExtensionMethod} for publishing ATX reports.
      *
-     * @param atxName
-     *            the tool name identifying the {@link ATXInstallation} to be used
-     * @param closure
-     *            the nested Groovy closure
+     * @param atxName the tool name identifying the {@link ATXInstallation} to be used
+     * @param closure the nested Groovy closure
      * @return the instance of a {@link ATXPublisher}
      */
     @DslExtensionMethod(context = PublisherContext.class)
@@ -91,10 +89,8 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     /**
      * Checks whether the ATX installation identified by given name exists.
      *
-     * @param atxName
-     *            the ATX tool name
-     * @param publisher
-     *            the publisher
+     * @param atxName   the ATX tool name
+     * @param publisher the publisher
      */
     private void checkATXInstallation(final String atxName, final ATXPublisher publisher) {
         if (StringUtils.containsNone(atxName, "$")) {
@@ -105,8 +101,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     /**
      * {@link DslExtensionMethod} for publishing ATX reports with default settings.
      *
-     * @param atxName
-     *            the tool name identifying the {@link ATXInstallation} to be used
+     * @param atxName the tool name identifying the {@link ATXInstallation} to be used
      * @return the instance of a {@link ATXPublisher}
      */
     @DslExtensionMethod(context = PublisherContext.class)
@@ -117,10 +112,8 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     /**
      * {@link DslExtensionMethod} for publishing UNIT reports.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param closure
-     *            the nested Groovy closure
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
+     * @param closure  the nested Groovy closure
      * @return the instance of a {@link JUnitPublisher}
      */
     @DslExtensionMethod(context = PublisherContext.class)
@@ -144,8 +137,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     /**
      * {@link DslExtensionMethod} for publishing UNIT reports with default settings.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
      * @return the instance of a {@link JUnitPublisher}
      */
     @DslExtensionMethod(context = PublisherContext.class)
@@ -156,8 +148,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     /**
      * {@link DslExtensionMethod} for publishing TRF reports.
      *
-     * @param closure
-     *            the nested Groovy closure
+     * @param closure the nested Groovy closure
      * @return the instance of a {@link TRFPublisher}
      */
     @DslExtensionMethod(context = PublisherContext.class)
@@ -185,8 +176,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     /**
      * {@link DslExtensionMethod} for publishing ECU-TEST logs.
      *
-     * @param closure
-     *            the nested Groovy closure
+     * @param closure the nested Groovy closure
      * @return the instance of a {@link ETLogPublisher}
      */
     @DslExtensionMethod(context = PublisherContext.class)
@@ -217,10 +207,8 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     /**
      * {@link DslExtensionMethod} for publishing generated reports.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param closure
-     *            the nested Groovy closure
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
+     * @param closure  the nested Groovy closure
      * @return the instance of a {@link ReportGeneratorPublisher}
      */
     @DslExtensionMethod(context = PublisherContext.class)
@@ -244,8 +232,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     /**
      * {@link DslExtensionMethod} for publishing generated reports with default settings.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
      * @return the instance of a {@link ReportGeneratorPublisher}
      */
     @DslExtensionMethod(context = PublisherContext.class)
@@ -256,12 +243,9 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     /**
      * {@link DslExtensionMethod} for publishing report to test management system.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param credentialsId
-     *            the credentials id
-     * @param closure
-     *            the nested Groovy closure
+     * @param toolName      the tool name identifying the {@link ETInstallation} to be used
+     * @param credentialsId the credentials id
+     * @param closure       the nested Groovy closure
      * @return the instance of a {@link TMSPublisher}
      */
     @DslExtensionMethod(context = PublisherContext.class)
@@ -285,10 +269,8 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     /**
      * {@link DslExtensionMethod} for publishing report to test management system with default settings.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param credentialsId
-     *            the credentials id
+     * @param toolName      the tool name identifying the {@link ETInstallation} to be used
+     * @param credentialsId the credentials id
      * @return the instance of a {@link ReportGeneratorPublisher}
      */
     @DslExtensionMethod(context = PublisherContext.class)
@@ -313,8 +295,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         /**
          * Option defining the unstable threshold.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void unstableThreshold(final double value) {
             final FormValidation validation = validator.validateUnstableThreshold(String.valueOf(value));
@@ -325,8 +306,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         /**
          * Option defining the failed threshold.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void failedThreshold(final double value) {
             final FormValidation validation = validator.validateFailedThreshold(String.valueOf(value));
@@ -353,8 +333,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         /**
          * Option defining whether to mark the build as unstable if warnings found.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void unstableOnWarning(final boolean value) {
             unstableOnWarning = value;
@@ -363,8 +342,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         /**
          * Option defining whether to mark the build as failed if errors found.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void failedOnError(final boolean value) {
             failedOnError = value;
@@ -373,8 +351,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         /**
          * Option defining whether to parse the test-specific log files.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void testSpecific(final boolean value) {
             testSpecific = value;
@@ -392,8 +369,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         /**
          * Option defining the default report generators.
          *
-         * @param closure
-         *            the nested Groovy closure
+         * @param closure the nested Groovy closure
          */
         public void generators(final Runnable closure) {
             final ReportGeneratorContext context = new ReportGeneratorContext();
@@ -404,8 +380,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         /**
          * Option defining the custom report generators.
          *
-         * @param closure
-         *            the nested Groovy closure
+         * @param closure the nested Groovy closure
          */
         public void customGenerators(final Runnable closure) {
             final ReportGeneratorContext context = new ReportGeneratorContext();
@@ -419,19 +394,16 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         public class ReportGeneratorContext implements Context {
 
             private static final String OPT_GENERATOR_NAME = "generator name";
-
-            private final List<ReportGeneratorConfig> generators = new ArrayList<>();
-
             /**
              * Validator to check report generated related DSL options.
              */
             protected final ReportGeneratorValidator reportValidator = new ReportGeneratorValidator();
+            private final List<ReportGeneratorConfig> generators = new ArrayList<>();
 
             /**
              * Option defining the report generator.
              *
-             * @param name
-             *            the generator name
+             * @param name the generator name
              */
             public void generator(final CharSequence name) {
                 Preconditions.checkNotNull(name, NOT_NULL_MSG, OPT_GENERATOR_NAME);
@@ -444,10 +416,8 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
             /**
              * Option defining the report generator.
              *
-             * @param name
-             *            the generator name
-             * @param closure
-             *            the nested Groovy closure
+             * @param name    the generator name
+             * @param closure the nested Groovy closure
              */
             public void generator(final CharSequence name, final Runnable closure) {
                 final ReportGeneratorConfigContext context = new ReportGeneratorConfigContext();
@@ -458,8 +428,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
             /**
              * Option defining the custom report generator.
              *
-             * @param name
-             *            the generator name
+             * @param name the generator name
              */
             public void customGenerator(final CharSequence name) {
                 generator(name);
@@ -468,10 +437,8 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
             /**
              * Option defining the custom report generator.
              *
-             * @param name
-             *            the generator name
-             * @param closure
-             *            the nested Groovy closure
+             * @param name    the generator name
+             * @param closure the nested Groovy closure
              */
             public void customGenerator(final CharSequence name, final Runnable closure) {
                 generator(name, closure);
@@ -487,8 +454,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
                 /**
                  * Option defining the report generator settings.
                  *
-                 * @param closure
-                 *            the nested Groovy closure
+                 * @param closure the nested Groovy closure
                  */
                 public void settings(final Runnable closure) {
                     final ReportGeneratorSettingsContext context = new ReportGeneratorSettingsContext();
@@ -510,10 +476,8 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
                 /**
                  * Option defining the report generator setting.
                  *
-                 * @param name
-                 *            the setting name
-                 * @param value
-                 *            the setting value
+                 * @param name  the setting name
+                 * @param value the setting value
                  */
                 public void setting(final CharSequence name, final CharSequence value) {
                     Preconditions.checkNotNull(name, NOT_NULL_MSG, OPT_SETTING_NAME);
@@ -530,8 +494,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
                 /**
                  * Option defining the report generator setting.
                  *
-                 * @param closure
-                 *            the nested Groovy closure
+                 * @param closure the nested Groovy closure
                  */
                 public void setting(final Runnable closure) {
                     final ReportGeneratorSettingContext context = new ReportGeneratorSettingContext();
@@ -550,28 +513,26 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
                     /**
                      * Option defining the settings name.
                      *
-                     * @param value
-                     *            the value
+                     * @param value the value
                      */
                     public void name(final CharSequence value) {
                         Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_SETTING_NAME);
                         final FormValidation validation = reportValidator.validateSettingName(value.toString());
                         Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR,
-                                validation.getMessage());
+                            validation.getMessage());
                         name = value.toString();
                     }
 
                     /**
                      * Option defining the settings value.
                      *
-                     * @param value
-                     *            the value
+                     * @param value the value
                      */
                     public void value(final CharSequence value) {
                         Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_SETTING_VALUE);
                         final FormValidation validation = reportValidator.validateSettingValue(value.toString());
                         Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR,
-                                validation.getMessage());
+                            validation.getMessage());
                         this.value = value.toString();
                     }
                 }
@@ -594,8 +555,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         /**
          * Option defining the timeout.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void timeout(final String value) {
             final FormValidation validation = tmsValidator.validateTimeout(value, TMSPublisher.getDefaultTimeout());

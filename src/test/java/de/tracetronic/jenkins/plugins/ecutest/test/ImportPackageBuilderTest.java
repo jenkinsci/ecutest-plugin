@@ -73,7 +73,7 @@ public class ImportPackageBuilderTest {
         importConfigs.add(importConfig);
         final ImportPackageBuilder builder = new ImportPackageBuilder(importConfigs);
         assertThat(builder.getImportConfigs(), hasSize(1));
-        assertThat((ImportPackageConfig) builder.getImportConfigs().get(0), sameInstance(importConfig));
+        assertThat(builder.getImportConfigs().get(0), sameInstance(importConfig));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class ImportPackageBuilderTest {
         importConfigs.add(attributeConfig);
         final ImportPackageBuilder builder = new ImportPackageBuilder(importConfigs);
         assertThat(builder.getImportConfigs(), hasSize(1));
-        assertThat((ImportPackageAttributeConfig) builder.getImportConfigs().get(0), sameInstance(attributeConfig));
+        assertThat(builder.getImportConfigs().get(0), sameInstance(attributeConfig));
     }
 
     @Test

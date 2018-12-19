@@ -70,8 +70,7 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     /**
      * Instantiates a {@link AbstractToolBuilder}.
      *
-     * @param toolName
-     *            the tool name
+     * @param toolName the tool name
      */
     public AbstractToolBuilder(@Nonnull final String toolName) {
         super();
@@ -95,8 +94,7 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     }
 
     /**
-     * @param timeout
-     *            the timeout
+     * @param timeout the timeout
      */
     @DataBoundSetter
     public void setTimeout(@CheckForNull final String timeout) {
@@ -131,29 +129,21 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     /**
      * Performs the tool-specific build step operations.
      *
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
-     * @throws InterruptedException
-     *             the interrupted exception
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws ETPluginException
-     *             in case of tool operation errors
+     * @param run       the run
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
+     * @throws InterruptedException the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws ETPluginException    in case of tool operation errors
      */
     protected abstract void performTool(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
-            throws InterruptedException, IOException, ETPluginException;
+        throws InterruptedException, IOException, ETPluginException;
 
     /**
      * Gets the test identifier by the size of {@link ToolEnvInvisibleAction}s already added to the build.
      *
-     * @param run
-     *            the run
+     * @param run the run
      * @return the tool id
      */
     protected int getToolId(final Run<?, ?> run) {
@@ -164,22 +154,17 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     /**
      * Configures the tool installation for functioning in the node and the environment.
      *
-     * @param computer
-     *            the node
-     * @param listener
-     *            the listener
-     * @param envVars
-     *            the environment variables
+     * @param computer the node
+     * @param listener the listener
+     * @param envVars  the environment variables
      * @return the tool installation
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
-     * @throws ETPluginException
-     *             if the selected tool installation is not configured
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
+     * @throws ETPluginException    if the selected tool installation is not configured
      */
     protected ETInstallation configureToolInstallation(final Computer computer, final TaskListener listener,
-            final EnvVars envVars) throws IOException, InterruptedException, ETPluginException {
+                                                       final EnvVars envVars)
+        throws IOException, InterruptedException, ETPluginException {
         ETInstallation installation = getToolInstallation(envVars);
         if (installation != null && computer != null) {
             final Node node = computer.getNode();
@@ -199,8 +184,7 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     /**
      * Gets the tool installation by descriptor and tool name.
      *
-     * @param envVars
-     *            the environment variables
+     * @param envVars the environment variables
      * @return the tool installation
      */
     @CheckForNull

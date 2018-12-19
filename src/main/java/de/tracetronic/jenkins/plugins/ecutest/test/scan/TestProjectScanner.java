@@ -46,12 +46,9 @@ public class TestProjectScanner extends AbstractTestScanner {
     /**
      * Instantiates a new {@link TestProjectScanner}.
      *
-     * @param inputDir
-     *            the input directory
-     * @param recursive
-     *            specifies whether to scan recursively
-     * @param launcher
-     *            the launcher
+     * @param inputDir  the input directory
+     * @param recursive specifies whether to scan recursively
+     * @param launcher  the launcher
      */
     public TestProjectScanner(final String inputDir, final boolean recursive, final Launcher launcher) {
         super(inputDir, recursive, launcher);

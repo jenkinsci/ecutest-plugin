@@ -48,18 +48,14 @@ public class ImportProjectDirConfig extends ImportProjectConfig {
     /**
      * Instantiates a new {@link ImportProjectDirConfig}.
      *
-     * @param tmsPath
-     *            the project directory path in test management system
-     * @param importPath
-     *            the import path
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the import timeout
+     * @param tmsPath       the project directory path in test management system
+     * @param importPath    the import path
+     * @param credentialsId the credentials id
+     * @param timeout       the import timeout
      */
     @DataBoundConstructor
     public ImportProjectDirConfig(final String tmsPath, final String importPath, final String credentialsId,
-            final String timeout) {
+                                  final String timeout) {
         super(tmsPath, importPath, false, credentialsId, timeout);
     }
 
@@ -67,7 +63,7 @@ public class ImportProjectDirConfig extends ImportProjectConfig {
     public ImportProjectDirConfig expand(final EnvVars envVars) {
         final ImportProjectConfig config = super.expand(envVars);
         return new ImportProjectDirConfig(config.getTmsPath(), config.getImportPath(),
-                config.getCredentialsId(), config.getTimeout());
+            config.getCredentialsId(), config.getTimeout());
     }
 
     /**

@@ -45,8 +45,7 @@ public interface ComProject {
      * Queries the project name.
      *
      * @return the name of this project
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     String getName() throws ETComException;
 
@@ -54,8 +53,7 @@ public interface ComProject {
      * Queries the list of packages used in this project.
      *
      * @return the list of referenced packages
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     String getPackages() throws ETComException;
 
@@ -70,8 +68,7 @@ public interface ComProject {
      * </ul>
      *
      * @return the error list
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     List<CheckInfoHolder> check() throws ETComException;
 

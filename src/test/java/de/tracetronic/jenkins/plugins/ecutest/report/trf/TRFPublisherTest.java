@@ -55,8 +55,7 @@ public class TRFPublisherTest {
     /**
      * Asserts the publisher properties.
      *
-     * @param publisher
-     *            the publisher
+     * @param publisher the publisher
      */
     private void assertPublisher(final TRFPublisher publisher) {
         assertNotNull(publisher);

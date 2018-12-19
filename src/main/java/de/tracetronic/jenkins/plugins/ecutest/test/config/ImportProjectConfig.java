@@ -57,20 +57,15 @@ public class ImportProjectConfig extends ImportConfig {
     /**
      * Instantiates a new {@link ImportProjectConfig}.
      *
-     * @param tmsPath
-     *            the project path in test management system
-     * @param importPath
-     *            the import path
-     * @param importMissingPackages
-     *            specifies whether to import missing packages
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the import timeout
+     * @param tmsPath               the project path in test management system
+     * @param importPath            the import path
+     * @param importMissingPackages specifies whether to import missing packages
+     * @param credentialsId         the credentials id
+     * @param timeout               the import timeout
      */
     @DataBoundConstructor
     public ImportProjectConfig(final String tmsPath, final String importPath,
-            final boolean importMissingPackages, final String credentialsId, final String timeout) {
+                               final boolean importMissingPackages, final String credentialsId, final String timeout) {
         super(tmsPath, importPath, credentialsId, timeout);
         this.importMissingPackages = importMissingPackages;
     }
@@ -89,7 +84,7 @@ public class ImportProjectConfig extends ImportConfig {
         final String expCredentialsId = envVars.expand(getCredentialsId());
         final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars, String.valueOf(DEFAULT_TIMEOUT));
         return new ImportProjectConfig(expTmsPath, expImportPath, isImportMissingPackages(),
-                expCredentialsId, expTimeout);
+            expCredentialsId, expTimeout);
     }
 
     @Override
@@ -133,8 +128,7 @@ public class ImportProjectConfig extends ImportConfig {
         /**
          * Validates the timeout.
          *
-         * @param value
-         *            the timeout
+         * @param value the timeout
          * @return the form validation
          */
         @Override

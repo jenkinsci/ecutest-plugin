@@ -58,8 +58,7 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     /**
      * Instantiates a new {@link ETComDispatch} with default programmatic identifier.
      *
-     * @param useTimeout
-     *            specifies whether to apply timeout
+     * @param useTimeout specifies whether to apply timeout
      */
     public ETComDispatch(final boolean useTimeout) {
         super(ETComProperty.getInstance().getProgId());
@@ -72,10 +71,8 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
      *
-     * @param dispatch
-     *            the dispatch
-     * @param useTimeout
-     *            specifies whether to apply timeout
+     * @param dispatch   the dispatch
+     * @param useTimeout specifies whether to apply timeout
      */
     public ETComDispatch(final Dispatch dispatch, final boolean useTimeout) {
         super(dispatch);
@@ -92,11 +89,9 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     /**
      * Performs a request on this {@link ETComDispatch}, invoking the given method.
      *
-     * @param method
-     *            the specific COM API method name
+     * @param method the specific COM API method name
      * @return the {@link Variant} returned by underlying callN
-     * @throws ETComException
-     *             the underlying {@link JacobException}
+     * @throws ETComException the underlying {@link JacobException}
      */
     protected Variant performRequest(final String method) throws ETComException {
         return performRequest(method, ETComProperty.getInstance().getTimeout(), NO_PARAMS);
@@ -106,13 +101,10 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      * Performs a request on this {@link ETComDispatch}, invoking the given method.
      * Respects the given timeout and aborts the dispatch call if timeout exceeded.
      *
-     * @param method
-     *            the specific COM API method name
-     * @param timeout
-     *            the timeout in seconds
+     * @param method  the specific COM API method name
+     * @param timeout the timeout in seconds
      * @return the {@link Variant} returned by underlying callN
-     * @throws ETComException
-     *             the underlying {@link JacobException}
+     * @throws ETComException the underlying {@link JacobException}
      */
     protected Variant performRequest(final String method, final int timeout) throws ETComException {
         return performRequest(method, timeout, NO_PARAMS);
@@ -121,13 +113,10 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     /**
      * Performs a request on this {@link ETComDispatch}, invoking the given method with parameters.
      *
-     * @param method
-     *            the parameterized COM API method name
-     * @param params
-     *            the parameters for the method
+     * @param method the parameterized COM API method name
+     * @param params the parameters for the method
      * @return the {@link Variant} returned by underlying callN
-     * @throws ETComException
-     *             the underlying {@link JacobException}
+     * @throws ETComException the underlying {@link JacobException}
      */
     protected Variant performRequest(final String method, final Object... params) throws ETComException {
         return performRequest(method, ETComProperty.getInstance().getTimeout(), params);
@@ -137,18 +126,14 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      * Performs a request on this {@link ETComDispatch}, invoking the given method with parameters.
      * Respects the given timeout and aborts the dispatch call if timeout exceeded.
      *
-     * @param method
-     *            the parameterized COM API method name
-     * @param timeout
-     *            the timeout in seconds
-     * @param params
-     *            the parameters for the method
+     * @param method  the parameterized COM API method name
+     * @param timeout the timeout in seconds
+     * @param params  the parameters for the method
      * @return the {@link Variant} returned by underlying callN
-     * @throws ETComException
-     *             the underlying {@link JacobException}
+     * @throws ETComException the underlying {@link JacobException}
      */
     protected Variant performRequest(final String method, final int timeout, final Object... params)
-            throws ETComException {
+        throws ETComException {
         if (timeout == 0) {
             return performDirectRequest(method, params);
         }
@@ -171,11 +156,9 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      * Performs a direct synchronous request on this {@link ETComDispatch},
      * invoking the given method and waiting for the result.
      *
-     * @param method
-     *            the specific COM API method name
+     * @param method the specific COM API method name
      * @return the {@link Variant} returned by underlying callN
-     * @throws ETComException
-     *             the underlying {@link JacobException}
+     * @throws ETComException the underlying {@link JacobException}
      */
     protected Variant performDirectRequest(final String method) throws ETComException {
         return callDispatch(method, NO_PARAMS);
@@ -185,13 +168,10 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      * Performs a direct synchronous request on this {@link ETComDispatch},
      * invoking the given method with parameters and waiting for the result.
      *
-     * @param method
-     *            the parameterized COM API method name
-     * @param params
-     *            the parameters for the method
+     * @param method the parameterized COM API method name
+     * @param params the parameters for the method
      * @return the {@link Variant} returned by underlying callN
-     * @throws ETComException
-     *             the underlying {@link JacobException}
+     * @throws ETComException the underlying {@link JacobException}
      */
     protected Variant performDirectRequest(final String method, final Object... params) throws ETComException {
         return callDispatch(method, params);
@@ -200,13 +180,10 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     /**
      * Performs a request on this {@link ETComDispatch}, invoking the given method with parameters.
      *
-     * @param method
-     *            the parameterized COM API method name
-     * @param params
-     *            the parameters for the method
+     * @param method the parameterized COM API method name
+     * @param params the parameters for the method
      * @return the {@link Variant} returned by underlying callN
-     * @throws ETComException
-     *             the underlying {@link JacobException}
+     * @throws ETComException the underlying {@link JacobException}
      */
     private Variant callDispatch(final String method, final Object... params) throws ETComException {
         try {
@@ -226,8 +203,7 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     /**
      * Releases this {@link ETComDispatch}.
      *
-     * @throws ETComException
-     *             the underlying {@link JacobException}
+     * @throws ETComException the underlying {@link JacobException}
      */
     private void releaseDispatch() throws ETComException {
         try {
@@ -274,10 +250,8 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
         /**
          * Instantiates a new {@link DispatchCallable}.
          *
-         * @param method
-         *            the specific COM API method name
-         * @param params
-         *            the parameters for the method
+         * @param method the specific COM API method name
+         * @param params the parameters for the method
          */
         DispatchCallable(final String method, final Object[] params) {
             this.method = method;

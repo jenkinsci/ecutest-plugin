@@ -30,10 +30,10 @@
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
-    <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation" page="select.jelly" />
+    <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation" page="select.jelly"/>
     <f:advanced>
-        <f:entry title="${%timeout.title}" description="${%timeout.description}"  field="timeout">
-            <f:textbox default="${descriptor.defaultTimeout}" />
+        <f:entry title="${%timeout.title}" description="${%timeout.description}" field="timeout">
+            <f:textbox default="${descriptor.defaultTimeout}"/>
         </f:entry>
     </f:advanced>
 </j:jelly>

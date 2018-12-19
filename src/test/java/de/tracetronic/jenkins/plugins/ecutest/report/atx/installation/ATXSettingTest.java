@@ -116,7 +116,7 @@ public class ATXSettingTest {
     @Test
     public void testCurrentValueForTextBox() {
         final ATXSetting<String> setting = new ATXTextSetting("settingName", "descGerman", "descEnglish",
-                "defaultValue");
+            "defaultValue");
         setting.setCurrentValue("currentValue");
         assertThat(setting.getCurrentValue(), is("currentValue"));
     }
@@ -131,7 +131,7 @@ public class ATXSettingTest {
     @Test
     public void testDefaultValueForText() {
         final ATXSetting<String> setting = new ATXTextSetting("settingName", "descGerman", "descEnglish",
-                "defaultValue");
+            "defaultValue");
         assertThat(setting.getDefaultValue(), is("defaultValue"));
     }
 
@@ -157,7 +157,7 @@ public class ATXSettingTest {
     @Test
     public void testManipulatedClone() {
         final ATXSetting<String> setting = new ATXTextSetting("settingName", "descGerman", "descEnglish",
-                "defaultValue");
+            "defaultValue");
         final ATXSetting<String> clone = setting.clone();
         clone.setCurrentValue("newCloneValue");
         assertThat(clone.getCurrentValue(), is(not(setting.getCurrentValue())));

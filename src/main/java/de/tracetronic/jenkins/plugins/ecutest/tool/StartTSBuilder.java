@@ -82,8 +82,7 @@ public class StartTSBuilder extends AbstractToolBuilder {
     /**
      * Instantiates a new {@link StartTSBuilder}.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
      */
     @DataBoundConstructor
     public StartTSBuilder(@Nonnull final String toolName) {
@@ -114,11 +113,27 @@ public class StartTSBuilder extends AbstractToolBuilder {
     }
 
     /**
+     * @param toolLibsIni the ToolLibs.ini path
+     */
+    @DataBoundSetter
+    public void setToolLibsIni(@CheckForNull final String toolLibsIni) {
+        this.toolLibsIni = Util.fixNull(toolLibsIni);
+    }
+
+    /**
      * @return the TCP port
      */
     @Nonnull
     public String getTcpPort() {
         return tcpPort;
+    }
+
+    /**
+     * @param tcpPort the TCP port
+     */
+    @DataBoundSetter
+    public void setTcpPort(@CheckForNull final String tcpPort) {
+        this.tcpPort = StringUtils.defaultIfBlank(tcpPort, String.valueOf(getDefaultTcpPort()));
     }
 
     /**
@@ -129,26 +144,7 @@ public class StartTSBuilder extends AbstractToolBuilder {
     }
 
     /**
-     * @param toolLibsIni
-     *            the ToolLibs.ini path
-     */
-    @DataBoundSetter
-    public void setToolLibsIni(@CheckForNull final String toolLibsIni) {
-        this.toolLibsIni = Util.fixNull(toolLibsIni);
-    }
-
-    /**
-     * @param tcpPort
-     *            the TCP port
-     */
-    @DataBoundSetter
-    public void setTcpPort(@CheckForNull final String tcpPort) {
-        this.tcpPort = StringUtils.defaultIfBlank(tcpPort, String.valueOf(getDefaultTcpPort()));
-    }
-
-    /**
-     * @param keepInstance
-     *            the specifies whether to re-use the previous instance
+     * @param keepInstance the specifies whether to re-use the previous instance
      */
     @DataBoundSetter
     public void setKeepInstance(final boolean keepInstance) {
@@ -157,7 +153,7 @@ public class StartTSBuilder extends AbstractToolBuilder {
 
     @Override
     public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
+                            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final List<String> foundProcesses = TSClient.checkProcesses(launcher, false);
         if (isKeepInstance() && !foundProcesses.isEmpty()) {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
@@ -166,10 +162,10 @@ public class StartTSBuilder extends AbstractToolBuilder {
             // Expand build parameters
             final EnvVars buildEnvVars = run.getEnvironment(listener);
             final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
-                    String.valueOf(DEFAULT_TIMEOUT)));
+                String.valueOf(DEFAULT_TIMEOUT)));
 
             final int expTcpPort = Integer.parseInt(EnvUtil.expandEnvVar(getTcpPort(), buildEnvVars,
-                    String.valueOf(DEFAULT_TCP_PORT)));
+                String.valueOf(DEFAULT_TCP_PORT)));
 
             final String expToolLibs = buildEnvVars.expand(getToolLibsIni());
             final FilePath expToolLibsPath = new FilePath(launcher.getChannel(), expToolLibs);
@@ -177,12 +173,12 @@ public class StartTSBuilder extends AbstractToolBuilder {
             // Check ToolLibs.ini path
             if (!expToolLibsPath.exists()) {
                 throw new ETPluginException(String.format("ToolLibs.ini path at %s does not exist!",
-                        expToolLibsPath.getRemote()));
+                    expToolLibsPath.getRemote()));
             }
 
             // Get selected ECU-TEST installation
             final ETInstallation installation = configureToolInstallation(workspace.toComputer(), listener,
-                    run.getEnvironment(listener));
+                run.getEnvironment(listener));
 
             // Start selected Tool-Server of related ECU-TEST installation
             final String installPath = installation.getTSExecutable(launcher);
@@ -221,8 +217,7 @@ public class StartTSBuilder extends AbstractToolBuilder {
         /**
          * Validates the ToolLibs.ini path.
          *
-         * @param value
-         *            the ToolLibs.ini path
+         * @param value the ToolLibs.ini path
          * @return the form validation
          */
         public FormValidation doCheckToolLibsIni(@QueryParameter final String value) {
@@ -232,8 +227,7 @@ public class StartTSBuilder extends AbstractToolBuilder {
         /**
          * Validates the TCP port.
          *
-         * @param value
-         *            the TCP port
+         * @param value the TCP port
          * @return the form validation
          */
         public FormValidation doCheckTcpPort(@QueryParameter final String value) {

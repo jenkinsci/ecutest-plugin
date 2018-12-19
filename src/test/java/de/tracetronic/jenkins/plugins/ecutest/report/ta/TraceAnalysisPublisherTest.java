@@ -69,8 +69,7 @@ public class TraceAnalysisPublisherTest {
     /**
      * Asserts the publisher properties.
      *
-     * @param publisher
-     *            the publisher
+     * @param publisher the publisher
      */
     private void assertPublisher(final TraceAnalysisPublisher publisher) {
         assertNotNull(publisher);

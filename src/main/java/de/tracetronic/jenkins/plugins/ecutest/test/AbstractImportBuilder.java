@@ -77,39 +77,18 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
     /**
      * Instantiates a new {@link AbstractImportBuilder}.
      *
-     * @param importConfigs
-     *            the list of configured test importers
+     * @param importConfigs the list of configured test importers
      */
     @DataBoundConstructor
     public AbstractImportBuilder(@CheckForNull final List<TMSConfig> importConfigs) {
         this.importConfigs = importConfigs == null ? new ArrayList<>()
-                : removeEmptyConfigs(importConfigs);
-    }
-
-    /**
-     * @return the list of configured test importers
-     */
-    @Nonnull
-    public List<TMSConfig> getImportConfigs() {
-        return Collections.unmodifiableList(importConfigs);
-    }
-
-    /**
-     * @param importConfigs
-     *            the list of configured test importers
-     */
-    @DataBoundSetter
-    public void setImportConfigs(@CheckForNull final List<TMSConfig> importConfigs) {
-        if (importConfigs != null) {
-            this.importConfigs.addAll(importConfigs);
-        }
+            : removeEmptyConfigs(importConfigs);
     }
 
     /**
      * Removes empty import configurations.
      *
-     * @param importConfigs
-     *            the import configurations
+     * @param importConfigs the import configurations
      * @return the list of valid import configurations
      */
     private static List<TMSConfig> removeEmptyConfigs(final List<TMSConfig> importConfigs) {
@@ -128,6 +107,24 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
             }
         }
         return validConfigs;
+    }
+
+    /**
+     * @return the list of configured test importers
+     */
+    @Nonnull
+    public List<TMSConfig> getImportConfigs() {
+        return Collections.unmodifiableList(importConfigs);
+    }
+
+    /**
+     * @param importConfigs the list of configured test importers
+     */
+    @DataBoundSetter
+    public void setImportConfigs(@CheckForNull final List<TMSConfig> importConfigs) {
+        if (importConfigs != null) {
+            this.importConfigs.addAll(importConfigs);
+        }
     }
 
     @Override
@@ -153,22 +150,16 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
     /**
      * Performs the test imports.
      *
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param run       the run
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
      * @return {@code true} if import succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean performImport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                  final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Check for running ECU-TEST instance
@@ -224,8 +215,7 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
         /**
          * Instantiates a {@link AbstractImportBuilder}.
          *
-         * @param clazz
-         *            the {@link AbstractImportBuilder} class name
+         * @param clazz the {@link AbstractImportBuilder} class name
          */
         public DescriptorImpl(final Class<? extends AbstractImportBuilder> clazz) {
             super(clazz);

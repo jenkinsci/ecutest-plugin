@@ -65,8 +65,7 @@ public abstract class AbstractATXReportHandler {
     /**
      * Instantiates a new {@code ATXReportUploader}.
      *
-     * @param installation
-     *            the ATX installation
+     * @param installation the ATX installation
      */
     public AbstractATXReportHandler(final ATXInstallation installation) {
         this.installation = installation;
@@ -82,8 +81,7 @@ public abstract class AbstractATXReportHandler {
     /**
      * Common {@link Callable} enabling generating and uploading ATX reports remotely.
      *
-     * @param <T>
-     *            the generic {@code Callable} return type
+     * @param <T> the generic {@code Callable} return type
      */
     protected abstract static class AbstractReportCallable<T> extends MasterToSlaveCallable<T, IOException> {
 
@@ -97,17 +95,13 @@ public abstract class AbstractATXReportHandler {
         /**
          * Instantiates a new {@link AbstractReportCallable}.
          *
-         * @param config
-         *            the ATX configuration
-         * @param reportFiles
-         *            the list of TRF files
-         * @param envVars
-         *            the environment variables
-         * @param listener
-         *            the listener
+         * @param config      the ATX configuration
+         * @param reportFiles the list of TRF files
+         * @param envVars     the environment variables
+         * @param listener    the listener
          */
         public AbstractReportCallable(final ATXConfig config, final List<FilePath> reportFiles, final EnvVars envVars,
-                final TaskListener listener) {
+                                      final TaskListener listener) {
             this.config = config;
             this.reportFiles = reportFiles;
             this.envVars = envVars;
@@ -132,8 +126,7 @@ public abstract class AbstractATXReportHandler {
          * Converts the ATX configuration to a map containing all setting names and their current value.
          * Parameterized values are expanded by given environment variables.
          *
-         * @param uploadToServer
-         *            specifies whether ATX upload is enabled or not
+         * @param uploadToServer specifies whether ATX upload is enabled or not
          * @return the configuration map
          */
         @SuppressWarnings("rawtypes")
@@ -146,7 +139,7 @@ public abstract class AbstractATXReportHandler {
                             configMap.put(setting.getName(), ATXSetting.toString(uploadToServer));
                         } else {
                             configMap.put(setting.getName(),
-                                    ATXSetting.toString(((ATXBooleanSetting) setting).getCurrentValue()));
+                                ATXSetting.toString(((ATXBooleanSetting) setting).getCurrentValue()));
                         }
                     } else {
                         configMap.put(setting.getName(), envVars.expand(((ATXTextSetting) setting).getCurrentValue()));
@@ -156,7 +149,7 @@ public abstract class AbstractATXReportHandler {
             for (final ATXCustomSetting setting : config.getCustomSettings()) {
                 if (setting instanceof ATXCustomBooleanSetting) {
                     configMap.put(setting.getName(),
-                            ATXSetting.toString(((ATXCustomBooleanSetting) setting).isChecked()));
+                        ATXSetting.toString(((ATXCustomBooleanSetting) setting).isChecked()));
                 } else if (setting instanceof ATXCustomTextSetting) {
                     configMap.put(setting.getName(), envVars.expand(((ATXCustomTextSetting) setting).getValue()));
                 }

@@ -68,7 +68,7 @@ public class ImportProjectBuilderIT extends IntegrationTestBase {
     @Before
     public void setUp() throws Exception {
         SystemCredentialsProvider.getInstance().getCredentials().add(new UsernamePasswordCredentialsImpl(
-                CredentialsScope.GLOBAL, "credentialsId", "test", "user", "password"));
+            CredentialsScope.GLOBAL, "credentialsId", "test", "user", "password"));
     }
 
     @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
@@ -275,10 +275,8 @@ public class ImportProjectBuilderIT extends IntegrationTestBase {
     /**
      * Asserts the pipeline step execution.
      *
-     * @param scriptName
-     *            the script name
-     * @throws Exception
-     *             the exception
+     * @param scriptName the script name
+     * @throws Exception the exception
      */
     private void assertPipelineStep(final String scriptName) throws Exception {
         assumeWindowsSlave();
@@ -294,10 +292,8 @@ public class ImportProjectBuilderIT extends IntegrationTestBase {
     /**
      * Performs a default configuration round-trip testing for a {@link ImportProjectBuilder}.
      *
-     * @param before
-     *            the instance before
-     * @throws Exception
-     *             the exception
+     * @param before the instance before
+     * @throws Exception the exception
      */
     private void testDefaultConfigRoundTripStep(final ImportProjectBuilder before) throws Exception {
         CoreStep step = new CoreStep(before);
@@ -312,10 +308,8 @@ public class ImportProjectBuilderIT extends IntegrationTestBase {
     /**
      * Performs a configuration round-trip testing for a {@link ImportProjectBuilder}.
      *
-     * @param before
-     *            the instance before
-     * @throws Exception
-     *             the exception
+     * @param before the instance before
+     * @throws Exception the exception
      */
     private void testConfigRoundTripStep(final ImportProjectBuilder before) throws Exception {
         CoreStep step = new CoreStep(before);
@@ -335,7 +329,7 @@ public class ImportProjectBuilderIT extends IntegrationTestBase {
     private ImportProjectBuilder createImportArchiveBuilder() {
         final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
         final ImportProjectArchiveConfig archiveConfig = new ImportProjectArchiveConfig("test.prz", "import", "import",
-                true);
+            true);
         importConfigs.add(archiveConfig);
         return new ImportProjectBuilder(importConfigs);
     }
@@ -348,7 +342,7 @@ public class ImportProjectBuilderIT extends IntegrationTestBase {
     private ImportProjectBuilder createImportProjectBuilder() {
         final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
         final ImportProjectConfig tmsConfig = new ImportProjectConfig("project", "import", true,
-                "credentialsId", "600");
+            "credentialsId", "600");
         importConfigs.add(tmsConfig);
         return new ImportProjectBuilder(importConfigs);
     }
@@ -361,7 +355,7 @@ public class ImportProjectBuilderIT extends IntegrationTestBase {
     private ImportProjectBuilder createImportProjectDirBuilder() {
         final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
         final ImportProjectDirConfig tmsDirConfig = new ImportProjectDirConfig(
-                "projectDir", "import", "credentialsId", "600");
+            "projectDir", "import", "credentialsId", "600");
         importConfigs.add(tmsDirConfig);
         return new ImportProjectBuilder(importConfigs);
     }
@@ -374,7 +368,7 @@ public class ImportProjectBuilderIT extends IntegrationTestBase {
     private ImportProjectBuilder createImportProjectAttributeBuilder() {
         final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
         final ImportProjectAttributeConfig attributeConfig = new ImportProjectAttributeConfig("test.prj",
-                "credentialsId", "600");
+            "credentialsId", "600");
         importConfigs.add(attributeConfig);
         return new ImportProjectBuilder(importConfigs);
     }

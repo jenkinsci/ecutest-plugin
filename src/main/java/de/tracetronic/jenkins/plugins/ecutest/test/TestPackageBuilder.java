@@ -63,8 +63,7 @@ public class TestPackageBuilder extends AbstractTestBuilder {
     /**
      * Instantiates a new {@link TestPackageBuilder}.
      *
-     * @param testFile
-     *            the package file
+     * @param testFile the package file
      */
     @DataBoundConstructor
     public TestPackageBuilder(@Nonnull final String testFile) {
@@ -80,8 +79,7 @@ public class TestPackageBuilder extends AbstractTestBuilder {
     }
 
     /**
-     * @param packageConfig
-     *            the package configuration
+     * @param packageConfig the package configuration
      */
     @DataBoundSetter
     public void setPackageConfig(@CheckForNull final PackageConfig packageConfig) {
@@ -90,15 +88,16 @@ public class TestPackageBuilder extends AbstractTestBuilder {
 
     @Override
     protected boolean runTest(final String testFile, final TestConfig testConfig,
-            final ExecutionConfig executionConfig, final Run<?, ?> run, final FilePath workspace,
-            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
+                              final ExecutionConfig executionConfig, final Run<?, ?> run, final FilePath workspace,
+                              final Launcher launcher, final TaskListener listener)
+        throws IOException, InterruptedException {
         // Expand package configuration
         final EnvVars buildEnv = run.getEnvironment(listener);
         final PackageConfig packageConfig = getPackageConfig().expand(buildEnv);
 
         // Run test case with package client
         final PackageClient testClient = new PackageClient(testFile, testConfig, packageConfig,
-                executionConfig);
+            executionConfig);
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo(String.format("Executing package %s...", testFile));
         if (testClient.runTestCase(workspace, launcher, listener)) {

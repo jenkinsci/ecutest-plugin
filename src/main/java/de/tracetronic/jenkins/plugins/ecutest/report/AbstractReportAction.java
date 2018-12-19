@@ -54,8 +54,7 @@ public abstract class AbstractReportAction extends AbstractRequestHandler implem
     /**
      * Instantiates a new {@link AbstractReportAction}.
      *
-     * @param projectLevel
-     *            specifies whether archiving is restricted to project level only
+     * @param projectLevel specifies whether archiving is restricted to project level only
      */
     public AbstractReportAction(final boolean projectLevel) {
         super();
@@ -99,8 +98,7 @@ public abstract class AbstractReportAction extends AbstractRequestHandler implem
     /**
      * Gets the last build with report artifacts in a project.
      *
-     * @param project
-     *            the project
+     * @param project the project
      * @return the last build with report artifacts or {@code null} if no proper build exists
      */
     @CheckForNull

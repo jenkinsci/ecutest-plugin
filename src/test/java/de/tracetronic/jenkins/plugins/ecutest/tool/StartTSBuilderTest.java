@@ -64,8 +64,7 @@ public class StartTSBuilderTest {
     /**
      * Asserts the builder properties.
      *
-     * @param builder
-     *            the builder
+     * @param builder the builder
      */
     private void assertBuilder(final StartTSBuilder builder) {
         assertNotNull(builder);

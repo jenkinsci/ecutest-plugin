@@ -67,7 +67,7 @@ public class StopETBuilderIT extends IntegrationTestBase {
     @Before
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
-                .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
     }
 
@@ -132,13 +132,14 @@ public class StopETBuilderIT extends IntegrationTestBase {
         project.getBuildersList().add(builder);
 
         final EnvVars envVars = new EnvVars(
-                Collections.unmodifiableMap(new HashMap<String, String>() {
+            Collections.unmodifiableMap(new HashMap<String, String>() {
 
-                    private static final long serialVersionUID = 1L;
-                    {
-                        put("ECUTEST", "ECU-TEST");
-                    }
-                }));
+                private static final long serialVersionUID = 1L;
+
+                {
+                    put("ECUTEST", "ECU-TEST");
+                }
+            }));
 
         assertEquals("Tool name should be resolved", "ECU-TEST", builder.getToolInstallation(envVars).getName());
     }
@@ -166,10 +167,8 @@ public class StopETBuilderIT extends IntegrationTestBase {
     /**
      * Asserts the pipeline step execution.
      *
-     * @param scriptName
-     *            the script name
-     * @throws Exception
-     *             the exception
+     * @param scriptName the script name
+     * @throws Exception the exception
      */
     private void assertPipelineStep(final String scriptName) throws Exception {
         assumeWindowsSlave();
@@ -178,7 +177,7 @@ public class StopETBuilderIT extends IntegrationTestBase {
         final FilePath rootPath = jenkins.jenkins.getRootPath();
         if (rootPath != null) {
             rootPath.child("\\plugins\\ecutest\\WEB-INF\\lib\\" + DllUtil.getLibraryFile(jenkins.jenkins.toComputer()))
-            .write();
+                .write();
         }
 
         final String script = loadPipelineScript(scriptName);

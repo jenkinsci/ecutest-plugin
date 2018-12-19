@@ -58,17 +58,13 @@ public abstract class AbstractArchiveFileReport extends AbstractTestReport {
     /**
      * Instantiates a new {@link AbstractArchiveFileReport}.
      *
-     * @param id
-     *            the id used in the report URL
-     * @param title
-     *            the report title
-     * @param fileName
-     *            the log file name
-     * @param fileSize
-     *            the log file size
+     * @param id       the id used in the report URL
+     * @param title    the report title
+     * @param fileName the log file name
+     * @param fileSize the log file size
      */
     public AbstractArchiveFileReport(final String id, final String title, final String fileName,
-            final long fileSize) {
+                                     final long fileSize) {
         super(id, title);
         this.fileName = fileName;
         this.fileSize = fileSize;
@@ -103,14 +99,10 @@ public abstract class AbstractArchiveFileReport extends AbstractTestReport {
     /**
      * Send contents of the archive file that is requested via HTTP.
      *
-     * @param req
-     *            the {@link StaplerRequest} used for access this report
-     * @param rsp
-     *            the {@link StaplerResponse} used for serving the file
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws ServletException
-     *             if serving the file failed
+     * @param req the {@link StaplerRequest} used for access this report
+     * @param rsp the {@link StaplerResponse} used for serving the file
+     * @throws IOException      signals that an I/O exception has occurred
+     * @throws ServletException if serving the file failed
      */
     public void doDynamic(final StaplerRequest req, final StaplerResponse rsp) throws IOException, ServletException {
         final Run<?, ?> build = getBuild(req);
@@ -126,19 +118,19 @@ public abstract class AbstractArchiveFileReport extends AbstractTestReport {
         final File archiveFile = new File(new File(rootDir, getArchiveDir()), getFileName());
         if (!archiveFile.exists()) {
             LOGGER.warning(String.format("Archive file does not exist: %s for %s", getFileName(),
-                    build.getFullDisplayName()));
+                build.getFullDisplayName()));
             rsp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
         if (!archiveFile.isFile()) {
             LOGGER.warning(String.format("Archive file is not a file: %s for %s", getFileName(),
-                    build.getFullDisplayName()));
+                build.getFullDisplayName()));
             rsp.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
 
         if (req.getDateHeader("If-Modified-Since") >= 0
-                && req.getDateHeader("If-Modified-Since") >= archiveFile.lastModified()) {
+            && req.getDateHeader("If-Modified-Since") >= archiveFile.lastModified()) {
             rsp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
             return;
         }

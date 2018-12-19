@@ -30,73 +30,75 @@
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:t="/lib/hudson">
-    <link type="text/css" href="${resURL}/plugin/ecutest/css/style.css" rel="stylesheet" />
-    <script type="text/javascript" src="${resURL}/plugin/ecutest/js/expand.js" />
-    <j:set var="testActions" value="${it.getTestEnvActions()}" />
+    <link type="text/css" href="${resURL}/plugin/ecutest/css/style.css" rel="stylesheet"/>
+    <script type="text/javascript" src="${resURL}/plugin/ecutest/js/expand.js"/>
+    <j:set var="testActions" value="${it.getTestEnvActions()}"/>
     <j:if test="${!empty(testActions)}">
         <t:summary icon="${it.iconFile}">
             <h3 class="results">${%parameters}</h3>
             <a href="#" class="expander">${%expand}</a>
             <div class="results">
-            <j:forEach var="action" items="${testActions}">
-                <j:set var="testId" value="${action.getTestId()}" />
-                <table class="pane" id="envAction">
-                    <colgroup>
-                        <col class="column-param" />
-                        <col class="column-value" />
-                    </colgroup>
-                    <tr class="parent" id="${testId}">
-                        <j:choose>
-                            <j:when test="${action.getTestType() == 'PACKAGE'}">
-                                <j:set var="extension" value=".pkg" />
-                            </j:when>
-                            <j:when test="${action.getTestType() == 'PROJECT'}">
-                                <j:set var="extension" value=".prj" />
-                            </j:when>
-                            <j:otherwise>
-                                <j:set var="extension" value="" />
-                            </j:otherwise>
-                        </j:choose>
-                        <td class="pane-header open ${action.getTestResult()}" colspan="3">${action.getTestName()}${extension}</td>
-                    </tr>
-                    <tr class="child-${testId}">
-                        <td class="tooltip" tooltip="${%name}">TT_TEST_NAME_${testId}</td>
-                        <td>${action.getTestName()}</td>
-                    </tr>
-                    <tr class="child-${testId}">
-                        <td class="tooltip" tooltip="${%file}">TT_TEST_FILE_${testId}</td>
-                        <td>${action.getTestFile()}</td>
-                    </tr>
-                    <tr class="child-${testId}">
-                        <td class="tooltip" tooltip="${%type}">TT_TEST_TYPE_${testId}</td>
-                        <td>${action.getTestType()}</td>
-                    </tr>
-                    <tr class="child-${testId}">
-                        <td class="tooltip" tooltip="${%description}">TT_TEST_DESCRIPTION_${testId}</td>
-                        <td>${action.getTestDescription()}</td>
-                    </tr>
-                    <tr class="child-${testId}">
-                        <td class="tooltip" tooltip="${%tbc}">TT_TEST_TBC_${testId}</td>
-                        <td>${action.getTestTbc()}</td>
-                    </tr>
-                    <tr class="child-${testId}">
-                        <td class="tooltip" tooltip="${%tcf}">TT_TEST_TCF_${testId}</td>
-                        <td>${action.getTestTcf()}</td>
-                    </tr>
-                    <tr class="child-${testId}">
-                        <td class="tooltip" tooltip="${%report}">TT_TEST_REPORT_${testId}</td>
-                        <td>${action.getTestReportDir()}</td>
-                    </tr>
-                    <tr class="child-${testId}">
-                        <td class="tooltip" tooltip="${%result}">TT_TEST_RESULT_${testId}</td>
-                        <td>${action.getTestResult()}</td>
-                    </tr>
-                    <tr class="child-${testId}">
-                        <td class="tooltip" tooltip="${%timeout}">TT_TEST_TIMEOUT_${testId}</td>
-                        <td>${action.getTimeout()}</td>
-                    </tr>
-                </table>
-            </j:forEach>
+                <j:forEach var="action" items="${testActions}">
+                    <j:set var="testId" value="${action.getTestId()}"/>
+                    <table class="pane" id="envAction">
+                        <colgroup>
+                            <col class="column-param"/>
+                            <col class="column-value"/>
+                        </colgroup>
+                        <tr class="parent" id="${testId}">
+                            <j:choose>
+                                <j:when test="${action.getTestType() == 'PACKAGE'}">
+                                    <j:set var="extension" value=".pkg"/>
+                                </j:when>
+                                <j:when test="${action.getTestType() == 'PROJECT'}">
+                                    <j:set var="extension" value=".prj"/>
+                                </j:when>
+                                <j:otherwise>
+                                    <j:set var="extension" value=""/>
+                                </j:otherwise>
+                            </j:choose>
+                            <td class="pane-header open ${action.getTestResult()}" colspan="3">
+                                ${action.getTestName()}${extension}
+                            </td>
+                        </tr>
+                        <tr class="child-${testId}">
+                            <td class="tooltip" tooltip="${%name}">TT_TEST_NAME_${testId}</td>
+                            <td>${action.getTestName()}</td>
+                        </tr>
+                        <tr class="child-${testId}">
+                            <td class="tooltip" tooltip="${%file}">TT_TEST_FILE_${testId}</td>
+                            <td>${action.getTestFile()}</td>
+                        </tr>
+                        <tr class="child-${testId}">
+                            <td class="tooltip" tooltip="${%type}">TT_TEST_TYPE_${testId}</td>
+                            <td>${action.getTestType()}</td>
+                        </tr>
+                        <tr class="child-${testId}">
+                            <td class="tooltip" tooltip="${%description}">TT_TEST_DESCRIPTION_${testId}</td>
+                            <td>${action.getTestDescription()}</td>
+                        </tr>
+                        <tr class="child-${testId}">
+                            <td class="tooltip" tooltip="${%tbc}">TT_TEST_TBC_${testId}</td>
+                            <td>${action.getTestTbc()}</td>
+                        </tr>
+                        <tr class="child-${testId}">
+                            <td class="tooltip" tooltip="${%tcf}">TT_TEST_TCF_${testId}</td>
+                            <td>${action.getTestTcf()}</td>
+                        </tr>
+                        <tr class="child-${testId}">
+                            <td class="tooltip" tooltip="${%report}">TT_TEST_REPORT_${testId}</td>
+                            <td>${action.getTestReportDir()}</td>
+                        </tr>
+                        <tr class="child-${testId}">
+                            <td class="tooltip" tooltip="${%result}">TT_TEST_RESULT_${testId}</td>
+                            <td>${action.getTestResult()}</td>
+                        </tr>
+                        <tr class="child-${testId}">
+                            <td class="tooltip" tooltip="${%timeout}">TT_TEST_TIMEOUT_${testId}</td>
+                            <td>${action.getTimeout()}</td>
+                        </tr>
+                    </table>
+                </j:forEach>
             </div>
         </t:summary>
     </j:if>

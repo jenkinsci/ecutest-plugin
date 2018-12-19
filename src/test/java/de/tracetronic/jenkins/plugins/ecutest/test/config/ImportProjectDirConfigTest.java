@@ -55,7 +55,7 @@ public class ImportProjectDirConfigTest {
     @Test
     public void testExpand() {
         final ImportProjectDirConfig config = new ImportProjectDirConfig("${PROJECT_DIR_PATH}", "${IMPORT_PATH}",
-                "${CREDENTIALS_ID}", "${TIMEOUT}");
+            "${CREDENTIALS_ID}", "${TIMEOUT}");
         final EnvVars envVars = new EnvVars();
         envVars.put("PROJECT_DIR_PATH", "projectDir");
         envVars.put("IMPORT_PATH", "import");

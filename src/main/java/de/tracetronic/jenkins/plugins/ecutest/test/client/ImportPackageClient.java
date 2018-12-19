@@ -66,8 +66,7 @@ public class ImportPackageClient extends AbstractTMSClient {
     /**
      * Instantiates a new {@link ImportPackageClient}.
      *
-     * @param importConfig
-     *            the import configuration
+     * @param importConfig the import configuration
      */
     public ImportPackageClient(final TMSConfig importConfig) {
         this.importConfig = importConfig;
@@ -83,27 +82,21 @@ public class ImportPackageClient extends AbstractTMSClient {
     /**
      * Imports a package according to given import configuration.
      *
-     * @param project
-     *            the project
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param project   the project
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
      * @return {@code true} if successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean importPackage(final Item project, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                 final TaskListener listener) throws IOException, InterruptedException {
         boolean isImported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = importConfig
-                        .getCredentials(project);
+                    .getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     if (importConfig instanceof ImportPackageDirConfig) {
                         isImported = importPackageDirFromTMS(launcher, listener);
@@ -121,27 +114,21 @@ public class ImportPackageClient extends AbstractTMSClient {
     /**
      * Imports a package attributes according to given import configuration.
      *
-     * @param project
-     *            the project
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param project   the project
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
      * @return {@code true} if successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean importPackageAttributes(final Item project, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                           final TaskListener listener) throws IOException, InterruptedException {
         boolean isImported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = importConfig
-                        .getCredentials(project);
+                    .getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isImported = importPackageAttributesFromTMS(launcher, listener);
                 }
@@ -155,58 +142,46 @@ public class ImportPackageClient extends AbstractTMSClient {
     /**
      * Imports a package from test management service.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true}, if import succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean importPackageFromTMS(final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         return launcher.getChannel().call(
-                new ImportPackageCallable((ImportPackageConfig) importConfig, listener));
+            new ImportPackageCallable((ImportPackageConfig) importConfig, listener));
     }
 
     /**
      * Imports a package directory from test management service.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true}, if import succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean importPackageDirFromTMS(final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         return launcher.getChannel().call(
-                new ImportPackageDirCallable((ImportPackageDirConfig) importConfig, listener));
+            new ImportPackageDirCallable((ImportPackageDirConfig) importConfig, listener));
     }
 
     /**
      * Imports a package attributes from test management service.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true}, if import succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean importPackageAttributesFromTMS(final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         return launcher.getChannel().call(
-                new ImportPackageAttributeCallable((ImportPackageAttributeConfig) importConfig, listener));
+            new ImportPackageAttributeCallable((ImportPackageAttributeConfig) importConfig, listener));
     }
 
     /**
@@ -222,10 +197,8 @@ public class ImportPackageClient extends AbstractTMSClient {
         /**
          * Instantiates a new {@link ImportPackageCallable}.
          *
-         * @param importConfig
-         *            the import configuration
-         * @param listener
-         *            the listener
+         * @param importConfig the import configuration
+         * @param listener     the listener
          */
         ImportPackageCallable(final ImportPackageConfig importConfig, final TaskListener listener) {
             this.importConfig = importConfig;
@@ -237,14 +210,14 @@ public class ImportPackageClient extends AbstractTMSClient {
             boolean isImported = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo(String.format("- Importing package %s from test management system...",
-                    importConfig.getTmsPath()));
+                importConfig.getTmsPath()));
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 if (isImported = tm.importPackage(importConfig.getTmsPath(), importConfig.getImportPath(),
-                        importConfig.getParsedTimeout())) {
+                    importConfig.getParsedTimeout())) {
                     logger.logInfo(String.format("-> Package imported successfully to target directory %s.",
-                            importConfig.getImportPath()));
+                        importConfig.getImportPath()));
                 }
             } catch (final ETComException e) {
                 logger.logError("-> Importing package failed: " + e.getMessage());
@@ -266,10 +239,8 @@ public class ImportPackageClient extends AbstractTMSClient {
         /**
          * Instantiates a new {@link ImportPackageCallable}.
          *
-         * @param importConfig
-         *            the import configuration
-         * @param listener
-         *            the listener
+         * @param importConfig the import configuration
+         * @param listener     the listener
          */
         ImportPackageDirCallable(final ImportPackageDirConfig importConfig, final TaskListener listener) {
             this.importConfig = importConfig;
@@ -281,14 +252,14 @@ public class ImportPackageClient extends AbstractTMSClient {
             boolean isImported = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo(String.format("- Importing package directory %s from test management system...",
-                    importConfig.getTmsPath()));
+                importConfig.getTmsPath()));
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 isImported = tm.importPackageDirectory(importConfig.getTmsPath(), importConfig.getImportPath(),
-                        importConfig.getParsedTimeout());
+                    importConfig.getParsedTimeout());
                 logger.logInfo(String.format("-> Package directory imported successfully to target directory %s.",
-                        importConfig.getImportPath()));
+                    importConfig.getImportPath()));
             } catch (final ETComException e) {
                 logger.logError("-> Importing package directory failed: " + e.getMessage());
             }
@@ -309,10 +280,8 @@ public class ImportPackageClient extends AbstractTMSClient {
         /**
          * Instantiates a new {@link ImportPackageCallable}.
          *
-         * @param importConfig
-         *            the import configuration
-         * @param listener
-         *            the listener
+         * @param importConfig the import configuration
+         * @param listener     the listener
          */
         ImportPackageAttributeCallable(final ImportPackageAttributeConfig importConfig, final TaskListener listener) {
             this.importConfig = importConfig;
@@ -324,7 +293,7 @@ public class ImportPackageClient extends AbstractTMSClient {
             boolean isImported = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo(String.format("- Importing attributes of package %s from test management system...",
-                    importConfig.getFilePath()));
+                importConfig.getFilePath()));
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();

@@ -34,22 +34,12 @@ import de.tracetronic.jenkins.plugins.ecutest.test.client.PackageClient;
 import hudson.model.InvisibleAction;
 
 /**
- * Helper invisible action which is used for exchanging information between {@link AbstractTestClient}s and other object
- * like {@link TestEnvContributor}.
+ * Helper invisible action which is used for exchanging information between {@link AbstractTestClient}s
+ * and other objects like {@link TestEnvContributor}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestEnvInvisibleAction extends InvisibleAction {
-
-    /**
-     * Defines the test type.
-     */
-    public enum TestType {
-        /**
-         * ECU-TEST package or project type.
-         */
-        PACKAGE, PROJECT
-    }
 
     private final int testId;
     private final String testName;
@@ -61,15 +51,12 @@ public class TestEnvInvisibleAction extends InvisibleAction {
     private final String testReportDir;
     private final String testResult;
     private final int timeout;
-
     /**
      * Instantiates a new {@link TestEnvInvisibleAction}.
      *
-     * @param testId
-     *            identifies this invisible action and is used as the suffix for the test related build environment
-     *            variables
-     * @param testClient
-     *            the test client holding the relevant information
+     * @param testId     identifies this invisible action and is used as the suffix
+     *                   for the test related build environment variables
+     * @param testClient the test client holding the relevant information
      */
     public TestEnvInvisibleAction(final int testId, final AbstractTestClient testClient) {
         super();
@@ -89,73 +76,53 @@ public class TestEnvInvisibleAction extends InvisibleAction {
         timeout = testClient.getExecutionConfig().getParsedTimeout();
     }
 
-    /**
-     * @return the test id
-     */
     public int getTestId() {
         return testId;
     }
 
-    /**
-     * @return the test name
-     */
     public String getTestName() {
         return testName;
     }
 
-    /**
-     * @return the test type
-     */
     public TestType getTestType() {
         return testType;
     }
 
-    /**
-     * @return the test description
-     */
     public String getTestDescription() {
         return testDescription;
     }
 
-    /**
-     * @return the test file
-     */
     public String getTestFile() {
         return testFile;
     }
 
-    /**
-     * @return the test bench configuration
-     */
     public String getTestTbc() {
         return testTbc;
     }
 
-    /**
-     * @return the test configuration
-     */
     public String getTestTcf() {
         return testTcf;
     }
 
-    /**
-     * @return the test report directory
-     */
     public String getTestReportDir() {
         return testReportDir;
     }
 
-    /**
-     * @return the test result
-     */
     public String getTestResult() {
         return testResult;
     }
 
-    /**
-     * @return the timeout
-     */
     public int getTimeout() {
         return timeout;
+    }
+
+    /**
+     * Defines the test type.
+     */
+    public enum TestType {
+        /**
+         * ECU-TEST package or project type.
+         */
+        PACKAGE, PROJECT
     }
 }

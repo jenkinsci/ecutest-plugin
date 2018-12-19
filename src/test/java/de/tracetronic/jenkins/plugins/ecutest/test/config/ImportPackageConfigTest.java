@@ -55,7 +55,7 @@ public class ImportPackageConfigTest {
     @Test
     public void testExpand() {
         final ImportPackageConfig config = new ImportPackageConfig("${PACKAGE_PATH}", "${IMPORT_PATH}",
-                "${CREDENTIALS_ID}", "${TIMEOUT}");
+            "${CREDENTIALS_ID}", "${TIMEOUT}");
         final EnvVars envVars = new EnvVars();
         envVars.put("PACKAGE_PATH", "package");
         envVars.put("IMPORT_PATH", "import");

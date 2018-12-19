@@ -44,15 +44,14 @@ import java.util.List;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorBuildAction extends AbstractReportGeneratorAction implements
-        SimpleBuildStep.LastBuildAction {
+    SimpleBuildStep.LastBuildAction {
 
     private final List<GeneratorReport> generatorReports = new ArrayList<>();
 
     /**
      * Instantiates a new {@link ReportGeneratorBuildAction}.
      *
-     * @param projectLevel
-     *            specifies whether archiving is restricted to project level only
+     * @param projectLevel specifies whether archiving is restricted to project level only
      */
     public ReportGeneratorBuildAction(final boolean projectLevel) {
         super(projectLevel);
@@ -70,8 +69,7 @@ public class ReportGeneratorBuildAction extends AbstractReportGeneratorAction im
     /**
      * Adds a generator report.
      *
-     * @param report
-     *            the generator report to add
+     * @param report the generator report to add
      * @return {@code true} if successful, {@code false} otherwise
      */
     public boolean add(final GeneratorReport report) {
@@ -81,8 +79,7 @@ public class ReportGeneratorBuildAction extends AbstractReportGeneratorAction im
     /**
      * Adds a bundle of generator reports.
      *
-     * @param reports
-     *            the collection of generator reports
+     * @param reports the collection of generator reports
      * @return {@code true} if successful, {@code false} otherwise
      */
     public boolean addAll(final Collection<GeneratorReport> reports) {
@@ -92,8 +89,7 @@ public class ReportGeneratorBuildAction extends AbstractReportGeneratorAction im
     /**
      * Returns {@link GeneratorReport} specified by the URL.
      *
-     * @param token
-     *            the URL token
+     * @param token the URL token
      * @return the {@link GeneratorReport} or {@code null} if no proper report exists
      */
     public AbstractTestReport getDynamic(final String token) {
@@ -114,10 +110,8 @@ public class ReportGeneratorBuildAction extends AbstractReportGeneratorAction im
      * Traverses the sub-reports recursively and searches
      * for the {@link GeneratorReport} matching the given token id.
      *
-     * @param token
-     *            the token id
-     * @param report
-     *            the report
+     * @param token  the token id
+     * @param report the report
      * @return the {@link GeneratorReport} or {@code null} if no proper report exists
      */
     private GeneratorReport traverseSubReports(final String token, final GeneratorReport report) {

@@ -67,8 +67,7 @@ public abstract class AbstractDslExtensionIT extends IntegrationTestBase {
      * Creates the test job.
      *
      * @return the test job
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     protected FreeStyleProject createTestJob() throws Exception {
         buildSeedJob(getDslScript());
@@ -81,11 +80,9 @@ public abstract class AbstractDslExtensionIT extends IntegrationTestBase {
     /**
      * Builds the seed job which generates the test job.
      *
-     * @param dslScript
-     *            the DSL script
+     * @param dslScript the DSL script
      * @return the test job
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     private FreeStyleProject buildSeedJob(final String dslScript) throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();

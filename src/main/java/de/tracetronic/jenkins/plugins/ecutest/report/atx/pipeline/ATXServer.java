@@ -53,8 +53,7 @@ public class ATXServer implements Serializable {
     /**
      * Instantiates a new {@link ATXServer}.
      *
-     * @param installation
-     *            the ATX installation
+     * @param installation the ATX installation
      */
     public ATXServer(final ATXInstallation installation) {
         this.installation = installation;
@@ -70,8 +69,7 @@ public class ATXServer implements Serializable {
     /**
      * Sets the pipeline script.
      *
-     * @param script
-     *            the pipeline script
+     * @param script the pipeline script
      */
     public void setScript(final CpsScript script) {
         this.script = script;
@@ -88,18 +86,14 @@ public class ATXServer implements Serializable {
     /**
      * Publishes ATX reports with given archiving settings.
      *
-     * @param allowMissing
-     *            the allow missing
-     * @param runOnFailed
-     *            the run on failed
-     * @param archiving
-     *            the archiving
-     * @param keepAll
-     *            the keep all
+     * @param allowMissing the allow missing
+     * @param runOnFailed  the run on failed
+     * @param archiving    the archiving
+     * @param keepAll      the keep all
      */
     @Whitelisted
     public void publish(final boolean allowMissing, final boolean runOnFailed,
-            final boolean archiving, final boolean keepAll) {
+                        final boolean archiving, final boolean keepAll) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
         stepVariables.put("installation", installation);
         stepVariables.put("allowMissing", allowMissing);

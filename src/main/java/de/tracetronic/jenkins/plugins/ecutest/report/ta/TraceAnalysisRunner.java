@@ -56,48 +56,36 @@ public class TraceAnalysisRunner {
     /**
      * Runs the trace analysis.
      *
-     * @param analysisFiles
-     *            the analysis files
-     * @param createReportDir
-     *            specifies whether to create a new report directory
-     * @param timeout
-     *            the timeout
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param analysisFiles   the analysis files
+     * @param createReportDir specifies whether to create a new report directory
+     * @param timeout         the timeout
+     * @param launcher        the launcher
+     * @param listener        the listener
      * @return the list of successfully generated analysis reports
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
      */
     public List<FilePath> runAnalysis(final List<FilePath> analysisFiles, final boolean createReportDir,
-            final int timeout,
-            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
+                                      final int timeout, final Launcher launcher, final TaskListener listener)
+        throws IOException, InterruptedException {
         return launcher.getChannel().call(
-                new TraceAnalysisCallable(analysisFiles, createReportDir, timeout, listener));
+            new TraceAnalysisCallable(analysisFiles, createReportDir, timeout, listener));
     }
 
     /**
      * Merges the analysis reports into the main report.
      *
-     * @param mainReport
-     *            the main report
-     * @param reportFiles
-     *            the analysis report files to merge
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param mainReport  the main report
+     * @param reportFiles the analysis report files to merge
+     * @param launcher    the launcher
+     * @param listener    the listener
      * @return {@code true} if merge was successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
      */
     public boolean mergeReports(final FilePath mainReport, final List<FilePath> reportFiles,
-            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
+                                final Launcher launcher, final TaskListener listener)
+        throws IOException, InterruptedException {
         return launcher.getChannel().call(new MergeReportsCallable(mainReport, reportFiles, listener));
     }
 
@@ -116,17 +104,13 @@ public class TraceAnalysisRunner {
         /**
          * Instantiates a new {@link TraceAnalysisCallable}.
          *
-         * @param jobFiles
-         *            the list of analysis files
-         * @param createReportDir
-         *            specifies whether to create a new report directory
-         * @param timeout
-         *            the timeout running each trace analysis
-         * @param listener
-         *            the listener
+         * @param jobFiles        the list of analysis files
+         * @param createReportDir specifies whether to create a new report directory
+         * @param timeout         the timeout running each trace analysis
+         * @param listener        the listener
          */
         TraceAnalysisCallable(final List<FilePath> jobFiles, final boolean createReportDir,
-                final int timeout, final TaskListener listener) {
+                              final int timeout, final TaskListener listener) {
             this.jobFiles = jobFiles;
             this.createReportDir = createReportDir;
             this.timeout = timeout;
@@ -139,11 +123,11 @@ public class TraceAnalysisRunner {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
-                    AnalysisEnvironment analysisEnv = (AnalysisEnvironment) comClient.getAnalysisEnvironment()) {
+                 AnalysisEnvironment analysisEnv = (AnalysisEnvironment) comClient.getAnalysisEnvironment()) {
                 for (final FilePath jobFile : jobFiles) {
                     logger.logInfo(String.format("- Running trace analysis: %s", jobFile.getRemote()));
                     final AnalysisExecutionInfo execInfo =
-                            (AnalysisExecutionInfo) analysisEnv.executeJob(jobFile.getRemote(), createReportDir);
+                        (AnalysisExecutionInfo) analysisEnv.executeJob(jobFile.getRemote(), createReportDir);
                     int tickCounter = 0;
                     final long endTimeMillis = System.currentTimeMillis() + (long) timeout * 1000L;
                     while ("RUNNING".equals(execInfo.getState())) {
@@ -152,7 +136,7 @@ public class TraceAnalysisRunner {
                         }
                         if (timeout > 0 && System.currentTimeMillis() > endTimeMillis) {
                             logger.logWarn(String.format("-> Analysis execution timeout of %d seconds reached! "
-                                    + "Aborting trace analysis now...", timeout));
+                                + "Aborting trace analysis now...", timeout));
                             execInfo.abort();
                             break;
                         }
@@ -171,15 +155,12 @@ public class TraceAnalysisRunner {
         /**
          * Gets the information of the executed package.
          *
-         * @param execInfo
-         *            the execution info
-         * @param logger
-         *            the logger
-         * @throws ETComException
-         *             in case of a COM exception
+         * @param execInfo the execution info
+         * @param logger   the logger
+         * @throws ETComException in case of a COM exception
          */
         private void getTestInfo(final AnalysisExecutionInfo execInfo, final TTConsoleLogger logger)
-                throws ETComException {
+            throws ETComException {
             final String testResult = execInfo.getResult();
             logger.logInfo(String.format("-> Analysis execution completed with result: %s", testResult));
             final String testReportDir = new File(execInfo.getReportDb()).getParentFile().getAbsolutePath();
@@ -201,12 +182,9 @@ public class TraceAnalysisRunner {
         /**
          * Instantiates a new {@link MergeReportsCallable}.
          *
-         * @param mainReport
-         *            the main report
-         * @param jobReports
-         *            the job reports
-         * @param listener
-         *            the listener
+         * @param mainReport the main report
+         * @param jobReports the job reports
+         * @param listener   the listener
          */
         MergeReportsCallable(final FilePath mainReport, final List<FilePath> jobReports, final TaskListener listener) {
             this.mainReport = mainReport;
@@ -220,10 +198,10 @@ public class TraceAnalysisRunner {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
-                    AnalysisEnvironment analysisEnv = (AnalysisEnvironment) comClient.getAnalysisEnvironment()) {
+                 AnalysisEnvironment analysisEnv = (AnalysisEnvironment) comClient.getAnalysisEnvironment()) {
                 final List<String> jobFiles = getJobFiles(jobReports);
                 logger.logInfo(String.format("- Merging analysis reports into main report: %s",
-                        mainReport.getRemote()));
+                    mainReport.getRemote()));
                 isMerged = analysisEnv.mergeJobReports(mainReport.getRemote(), jobFiles);
             } catch (final ETComException e) {
                 isMerged = false;
@@ -235,8 +213,7 @@ public class TraceAnalysisRunner {
         /**
          * Gets the list job files with their absolute file paths.
          *
-         * @param jobReports
-         *            the job reports
+         * @param jobReports the job reports
          * @return the list of job files
          */
         private List<String> getJobFiles(final List<FilePath> jobReports) {

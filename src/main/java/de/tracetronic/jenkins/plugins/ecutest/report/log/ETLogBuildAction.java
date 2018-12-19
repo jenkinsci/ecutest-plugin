@@ -50,8 +50,7 @@ public class ETLogBuildAction extends AbstractETLogAction implements SimpleBuild
     /**
      * Instantiates a new {@link ETLogBuildAction}.
      *
-     * @param projectLevel
-     *            specifies whether archiving is restricted to project level only
+     * @param projectLevel specifies whether archiving is restricted to project level only
      */
     public ETLogBuildAction(final boolean projectLevel) {
         super(projectLevel);
@@ -69,8 +68,7 @@ public class ETLogBuildAction extends AbstractETLogAction implements SimpleBuild
     /**
      * Adds a ECU-TEST log report.
      *
-     * @param report
-     *            the ECU-TEST log report to add
+     * @param report the ECU-TEST log report to add
      * @return {@code true} if successful, {@code false} otherwise
      */
     public boolean add(final ETLogReport report) {
@@ -80,8 +78,7 @@ public class ETLogBuildAction extends AbstractETLogAction implements SimpleBuild
     /**
      * Adds a bundle of ECU-TEST log reports.
      *
-     * @param reports
-     *            the collection of ECU-TEST log reports
+     * @param reports the collection of ECU-TEST log reports
      * @return {@code true} if successful, {@code false} otherwise
      */
     public boolean addAll(final Collection<ETLogReport> reports) {
@@ -91,8 +88,7 @@ public class ETLogBuildAction extends AbstractETLogAction implements SimpleBuild
     /**
      * Returns {@link ETLogReport} specified by the URL.
      *
-     * @param token
-     *            the URL token
+     * @param token the URL token
      * @return the {@link ETLogReport} or {@code null} if no proper report exists
      */
     public ETLogReport getDynamic(final String token) {
@@ -113,10 +109,8 @@ public class ETLogBuildAction extends AbstractETLogAction implements SimpleBuild
      * Traverses the sub-reports recursively and searches
      * for the {@link ETLogReport} matching the given token id.
      *
-     * @param token
-     *            the token id
-     * @param report
-     *            the report
+     * @param token  the token id
+     * @param report the report
      * @return the {@link ETLogReport} or {@code null} if no proper report exists
      */
     private ETLogReport traverseSubReports(final String token, final ETLogReport report) {

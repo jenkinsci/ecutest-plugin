@@ -60,10 +60,8 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
     /**
      * Instantiates a new {@link ETToolProperty}.
      *
-     * @param progId
-     *            the programmatic identifier
-     * @param timeout
-     *            the timeout
+     * @param progId  the programmatic identifier
+     * @param timeout the timeout
      */
     @DataBoundConstructor
     public ETToolProperty(final String progId, final int timeout) {
@@ -83,7 +81,7 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
 
     /**
      * Gets the current maximum COM response timeout.
-     * 
+     *
      * @return the timeout
      */
     public int getTimeout() {
@@ -126,8 +124,7 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
         /**
          * Validates the ECU-TEST specific programmatic identifier.
          *
-         * @param value
-         *            the programmatic identifier
+         * @param value the programmatic identifier
          * @return the form validation
          */
         public FormValidation doCheckProgId(@QueryParameter final String value) {

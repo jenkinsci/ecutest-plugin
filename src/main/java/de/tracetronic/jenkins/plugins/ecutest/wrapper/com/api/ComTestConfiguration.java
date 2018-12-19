@@ -43,12 +43,9 @@ public interface ComTestConfiguration {
      * test configuration file to be loaded, otherwise an exception is thrown. The changed test configuration is saved
      * instantly.
      *
-     * @param name
-     *            the name of the constant to be modified
-     * @param value
-     *            the value to be assigned
-     * @throws ETComException
-     *             in case of a COM exception
+     * @param name  the name of the constant to be modified
+     * @param value the value to be assigned
+     * @throws ETComException in case of a COM exception
      */
     void setGlobalConstant(String name, String value) throws ETComException;
 
@@ -56,8 +53,7 @@ public interface ComTestConfiguration {
      * Queries all global constants of the currently loaded test configuration.
      *
      * @return the global constants
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     ComConstants getGlobalConstants() throws ETComException;
 
@@ -65,8 +61,7 @@ public interface ComTestConfiguration {
      * Returns the full path of this test configuration.
      *
      * @return the TCF file path
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     String getFileName() throws ETComException;
 

@@ -70,8 +70,7 @@ public final class ProcessUtil {
     /**
      * Check the ECU-TEST processes and kills them if appropriate.
      *
-     * @param kill
-     *            specifies whether to task-kill the running processes
+     * @param kill specifies whether to task-kill the running processes
      * @return the list of found or killed processes
      */
     public static List<String> checkETProcesses(final boolean kill) {
@@ -81,8 +80,7 @@ public final class ProcessUtil {
     /**
      * Check the Tool-Server processes and kills them if appropriate.
      *
-     * @param kill
-     *            specifies whether to task-kill the running processes
+     * @param kill specifies whether to task-kill the running processes
      * @return the list of found or killed processes
      */
     public static List<String> checkTSProcess(final boolean kill) {
@@ -92,10 +90,8 @@ public final class ProcessUtil {
     /**
      * Checks a list of processes and kills them if appropriate.
      *
-     * @param processes
-     *            the list of processes to check
-     * @param kill
-     *            specifies whether to task-kill the running processes
+     * @param processes the list of processes to check
+     * @param kill      specifies whether to task-kill the running processes
      * @return the list of found or killed processes
      */
     private static List<String> checkProcesses(final List<String> processes, final boolean kill) {
@@ -122,8 +118,7 @@ public final class ProcessUtil {
     /**
      * Kills this process and all the descendant processes that this process launched.
      *
-     * @param process
-     *            the process to kill
+     * @param process the process to kill
      */
     private static void killProcess(final WinProcess process) {
         process.killRecursively();
@@ -134,30 +129,26 @@ public final class ProcessUtil {
      * <p>
      * Most of the builders and publishers implemented by this plugin require to run on Windows.
      *
-     * @param launcher
-     *            the launcher
-     * @throws ETPluginException
-     *             if Unix-based launcher
+     * @param launcher the launcher
+     * @throws ETPluginException if Unix-based launcher
      */
     public static void checkOS(final Launcher launcher) throws ETPluginException {
         if (launcher.isUnix()) {
             throw new ETPluginException("Trying to build Windows related configuration on an Unix-based system! "
-                    + "Restrict the project to be built on a particular Windows slave or master.");
+                + "Restrict the project to be built on a particular Windows slave or master.");
         }
     }
 
     /**
      * From https://stackoverflow.com/a/35418180
-     * 
+     * <p>
      * Reads the .exe file to find headers that tell us if the file is 32 or 64 bit.
-     * 
+     * <p>
      * Note: Assumes byte pattern 0x50, 0x45, 0x00, 0x00 just before the byte that tells us the architecture.
-     * 
-     * @param filePath
-     *            fully qualified .exe file path.
+     *
+     * @param filePath fully qualified .exe file path.
      * @return {@code true} if the file is a 64-bit executable, {@code false} otherwise.
-     * @throws IOException
-     *             if there is a problem reading the file or the file does not end in .exe.
+     * @throws IOException if there is a problem reading the file or the file does not end in .exe.
      */
     @SuppressWarnings("checkstyle:booleanexpressioncomplexity")
     public static boolean is64BitExecutable(final String filePath) throws IOException {
@@ -170,10 +161,10 @@ public final class ProcessUtil {
             final int bytesRead = input.read(fileData);
             for (int i = 0; i < bytesRead; i++) {
                 if (fileData[i] == 0x50
-                        && i + 5 < bytesRead
-                        && fileData[i + 1] == 0x45
-                        && fileData[i + 2] == 0
-                        && fileData[i + 3] == 0) {
+                    && i + 5 < bytesRead
+                    && fileData[i + 1] == 0x45
+                    && fileData[i + 2] == 0
+                    && fileData[i + 3] == 0) {
                     return fileData[i + 4] == 0x64;
                 }
             }
@@ -184,13 +175,10 @@ public final class ProcessUtil {
     /**
      * Checks whether the underlying JVM supports 64-bit architecture.
      *
-     * @param computer
-     *            the computer
+     * @param computer the computer
      * @return {@code true} 64-bit architecture is supported, {@code false} otherwise.
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public static boolean is64BitJVM(final Computer computer) throws IOException, InterruptedException {
         if (computer == null) {

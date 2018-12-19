@@ -62,7 +62,7 @@ public class EnvUtilTest {
     @Test
     public void testMultipleExpandedEnvVar() {
         final String expanded = EnvUtil.expandEnvVar("${test}${var}",
-                new EnvVars("test", "expandedTest", "var", "123"), "default");
+            new EnvVars("test", "expandedTest", "var", "123"), "default");
         assertEquals("Should expand using multiple env vars", "expandedTest123", expanded);
     }
 }

@@ -51,18 +51,14 @@ public class ImportPackageConfig extends ImportConfig {
     /**
      * Instantiates a new {@link ImportPackageConfig}.
      *
-     * @param tmsPath
-     *            the package path in test management system
-     * @param importPath
-     *            the import path
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the import timeout
+     * @param tmsPath       the package path in test management system
+     * @param importPath    the import path
+     * @param credentialsId the credentials id
+     * @param timeout       the import timeout
      */
     @DataBoundConstructor
     public ImportPackageConfig(final String tmsPath, final String importPath,
-            final String credentialsId, final String timeout) {
+                               final String credentialsId, final String timeout) {
         super(tmsPath, importPath, credentialsId, timeout);
     }
 

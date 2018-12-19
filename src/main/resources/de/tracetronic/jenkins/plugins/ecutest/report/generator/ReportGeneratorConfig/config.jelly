@@ -33,19 +33,19 @@
     <f:entry title="${%generator.name}" field="name">
         <j:choose>
             <j:when test="${customGenerator}">
-                <f:textbox />
+                <f:textbox/>
             </j:when>
             <j:otherwise>
-                <f:select />
+                <f:select/>
             </j:otherwise>
         </j:choose>
     </f:entry>
     <f:entry title="${%settings.title}" description="${%settings.description}" field="settings">
-        <f:repeatableProperty field="settings" add="${%setting.add}" header="${%setting.header}" minimum="0" />
+        <f:repeatableProperty field="settings" add="${%setting.add}" header="${%setting.header}" minimum="0"/>
     </f:entry>
     <f:entry title="">
         <div align="right">
-            <f:repeatableDeleteButton value="${%generator.delete}" />
+            <f:repeatableDeleteButton value="${%generator.delete}"/>
         </div>
     </f:entry>
 </j:jelly>

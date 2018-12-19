@@ -72,7 +72,7 @@ public class ExportPackageBuilderTest {
         exportConfigs.add(exportConfig);
         final ExportPackageBuilder builder = new ExportPackageBuilder(exportConfigs);
         assertThat(builder.getExportConfigs(), hasSize(1));
-        assertThat((ExportPackageConfig) builder.getExportConfigs().get(0), sameInstance(exportConfig));
+        assertThat(builder.getExportConfigs().get(0), sameInstance(exportConfig));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class ExportPackageBuilderTest {
         exportConfigs.add(attributeConfig);
         final ExportPackageBuilder builder = new ExportPackageBuilder(exportConfigs);
         assertThat(builder.getExportConfigs(), hasSize(1));
-        assertThat((ExportPackageAttributeConfig) builder.getExportConfigs().get(0), sameInstance(attributeConfig));
+        assertThat(builder.getExportConfigs().get(0), sameInstance(attributeConfig));
     }
 
     @Test

@@ -87,16 +87,21 @@ public class TMSPublisher extends AbstractReportPublisher {
     /**
      * Instantiates a new {@link TMSPublisher}.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param credentialsId
-     *            the credentials id
+     * @param toolName      the tool name identifying the {@link ETInstallation} to be used
+     * @param credentialsId the credentials id
      */
     @DataBoundConstructor
     public TMSPublisher(@Nonnull final String toolName, @Nonnull final String credentialsId) {
         super();
         this.toolName = StringUtils.trimToEmpty(toolName);
         this.credentialsId = StringUtils.trimToEmpty(credentialsId);
+    }
+
+    /**
+     * @return the default timeout
+     */
+    public static int getDefaultTimeout() {
+        return DEFAULT_TIMEOUT;
     }
 
     /**
@@ -116,15 +121,6 @@ public class TMSPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * @param timeout
-     *            the timeout
-     */
-    @DataBoundSetter
-    public void setTimeout(@CheckForNull final String timeout) {
-        this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(getDefaultTimeout()));
-    }
-
-    /**
      * @return the export timeout
      */
     @Nonnull
@@ -133,15 +129,16 @@ public class TMSPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * @return the default timeout
+     * @param timeout the timeout
      */
-    public static int getDefaultTimeout() {
-        return DEFAULT_TIMEOUT;
+    @DataBoundSetter
+    public void setTimeout(@CheckForNull final String timeout) {
+        this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(getDefaultTimeout()));
     }
 
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
+                              final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = getLogger();
         logger.logInfo("Publishing reports to test management system...");
 
@@ -180,26 +177,20 @@ public class TMSPublisher extends AbstractReportPublisher {
     /**
      * Publishes the reports to the test management system.
      *
-     * @param reportFiles
-     *            the report files
-     * @param project
-     *            the project
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param reportFiles the report files
+     * @param project     the project
+     * @param workspace   the workspace
+     * @param launcher    the launcher
+     * @param listener    the listener
      * @return {@code true}, if upload succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean publishReports(final List<FilePath> reportFiles, final Item project, final FilePath workspace,
-            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
+                                   final Launcher launcher, final TaskListener listener)
+        throws IOException, InterruptedException {
         return new TMSReportUploader().upload(reportFiles, credentialsId, timeout, project, workspace, launcher,
-                listener);
+            listener);
     }
 
     @Override
@@ -236,8 +227,7 @@ public class TMSPublisher extends AbstractReportPublisher {
         /**
          * Validates the timeout.
          *
-         * @param value
-         *            the timeout
+         * @param value the timeout
          * @return the form validation
          */
         public FormValidation doCheckTimeout(@QueryParameter final String value) {
@@ -247,14 +237,12 @@ public class TMSPublisher extends AbstractReportPublisher {
         /**
          * Fills the credentials drop-down menu.
          *
-         * @param item
-         *            the item
-         * @param credentialsId
-         *            the credentials id
+         * @param item          the item
+         * @param credentialsId the credentials id
          * @return the credentials items
          */
         public ListBoxModel doFillCredentialsIdItems(@AncestorInPath final Item item,
-                @QueryParameter final String credentialsId) {
+                                                     @QueryParameter final String credentialsId) {
             final StandardListBoxModel result = new StandardListBoxModel();
             if (item == null) {
                 if (!Jenkins.getInstance().hasPermission(Jenkins.ADMINISTER)) {
@@ -262,15 +250,15 @@ public class TMSPublisher extends AbstractReportPublisher {
                 }
             } else {
                 if (!item.hasPermission(Item.EXTENDED_READ)
-                        && !item.hasPermission(CredentialsProvider.USE_ITEM)) {
+                    && !item.hasPermission(CredentialsProvider.USE_ITEM)) {
                     return result.includeCurrentValue(credentialsId);
                 }
             }
             return result
-                    .includeEmptyValue()
-                    .includeMatchingAs(ACL.SYSTEM, item, StandardCredentials.class,
-                            Collections.emptyList(),
-                            CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class));
+                .includeEmptyValue()
+                .includeMatchingAs(ACL.SYSTEM, item, StandardCredentials.class,
+                    Collections.emptyList(),
+                    CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class));
         }
 
         @Nonnull

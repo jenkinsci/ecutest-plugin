@@ -40,25 +40,36 @@ import java.io.Serializable;
  */
 public final class ETComProperty implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     /**
      * Default COM specific programmatic identifier.
      */
     public static final String DEFAULT_PROG_ID = "ECU-TEST.Application";
-
     /**
      * Default COM response timeout in seconds.
      */
     public static final int DEFAULT_TIMEOUT = 0;
-
     /**
      * Default COM connection timeout in seconds.
      */
     public static final int DEFAULT_CONNECTION_TIMEOUT = 120;
-
+    private static final long serialVersionUID = 1L;
     private String progId = DEFAULT_PROG_ID;
     private int timeout = DEFAULT_TIMEOUT;
+
+    /**
+     * Private constructor.
+     */
+    private ETComProperty() {
+    }
+
+    /**
+     * Returns the current instance of {@link ETComProperty}.
+     *
+     * @return the singleton instance
+     */
+    public static ETComProperty getInstance() {
+        return SingletonHolder.INSTANCE;
+    }
 
     /**
      * Gets the current COM specific programmatic identifier set by latest ECU-TEST startup.
@@ -72,8 +83,7 @@ public final class ETComProperty implements Serializable {
     /**
      * Sets the COM specific programmatic identifier.
      *
-     * @param progId
-     *            the progId to set
+     * @param progId the progId to set
      */
     public void setProgId(final String progId) {
         this.progId = StringUtils.defaultIfBlank(progId, DEFAULT_PROG_ID);
@@ -81,7 +91,7 @@ public final class ETComProperty implements Serializable {
 
     /**
      * Gets the current COM response timeout set by latest ECU-TEST startup.
-     * 
+     *
      * @return the timeout
      */
     public int getTimeout() {
@@ -90,18 +100,11 @@ public final class ETComProperty implements Serializable {
 
     /**
      * Sets the COM response timeout.
-     * 
-     * @param timeout
-     *            the timeout to set
+     *
+     * @param timeout the timeout to set
      */
     public void setTimeout(final int timeout) {
         this.timeout = timeout;
-    }
-
-    /**
-     * Private constructor.
-     */
-    private ETComProperty() {
     }
 
     /**
@@ -126,14 +129,5 @@ public final class ETComProperty implements Serializable {
         private SingletonHolder() {
             throw new UnsupportedOperationException("Singleton class");
         }
-    }
-
-    /**
-     * Returns the current instance of {@link ETComProperty}.
-     *
-     * @return the singleton instance
-     */
-    public static ETComProperty getInstance() {
-        return SingletonHolder.INSTANCE;
     }
 }

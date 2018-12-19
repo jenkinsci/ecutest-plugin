@@ -55,10 +55,8 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     /**
      * {@link DslExtensionMethod} providing the start up of ECU-TEST.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param closure
-     *            the nested Groovy closure
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
+     * @param closure  the nested Groovy closure
      * @return the instance of a {@link StartETBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
@@ -81,8 +79,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     /**
      * {@link DslExtensionMethod} providing the start up of ECU-TEST with default settings.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
      * @return the instance of a {@link StartETBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
@@ -93,10 +90,8 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     /**
      * {@link DslExtensionMethod} providing the shut down of ECU-TEST.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param closure
-     *            the nested Groovy closure
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
+     * @param closure  the nested Groovy closure
      * @return the instance of a {@link StopETBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
@@ -115,8 +110,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     /**
      * {@link DslExtensionMethod} providing the shut down of ECU-TEST with default settings.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
      * @return the instance of a {@link StopETBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
@@ -127,10 +121,8 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     /**
      * {@link DslExtensionMethod} providing the start up of the Tool-Server.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param closure
-     *            the nested Groovy closure
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
+     * @param closure  the nested Groovy closure
      * @return the instance of a {@link StartTSBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
@@ -152,8 +144,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     /**
      * {@link DslExtensionMethod} providing the start up of the Tool-Server with default settings.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
      * @return the instance of a {@link StartTSBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
@@ -164,10 +155,8 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     /**
      * {@link DslExtensionMethod} providing the shut down of the Tool-Server.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param closure
-     *            the nested Groovy closure
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
+     * @param closure  the nested Groovy closure
      * @return the instance of a {@link StopTSBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
@@ -186,8 +175,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     /**
      * {@link DslExtensionMethod} providing the shut down of the Tool-Server with default settings.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
      * @return the instance of a {@link StopTSBuilder}
      */
     @DslExtensionMethod(context = StepContext.class)
@@ -213,8 +201,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         /**
          * Option defining the ECU-TEST workspace directory.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void workspaceDir(final CharSequence value) {
             Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_WORKSPACE_DIR);
@@ -226,8 +213,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         /**
          * Option defining the ECU-TEST settings directory.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void settingsDir(final CharSequence value) {
             Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_SETTINGS_DIR);
@@ -239,8 +225,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         /**
          * Option defining the debug mode.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void debugMode(final boolean value) {
             debugMode = value;
@@ -249,8 +234,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         /**
          * Option defining whether to re-use the previous instance.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void keepInstance(final boolean value) {
             keepInstance = value;
@@ -288,8 +272,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         /**
          * Option defining the custom ToolLibs.ini path.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void toolLibsIni(final CharSequence value) {
             Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TOOLLIBS_INI);
@@ -301,8 +284,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         /**
          * Option defining the custom TCP port.
          *
-         * @param value
-         *            the value as String
+         * @param value the value as String
          */
         public void tcpPort(final CharSequence value) {
             Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TCP_PORT);
@@ -314,8 +296,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         /**
          * Option defining the custom TCP port.
          *
-         * @param value
-         *            the value as Integer
+         * @param value the value as Integer
          */
         public void tcpPort(final int value) {
             tcpPort(String.valueOf((Object) value));
@@ -324,8 +305,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         /**
          * Option defining whether to re-use the previous instance.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void keepInstance(final boolean value) {
             keepInstance = value;

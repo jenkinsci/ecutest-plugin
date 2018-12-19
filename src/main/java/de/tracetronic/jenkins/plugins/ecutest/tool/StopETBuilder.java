@@ -60,8 +60,7 @@ public class StopETBuilder extends AbstractToolBuilder {
     /**
      * Instantiates a new {@link StopETBuilder}.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
      */
     @DataBoundConstructor
     public StopETBuilder(@Nonnull final String toolName) {
@@ -78,16 +77,16 @@ public class StopETBuilder extends AbstractToolBuilder {
 
     @Override
     public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
+                            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         // Get selected ECU-TEST installation
         final ETInstallation installation = configureToolInstallation(workspace.toComputer(), listener,
-                run.getEnvironment(listener));
+            run.getEnvironment(listener));
 
         // Stop selected ECU-TEST
         final String toolName = run.getEnvironment(listener).expand(installation.getName());
         final EnvVars buildEnvVars = run.getEnvironment(listener);
         final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
-                String.valueOf(DEFAULT_TIMEOUT)));
+            String.valueOf(DEFAULT_TIMEOUT)));
         final ETClient etClient = new ETClient(toolName, expTimeout);
         if (!etClient.stop(true, workspace, launcher, listener)) {
             throw new ETPluginException(String.format("Stopping %s failed.", toolName));

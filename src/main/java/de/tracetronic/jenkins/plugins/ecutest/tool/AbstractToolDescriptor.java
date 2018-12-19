@@ -90,8 +90,7 @@ public abstract class AbstractToolDescriptor extends BuildStepDescriptor<Builder
     /**
      * Validates the timeout.
      *
-     * @param value
-     *            the timeout
+     * @param value the timeout
      * @return the form validation
      */
     public FormValidation doCheckTimeout(@QueryParameter final String value) {

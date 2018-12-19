@@ -63,7 +63,7 @@ public final class ATXSettingParser {
     private static final String ARCHIVE_EXPRESSION = PRECEDING_COMMENT + "[.=' Archiveinstellungen ']]";
     private static final String ATTRIBUTE_EXPRESSION = PRECEDING_COMMENT + "[.=' Attributeinstellungen ']]";
     private static final String TCF_CONSTANT_EXPRESSION = PRECEDING_COMMENT
-            + "[.=' TCF-Globale Konstanteneinstellungen ']]";
+        + "[.=' TCF-Globale Konstanteneinstellungen ']]";
     private static final String SPECIAL_EXPRESSION = PRECEDING_COMMENT + "[.=' Spezielle Einstellungen ']]";
 
     /**
@@ -75,8 +75,7 @@ public final class ATXSettingParser {
     /**
      * Parses all settings of the ATX template configuration.
      *
-     * @param doc
-     *            the XML document representation
+     * @param doc the XML document representation
      * @return the map of settings
      */
     public static Map<String, List<ATXSetting>> parseSettings(final Document doc) {
@@ -100,10 +99,8 @@ public final class ATXSettingParser {
     /**
      * Parses a single setting of the ATX template configuration.
      *
-     * @param doc
-     *            the XML document representation
-     * @param expression
-     *            the XPath expression for a separated setting
+     * @param doc        the XML document representation
+     * @param expression the XPath expression for a separated setting
      * @return the parsed setting represented by a list of settings
      */
     public static List<ATXSetting> parseSetting(final Document doc, final String expression) {
@@ -126,11 +123,11 @@ public final class ATXSettingParser {
                 // Add sub setting
                 if (isCheckbox) {
                     final ATXBooleanSetting setting = new ATXBooleanSetting(settingName, descGerman,
-                            descEnglish, toBoolean(defaultValue));
+                        descEnglish, toBoolean(defaultValue));
                     settings.add(setting);
                 } else {
                     final ATXTextSetting setting = new ATXTextSetting(settingName, descGerman, descEnglish,
-                            defaultValue);
+                        defaultValue);
                     settings.add(setting);
                 }
             }
@@ -143,10 +140,8 @@ public final class ATXSettingParser {
     /**
      * Parses the description for the given language key.
      *
-     * @param node
-     *            the node containing the description
-     * @param languageKey
-     *            the language key (only de_DE or en_US supported for now)
+     * @param node        the node containing the description
+     * @param languageKey the language key (only de_DE or en_US supported for now)
      * @return the parsed description value
      */
     private static String parseDescription(final Node node, final String languageKey) {
@@ -168,10 +163,8 @@ public final class ATXSettingParser {
     /**
      * Parses a node attribute for given name.
      *
-     * @param node
-     *            the node containing the attribute
-     * @param attrName
-     *            the attribute name
+     * @param node     the node containing the attribute
+     * @param attrName the attribute name
      * @return the parsed attribute value
      */
     private static String parseAttribute(final Node node, final String attrName) {
@@ -181,22 +174,18 @@ public final class ATXSettingParser {
     /**
      * Determines whether a setting is a checkbox option.
      *
-     * @param defaultValue
-     *            the default value of the setting
+     * @param defaultValue the default value of the setting
      * @return {@code true} if is checkbox, {@code false} otherwise
      */
     private static boolean isCheckbox(final String defaultValue) {
-        final boolean isCheckbox;
-        isCheckbox = "true".equals(defaultValue.toLowerCase(Locale.getDefault()))
+        return "true".equals(defaultValue.toLowerCase(Locale.getDefault()))
             || "false".equals(defaultValue.toLowerCase(Locale.getDefault()));
-        return isCheckbox;
     }
 
     /**
      * Converts a string value to boolean equivalent.
      *
-     * @param value
-     *            the boolean value
+     * @param value the boolean value
      * @return {@code true} if value represents true, {@code false} otherwise
      */
     private static boolean toBoolean(final String value) {
@@ -206,8 +195,7 @@ public final class ATXSettingParser {
     /**
      * Removes whitespace nodes for easier data extraction.
      *
-     * @param elem
-     *            the node element
+     * @param elem the node element
      */
     private static void removeWhitespaceNodes(final Element elem) {
         final NodeList children = elem.getChildNodes();

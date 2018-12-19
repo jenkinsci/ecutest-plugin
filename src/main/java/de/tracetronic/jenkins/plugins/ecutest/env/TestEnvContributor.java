@@ -104,10 +104,6 @@ public class TestEnvContributor extends EnvironmentContributor {
                                     @Nonnull final TaskListener listener) throws IOException, InterruptedException {
 
         final List<TestEnvInvisibleAction> envActions = r.getActions(TestEnvInvisibleAction.class);
-        if (envActions.size() == 0) {
-            return;
-        }
-
         for (final TestEnvInvisibleAction action : envActions) {
             final String id = String.valueOf(action.getTestId());
             final TestType testType = action.getTestType();

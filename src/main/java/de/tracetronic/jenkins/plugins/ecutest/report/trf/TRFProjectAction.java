@@ -45,8 +45,7 @@ public class TRFProjectAction extends AbstractTRFAction {
     /**
      * Instantiates a new {@link TRFProjectAction}.
      *
-     * @param projectLevel
-     *            specifies whether archiving is restricted to project level only
+     * @param projectLevel specifies whether archiving is restricted to project level only
      */
     public TRFProjectAction(final boolean projectLevel) {
         super(projectLevel);
@@ -57,8 +56,7 @@ public class TRFProjectAction extends AbstractTRFAction {
      * <p>
      * Resolves the owner by {@link StaplerRequest#findAncestorObject(Class)}.
      *
-     * @param req
-     *            the {@link StaplerRequest} used for access this action
+     * @param req the {@link StaplerRequest} used for access this action
      * @return the last {@link TRFBuildAction} or {@code null} if no proper build exists
      */
     @CheckForNull
@@ -72,10 +70,8 @@ public class TRFProjectAction extends AbstractTRFAction {
      * <p>
      * Delegates to the last {@link TRFBuildAction}.
      *
-     * @param token
-     *            the URL token
-     * @param req
-     *            the {@link StaplerRequest} used for access this action
+     * @param token the URL token
+     * @param req   the {@link StaplerRequest} used for access this action
      * @return the requested {@link TRFReport} or {@code null} if no proper report exists
      */
     public TRFReport getDynamic(final String token, final StaplerRequest req) {

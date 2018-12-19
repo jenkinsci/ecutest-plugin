@@ -58,7 +58,7 @@ public class ExportProjectConfigTest {
     @Test
     public void testExpand() {
         final ExportProjectConfig config = new ExportProjectConfig("${FILE_PATH}", "${EXPORT_PATH}",
-                true, "${CREDENTIALS_ID}", "${TIMEOUT}");
+            true, "${CREDENTIALS_ID}", "${TIMEOUT}");
         final EnvVars envVars = new EnvVars();
         envVars.put("FILE_PATH", "test.prj");
         envVars.put("EXPORT_PATH", "export");

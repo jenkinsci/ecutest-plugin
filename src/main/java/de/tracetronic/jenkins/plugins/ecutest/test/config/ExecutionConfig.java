@@ -51,15 +51,13 @@ import java.util.Objects;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
-        implements Serializable, ExpandableConfig {
-
-    private static final long serialVersionUID = 1L;
+    implements Serializable, ExpandableConfig {
 
     /**
      * Defines the default timeout running a test.
      */
     protected static final int DEFAULT_TIMEOUT = 3600;
-
+    private static final long serialVersionUID = 1L;
     private final String timeout;
     private final boolean stopOnError;
     /**
@@ -70,13 +68,10 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     /**
      * Instantiates a new {@link ExecutionConfig}.
      *
-     * @param timeout
-     *            the timeout to run the test
-     * @param stopOnError
-     *            specifies whether to stop ECU-TEST and
-     *            Tool-Server instances if an error occurred
-     * @param checkTestFile
-     *            specifies whether to check the test file
+     * @param timeout       the timeout to run the test
+     * @param stopOnError   specifies whether to stop ECU-TEST and
+     *                      Tool-Server instances if an error occurred
+     * @param checkTestFile specifies whether to check the test file
      */
     @DataBoundConstructor
     public ExecutionConfig(final String timeout, final boolean stopOnError, final boolean checkTestFile) {
@@ -89,13 +84,10 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     /**
      * Instantiates a new {@link ExecutionConfig}.
      *
-     * @param timeout
-     *            the timeout to run the test
-     * @param stopOnError
-     *            specifies whether to stop ECU-TEST and
-     *            Tool-Server instances if an error occurred
-     * @param checkTestFile
-     *            specifies whether to check the test file
+     * @param timeout       the timeout to run the test
+     * @param stopOnError   specifies whether to stop ECU-TEST and
+     *                      Tool-Server instances if an error occurred
+     * @param checkTestFile specifies whether to check the test file
      */
     public ExecutionConfig(final int timeout, final boolean stopOnError, final boolean checkTestFile) {
         this(String.valueOf(timeout), stopOnError, checkTestFile);
@@ -104,10 +96,9 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     /**
      * Parses a string-based parameter to integer.
      *
-     * @param param
-     *            the parameter string
+     * @param param the parameter string
      * @return the parsed integer value represented by the String parameter,
-     *         defaults to {@link #DEFAULT_TIMEOUT} if null or invalid value
+     * defaults to {@link #DEFAULT_TIMEOUT} if null or invalid value
      */
     public static int parse(final String param) {
         try {
@@ -115,6 +106,20 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
         } catch (final NumberFormatException e) {
             return DEFAULT_TIMEOUT;
         }
+    }
+
+    /**
+     * @return the default timeout
+     */
+    public static int getDefaultTimeout() {
+        return DEFAULT_TIMEOUT;
+    }
+
+    /**
+     * @return the instance of a {@link ExecutionConfig}.
+     */
+    public static ExecutionConfig newInstance() {
+        return new ExecutionConfig(null, true, true);
     }
 
     /**
@@ -132,15 +137,8 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     }
 
     /**
-     * @return the default timeout
-     */
-    public static int getDefaultTimeout() {
-        return DEFAULT_TIMEOUT;
-    }
-
-    /**
      * @return {@code true} to stop ECU-TEST and Tool-Server instances
-     *         if an error occurred, {@code false} otherwise
+     * if an error occurred, {@code false} otherwise
      */
     public boolean isStopOnError() {
         return stopOnError;
@@ -156,7 +154,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     @Override
     public ExecutionConfig expand(final EnvVars envVars) {
         final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars,
-                String.valueOf(DEFAULT_TIMEOUT));
+            String.valueOf(DEFAULT_TIMEOUT));
         return new ExecutionConfig(expTimeout, isStopOnError(), isCheckTestFile());
     }
 
@@ -165,8 +163,8 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
         boolean result = false;
         if (other instanceof ExecutionConfig) {
             final ExecutionConfig that = (ExecutionConfig) other;
-            result = (Objects.equals(timeout, that.timeout))
-                    && stopOnError == that.stopOnError && checkTestFile == that.checkTestFile;
+            result = Objects.equals(timeout, that.timeout)
+                && stopOnError == that.stopOnError && checkTestFile == that.checkTestFile;
         }
         return result;
     }
@@ -174,14 +172,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     @Override
     public final int hashCode() {
         return new HashCodeBuilder(17, 31).append(timeout).append(stopOnError).append(checkTestFile)
-                .toHashCode();
-    }
-
-    /**
-     * @return the instance of a {@link ExecutionConfig}.
-     */
-    public static ExecutionConfig newInstance() {
-        return new ExecutionConfig(null, true, true);
+            .toHashCode();
     }
 
     /**
@@ -192,12 +183,6 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
 
         private final TestValidator testValidator = new TestValidator();
 
-        @Nonnull
-        @Override
-        public String getDisplayName() {
-            return "Execution Configuration";
-        }
-
         /**
          * @return the default timeout
          */
@@ -205,11 +190,16 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
             return DEFAULT_TIMEOUT;
         }
 
+        @Nonnull
+        @Override
+        public String getDisplayName() {
+            return "Execution Configuration";
+        }
+
         /**
          * Validates the timeout.
          *
-         * @param value
-         *            the timeout
+         * @param value the timeout
          * @return the form validation
          */
         public FormValidation doCheckTimeout(@QueryParameter final String value) {

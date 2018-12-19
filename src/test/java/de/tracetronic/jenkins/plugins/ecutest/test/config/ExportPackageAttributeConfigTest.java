@@ -54,7 +54,7 @@ public class ExportPackageAttributeConfigTest {
     @Test
     public void testExpand() {
         final ExportPackageAttributeConfig config = new ExportPackageAttributeConfig("${FILE_PATH}",
-                "${CREDENTIALS_ID}", "${TIMEOUT}");
+            "${CREDENTIALS_ID}", "${TIMEOUT}");
         final EnvVars envVars = new EnvVars();
         envVars.put("FILE_PATH", "test.pkg");
         envVars.put("CREDENTIALS_ID", "credentialsId");

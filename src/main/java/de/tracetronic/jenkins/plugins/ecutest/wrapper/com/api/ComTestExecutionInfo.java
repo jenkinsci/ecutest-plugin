@@ -43,9 +43,8 @@ public interface ComTestExecutionInfo {
      * Aborts the current test execution.
      *
      * @return {@code true} if the abortion succeeded, {@code false}, if the test execution has already finished or
-     *         aborted
-     * @throws ETComException
-     *             in case of a COM exception
+     * aborted
+     * @throws ETComException in case of a COM exception
      */
     boolean abort() throws ETComException;
 
@@ -53,8 +52,7 @@ public interface ComTestExecutionInfo {
      * Queries the path to report database of current (or most recent) test run.
      *
      * @return the path to report database
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     String getReportDb() throws ETComException;
 
@@ -64,8 +62,7 @@ public interface ComTestExecutionInfo {
      * separate log folder.
      *
      * @return the log folder
-     * @throws ETComException
-     *             in case of a COM exception or when using this method on project executions
+     * @throws ETComException in case of a COM exception or when using this method on project executions
      */
     String getLogFolder() throws ETComException;
 
@@ -75,15 +72,13 @@ public interface ComTestExecutionInfo {
      * called before. If the test execution has not finished yet, the result equates the test result at calling time.
      *
      * @return the current overall test result. One of:
-     *         <ol>
-     *         <li>NONE</li>
-     *         <li>SUCCESS</li>
-     *         <li>FAILED</li>
-     *         <li>ERROR</li>
-     *         </ol>
-     *
-     * @throws ETComException
-     *             in case of a COM exception
+     * <ol>
+     * <li>NONE</li>
+     * <li>SUCCESS</li>
+     * <li>FAILED</li>
+     * <li>ERROR</li>
+     * </ol>
+     * @throws ETComException in case of a COM exception
      */
     String getResult() throws ETComException;
 
@@ -91,14 +86,13 @@ public interface ComTestExecutionInfo {
      * Returns the state of the current test execution.
      *
      * @return the state current test execution. One of:
-     *         <ol>
-     *         <li>IDLE</li>
-     *         <li>RUNNING</li>
-     *         <li>ABORTED</li>
-     *         <li>FINISHED</li>
-     *         </ol>
-     * @throws ETComException
-     *             in case of a COM exception
+     * <ol>
+     * <li>IDLE</li>
+     * <li>RUNNING</li>
+     * <li>ABORTED</li>
+     * <li>FINISHED</li>
+     * </ol>
+     * @throws ETComException in case of a COM exception
      */
     String getState() throws ETComException;
 

@@ -41,21 +41,18 @@ import java.util.List;
 /**
  * Action to show a link to {@link ATXReport}s or {@link ATXZipReport}s at the build page.
  *
- * @param <T>
- *            the report type, either {@link ATXReport} or {@link ATXZipReport}
- *
+ * @param <T> the report type, either {@link ATXReport} or {@link ATXZipReport}
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXBuildAction<T extends AbstractTestReport> extends AbstractATXAction implements
-SimpleBuildStep.LastBuildAction {
+    SimpleBuildStep.LastBuildAction {
 
     private final List<T> atxReports = new ArrayList<>();
 
     /**
      * Instantiates a new {@link ATXBuildAction}.
      *
-     * @param projectLevel
-     *            specifies whether archiving is restricted to project level only
+     * @param projectLevel specifies whether archiving is restricted to project level only
      */
     public ATXBuildAction(final boolean projectLevel) {
         super(projectLevel);
@@ -73,8 +70,7 @@ SimpleBuildStep.LastBuildAction {
     /**
      * Adds a ATX report.
      *
-     * @param report
-     *            the ATX report to add
+     * @param report the ATX report to add
      * @return {@code true} if successful, {@code false} otherwise
      */
     public boolean add(final T report) {
@@ -84,8 +80,7 @@ SimpleBuildStep.LastBuildAction {
     /**
      * Adds a bundle of ATX reports.
      *
-     * @param reports
-     *            the collection of ATX reports
+     * @param reports the collection of ATX reports
      * @return {@code true} if successful, {@code false} otherwise
      */
     public boolean addAll(final Collection<T> reports) {
@@ -95,8 +90,7 @@ SimpleBuildStep.LastBuildAction {
     /**
      * Returns {@link ATXReport} specified by the URL.
      *
-     * @param token
-     *            the URL token
+     * @param token the URL token
      * @return the {@link ATXReport} or {@code null} if no proper report exists
      */
     public T getDynamic(final String token) {
@@ -117,10 +111,8 @@ SimpleBuildStep.LastBuildAction {
      * Traverses the sub-reports recursively and searches
      * for the {@link ATXReport} matching the given token id.
      *
-     * @param token
-     *            the token id
-     * @param report
-     *            the report
+     * @param token  the token id
+     * @param report the report
      * @return the {@link ATXReport} or {@code null} if no proper report exists
      */
     @SuppressWarnings("unchecked")

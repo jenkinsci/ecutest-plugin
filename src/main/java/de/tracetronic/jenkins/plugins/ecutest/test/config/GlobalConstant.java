@@ -50,7 +50,7 @@ import java.util.Objects;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class GlobalConstant extends AbstractDescribableImpl<GlobalConstant> implements Serializable,
-        ExpandableConfig {
+    ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
 
@@ -60,10 +60,8 @@ public class GlobalConstant extends AbstractDescribableImpl<GlobalConstant> impl
     /**
      * Instantiates a new {@link GlobalConstant}.
      *
-     * @param name
-     *            the global constant name
-     * @param value
-     *            the global constant value
+     * @param name  the global constant name
+     * @param value the global constant value
      */
     @DataBoundConstructor
     public GlobalConstant(final String name, final String value) {
@@ -98,8 +96,8 @@ public class GlobalConstant extends AbstractDescribableImpl<GlobalConstant> impl
         boolean result = false;
         if (other instanceof GlobalConstant) {
             final GlobalConstant that = (GlobalConstant) other;
-            result = (Objects.equals(name, that.name))
-                    && (Objects.equals(value, that.value));
+            result = Objects.equals(name, that.name)
+                && Objects.equals(value, that.value);
         }
         return result;
     }
@@ -126,8 +124,7 @@ public class GlobalConstant extends AbstractDescribableImpl<GlobalConstant> impl
         /**
          * Validates the global constant name.
          *
-         * @param value
-         *            the value
+         * @param value the value
          * @return FormValidation
          */
         public FormValidation doCheckName(@QueryParameter final String value) {
@@ -137,8 +134,7 @@ public class GlobalConstant extends AbstractDescribableImpl<GlobalConstant> impl
         /**
          * Validates the global constant value.
          *
-         * @param value
-         *            the value
+         * @param value the value
          * @return FormValidation
          */
         public FormValidation doCheckValue(@QueryParameter final String value) {

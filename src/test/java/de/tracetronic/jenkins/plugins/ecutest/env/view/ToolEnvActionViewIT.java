@@ -62,7 +62,7 @@ public class ToolEnvActionViewIT extends IntegrationTestBase {
         final ETClient etClient = new ETClient("ECU-TEST", "ECU-TEST", "workspace", "settings", 0, false);
         final ToolEnvInvisibleAction toolEnvAction = new ToolEnvInvisibleAction(toolId, etClient);
         final FreeStyleBuild build = jenkins.createFreeStyleProject()
-                .scheduleBuild2(0, null, Collections.singletonList(toolEnvAction)).get();
+            .scheduleBuild2(0, null, Collections.singletonList(toolEnvAction)).get();
 
         assertNotNull("One ToolEnvInvisibleAction should exist", build.getAction(ToolEnvInvisibleAction.class));
         assertNotNull("One ToolEnvActionView should exist", build.getAction(ToolEnvActionView.class));

@@ -51,10 +51,8 @@ public abstract class AbstractToolBuilderDslExtension extends AbstractDslExtensi
     /**
      * Checks whether a tool installation identified by given name exists.
      *
-     * @param toolName
-     *            the tool name
-     * @param builder
-     *            the builder
+     * @param toolName the tool name
+     * @param builder  the builder
      */
     protected void checkToolInstallation(final String toolName, final AbstractToolBuilder builder) {
         if (!toolName.isEmpty() && !toolName.contains("$")) {
@@ -82,8 +80,7 @@ public abstract class AbstractToolBuilderDslExtension extends AbstractDslExtensi
         /**
          * Option defining the timeout.
          *
-         * @param value
-         *            the value as String
+         * @param value the value as String
          */
         public void timeout(final CharSequence value) {
             Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TIMEOUT);
@@ -95,8 +92,7 @@ public abstract class AbstractToolBuilderDslExtension extends AbstractDslExtensi
         /**
          * Option defining the timeout.
          *
-         * @param value
-         *            the value as Integer
+         * @param value the value as Integer
          */
         public void timeout(final int value) {
             timeout(String.valueOf((Object) value));

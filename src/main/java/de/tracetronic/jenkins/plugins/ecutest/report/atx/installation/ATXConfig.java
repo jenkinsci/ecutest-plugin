@@ -74,13 +74,11 @@ public class ATXConfig implements Serializable, Cloneable {
     /**
      * Instantiates a new {@link ATXConfig}.
      *
-     * @param configMap
-     *            the configuration map
-     * @param customSettings
-     *            the custom settings
+     * @param configMap      the configuration map
+     * @param customSettings the custom settings
      */
     public ATXConfig(final Map<String, List<ATXSetting>> configMap,
-            final List<ATXCustomSetting> customSettings) {
+                     final List<ATXCustomSetting> customSettings) {
         this.configMap = configMap == null ? new LinkedHashMap<>() : configMap;
         this.customSettings = customSettings == null ? new ArrayList<>() : customSettings;
     }
@@ -143,8 +141,7 @@ public class ATXConfig implements Serializable, Cloneable {
     /**
      * Gets the ATX setting group by given configuration name.
      *
-     * @param configName
-     *            the configuration name
+     * @param configName the configuration name
      * @return the ATX setting group list
      */
     public List<ATXSetting> getConfigByName(final String configName) {
@@ -154,8 +151,7 @@ public class ATXConfig implements Serializable, Cloneable {
     /**
      * Gets the ATX setting by given setting name.
      *
-     * @param settingName
-     *            the setting name
+     * @param settingName the setting name
      * @return the ATX setting or {@code null} if not found
      */
     @CheckForNull
@@ -180,10 +176,8 @@ public class ATXConfig implements Serializable, Cloneable {
     /**
      * Gets the ATX setting by given setting name and a list of ATX settings.
      *
-     * @param settingName
-     *            the setting name
-     * @param settings
-     *            the setting list to search in
+     * @param settingName the setting name
+     * @param settings    the setting list to search in
      * @return the ATX setting or {@code null} if not found
      */
     @CheckForNull
@@ -208,8 +202,7 @@ public class ATXConfig implements Serializable, Cloneable {
     }
 
     /**
-     * @param customSettings
-     *            the custom settings to set
+     * @param customSettings the custom settings to set
      */
     public void setCustomSettings(final List<ATXCustomSetting> customSettings) {
         this.customSettings = customSettings;

@@ -76,13 +76,37 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
     /**
      * Instantiates a new {@link AbstractExportBuilder}.
      *
-     * @param exportConfigs
-     *            the list of configured test exporters
+     * @param exportConfigs the list of configured test exporters
      */
     @DataBoundConstructor
     public AbstractExportBuilder(@CheckForNull final List<TMSConfig> exportConfigs) {
         this.exportConfigs = exportConfigs == null ? new ArrayList<>()
-                : removeEmptyConfigs(exportConfigs);
+            : removeEmptyConfigs(exportConfigs);
+    }
+
+    /**
+     * Removes empty export configurations.
+     *
+     * @param exportConfigs the export configurations
+     * @return the list of valid export configurations
+     */
+    private static List<TMSConfig> removeEmptyConfigs(final List<TMSConfig> exportConfigs) {
+        final List<TMSConfig> validConfigs = new ArrayList<>();
+        for (final TMSConfig config : exportConfigs) {
+            if (config instanceof ExportConfig) {
+                final ExportConfig pkgConfig = (ExportConfig) config;
+                if (StringUtils.isNotBlank(pkgConfig.getFilePath())
+                    && StringUtils.isNotBlank(pkgConfig.getExportPath())) {
+                    validConfigs.add(config);
+                }
+            } else if (config instanceof ExportAttributeConfig) {
+                final ExportAttributeConfig pkgAttrConfig = (ExportAttributeConfig) config;
+                if (StringUtils.isNotBlank(pkgAttrConfig.getFilePath())) {
+                    validConfigs.add(config);
+                }
+            }
+        }
+        return validConfigs;
     }
 
     /**
@@ -94,40 +118,13 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
     }
 
     /**
-     * @param exportConfigs
-     *            the list of configured test exporters
+     * @param exportConfigs the list of configured test exporters
      */
     @DataBoundSetter
     public void setExportConfigs(@CheckForNull final List<TMSConfig> exportConfigs) {
         if (exportConfigs != null) {
             this.exportConfigs.addAll(exportConfigs);
         }
-    }
-
-    /**
-     * Removes empty export configurations.
-     *
-     * @param exportConfigs
-     *            the export configurations
-     * @return the list of valid export configurations
-     */
-    private static List<TMSConfig> removeEmptyConfigs(final List<TMSConfig> exportConfigs) {
-        final List<TMSConfig> validConfigs = new ArrayList<>();
-        for (final TMSConfig config : exportConfigs) {
-            if (config instanceof ExportConfig) {
-                final ExportConfig pkgConfig = (ExportConfig) config;
-                if (StringUtils.isNotBlank(pkgConfig.getFilePath())
-                        && StringUtils.isNotBlank(pkgConfig.getExportPath())) {
-                    validConfigs.add(config);
-                }
-            } else if (config instanceof ExportAttributeConfig) {
-                final ExportAttributeConfig pkgAttrConfig = (ExportAttributeConfig) config;
-                if (StringUtils.isNotBlank(pkgAttrConfig.getFilePath())) {
-                    validConfigs.add(config);
-                }
-            }
-        }
-        return validConfigs;
     }
 
     @Override
@@ -153,22 +150,16 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
     /**
      * Performs the test exports.
      *
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param run       the run
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
      * @return {@code true} if export succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean performExport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                  final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Check for running ECU-TEST instance
@@ -219,8 +210,7 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
         /**
          * Instantiates a {@link AbstractExportBuilder}.
          *
-         * @param clazz
-         *            the {@link AbstractExportBuilder} class name
+         * @param clazz the {@link AbstractExportBuilder} class name
          */
         public DescriptorImpl(final Class<? extends AbstractExportBuilder> clazz) {
             super(clazz);

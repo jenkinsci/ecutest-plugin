@@ -68,7 +68,7 @@ public class TestEnvActionViewIT extends IntegrationTestBase {
         final PackageClient packageClient = new PackageClient("test.pkg", testConfig, packageConfig, executionConfig);
         final TestEnvInvisibleAction testEnvAction = new TestEnvInvisibleAction(testId, packageClient);
         final FreeStyleBuild build = jenkins.createFreeStyleProject()
-                .scheduleBuild2(0, null, Collections.singletonList(testEnvAction)).get();
+            .scheduleBuild2(0, null, Collections.singletonList(testEnvAction)).get();
 
         assertNotNull("One TestEnvInvisibleAction should exist", build.getAction(TestEnvInvisibleAction.class));
         assertNotNull("One TestEnvActionView should exist", build.getAction(TestEnvActionView.class));

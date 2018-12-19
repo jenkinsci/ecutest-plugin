@@ -68,36 +68,27 @@ public class TMSReportUploader extends AbstractTMSClient {
     /**
      * Uploads the reports to the test management system.
      *
-     * @param reportFiles
-     *            the report files
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the export timeout
-     * @param project
-     *            the project
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param reportFiles   the report files
+     * @param credentialsId the credentials id
+     * @param timeout       the export timeout
+     * @param project       the project
+     * @param workspace     the workspace
+     * @param launcher      the launcher
+     * @param listener      the listener
      * @return {@code true} if upload succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean upload(final List<FilePath> reportFiles, final String credentialsId, final String timeout,
-            final Item project, final FilePath workspace, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+                          final Item project, final FilePath workspace, final Launcher launcher,
+                          final TaskListener listener) throws IOException, InterruptedException {
         boolean isUploaded = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = getCredentials(credentialsId, project);
                 if (login(credentials, launcher, listener)) {
                     isUploaded = launcher.getChannel().call(
-                            new UploadReportCallable(reportFiles, timeout, listener));
+                        new UploadReportCallable(reportFiles, timeout, listener));
                 }
             } finally {
                 logout(launcher, listener);
@@ -109,22 +100,18 @@ public class TMSReportUploader extends AbstractTMSClient {
     /**
      * Gets the credentials providing access to user name and password.
      *
-     * @param credentialsId
-     *            the credentials id
-     * @param project
-     *            the project
+     * @param credentialsId the credentials id
+     * @param project       the project
      * @return the credentials
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
      */
     @CheckForNull
     private StandardUsernamePasswordCredentials getCredentials(final String credentialsId, final Item project)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         final List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider
-                .lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
-                        Collections.emptyList());
+            .lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
+                Collections.emptyList());
         return CredentialsMatchers.firstOrNull(credentials, CredentialsMatchers.withId(credentialsId));
     }
 
@@ -142,15 +129,12 @@ public class TMSReportUploader extends AbstractTMSClient {
         /**
          * Instantiates a new {@link UploadReportCallable}.
          *
-         * @param reportFiles
-         *            the list of TRF files
-         * @param timeout
-         *            the export timeout
-         * @param listener
-         *            the listener
+         * @param reportFiles the list of TRF files
+         * @param timeout     the export timeout
+         * @param listener    the listener
          */
         UploadReportCallable(final List<FilePath> reportFiles, final String timeout,
-                final TaskListener listener) {
+                             final TaskListener listener) {
             this.reportFiles = reportFiles;
             this.timeout = timeout;
             this.listener = listener;

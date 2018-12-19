@@ -30,14 +30,15 @@
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
-    <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation" page="select.jelly" />
+    <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation" page="select.jelly"/>
     <f:entry title="${%generators.title}" description="${%generators.description}" field="generators">
-        <j:set var="customGenerator" value="false" />
-        <f:repeatableProperty field="generators" add="${%generator.add}" header="${%generator.header}" minimum="0" />
+        <j:set var="customGenerator" value="false"/>
+        <f:repeatableProperty field="generators" add="${%generator.add}" header="${%generator.header}" minimum="0"/>
     </f:entry>
     <f:entry title="${%customGenerators.title}" description="${%customGenerators.description}" field="customGenerators">
-        <j:set var="customGenerator" value="true" />
-        <f:repeatableProperty field="customGenerators" add="${%generator.add}" header="${%generator.header}" minimum="0" />
+        <j:set var="customGenerator" value="true"/>
+        <f:repeatableProperty field="customGenerators" add="${%generator.add}" header="${%generator.header}"
+                              minimum="0"/>
     </f:entry>
-    <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly" />
+    <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly"/>
 </j:jelly>

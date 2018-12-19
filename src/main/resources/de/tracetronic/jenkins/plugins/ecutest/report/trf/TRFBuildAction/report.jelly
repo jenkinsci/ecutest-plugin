@@ -33,8 +33,8 @@
     <tr>
         <td>
             <div style="text-indent: ${indent}px;">
-                <lsi:icon class="${it.iconClassName} icon-sm" alt="TRF report" />
-                <st:nbsp />
+                <lsi:icon class="${it.iconClassName} icon-sm" alt="TRF report"/>
+                <st:nbsp/>
                 <j:if test="${owner == build}">
                     <a href="${report.url}">${report.title}</a>
                 </j:if>
@@ -46,9 +46,9 @@
         <td class="fileSize">
             ${h.humanReadableByteSize(report.fileSize)}
         </td>
-        <j:set var="indent" value="${indent+20}" />
+        <j:set var="indent" value="${indent+20}"/>
         <j:forEach var="report" items="${report.getSubReports()}">
-            <st:include page="report.jelly" />
+            <st:include page="report.jelly"/>
         </j:forEach>
     </tr>
 </j:jelly>

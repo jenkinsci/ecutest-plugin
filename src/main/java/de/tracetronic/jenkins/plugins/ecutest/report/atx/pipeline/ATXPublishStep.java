@@ -51,7 +51,7 @@ import java.util.Set;
 
 /**
  * Advanced pipeline step that publishes ATX reports to given {@link ATXInstallation} instance.
- * 
+ *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXPublishStep extends Step {
@@ -65,22 +65,17 @@ public class ATXPublishStep extends Step {
     /**
      * Instantiates a new {@link ATXPublishStep}.
      *
-     * @param installation
-     *            the ATX installation
-     * @param allowMissing
-     *            specifies whether missing reports are allowed
-     * @param runOnFailed
-     *            specifies whether this publisher even runs on a failed build
-     * @param archiving
-     *            specifies whether archiving artifacts is enabled
-     * @param keepAll
-     *            specifies whether artifacts are archived for all successful builds,
-     *            otherwise only the most recent
+     * @param installation the ATX installation
+     * @param allowMissing specifies whether missing reports are allowed
+     * @param runOnFailed  specifies whether this publisher even runs on a failed build
+     * @param archiving    specifies whether archiving artifacts is enabled
+     * @param keepAll      specifies whether artifacts are archived for all successful builds,
+     *                     otherwise only the most recent
      */
     @DataBoundConstructor
     public ATXPublishStep(final ATXInstallation installation,
-            final boolean allowMissing, final boolean runOnFailed,
-            final boolean archiving, final boolean keepAll) {
+                          final boolean allowMissing, final boolean runOnFailed,
+                          final boolean archiving, final boolean keepAll) {
         this.installation = installation;
         this.allowMissing = allowMissing;
         this.runOnFailed = runOnFailed;
@@ -141,10 +136,8 @@ public class ATXPublishStep extends Step {
         /**
          * Instantiates a new {@link Execution}.
          *
-         * @param step
-         *            the step
-         * @param context
-         *            the context
+         * @param step    the step
+         * @param context the context
          */
         Execution(final ATXPublishStep step, final StepContext context) {
             super(context);
@@ -158,9 +151,9 @@ public class ATXPublishStep extends Step {
             final Launcher launcher = getContext().get(Launcher.class);
             final TaskListener listener = getContext().get(TaskListener.class);
             return launcher.getChannel().call(
-                    new ExecutionCallable(step.installation,
-                            step.allowMissing, step.runOnFailed, step.archiving, step.keepAll,
-                            run, workspace, launcher, listener));
+                new ExecutionCallable(step.installation,
+                    step.allowMissing, step.runOnFailed, step.archiving, step.keepAll,
+                    run, workspace, launcher, listener));
         }
     }
 
@@ -184,31 +177,22 @@ public class ATXPublishStep extends Step {
         /**
          * Instantiates a new {@link ExecutionCallable}.
          *
-         * @param installation
-         *            the ATX installation
-         * @param allowMissing
-         *            specifies whether missing reports are allowed
-         * @param runOnFailed
-         *            specifies whether this publisher even runs on a failed build
-         * @param archiving
-         *            specifies whether archiving artifacts is enabled
-         * @param keepAll
-         *            specifies whether artifacts are archived for all successful builds,
-         *            otherwise only the most recent
-         * @param run
-         *            the run
-         * @param workspace
-         *            the workspace
-         * @param launcher
-         *            the launcher
-         * @param listener
-         *            the listener
+         * @param installation the ATX installation
+         * @param allowMissing specifies whether missing reports are allowed
+         * @param runOnFailed  specifies whether this publisher even runs on a failed build
+         * @param archiving    specifies whether archiving artifacts is enabled
+         * @param keepAll      specifies whether artifacts are archived for all successful builds,
+         *                     otherwise only the most recent
+         * @param run          the run
+         * @param workspace    the workspace
+         * @param launcher     the launcher
+         * @param listener     the listener
          */
         ExecutionCallable(final ATXInstallation installation,
-                final boolean allowMissing, final boolean runOnFailed,
-                final boolean archiving, final boolean keepAll,
-                final Run<?, ?> run, final FilePath workspace,
-                final Launcher launcher, final TaskListener listener) {
+                          final boolean allowMissing, final boolean runOnFailed,
+                          final boolean archiving, final boolean keepAll,
+                          final Run<?, ?> run, final FilePath workspace,
+                          final Launcher launcher, final TaskListener listener) {
             super();
             this.installation = installation;
             this.allowMissing = allowMissing;

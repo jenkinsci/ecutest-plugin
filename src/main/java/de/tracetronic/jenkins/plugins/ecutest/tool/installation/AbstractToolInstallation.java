@@ -49,50 +49,41 @@ import java.util.List;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractToolInstallation extends ToolInstallation implements
-EnvironmentSpecific<AbstractToolInstallation>, NodeSpecific<AbstractToolInstallation> {
+    EnvironmentSpecific<AbstractToolInstallation>, NodeSpecific<AbstractToolInstallation> {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * Instantiates a new {@link AbstractToolInstallation}.
      *
-     * @param name
-     *            the name of the tool
-     * @param home
-     *            the home directory of the tool
-     * @param properties
-     *            the tool properties
+     * @param name       the name of the tool
+     * @param home       the home directory of the tool
+     * @param properties the tool properties
      */
     public AbstractToolInstallation(final String name, final String home,
-            final List<? extends ToolProperty<?>> properties) {
+                                    final List<? extends ToolProperty<?>> properties) {
         super(Util.fixEmptyAndTrim(name), Util.fixEmptyAndTrim(home), properties);
     }
 
     /**
      * Instantiates a new {@link AbstractToolInstallation}.
      *
-     * @param source
-     *            the source to install the tool
-     * @param home
-     *            the home directory of the tool
-     * @param properties
-     *            the tool properties
+     * @param source     the source to install the tool
+     * @param home       the home directory of the tool
+     * @param properties the tool properties
      */
     public AbstractToolInstallation(final AbstractToolInstallation source, final String home,
-            final List<? extends ToolProperty<?>> properties) {
+                                    final List<? extends ToolProperty<?>> properties) {
         super(Util.fixEmptyAndTrim(source.getName()), Util.fixEmptyAndTrim(home), properties);
     }
 
     /**
      * Gets the executable path of the tool on the given target system.
      *
-     * @param launcher
-     *            the launcher
+     * @param launcher the launcher
      * @return the executable
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public String getExecutable(final Launcher launcher) throws IOException, InterruptedException {
         return launcher.getChannel().call(new MasterToSlaveCallable<String, IOException>() {
@@ -126,8 +117,7 @@ EnvironmentSpecific<AbstractToolInstallation>, NodeSpecific<AbstractToolInstalla
     /**
      * Gets the executable file relative to given home directory.
      *
-     * @param home
-     *            the home directory of the tool
+     * @param home the home directory of the tool
      * @return the executable file
      */
     protected abstract File getExeFile(File home);

@@ -41,8 +41,7 @@ public class ETComException extends Exception {
     /**
      * Instantiates a new {@link ETComException}.
      *
-     * @param cause
-     *            the cause of the {@link Exception}
+     * @param cause the cause of the {@link Exception}
      */
     public ETComException(final Throwable cause) {
         super(cause);
@@ -51,10 +50,8 @@ public class ETComException extends Exception {
     /**
      * Instantiates a new {@link ETComException}.
      *
-     * @param message
-     *            the message to attach to the {@link Exception}
-     * @param cause
-     *            the cause of the {@link Exception}
+     * @param message the message to attach to the {@link Exception}
+     * @param cause   the cause of the {@link Exception}
      */
     public ETComException(final String message, final Throwable cause) {
         super(message, cause);
@@ -63,8 +60,7 @@ public class ETComException extends Exception {
     /**
      * Instantiates a new {@link ETComException}.
      *
-     * @param message
-     *            the message to attach to the {@link Exception}
+     * @param message the message to attach to the {@link Exception}
      */
     public ETComException(final String message) {
         super(message);

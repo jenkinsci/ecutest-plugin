@@ -37,6 +37,8 @@ import org.junit.Rule;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.JenkinsRule.WebClient;
 
+import java.nio.charset.StandardCharsets;
+
 import static org.junit.Assume.assumeFalse;
 
 /**
@@ -60,8 +62,7 @@ public class IntegrationTestBase {
      * Creates a dumb slave and assumes that it runs on a Windows machine.
      *
      * @return the dumb slave
-     * @throws Exception
-     *             signals that an exception has occurred
+     * @throws Exception signals that an exception has occurred
      */
     protected DumbSlave assumeWindowsSlave() throws Exception {
         // Windows only
@@ -74,14 +75,13 @@ public class IntegrationTestBase {
     /**
      * Loads given pipeline script from class specific test resources.
      *
-     * @param name
-     *            the file name
+     * @param name the file name
      * @return the pipeline content
      */
     protected String loadPipelineScript(final String name) {
         try {
             return new String(IOUtils.toByteArray(
-                    getClass().getResourceAsStream(getClass().getSimpleName() + "/" + name)), "UTF-8");
+                getClass().getResourceAsStream(getClass().getSimpleName() + "/" + name)), StandardCharsets.UTF_8);
         } catch (final Throwable t) {
             throw new RuntimeException("Could not read resource: [" + name + "].");
         }

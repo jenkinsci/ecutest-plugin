@@ -57,8 +57,7 @@ public class ReportGenerator {
     /**
      * Instantiates a new {@link ReportGenerator}.
      *
-     * @param config
-     *            the configuration
+     * @param config the configuration
      */
     public ReportGenerator(final ReportGeneratorConfig config) {
         super();
@@ -75,20 +74,15 @@ public class ReportGenerator {
     /**
      * Generate reports by calling the {@link GenerateReportCallable}.
      *
-     * @param reportFiles
-     *            the report files
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param reportFiles the report files
+     * @param launcher    the launcher
+     * @param listener    the listener
      * @return {@code true} if generation succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean generate(final List<FilePath> reportFiles, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                            final TaskListener listener) throws IOException, InterruptedException {
         return launcher.getChannel().call(new GenerateReportCallable(config, reportFiles, listener));
     }
 
@@ -106,15 +100,12 @@ public class ReportGenerator {
         /**
          * Instantiates a new {@link GenerateReportCallable}.
          *
-         * @param config
-         *            the template name
-         * @param dbFiles
-         *            the list of TRF files
-         * @param listener
-         *            the listener
+         * @param config   the template name
+         * @param dbFiles  the list of TRF files
+         * @param listener the listener
          */
         GenerateReportCallable(final ReportGeneratorConfig config, final List<FilePath> dbFiles,
-                final TaskListener listener) {
+                               final TaskListener listener) {
             this.config = config;
             this.dbFiles = dbFiles;
             this.listener = listener;
@@ -134,7 +125,7 @@ public class ReportGenerator {
                     logger.logInfo(String.format("-> Generating %s report: %s", templateName, dbFile.getRemote()));
                     final FilePath outDir = dbFile.getParent().child(templateName);
                     if (!testEnv.generateTestReportDocumentFromDB(dbFile.getRemote(),
-                            outDir.getRemote(), templateName, true, configMap)) {
+                        outDir.getRemote(), templateName, true, configMap)) {
                         isGenerated = false;
                         logger.logError(String.format("Generating %s report failed!", templateName));
                     }

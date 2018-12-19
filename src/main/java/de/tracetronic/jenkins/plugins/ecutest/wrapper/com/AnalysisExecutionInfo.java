@@ -41,14 +41,12 @@ public class AnalysisExecutionInfo extends ETComDispatch implements ComAnalysisE
 
     /**
      * Instantiates a new {@link AnalysisExecutionInfo}.
-     *
+     * <p>
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
      *
-     * @param dispatch
-     *            the dispatch
-     * @param useTimeout
-     *            specifies whether to apply timeout
+     * @param dispatch   the dispatch
+     * @param useTimeout specifies whether to apply timeout
      */
     public AnalysisExecutionInfo(final Dispatch dispatch, final boolean useTimeout) {
         super(dispatch, useTimeout);

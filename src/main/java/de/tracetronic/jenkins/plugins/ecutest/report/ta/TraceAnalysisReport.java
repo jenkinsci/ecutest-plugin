@@ -43,14 +43,10 @@ public class TraceAnalysisReport extends AbstractArchiveFileReport {
     /**
      * Instantiates a new {@link TraceAnalysisReport}.
      *
-     * @param id
-     *            the id used in the report URL
-     * @param title
-     *            the report title
-     * @param fileName
-     *            the file name
-     * @param fileSize
-     *            the report file size
+     * @param id       the id used in the report URL
+     * @param title    the report title
+     * @param fileName the file name
+     * @param fileSize the report file size
      */
     public TraceAnalysisReport(final String id, final String title, final String fileName, final long fileSize) {
         super(id, title, fileName, fileSize);

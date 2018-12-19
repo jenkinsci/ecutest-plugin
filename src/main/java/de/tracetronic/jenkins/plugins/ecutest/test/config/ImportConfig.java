@@ -51,17 +51,13 @@ public abstract class ImportConfig extends TMSConfig {
     /**
      * Instantiates a new {@link ImportConfig}.
      *
-     * @param tmsPath
-     *            the file path
-     * @param importPath
-     *            the export path
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the timeout
+     * @param tmsPath       the file path
+     * @param importPath    the export path
+     * @param credentialsId the credentials id
+     * @param timeout       the timeout
      */
     public ImportConfig(final String tmsPath, final String importPath,
-            final String credentialsId, final String timeout) {
+                        final String credentialsId, final String timeout) {
         super(credentialsId, timeout);
         this.tmsPath = StringUtils.trimToEmpty(tmsPath);
         this.importPath = StringUtils.trimToEmpty(importPath);
@@ -92,12 +88,12 @@ public abstract class ImportConfig extends TMSConfig {
             final String thatFilePath = that.getTmsPath();
             final String thatImportPath = that.getImportPath();
             result = that.canEqual(this)
-                    && (Objects.equals(tmsPath, thatFilePath))
-                    && (Objects.equals(importPath, thatImportPath))
-                    && (getCredentialsId() == null ? that.getCredentialsId() == null :
-                            getCredentialsId().equals(that.getCredentialsId()))
-                    && (getTimeout() == null ? that.getTimeout() == null :
-                            getTimeout().equals(that.getTimeout()));
+                && Objects.equals(tmsPath, thatFilePath)
+                && Objects.equals(importPath, thatImportPath)
+                && (getCredentialsId() == null ? that.getCredentialsId() == null :
+                getCredentialsId().equals(that.getCredentialsId()))
+                && (getTimeout() == null ? that.getTimeout() == null :
+                getTimeout().equals(that.getTimeout()));
         }
         return result;
     }
@@ -105,10 +101,9 @@ public abstract class ImportConfig extends TMSConfig {
     /**
      * Implementation according to <a href="www.artima.com/lejava/articles/equality.html">Equality Pitfall #4</a>.
      *
-     * @param other
-     *            the other object
+     * @param other the other object
      * @return {@code true} if the other object is an instance of the class in which canEqual is (re)defined,
-     *         {@code false} otherwise.
+     * {@code false} otherwise.
      */
     public boolean canEqual(final Object other) {
         return other instanceof ImportConfig;
@@ -117,7 +112,7 @@ public abstract class ImportConfig extends TMSConfig {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 31).append(getTmsPath()).append(getImportPath()).append(getCredentialsId())
-                .append(getTimeout()).toHashCode();
+            .append(getTimeout()).toHashCode();
     }
 
     /**
@@ -128,8 +123,7 @@ public abstract class ImportConfig extends TMSConfig {
         /**
          * Validates the file path in the test management system.
          *
-         * @param value
-         *            the file path
+         * @param value the file path
          * @return the form validation
          */
         public abstract FormValidation doCheckTmsPath(@QueryParameter String value);
@@ -137,8 +131,7 @@ public abstract class ImportConfig extends TMSConfig {
         /**
          * Validates the import target path.
          *
-         * @param value
-         *            the import path
+         * @param value the import path
          * @return the form validation
          */
         public FormValidation doCheckImportPath(@QueryParameter final String value) {

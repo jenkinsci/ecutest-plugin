@@ -46,10 +46,10 @@ import static org.junit.Assert.assertNotNull;
  */
 public class ETClientTest {
 
-    private List<String> expectedArgs;
     private final String exe = "C:\\ECU-TEST\\ECU-TEST.exe";
     private final String ws = "C:\\Daten\\ECU-TEST";
     private final String settings = "C:\\Daten\\ECU-TEST\\settings";
+    private List<String> expectedArgs;
 
     @Test
     public void testNullConstructor() {

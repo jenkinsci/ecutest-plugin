@@ -94,8 +94,7 @@ public class JUnitPublisherTest {
     /**
      * Asserts the publisher properties.
      *
-     * @param publisher
-     *            the publisher
+     * @param publisher the publisher
      */
     private void assertPublisher(final JUnitPublisher publisher) {
         assertNotNull(publisher);

@@ -62,8 +62,7 @@ public class ATXPipeline implements Serializable {
     /**
      * Instantiates a new {@link ATXPipeline}.
      *
-     * @param script
-     *            the pipeline script
+     * @param script the pipeline script
      */
     public ATXPipeline(final CpsScript script) {
         this.script = script;
@@ -72,8 +71,7 @@ public class ATXPipeline implements Serializable {
     /**
      * Gets a {@link ATXServer} instance by name.
      *
-     * @param serverName
-     *            the server name
+     * @param serverName the server name
      * @return the ATX server
      */
     @Whitelisted
@@ -88,8 +86,7 @@ public class ATXPipeline implements Serializable {
     /**
      * Gets a {@link ATXServer} instance by named argument.
      *
-     * @param serverArgs
-     *            the server arguments
+     * @param serverArgs the server arguments
      * @return the ATX server
      */
     @Whitelisted
@@ -97,7 +94,7 @@ public class ATXPipeline implements Serializable {
         final List<String> keysAsList = Collections.singletonList(KEY_ATX_NAME);
         if (!keysAsList.containsAll(serverArgs.keySet())) {
             throw new IllegalArgumentException("The newServer method requires the following arguments at least: "
-                    + keysAsList);
+                + keysAsList);
         }
         final ATXServer server = (ATXServer) script.invokeMethod("getATXServer", serverArgs);
         server.setScript(script);
@@ -107,10 +104,8 @@ public class ATXPipeline implements Serializable {
     /**
      * Creates a new {@link ATXServer} instance with default settings.
      *
-     * @param atxName
-     *            the ATX name
-     * @param toolName
-     *            the tool name
+     * @param atxName  the ATX name
+     * @param toolName the tool name
      * @return the ATX server
      */
     @Whitelisted
@@ -121,12 +116,9 @@ public class ATXPipeline implements Serializable {
     /**
      * Creates a new {@link ATXServer} instance with given {@link ATXConfig}.
      *
-     * @param atxName
-     *            the ATX name
-     * @param toolName
-     *            the tool name
-     * @param config
-     *            the ATX configuration
+     * @param atxName  the ATX name
+     * @param toolName the tool name
+     * @param config   the ATX configuration
      * @return the ATX server
      */
     @Whitelisted
@@ -143,26 +135,20 @@ public class ATXPipeline implements Serializable {
     /**
      * Creates a new {@link ATXServer} instance with server specific settings.
      *
-     * @param atxName
-     *            the ATX name
-     * @param toolName
-     *            the tool name
-     * @param serverUrl
-     *            the server URL
-     * @param uploadToServer
-     *            the upload to server
-     * @param authKey
-     *            the authentication key
-     * @param projectId
-     *            the project id
+     * @param atxName        the ATX name
+     * @param toolName       the tool name
+     * @param serverUrl      the server URL
+     * @param uploadToServer the upload to server
+     * @param authKey        the authentication key
+     * @param projectId      the project id
      * @return the ATX server
-     * @throws MalformedURLException
-     *             the malformed URL exception
+     * @throws MalformedURLException the malformed URL exception
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Whitelisted
     public ATXServer newServer(final String atxName, final String toolName, final String serverUrl,
-            final boolean uploadToServer, final String authKey, final String projectId) throws MalformedURLException {
+                               final boolean uploadToServer, final String authKey, final String projectId)
+        throws MalformedURLException {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
         stepVariables.put(KEY_ATX_NAME, atxName);
         stepVariables.put(KEY_TOOL_NAME, toolName);
@@ -217,30 +203,28 @@ public class ATXPipeline implements Serializable {
     /**
      * Creates a new {@link ATXServer} instance with named arguments.
      *
-     * @param serverArgs
-     *            the server arguments
+     * @param serverArgs the server arguments
      * @return the ATX server
-     * @throws MalformedURLException
-     *             the malformed URL exception
+     * @throws MalformedURLException the malformed URL exception
      */
     @Whitelisted
     public ATXServer newServer(final Map<String, Object> serverArgs) throws MalformedURLException {
         final List<String> requiredKeys = new ArrayList<>(Arrays.asList(KEY_ATX_NAME, KEY_TOOL_NAME));
         if (!serverArgs.keySet().containsAll(requiredKeys)) {
             throw new IllegalArgumentException("The newServer method requires the following arguments at least: "
-                    + requiredKeys);
+                + requiredKeys);
         }
 
         if (serverArgs.containsKey(KEY_CONFIG) && serverArgs.get(KEY_CONFIG) instanceof ATXConfig) {
             return newServer((String) serverArgs.get(KEY_ATX_NAME), (String) serverArgs.get(KEY_TOOL_NAME),
-                    (ATXConfig) serverArgs.get(KEY_CONFIG));
+                (ATXConfig) serverArgs.get(KEY_CONFIG));
         }
 
         requiredKeys.addAll(Arrays.asList("serverUrl", "uploadToServer", "authKey", "projectId"));
         if (serverArgs.keySet().containsAll(requiredKeys)) {
             return newServer(serverArgs.get(KEY_ATX_NAME).toString(), serverArgs.get(KEY_TOOL_NAME).toString(),
-                    serverArgs.get("serverUrl").toString(), (boolean) serverArgs.get("uploadToServer"),
-                    serverArgs.get("authKey").toString(), serverArgs.get("projectId").toString());
+                serverArgs.get("serverUrl").toString(), (boolean) serverArgs.get("uploadToServer"),
+                serverArgs.get("authKey").toString(), serverArgs.get("projectId").toString());
         } else {
             return newServer(serverArgs.get(KEY_ATX_NAME).toString(), serverArgs.get(KEY_TOOL_NAME).toString());
         }

@@ -47,14 +47,12 @@ public abstract class AbstractTestObject extends ETComDispatch {
 
     /**
      * Instantiates a new {@link AbstractTestObject}.
-     * 
+     * <p>
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
      *
-     * @param dispatch
-     *            the dispatch
-     * @param useTimeout
-     *            specifies whether to apply timeout
+     * @param dispatch   the dispatch
+     * @param useTimeout specifies whether to apply timeout
      */
     public AbstractTestObject(final Dispatch dispatch, final boolean useTimeout) {
         super(dispatch, useTimeout);
@@ -64,8 +62,7 @@ public abstract class AbstractTestObject extends ETComDispatch {
      * Queries the package name.
      *
      * @return the name of this package
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     public String getName() throws ETComException {
         return performRequest("GetName").getString();
@@ -75,8 +72,7 @@ public abstract class AbstractTestObject extends ETComDispatch {
      * Returns a list of the errors of the project.
      *
      * @return the error list
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     public List<CheckInfoHolder> check() throws ETComException {
         final List<CheckInfoHolder> errorList = new ArrayList<>();
@@ -87,8 +83,8 @@ public abstract class AbstractTestObject extends ETComDispatch {
             if (array.getUBound(2) == 3) {
                 for (int i = lBound; i <= uBound; i++) {
                     errorList.add(new CheckInfoHolder(array.getString(i, 0),
-                            Seriousness.valueOf(array.getString(i, 1).toUpperCase(Locale.getDefault())),
-                            array.getString(i, 2), array.getString(i, 3)));
+                        Seriousness.valueOf(array.getString(i, 1).toUpperCase(Locale.getDefault())),
+                        array.getString(i, 2), array.getString(i, 3)));
                 }
             }
         }

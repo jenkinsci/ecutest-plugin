@@ -43,8 +43,7 @@ public abstract class AbstractATXAction extends AbstractReportAction {
     /**
      * Instantiates a new {@link AbstractATXAction}.
      *
-     * @param projectLevel
-     *            specifies whether archiving is restricted to project level only
+     * @param projectLevel specifies whether archiving is restricted to project level only
      */
     public AbstractATXAction(final boolean projectLevel) {
         super(projectLevel);

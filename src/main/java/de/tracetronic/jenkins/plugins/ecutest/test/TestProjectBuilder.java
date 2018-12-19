@@ -63,8 +63,7 @@ public class TestProjectBuilder extends AbstractTestBuilder {
     /**
      * Instantiates a new {@link TestProjectBuilder}.
      *
-     * @param testFile
-     *            the project file
+     * @param testFile the project file
      */
     @DataBoundConstructor
     public TestProjectBuilder(@Nonnull final String testFile) {
@@ -80,8 +79,7 @@ public class TestProjectBuilder extends AbstractTestBuilder {
     }
 
     /**
-     * @param projectConfig
-     *            the project configuration
+     * @param projectConfig the project configuration
      */
     @DataBoundSetter
     public void setProjectConfig(@CheckForNull final ProjectConfig projectConfig) {
@@ -90,15 +88,16 @@ public class TestProjectBuilder extends AbstractTestBuilder {
 
     @Override
     protected boolean runTest(final String testFile, final TestConfig testConfig,
-            final ExecutionConfig executionConfig, final Run<?, ?> run, final FilePath workspace,
-            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
+                              final ExecutionConfig executionConfig, final Run<?, ?> run, final FilePath workspace,
+                              final Launcher launcher, final TaskListener listener)
+        throws IOException, InterruptedException {
         // Expand project configuration
         final EnvVars buildEnv = run.getEnvironment(listener);
         final ProjectConfig projectConfig = getProjectConfig().expand(buildEnv);
 
         // Run test case with project client
         final ProjectClient testClient = new ProjectClient(testFile, testConfig, projectConfig,
-                executionConfig);
+            executionConfig);
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo(String.format("Executing project %s...", testFile));
         if (testClient.runTestCase(workspace, launcher, listener)) {

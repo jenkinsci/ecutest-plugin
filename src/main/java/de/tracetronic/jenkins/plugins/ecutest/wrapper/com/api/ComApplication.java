@@ -42,8 +42,7 @@ public interface ComApplication {
      * Starts up the currently loaded test configuration and testbench configuration files.
      *
      * @return the {@link ComTestEnvironment} dispatch
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     ComTestEnvironment start() throws ETComException;
 
@@ -51,8 +50,7 @@ public interface ComApplication {
      * Stops the currently loaded test configuration and testbench configuration files.
      *
      * @return the {@link ComTestEnvironment} dispatch
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     ComTestEnvironment stop() throws ETComException;
 
@@ -60,8 +58,7 @@ public interface ComApplication {
      * Returns the test environment.
      *
      * @return the {@link ComTestEnvironment} dispatch
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     ComTestEnvironment getTestEnvironment() throws ETComException;
 
@@ -69,8 +66,7 @@ public interface ComApplication {
      * Returns the analysis environment.
      *
      * @return the {@link ComAnalysisEnvironment} dispatch
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     ComAnalysisEnvironment getAnalysisEnvironment() throws ETComException;
 
@@ -78,8 +74,7 @@ public interface ComApplication {
      * Returns the test management module.
      *
      * @return the {@link ComTestEnvironment} dispatch
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     ComTestManagement getTestManagement() throws ETComException;
 
@@ -87,8 +82,7 @@ public interface ComApplication {
      * Checks if the application process is running and ready to use.
      *
      * @return {@code true} if application is already running, {@code false} otherwise
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     boolean isApplicationRunning() throws ETComException;
 
@@ -96,8 +90,7 @@ public interface ComApplication {
      * Queries the COM-Application version.
      *
      * @return the version string
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     String getVersion() throws ETComException;
 
@@ -123,11 +116,9 @@ public interface ComApplication {
      * <li>settingsPath</li>
      * </ul>
      *
-     * @param settingName
-     *            the setting name
+     * @param settingName the setting name
      * @return the setting value or {@code null} if not defined
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     String getSetting(String settingName) throws ETComException;
 
@@ -135,8 +126,7 @@ public interface ComApplication {
      * Exits the currently running instance of the application (Soft Exit).
      *
      * @return {@code true} if successful
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     boolean quit() throws ETComException;
 
@@ -144,100 +134,81 @@ public interface ComApplication {
      * Exits the currently running instance of the application (Hard Exit). Prefer the method {@link #quit()} instead.
      *
      * @return {@code true} if successful
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     boolean exit() throws ETComException;
 
     /**
      * Opens an existing package in COM-Application.
      *
-     * @param path
-     *            the full path name of the package to open
+     * @param path the full path name of the package to open
      * @return the {@link ComPackage} dispatch, if the package is successfully opened, {@code null} otherwise
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     ComPackage openPackage(String path) throws ETComException;
 
     /**
      * Closes a package.
      *
-     * @param path
-     *            the full path name of the package to close
+     * @param path the full path name of the package to close
      * @return {@code true} if the package was closed, {@code false} otherwise
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     boolean closePackage(String path) throws ETComException;
 
     /**
      * Opens an existing project in COM-Application.
      *
-     * @param path
-     *            the full path name of the project to open
-     * @param execInCurrentPkgDir
-     *            defines whether relative references in the project are resolved starting from the current workspaces
-     *            package directory or from the project file location
-     * @param filterExpression
-     *            a valid filter expression (see the main help document, section 'Projects')
+     * @param path                the full path name of the project to open
+     * @param execInCurrentPkgDir defines whether relative references in the project are
+     *                            resolved starting from the current workspaces
+     *                            package directory or from the project file location
+     * @param filterExpression    a valid filter expression (see the main help document, section 'Projects')
      * @return the {@link ComProject} dispatch, if the project is successfully opened, {@code null} otherwise
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     ComProject openProject(String path, boolean execInCurrentPkgDir, String filterExpression)
-            throws ETComException;
+        throws ETComException;
 
     /**
      * Closes a project.
      *
-     * @param path
-     *            the full path name of the project to close
+     * @param path the full path name of the project to close
      * @return {@code true} if the project was closed, {@code false} otherwise
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     boolean closeProject(String path) throws ETComException;
 
     /**
      * Imports a project from an archive.
      *
-     * @param path
-     *            the full path name of the project to import
-     * @param importPath
-     *            the full path name or a relative directory to the default package directory
-     *            as the projects/packages destination directory
-     * @param importConfigPath
-     *            the full path name or a relative directory to the default configuration directory
-     *            as the configurations destination directory
-     * @param replaceFiles
-     *            specifies whether files of same name should be replaced or left untouched
+     * @param path             the full path name of the project to import
+     * @param importPath       the full path name or a relative directory to the default package directory
+     *                         as the projects/packages destination directory
+     * @param importConfigPath the full path name or a relative directory to the default configuration directory
+     *                         as the configurations destination directory
+     * @param replaceFiles     specifies whether files of same name should be replaced or left untouched
      * @return the {@link ComPackage} dispatch, if the project was successfully imported, {@code null} otherwise
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     boolean importProject(String path, String importPath, String importConfigPath, boolean replaceFiles)
-            throws ETComException;
+        throws ETComException;
 
     /**
      * Opens a test bench configuration file (*.tbc).
      *
-     * @param path
-     *            the full path name of the test bench configuration file to open
+     * @param path the full path name of the test bench configuration file to open
      * @return {@code true} if the configuration was successfully opened, {@code false} otherwise
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     boolean openTestbenchConfiguration(String path) throws ETComException;
 
     /**
      * Opens a test configuration file (*.tcf).
      *
-     * @param path
-     *            the full path name of the test configuration file to open
+     * @param path the full path name of the test configuration file to open
      * @return {@code true} if the configuration was successfully opened, {@code false} otherwise
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     boolean openTestConfiguration(String path) throws ETComException;
 
@@ -245,8 +216,7 @@ public interface ComApplication {
      * Provides access to settings of the currently active test configuration file.
      *
      * @return the {@link ComTestConfiguration} dispatch
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     ComTestConfiguration getCurrentTestConfiguration() throws ETComException;
 
@@ -254,8 +224,7 @@ public interface ComApplication {
      * Provides access to settings of the currently active test bench configuration file.
      *
      * @return the {@link ComTestBenchConfiguration} dispatch
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     ComTestBenchConfiguration getCurrentTestBenchConfiguration() throws ETComException;
 
@@ -263,11 +232,9 @@ public interface ComApplication {
      * Waits until the job count in the task manager reaches zero. The timeout parameter specifies the maximum waiting
      * time in seconds.
      *
-     * @param timeout
-     *            the timeout in seconds
+     * @param timeout the timeout in seconds
      * @return {@code true} if if a job count of zero was reached within the timeout
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     boolean waitForIdle(int timeout) throws ETComException;
 

@@ -49,7 +49,7 @@ import java.io.Serializable;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorSetting extends AbstractDescribableImpl<ReportGeneratorSetting> implements
-ExpandableConfig, Serializable {
+    ExpandableConfig, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -59,10 +59,8 @@ ExpandableConfig, Serializable {
     /**
      * Instantiates a new {@link ReportGeneratorSetting}.
      *
-     * @param name
-     *            the name of the setting
-     * @param value
-     *            the value of the setting
+     * @param name  the name of the setting
+     * @param value the value of the setting
      */
     @DataBoundConstructor
     public ReportGeneratorSetting(final String name, final String value) {
@@ -102,8 +100,7 @@ ExpandableConfig, Serializable {
         /**
          * Validates the setting name.
          *
-         * @param value
-         *            the value
+         * @param value the value
          * @return the form validation
          */
         public FormValidation doCheckName(@QueryParameter final String value) {
@@ -113,8 +110,7 @@ ExpandableConfig, Serializable {
         /**
          * Validates the setting value.
          *
-         * @param value
-         *            the value
+         * @param value the value
          * @return the form validation
          */
         public FormValidation doCheckValue(@QueryParameter final String value) {

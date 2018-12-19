@@ -87,12 +87,9 @@ public class ETInstallation extends AbstractToolInstallation {
     /**
      * Instantiates a new {@link ETInstallation}.
      *
-     * @param name
-     *            the name of the ECU-TEST installation
-     * @param home
-     *            the home directory of the ECU-TEST installation
-     * @param properties
-     *            the ECU-TEST properties
+     * @param name       the name of the ECU-TEST installation
+     * @param home       the home directory of the ECU-TEST installation
+     * @param properties the ECU-TEST properties
      */
     @DataBoundConstructor
     public ETInstallation(final String name, final String home, final List<? extends ToolProperty<?>> properties) {
@@ -102,15 +99,12 @@ public class ETInstallation extends AbstractToolInstallation {
     /**
      * Instantiates a new {@link ETInstallation}.
      *
-     * @param source
-     *            the source to install the ECU-TEST installation
-     * @param home
-     *            the home directory of the ECU-TEST installation
-     * @param properties
-     *            the ECU-TEST properties
+     * @param source     the source to install the ECU-TEST installation
+     * @param home       the home directory of the ECU-TEST installation
+     * @param properties the ECU-TEST properties
      */
     public ETInstallation(final ETInstallation source, final String home,
-            final List<? extends ToolProperty<?>> properties) {
+                          final List<? extends ToolProperty<?>> properties) {
         super(source.getName(), home, properties);
     }
 
@@ -133,10 +127,8 @@ public class ETInstallation extends AbstractToolInstallation {
     /**
      * Gets the Tool-Server executable file relative to given home directory.
      *
-     * @param home
-     *            the home directory of the tool
-     * @param subDir
-     *            the sub directory relative to home directory
+     * @param home   the home directory of the tool
+     * @param subDir the sub directory relative to home directory
      * @return the Tool-Server executable file
      */
     protected File getTSExeFile(final File home, final String subDir) {
@@ -148,13 +140,10 @@ public class ETInstallation extends AbstractToolInstallation {
      * According to ECU-TEST 6.5 and above the Tool-Server executable is directly
      * located in ECU-TEST installation path, otherwise in sub directory 'ToolServer'.
      *
-     * @param launcher
-     *            the launcher
+     * @param launcher the launcher
      * @return the Tool-Server executable path
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public String getTSExecutable(final Launcher launcher) throws IOException, InterruptedException {
         return launcher.getChannel().call(new MasterToSlaveCallable<String, IOException>() {
@@ -175,8 +164,7 @@ public class ETInstallation extends AbstractToolInstallation {
     /**
      * Gets the expanded Tool-Server executable file path.
      *
-     * @param subDir
-     *            the sub directory relative to home directory
+     * @param subDir the sub directory relative to home directory
      * @return the Tool-Server executable file path or {@code null} if home directory is not set
      */
     @CheckForNull
@@ -242,6 +230,35 @@ public class ETInstallation extends AbstractToolInstallation {
             load();
         }
 
+        /**
+         * Gets the ECU-TEST executable file.
+         *
+         * @param home the home directory of ECU-TEST
+         * @return the executable file or {@code null} if Unix-based system
+         */
+        @CheckForNull
+        private static File getExeFile(final File home) {
+            if (Functions.isWindows() && home != null) {
+                return new File(home, EXECUTABLE);
+            }
+            return null;
+        }
+
+        /**
+         * Gets the Tool-Server executable file.
+         *
+         * @param home   the home directory of ECU-TEST
+         * @param subDir the sub directory relative to home directory
+         * @return the executable file or {@code null} if Unix-based system
+         */
+        @CheckForNull
+        private static File getTSExeFile(final File home, final String subDir) {
+            if (Functions.isWindows() && home != null && subDir != null) {
+                return new File(new File(home, subDir), TS_EXECUTABLE);
+            }
+            return null;
+        }
+
         @Override
         public synchronized void load() {
             if (getConfigFile().exists()) {
@@ -261,8 +278,7 @@ public class ETInstallation extends AbstractToolInstallation {
          * Moves the configured installations from old descriptor implementations to this descriptor
          * in order to retain backward compatibility. Old configuration files will be removed automatically.
          *
-         * @param oldClass
-         *            the old descriptor class name
+         * @param oldClass the old descriptor class name
          * @since 1.12
          */
         @SuppressWarnings("rawtypes")
@@ -273,7 +289,7 @@ public class ETInstallation extends AbstractToolInstallation {
             stream.addCompatibilityAlias(oldClass.getName(), getClass());
 
             final XmlFile file = new XmlFile(stream,
-                    new File(Jenkins.getInstance().getRootDir(), oldClass.getEnclosingClass().getName() + ".xml"));
+                new File(Jenkins.getInstance().getRootDir(), oldClass.getEnclosingClass().getName() + ".xml"));
             if (file.exists()) {
                 try {
                     file.unmarshal(this);
@@ -315,8 +331,7 @@ public class ETInstallation extends AbstractToolInstallation {
         /**
          * Gets the ECU-TEST installation specified by name.
          *
-         * @param name
-         *            the installation name
+         * @param name the installation name
          * @return the installation or {@code null} if not found
          */
         @CheckForNull
@@ -348,38 +363,6 @@ public class ETInstallation extends AbstractToolInstallation {
                 returnValue = FormValidation.warning(Messages.ET_NotRequired());
             }
             return returnValue;
-        }
-
-        /**
-         * Gets the ECU-TEST executable file.
-         *
-         * @param home
-         *            the home directory of ECU-TEST
-         * @return the executable file or {@code null} if Unix-based system
-         */
-        @CheckForNull
-        private static File getExeFile(final File home) {
-            if (Functions.isWindows() && home != null) {
-                return new File(home, EXECUTABLE);
-            }
-            return null;
-        }
-
-        /**
-         * Gets the Tool-Server executable file.
-         *
-         * @param home
-         *            the home directory of ECU-TEST
-         * @param subDir
-         *            the sub directory relative to home directory
-         * @return the executable file or {@code null} if Unix-based system
-         */
-        @CheckForNull
-        private static File getTSExeFile(final File home, final String subDir) {
-            if (Functions.isWindows() && home != null && subDir != null) {
-                return new File(new File(home, subDir), TS_EXECUTABLE);
-            }
-            return null;
         }
     }
 }

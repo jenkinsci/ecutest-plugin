@@ -43,7 +43,7 @@ import java.util.Set;
 
 /**
  * Advanced pipeline step that returns a pre-configured {@link ATXServer} instance by name.
- * 
+ *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXGetServerStep extends Step {
@@ -53,8 +53,7 @@ public class ATXGetServerStep extends Step {
     /**
      * Instantiates a new {@link ATXGetServerStep}.
      *
-     * @param atxName
-     *            the ATX name
+     * @param atxName the ATX name
      */
     @DataBoundConstructor
     public ATXGetServerStep(final String atxName) {
@@ -86,10 +85,8 @@ public class ATXGetServerStep extends Step {
         /**
          * Instantiates a new {@link Execution}.
          *
-         * @param step
-         *            the step
-         * @param context
-         *            the context
+         * @param step    the step
+         * @param context the context
          */
         Execution(final ATXGetServerStep step, final StepContext context) {
             super(context);

@@ -33,8 +33,8 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import hudson.model.InvisibleAction;
 
 /**
- * Helper invisible action which is used for exchanging information between {@link ETClient}s and other object like
- * {@link ToolEnvContributor}.
+ * Helper invisible action which is used for exchanging information between {@link ETClient}s
+ * and other objects like {@link ToolEnvContributor}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
@@ -54,11 +54,9 @@ public class ToolEnvInvisibleAction extends InvisibleAction {
     /**
      * Instantiates a new {@link ToolEnvInvisibleAction}.
      *
-     * @param toolId
-     *            identifies this invisible action and is used as the suffix for the tool related build environment
-     *            variables
-     * @param toolClient
-     *            the tool client holding the relevant information
+     * @param toolId     identifies this invisible action and is used as the suffix
+     *                   for the tool related build environment variables
+     * @param toolClient the tool client holding the relevant information
      */
     public ToolEnvInvisibleAction(final int toolId, final ETClient toolClient) {
         super();
@@ -74,72 +72,42 @@ public class ToolEnvInvisibleAction extends InvisibleAction {
         lastTcf = toolClient.getLastTcf();
     }
 
-    /**
-     * @return the tool id
-     */
     public int getToolId() {
         return toolId;
     }
 
-    /**
-     * @return the tool name
-     */
     public String getToolName() {
         return toolName;
     }
 
-    /**
-     * @return the tool version
-     */
     public String getToolVersion() {
         return toolVersion;
     }
 
-    /**
-     * @return the tool installation
-     */
     public String getToolInstallation() {
         return toolInstallation;
     }
 
-    /**
-     * @return the tool workspace
-     */
     public String getToolWorkspace() {
         return toolWorkspace;
     }
 
-    /**
-     * @return the tool settings
-     */
     public String getToolSettings() {
         return toolSettings;
     }
 
-    /**
-     * @return the timeout
-     */
     public int getTimeout() {
         return timeout;
     }
 
-    /**
-     * @return the debug mode
-     */
     public boolean isDebug() {
         return debug;
     }
 
-    /**
-     * @return the last loaded TBC file path
-     */
     public String getLastTbc() {
         return lastTbc;
     }
 
-    /**
-     * @return the last loaded TCF file path
-     */
     public String getLastTcf() {
         return lastTcf;
     }

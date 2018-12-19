@@ -51,12 +51,9 @@ public class ExportPackageAttributeConfig extends ExportAttributeConfig {
     /**
      * Instantiates a new {@link ExportPackageAttributeConfig}.
      *
-     * @param filePath
-     *            the test file path whose attributes to export
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the export timeout
+     * @param filePath      the test file path whose attributes to export
+     * @param credentialsId the credentials id
+     * @param timeout       the export timeout
      */
     @DataBoundConstructor
     public ExportPackageAttributeConfig(final String filePath, final String credentialsId, final String timeout) {

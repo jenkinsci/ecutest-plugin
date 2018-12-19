@@ -53,12 +53,9 @@ public class ATXInstallation implements Serializable {
     /**
      * Instantiates a new {@link ATXInstallation}.
      *
-     * @param name
-     *            the name
-     * @param toolName
-     *            the tool name
-     * @param config
-     *            the configuration
+     * @param name     the name
+     * @param toolName the tool name
+     * @param config   the configuration
      */
     @DataBoundConstructor
     public ATXInstallation(final String name, final String toolName, final ATXConfig config) {
@@ -66,6 +63,38 @@ public class ATXInstallation implements Serializable {
         this.toolName = toolName;
         this.config = config == null ? new ATXConfig() : config;
 
+    }
+
+    /**
+     * Gets all ATX installations.
+     *
+     * @return all available installations, never {@code null}
+     */
+    public static ATXInstallation[] all() {
+        final Jenkins instance = Jenkins.getInstanceOrNull();
+        if (instance == null) {
+            return new ATXInstallation[0];
+        }
+        final ATXPublisher.DescriptorImpl atxDescriptor = instance
+            .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
+        return atxDescriptor.getInstallations();
+    }
+
+    /**
+     * Gets the ATX installation by name.
+     *
+     * @param name the name
+     * @return installation by name, {@code null} if not found
+     */
+    @CheckForNull
+    public static ATXInstallation get(final String name) {
+        final ATXInstallation[] installations = all();
+        for (final ATXInstallation installation : installations) {
+            if (StringUtils.equals(name, installation.getName())) {
+                return installation;
+            }
+        }
+        return null;
     }
 
     /**
@@ -89,38 +118,5 @@ public class ATXInstallation implements Serializable {
      */
     public ATXConfig getConfig() {
         return config;
-    }
-
-    /**
-     * Gets all ATX installations.
-     *
-     * @return all available installations, never {@code null}
-     */
-    public static ATXInstallation[] all() {
-        final Jenkins instance = Jenkins.getInstanceOrNull();
-        if (instance == null) {
-            return new ATXInstallation[0];
-        }
-        final ATXPublisher.DescriptorImpl atxDescriptor = instance
-                .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
-        return atxDescriptor.getInstallations();
-    }
-
-    /**
-     * Gets the ATX installation by name.
-     *
-     * @param name
-     *            the name
-     * @return installation by name, {@code null} if not found
-     */
-    @CheckForNull
-    public static ATXInstallation get(final String name) {
-        final ATXInstallation[] installations = all();
-        for (final ATXInstallation installation : installations) {
-            if (StringUtils.equals(name, installation.getName())) {
-                return installation;
-            }
-        }
-        return null;
     }
 }

@@ -57,8 +57,7 @@ public class TestValidator extends AbstractValidator {
     /**
      * Validates the test folder.
      *
-     * @param testFolder
-     *            the test folder
+     * @param testFolder the test folder
      * @return the form validation
      */
     public FormValidation validateTestFolder(final String testFolder) {
@@ -74,8 +73,7 @@ public class TestValidator extends AbstractValidator {
     /**
      * Validates the TBC file.
      *
-     * @param tbcFile
-     *            the TBC file
+     * @param tbcFile the TBC file
      * @return the form validation
      */
     public FormValidation validateTbcFile(final String tbcFile) {
@@ -93,8 +91,7 @@ public class TestValidator extends AbstractValidator {
     /**
      * Validates the TCF file.
      *
-     * @param tcfFile
-     *            the TCF file
+     * @param tcfFile the TCF file
      * @return the form validation
      */
     public FormValidation validateTcfFile(final String tcfFile) {
@@ -112,8 +109,7 @@ public class TestValidator extends AbstractValidator {
     /**
      * Validates the parameter name.
      *
-     * @param name
-     *            the parameter name
+     * @param name the parameter name
      * @return FormValidation
      */
     public FormValidation validateParameterName(final String name) {
@@ -131,8 +127,7 @@ public class TestValidator extends AbstractValidator {
     /**
      * Validates the parameter value.
      *
-     * @param value
-     *            the parameter value
+     * @param value the parameter value
      * @return FormValidation
      */
     public FormValidation validateParameterValue(final String value) {
@@ -148,8 +143,7 @@ public class TestValidator extends AbstractValidator {
     /**
      * Validates the global constant name.
      *
-     * @param name
-     *            the global constant name
+     * @param name the global constant name
      * @return FormValidation
      */
     public FormValidation validateGlobalConstantName(final String name) {
@@ -167,8 +161,7 @@ public class TestValidator extends AbstractValidator {
     /**
      * Validates the global constant value.
      *
-     * @param value
-     *            the global constant value
+     * @param value the global constant value
      * @return FormValidation
      */
     public FormValidation validateGlobalConstantValue(final String value) {
@@ -184,8 +177,7 @@ public class TestValidator extends AbstractValidator {
     /**
      * Validates the filter expression.
      *
-     * @param filterExpression
-     *            the filter expression
+     * @param filterExpression the filter expression
      * @return the form validation
      */
     public FormValidation validateFilterExpression(final String filterExpression) {
@@ -195,7 +187,7 @@ public class TestValidator extends AbstractValidator {
                 returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
             } else {
                 final String trimmedExpression = StringUtils.trimToEmpty(filterExpression).replaceAll("^\\(\\s*", "(")
-                        .replaceAll("\\s*\\)", ")");
+                    .replaceAll("\\s*\\)", ")");
                 final FilterExpressionValidator validator = new FilterExpressionValidator(trimmedExpression);
                 validator.validate();
                 if (!validator.isValid()) {
@@ -209,8 +201,7 @@ public class TestValidator extends AbstractValidator {
     /**
      * Checks if the variable name contains valid characters only.
      *
-     * @param name
-     *            the variable name
+     * @param name the variable name
      * @return {@code true} if variable name is valid, {@code false} otherwise
      */
     private boolean isValidVariableName(final String name) {
@@ -230,8 +221,7 @@ public class TestValidator extends AbstractValidator {
         /**
          * Instantiates a new {@link FilterExpressionValidator}.
          *
-         * @param expression
-         *            the expression to validate
+         * @param expression the expression to validate
          */
         FilterExpressionValidator(final String expression) {
             this.expression = expression;
@@ -252,8 +242,8 @@ public class TestValidator extends AbstractValidator {
 
                     @Override
                     public void syntaxError(final Recognizer<?, ?> recognizer, final Object offendingSymbol,
-                            final int line, final int charPositionInLine,
-                            final String msg, final RecognitionException e) {
+                                            final int line, final int charPositionInLine,
+                                            final String msg, final RecognitionException e) {
                         isValid = false;
                     }
                 });
@@ -263,8 +253,8 @@ public class TestValidator extends AbstractValidator {
 
                     @Override
                     public void syntaxError(final Recognizer<?, ?> recognizer, final Object offendingSymbol,
-                            final int line, final int charPositionInLine,
-                            final String msg, final RecognitionException e) {
+                                            final int line, final int charPositionInLine,
+                                            final String msg, final RecognitionException e) {
                         isValid = false;
                     }
                 });

@@ -31,9 +31,9 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
     <f:entry title="${%setting.name}" field="name">
-        <f:textbox />
+        <f:textbox/>
     </f:entry>
     <f:entry title="${%setting.value}">
-        <f:checkbox name="checked" checked="${instance.isChecked()}" default="false" />
+        <f:checkbox name="checked" checked="${instance.isChecked()}" default="false"/>
     </f:entry>
 </j:jelly>

@@ -75,8 +75,7 @@ public class TestProjectBuilderTest {
     /**
      * Asserts the builder properties.
      *
-     * @param builder
-     *            the builder
+     * @param builder the builder
      */
     private void assertBuilder(final TestProjectBuilder builder) {
         assertNotNull(builder);

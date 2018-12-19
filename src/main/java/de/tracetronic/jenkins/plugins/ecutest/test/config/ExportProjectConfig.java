@@ -51,20 +51,15 @@ public class ExportProjectConfig extends ExportConfig {
     /**
      * Instantiates a new {@link ExportProjectConfig}.
      *
-     * @param filePath
-     *            the file path
-     * @param exportPath
-     *            the export path
-     * @param createNewPath
-     *            specifies whether missing export path will be created
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the timeout
+     * @param filePath      the file path
+     * @param exportPath    the export path
+     * @param createNewPath specifies whether missing export path will be created
+     * @param credentialsId the credentials id
+     * @param timeout       the timeout
      */
     @DataBoundConstructor
     public ExportProjectConfig(final String filePath, final String exportPath, final boolean createNewPath,
-            final String credentialsId, final String timeout) {
+                               final String credentialsId, final String timeout) {
         super(filePath, exportPath, createNewPath, credentialsId, timeout);
     }
 

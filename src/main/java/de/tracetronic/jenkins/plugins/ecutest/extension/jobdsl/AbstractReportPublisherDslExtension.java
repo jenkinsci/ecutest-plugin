@@ -51,15 +51,13 @@ public abstract class AbstractReportPublisherDslExtension extends AbstractDslExt
     /**
      * Checks whether a tool installation identified by given name exists.
      *
-     * @param toolName
-     *            the tool name
-     * @param publisher
-     *            the builder
+     * @param toolName  the tool name
+     * @param publisher the builder
      */
     protected void checkToolInstallation(final String toolName, final AbstractReportPublisher publisher) {
         if (StringUtils.containsNone(toolName, "$")) {
             Preconditions.checkNotNull(publisher.getToolInstallation(toolName, new EnvVars()),
-                    NO_INSTALL_MSG, toolName);
+                NO_INSTALL_MSG, toolName);
         }
     }
 
@@ -91,8 +89,7 @@ public abstract class AbstractReportPublisherDslExtension extends AbstractDslExt
         /**
          * Option defining whether missing reports are allowed.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void allowMissing(final boolean value) {
             allowMissing = value;
@@ -101,8 +98,7 @@ public abstract class AbstractReportPublisherDslExtension extends AbstractDslExt
         /**
          * Option defining whether this publisher even runs on a failed build.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void runOnFailed(final boolean value) {
             runOnFailed = value;
@@ -111,8 +107,7 @@ public abstract class AbstractReportPublisherDslExtension extends AbstractDslExt
         /**
          * Option defining whether archiving artifacts is enabled.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void archiving(final boolean value) {
             archiving = value;
@@ -121,8 +116,7 @@ public abstract class AbstractReportPublisherDslExtension extends AbstractDslExt
         /**
          * Option defining whether artifacts are archived for all successful builds.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void keepAll(final boolean value) {
             keepAll = value;

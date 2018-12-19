@@ -74,13 +74,28 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     /**
      * Instantiates a new {@link ReportGeneratorPublisher}.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
      */
     @DataBoundConstructor
     public ReportGeneratorPublisher(@Nonnull final String toolName) {
         super();
         this.toolName = StringUtils.trimToEmpty(toolName);
+    }
+
+    /**
+     * Removes empty report generators.
+     *
+     * @param generators the generators
+     * @return the list of valid generators
+     */
+    private static List<ReportGeneratorConfig> removeEmptyGenerators(final List<ReportGeneratorConfig> generators) {
+        final List<ReportGeneratorConfig> validGenerators = new ArrayList<>();
+        for (final ReportGeneratorConfig generator : generators) {
+            if (StringUtils.isNotBlank(generator.getName())) {
+                validGenerators.add(generator);
+            }
+        }
+        return validGenerators;
     }
 
     /**
@@ -100,6 +115,15 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     }
 
     /**
+     * @param generators the report generators
+     */
+    @DataBoundSetter
+    public void setGenerators(final List<ReportGeneratorConfig> generators) {
+        this.generators = generators == null ? new ArrayList<>()
+            : removeEmptyGenerators(generators);
+    }
+
+    /**
      * @return the customGenerators
      */
     @Nonnull
@@ -108,45 +132,17 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * @param generators
-     *            the report generators
-     */
-    @DataBoundSetter
-    public void setGenerators(final List<ReportGeneratorConfig> generators) {
-        this.generators = generators == null ? new ArrayList<>()
-                : removeEmptyGenerators(generators);
-    }
-
-    /**
-     * @param customGenerators
-     *            the custom report generators
+     * @param customGenerators the custom report generators
      */
     @DataBoundSetter
     public void setCustomGenerators(final List<ReportGeneratorConfig> customGenerators) {
         this.customGenerators = customGenerators == null ? new ArrayList<>()
-                : removeEmptyGenerators(customGenerators);
-    }
-
-    /**
-     * Removes empty report generators.
-     *
-     * @param generators
-     *            the generators
-     * @return the list of valid generators
-     */
-    private static List<ReportGeneratorConfig> removeEmptyGenerators(final List<ReportGeneratorConfig> generators) {
-        final List<ReportGeneratorConfig> validGenerators = new ArrayList<>();
-        for (final ReportGeneratorConfig generator : generators) {
-            if (StringUtils.isNotBlank(generator.getName())) {
-                validGenerators.add(generator);
-            }
-        }
-        return validGenerators;
+            : removeEmptyGenerators(customGenerators);
     }
 
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
+                              final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = getLogger();
         logger.logInfo("Publishing generator reports...");
 
@@ -186,26 +182,20 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     /**
      * Generates the reports with the configured report generators.
      *
-     * @param reportFiles
-     *            the report files
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param reportFiles the report files
+     * @param run         the run
+     * @param workspace   the workspace
+     * @param launcher    the launcher
+     * @param listener    the listener
      * @return the list of generated reports
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws IOException          Signals that an I/O exception has occurred.
+     * @throws InterruptedException the interrupted exception
      */
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private List<GeneratorReport> generateReports(final List<FilePath> reportFiles, final Run<?, ?> run,
-            final FilePath workspace, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+                                                  final FilePath workspace, final Launcher launcher,
+                                                  final TaskListener listener)
+        throws IOException, InterruptedException {
         final TTConsoleLogger logger = getLogger();
         final List<GeneratorReport> reports = new ArrayList<>();
         final FilePath archiveTarget = getArchiveTarget(run);
@@ -235,7 +225,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
                 for (final FilePath reportDir : reportDirs) {
                     try {
                         final int copiedFiles = reportDir.copyRecursiveTo(String.format("**/%s/**", templateName),
-                                archiveTargetDir.child(reportDir.getName()));
+                            archiveTargetDir.child(reportDir.getName()));
                         logger.logInfo(String.format("-> Archived %d report file(s).", copiedFiles));
                     } catch (final IOException e) {
                         Util.displayIOException(e, listener);
@@ -245,12 +235,12 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
                 // Collect reports
                 if (archiveTargetDir.exists()) {
                     final GeneratorReport report = new GeneratorReport(String.format("%d", ++index), templateName,
-                            templateName, getDirectorySize(archiveTargetDir));
+                        templateName, getDirectorySize(archiveTargetDir));
                     reports.add(report);
                     for (final FilePath testReportDir : archiveTargetDir.listDirectories()) {
                         final GeneratorReport subReport = new GeneratorReport(String.format("%d", ++index),
-                                testReportDir.getBaseName(), String.format("%s/%s", templateName,
-                                        testReportDir.getBaseName()), getDirectorySize(testReportDir));
+                            testReportDir.getBaseName(), String.format("%s/%s", templateName,
+                            testReportDir.getBaseName()), getDirectorySize(testReportDir));
                         report.addSubReport(subReport);
                     }
                 }
@@ -263,10 +253,8 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     /**
      * Adds the {@link ReportGeneratorBuildAction} to the build holding the found {@link GeneratorReport}s.
      *
-     * @param run
-     *            the run
-     * @param reports
-     *            the list of {@link GeneratorReport}s to add
+     * @param run     the run
+     * @param reports the list of {@link GeneratorReport}s to add
      */
     private void addBuildAction(final Run<?, ?> run, final List<GeneratorReport> reports) {
         ReportGeneratorBuildAction action = run.getAction(ReportGeneratorBuildAction.class);

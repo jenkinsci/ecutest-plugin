@@ -46,7 +46,7 @@ import java.util.Set;
 
 /**
  * Advanced pipeline step that returns a new {@link ATXServer} instance.
- * 
+ *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXNewServerStep extends Step {
@@ -61,12 +61,9 @@ public class ATXNewServerStep extends Step {
     /**
      * Instantiates a new {@link ATXNewServerStep}.
      *
-     * @param atxName
-     *            the ATX name
-     * @param toolName
-     *            the tool name
-     * @param config
-     *            the ATX configuration
+     * @param atxName  the ATX name
+     * @param toolName the tool name
+     * @param config   the ATX configuration
      */
     @DataBoundConstructor
     public ATXNewServerStep(@Nonnull final String atxName, @Nonnull final String toolName, final ATXConfig config) {
@@ -115,10 +112,8 @@ public class ATXNewServerStep extends Step {
         /**
          * Instantiates a new {@link Execution}.
          *
-         * @param step
-         *            the step
-         * @param context
-         *            the context
+         * @param step    the step
+         * @param context the context
          */
         Execution(final ATXNewServerStep step, final StepContext context) {
             super(context);

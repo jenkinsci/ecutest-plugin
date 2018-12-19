@@ -53,7 +53,7 @@ import java.util.List;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGeneratorConfig> implements ExpandableConfig,
-        Serializable {
+    Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -63,15 +63,29 @@ public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGenerat
     /**
      * Instantiates a new {@link ReportGeneratorConfig}.
      *
-     * @param name
-     *            the name
-     * @param settings
-     *            the settings
+     * @param name     the name
+     * @param settings the settings
      */
     @DataBoundConstructor
     public ReportGeneratorConfig(final String name, final List<ReportGeneratorSetting> settings) {
         this.name = StringUtils.trimToEmpty(name);
         this.settings = settings == null ? new ArrayList<>() : removeEmptySettings(settings);
+    }
+
+    /**
+     * Removes empty settings.
+     *
+     * @param settings the settings
+     * @return the list of valid settings
+     */
+    private static List<ReportGeneratorSetting> removeEmptySettings(final List<ReportGeneratorSetting> settings) {
+        final List<ReportGeneratorSetting> validSettings = new ArrayList<>();
+        for (final ReportGeneratorSetting setting : settings) {
+            if (StringUtils.isNotBlank(setting.getName())) {
+                validSettings.add(setting);
+            }
+        }
+        return validSettings;
     }
 
     /**
@@ -88,23 +102,6 @@ public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGenerat
      */
     public List<ReportGeneratorSetting> getSettings() {
         return settings;
-    }
-
-    /**
-     * Removes empty settings.
-     *
-     * @param settings
-     *            the settings
-     * @return the list of valid settings
-     */
-    private static List<ReportGeneratorSetting> removeEmptySettings(final List<ReportGeneratorSetting> settings) {
-        final List<ReportGeneratorSetting> validSettings = new ArrayList<>();
-        for (final ReportGeneratorSetting setting : settings) {
-            if (StringUtils.isNotBlank(setting.getName())) {
-                validSettings.add(setting);
-            }
-        }
-        return validSettings;
     }
 
     @Override
@@ -127,7 +124,7 @@ public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGenerat
          * Defines the standard report generators shipped with ECU-TEST installation.
          */
         private static final List<String> REPORT_GENERATORS = Arrays.asList(
-                "ATX", "EXCEL", "HTML", "JSON", "OMR", "TestSpec", "TRF-SPLIT", "TXT", "UNIT");
+            "ATX", "EXCEL", "HTML", "JSON", "OMR", "TestSpec", "TRF-SPLIT", "TXT", "UNIT");
 
         private final ReportGeneratorValidator reportValidator = new ReportGeneratorValidator();
 
@@ -147,8 +144,7 @@ public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGenerat
         /**
          * Validates the generator name.
          *
-         * @param value
-         *            the value
+         * @param value the value
          * @return the form validation
          */
         public FormValidation doCheckName(@QueryParameter final String value) {

@@ -55,8 +55,7 @@ public abstract class AbstractTestDescriptor extends BuildStepDescriptor<Builder
     /**
      * Instantiates a {@link AbstractTestDescriptor}.
      *
-     * @param clazz
-     *            the {@link AbstractTestBuilder} class name
+     * @param clazz the {@link AbstractTestBuilder} class name
      */
     public AbstractTestDescriptor(final Class<? extends AbstractTestBuilder> clazz) {
         super(clazz);
@@ -72,8 +71,7 @@ public abstract class AbstractTestDescriptor extends BuildStepDescriptor<Builder
     /**
      * Validates the test file.
      *
-     * @param value
-     *            the test file
+     * @param value the test file
      * @return the form validation
      */
     public abstract FormValidation doCheckTestFile(@QueryParameter String value);
@@ -81,8 +79,8 @@ public abstract class AbstractTestDescriptor extends BuildStepDescriptor<Builder
     @Override
     @SuppressWarnings("deprecation")
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(
-            value = "NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE",
-            justification = "False positive")
+        value = "NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE",
+        justification = "False positive")
     public Builder newInstance(final StaplerRequest req, @Nonnull final JSONObject json) throws FormException {
         final JSONObject testConfig = json.optJSONObject("testConfig");
         if (testConfig != null) {

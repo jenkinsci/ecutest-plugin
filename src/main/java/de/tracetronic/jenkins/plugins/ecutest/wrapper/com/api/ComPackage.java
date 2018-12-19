@@ -45,8 +45,7 @@ public interface ComPackage {
      * Queries the package name.
      *
      * @return the name of this package
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     String getName() throws ETComException;
 
@@ -54,8 +53,7 @@ public interface ComPackage {
      * Queries the package description.
      *
      * @return the description of this package
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     String getDescription() throws ETComException;
 
@@ -70,8 +68,7 @@ public interface ComPackage {
      * </ul>
      *
      * @return the error list
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     List<CheckInfoHolder> check() throws ETComException;
 

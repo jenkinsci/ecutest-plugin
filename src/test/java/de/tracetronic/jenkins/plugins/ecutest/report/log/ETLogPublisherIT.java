@@ -93,7 +93,7 @@ public class ETLogPublisherIT extends IntegrationTestBase {
 
         final ETLogPublisher after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after,
-                "unstableOnWarning,failedOnError,testSpecific,allowMissing,runOnFailed,archiving,keepAll");
+            "unstableOnWarning,failedOnError,testSpecific,allowMissing,runOnFailed,archiving,keepAll");
     }
 
     @Test
@@ -138,7 +138,7 @@ public class ETLogPublisherIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                    final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) throws InterruptedException, IOException {
                 return false;
             }
         });
@@ -150,7 +150,7 @@ public class ETLogPublisherIT extends IntegrationTestBase {
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
         assertThat("Skip message should be present in console log", build.getLog(100).toString(),
-                containsString("Skipping publisher"));
+            containsString("Skipping publisher"));
     }
 
     @Test
@@ -206,12 +206,9 @@ public class ETLogPublisherIT extends IntegrationTestBase {
     /**
      * Asserts the pipeline step execution.
      *
-     * @param scriptName
-     *            the script name
-     * @param status
-     *            the expected build status
-     * @throws Exception
-     *             the exception
+     * @param scriptName the script name
+     * @param status     the expected build status
+     * @throws Exception the exception
      */
     private void assertPipelineStep(final String scriptName, final boolean status) throws Exception {
         assumeWindowsSlave();

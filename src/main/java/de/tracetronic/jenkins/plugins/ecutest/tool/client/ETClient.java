@@ -69,21 +69,15 @@ public class ETClient extends AbstractToolClient {
     /**
      * Instantiates a new {@link ETClient}.
      *
-     * @param toolName
-     *            the tool name identifying the chosen {@link ETInstallation}.
-     * @param installPath
-     *            the ECU-TEST install path
-     * @param workspaceDir
-     *            the ECU-TEST workspace directory
-     * @param settingsDir
-     *            the ECU-TEST settings directory
-     * @param timeout
-     *            the timeout to start ECU-TEST
-     * @param debug
-     *            the debug mode
+     * @param toolName     the tool name identifying the chosen {@link ETInstallation}.
+     * @param installPath  the ECU-TEST install path
+     * @param workspaceDir the ECU-TEST workspace directory
+     * @param settingsDir  the ECU-TEST settings directory
+     * @param timeout      the timeout to start ECU-TEST
+     * @param debug        the debug mode
      */
     public ETClient(final String toolName, final String installPath, final String workspaceDir,
-            final String settingsDir, final int timeout, final boolean debug) {
+                    final String settingsDir, final int timeout, final boolean debug) {
         super(toolName, installPath, timeout);
         this.workspaceDir = StringUtils.trimToEmpty(workspaceDir);
         this.settingsDir = StringUtils.trimToEmpty(settingsDir);
@@ -96,10 +90,8 @@ public class ETClient extends AbstractToolClient {
     /**
      * Instantiates a new {@link ETClient}.
      *
-     * @param toolName
-     *            the tool name identifying the chosen {@link ETInstallation}.
-     * @param timeout
-     *            the timeout to start ECU-TEST
+     * @param toolName the tool name identifying the chosen {@link ETInstallation}.
+     * @param timeout  the timeout to start ECU-TEST
      */
     public ETClient(final String toolName, final int timeout) {
         super(toolName, timeout);
@@ -109,6 +101,49 @@ public class ETClient extends AbstractToolClient {
         version = "";
         lastTbc = "";
         lastTcf = "";
+    }
+
+    /**
+     * Checks already opened ECU-TEST instances.
+     *
+     * @param launcher the launcher
+     * @param kill     specifies whether to task-kill the running processes
+     * @return list of found processes, can be empty but never {@code null}
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
+     */
+    public static List<String> checkProcesses(final Launcher launcher, final boolean kill)
+        throws IOException, InterruptedException {
+        return launcher.getChannel().call(new CheckProcessCallable(kill));
+    }
+
+    /**
+     * Closes already opened ECU-TEST instances.
+     *
+     * @param kill     specifies whether to task-kill the running processes
+     * @param launcher the launcher
+     * @param listener the listener
+     * @return {@code true} if ECU-TEST instance has been stopped successfully
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
+     */
+    public static boolean stopProcesses(final Launcher launcher, final TaskListener listener, final boolean kill)
+        throws IOException, InterruptedException {
+        return launcher.getChannel().call(new StopCallable(StartETBuilder.DEFAULT_TIMEOUT, kill, listener));
+    }
+
+    /**
+     * Gets the COM version of currently running ECU-TEST instance.
+     *
+     * @param launcher the launcher
+     * @param listener the listener
+     * @return the COM version
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
+     */
+    public static String getComVersion(final Launcher launcher, final TaskListener listener)
+        throws IOException, InterruptedException {
+        return launcher.getChannel().call(new VersionCallable(listener));
     }
 
     /**
@@ -153,10 +188,10 @@ public class ETClient extends AbstractToolClient {
         return lastTcf;
     }
 
-    @SuppressWarnings({ "checkstyle:cyclomaticcomplexity", "checkstyle:npathcomplexity" })
+    @SuppressWarnings({"checkstyle:cyclomaticcomplexity", "checkstyle:npathcomplexity"})
     @Override
     public boolean start(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                         final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo(String.format("Starting %s...", getToolName()));
 
@@ -177,7 +212,7 @@ public class ETClient extends AbstractToolClient {
             final boolean is64BitJVM = ProcessUtil.is64BitJVM(workspace.toComputer());
             if (!checkProcessArchitecture(getInstallPath(), is64BitJVM, launcher)) {
                 logger.logError("The configured ECU-TEST executable is not compatible with running Java VM! "
-                        + "Please install a 64-bit JRE which supports 64-bit ECU-TEST installation!");
+                    + "Please install a 64-bit JRE which supports 64-bit ECU-TEST installation!");
                 return false;
             }
             // Launch process
@@ -205,13 +240,13 @@ public class ETClient extends AbstractToolClient {
         final ToolVersion comToolVersion = ToolVersion.parse(comVersion);
         if (comToolVersion.compareWithoutMicroTo(ETPlugin.ET_MAX_VERSION) > 0) {
             logger.logWarn(String.format(
-                    "The configured ECU-TEST version %s might be incompatible with this plugin. "
-                            + "Currently supported versions: %s up to %s", comVersion,
-                    ETPlugin.ET_MIN_VERSION.toMinorString(), ETPlugin.ET_MAX_VERSION.toMinorString()));
+                "The configured ECU-TEST version %s might be incompatible with this plugin. "
+                    + "Currently supported versions: %s up to %s", comVersion,
+                ETPlugin.ET_MIN_VERSION.toMinorString(), ETPlugin.ET_MAX_VERSION.toMinorString()));
         } else if (comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
             logger.logError(String.format(
-                    "The configured ECU-TEST version %s is not compatible with this plugin. "
-                            + "Please use at least ECU-TEST %s!", comVersion, ETPlugin.ET_MIN_VERSION.toMicroString()));
+                "The configured ECU-TEST version %s is not compatible with this plugin. "
+                    + "Please use at least ECU-TEST %s!", comVersion, ETPlugin.ET_MIN_VERSION.toMicroString()));
             // Close ECU-TEST
             stop(checkProcesses, workspace, launcher, listener);
             return false;
@@ -229,7 +264,7 @@ public class ETClient extends AbstractToolClient {
 
     @Override
     public boolean stop(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
+                        final TaskListener listener) throws InterruptedException, IOException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo(String.format("Stopping %s...", getToolName()));
 
@@ -256,9 +291,9 @@ public class ETClient extends AbstractToolClient {
 
     @Override
     public boolean restart(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                           final TaskListener listener) throws IOException, InterruptedException {
         return stop(checkProcesses, workspace, launcher, listener)
-                && start(checkProcesses, workspace, launcher, listener);
+            && start(checkProcesses, workspace, launcher, listener);
     }
 
     @Override
@@ -285,79 +320,18 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
-     * Checks already opened ECU-TEST instances.
-     *
-     * @param launcher
-     *            the launcher
-     * @param kill
-     *            specifies whether to task-kill the running processes
-     * @return list of found processes, can be empty but never {@code null}
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
-     */
-    public static List<String> checkProcesses(final Launcher launcher, final boolean kill)
-            throws IOException, InterruptedException {
-        return launcher.getChannel().call(new CheckProcessCallable(kill));
-    }
-
-    /**
-     * Closes already opened ECU-TEST instances.
-     *
-     * @param kill
-     *            specifies whether to task-kill the running processes
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
-     * @return {@code true} if ECU-TEST instance has been stopped successfully
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
-     */
-    public static boolean stopProcesses(final Launcher launcher, final TaskListener listener, final boolean kill)
-            throws IOException, InterruptedException {
-        return launcher.getChannel().call(new StopCallable(StartETBuilder.DEFAULT_TIMEOUT, kill, listener));
-    }
-
-    /**
-     * Gets the COM version of currently running ECU-TEST instance.
-     *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
-     * @return the COM version
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
-     */
-    public static String getComVersion(final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
-        return launcher.getChannel().call(new VersionCallable(listener));
-    }
-
-    /**
      * Checks the process architecture compatibility between ECU-TEST and underlying JVM that runs the slave.
      * A 64-bit JVM supports both 32-bit and 64-bit ECU-TEST, while 32-bit JVM is only compatible with 32-bit ECU-TEST.
      *
-     * @param processPath
-     *            the full process path
-     * @param is64BitJVM
-     *            specifies whether the JVM supports 64-bit architecture
-     * @param launcher
-     *            the launcher
+     * @param processPath the full process path
+     * @param is64BitJVM  specifies whether the JVM supports 64-bit architecture
+     * @param launcher    the launcher
      * @return {@code true} if architectures are compatible, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public boolean checkProcessArchitecture(final String processPath, final boolean is64BitJVM,
-            final Launcher launcher) throws IOException, InterruptedException {
+                                            final Launcher launcher) throws IOException, InterruptedException {
         return launcher.getChannel().call(new CheckProcessArchitectureCallable(processPath, is64BitJVM));
     }
 
@@ -374,10 +348,8 @@ public class ETClient extends AbstractToolClient {
         /**
          * Instantiates a new {@link StartCallable}.
          *
-         * @param timeout
-         *            the timeout
-         * @param listener
-         *            the listener
+         * @param timeout  the timeout
+         * @param listener the listener
          */
         StartCallable(final int timeout, final TaskListener listener) {
             this.timeout = timeout;
@@ -414,12 +386,9 @@ public class ETClient extends AbstractToolClient {
         /**
          * Instantiates a {@link StopCallable}.
          *
-         * @param timeout
-         *            the timeout
-         * @param checkProcesses
-         *            specifies whether to check open processes after closing
-         * @param listener
-         *            the listener
+         * @param timeout        the timeout
+         * @param checkProcesses specifies whether to check open processes after closing
+         * @param listener       the listener
          */
         StopCallable(final int timeout, final boolean checkProcesses, final TaskListener listener) {
             this.timeout = timeout;
@@ -464,8 +433,7 @@ public class ETClient extends AbstractToolClient {
         /**
          * Instantiates a new {@link CheckProcessCallable}.
          *
-         * @param kill
-         *            specifies whether to task-kill running processes
+         * @param kill specifies whether to task-kill running processes
          */
         CheckProcessCallable(final boolean kill) {
             this.kill = kill;
@@ -489,8 +457,7 @@ public class ETClient extends AbstractToolClient {
         /**
          * Instantiates a new {@link VersionCallable}.
          *
-         * @param listener
-         *            the listener
+         * @param listener the listener
          */
         VersionCallable(final TaskListener listener) {
             this.listener = listener;
@@ -522,8 +489,7 @@ public class ETClient extends AbstractToolClient {
         /**
          * Instantiates a new {@link LastTbcCallable}.
          *
-         * @param listener
-         *            the listener
+         * @param listener the listener
          */
         LastTbcCallable(final TaskListener listener) {
             this.listener = listener;
@@ -535,8 +501,8 @@ public class ETClient extends AbstractToolClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
-                    TestBenchConfiguration tbc = (TestBenchConfiguration)
-                            comClient.getCurrentTestBenchConfiguration()) {
+                 TestBenchConfiguration tbc = (TestBenchConfiguration)
+                     comClient.getCurrentTestBenchConfiguration()) {
                 tbcFilePath = StringUtils.trimToEmpty(tbc.getFileName());
             } catch (final ETComException e) {
                 logger.logError("-> Caught COM exception: " + e.getMessage());
@@ -557,8 +523,7 @@ public class ETClient extends AbstractToolClient {
         /**
          * Instantiates a new {@link LastTcfCallable}.
          *
-         * @param listener
-         *            the listener
+         * @param listener the listener
          */
         LastTcfCallable(final TaskListener listener) {
             this.listener = listener;
@@ -570,7 +535,7 @@ public class ETClient extends AbstractToolClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
-                    TestConfiguration tcf = (TestConfiguration) comClient.getCurrentTestConfiguration()) {
+                 TestConfiguration tcf = (TestConfiguration) comClient.getCurrentTestConfiguration()) {
                 tcfFilePath = StringUtils.trimToEmpty(tcf.getFileName());
             } catch (final ETComException e) {
                 logger.logError("-> Caught COM exception: " + e.getMessage());
@@ -592,10 +557,8 @@ public class ETClient extends AbstractToolClient {
         /**
          * Instantiates a new {@link CheckProcessArchitectureCallable}.
          *
-         * @param processPath
-         *            the full process file path
-         * @param is64BitJVM
-         *            specifies whether the JVM supports 64-bit architecture
+         * @param processPath the full process file path
+         * @param is64BitJVM  specifies whether the JVM supports 64-bit architecture
          */
         CheckProcessArchitectureCallable(final String processPath, final boolean is64BitJVM) {
             this.processPath = processPath;

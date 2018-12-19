@@ -77,11 +77,11 @@ public class ReportPublisherParamInstallDslExtensionIT extends AbstractDslExtens
     @Before
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
-                .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
 
         final ATXPublisher.DescriptorImpl atxImpl = jenkins.jenkins
-                .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
+            .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
         final ATXInstallation inst = new ATXInstallation("TEST-GUIDE", "${ECUTEST}", new ATXConfig());
         atxImpl.setInstallations(inst);
     }
@@ -98,13 +98,14 @@ public class ReportPublisherParamInstallDslExtensionIT extends AbstractDslExtens
     public void testPublishATXWithDsl() throws Exception {
         final FreeStyleProject project = createTestJob();
         final EnvVars envVars = new EnvVars(
-                Collections.unmodifiableMap(new HashMap<String, String>() {
+            Collections.unmodifiableMap(new HashMap<String, String>() {
 
-                    private static final long serialVersionUID = 1L;
-                    {
-                        put("TESTGUIDE", "TEST-GUIDE");
-                    }
-                }));
+                private static final long serialVersionUID = 1L;
+
+                {
+                    put("TESTGUIDE", "TEST-GUIDE");
+                }
+            }));
 
         final DescribableList<Publisher, Descriptor<Publisher>> publishers = project.getPublishersList();
         final ATXPublisher publisher = publishers.get(ATXPublisher.class);

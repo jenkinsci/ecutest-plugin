@@ -30,7 +30,7 @@
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:t="/lib/hudson">
-    <link type="text/css" href="${resURL}/plugin/ecutest/css/style.css" rel="stylesheet" />
+    <link type="text/css" href="${resURL}/plugin/ecutest/css/style.css" rel="stylesheet"/>
     <table class="jobMain">
         <t:summary icon="${it.iconFileName}">
             <div>

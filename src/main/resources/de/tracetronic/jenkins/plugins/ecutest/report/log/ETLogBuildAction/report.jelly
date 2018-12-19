@@ -33,8 +33,8 @@
     <tr>
         <td>
             <div style="text-indent: ${indent}px;">
-                <lsi:icon class="${it.iconClassName} icon-sm" alt="ECU-TEST Log" />
-                <st:nbsp />
+                <lsi:icon class="${it.iconClassName} icon-sm" alt="ECU-TEST Log"/>
+                <st:nbsp/>
                 <j:choose>
                     <j:when test="${!report.fileName.endsWith('.log')}">
                         <j:if test="${owner == build}">
@@ -58,12 +58,12 @@
         <td class="fileSize">
             ${h.humanReadableByteSize(report.fileSize)}
         </td>
-        <td />
+        <td/>
     </tr>
-    <j:set var="maxLogSize" value="${it.getMaxLogSize()}" />
-    <j:set var="warningLogs" value="${report.getWarningLogs()}" />
-    <j:set var="warningLogSize" value="${size(warningLogs)}" />
-    <j:set var="warningLogCount" value="${report.getWarningLogCount()}" />
+    <j:set var="maxLogSize" value="${it.getMaxLogSize()}"/>
+    <j:set var="warningLogs" value="${report.getWarningLogs()}"/>
+    <j:set var="warningLogSize" value="${size(warningLogs)}"/>
+    <j:set var="warningLogCount" value="${report.getWarningLogCount()}"/>
     <j:if test="${!empty(warningLogs)}">
         <tr>
             <td colspan="3" class="warningHeader">
@@ -86,9 +86,9 @@
             </tr>
         </j:if>
     </j:if>
-    <j:set var="errorLogs" value="${report.getErrorLogs()}" />
-    <j:set var="errorLogSize" value="${size(errorLogs)}" />
-    <j:set var="errorLogCount" value="${report.getErrorLogCount()}" />
+    <j:set var="errorLogs" value="${report.getErrorLogs()}"/>
+    <j:set var="errorLogSize" value="${size(errorLogs)}"/>
+    <j:set var="errorLogCount" value="${report.getErrorLogCount()}"/>
     <j:if test="${!empty(errorLogs)}">
         <tr>
             <td colspan="3" class="errorHeader">
@@ -113,11 +113,13 @@
     </j:if>
     <j:if test="${!empty(warningLogs) || !empty(errorLogs)}">
         <tr>
-            <td colspan="3"><br /></td>
+            <td colspan="3">
+                <br/>
+            </td>
         </tr>
     </j:if>
-    <j:set var="indent" value="${indent+20}" />
+    <j:set var="indent" value="${indent+20}"/>
     <j:forEach var="report" items="${report.getSubReports()}">
-        <st:include page="report.jelly" />
+        <st:include page="report.jelly"/>
     </j:forEach>
 </j:jelly>

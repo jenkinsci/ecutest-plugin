@@ -53,7 +53,7 @@ public class ETInstallationIT extends IntegrationTestBase {
     @LocalData
     public void testInstallation() {
         final ETInstallation[] installations = jenkins.jenkins.getDescriptorByType(ETInstallation.DescriptorImpl.class)
-                .getInstallations();
+            .getInstallations();
         assertEquals(1, installations.length);
 
         final ETInstallation inst = installations[0];
@@ -66,7 +66,7 @@ public class ETInstallationIT extends IntegrationTestBase {
     @LocalData
     public void testInstallationWithCustomProgId() {
         final ETInstallation[] installations = jenkins.jenkins.getDescriptorByType(ETInstallation.DescriptorImpl.class)
-                .getInstallations();
+            .getInstallations();
         assertEquals(1, installations.length);
 
         final ETInstallation inst = installations[0];
@@ -79,7 +79,7 @@ public class ETInstallationIT extends IntegrationTestBase {
     @LocalData
     public void testInstallationWithoutConfiguration() {
         final ETInstallation[] installations = jenkins.jenkins.getDescriptorByType(ETInstallation.DescriptorImpl.class)
-                .getInstallations();
+            .getInstallations();
         assertEquals(0, installations.length);
     }
 
@@ -87,7 +87,7 @@ public class ETInstallationIT extends IntegrationTestBase {
     @LocalData
     public void testInstallationMigration() {
         final ETInstallation[] installations = jenkins.jenkins.getDescriptorByType(ETInstallation.DescriptorImpl.class)
-                .getInstallations();
+            .getInstallations();
         assertEquals(1, installations.length);
 
         final ETInstallation inst = installations[0];
@@ -100,18 +100,18 @@ public class ETInstallationIT extends IntegrationTestBase {
     public void testGlobalConfigPresence() throws Exception {
         final HtmlPage page = getWebClient().goTo("configureTools");
         jenkins.assertXPath(page,
-                "//tr[@name='de-tracetronic-jenkins-plugins-ecutest-tool-installation-ETInstallation']");
+            "//tr[@name='de-tracetronic-jenkins-plugins-ecutest-tool-installation-ETInstallation']");
     }
 
     @Test
     public void testFormRoundTrip() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
-                .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", Collections
-                .singletonList(new ETToolProperty("ECU-TEST6.Application", 120))));
+            .singletonList(new ETToolProperty("ECU-TEST6.Application", 120))));
 
         final ToolLocationNodeProperty property = new ToolLocationNodeProperty(
-                new ToolLocationNodeProperty.ToolLocation(etDescriptor, "ECU-TEST", "C:\\ECU-TEST"));
+            new ToolLocationNodeProperty.ToolLocation(etDescriptor, "ECU-TEST", "C:\\ECU-TEST"));
         final DumbSlave slave = jenkins.createSlave("slave", new EnvVars());
         slave.getNodeProperties().add(property);
 

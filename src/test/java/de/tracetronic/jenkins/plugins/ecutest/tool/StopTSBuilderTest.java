@@ -60,8 +60,7 @@ public class StopTSBuilderTest {
     /**
      * Asserts the builder properties.
      *
-     * @param builder
-     *            the builder
+     * @param builder the builder
      */
     private void assertBuilder(final StopTSBuilder builder) {
         assertNotNull(builder);

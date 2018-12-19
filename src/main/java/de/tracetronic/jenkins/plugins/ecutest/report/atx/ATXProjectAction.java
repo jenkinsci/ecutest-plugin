@@ -39,9 +39,7 @@ import javax.annotation.CheckForNull;
 /**
  * Action to show a link to {@link ATXReport}s in side menu of projects.
  *
- * @param <T>
- *            the report type, either {@link ATXReport} or {@link ATXZipReport}
- *
+ * @param <T> the report type, either {@link ATXReport} or {@link ATXZipReport}
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXProjectAction<T extends AbstractTestReport> extends AbstractATXAction {
@@ -49,8 +47,7 @@ public class ATXProjectAction<T extends AbstractTestReport> extends AbstractATXA
     /**
      * Instantiates a new {@link ATXProjectAction}.
      *
-     * @param projectLevel
-     *            specifies whether archiving is restricted to project level only
+     * @param projectLevel specifies whether archiving is restricted to project level only
      */
     public ATXProjectAction(final boolean projectLevel) {
         super(projectLevel);
@@ -61,8 +58,7 @@ public class ATXProjectAction<T extends AbstractTestReport> extends AbstractATXA
      * <p>
      * Resolves the owner by {@link StaplerRequest#findAncestorObject(Class)}.
      *
-     * @param req
-     *            the {@link StaplerRequest} used for access this action
+     * @param req the {@link StaplerRequest} used for access this action
      * @return the last {@link ATXBuildAction} or {@code null} if no proper build exists
      */
     @SuppressWarnings("unchecked")
@@ -77,10 +73,8 @@ public class ATXProjectAction<T extends AbstractTestReport> extends AbstractATXA
      * <p>
      * Delegates to the last {@link ATXBuildAction}.
      *
-     * @param token
-     *            the URL token
-     * @param req
-     *            the {@link StaplerRequest} used for access this action
+     * @param token the URL token
+     * @param req   the {@link StaplerRequest} used for access this action
      * @return the requested {@link ATXReport} or {@code null} if no proper report exists
      */
     public T getDynamic(final String token, final StaplerRequest req) {

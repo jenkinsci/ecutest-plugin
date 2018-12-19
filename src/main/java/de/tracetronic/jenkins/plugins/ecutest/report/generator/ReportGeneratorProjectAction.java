@@ -45,8 +45,7 @@ public class ReportGeneratorProjectAction extends AbstractReportGeneratorAction 
     /**
      * Instantiates a new {@link ReportGeneratorProjectAction}.
      *
-     * @param projectLevel
-     *            specifies whether archiving is restricted to project level only
+     * @param projectLevel specifies whether archiving is restricted to project level only
      */
     public ReportGeneratorProjectAction(final boolean projectLevel) {
         super(projectLevel);
@@ -57,8 +56,7 @@ public class ReportGeneratorProjectAction extends AbstractReportGeneratorAction 
      * <p>
      * Resolves the owner by {@link StaplerRequest#findAncestorObject(Class)}.
      *
-     * @param req
-     *            the {@link StaplerRequest} used for access this action
+     * @param req the {@link StaplerRequest} used for access this action
      * @return the last {@link ReportGeneratorBuildAction} or {@code null} if no proper build exists
      */
     @CheckForNull
@@ -72,10 +70,8 @@ public class ReportGeneratorProjectAction extends AbstractReportGeneratorAction 
      * <p>
      * Delegates to the last {@link ReportGeneratorBuildAction}.
      *
-     * @param token
-     *            the URL token
-     * @param req
-     *            the {@link StaplerRequest} used for access this action
+     * @param token the URL token
+     * @param req   the {@link StaplerRequest} used for access this action
      * @return the requested {@link GeneratorReport} or {@code null} if no proper report exists
      */
     public GeneratorReport getDynamic(final String token, final StaplerRequest req) {

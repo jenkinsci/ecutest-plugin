@@ -64,17 +64,13 @@ public class ProjectClient extends AbstractTestClient {
     /**
      * Instantiates a new {@link ProjectClient}.
      *
-     * @param testFile
-     *            the project file
-     * @param testConfig
-     *            the test configuration
-     * @param projectConfig
-     *            the project configuration
-     * @param executionConfig
-     *            the execution configuration
+     * @param testFile        the project file
+     * @param testConfig      the test configuration
+     * @param projectConfig   the project configuration
+     * @param executionConfig the execution configuration
      */
     public ProjectClient(final String testFile, final TestConfig testConfig,
-            final ProjectConfig projectConfig, final ExecutionConfig executionConfig) {
+                         final ProjectConfig projectConfig, final ExecutionConfig executionConfig) {
         super(testFile, testConfig, executionConfig);
         this.projectConfig = projectConfig;
     }
@@ -88,7 +84,7 @@ public class ProjectClient extends AbstractTestClient {
 
     @Override
     public boolean runTestCase(final FilePath workspace, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -99,14 +95,14 @@ public class ProjectClient extends AbstractTestClient {
 
         // Load test configuration
         if (!getTestConfig().isKeepConfig() && !launcher.getChannel().call(
-                new LoadConfigCallable(getTestConfig(), listener))) {
+            new LoadConfigCallable(getTestConfig(), listener))) {
             return false;
         }
 
         // Open and check project
         if (!launcher.getChannel().call(
-                new OpenProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig().isCheckTestFile(),
-                        listener))) {
+            new OpenProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig().isCheckTestFile(),
+                listener))) {
             return false;
         }
 
@@ -117,7 +113,7 @@ public class ProjectClient extends AbstractTestClient {
         try {
             // Run project
             final TestInfoHolder testInfo = launcher.getChannel().call(
-                    new RunProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig(), listener));
+                new RunProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig(), listener));
 
             // Set project information
             if (testInfo != null) {
@@ -151,17 +147,13 @@ public class ProjectClient extends AbstractTestClient {
         /**
          * Instantiates a new {@link OpenProjectCallable}.
          *
-         * @param projectFile
-         *            the project file
-         * @param projectConfig
-         *            the project configuration
-         * @param checkTestFile
-         *            specifies whether to check the project file
-         * @param listener
-         *            the listener
+         * @param projectFile   the project file
+         * @param projectConfig the project configuration
+         * @param checkTestFile specifies whether to check the project file
+         * @param listener      the listener
          */
         OpenProjectCallable(final String projectFile, final ProjectConfig projectConfig,
-                final boolean checkTestFile, final TaskListener listener) {
+                            final boolean checkTestFile, final TaskListener listener) {
             this.projectFile = projectFile;
             this.projectConfig = projectConfig;
             this.checkTestFile = checkTestFile;
@@ -177,15 +169,15 @@ public class ProjectClient extends AbstractTestClient {
             logger.logInfo("- Opening project...");
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
-                    Project project = (Project) comClient.openProject(projectFile, execInCurrentPkgDir,
-                            filterExpression)) {
+                 Project project = (Project) comClient.openProject(projectFile, execInCurrentPkgDir,
+                     filterExpression)) {
                 logger.logInfo("-> Project opened successfully.");
                 if (checkTestFile) {
                     logger.logInfo("- Checking project...");
                     final List<CheckInfoHolder> checks = project.check();
                     for (final CheckInfoHolder check : checks) {
                         final String logMessage = String.format("%s (line %s): %s", check.getFilePath(),
-                                check.getLineNumber(), check.getErrorMessage());
+                            check.getLineNumber(), check.getErrorMessage());
                         final Seriousness seriousness = check.getSeriousness();
                         switch (seriousness) {
                             case NOTE:
@@ -230,17 +222,13 @@ public class ProjectClient extends AbstractTestClient {
         /**
          * Instantiates a new {@link RunProjectCallable}.
          *
-         * @param projectFile
-         *            the project file
-         * @param projectConfig
-         *            the project configuration
-         * @param executionConfig
-         *            the execution configuration
-         * @param listener
-         *            the listener
+         * @param projectFile     the project file
+         * @param projectConfig   the project configuration
+         * @param executionConfig the execution configuration
+         * @param listener        the listener
          */
         RunProjectCallable(final String projectFile, final ProjectConfig projectConfig,
-                final ExecutionConfig executionConfig, final TaskListener listener) {
+                           final ExecutionConfig executionConfig, final TaskListener listener) {
             this.projectFile = projectFile;
             this.projectConfig = projectConfig;
             this.executionConfig = executionConfig;
@@ -256,9 +244,9 @@ public class ProjectClient extends AbstractTestClient {
             logger.logInfo("- Running project...");
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
-                    TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
-                    TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.executeProject(projectFile, true,
-                            jobExecutionMode)) {
+                 TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
+                 TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.executeProject(projectFile, true,
+                     jobExecutionMode)) {
                 boolean isAborted = false;
                 int tickCounter = 0;
                 final long endTimeMillis = System.currentTimeMillis() + (long) timeout * 1000L;
@@ -268,7 +256,7 @@ public class ProjectClient extends AbstractTestClient {
                     }
                     if (timeout > 0 && System.currentTimeMillis() > endTimeMillis) {
                         logger.logWarn(String.format("-> Test execution timeout of %d seconds reached! "
-                                + "Aborting project now...", timeout));
+                            + "Aborting project now...", timeout));
                         isAborted = true;
                         execInfo.abort();
                         break;
@@ -289,20 +277,17 @@ public class ProjectClient extends AbstractTestClient {
         /**
          * Aborts the test execution.
          *
-         * @param timeout
-         *            the timeout
-         * @param progId
-         *            the programmatic id
-         * @param logger
-         *            the logger
+         * @param timeout the timeout
+         * @param progId  the programmatic id
+         * @param logger  the logger
          * @return the test information
          */
         private TestInfoHolder abortTestExecution(final int timeout, final String progId,
-                final TTConsoleLogger logger) {
+                                                  final TTConsoleLogger logger) {
             TestInfoHolder testInfo = null;
             try (ETComClient comClient = new ETComClient(progId);
-                    TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
-                    TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {
+                 TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
+                 TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {
                 logger.logWarn("-> Build interrupted! Aborting test exection...");
                 execInfo.abort();
                 testInfo = getTestInfo(execInfo, true, logger);
@@ -316,18 +301,14 @@ public class ProjectClient extends AbstractTestClient {
         /**
          * Gets the information of the executed test.
          *
-         * @param execInfo
-         *            the execution info
-         * @param isAborted
-         *            specifies whether the test execution is aborted
-         * @param logger
-         *            the logger
+         * @param execInfo  the execution info
+         * @param isAborted specifies whether the test execution is aborted
+         * @param logger    the logger
          * @return the test information
-         * @throws ETComException
-         *             in case of a COM exception
+         * @throws ETComException in case of a COM exception
          */
         private TestInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
-                final TTConsoleLogger logger) throws ETComException {
+                                           final TTConsoleLogger logger) throws ETComException {
             final String testResult = execInfo.getResult();
             logger.logInfo(String.format("-> Project execution completed with result: %s", testResult));
             final String testReportDir = new File(execInfo.getReportDb()).getParentFile().getAbsolutePath();
@@ -338,17 +319,13 @@ public class ProjectClient extends AbstractTestClient {
         /**
          * Timeout handling for post execution.
          *
-         * @param timeout
-         *            the timeout
-         * @param comClient
-         *            the COM client
-         * @param logger
-         *            the logger
-         * @throws ETComException
-         *             in case of a COM exception
+         * @param timeout   the timeout
+         * @param comClient the COM client
+         * @param logger    the logger
+         * @throws ETComException in case of a COM exception
          */
         private void postExecution(final int timeout, final ETComClient comClient, final TTConsoleLogger logger)
-                throws ETComException {
+            throws ETComException {
             if (!comClient.waitForIdle(timeout)) {
                 logger.logWarn(String.format("-> Post-execution timeout of %d seconds reached!", timeout));
             }
@@ -368,10 +345,8 @@ public class ProjectClient extends AbstractTestClient {
         /**
          * Instantiates a new {@link CloseProjectCallable}.
          *
-         * @param projectFile
-         *            the project file
-         * @param listener
-         *            the listener
+         * @param projectFile the project file
+         * @param listener    the listener
          */
         CloseProjectCallable(final String projectFile, final TaskListener listener) {
             this.projectFile = projectFile;

@@ -61,19 +61,14 @@ public class TSClient extends AbstractToolClient {
     /**
      * Instantiates a new {@link TSClient}.
      *
-     * @param toolName
-     *            the tool name identifying the chosen {@link ETInstallation}.
-     * @param installPath
-     *            the Tool-Server install path
-     * @param timeout
-     *            the timeout
-     * @param toolLibsIniPath
-     *            the alternative ToolLibs.ini path
-     * @param tcpPort
-     *            the alternative TCP port
+     * @param toolName        the tool name identifying the chosen {@link ETInstallation}.
+     * @param installPath     the Tool-Server install path
+     * @param timeout         the timeout
+     * @param toolLibsIniPath the alternative ToolLibs.ini path
+     * @param tcpPort         the alternative TCP port
      */
     public TSClient(final String toolName, final String installPath, final int timeout, final String toolLibsIniPath,
-            final int tcpPort) {
+                    final int tcpPort) {
         super(toolName, installPath, timeout);
         this.toolLibsIniPath = StringUtils.trimToEmpty(toolLibsIniPath);
         this.tcpPort = tcpPort == 0 ? DEFAULT_TCP_PORT : tcpPort;
@@ -82,15 +77,27 @@ public class TSClient extends AbstractToolClient {
     /**
      * Instantiates a new {@link TSClient}.
      *
-     * @param toolName
-     *            the tool name identifying the chosen {@link ETInstallation}.
-     * @param timeout
-     *            the timeout
+     * @param toolName the tool name identifying the chosen {@link ETInstallation}.
+     * @param timeout  the timeout
      */
     public TSClient(final String toolName, final int timeout) {
         super(toolName, timeout);
         toolLibsIniPath = "";
         tcpPort = DEFAULT_TCP_PORT;
+    }
+
+    /**
+     * Checks already opened Tool-Server instances.
+     *
+     * @param launcher the launcher
+     * @param kill     specifies whether to task-kill the running processes
+     * @return list of found processes, can be empty but never {@code null}
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
+     */
+    public static List<String> checkProcesses(final Launcher launcher, final boolean kill) throws IOException,
+        InterruptedException {
+        return launcher.getChannel().call(new CheckProcessCallable(kill));
     }
 
     /**
@@ -109,7 +116,7 @@ public class TSClient extends AbstractToolClient {
 
     @Override
     public boolean start(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                         final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Starting Tool-Server...");
 
@@ -133,7 +140,7 @@ public class TSClient extends AbstractToolClient {
 
     @Override
     public boolean stop(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
+                        final TaskListener listener) throws InterruptedException, IOException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Stopping Tool-Server...");
 
@@ -147,9 +154,9 @@ public class TSClient extends AbstractToolClient {
 
     @Override
     public boolean restart(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                           final TaskListener listener) throws IOException, InterruptedException {
         return stop(checkProcesses, workspace, launcher, listener)
-                && start(checkProcesses, workspace, launcher, listener);
+            && start(checkProcesses, workspace, launcher, listener);
     }
 
     @Override
@@ -167,24 +174,6 @@ public class TSClient extends AbstractToolClient {
     }
 
     /**
-     * Checks already opened Tool-Server instances.
-     *
-     * @param launcher
-     *            the launcher
-     * @param kill
-     *            specifies whether to task-kill the running processes
-     * @return list of found processes, can be empty but never {@code null}
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
-     */
-    public static List<String> checkProcesses(final Launcher launcher, final boolean kill) throws IOException,
-            InterruptedException {
-        return launcher.getChannel().call(new CheckProcessCallable(kill));
-    }
-
-    /**
      * {@link Callable} providing remote access to close Tool-Server processes.
      */
     private static final class StopCallable extends MasterToSlaveCallable<Boolean, IOException> {
@@ -197,10 +186,8 @@ public class TSClient extends AbstractToolClient {
         /**
          * Instantiates a new {@link StopCallable}.
          *
-         * @param timeout
-         *            the timeout
-         * @param listener
-         *            the listener
+         * @param timeout  the timeout
+         * @param listener the listener
          */
         StopCallable(final int timeout, final TaskListener listener) {
             this.timeout = timeout;
@@ -251,8 +238,7 @@ public class TSClient extends AbstractToolClient {
         /**
          * Instantiates a new {@link CheckProcessCallable}.
          *
-         * @param kill
-         *            specifies whether to task-kill running processes
+         * @param kill specifies whether to task-kill running processes
          */
         CheckProcessCallable(final boolean kill) {
             this.kill = kill;

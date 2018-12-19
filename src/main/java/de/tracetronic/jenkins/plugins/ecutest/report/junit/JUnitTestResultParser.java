@@ -55,18 +55,14 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
     /**
      * Parses the given JUnit test report files and builds a {@link TestResult} object that represents them.
      *
-     * @param xmlFiles
-     *            the JUnit report files
-     * @param listener
-     *            the listener
+     * @param xmlFiles the JUnit report files
+     * @param listener the listener
      * @return the {@link TestResult} instance
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
      */
     public TestResult parseResult(final List<FilePath> xmlFiles, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         TestResult testResult = new TestResult(false);
         for (final FilePath xmlFile : xmlFiles) {
@@ -101,8 +97,7 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
         /**
          * Instantiates a new {@link ParseTestResultCallable}.
          *
-         * @param testResult
-         *            the test result
+         * @param testResult the test result
          */
         ParseTestResultCallable(final TestResult testResult) {
             this.testResult = testResult;
@@ -110,7 +105,7 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
 
         @Override
         public TestResult invoke(final File file, final VirtualChannel channel)
-                throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
             testResult.parse(file, null);
             return testResult;
         }

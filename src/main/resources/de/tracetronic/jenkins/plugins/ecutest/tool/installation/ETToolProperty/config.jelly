@@ -30,10 +30,10 @@
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
-     <f:entry title="${%progId.title}" description="${%progId.description}" field="progId">
-        <f:textbox default="${descriptor.defaultProgId}" />
+    <f:entry title="${%progId.title}" description="${%progId.description}" field="progId">
+        <f:textbox default="${descriptor.defaultProgId}"/>
     </f:entry>
     <f:entry title="${%timeout.title}" description="${%timeout.description}" field="timeout">
-        <f:number default="${descriptor.defaultTimeout}" clazz="number" />
+        <f:number default="${descriptor.defaultTimeout}" clazz="number"/>
     </f:entry>
 </j:jelly>

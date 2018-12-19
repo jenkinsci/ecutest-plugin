@@ -51,12 +51,9 @@ public class ImportProjectAttributeConfig extends ImportAttributeConfig {
     /**
      * Instantiates a new {@link ImportProjectAttributeConfig}.
      *
-     * @param filePath
-     *            the test file path whose attributes to import
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the import timeout
+     * @param filePath      the test file path whose attributes to import
+     * @param credentialsId the credentials id
+     * @param timeout       the import timeout
      */
     @DataBoundConstructor
     public ImportProjectAttributeConfig(final String filePath, final String credentialsId, final String timeout) {

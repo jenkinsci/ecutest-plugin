@@ -62,8 +62,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
     /**
      * Instantiates a new {@code ATXReportGenerator}.
      *
-     * @param installation
-     *            the ATX installation
+     * @param installation the ATX installation
      */
     public ATXReportGenerator(final ATXInstallation installation) {
         super(installation);
@@ -72,39 +71,30 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
     /**
      * Generates {@link ATXReport}s without uploading them.
      *
-     * @param archiveTarget
-     *            the archive target directory
-     * @param reportDirs
-     *            the report directories
-     * @param allowMissing
-     *            specifies whether missing reports are allowed
-     * @param isArchiving
-     *            specifies whether archiving artifacts is enabled
-     * @param keepAll
-     *            specifies whether to keep all artifacts
-     * @param run
-     *            the run
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param archiveTarget the archive target directory
+     * @param reportDirs    the report directories
+     * @param allowMissing  specifies whether missing reports are allowed
+     * @param isArchiving   specifies whether archiving artifacts is enabled
+     * @param keepAll       specifies whether to keep all artifacts
+     * @param run           the run
+     * @param launcher      the launcher
+     * @param listener      the listener
      * @return {@code true} if upload succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
-    public boolean generate(final FilePath archiveTarget, final List<FilePath> reportDirs, final boolean allowMissing,
-            final boolean isArchiving, final boolean keepAll, final Run<?, ?> run, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+    public boolean generate(final FilePath archiveTarget, final List<FilePath> reportDirs,
+                            final boolean allowMissing, final boolean isArchiving, final boolean keepAll,
+                            final Run<?, ?> run, final Launcher launcher, final TaskListener listener)
+        throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<FilePath> reportFiles = new ArrayList<>();
         for (final FilePath reportDir : reportDirs) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(reportDir);
             if (reportFile != null && reportFile.exists()) {
                 reportFiles.addAll(Arrays.asList(
-                        reportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
+                    reportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
             } else {
                 if (!allowMissing) {
                     logger.logError(String.format("Specified TRF file '%s' does not exist.", reportFile));
@@ -120,8 +110,8 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
 
         // Generate ATX reports
         final boolean isGenerated = launcher.getChannel().call(
-                new GenerateReportCallable(getInstallation().getConfig(), reportFiles, run.getEnvironment(listener),
-                        listener));
+            new GenerateReportCallable(getInstallation().getConfig(), reportFiles, run.getEnvironment(listener),
+                listener));
 
         if (isArchiving) {
             // Removing old artifacts at project level
@@ -137,7 +127,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
                     final FilePath archiveTargetDir = archiveTarget.child(reportDir.getName());
                     try {
                         final int copiedFiles = reportDir.copyRecursiveTo(
-                                String.format("**/%s/*.zip", ATX_TEMPLATE_NAME), archiveTargetDir);
+                            String.format("**/%s/*.zip", ATX_TEMPLATE_NAME), archiveTargetDir);
                         logger.logInfo(String.format("-> Archived %d report(s).", copiedFiles));
                         if (copiedFiles == 0) {
                             continue;
@@ -161,28 +151,23 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
     /**
      * Creates the main report and adds the sub-reports by traversing them recursively.
      *
-     * @param atxReports
-     *            the ATX reports
-     * @param archiveTargetDir
-     *            the archive target directory
-     * @param id
-     *            the report id
+     * @param atxReports       the ATX reports
+     * @param archiveTargetDir the archive target directory
+     * @param id               the report id
      * @return the current report id
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private int traverseReports(final List<ATXZipReport> atxReports, final FilePath archiveTargetDir, int id)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         final FilePath[] zipFiles = archiveTargetDir.list(String.format("%s/%s.zip", ATX_TEMPLATE_NAME,
-                archiveTargetDir.getName()));
+            archiveTargetDir.getName()));
         if (zipFiles.length == 1) {
             final FilePath zipFile = zipFiles[0];
             final String relFilePath = archiveTargetDir.getParent().toURI().relativize(zipFile.toURI())
-                    .getPath();
+                .getPath();
             final ATXZipReport atxReport = new ATXZipReport(String.format("%d", ++id),
-                    zipFile.getBaseName(), relFilePath, zipFile.length());
+                zipFile.getBaseName(), relFilePath, zipFile.length());
             atxReports.add(atxReport);
 
             // Search for sub-reports
@@ -195,32 +180,26 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      * Builds a list of report files for ATX report generation without upload.
      * Includes the report files generated during separate sub-project execution.
      *
-     * @param atxReport
-     *            the ATX report
-     * @param testReportDir
-     *            the main test report directory
-     * @param subTestReportDir
-     *            the sub test report directory
-     * @param id
-     *            the id increment
+     * @param atxReport        the ATX report
+     * @param testReportDir    the main test report directory
+     * @param subTestReportDir the sub test report directory
+     * @param id               the id increment
      * @return the current id increment
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private int traverseSubReports(final ATXZipReport atxReport, final FilePath testReportDir,
-            final FilePath subTestReportDir, int id) throws IOException, InterruptedException {
+                                   final FilePath subTestReportDir, int id) throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
             final FilePath[] reportFiles = subDir.list(String.format("%s/%s.zip", ATX_TEMPLATE_NAME,
-                    subDir.getName()));
+                subDir.getName()));
             if (reportFiles.length == 1) {
                 // Prepare ATX report information for sub-report
                 final FilePath reportFile = reportFiles[0];
                 final String fileName = reportFile.getBaseName().replaceFirst("^Report\\s", "");
                 final String relFilePath = testReportDir.toURI().relativize(reportFile.toURI()).getPath();
                 final ATXZipReport subReport = new ATXZipReport(String.format("%d", ++id), fileName, relFilePath,
-                        reportFile.length());
+                    reportFile.length());
                 atxReport.addSubReport(subReport);
 
                 // Search for sub-reports
@@ -233,12 +212,9 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
     /**
      * Adds the {@link ATXBuildAction} to the build holding the found {@link ATXZipReport}s.
      *
-     * @param run
-     *            the run
-     * @param atxReports
-     *            the list of {@link ATXZipReport}s to add
-     * @param keepAll
-     *            specifies whether to keep all artifacts
+     * @param run        the run
+     * @param atxReports the list of {@link ATXZipReport}s to add
+     * @param keepAll    specifies whether to keep all artifacts
      */
     @SuppressWarnings("unchecked")
     private void addBuildAction(final Run<?, ?> run, final List<ATXZipReport> atxReports, final boolean keepAll) {
@@ -260,17 +236,13 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
         /**
          * Instantiates a new {@link GenerateReportCallable}.
          *
-         * @param config
-         *            the ATX configuration
-         * @param reportFiles
-         *            the list of TRF files
-         * @param envVars
-         *            the environment variables
-         * @param listener
-         *            the listener
+         * @param config      the ATX configuration
+         * @param reportFiles the list of TRF files
+         * @param envVars     the environment variables
+         * @param listener    the listener
          */
         GenerateReportCallable(final ATXConfig config, final List<FilePath> reportFiles, final EnvVars envVars,
-                final TaskListener listener) {
+                               final TaskListener listener) {
             super(config, reportFiles, envVars, listener);
         }
 
@@ -290,7 +262,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
                         logger.logInfo(String.format("-> Generating ATX report: %s", reportFile.getRemote()));
                         final FilePath outDir = reportFile.getParent().child(ATX_TEMPLATE_NAME);
                         testEnv.generateTestReportDocumentFromDB(reportFile.getRemote(),
-                                outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
+                            outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
                         comClient.waitForIdle(0);
                     }
                 }

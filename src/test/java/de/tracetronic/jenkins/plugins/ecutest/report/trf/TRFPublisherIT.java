@@ -125,7 +125,7 @@ public class TRFPublisherIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                    final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) throws InterruptedException, IOException {
                 return false;
             }
         });
@@ -135,7 +135,7 @@ public class TRFPublisherIT extends IntegrationTestBase {
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
         assertThat("Skip message should be present in console log", build.getLog(100).toString(),
-                containsString("Skipping publisher"));
+            containsString("Skipping publisher"));
     }
 
     @Test
@@ -161,12 +161,9 @@ public class TRFPublisherIT extends IntegrationTestBase {
     /**
      * Asserts the pipeline step execution.
      *
-     * @param scriptName
-     *            the script name
-     * @param status
-     *            the expected build status
-     * @throws Exception
-     *             the exception
+     * @param scriptName the script name
+     * @param status     the expected build status
+     * @throws Exception the exception
      */
     private void assertPipelineStep(final String scriptName, final boolean status) throws Exception {
         assumeWindowsSlave();

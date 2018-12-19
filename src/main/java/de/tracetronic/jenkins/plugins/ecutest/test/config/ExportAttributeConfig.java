@@ -44,12 +44,9 @@ public abstract class ExportAttributeConfig extends AttributeConfig {
     /**
      * Instantiates a new {@link ExportAttributeConfig}.
      *
-     * @param filePath
-     *            the test file path whose attributes to export
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the export timeout
+     * @param filePath      the test file path whose attributes to export
+     * @param credentialsId the credentials id
+     * @param timeout       the export timeout
      */
     public ExportAttributeConfig(final String filePath, final String credentialsId, final String timeout) {
         super(filePath, credentialsId, timeout);
@@ -63,8 +60,7 @@ public abstract class ExportAttributeConfig extends AttributeConfig {
         /**
          * Validates the file path to export.
          *
-         * @param value
-         *            the file path to export
+         * @param value the file path to export
          * @return the form validation
          */
         public FormValidation doCheckFilePath(@QueryParameter final String value) {
@@ -74,8 +70,7 @@ public abstract class ExportAttributeConfig extends AttributeConfig {
         /**
          * Validates the export target path.
          *
-         * @param value
-         *            the export path
+         * @param value the export path
          * @return the form validation
          */
         public FormValidation doCheckExportPath(@QueryParameter final String value) {

@@ -43,7 +43,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
-  * Integration tests for {@link TestPackageScanner}.
+ * Integration tests for {@link TestPackageScanner}.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
@@ -56,14 +56,14 @@ public class TestPackageScannerIT extends IntegrationTestBase {
     @WithoutJenkins
     public void testFilePattern() throws IOException {
         final TestPackageScanner scanner = new TestPackageScanner(null, false, null);
-        assertEquals("Wrong file pattern for package files", "*.pkg", scanner.getFilePattern()[0]);
+        assertEquals("Wrong file pattern for package files", "*.pkg", scanner.getFilePattern());
     }
 
     @Test
     @WithoutJenkins
     public void testRecursiveFilePattern() throws IOException {
         final TestPackageScanner scanner = new TestPackageScanner(null, true, null);
-        assertEquals("Wrong recursive file pattern for package files", "**/**.pkg", scanner.getFilePattern()[0]);
+        assertEquals("Wrong recursive file pattern for package files", "**/**.pkg", scanner.getFilePattern());
     }
 
     @Test

@@ -85,8 +85,7 @@ public class StartETBuilder extends AbstractToolBuilder {
     /**
      * Instantiates a new {@link StartETBuilder}.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
      */
     @DataBoundConstructor
     public StartETBuilder(@Nonnull final String toolName) {
@@ -110,11 +109,27 @@ public class StartETBuilder extends AbstractToolBuilder {
     }
 
     /**
+     * @param workspaceDir the workspace directory
+     */
+    @DataBoundSetter
+    public void setWorkspaceDir(@CheckForNull final String workspaceDir) {
+        this.workspaceDir = Util.fixNull(workspaceDir);
+    }
+
+    /**
      * @return the settings directory
      */
     @Nonnull
     public String getSettingsDir() {
         return StringUtils.trimToEmpty(settingsDir);
+    }
+
+    /**
+     * @param settingsDir the settings directory
+     */
+    @DataBoundSetter
+    public void setSettingsDir(@CheckForNull final String settingsDir) {
+        this.settingsDir = Util.fixNull(settingsDir);
     }
 
     /**
@@ -125,33 +140,7 @@ public class StartETBuilder extends AbstractToolBuilder {
     }
 
     /**
-     * @return specifies whether to re-use the previous instance
-     */
-    public boolean isKeepInstance() {
-        return keepInstance;
-    }
-
-    /**
-     * @param workspaceDir
-     *            the workspace directory
-     */
-    @DataBoundSetter
-    public void setWorkspaceDir(@CheckForNull final String workspaceDir) {
-        this.workspaceDir = Util.fixNull(workspaceDir);
-    }
-
-    /**
-     * @param settingsDir
-     *            the settings directory
-     */
-    @DataBoundSetter
-    public void setSettingsDir(@CheckForNull final String settingsDir) {
-        this.settingsDir = Util.fixNull(settingsDir);
-    }
-
-    /**
-     * @param debugMode
-     *            the debug mode
+     * @param debugMode the debug mode
      */
     @DataBoundSetter
     public void setDebugMode(final boolean debugMode) {
@@ -159,8 +148,14 @@ public class StartETBuilder extends AbstractToolBuilder {
     }
 
     /**
-     * @param keepInstance
-     *            the specifies whether to re-use the previous instance
+     * @return specifies whether to re-use the previous instance
+     */
+    public boolean isKeepInstance() {
+        return keepInstance;
+    }
+
+    /**
+     * @param keepInstance the specifies whether to re-use the previous instance
      */
     @DataBoundSetter
     public void setKeepInstance(final boolean keepInstance) {
@@ -169,7 +164,7 @@ public class StartETBuilder extends AbstractToolBuilder {
 
     @Override
     public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
+                            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
         if (isKeepInstance() && !foundProcesses.isEmpty()) {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
@@ -178,7 +173,7 @@ public class StartETBuilder extends AbstractToolBuilder {
             // Expand build parameters
             final EnvVars buildEnvVars = run.getEnvironment(listener);
             final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
-                    String.valueOf(DEFAULT_TIMEOUT)));
+                String.valueOf(DEFAULT_TIMEOUT)));
 
             // Absolutize ECU-TEST workspace directory, if not absolute assume relative to build workspace
             String expWorkspaceDir = EnvUtil.expandEnvVar(getWorkspaceDir(), buildEnvVars, workspace.getRemote());
@@ -194,19 +189,19 @@ public class StartETBuilder extends AbstractToolBuilder {
             // Delete logs if log publisher is present
             final Object parent = run.getParent();
             if (parent instanceof Project
-                    && ((Project<?, ?>) run.getParent()).getPublishersList().get(ETLogPublisher.class) != null) {
+                && ((Project<?, ?>) run.getParent()).getPublishersList().get(ETLogPublisher.class) != null) {
                 ETLogPublisher.RunListenerImpl.onStarted(expSettingsPath, listener);
             }
 
             // Get selected ECU-TEST installation
             final ETInstallation installation = configureToolInstallation(workspace.toComputer(), listener,
-                    run.getEnvironment(listener));
+                run.getEnvironment(listener));
 
             // Start selected ECU-TEST
             final String toolName = run.getEnvironment(listener).expand(installation.getName());
             final String installPath = installation.getExecutable(launcher);
             final ETClient etClient = new ETClient(toolName, installPath, expWorkspaceDir, expSettingsDir,
-                    expTimeout, isDebugMode());
+                expTimeout, isDebugMode());
             if (!etClient.start(true, workspace, launcher, listener)) {
                 throw new ETPluginException(String.format("Starting %s failed!", toolName));
             }
@@ -221,26 +216,21 @@ public class StartETBuilder extends AbstractToolBuilder {
     /**
      * Checks whether the ECU-TEST workspace and settings directory exist.
      *
-     * @param workspacePath
-     *            the workspace path
-     * @param settingsPath
-     *            the settings path
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
-     * @throws ETPluginException
-     *             in case of missing workspace or settings directory
+     * @param workspacePath the workspace path
+     * @param settingsPath  the settings path
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
+     * @throws ETPluginException    in case of missing workspace or settings directory
      */
     private void checkWorkspace(final FilePath workspacePath, final FilePath settingsPath)
-            throws IOException, InterruptedException, ETPluginException {
+        throws IOException, InterruptedException, ETPluginException {
         if (!workspacePath.exists()) {
             throw new ETPluginException(String.format("ECU-TEST workspace at %s does not exist!",
-                    workspacePath.getRemote()));
+                workspacePath.getRemote()));
         }
         if (!settingsPath.exists()) {
             throw new ETPluginException(String.format("ECU-TEST settings directory at %s does not exist!",
-                    settingsPath.getRemote()));
+                settingsPath.getRemote()));
         }
     }
 
@@ -265,8 +255,7 @@ public class StartETBuilder extends AbstractToolBuilder {
         /**
          * Validates the workspace directory.
          *
-         * @param value
-         *            the workspace directory
+         * @param value the workspace directory
          * @return the form validation
          */
         public FormValidation doCheckWorkspaceDir(@QueryParameter final String value) {
@@ -276,8 +265,7 @@ public class StartETBuilder extends AbstractToolBuilder {
         /**
          * Validates the settings directory.
          *
-         * @param value
-         *            the settings directory
+         * @param value the settings directory
          * @return the form validation
          */
         public FormValidation doCheckSettingsDir(@QueryParameter final String value) {

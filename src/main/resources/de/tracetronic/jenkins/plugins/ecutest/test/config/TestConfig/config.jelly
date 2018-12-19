@@ -33,28 +33,29 @@
     <f:section title="${%configSection.title}">
         <j:choose>
             <j:when test="${empty(instance.isKeepConfig())}">
-                <j:set var="checked" value="false" />
+                <j:set var="checked" value="false"/>
             </j:when>
             <j:otherwise>
-                <j:set var="checked" value="${instance.isKeepConfig()}" />
+                <j:set var="checked" value="${instance.isKeepConfig()}"/>
             </j:otherwise>
         </j:choose>
-        <f:optionalBlock negative="true" inline="true" checked="${checked}" title="${%keepConfig.title}" field="keepConfig">
+        <f:optionalBlock negative="true" inline="true" checked="${checked}" title="${%keepConfig.title}"
+                         field="keepConfig">
             <f:entry title="${%tbcFile.title}" description="${%tbcFile.description}" field="tbcFile">
-                <f:textbox />
+                <f:textbox/>
             </f:entry>
             <f:entry title="${%tcfFile.title}" description="${%tcfFile.description}" field="tcfFile">
-                <f:textbox />
+                <f:textbox/>
             </f:entry>
             <f:entry title="${%forceReload.title}" description="${%forceReload.description}" field="forceReload">
-                <f:checkbox default="false" />
+                <f:checkbox default="false"/>
             </f:entry>
             <f:entry title="${%loadOnly.title}" description="${%loadOnly.description}" field="loadOnly">
-                <f:checkbox default="false" />
+                <f:checkbox default="false"/>
             </f:entry>
             <f:advanced title="${%constants.title}">
                 <f:entry title="${%constants.title}" description="${%constants.description}" field="constants">
-                    <f:repeatableProperty field="constants" add="${%constants.add}" minimum="0" />
+                    <f:repeatableProperty field="constants" add="${%constants.add}" minimum="0"/>
                 </f:entry>
             </f:advanced>
         </f:optionalBlock>

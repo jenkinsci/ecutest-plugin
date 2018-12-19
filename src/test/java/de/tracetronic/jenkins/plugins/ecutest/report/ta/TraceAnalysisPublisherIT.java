@@ -71,7 +71,7 @@ public class TraceAnalysisPublisherIT extends IntegrationTestBase {
     @Before
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
-                .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
     }
 
@@ -154,7 +154,7 @@ public class TraceAnalysisPublisherIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                    final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) throws InterruptedException, IOException {
                 return false;
             }
         });
@@ -164,7 +164,7 @@ public class TraceAnalysisPublisherIT extends IntegrationTestBase {
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
         assertThat("Skip message should be present in console log", build.getLog(100).toString(),
-                containsString("Skipping publisher"));
+            containsString("Skipping publisher"));
     }
 
     @Test
@@ -174,16 +174,17 @@ public class TraceAnalysisPublisherIT extends IntegrationTestBase {
         project.getPublishersList().add(publisher);
 
         final EnvVars envVars = new EnvVars(
-                Collections.unmodifiableMap(new HashMap<String, String>() {
+            Collections.unmodifiableMap(new HashMap<String, String>() {
 
-                    private static final long serialVersionUID = 1L;
-                    {
-                        put("ECUTEST", "ECU-TEST");
-                    }
-                }));
+                private static final long serialVersionUID = 1L;
+
+                {
+                    put("ECUTEST", "ECU-TEST");
+                }
+            }));
 
         assertEquals("Tool name should be resolved", "ECU-TEST",
-                publisher.getToolInstallation(publisher.getToolName(), envVars).getName());
+            publisher.getToolInstallation(publisher.getToolName(), envVars).getName());
     }
 
     @Test
@@ -209,12 +210,9 @@ public class TraceAnalysisPublisherIT extends IntegrationTestBase {
     /**
      * Asserts the pipeline step execution.
      *
-     * @param scriptName
-     *            the script name
-     * @param emptyResults
-     *            if results are expected
-     * @throws Exception
-     *             the exception
+     * @param scriptName   the script name
+     * @param emptyResults if results are expected
+     * @throws Exception the exception
      */
     private void assertPipelineStep(final String scriptName, final boolean emptyResults) throws Exception {
         assumeWindowsSlave();

@@ -49,10 +49,8 @@ public abstract class AbstractValidator {
     /**
      * Validates the timeout.
      *
-     * @param timeout
-     *            the timeout
-     * @param defaultTimeout
-     *            the default timeout
+     * @param timeout        the timeout
+     * @param defaultTimeout the default timeout
      * @return the form validation
      */
     public FormValidation validateTimeout(@QueryParameter final String timeout, final int defaultTimeout) {
@@ -73,8 +71,7 @@ public abstract class AbstractValidator {
     /**
      * Validates required form value.
      *
-     * @param value
-     *            the form value
+     * @param value the form value
      * @return the form validation
      */
     protected FormValidation validateRequiredValue(final String value) {
@@ -84,8 +81,7 @@ public abstract class AbstractValidator {
     /**
      * Validates parameterized form value.
      *
-     * @param value
-     *            the form value
+     * @param value the form value
      * @return the form validation
      */
     protected FormValidation validateParameterizedValue(final String value) {
@@ -99,8 +95,7 @@ public abstract class AbstractValidator {
     /**
      * Validates required and parameterized form value.
      *
-     * @param value
-     *            the form value
+     * @param value the form value
      * @return the form validation
      */
     protected FormValidation validateRequiredParamValue(final String value) {
@@ -116,8 +111,7 @@ public abstract class AbstractValidator {
     /**
      * Validates the package file.
      *
-     * @param testFile
-     *            the test file
+     * @param testFile the test file
      * @return the form validation
      */
     public FormValidation validatePackageFile(final String testFile) {
@@ -135,8 +129,7 @@ public abstract class AbstractValidator {
     /**
      * Validates the project file.
      *
-     * @param testFile
-     *            the test file
+     * @param testFile the test file
      * @return the form validation
      */
     public FormValidation validateProjectFile(final String testFile) {

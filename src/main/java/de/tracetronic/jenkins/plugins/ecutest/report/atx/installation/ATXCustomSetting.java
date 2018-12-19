@@ -59,11 +59,19 @@ public abstract class ATXCustomSetting implements Serializable, Cloneable, Descr
     /**
      * Instantiates a new {@link ATXCustomSetting}.
      *
-     * @param name
-     *            the name of the setting
+     * @param name the name of the setting
      */
     public ATXCustomSetting(final String name) {
         this.name = name;
+    }
+
+    /**
+     * Gets all descriptors of {@link ATXCustomSetting} type.
+     *
+     * @return the descriptor extension list
+     */
+    public static DescriptorExtensionList<ATXCustomSetting, Descriptor<ATXCustomSetting>> all() {
+        return Jenkins.getInstance().getDescriptorList(ATXCustomSetting.class);
     }
 
     /**
@@ -89,7 +97,7 @@ public abstract class ATXCustomSetting implements Serializable, Cloneable, Descr
         boolean result = false;
         if (other instanceof ATXCustomSetting) {
             final ATXCustomSetting that = (ATXCustomSetting) other;
-            result = that.canEqual(this) && (Objects.equals(name, that.name));
+            result = that.canEqual(this) && Objects.equals(name, that.name);
         }
         return result;
     }
@@ -97,10 +105,9 @@ public abstract class ATXCustomSetting implements Serializable, Cloneable, Descr
     /**
      * Implementation according to <a href="www.artima.com/lejava/articles/equality.html">Equality Pitfall #4</a>.
      *
-     * @param other
-     *            the other object
+     * @param other the other object
      * @return {@code true} if the other object is an instance of the class in which canEqual is (re)defined,
-     *         {@code false} otherwise.
+     * {@code false} otherwise.
      */
     public boolean canEqual(final Object other) {
         return other instanceof ATXCustomSetting;
@@ -118,15 +125,6 @@ public abstract class ATXCustomSetting implements Serializable, Cloneable, Descr
     }
 
     /**
-     * Gets all descriptors of {@link ATXCustomSetting} type.
-     *
-     * @return the descriptor extension list
-     */
-    public static DescriptorExtensionList<ATXCustomSetting, Descriptor<ATXCustomSetting>> all() {
-        return Jenkins.getInstance().getDescriptorList(ATXCustomSetting.class);
-    }
-
-    /**
      * DescriptorImpl for {@link ATXCustomSetting}.
      */
     public abstract static class DescriptorImpl extends Descriptor<ATXCustomSetting> {
@@ -139,8 +137,7 @@ public abstract class ATXCustomSetting implements Serializable, Cloneable, Descr
         /**
          * Validates the setting name.
          *
-         * @param value
-         *            the value
+         * @param value the value
          * @return the form validation
          */
         public FormValidation doCheckName(@QueryParameter final String value) {

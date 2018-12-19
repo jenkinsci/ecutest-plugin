@@ -57,8 +57,7 @@ public final class ATXUtil {
     /**
      * Removes special characters from test name and replaces with underscore "_".
      *
-     * @param testName
-     *            the test name
+     * @param testName the test name
      * @return the ATX compliant test name
      */
     public static String getValidATXName(final String testName) {
@@ -97,8 +96,7 @@ public final class ATXUtil {
     /**
      * Removes the coherent underscores.
      *
-     * @param testName
-     *            the test name
+     * @param testName the test name
      * @return the string without coherent underscores
      */
     private static String removeCoherentUnderscores(final String testName) {
@@ -114,10 +112,8 @@ public final class ATXUtil {
      * Gets the server base URL of the ATX installation.
      * Parameterized settings are expanded by given environment variables.
      *
-     * @param config
-     *            the ATX configuration
-     * @param envVars
-     *            the environment variables
+     * @param config  the ATX configuration
+     * @param envVars the environment variables
      * @return the ATX base URL or {@code null} if invalid URL
      */
     @CheckForNull
@@ -129,9 +125,9 @@ public final class ATXUtil {
             final Object useHttpsConnection = config.getSettingValueByName("useHttpsConnection", uploadSettings);
             final String serverUrl = envVars.expand((String) config.getSettingValueByName("serverURL", uploadSettings));
             final String serverPort = envVars.expand((String) config
-                    .getSettingValueByName("serverPort", uploadSettings));
+                .getSettingValueByName("serverPort", uploadSettings));
             final String contextPath = envVars.expand((String) config.getSettingValueByName("serverContextPath",
-                    uploadSettings));
+                uploadSettings));
             if (serverUrl != null && serverPort != null && contextPath != null && useHttpsConnection != null) {
                 fullServerUrl = getBaseUrl(serverUrl, serverPort, contextPath, (boolean) useHttpsConnection);
             }
@@ -142,23 +138,19 @@ public final class ATXUtil {
     /**
      * Gets the base URL of the ATX installation by given server settings.
      *
-     * @param serverUrl
-     *            the server URL
-     * @param serverPort
-     *            the server port
-     * @param contextPath
-     *            the context path
-     * @param useHttpsConnection
-     *            specifies whether to use secured connection
+     * @param serverUrl          the server URL
+     * @param serverPort         the server port
+     * @param contextPath        the context path
+     * @param useHttpsConnection specifies whether to use secured connection
      * @return the ATX base URL or {@code null} if invalid URL
      */
     public static String getBaseUrl(final String serverUrl, final String serverPort, final String contextPath,
-            final boolean useHttpsConnection) {
+                                    final boolean useHttpsConnection) {
         String fullServerUrl = null;
         if (serverUrl != null && serverPort != null && contextPath != null) {
             final String protocol = useHttpsConnection ? "https" : "http";
             fullServerUrl = contextPath.isEmpty() ? String.format("%s://%s:%s", protocol, serverUrl, serverPort)
-                    : String.format("%s://%s:%s/%s", protocol, serverUrl, serverPort, contextPath);
+                : String.format("%s://%s:%s/%s", protocol, serverUrl, serverPort, contextPath);
         }
         return fullServerUrl;
     }
@@ -166,10 +158,8 @@ public final class ATXUtil {
     /**
      * Gets the current ATX project id.
      *
-     * @param config
-     *            the ATX configuration
-     * @param envVars
-     *            the environment variables
+     * @param config  the ATX configuration
+     * @param envVars the environment variables
      * @return the project id, {@code null} if setting is not available
      */
     @SuppressWarnings("rawtypes")
@@ -188,8 +178,7 @@ public final class ATXUtil {
     /**
      * Returns the current ATX setting {@code mapSeparateProjectExecutionAsSingleTestplan}.
      *
-     * @param config
-     *            the ATX configuration
+     * @param config the ATX configuration
      * @return the value of this setting as boolean, {@code true} by default if setting not exists
      */
     @SuppressWarnings("rawtypes")
@@ -198,7 +187,7 @@ public final class ATXUtil {
         if (config != null) {
             final List<ATXSetting> specialSettings = config.getConfigByName("specialConfig");
             final Object settingValue = config.getSettingValueByName("mapSeparateProjectExecutionAsSingleTestplan",
-                    specialSettings);
+                specialSettings);
             if (settingValue != null) {
                 isMapEnabled = (boolean) settingValue;
             }

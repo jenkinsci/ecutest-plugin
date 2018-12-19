@@ -252,7 +252,7 @@ public class ATXValidatorTest {
     @Test
     public void testValidMultiAttributesExpression() {
         final FormValidation validation = atxValidator
-                .validateCoveredAttributes("Testlevel;Designer;Execution Priority;Estimated Duration [min];");
+            .validateCoveredAttributes("Testlevel;Designer;Execution Priority;Estimated Duration [min];");
         assertEquals("Valid multiple expression", FormValidation.Kind.OK, validation.kind);
     }
 

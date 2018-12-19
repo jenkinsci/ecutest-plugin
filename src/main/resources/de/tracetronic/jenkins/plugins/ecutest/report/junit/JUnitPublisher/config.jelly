@@ -30,13 +30,14 @@
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
-    <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation" page="select.jelly" />
-    <f:entry title="${%unstableThreshold.title}" description="${%unstableThreshold.description}" field="unstableThreshold">
-        <f:textbox default="0" />
+    <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation" page="select.jelly"/>
+    <f:entry title="${%unstableThreshold.title}" description="${%unstableThreshold.description}"
+             field="unstableThreshold">
+        <f:textbox default="0"/>
     </f:entry>
     <f:entry title="${%failedThreshold.title}" description="${%failedThreshold.description}" field="failedThreshold">
-        <f:textbox default="0" />
+        <f:textbox default="0"/>
     </f:entry>
-    <j:set var="showArchiving" value="false" />
-    <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly" />
+    <j:set var="showArchiving" value="false"/>
+    <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly"/>
 </j:jelly>

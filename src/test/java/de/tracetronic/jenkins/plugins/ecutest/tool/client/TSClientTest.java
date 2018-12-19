@@ -45,9 +45,9 @@ import static org.junit.Assert.assertNotNull;
  */
 public class TSClientTest {
 
-    private List<String> expectedArgs;
     private final String exe = "C:\\ECU-TEST\\ToolServer\\Tool-Server.exe";
     private final String tlIni = "C:\\ECU-TEST\\ToolServer\\ToolLibs.ini";
+    private List<String> expectedArgs;
 
     @Test
     public void testBlankConstructor() {

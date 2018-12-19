@@ -71,8 +71,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     /**
      * Instantiates a new {@link AbstractTestBuilder}.
      *
-     * @param testFile
-     *            the test file
+     * @param testFile the test file
      */
     public AbstractTestBuilder(final String testFile) {
         super();
@@ -96,6 +95,14 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     }
 
     /**
+     * @param testConfig the test configuration
+     */
+    @DataBoundSetter
+    public void setTestConfig(@CheckForNull final TestConfig testConfig) {
+        this.testConfig = testConfig == null ? TestConfig.newInstance() : testConfig;
+    }
+
+    /**
      * @return the execution configuration
      */
     @Nonnull
@@ -104,17 +111,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     }
 
     /**
-     * @param testConfig
-     *            the test configuration
-     */
-    @DataBoundSetter
-    public void setTestConfig(@CheckForNull final TestConfig testConfig) {
-        this.testConfig = testConfig == null ? TestConfig.newInstance() : testConfig;
-    }
-
-    /**
-     * @param executionConfig
-     *            the execution configuration
+     * @param executionConfig the execution configuration
      */
     @DataBoundSetter
     public void setExecutionConfig(@CheckForNull final ExecutionConfig executionConfig) {
@@ -158,23 +155,17 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     /**
      * Performs the test execution.
      *
-     * @param run
-     *            the build
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param run       the build
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
      * @return {@code true} if running the test passed, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private boolean performTest(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Check for running ECU-TEST instance
@@ -230,11 +221,11 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
 
             // Configure test bench configuration file
             expTbcFilePath = getConfigFilePath(expTestConfig.getTbcFile(),
-                    expTbcConfigDir, launcher, listener);
+                expTbcConfigDir, launcher, listener);
 
             // Configure test configuration file
             expTcfFilePath = getConfigFilePath(expTestConfig.getTcfFile(),
-                    expTcfConfigDir, launcher, listener);
+                expTcfConfigDir, launcher, listener);
 
             // Check configuration file existence
             if (expTbcFilePath == null || expTcfFilePath == null) {
@@ -244,7 +235,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
 
         // Set expanded test configuration
         expTestConfig = new TestConfig(expTbcFilePath, expTcfFilePath, expTestConfig.isForceReload(),
-                expTestConfig.isLoadOnly(), expTestConfig.isKeepConfig(), expTestConfig.getConstants());
+            expTestConfig.isLoadOnly(), expTestConfig.isKeepConfig(), expTestConfig.getConstants());
 
         // Run tests
         return runTest(expTestFilePath, expTestConfig, expExecConfig, run, workspace, launcher, listener);
@@ -253,10 +244,8 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     /**
      * Adds the build action holding test information by injecting environment variables.
      *
-     * @param run
-     *            the run
-     * @param testClient
-     *            the test client
+     * @param run        the run
+     * @param testClient the test client
      */
     protected void addBuildAction(final Run<?, ?> run, final AbstractTestClient testClient) {
         final int builderId = getTestId(run);
@@ -267,29 +256,20 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     /**
      * Run the test with given configurations within a defined timeout.
      *
-     * @param testFile
-     *            the full test file path
-     * @param testConfig
-     *            the expanded test configuration
-     * @param executionConfig
-     *            the expanded execution configuration
-     * @param run
-     *            the build
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param testFile        the full test file path
+     * @param testConfig      the expanded test configuration
+     * @param executionConfig the expanded execution configuration
+     * @param run             the build
+     * @param workspace       the workspace
+     * @param launcher        the launcher
+     * @param listener        the listener
      * @return {@code true} if running the test passed, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     protected abstract boolean runTest(String testFile, TestConfig testConfig, ExecutionConfig executionConfig,
-            Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
-                    throws IOException, InterruptedException;
+                                       Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
+        throws IOException, InterruptedException;
 
     @Override
     public BuildStepMonitor getRequiredMonitorService() {

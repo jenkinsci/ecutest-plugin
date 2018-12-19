@@ -43,18 +43,14 @@ public class ATXTextSetting extends ATXSetting<String> {
     /**
      * Instantiates a new {@link ATXTextSetting}.
      *
-     * @param name
-     *            the name of the setting
-     * @param descGerman
-     *            the German description
-     * @param descEnglish
-     *            the English description
-     * @param defaultValue
-     *            the default value
+     * @param name         the name of the setting
+     * @param descGerman   the German description
+     * @param descEnglish  the English description
+     * @param defaultValue the default value
      */
     @DataBoundConstructor
     public ATXTextSetting(final String name, final String descGerman, final String descEnglish,
-            final String defaultValue) {
+                          final String defaultValue) {
         super(name, descGerman, descEnglish, defaultValue);
     }
 }

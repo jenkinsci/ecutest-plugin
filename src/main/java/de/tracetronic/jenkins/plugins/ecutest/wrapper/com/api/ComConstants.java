@@ -42,8 +42,7 @@ public interface ComConstants {
      * Queries the number of constants.
      *
      * @return the number of constants
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     int getCount() throws ETComException;
 
@@ -52,22 +51,18 @@ public interface ComConstants {
      * The index should be larger than 0 and lesser than the number of constants.
      * The count of constants can be determined with {@link #getCount()}.
      *
-     * @param id
-     *            the id of the constant
+     * @param id the id of the constant
      * @return the specified constant
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     ComConstant item(int id) throws ETComException;
 
     /**
      * Returns a specified constant by name.
      *
-     * @param name
-     *            the name of the constant
+     * @param name the name of the constant
      * @return the specified constant
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     ComConstant item(String name) throws ETComException;
 

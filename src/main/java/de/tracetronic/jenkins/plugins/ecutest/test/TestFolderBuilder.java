@@ -69,32 +69,10 @@ public class TestFolderBuilder extends AbstractTestBuilder {
      * Defines the default {@link ScanMode}.
      */
     protected static final ScanMode DEFAULT_SCANMODE = ScanMode.PACKAGES_AND_PROJECTS;
-
-    /**
-     * Defines the modes to scan the test folder.
-     */
-    public enum ScanMode {
-        /**
-         * Scan packages only.
-         */
-        PACKAGES_ONLY,
-
-        /**
-         * Scan projects only.
-         */
-        PROJECTS_ONLY,
-
-        /**
-         * Scan both packages and projects.
-         */
-        PACKAGES_AND_PROJECTS
-    }
-
     // Scan settings
     @Nonnull
     private ScanMode scanMode = DEFAULT_SCANMODE;
     private boolean recursiveScan;
-
     // Test settings
     @Nonnull
     private PackageConfig packageConfig = PackageConfig.newInstance();
@@ -104,8 +82,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     /**
      * Instantiates a new {@link TestFolderBuilder}.
      *
-     * @param testFile
-     *            the test folder
+     * @param testFile the test folder
      */
     @DataBoundConstructor
     public TestFolderBuilder(@Nonnull final String testFile) {
@@ -121,10 +98,26 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     }
 
     /**
+     * @param scanMode the scan mode
+     */
+    @DataBoundSetter
+    public void setScanMode(@Nonnull final ScanMode scanMode) {
+        this.scanMode = scanMode;
+    }
+
+    /**
      * @return the recursiveScan
      */
     public boolean isRecursiveScan() {
         return recursiveScan;
+    }
+
+    /**
+     * @param recursiveScan the recursive scan mode
+     */
+    @DataBoundSetter
+    public void setRecursiveScan(final boolean recursiveScan) {
+        this.recursiveScan = recursiveScan;
     }
 
     /**
@@ -136,6 +129,14 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     }
 
     /**
+     * @param packageConfig the package configuration
+     */
+    @DataBoundSetter
+    public void setPackageConfig(@CheckForNull final PackageConfig packageConfig) {
+        this.packageConfig = packageConfig == null ? PackageConfig.newInstance() : packageConfig;
+    }
+
+    /**
      * @return the project configuration
      */
     @Nonnull
@@ -144,35 +145,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     }
 
     /**
-     * @param scanMode
-     *            the scan mode
-     */
-    @DataBoundSetter
-    public void setScanMode(@Nonnull final ScanMode scanMode) {
-        this.scanMode = scanMode;
-    }
-
-    /**
-     * @param recursiveScan
-     *            the recursive scan mode
-     */
-    @DataBoundSetter
-    public void setRecursiveScan(final boolean recursiveScan) {
-        this.recursiveScan = recursiveScan;
-    }
-
-    /**
-     * @param packageConfig
-     *            the package configuration
-     */
-    @DataBoundSetter
-    public void setPackageConfig(@CheckForNull final PackageConfig packageConfig) {
-        this.packageConfig = packageConfig == null ? PackageConfig.newInstance() : packageConfig;
-    }
-
-    /**
-     * @param projectConfig
-     *            the project configuration
+     * @param projectConfig the project configuration
      */
     @DataBoundSetter
     public void setProjectConfig(@CheckForNull final ProjectConfig projectConfig) {
@@ -181,7 +154,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
 
     @Override
     protected String getTestFilePath(final String testFile, final String pkgDir, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                     final TaskListener listener) throws IOException, InterruptedException {
         String testFolderPath = null;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (testFile.isEmpty()) {
@@ -200,8 +173,9 @@ public class TestFolderBuilder extends AbstractTestBuilder {
 
     @Override
     protected boolean runTest(final String testFolder, final TestConfig testConfig,
-            final ExecutionConfig executionConfig, final Run<?, ?> run, final FilePath workspace,
-            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
+                              final ExecutionConfig executionConfig, final Run<?, ?> run, final FilePath workspace,
+                              final Launcher launcher, final TaskListener listener)
+        throws IOException, InterruptedException {
         // Scan test folder for tests
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Executing test folder...");
@@ -258,20 +232,15 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     /**
      * Scans for ECU-TEST packages.
      *
-     * @param testFolder
-     *            the test folder
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param testFolder the test folder
+     * @param launcher   the launcher
+     * @param listener   the listener
      * @return the list of found packages
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private List<String> scanPackages(final String testFolder, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         List<String> pkgFiles = new ArrayList<>();
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (scanMode.equals(ScanMode.PACKAGES_ONLY) || scanMode.equals(ScanMode.PACKAGES_AND_PROJECTS)) {
@@ -289,20 +258,15 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     /**
      * Scan for ECU-TEST projects.
      *
-     * @param testFolder
-     *            the test folder
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param testFolder the test folder
+     * @param launcher   the launcher
+     * @param listener   the listener
      * @return the list of found projects
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private List<String> scanProjects(final String testFolder, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         List<String> prjFiles = new ArrayList<>();
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (scanMode.equals(ScanMode.PROJECTS_ONLY) || scanMode.equals(ScanMode.PACKAGES_AND_PROJECTS)) {
@@ -315,6 +279,26 @@ public class TestFolderBuilder extends AbstractTestBuilder {
             }
         }
         return prjFiles;
+    }
+
+    /**
+     * Defines the modes to scan the test folder.
+     */
+    public enum ScanMode {
+        /**
+         * Scan packages only.
+         */
+        PACKAGES_ONLY,
+
+        /**
+         * Scan projects only.
+         */
+        PROJECTS_ONLY,
+
+        /**
+         * Scan both packages and projects.
+         */
+        PACKAGES_AND_PROJECTS
     }
 
     /**
@@ -355,8 +339,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
         /**
          * Validates the test folder.
          *
-         * @param value
-         *            the test folder
+         * @param value the test folder
          * @return the form validation
          */
         @Override

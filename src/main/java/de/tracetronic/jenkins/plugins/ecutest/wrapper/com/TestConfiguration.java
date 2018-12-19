@@ -45,14 +45,12 @@ public class TestConfiguration extends ETComDispatch implements ComTestConfigura
 
     /**
      * Instantiates a new {@link TestConfiguration}.
-     * 
+     * <p>
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
      *
-     * @param dispatch
-     *            the dispatch
-     * @param useTimeout
-     *            specifies whether to apply timeout
+     * @param dispatch   the dispatch
+     * @param useTimeout specifies whether to apply timeout
      */
     public TestConfiguration(final Dispatch dispatch, final boolean useTimeout) {
         super(dispatch, useTimeout);
@@ -63,13 +61,13 @@ public class TestConfiguration extends ETComDispatch implements ComTestConfigura
     public void setGlobalConstant(final String name, final String value) throws ETComException {
         Object objValue;
         if (StringUtils.isNotEmpty(value)
-                && (StringUtils.isNumeric(value) ||
-                        startsAndEndsWith(value, "[", "]") ||
-                        startsAndEndsWith(value, "{", "}") ||
-                        startsAndEndsWith(value, "(", ")") ||
-                        startsAndEndsWith(value, "'", "'") ||
-                        startsAndEndsWith(value, "\"", "\"") ||
-                        "True".equals(value) || "False".equals(value))) {
+            && (StringUtils.isNumeric(value) ||
+            startsAndEndsWith(value, "[", "]") ||
+            startsAndEndsWith(value, "{", "}") ||
+            startsAndEndsWith(value, "(", ")") ||
+            startsAndEndsWith(value, "'", "'") ||
+            startsAndEndsWith(value, "\"", "\"") ||
+            "True".equals(value) || "False".equals(value))) {
             // Assume Python integer, list, dictionary, tuple, string or boolean literal
             objValue = value;
         } else {
@@ -82,12 +80,9 @@ public class TestConfiguration extends ETComDispatch implements ComTestConfigura
     /**
      * Checks whether the given value starts with prefix and ends with suffix.
      *
-     * @param value
-     *            the value
-     * @param prefix
-     *            the prefix
-     * @param suffix
-     *            the suffix
+     * @param value  the value
+     * @param prefix the prefix
+     * @param suffix the suffix
      * @return {@code true} if check passed, {@code false} otherwise
      */
     private boolean startsAndEndsWith(final String value, final String prefix, final String suffix) {

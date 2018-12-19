@@ -30,17 +30,17 @@
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
-    <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation" page="select.jelly" />
+    <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation" page="select.jelly"/>
     <f:entry title="${%mergeReports.title}" description="${%mergeReports.description}" field="mergeReports">
-        <f:checkbox default="true" />
+        <f:checkbox default="true"/>
     </f:entry>
     <f:entry title="${%createReportDir.title}" description="${%createReportDir.description}" field="createReportDir">
-        <f:checkbox default="false" />
+        <f:checkbox default="false"/>
     </f:entry>
     <f:advanced>
         <f:entry title="${%timeout.title}" description="${%timeout.description}" field="timeout">
-            <f:textbox default="${descriptor.defaultTimeout}" />
+            <f:textbox default="${descriptor.defaultTimeout}"/>
         </f:entry>
     </f:advanced>
-    <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly" />
+    <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly"/>
 </j:jelly>

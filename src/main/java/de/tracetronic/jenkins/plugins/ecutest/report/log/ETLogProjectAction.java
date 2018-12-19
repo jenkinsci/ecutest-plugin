@@ -45,8 +45,7 @@ public class ETLogProjectAction extends AbstractETLogAction {
     /**
      * Instantiates a new {@link ETLogProjectAction}.
      *
-     * @param projectLevel
-     *            specifies whether archiving is restricted to project level only
+     * @param projectLevel specifies whether archiving is restricted to project level only
      */
     public ETLogProjectAction(final boolean projectLevel) {
         super(projectLevel);
@@ -57,8 +56,7 @@ public class ETLogProjectAction extends AbstractETLogAction {
      * <p>
      * Resolves the owner by {@link StaplerRequest#findAncestorObject(Class)}.
      *
-     * @param req
-     *            the {@link StaplerRequest} used for access this action
+     * @param req the {@link StaplerRequest} used for access this action
      * @return the last {@link ETLogBuildAction} or {@code null} if no proper build exists
      */
     @CheckForNull
@@ -72,10 +70,8 @@ public class ETLogProjectAction extends AbstractETLogAction {
      * <p>
      * Delegates to the last {@link ETLogBuildAction}.
      *
-     * @param token
-     *            the URL token
-     * @param req
-     *            the {@link StaplerRequest} used for access this action
+     * @param token the URL token
+     * @param req   the {@link StaplerRequest} used for access this action
      * @return the requested {@link ETLogReport} or {@code null} if no proper report exists
      */
     public ETLogReport getDynamic(final String token, final StaplerRequest req) {

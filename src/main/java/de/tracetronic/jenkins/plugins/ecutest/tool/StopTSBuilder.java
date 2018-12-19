@@ -60,8 +60,7 @@ public class StopTSBuilder extends AbstractToolBuilder {
     /**
      * Instantiates a new {@link StopTSBuilder}.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
      */
     @DataBoundConstructor
     public StopTSBuilder(@Nonnull final String toolName) {
@@ -78,11 +77,11 @@ public class StopTSBuilder extends AbstractToolBuilder {
 
     @Override
     public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
+                            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         // Stop selected Tool-Server of related ECU-TEST installation
         final EnvVars buildEnvVars = run.getEnvironment(listener);
         final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
-                String.valueOf(DEFAULT_TIMEOUT)));
+            String.valueOf(DEFAULT_TIMEOUT)));
         final TSClient tsClient = new TSClient(getToolName(), expTimeout);
         if (!tsClient.stop(true, workspace, launcher, listener)) {
             throw new ETPluginException("Stopping Tool-Server failed.");

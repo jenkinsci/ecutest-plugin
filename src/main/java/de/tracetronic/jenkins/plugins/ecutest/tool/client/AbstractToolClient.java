@@ -53,12 +53,9 @@ public abstract class AbstractToolClient implements ToolClient {
     /**
      * Instantiates a new {@link AbstractToolClient}.
      *
-     * @param toolName
-     *            the tool name identifying the chosen {@link ETInstallation}.
-     * @param installPath
-     *            the install path
-     * @param timeout
-     *            the timeout
+     * @param toolName    the tool name identifying the chosen {@link ETInstallation}.
+     * @param installPath the install path
+     * @param timeout     the timeout
      */
     public AbstractToolClient(final String toolName, final String installPath, final int timeout) {
         this.toolName = StringUtils.trimToEmpty(toolName);
@@ -69,10 +66,8 @@ public abstract class AbstractToolClient implements ToolClient {
     /**
      * Instantiates a new {@link AbstractToolClient}.
      *
-     * @param toolName
-     *            the tool name identifying the chosen {@link ETInstallation}.
-     * @param timeout
-     *            the timeout
+     * @param toolName the tool name identifying the chosen {@link ETInstallation}.
+     * @param timeout  the timeout
      */
     public AbstractToolClient(final String toolName, final int timeout) {
         this.toolName = StringUtils.trimToEmpty(toolName);
@@ -111,14 +106,11 @@ public abstract class AbstractToolClient implements ToolClient {
     /**
      * Launches a process by using {@link ArgumentListBuilder} and waits for start up within a given timeout.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true} if process invocation succeeded, {@code false} if launching process failed or timeout
-     *         exceeded
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * exceeded
+     * @throws InterruptedException if the build gets interrupted
      */
     protected boolean launchProcess(final Launcher launcher, final TaskListener listener) throws InterruptedException {
         // Create command line

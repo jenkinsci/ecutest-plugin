@@ -76,8 +76,7 @@ public class ETLogPublisherTest {
     /**
      * Asserts the publisher properties.
      *
-     * @param publisher
-     *            the publisher
+     * @param publisher the publisher
      */
     private void assertPublisher(final ETLogPublisher publisher) {
         assertNotNull(publisher);

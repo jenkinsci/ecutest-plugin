@@ -45,8 +45,8 @@ import java.io.IOException;
  * <i>RESTART_JENKINS_SLAVE</i> and configured with actions how to restart the slave.
  * </p>
  *
- * @since 1.8
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
+ * @since 1.8
  */
 @Extension
 public class WindowsTaskSlaveRestarter extends SlaveRestarter {
@@ -69,17 +69,15 @@ public class WindowsTaskSlaveRestarter extends SlaveRestarter {
     public void restart() throws Exception {
         final int ret = execTask();
         throw new IOException("Failed restarting slave!\n"
-                + "Task completed with exit value: " + ret);
+            + "Task completed with exit value: " + ret);
     }
 
     /**
      * Queries the task scheduler.
      *
      * @return the process exit value
-     * @throws InterruptedException
-     *             the interrupted exception
-     * @throws IOException
-     *             signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
      */
     private int queryTask() throws InterruptedException, IOException {
         return runProcess("/query");
@@ -89,10 +87,8 @@ public class WindowsTaskSlaveRestarter extends SlaveRestarter {
      * Executes the task scheduler.
      *
      * @return the process exit value
-     * @throws InterruptedException
-     *             the interrupted exception
-     * @throws IOException
-     *             signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
      */
     private int execTask() throws InterruptedException, IOException {
         return runProcess("/run");
@@ -101,13 +97,10 @@ public class WindowsTaskSlaveRestarter extends SlaveRestarter {
     /**
      * Runs the task process with appropriate arguments.
      *
-     * @param option
-     *            the option
+     * @param option the option
      * @return the process exit value
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
      */
     private int runProcess(final String option) throws IOException, InterruptedException {
         final ProcessBuilder procBuilder = new ProcessBuilder("schtasks.exe", option, "/tn", TASKNAME);

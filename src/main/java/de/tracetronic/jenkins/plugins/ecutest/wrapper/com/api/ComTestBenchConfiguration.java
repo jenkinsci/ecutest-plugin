@@ -42,8 +42,7 @@ public interface ComTestBenchConfiguration {
      * Returns the full path of this test bench configuration.
      *
      * @return the TBC file path
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     String getFileName() throws ETComException;
 

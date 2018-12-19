@@ -50,7 +50,7 @@ import static org.junit.Assert.assertEquals;
 public class JUnitTestResultParserTest {
 
     private static final String REPORT_FILE = String.format("%s/%s",
-            JUnitPublisher.UNIT_TEMPLATE_NAME, JUnitPublisher.JUNIT_REPORT_FILE);
+        JUnitPublisher.UNIT_TEMPLATE_NAME, JUnitPublisher.JUNIT_REPORT_FILE);
 
     @Test
     public void testEmptyTestReport() throws Exception {

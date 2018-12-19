@@ -59,10 +59,8 @@ public class ATXPublisherTest {
     /**
      * Asserts the publisher properties.
      *
-     * @param publisher
-     *            the publisher
-     * @param isDefault
-     *            specifies whether to check default values
+     * @param publisher the publisher
+     * @param isDefault specifies whether to check default values
      */
     private void assertPublisher(final ATXPublisher publisher, final boolean isDefault) {
         assertNotNull(publisher);

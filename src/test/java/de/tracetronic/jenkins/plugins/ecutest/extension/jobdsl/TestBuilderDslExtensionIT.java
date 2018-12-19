@@ -353,7 +353,7 @@ public class TestBuilderDslExtensionIT extends AbstractDslExtensionIT {
     }
 
     private void testExportProjectAttributeConfigWithDsl(final ExportProjectAttributeConfig config)
-            throws Exception {
+        throws Exception {
         assertThat(config.getFilePath(), is("test.prj"));
         assertThat(config.getCredentialsId(), is("credentialsId"));
         assertThat(config.getTimeout(), is("600"));

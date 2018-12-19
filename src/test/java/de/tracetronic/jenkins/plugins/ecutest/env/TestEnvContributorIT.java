@@ -83,23 +83,23 @@ public class TestEnvContributorIT extends IntegrationTestBase {
         assertEquals("Only one test env action should exist", 1, envActions.size());
 
         assertEquals("TT_TEST_NAME_0 should match env action", testEnvAction.getTestName(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_NAME + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_NAME + testId));
         assertEquals("TT_TEST_DESCRIPTION_0 should match env action", testEnvAction.getTestDescription(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_DESCRIPTION + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_DESCRIPTION + testId));
         assertEquals("TT_TEST_TYPE_0 should match env action", testEnvAction.getTestType().name(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TYPE + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TYPE + testId));
         assertEquals("TT_TEST_FILE_0 should match env action", testEnvAction.getTestFile(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_FILE + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_FILE + testId));
         assertEquals("TT_TEST_TBC_0 should match env action", testEnvAction.getTestTbc(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TBC + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TBC + testId));
         assertEquals("TT_TEST_TCF_0 should match env action", String.valueOf(testEnvAction.getTestTcf()),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TCF + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TCF + testId));
         assertEquals("TT_TEST_REPORT_0 should match env action", testEnvAction.getTestReportDir(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_REPORT + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_REPORT + testId));
         assertEquals("TT_TEST_RESULT_0 should match env action", testEnvAction.getTestResult(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_RESULT + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_RESULT + testId));
         assertEquals("TT_TEST_TIMEOUT_0 should match env action", String.valueOf(testEnvAction.getTimeout()),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TIMEOUT + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TIMEOUT + testId));
     }
 
     @Test
@@ -120,22 +120,22 @@ public class TestEnvContributorIT extends IntegrationTestBase {
         assertEquals("Only one test env action should exist", 1, envActions.size());
 
         assertEquals("TT_TEST_NAME_0 should match env action", testEnvAction.getTestName(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_NAME + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_NAME + testId));
         assertNull("TT_TEST_DESCRIPTION_0 should not exist for projects",
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_DESCRIPTION + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_DESCRIPTION + testId));
         assertEquals("TT_TEST_TYPE_0 should match env action", testEnvAction.getTestType().name(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TYPE + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TYPE + testId));
         assertEquals("TT_TEST_FILE_0 should match env action", testEnvAction.getTestFile(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_FILE + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_FILE + testId));
         assertEquals("TT_TEST_TBC_0 should match env action", testEnvAction.getTestTbc(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TBC + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TBC + testId));
         assertEquals("TT_TEST_TCF_0 should match env action", String.valueOf(testEnvAction.getTestTcf()),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TCF + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TCF + testId));
         assertEquals("TT_TEST_REPORT_0 should match env action", testEnvAction.getTestReportDir(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_REPORT + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_REPORT + testId));
         assertEquals("TT_TEST_RESULT_0 should match env action", testEnvAction.getTestResult(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_RESULT + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_RESULT + testId));
         assertEquals("TT_TEST_TIMEOUT_0 should match env action", String.valueOf(testEnvAction.getTimeout()),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TIMEOUT + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TIMEOUT + testId));
     }
 }

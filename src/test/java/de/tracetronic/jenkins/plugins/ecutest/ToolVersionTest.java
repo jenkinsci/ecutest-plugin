@@ -93,7 +93,7 @@ public class ToolVersionTest {
         final ToolVersion toolVersion = new ToolVersion(1, 2, 3, "4");
         final ToolVersion sameToolVersion = new ToolVersion(1, 2, 0, "0");
         assertEquals("Tool versions compare without micro to equals", 0,
-                sameToolVersion.compareWithoutMicroTo(toolVersion));
+            sameToolVersion.compareWithoutMicroTo(toolVersion));
     }
 
     @Test
@@ -101,7 +101,7 @@ public class ToolVersionTest {
         final ToolVersion toolVersion = new ToolVersion(1, 2, 3, "4");
         final ToolVersion sameToolVersion = new ToolVersion(1, 2, 3, "0");
         assertEquals("Tool versions compare without qualifier to equals", 0,
-                sameToolVersion.compareWithoutQualifierTo(toolVersion));
+            sameToolVersion.compareWithoutQualifierTo(toolVersion));
     }
 
     @Test

@@ -35,23 +35,26 @@
             <div style="text-indent: ${indent}px;">
                 <j:choose>
                     <j:when test="${report.hasTrendReport()}">
-                        <lsi:icon class="${it.trendIconClassName} icon-sm" alt="ATX report" />
-                        <st:nbsp />
+                        <lsi:icon class="${it.trendIconClassName} icon-sm" alt="ATX report"/>
+                        <st:nbsp/>
                         <j:if test="${owner == build}">
                             <a href="${report.url}" target="_blank">${%trend.view}</a>
                         </j:if>
                         <j:if test="${owner != build}">
-                            <a href="${rootURL}/${build.url}${it.urlName}/${report.id}" target="_blank">${%trend.view}</a>
+                            <a href="${rootURL}/${build.url}${it.urlName}/${report.id}" target="_blank">${%trend.view}
+                            </a>
                         </j:if>
                     </j:when>
                     <j:otherwise>
-                        <lsi:icon class="${it.reportIconClassName} icon-sm" alt="ATX report" />
-                        <st:nbsp />
+                        <lsi:icon class="${it.reportIconClassName} icon-sm" alt="ATX report"/>
+                        <st:nbsp/>
                         <j:if test="${owner == build}">
                             <a href="${report.url}" target="_blank">${report.title}</a>
                         </j:if>
                         <j:if test="${owner != build}">
-                            <a href="${rootURL}/${build.url}${it.urlName}/${report.id}" target="_blank">${report.title}</a>
+                            <a href="${rootURL}/${build.url}${it.urlName}/${report.id}" target="_blank">
+                                ${report.title}
+                            </a>
                         </j:if>
                     </j:otherwise>
                 </j:choose>
@@ -60,9 +63,9 @@
         <td class="fileSize">
             ${h.humanReadableByteSize(report.fileSize)}
         </td>
-        <j:set var="indent" value="${indent+20}" />
+        <j:set var="indent" value="${indent+20}"/>
         <j:forEach var="report" items="${report.getSubReports()}">
-            <st:include page="report.jelly" />
+            <st:include page="report.jelly"/>
         </j:forEach>
     </tr>
 </j:jelly>

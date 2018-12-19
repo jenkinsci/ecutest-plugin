@@ -51,7 +51,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Shows the test related environment variables on a build as an action.
+ * Shows the test related environment variables as an build action.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
@@ -65,10 +65,8 @@ public class TestEnvActionView extends InvisibleAction {
     /**
      * Instantiates a new {@link TestEnvActionView}.
      *
-     * @param run
-     *            the build
-     * @param listener
-     *            the listener
+     * @param run      the build
+     * @param listener the listener
      */
     public TestEnvActionView(final Run<?, ?> run, final TaskListener listener) {
         super();
@@ -77,8 +75,8 @@ public class TestEnvActionView extends InvisibleAction {
     }
 
     /**
-     * Gets the test related build environment variables from the {@link TestEnvInvisibleAction} previously added to the
-     * build.
+     * Gets the test related build environment variables from the {@link TestEnvInvisibleAction}
+     * previously added to the build.
      *
      * @return set of {@link ParameterValue}'s to show in the build page.
      */

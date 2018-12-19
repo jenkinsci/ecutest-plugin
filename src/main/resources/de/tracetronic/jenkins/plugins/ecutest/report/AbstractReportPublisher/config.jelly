@@ -35,23 +35,23 @@
             <j:if test="${empty(showArchiving)}">
                 <j:choose>
                     <j:when test="${empty(instance.isArchiving())}">
-                        <j:set var="checked" value="true" />
+                        <j:set var="checked" value="true"/>
                     </j:when>
                     <j:otherwise>
-                        <j:set var="checked" value="${instance.isArchiving()}" />
+                        <j:set var="checked" value="${instance.isArchiving()}"/>
                     </j:otherwise>
                 </j:choose>
                 <f:optionalBlock inline="true" checked="${checked}" title="${%archiving.title}" field="archiving">
                     <f:entry title="${%keepAll.title}" description="${%keepAll.description}" field="keepAll">
-                        <f:checkbox checked="${instance.isKeepAll()}" default="true" />
+                        <f:checkbox checked="${instance.isKeepAll()}" default="true"/>
                     </f:entry>
                 </f:optionalBlock>
             </j:if>
             <f:entry title="${%allowMissing.title}" description="${%allowMissing.description}" field="allowMissing">
-                <f:checkbox />
+                <f:checkbox/>
             </f:entry>
             <f:entry title="${%runOnFailed.title}" description="${%runOnFailed.description}" field="runOnFailed">
-                <f:checkbox />
+                <f:checkbox/>
             </f:entry>
         </f:section>
     </f:advanced>

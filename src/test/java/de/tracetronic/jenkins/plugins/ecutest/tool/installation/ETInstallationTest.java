@@ -47,7 +47,7 @@ public class ETInstallationTest {
     @Test
     public void testInstallation() {
         final ETInstallation inst = new ETInstallation("ECU-TEST", "C:\\ECU-TEST",
-                Collections.<ToolProperty<?>> emptyList());
+            Collections.emptyList());
         assertNotNull(inst);
         assertEquals("ECU-TEST", inst.getName());
         assertEquals("C:\\ECU-TEST", inst.getHome());
@@ -57,7 +57,7 @@ public class ETInstallationTest {
     @Test
     public void testInstallationWithCustomProgId() {
         final ETInstallation inst = new ETInstallation("ECU-TEST", "C:\\ECU-TEST",
-                Collections.singletonList(new ETToolProperty("ECU-TEST6.Application", 120)));
+            Collections.singletonList(new ETToolProperty("ECU-TEST6.Application", 120)));
         assertNotNull(inst);
         assertEquals("ECU-TEST", inst.getName());
         assertEquals("C:\\ECU-TEST", inst.getHome());

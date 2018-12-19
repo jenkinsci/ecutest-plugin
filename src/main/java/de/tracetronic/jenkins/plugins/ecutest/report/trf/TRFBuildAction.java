@@ -50,8 +50,7 @@ public class TRFBuildAction extends AbstractTRFAction implements SimpleBuildStep
     /**
      * Instantiates a new {@link TRFBuildAction}.
      *
-     * @param projectLevel
-     *            specifies whether archiving is restricted to project level only
+     * @param projectLevel specifies whether archiving is restricted to project level only
      */
     public TRFBuildAction(final boolean projectLevel) {
         super(projectLevel);
@@ -69,8 +68,7 @@ public class TRFBuildAction extends AbstractTRFAction implements SimpleBuildStep
     /**
      * Adds a TRF report.
      *
-     * @param report
-     *            the TRF report to add
+     * @param report the TRF report to add
      * @return {@code true} if successful, {@code false} otherwise
      */
     public boolean add(final TRFReport report) {
@@ -80,8 +78,7 @@ public class TRFBuildAction extends AbstractTRFAction implements SimpleBuildStep
     /**
      * Adds a bundle of TRF reports.
      *
-     * @param reports
-     *            the collection of TRF reports
+     * @param reports the collection of TRF reports
      * @return {@code true} if successful, {@code false} otherwise
      */
     public boolean addAll(final Collection<TRFReport> reports) {
@@ -91,8 +88,7 @@ public class TRFBuildAction extends AbstractTRFAction implements SimpleBuildStep
     /**
      * Returns {@link TRFReport} specified by the URL.
      *
-     * @param token
-     *            the URL token
+     * @param token the URL token
      * @return the {@link TRFReport} or {@code null} if no proper report exists
      */
     public AbstractTestReport getDynamic(final String token) {
@@ -113,10 +109,8 @@ public class TRFBuildAction extends AbstractTRFAction implements SimpleBuildStep
      * Traverses the sub-reports recursively and searches
      * for the {@link TRFReport} matching the given token id.
      *
-     * @param token
-     *            the token id
-     * @param report
-     *            the report
+     * @param token  the token id
+     * @param report the report
      * @return the {@link TRFReport} or {@code null} if no proper report exists
      */
     private TRFReport traverseSubReports(final String token, final TRFReport report) {

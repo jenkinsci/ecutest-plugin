@@ -87,13 +87,57 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     /**
      * Instantiates a new {@link JUnitPublisher}.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
      */
     @DataBoundConstructor
     public JUnitPublisher(@Nonnull final String toolName) {
         super();
         this.toolName = StringUtils.trimToEmpty(toolName);
+    }
+
+    /**
+     * Gets the failed percentage.
+     *
+     * @param failedCount the failed count
+     * @param totalCount  the total count
+     * @return the unstable percentage
+     */
+    static double getFailedPercentage(final int failedCount, final int totalCount) {
+        if (totalCount == 0) {
+            return 0;
+        }
+
+        final double percentage = (double) failedCount / (double) totalCount * 100;
+        return roundToDecimals(percentage, 1);
+    }
+
+    /**
+     * Round to decimals.
+     *
+     * @param value    the value to round
+     * @param decimals the number of decimals
+     * @return the rounded value
+     */
+    private static double roundToDecimals(final double value, final int decimals) {
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(decimals, BigDecimal.ROUND_HALF_UP);
+        return bd.doubleValue();
+    }
+
+    /**
+     * Converts to percentage value.
+     *
+     * @param value the value to convert
+     * @return the percentage value
+     */
+    private static double convertToPercentage(final double value) {
+        if (value < 0.0) {
+            return 0.0;
+        } else if (value > 100.0) {
+            return 100.0;
+        } else {
+            return value;
+        }
     }
 
     /**
@@ -112,15 +156,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     }
 
     /**
-     * @return the failed threshold
-     */
-    public double getFailedThreshold() {
-        return failedThreshold;
-    }
-
-    /**
-     * @param unstableThreshold
-     *            the unstable threshold
+     * @param unstableThreshold the unstable threshold
      */
     @DataBoundSetter
     public void setUnstableThreshold(final double unstableThreshold) {
@@ -128,8 +164,14 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     }
 
     /**
-     * @param failedThreshold
-     *            the failed threshold
+     * @return the failed threshold
+     */
+    public double getFailedThreshold() {
+        return failedThreshold;
+    }
+
+    /**
+     * @param failedThreshold the failed threshold
      */
     @DataBoundSetter
     public void setFailedThreshold(final double failedThreshold) {
@@ -138,13 +180,13 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
 
     @Override
     public MatrixAggregator createAggregator(final MatrixBuild build, final Launcher launcher,
-            final BuildListener listener) {
+                                             final BuildListener listener) {
         return new TestResultAggregator(build, launcher, listener);
     }
 
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
+                              final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = getLogger();
         logger.logInfo("Publishing UNIT reports...");
 
@@ -159,7 +201,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
 
         // Generate JUnit reports
         final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
-                run.getEnvironment(listener));
+            run.getEnvironment(listener));
         final JUnitReportGenerator generator = new JUnitReportGenerator();
         if (!generator.generate(installation, reportFiles, run, workspace, launcher, listener)) {
             run.setResult(Result.FAILURE);
@@ -195,10 +237,8 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
     /**
      * Sets the build result according to the test result.
      *
-     * @param run
-     *            the run
-     * @param testResult
-     *            the test result
+     * @param run        the run
+     * @param testResult the test result
      * @return {@code true} if test results exist and could be published
      */
     private boolean setBuildResult(final Run<?, ?> run, final TestResult testResult) {
@@ -212,75 +252,25 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
             }
         } else {
             logger.logInfo(String.format(
-                    "-> Found %d test result(s) in total: #Passed: %d, #Failed: %d, #Skipped: %d",
-                    testResult.getTotalCount(), testResult.getPassCount(), testResult.getFailCount(),
-                    testResult.getSkipCount()));
+                "-> Found %d test result(s) in total: #Passed: %d, #Failed: %d, #Skipped: %d",
+                testResult.getTotalCount(), testResult.getPassCount(), testResult.getFailCount(),
+                testResult.getSkipCount()));
         }
 
         final double failedPercentage = getFailedPercentage(testResult.getFailCount(),
-                testResult.getTotalCount());
+            testResult.getTotalCount());
         if (failedPercentage > failedThreshold) {
             logger.logInfo(String.format(
-                    "-> %.1f%% of failed test results exceed failed threshold of %.1f%%, "
-                            + "setting build status to FAILURE!", failedPercentage, failedThreshold));
+                "-> %.1f%% of failed test results exceed failed threshold of %.1f%%, "
+                    + "setting build status to FAILURE!", failedPercentage, failedThreshold));
             run.setResult(Result.FAILURE);
         } else if (failedPercentage > unstableThreshold) {
             logger.logInfo(String.format(
-                    "-> %.1f%% of failed test results exceed unstable threshold of %.1f%%, "
-                            + "setting build status to UNSTABLE!", failedPercentage, unstableThreshold));
+                "-> %.1f%% of failed test results exceed unstable threshold of %.1f%%, "
+                    + "setting build status to UNSTABLE!", failedPercentage, unstableThreshold));
             run.setResult(Result.UNSTABLE);
         }
         return true;
-    }
-
-    /**
-     * Gets the failed percentage.
-     *
-     * @param failedCount
-     *            the failed count
-     * @param totalCount
-     *            the total count
-     * @return the unstable percentage
-     */
-    static double getFailedPercentage(final int failedCount, final int totalCount) {
-        if (totalCount == 0) {
-            return 0;
-        }
-
-        final double percentage = (double) failedCount / (double) totalCount * 100;
-        return roundToDecimals(percentage, 1);
-    }
-
-    /**
-     * Round to decimals.
-     *
-     * @param value
-     *            the value to round
-     * @param decimals
-     *            the number of decimals
-     * @return the rounded value
-     */
-    private static double roundToDecimals(final double value, final int decimals) {
-        BigDecimal bd = new BigDecimal(Double.toString(value));
-        bd = bd.setScale(decimals, BigDecimal.ROUND_HALF_UP);
-        return bd.doubleValue();
-    }
-
-    /**
-     * Converts to percentage value.
-     *
-     * @param value
-     *            the value to convert
-     * @return the percentage value
-     */
-    private static double convertToPercentage(final double value) {
-        if (value < 0.0) {
-            return 0.0;
-        } else if (value > 100.0) {
-            return 100.0;
-        } else {
-            return value;
-        }
     }
 
     @Override
@@ -314,8 +304,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
         /**
          * Validates the unstable threshold.
          *
-         * @param value
-         *            the threshold
+         * @param value the threshold
          * @return the form validation
          */
         public FormValidation doCheckUnstableThreshold(@QueryParameter final String value) {
@@ -325,8 +314,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
         /**
          * Validates the failed threshold.
          *
-         * @param value
-         *            the threshold
+         * @param value the threshold
          * @return the form validation
          */
         public FormValidation doCheckFailedThreshold(@QueryParameter final String value) {

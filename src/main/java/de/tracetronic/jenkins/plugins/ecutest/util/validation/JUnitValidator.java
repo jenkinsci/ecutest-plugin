@@ -43,8 +43,7 @@ public class JUnitValidator extends AbstractValidator {
     /**
      * Validates the unstable threshold.
      *
-     * @param value
-     *            the threshold
+     * @param value the threshold
      * @return the form validation
      */
     public FormValidation validateUnstableThreshold(final String value) {
@@ -62,8 +61,7 @@ public class JUnitValidator extends AbstractValidator {
     /**
      * Validates the failed threshold.
      *
-     * @param value
-     *            the threshold
+     * @param value the threshold
      * @return the form validation
      */
     public FormValidation validateFailedThreshold(final String value) {
@@ -81,8 +79,7 @@ public class JUnitValidator extends AbstractValidator {
     /**
      * Checks for percentage value.
      *
-     * @param value
-     *            the value
+     * @param value the value
      * @return {@code true} if is percentage value
      */
     private boolean isPercentageValue(final String value) {

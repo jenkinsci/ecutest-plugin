@@ -30,8 +30,8 @@
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
-    <j:set var="lastBuildAction" value="${it.getLastBuildAction(request)}" />
+    <j:set var="lastBuildAction" value="${it.getLastBuildAction(request)}"/>
     <j:if test="${lastBuildAction != null}">
-        <st:include page="index.jelly" it="${lastBuildAction}" />
+        <st:include page="index.jelly" it="${lastBuildAction}"/>
     </j:if>
 </j:jelly>

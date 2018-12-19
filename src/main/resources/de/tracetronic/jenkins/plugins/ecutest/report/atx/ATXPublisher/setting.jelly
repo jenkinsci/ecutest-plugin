@@ -34,11 +34,13 @@
         <f:entry title="${setting.getTitle()}" description="${setting.getDescription()}">
             <j:choose>
                 <j:when test="${setting.isCheckbox()}">
-                    <f:checkbox name="${setting.getName()}" checked="${setting.getCurrentValue()}" default="${setting.getDefaultValue()}" />
+                    <f:checkbox name="${setting.getName()}" checked="${setting.getCurrentValue()}"
+                                default="${setting.getDefaultValue()}"/>
                 </j:when>
                 <j:otherwise>
-                    <f:textbox name="${setting.getName()}" value="${setting.getCurrentValue()}" default="${setting.getDefaultValue()}"
-                        checkUrl="'descriptorByName/ATXPublisher/checkSetting?name='+this.name+'&amp;value='+this.value" />
+                    <f:textbox name="${setting.getName()}" value="${setting.getCurrentValue()}"
+                               default="${setting.getDefaultValue()}"
+                               checkUrl="'descriptorByName/ATXPublisher/checkSetting?name='+this.name+'&amp;value='+this.value"/>
                 </j:otherwise>
             </j:choose>
         </f:entry>

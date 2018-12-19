@@ -30,46 +30,48 @@
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:lsi="/shim/layout/icon">
-    <j:set var="owner" value="${it.getOwner(request)}" />
-    <j:set var="build" value="${it.getBuild(request)}" />
+    <j:set var="owner" value="${it.getOwner(request)}"/>
+    <j:set var="build" value="${it.getBuild(request)}"/>
     <l:layout title="${it.displayName}" norefresh="true">
-        <st:include page="sidepanel.jelly" it="${owner}" />
+        <st:include page="sidepanel.jelly" it="${owner}"/>
         <l:main-panel>
             <h1>
-                <lsi:icon class="${it.iconClassName} icon-xlg" alt="ATX reports" />
+                <lsi:icon class="${it.iconClassName} icon-xlg" alt="ATX reports"/>
                 ${it.displayName}
             </h1>
             <j:if test="${owner != null}">
                 <j:if test="${owner != build}">
                     <div>
-                        ${%built.on} <a href="${rootURL}/${build.url}">${build.fullDisplayName}</a>
+                        ${%built.on}
+                        <a href="${rootURL}/${build.url}">${build.fullDisplayName}</a>
                     </div>
                 </j:if>
                 <table class="fileList">
-                    <j:set var="indent" value="0" />
-                    <j:set var="reports" value="${it.getATXReports()}" />
+                    <j:set var="indent" value="0"/>
+                    <j:set var="reports" value="${it.getATXReports()}"/>
                     <j:choose>
                         <j:when test="${empty(reports)}">
                             ${%reports.empty}
                         </j:when>
                         <j:otherwise>
                             <j:forEach var="report" items="${reports}">
-                                 <st:include page="report.jelly" />
+                                <st:include page="report.jelly"/>
                             </j:forEach>
                             <j:if test="${it.hasArchivedReports()}">
                                 <tr>
                                     <td style="text-align:right;" colspan="2">
                                         <div style="margin-top: 1em;">
-                                            <l:icon class="icon-package icon-sm" /><st:nbsp />
+                                            <l:icon class="icon-package icon-sm"/>
+                                            <st:nbsp/>
                                             <a href="${rootURL}/${build.url}${it.urlName}/zipDownload">
                                                 ${%download.zip}
                                             </a>
                                         </div>
                                     </td>
-                                 </tr>
-                             </j:if>
+                                </tr>
+                            </j:if>
                         </j:otherwise>
-                     </j:choose>
+                    </j:choose>
                 </table>
             </j:if>
         </l:main-panel>

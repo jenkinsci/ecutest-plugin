@@ -52,10 +52,8 @@ public class ATXCustomTextSetting extends ATXCustomSetting {
     /**
      * Instantiates a new {@link ATXCustomTextSetting}.
      *
-     * @param name
-     *            the name of the setting
-     * @param value
-     *            the value of the setting
+     * @param name  the name of the setting
+     * @param value the value of the setting
      */
     @DataBoundConstructor
     public ATXCustomTextSetting(final String name, final String value) {
@@ -76,7 +74,7 @@ public class ATXCustomTextSetting extends ATXCustomSetting {
         if (other instanceof ATXCustomTextSetting) {
             final ATXCustomTextSetting that = (ATXCustomTextSetting) other;
             result = that.canEqual(this) && super.equals(that)
-                    && (Objects.equals(value, that.value));
+                && Objects.equals(value, that.value);
         }
         return result;
     }
@@ -100,8 +98,7 @@ public class ATXCustomTextSetting extends ATXCustomSetting {
         /**
          * Validates the setting value.
          *
-         * @param value
-         *            the value
+         * @param value the value
          * @return the form validation
          */
         public FormValidation doCheckValue(@QueryParameter final String value) {

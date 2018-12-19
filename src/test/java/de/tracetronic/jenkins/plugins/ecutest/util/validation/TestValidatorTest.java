@@ -338,14 +338,14 @@ public class TestValidatorTest {
     public void testMissingLogicOperatorExpression() {
         final FormValidation validation = testValidator.validateFilterExpression("Name='test' Status='FAILED'");
         assertEquals("Error if logical operator missing in filter expression", FormValidation.Kind.WARNING,
-                validation.kind);
+            validation.kind);
     }
 
     @Test
     public void testValidComplexExpression() {
         final FormValidation validation = testValidator
-                .validateFilterExpression("(Name=\"test\" and (Status='FAILED' or 'Test Comment' has 't?st*') "
-                        + "or 'Execution Priority'>=1 and VersionCounter=True)");
+            .validateFilterExpression("(Name=\"test\" and (Status='FAILED' or 'Test Comment' has 't?st*') "
+                + "or 'Execution Priority'>=1 and VersionCounter=True)");
         assertEquals("Valid complex filter expression", FormValidation.Kind.OK, validation.kind);
     }
 
@@ -445,7 +445,7 @@ public class TestValidatorTest {
     public void testInvalidConstantName() {
         final FormValidation validation = testValidator.validateGlobalConstantName("123constant");
         assertEquals("Invalid global constant name starts with non-letter char", FormValidation.Kind.ERROR,
-                validation.kind);
+            validation.kind);
     }
 
     @Test

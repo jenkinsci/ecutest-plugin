@@ -76,13 +76,10 @@ public final class DllUtil {
     /**
      * Loads the JACOB library.
      *
-     * @param computer
-     *            the computer
+     * @param computer the computer
      * @return {@code true} if successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public static boolean loadLibrary(@CheckForNull final Computer computer) throws IOException, InterruptedException {
         if (computer == null) {
@@ -95,13 +92,10 @@ public final class DllUtil {
     /**
      * Gets the file path to the JACOB library.
      *
-     * @param computer
-     *            the computer
+     * @param computer the computer
      * @return the library file path
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     private static FilePath getJacobLibrary(final Computer computer) throws IOException, InterruptedException {
         final FilePath jacobLib;
@@ -120,13 +114,10 @@ public final class DllUtil {
     /**
      * Gets the local file path to the JACOB library.
      *
-     * @param computer
-     *            the computer
+     * @param computer the computer
      * @return the local library file path
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     private static FilePath getLocalLibrary(final Computer computer) throws IOException, InterruptedException {
         FilePath localLib = null;
@@ -139,7 +130,7 @@ public final class DllUtil {
         final PluginWrapper wrapper = instance.getPluginManager().getPlugin("ecutest");
         if (wrapper != null) {
             localLib = new FilePath(FilePath.localChannel, rootDir.getAbsolutePath() + "/plugins/"
-                    + wrapper.getShortName() + "/WEB-INF/lib/" + libFile);
+                + wrapper.getShortName() + "/WEB-INF/lib/" + libFile);
         }
         return localLib;
     }
@@ -147,13 +138,10 @@ public final class DllUtil {
     /**
      * Gets the remote file path to the JACOB library.
      *
-     * @param computer
-     *            the computer
+     * @param computer the computer
      * @return the remote library file path
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     private static FilePath getRemoteLibrary(final Computer computer) throws IOException, InterruptedException {
         FilePath remoteLib = null;
@@ -172,13 +160,10 @@ public final class DllUtil {
     /**
      * Gets the library file for the respective system architecture.
      *
-     * @param computer
-     *            the computer
+     * @param computer the computer
      * @return the library file
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public static String getLibraryFile(final Computer computer) throws IOException, InterruptedException {
         return "amd64".equals(computer.getSystemProperties().get("os.arch")) ? JACOB_DLL_X64 : JACOB_DLL_X86;
@@ -187,18 +172,14 @@ public final class DllUtil {
     /**
      * Copies the library file from source to the destination which can be on remote.
      *
-     * @param src
-     *            the source file
-     * @param dest
-     *            the destination file
+     * @param src  the source file
+     * @param dest the destination file
      * @return {@code true} if successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     private static boolean copyLibrary(final FilePath src, final FilePath dest) throws IOException,
-            InterruptedException {
+        InterruptedException {
         return PathUtil.copyRemoteFile(src, dest);
     }
 
@@ -217,7 +198,7 @@ public final class DllUtil {
 
         @Override
         public Boolean invoke(final File libFile, final VirtualChannel channel) throws IOException,
-        InterruptedException {
+            InterruptedException {
             if (libFile.exists() && libFile.isFile()) {
                 final String libProperty = System.getProperty(LibraryLoader.JACOB_DLL_PATH);
                 if (!StringUtils.isBlank(libProperty)) {
@@ -228,7 +209,7 @@ public final class DllUtil {
                         LibraryLoader.loadJacobLibrary();
                     } catch (final UnsatisfiedLinkError e) {
                         LOGGER.log(Level.SEVERE,
-                                String.format("Loading local library %s failed: %s", libFile, e.getMessage()));
+                            String.format("Loading local library %s failed: %s", libFile, e.getMessage()));
                         return false;
                     }
                 }

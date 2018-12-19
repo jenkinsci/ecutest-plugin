@@ -54,8 +54,7 @@ public class ExportProjectBuilder extends AbstractExportBuilder {
     /**
      * Instantiates a new {@link ExportProjectBuilder}.
      *
-     * @param exportConfigs
-     *            the list of configured project exporters
+     * @param exportConfigs the list of configured project exporters
      */
     @DataBoundConstructor
     public ExportProjectBuilder(@CheckForNull final List<TMSConfig> exportConfigs) {
@@ -88,7 +87,7 @@ public class ExportProjectBuilder extends AbstractExportBuilder {
             if (configs != null) {
                 for (final Descriptor<TMSConfig> config : configs) {
                     if (config.isSubTypeOf(ExportProjectConfig.class) ||
-                            config.isSubTypeOf(ExportProjectAttributeConfig.class)) {
+                        config.isSubTypeOf(ExportProjectAttributeConfig.class)) {
                         list.add(config);
                     }
                 }

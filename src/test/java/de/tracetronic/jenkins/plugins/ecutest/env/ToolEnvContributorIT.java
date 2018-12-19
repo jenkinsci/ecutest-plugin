@@ -73,22 +73,22 @@ public class ToolEnvContributorIT extends IntegrationTestBase {
         assertEquals("Only one tool env action should exist", 1, envActions.size());
 
         assertEquals("TT_TOOL_NAME_0 should match env action", toolEnvAction.getToolName(),
-                envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_NAME + toolId));
+            envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_NAME + toolId));
         assertEquals("TT_TOOL_VERSION_0 should match env action", toolEnvAction.getToolVersion(),
-                envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_VERSION + toolId));
+            envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_VERSION + toolId));
         assertEquals("TT_TOOL_INSTALL_0 should match env action", toolEnvAction.getToolInstallation(),
-                envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_INSTALL + toolId));
+            envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_INSTALL + toolId));
         assertEquals("TT_TOOL_WORKSPACE_0 should match env action", toolEnvAction.getToolWorkspace(),
-                envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_WORKSPACE + toolId));
+            envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_WORKSPACE + toolId));
         assertEquals("TT_TOOL_SETTINGS_0 should match env action", toolEnvAction.getToolSettings(),
-                envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_SETTINGS + toolId));
+            envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_SETTINGS + toolId));
         assertEquals("TT_TOOL_TIMEOUT_0 should match env action", String.valueOf(toolEnvAction.getTimeout()),
-                envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_TIMEOUT + toolId));
+            envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_TIMEOUT + toolId));
         assertEquals("TT_TOOL_DEBUG_0 should match env action", toolEnvAction.isDebug() ? "true" : "false",
-                envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_DEBUG + toolId));
+            envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_DEBUG + toolId));
         assertEquals("TT_TOOL_LAST_TBC_0 should match env action", String.valueOf(toolEnvAction.getLastTbc()),
-                envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_LAST_TBC + toolId));
+            envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_LAST_TBC + toolId));
         assertEquals("TT_TOOL_LAST_TCF_0 should match env action", String.valueOf(toolEnvAction.getLastTcf()),
-                envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_LAST_TCF + toolId));
+            envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_LAST_TCF + toolId));
     }
 }

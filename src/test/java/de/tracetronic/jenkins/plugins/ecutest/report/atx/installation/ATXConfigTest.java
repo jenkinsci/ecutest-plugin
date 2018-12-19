@@ -63,8 +63,8 @@ public class ATXConfigTest {
 
     @Test
     public void testEmptyConfigMap() {
-        final ATXConfig config = new ATXConfig(Collections.<String, List<ATXSetting>> emptyMap(),
-                Collections.<ATXCustomSetting> emptyList());
+        final ATXConfig config = new ATXConfig(Collections.emptyMap(),
+            Collections.emptyList());
         assertTrue(config.getConfigMap().isEmpty());
         assertTrue(config.getCustomSettings().isEmpty());
     }
@@ -131,8 +131,8 @@ public class ATXConfigTest {
     @Test
     public void testGetSettingValueByName() {
         final ATXConfig config = new ATXConfig();
-        assertThat((String) config.getSettingValueByName("serverPort", config.getConfigByName("uploadConfig")),
-                is("8085"));
+        assertThat(config.getSettingValueByName("serverPort", config.getConfigByName("uploadConfig")),
+            is("8085"));
     }
 
     @Test

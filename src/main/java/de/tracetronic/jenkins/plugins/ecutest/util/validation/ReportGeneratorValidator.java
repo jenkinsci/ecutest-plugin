@@ -42,8 +42,7 @@ public class ReportGeneratorValidator extends AbstractValidator {
     /**
      * Validates the generator name.
      *
-     * @param name
-     *            the generator name
+     * @param name the generator name
      * @return the form validation
      */
     public FormValidation validateGeneratorName(final String name) {
@@ -59,8 +58,7 @@ public class ReportGeneratorValidator extends AbstractValidator {
     /**
      * Validates the setting name.
      *
-     * @param name
-     *            the setting name
+     * @param name the setting name
      * @return the form validation
      */
     public FormValidation validateSettingName(final String name) {
@@ -76,8 +74,7 @@ public class ReportGeneratorValidator extends AbstractValidator {
     /**
      * Validates the setting value.
      *
-     * @param value
-     *            the setting value
+     * @param value the setting value
      * @return the form validation
      */
     public FormValidation validateSettingValue(final String value) {

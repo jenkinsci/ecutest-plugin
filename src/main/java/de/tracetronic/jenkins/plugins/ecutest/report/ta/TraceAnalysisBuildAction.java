@@ -50,8 +50,7 @@ public class TraceAnalysisBuildAction extends AbstractTraceAnalysisAction implem
     /**
      * Instantiates a new {@link TraceAnalysisBuildAction}.
      *
-     * @param projectLevel
-     *            specifies whether archiving is restricted to project level only
+     * @param projectLevel specifies whether archiving is restricted to project level only
      */
     public TraceAnalysisBuildAction(final boolean projectLevel) {
         super(projectLevel);
@@ -69,8 +68,7 @@ public class TraceAnalysisBuildAction extends AbstractTraceAnalysisAction implem
     /**
      * Adds a trace analysis report.
      *
-     * @param report
-     *            the trace analysis report to add
+     * @param report the trace analysis report to add
      * @return {@code true} if successful, {@code false} otherwise
      */
     public boolean add(final TraceAnalysisReport report) {
@@ -80,8 +78,7 @@ public class TraceAnalysisBuildAction extends AbstractTraceAnalysisAction implem
     /**
      * Adds a bundle of trace analysis reports.
      *
-     * @param reports
-     *            the collection of trace analysis reports
+     * @param reports the collection of trace analysis reports
      * @return {@code true} if successful, {@code false} otherwise
      */
     public boolean addAll(final Collection<TraceAnalysisReport> reports) {
@@ -91,8 +88,7 @@ public class TraceAnalysisBuildAction extends AbstractTraceAnalysisAction implem
     /**
      * Returns {@link TraceAnalysisReport} specified by the URL.
      *
-     * @param token
-     *            the URL token
+     * @param token the URL token
      * @return the {@link TraceAnalysisReport} or {@code null} if no proper report exists
      */
     public AbstractTestReport getDynamic(final String token) {
@@ -113,10 +109,8 @@ public class TraceAnalysisBuildAction extends AbstractTraceAnalysisAction implem
      * Traverses the sub-reports recursively and searches
      * for the {@link TraceAnalysisReport} matching the given token id.
      *
-     * @param token
-     *            the token id
-     * @param report
-     *            the report
+     * @param token  the token id
+     * @param report the report
      * @return the {@link TraceAnalysisReport} or {@code null} if no proper report exists
      */
     private TraceAnalysisReport traverseSubReports(final String token, final TraceAnalysisReport report) {

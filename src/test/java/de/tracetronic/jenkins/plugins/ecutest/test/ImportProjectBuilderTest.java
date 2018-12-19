@@ -73,18 +73,18 @@ public class ImportProjectBuilderTest {
         importConfigs.add(importConfig);
         final ImportProjectBuilder builder = new ImportProjectBuilder(importConfigs);
         assertThat(builder.getImportConfigs(), hasSize(1));
-        assertThat((ImportProjectConfig) builder.getImportConfigs().get(0), sameInstance(importConfig));
+        assertThat(builder.getImportConfigs().get(0), sameInstance(importConfig));
     }
 
     @Test
     public void testImportArchiveConfig() {
         final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
         final ImportProjectArchiveConfig archiveConfig = new ImportProjectArchiveConfig("test.prz", "import", "import",
-                true);
+            true);
         importConfigs.add(archiveConfig);
         final ImportProjectBuilder builder = new ImportProjectBuilder(importConfigs);
         assertThat(builder.getImportConfigs(), hasSize(1));
-        assertThat((ImportProjectArchiveConfig) builder.getImportConfigs().get(0), sameInstance(archiveConfig));
+        assertThat(builder.getImportConfigs().get(0), sameInstance(archiveConfig));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class ImportProjectBuilderTest {
         importConfigs.add(attributeConfig);
         final ImportProjectBuilder builder = new ImportProjectBuilder(importConfigs);
         assertThat(builder.getImportConfigs(), hasSize(1));
-        assertThat((ImportProjectAttributeConfig) builder.getImportConfigs().get(0), sameInstance(attributeConfig));
+        assertThat(builder.getImportConfigs().get(0), sameInstance(attributeConfig));
     }
 
     @Test

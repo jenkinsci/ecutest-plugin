@@ -45,61 +45,43 @@ public interface ToolClient {
     /**
      * Starts a tool.
      *
-     * @param checkProcesses
-     *            specifies whether to check open processes after tear down
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param checkProcesses specifies whether to check open processes after tear down
+     * @param workspace      the workspace
+     * @param launcher       the launcher
+     * @param listener       the listener
      * @return {@code true} if successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     boolean start(boolean checkProcesses, FilePath workspace, Launcher launcher, TaskListener listener)
-            throws IOException, InterruptedException;
+        throws IOException, InterruptedException;
 
     /**
      * Stops a tool.
      *
-     * @param checkProcesses
-     *            specifies whether to check open processes after tear down
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param checkProcesses specifies whether to check open processes after tear down
+     * @param workspace      the workspace
+     * @param launcher       the launcher
+     * @param listener       the listener
      * @return {@code true} if successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     boolean stop(boolean checkProcesses, FilePath workspace, Launcher launcher, TaskListener listener)
-            throws IOException, InterruptedException;
+        throws IOException, InterruptedException;
 
     /**
      * Restarts a tool.
      *
-     * @param checkProcesses
-     *            specifies whether to check open processes after tear down
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param checkProcesses specifies whether to check open processes after tear down
+     * @param workspace      the workspace
+     * @param launcher       the launcher
+     * @param listener       the listener
      * @return {@code true} if successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     boolean restart(boolean checkProcesses, FilePath workspace, Launcher launcher, TaskListener listener)
-            throws IOException, InterruptedException;
+        throws IOException, InterruptedException;
 
 }

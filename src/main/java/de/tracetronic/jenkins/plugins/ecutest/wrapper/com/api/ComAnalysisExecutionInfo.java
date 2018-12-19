@@ -42,9 +42,8 @@ public interface ComAnalysisExecutionInfo {
      * Aborts the current analysis execution.
      *
      * @return {@code true} if the abortion succeeded, {@code false},
-     *         if the analysis execution has already finished or aborted
-     * @throws ETComException
-     *             in case of a COM exception
+     * if the analysis execution has already finished or aborted
+     * @throws ETComException in case of a COM exception
      */
     boolean abort() throws ETComException;
 
@@ -52,8 +51,7 @@ public interface ComAnalysisExecutionInfo {
      * Queries the path to report database of current (or most recent) analysis job execution.
      *
      * @return the path to report database
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     String getReportDb() throws ETComException;
 
@@ -62,8 +60,7 @@ public interface ComAnalysisExecutionInfo {
      * Please note, each analysis job has got a separate log folder.
      *
      * @return the log folder
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     String getLogFolder() throws ETComException;
 
@@ -72,15 +69,13 @@ public interface ComAnalysisExecutionInfo {
      * If the execution has not finished yet, the result equates the result at calling time.
      *
      * @return the current overall result. One of:
-     *         <ol>
-     *         <li>NONE</li>
-     *         <li>SUCCESS</li>
-     *         <li>FAILED</li>
-     *         <li>ERROR</li>
-     *         </ol>
-     *
-     * @throws ETComException
-     *             in case of a COM exception
+     * <ol>
+     * <li>NONE</li>
+     * <li>SUCCESS</li>
+     * <li>FAILED</li>
+     * <li>ERROR</li>
+     * </ol>
+     * @throws ETComException in case of a COM exception
      */
     String getResult() throws ETComException;
 
@@ -88,14 +83,13 @@ public interface ComAnalysisExecutionInfo {
      * Returns the state of the current analysis job execution.
      *
      * @return the state current analysis job execution. One of:
-     *         <ol>
-     *         <li>IDLE</li>
-     *         <li>RUNNING</li>
-     *         <li>ABORTED</li>
-     *         <li>FINISHED</li>
-     *         </ol>
-     * @throws ETComException
-     *             in case of a COM exception
+     * <ol>
+     * <li>IDLE</li>
+     * <li>RUNNING</li>
+     * <li>ABORTED</li>
+     * <li>FINISHED</li>
+     * </ol>
+     * @throws ETComException in case of a COM exception
      */
     String getState() throws ETComException;
 

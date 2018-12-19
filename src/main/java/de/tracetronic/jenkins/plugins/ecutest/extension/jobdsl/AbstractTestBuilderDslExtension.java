@@ -83,21 +83,19 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
         /**
          * Option defining the test configuration.
          *
-         * @param closure
-         *            the nested Groovy closure
+         * @param closure the nested Groovy closure
          */
         public void testConfig(final Runnable closure) {
             final TestConfigContext context = new TestConfigContext();
             executeInContext(closure, context);
             testConfig = new TestConfig(context.tbcFile, context.tcfFile, context.forceReload, context.loadOnly,
-                    context.keepConfig, context.constants);
+                context.keepConfig, context.constants);
         }
 
         /**
          * Option defining the test execution configuration.
          *
-         * @param closure
-         *            the nested Groovy closure
+         * @param closure the nested Groovy closure
          */
         public void executionConfig(final Runnable closure) {
             final ExecutionConfigContext context = new ExecutionConfigContext();
@@ -125,8 +123,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining the test bench configuration file.
              *
-             * @param value
-             *            the value
+             * @param value the value
              */
             public void tbcFile(final CharSequence value) {
                 Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TBC_FILE);
@@ -138,8 +135,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining the test configuration file.
              *
-             * @param value
-             *            the value
+             * @param value the value
              */
             public void tcfFile(final CharSequence value) {
                 Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TCF_FILE);
@@ -151,8 +147,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining whether to force reloading the current test configuration.
              *
-             * @param value
-             *            the value
+             * @param value the value
              */
             public void forceReload(final boolean value) {
                 forceReload = value;
@@ -161,8 +156,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining whether to load the test configuration only.
              *
-             * @param value
-             *            the value
+             * @param value the value
              */
             public void loadOnly(final boolean value) {
                 loadOnly = value;
@@ -171,8 +165,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining whether to keep the previous loaded configuration.
              *
-             * @param value
-             *            the value
+             * @param value the value
              */
             public void keepConfig(final boolean value) {
                 keepConfig = value;
@@ -181,8 +174,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining the global constants.
              *
-             * @param closure
-             *            the nested Groovy closure
+             * @param closure the nested Groovy closure
              */
             public void constants(final Runnable closure) {
                 final GlobalConstantsContext context = new GlobalConstantsContext();
@@ -200,10 +192,8 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
                 /**
                  * Option defining the global constant.
                  *
-                 * @param name
-                 *            the global constant name
-                 * @param value
-                 *            the global constant value
+                 * @param name  the global constant name
+                 * @param value the global constant value
                  */
                 public void constant(final CharSequence name, final CharSequence value) {
                     Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_CONSTANT_NAME);
@@ -220,8 +210,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
                 /**
                  * Option defining the global constant.
                  *
-                 * @param closure
-                 *            the nested Groovy closure
+                 * @param closure the nested Groovy closure
                  */
                 public void constant(final Runnable closure) {
                     final GlobalConstantContext context = new GlobalConstantContext();
@@ -240,28 +229,26 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
                     /**
                      * Option defining the global constant name.
                      *
-                     * @param value
-                     *            the value
+                     * @param value the value
                      */
                     public void name(final CharSequence value) {
                         Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_CONSTANT_NAME);
                         final FormValidation validation = validator.validateGlobalConstantName(value.toString());
                         Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR,
-                                validation.getMessage());
+                            validation.getMessage());
                         name = value.toString();
                     }
 
                     /**
                      * Option defining the global constant value.
                      *
-                     * @param value
-                     *            the value
+                     * @param value the value
                      */
                     public void value(final CharSequence value) {
                         Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_CONSTANT_VALUE);
                         final FormValidation validation = validator.validateGlobalConstantValue(value.toString());
                         Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR,
-                                validation.getMessage());
+                            validation.getMessage());
                         this.value = value.toString();
                     }
                 }
@@ -280,13 +267,12 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining the timeout.
              *
-             * @param value
-             *            the value as String
+             * @param value the value as String
              */
             public void timeout(final CharSequence value) {
                 Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TIMEOUT);
                 final FormValidation validation = validator.validateTimeout(value.toString(),
-                        ExecutionConfig.getDefaultTimeout());
+                    ExecutionConfig.getDefaultTimeout());
                 Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
                 timeout = value.toString();
             }
@@ -294,8 +280,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining the timeout.
              *
-             * @param value
-             *            the value as Integer
+             * @param value the value as Integer
              */
             public void timeout(final int value) {
                 timeout(String.valueOf((Object) value));
@@ -304,8 +289,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining whether to stop ECU-TEST and Tool-Server instances if an error occurred.
              *
-             * @param value
-             *            the value
+             * @param value the value
              */
             public void stopOnError(final boolean value) {
                 stopOnError = value;
@@ -314,8 +298,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining whether to pre-check the package and project files.
              *
-             * @param value
-             *            the value
+             * @param value the value
              */
             public void checkTestFile(final boolean value) {
                 checkTestFile = value;
@@ -351,8 +334,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
         /**
          * Option defining the import path.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void importPath(final String value) {
             final FormValidation validation = tmsValidator.validateImportPath(value);
@@ -377,12 +359,11 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining the import timeout.
              *
-             * @param value
-             *            the value
+             * @param value the value
              */
             public void timeout(final String value) {
                 final FormValidation validation = tmsValidator.validateTimeout(value,
-                        ImportProjectConfig.getDefaultTimeout());
+                    ImportProjectConfig.getDefaultTimeout());
                 Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
                 timeout = value;
             }
@@ -390,8 +371,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining the import timeout.
              *
-             * @param value
-             *            the value as Integer
+             * @param value the value as Integer
              */
             public void timeout(final int value) {
                 timeout(String.valueOf((Object) value));
@@ -400,8 +380,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining whether to import missing packages.
              *
-             * @param value
-             *            the value
+             * @param value the value
              */
             public void importMissingPackages(final boolean value) {
                 importMissingPackages = value;
@@ -437,8 +416,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
         /**
          * Option defining the export path.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         public void exportPath(final String value) {
             final FormValidation validation = tmsValidator.validateExportPath(value);
@@ -464,12 +442,11 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining the export timeout.
              *
-             * @param value
-             *            the value
+             * @param value the value
              */
             public void timeout(final String value) {
                 final FormValidation validation = tmsValidator.validateTimeout(value,
-                        TMSConfig.getDefaultTimeout());
+                    TMSConfig.getDefaultTimeout());
                 Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
                 timeout = value;
             }
@@ -477,8 +454,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining the export timeout.
              *
-             * @param value
-             *            the value as Integer
+             * @param value the value as Integer
              */
             public void timeout(final int value) {
                 timeout(String.valueOf((Object) value));
@@ -487,8 +463,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             /**
              * Option defining whether missing export path will be created.
              *
-             * @param value
-             *            the value
+             * @param value the value
              */
             public void createNewPath(final boolean value) {
                 createNewPath = value;

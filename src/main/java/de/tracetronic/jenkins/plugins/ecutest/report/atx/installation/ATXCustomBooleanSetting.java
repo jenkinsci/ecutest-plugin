@@ -49,10 +49,8 @@ public class ATXCustomBooleanSetting extends ATXCustomSetting {
     /**
      * Instantiates a new {@link ATXCustomBooleanSetting}.
      *
-     * @param name
-     *            the name of the setting
-     * @param checked
-     *            the checkbox status
+     * @param name    the name of the setting
+     * @param checked the checkbox status
      */
     @DataBoundConstructor
     public ATXCustomBooleanSetting(final String name, final boolean checked) {

@@ -53,12 +53,9 @@ public abstract class AbstractTestScanner {
     /**
      * Instantiates a {@link AbstractTestScanner}.
      *
-     * @param inputDir
-     *            the input directory
-     * @param recursive
-     *            specifies whether to scan recursively
-     * @param launcher
-     *            the launcher
+     * @param inputDir  the input directory
+     * @param recursive specifies whether to scan recursively
+     * @param launcher  the launcher
      */
     public AbstractTestScanner(final String inputDir, final boolean recursive, final Launcher launcher) {
         super();
@@ -85,10 +82,8 @@ public abstract class AbstractTestScanner {
      * Scans the test files.
      *
      * @return the test files
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public List<String> scanTestFiles() throws IOException, InterruptedException {
         return launcher.getChannel().call(new ScanTestCallable(inputDir, getFilePattern()));
@@ -99,12 +94,12 @@ public abstract class AbstractTestScanner {
      *
      * @return the file pattern
      */
-    protected String[] getFilePattern() {
-        final String[] filePattern;
+    protected String getFilePattern() {
+        final String filePattern;
         if (isRecursive()) {
-            filePattern = new String[] { "**/**" + getFileExtension() };
+            filePattern = "**/**" + getFileExtension();
         } else {
-            filePattern = new String[] { "*" + getFileExtension() };
+            filePattern = "*" + getFileExtension();
         }
         return filePattern;
     }
@@ -124,17 +119,15 @@ public abstract class AbstractTestScanner {
         private static final long serialVersionUID = 1L;
 
         private final String inputDir;
-        private final String[] filePattern;
+        private final String filePattern;
 
         /**
          * Instantiates a new {@link ScanTestCallable}.
          *
-         * @param inputDir
-         *            the input directory
-         * @param filePattern
-         *            the file pattern
+         * @param inputDir    the input directory
+         * @param filePattern the file pattern
          */
-        ScanTestCallable(final String inputDir, final String[] filePattern) {
+        ScanTestCallable(final String inputDir, final String filePattern) {
             this.inputDir = inputDir;
             this.filePattern = filePattern;
         }
@@ -144,7 +137,7 @@ public abstract class AbstractTestScanner {
             final List<String> includeFiles = new ArrayList<>();
             final DirectoryScanner scanner = new DirectoryScanner();
             scanner.setBasedir(inputDir);
-            scanner.setIncludes(filePattern);
+            scanner.setIncludes(new String[]{filePattern});
             scanner.scan();
 
             final String[] fileNames = scanner.getIncludedFiles();

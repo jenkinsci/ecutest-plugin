@@ -54,8 +54,7 @@ public class ImportPackageBuilder extends AbstractImportBuilder {
     /**
      * Instantiates a new {@link ImportPackageBuilder}.
      *
-     * @param importConfigs
-     *            the list of configured package importers
+     * @param importConfigs the list of configured package importers
      */
     @DataBoundConstructor
     public ImportPackageBuilder(@CheckForNull final List<TMSConfig> importConfigs) {
@@ -88,7 +87,7 @@ public class ImportPackageBuilder extends AbstractImportBuilder {
             if (configs != null) {
                 for (final Descriptor<TMSConfig> config : configs) {
                     if (config.isSubTypeOf(ImportPackageConfig.class) ||
-                            config.isSubTypeOf(ImportPackageAttributeConfig.class)) {
+                        config.isSubTypeOf(ImportPackageAttributeConfig.class)) {
                         list.add(config);
                     }
                 }

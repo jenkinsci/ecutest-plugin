@@ -82,18 +82,14 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * Checks already opened ECU-TEST instances.
      *
-     * @param launcher
-     *            the launcher
-     * @param kill
-     *            specifies whether to task-kill the running processes
+     * @param launcher the launcher
+     * @param kill     specifies whether to task-kill the running processes
      * @return {@code true} if processes found, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     protected boolean checkETInstance(final Launcher launcher, final boolean kill) throws IOException,
-            InterruptedException {
+        InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }
@@ -102,18 +98,14 @@ public abstract class AbstractTestHelper extends Builder {
      * Tries to close already opened ECU-TEST instances via COM first.
      * If this is not successful tries to task-kill the running process.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true} if processes found, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     protected boolean closeETInstance(final Launcher launcher, final TaskListener listener) throws IOException,
-            InterruptedException {
+        InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
         if (foundProcesses.isEmpty()) {
             return false;
@@ -124,18 +116,14 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * Checks already opened Tool-Server instances.
      *
-     * @param launcher
-     *            the launcher
-     * @param kill
-     *            specifies whether to task-kill the running processes
+     * @param launcher the launcher
+     * @param kill     specifies whether to task-kill the running processes
      * @return {@code true} if processes found, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     protected boolean checkTSInstance(final Launcher launcher, final boolean kill) throws IOException,
-            InterruptedException {
+        InterruptedException {
         final List<String> foundProcesses = TSClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }
@@ -143,8 +131,7 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * Gets the test identifier by the size of {@link TestEnvInvisibleAction}s already added to the build.
      *
-     * @param run
-     *            the build
+     * @param run the build
      * @return the test id
      */
     protected int getTestId(final Run<?, ?> run) {
@@ -155,22 +142,16 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * Gets the absolute test file path.
      *
-     * @param testFile
-     *            the expanded test file
-     * @param pkgDir
-     *            the packages directory containing the test file
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param testFile the expanded test file
+     * @param pkgDir   the packages directory containing the test file
+     * @param launcher the launcher
+     * @param listener the listener
      * @return the absolute test file path
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     protected String getTestFilePath(final String testFile, final String pkgDir, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                     final TaskListener listener) throws IOException, InterruptedException {
         String testFilePath = null;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (testFile.isEmpty()) {
@@ -190,22 +171,16 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * Gets the absolute configuration file path.
      *
-     * @param configFile
-     *            the expanded configuration file
-     * @param configDir
-     *            the expanded configuration directory containing the configuration file
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param configFile the expanded configuration file
+     * @param configDir  the expanded configuration directory containing the configuration file
+     * @param launcher   the launcher
+     * @param listener   the listener
      * @return the absolute configuration file path
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     protected String getConfigFilePath(final String configFile, final String configDir, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                       final TaskListener listener) throws IOException, InterruptedException {
         String configFilePath = null;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (configFile.isEmpty()) {
@@ -225,13 +200,10 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * Gets the configuration directory of the current ECU-TEST workspace by querying the settings file via COM.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return the configuration directory
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     protected String getConfigDir(final Launcher launcher, final TaskListener listener) throws InterruptedException {
         String configDir;
@@ -248,13 +220,10 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * Gets the packages directory of the current ECU-TEST workspace by querying the settings file via COM.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return the package directory
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     protected String getPackagesDir(final Launcher launcher, final TaskListener listener) throws InterruptedException {
         String packagesDir;
@@ -280,8 +249,7 @@ public abstract class AbstractTestHelper extends Builder {
         /**
          * Instantiates a new {@link GetSettingCallable}.
          *
-         * @param settingName
-         *            the setting name to request
+         * @param settingName the setting name to request
          */
         GetSettingCallable(final String settingName) {
             this.settingName = settingName;

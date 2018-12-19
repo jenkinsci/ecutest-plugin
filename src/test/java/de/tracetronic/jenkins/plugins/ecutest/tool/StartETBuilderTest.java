@@ -67,8 +67,7 @@ public class StartETBuilderTest {
     /**
      * Asserts the builder properties.
      *
-     * @param builder
-     *            the builder
+     * @param builder the builder
      */
     private void assertBuilder(final StartETBuilder builder) {
         assertNotNull(builder);

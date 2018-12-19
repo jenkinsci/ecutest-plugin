@@ -75,8 +75,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
      * Instantiates a new {@link ETComClient} by initializing the {@link ETComDispatch} with the configured COM
      * settings.
      *
-     * @throws ETComException
-     *             in case of a COM exception or if the timeout is reached
+     * @throws ETComException in case of a COM exception or if the timeout is reached
      */
     public ETComClient() throws ETComException {
         final ETComProperty properties = ETComProperty.getInstance();
@@ -88,10 +87,8 @@ public class ETComClient implements ComApplication, AutoCloseable {
      * Instantiates a new {@link ETComClient} by initializing the {@link ETComDispatch} with given programmatic
      * identifier and waits for connection within the default timeout.
      *
-     * @param progId
-     *            the programmatic identifier
-     * @throws ETComException
-     *             in case of a COM exception or if the timeout is reached
+     * @param progId the programmatic identifier
+     * @throws ETComException in case of a COM exception or if the timeout is reached
      */
     public ETComClient(final String progId) throws ETComException {
         initDispatch(progId);
@@ -102,10 +99,8 @@ public class ETComClient implements ComApplication, AutoCloseable {
      * Instantiates a new {@link ETComClient} by initializing the {@link ETComDispatch} and waits for connection within
      * the given timeout.
      *
-     * @param timeout
-     *            the timeout waiting for a connection
-     * @throws ETComException
-     *             in case of a COM exception or if the timeout is reached
+     * @param timeout the timeout waiting for a connection
+     * @throws ETComException in case of a COM exception or if the timeout is reached
      */
     public ETComClient(final int timeout) throws ETComException {
         initDispatch(ETComProperty.DEFAULT_PROG_ID);
@@ -116,12 +111,9 @@ public class ETComClient implements ComApplication, AutoCloseable {
      * Instantiates a new {@link ETComClient} by initializing the {@link ETComDispatch} with given programmatic
      * identifier and waits for connection within the given timeout.
      *
-     * @param progId
-     *            the programmatic identifier
-     * @param timeout
-     *            the timeout waiting for a connection
-     * @throws ETComException
-     *             in case of a COM exception or if the timeout is reached
+     * @param progId  the programmatic identifier
+     * @param timeout the timeout waiting for a connection
+     * @throws ETComException in case of a COM exception or if the timeout is reached
      */
     public ETComClient(final String progId, final int timeout) throws ETComException {
         initDispatch(progId);
@@ -132,10 +124,8 @@ public class ETComClient implements ComApplication, AutoCloseable {
      * Initializes the a single-threaded {@link ComThread} and sets the {@link ETComDispatch} instance using the default
      * program id returned from the {@link ActiveXComponent}.
      *
-     * @param progId
-     *            the programmatic identifier
-     * @throws ETComException
-     *             in case of a COM exception
+     * @param progId the programmatic identifier
+     * @throws ETComException in case of a COM exception
      */
     private void initDispatch(final String progId) throws ETComException {
         final ETComProperty properties = ETComProperty.getInstance();
@@ -153,16 +143,14 @@ public class ETComClient implements ComApplication, AutoCloseable {
      * Initializes the a single-threaded {@link ComThread} and sets the {@link ETComDispatch} instance using the default
      * program id returned from the {@link ActiveXComponent}.
      *
-     * @param progId
-     *            the programmatic identifier
-     * @throws ETComException
-     *             in case of a COM exception
+     * @param progId the programmatic identifier
+     * @throws ETComException in case of a COM exception
      */
     private void initSTA(final String progId) throws ETComException {
         try {
             ComThread.InitSTA();
             final ActiveXComponent component = new ActiveXComponent(StringUtils.isEmpty(progId) ?
-                    ETComProperty.DEFAULT_PROG_ID : progId);
+                ETComProperty.DEFAULT_PROG_ID : progId);
             dispatch = new ETComDispatch(component.getObject(), false);
         } catch (final JacobException e) {
             throw new ETComException(e.getMessage(), e);
@@ -173,10 +161,8 @@ public class ETComClient implements ComApplication, AutoCloseable {
      * Initializes the a single-threaded {@link ComThread} and sets the {@link ETComDispatch} instance using the default
      * program id returned from the {@link ActiveXComponent}.
      *
-     * @param progId
-     *            the programmatic identifier
-     * @throws ETComException
-     *             in case of a COM exception
+     * @param progId the programmatic identifier
+     * @throws ETComException in case of a COM exception
      */
     private void initMTA(final String progId) throws ETComException {
         try {
@@ -199,7 +185,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
                 Thread.sleep(100L);
             }
             throw new ETComTimeoutException(String.format(
-                    "Maximum timeout of %d seconds exceeded: COM server not available!", timeout));
+                "Maximum timeout of %d seconds exceeded: COM server not available!", timeout));
         } catch (final InterruptedException e) {
             throw new ETComException(e.getMessage(), e);
         }
@@ -208,10 +194,8 @@ public class ETComClient implements ComApplication, AutoCloseable {
     /**
      * Waits for a valid COM connection within the given timeout.
      *
-     * @param timeout
-     *            the timeout waiting for a connection
-     * @throws ETComException
-     *             in case of a COM exception or if the timeout is reached
+     * @param timeout the timeout waiting for a connection
+     * @throws ETComException in case of a COM exception or if the timeout is reached
      */
     private void waitForConnection(final int timeout) throws ETComException {
         final long endTimeMillis = System.currentTimeMillis() + (long) timeout * 1000L;
@@ -236,7 +220,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
             }
         }
         throw new ETComTimeoutException(
-                String.format("Maximum timeout of %d seconds exceeded: COM server not available!", timeout));
+            String.format("Maximum timeout of %d seconds exceeded: COM server not available!", timeout));
     }
 
     @Override
@@ -271,8 +255,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
     /**
      * Releases the {@link Dispatch}.
      *
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      */
     private void releaseDispatch() throws ETComException {
         if (dispatch != null) {
@@ -347,11 +330,9 @@ public class ETComClient implements ComApplication, AutoCloseable {
     /**
      * Same as {@link #openProject(String, boolean, String)} but with default parameters.
      *
-     * @param path
-     *            the full path name of the project to open
+     * @param path the full path name of the project to open
      * @return the {@link ComProject} dispatch, if the project is successfully opened, {@code null} otherwise
-     * @throws ETComException
-     *             in case of a COM exception
+     * @throws ETComException in case of a COM exception
      * @see #openProject(String, boolean, String)
      */
     public ComProject openProject(final String path) throws ETComException {
@@ -360,9 +341,9 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     @Override
     public ComProject openProject(final String path, final boolean execInCurrentPkgDir,
-            final String filterExpression) throws ETComException {
+                                  final String filterExpression) throws ETComException {
         return new Project(dispatch.performRequest("OpenProject", new Variant(path),
-                new Variant(execInCurrentPkgDir), new Variant(filterExpression)).toDispatch(), useTimeout);
+            new Variant(execInCurrentPkgDir), new Variant(filterExpression)).toDispatch(), useTimeout);
     }
 
     @Override
@@ -372,9 +353,9 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     @Override
     public boolean importProject(final String path, final String importPath, final String importConfigPath,
-            final boolean replaceFiles) throws ETComException {
+                                 final boolean replaceFiles) throws ETComException {
         return dispatch.performDirectRequest("ImportProject", new Variant(path), new Variant(replaceFiles),
-                new Variant(false), new Variant(importPath), new Variant(importConfigPath)).getBoolean();
+            new Variant(false), new Variant(importPath), new Variant(importConfigPath)).getBoolean();
     }
 
     @Override
@@ -390,13 +371,13 @@ public class ETComClient implements ComApplication, AutoCloseable {
     @Override
     public ComTestConfiguration getCurrentTestConfiguration() throws ETComException {
         return new TestConfiguration(dispatch.performRequest("GetCurrentTestConfiguration").toDispatch(),
-                useTimeout);
+            useTimeout);
     }
 
     @Override
     public ComTestBenchConfiguration getCurrentTestBenchConfiguration() throws ETComException {
         return new TestBenchConfiguration(dispatch.performRequest("GetCurrentTestbenchConfiguration").toDispatch(),
-                useTimeout);
+            useTimeout);
     }
 
     @Override
@@ -419,8 +400,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
         /**
          * Instantiates a new {@link InitDispatch}.
          *
-         * @param progId
-         *            the programmatic identifier
+         * @param progId the programmatic identifier
          */
         InitDispatch(final String progId) {
             super();

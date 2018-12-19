@@ -79,8 +79,7 @@ public class TestFolderBuilderTest {
     /**
      * Asserts the builder properties.
      *
-     * @param builder
-     *            the builder
+     * @param builder the builder
      */
     private void assertBuilder(final TestFolderBuilder builder) {
         assertNotNull(builder);

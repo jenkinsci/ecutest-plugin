@@ -43,8 +43,7 @@ public abstract class AbstractTraceAnalysisAction extends AbstractReportAction {
     /**
      * Instantiates a new {@link AbstractTraceAnalysisAction}.
      *
-     * @param projectLevel
-     *            specifies whether archiving is restricted to project level only
+     * @param projectLevel specifies whether archiving is restricted to project level only
      */
     public AbstractTraceAnalysisAction(final boolean projectLevel) {
         super(projectLevel);

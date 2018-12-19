@@ -30,19 +30,19 @@
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
-    <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation" page="select.jelly" />
+    <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation" page="select.jelly"/>
     <f:advanced>
         <f:entry title="${%toolLibsIni.title}" description="${%toolLibsIni.description}" field="toolLibsIni">
-            <f:textbox />
+            <f:textbox/>
         </f:entry>
         <f:entry title="${%tcpPort.title}" description="${%tcpPort.description}" field="tcpPort">
-            <f:textbox default="${descriptor.defaultTcpPort}" />
+            <f:textbox default="${descriptor.defaultTcpPort}"/>
         </f:entry>
         <f:entry title="${%timeout.title}" description="${%timeout.description}" field="timeout">
-            <f:textbox default="${descriptor.defaultTimeout}" />
+            <f:textbox default="${descriptor.defaultTimeout}"/>
         </f:entry>
         <f:entry title="${%keepInstance.title}" description="${%keepInstance.description}" field="keepInstance">
-            <f:checkbox />
+            <f:checkbox/>
         </f:entry>
     </f:advanced>
 </j:jelly>

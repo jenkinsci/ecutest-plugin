@@ -55,7 +55,7 @@ public class ImportPackageDirConfigTest {
     @Test
     public void testExpand() {
         final ImportPackageDirConfig config = new ImportPackageDirConfig("${PACKAGE_DIR_PATH}", "${IMPORT_PATH}",
-                "${CREDENTIALS_ID}", "${TIMEOUT}");
+            "${CREDENTIALS_ID}", "${TIMEOUT}");
         final EnvVars envVars = new EnvVars();
         envVars.put("PACKAGE_DIR_PATH", "packageDir");
         envVars.put("IMPORT_PATH", "import");

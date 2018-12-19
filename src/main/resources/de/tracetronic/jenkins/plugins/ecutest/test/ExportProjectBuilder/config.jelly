@@ -32,7 +32,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
     <f:entry title="${%exportConfig.title}" description="${%exportConfig.description}">
         <f:hetero-list name="exportConfigs"
-            items="${instance.exportConfigs}" descriptors="${descriptor.getApplicableExporters()}"
-            addCaption="${%exportConfig.add}" deleteCaption="${%exportConfig.delete}" hasHeader="true" />
+                       items="${instance.exportConfigs}" descriptors="${descriptor.getApplicableExporters()}"
+                       addCaption="${%exportConfig.add}" deleteCaption="${%exportConfig.delete}" hasHeader="true"/>
     </f:entry>
 </j:jelly>

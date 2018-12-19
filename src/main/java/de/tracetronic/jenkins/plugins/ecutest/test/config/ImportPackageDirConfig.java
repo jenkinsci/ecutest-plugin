@@ -48,18 +48,14 @@ public class ImportPackageDirConfig extends ImportPackageConfig {
     /**
      * Instantiates a new {@link ImportPackageDirConfig}.
      *
-     * @param tmsPath
-     *            the package directory path in test management system
-     * @param importPath
-     *            the import path
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the import timeout
+     * @param tmsPath       the package directory path in test management system
+     * @param importPath    the import path
+     * @param credentialsId the credentials id
+     * @param timeout       the import timeout
      */
     @DataBoundConstructor
     public ImportPackageDirConfig(final String tmsPath, final String importPath,
-            final String credentialsId, final String timeout) {
+                                  final String credentialsId, final String timeout) {
         super(tmsPath, importPath, credentialsId, timeout);
     }
 
@@ -67,7 +63,7 @@ public class ImportPackageDirConfig extends ImportPackageConfig {
     public ImportPackageDirConfig expand(final EnvVars envVars) {
         final ImportPackageConfig config = super.expand(envVars);
         return new ImportPackageDirConfig(config.getTmsPath(), config.getImportPath(),
-                config.getCredentialsId(), config.getTimeout());
+            config.getCredentialsId(), config.getTimeout());
     }
 
     @Override

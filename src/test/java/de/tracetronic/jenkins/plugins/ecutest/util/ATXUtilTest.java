@@ -176,15 +176,16 @@ public class ATXUtilTest {
         final ATXConfig atxConfig = new ATXConfig(configMap, null);
 
         final EnvVars envVars = new EnvVars(
-                Collections.unmodifiableMap(new HashMap<String, String>() {
+            Collections.unmodifiableMap(new HashMap<String, String>() {
 
-                    private static final long serialVersionUID = 1L;
-                    {
-                        put("SERVER_URL", "localhost");
-                        put("SERVER_PORT", "8086");
-                        put("SERVER_CONTEXT", "context");
-                    }
-                }));
+                private static final long serialVersionUID = 1L;
+
+                {
+                    put("SERVER_URL", "localhost");
+                    put("SERVER_PORT", "8086");
+                    put("SERVER_CONTEXT", "context");
+                }
+            }));
 
         assertThat(ATXUtil.getBaseUrl(atxConfig, envVars), is("https://localhost:8086/context"));
     }
@@ -215,13 +216,14 @@ public class ATXUtilTest {
         final ATXConfig atxConfig = new ATXConfig(configMap, null);
 
         final EnvVars envVars = new EnvVars(
-                Collections.unmodifiableMap(new HashMap<String, String>() {
+            Collections.unmodifiableMap(new HashMap<String, String>() {
 
-                    private static final long serialVersionUID = 1L;
-                    {
-                        put("PROJECT_ID", "2");
-                    }
-                }));
+                private static final long serialVersionUID = 1L;
+
+                {
+                    put("PROJECT_ID", "2");
+                }
+            }));
 
         assertThat(ATXUtil.getProjectId(atxConfig, envVars), is("2"));
     }
@@ -243,7 +245,7 @@ public class ATXUtilTest {
     public void testSingleTestplanMap() {
         final List<ATXSetting> specialSettings = new ArrayList<ATXSetting>();
         final ATXBooleanSetting singleTestplanMap = new ATXBooleanSetting(
-                "mapSeparateProjectExecutionAsSingleTestplan", "", "", false);
+            "mapSeparateProjectExecutionAsSingleTestplan", "", "", false);
         specialSettings.add(singleTestplanMap);
 
         final Map<String, List<ATXSetting>> configMap = new LinkedHashMap<String, List<ATXSetting>>();

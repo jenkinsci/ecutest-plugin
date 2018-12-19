@@ -66,7 +66,7 @@ public class ExportProjectBuilderIT extends IntegrationTestBase {
     @Before
     public void setUp() throws Exception {
         SystemCredentialsProvider.getInstance().getCredentials().add(new UsernamePasswordCredentialsImpl(
-                CredentialsScope.GLOBAL, "credentialsId", "test", "user", "password"));
+            CredentialsScope.GLOBAL, "credentialsId", "test", "user", "password"));
     }
 
     @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
@@ -180,10 +180,8 @@ public class ExportProjectBuilderIT extends IntegrationTestBase {
     /**
      * Asserts the pipeline step execution.
      *
-     * @param scriptName
-     *            the script name
-     * @throws Exception
-     *             the exception
+     * @param scriptName the script name
+     * @throws Exception the exception
      */
     private void assertPipelineStep(final String scriptName) throws Exception {
         assumeWindowsSlave();
@@ -199,10 +197,8 @@ public class ExportProjectBuilderIT extends IntegrationTestBase {
     /**
      * Performs a default configuration round-trip testing for a {@link ExportProjectBuilder}.
      *
-     * @param before
-     *            the instance before
-     * @throws Exception
-     *             the exception
+     * @param before the instance before
+     * @throws Exception the exception
      */
     private void testDefaultConfigRoundTripStep(final ExportProjectBuilder before) throws Exception {
         CoreStep step = new CoreStep(before);
@@ -217,10 +213,8 @@ public class ExportProjectBuilderIT extends IntegrationTestBase {
     /**
      * Performs a configuration round-trip testing for a {@link ExportProjectBuilder}.
      *
-     * @param before
-     *            the instance before
-     * @throws Exception
-     *             the exception
+     * @param before the instance before
+     * @throws Exception the exception
      */
     private void testConfigRoundTripStep(final ExportProjectBuilder before) throws Exception {
         CoreStep step = new CoreStep(before);
@@ -240,7 +234,7 @@ public class ExportProjectBuilderIT extends IntegrationTestBase {
     private ExportProjectBuilder createExportProjectBuilder() {
         final List<TMSConfig> exportConfigs = new ArrayList<TMSConfig>();
         final ExportProjectConfig tmsConfig = new ExportProjectConfig("test.prj", "export", true,
-                "credentialsId", "600");
+            "credentialsId", "600");
         exportConfigs.add(tmsConfig);
         return new ExportProjectBuilder(exportConfigs);
     }
@@ -253,7 +247,7 @@ public class ExportProjectBuilderIT extends IntegrationTestBase {
     private ExportProjectBuilder createExportProjectAttributeBuilder() {
         final List<TMSConfig> exportConfigs = new ArrayList<TMSConfig>();
         final ExportProjectAttributeConfig attributeConfig = new ExportProjectAttributeConfig("test.prj",
-                "credentialsId", "600");
+            "credentialsId", "600");
         exportConfigs.add(attributeConfig);
         return new ExportProjectBuilder(exportConfigs);
     }

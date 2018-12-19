@@ -51,10 +51,8 @@ public abstract class AbstractTestReport extends AbstractRequestHandler implemen
     /**
      * Instantiates a new {@link AbstractTestReport}.
      *
-     * @param id
-     *            the id used in report URL
-     * @param title
-     *            the report title
+     * @param id    the id used in report URL
+     * @param title the report title
      */
     public AbstractTestReport(final String id, final String title) {
         super();
@@ -89,8 +87,7 @@ public abstract class AbstractTestReport extends AbstractRequestHandler implemen
     /**
      * Adds a sub-report.
      *
-     * @param subReport
-     *            the subReport to add
+     * @param subReport the subReport to add
      */
     public void addSubReport(final AbstractTestReport subReport) {
         subReports.add(subReport);
@@ -99,8 +96,7 @@ public abstract class AbstractTestReport extends AbstractRequestHandler implemen
     /**
      * Adds a bundle of sub-reports.
      *
-     * @param subReports
-     *            the subReports to add
+     * @param subReports the subReports to add
      */
     public void addSubReports(final List<AbstractTestReport> subReports) {
         this.subReports.addAll(subReports);

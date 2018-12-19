@@ -55,10 +55,8 @@ public final class PathUtil {
     /**
      * Builds an absolute path by given relative path.
      *
-     * @param path
-     *            the path to make absolute
-     * @param relativeTo
-     *            the relative path
+     * @param path       the path to make absolute
+     * @param relativeTo the relative path
      * @return the absolute path
      */
     public static String makeAbsolutePath(final String path, final FilePath relativeTo) {
@@ -72,18 +70,14 @@ public final class PathUtil {
     /**
      * Copies a file from source to destination which can be on remote.
      *
-     * @param src
-     *            the source file
-     * @param dest
-     *            the destination file
+     * @param src  the source file
+     * @param dest the destination file
      * @return {@code true} if successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public static boolean copyRemoteFile(final FilePath src, final FilePath dest) throws IOException,
-    InterruptedException {
+        InterruptedException {
         if (dest != null && !dest.exists()) {
             if (src != null && src.exists()) {
                 try {

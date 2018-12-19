@@ -56,18 +56,14 @@ public class ImportProjectArchiveConfig extends ImportConfig {
     /**
      * Instantiates a new {@link ImportProjectArchiveConfig}.
      *
-     * @param tmsPath
-     *            the project path
-     * @param importPath
-     *            the import path
-     * @param importConfigPath
-     *            the import config path
-     * @param replaceFiles
-     *            the replace files
+     * @param tmsPath          the project path
+     * @param importPath       the import path
+     * @param importConfigPath the import config path
+     * @param replaceFiles     the replace files
      */
     @DataBoundConstructor
     public ImportProjectArchiveConfig(final String tmsPath, final String importPath,
-            final String importConfigPath, final boolean replaceFiles) {
+                                      final String importConfigPath, final boolean replaceFiles) {
         super(tmsPath, importPath, null, null);
         this.importConfigPath = StringUtils.trimToEmpty(importConfigPath);
         this.replaceFiles = replaceFiles;
@@ -101,9 +97,9 @@ public class ImportProjectArchiveConfig extends ImportConfig {
         if (other instanceof ImportProjectArchiveConfig) {
             final ImportProjectArchiveConfig that = (ImportProjectArchiveConfig) other;
             result = that.canEqual(this)
-                    && super.equals(that)
-                    && (Objects.equals(importConfigPath, that.importConfigPath))
-                    && replaceFiles == that.replaceFiles;
+                && super.equals(that)
+                && Objects.equals(importConfigPath, that.importConfigPath)
+                && replaceFiles == that.replaceFiles;
         }
         return result;
     }
@@ -116,7 +112,7 @@ public class ImportProjectArchiveConfig extends ImportConfig {
     @Override
     public final int hashCode() {
         return new HashCodeBuilder(17, 31).append(super.hashCode())
-                .append(importConfigPath).append(replaceFiles).toHashCode();
+            .append(importConfigPath).append(replaceFiles).toHashCode();
     }
 
     /**
@@ -133,8 +129,7 @@ public class ImportProjectArchiveConfig extends ImportConfig {
         /**
          * Validates the import configuration target path.
          *
-         * @param value
-         *            the import configuration path
+         * @param value the import configuration path
          * @return the form validation
          */
         public FormValidation doCheckImportConfigPath(@QueryParameter final String value) {

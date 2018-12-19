@@ -48,12 +48,9 @@ public abstract class AttributeConfig extends TMSConfig {
     /**
      * Instantiates a new {@link AttributeConfig}.
      *
-     * @param filePath
-     *            the test file path whose attributes to import or export
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the export timeout
+     * @param filePath      the test file path whose attributes to import or export
+     * @param credentialsId the credentials id
+     * @param timeout       the export timeout
      */
     public AttributeConfig(final String filePath, final String credentialsId, final String timeout) {
         super(credentialsId, timeout);
@@ -74,11 +71,11 @@ public abstract class AttributeConfig extends TMSConfig {
             final AttributeConfig that = (AttributeConfig) other;
             final String filePath = getFilePath();
             final String thatFilePath = that.getFilePath();
-            result = (Objects.equals(filePath, thatFilePath))
-                    && (getCredentialsId() == null ? that.getCredentialsId() == null :
-                        getCredentialsId().equals(that.getCredentialsId()))
-                        && (getTimeout() == null ? that.getTimeout() == null :
-                            getTimeout().equals(that.getTimeout()));
+            result = Objects.equals(filePath, thatFilePath)
+                && (getCredentialsId() == null ? that.getCredentialsId() == null :
+                getCredentialsId().equals(that.getCredentialsId()))
+                && (getTimeout() == null ? that.getTimeout() == null :
+                getTimeout().equals(that.getTimeout()));
         }
         return result;
     }
@@ -86,6 +83,6 @@ public abstract class AttributeConfig extends TMSConfig {
     @Override
     public final int hashCode() {
         return new HashCodeBuilder(17, 31).append(getFilePath()).append(getCredentialsId()).append(getTimeout())
-                .toHashCode();
+            .toHashCode();
     }
 }
