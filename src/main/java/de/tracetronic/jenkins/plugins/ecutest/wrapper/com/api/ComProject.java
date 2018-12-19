@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,10 +29,10 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api;
 
-import java.util.List;
-
 import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
+
+import java.util.List;
 
 /**
  * Represents the ECU-TEST specific COMProject API.

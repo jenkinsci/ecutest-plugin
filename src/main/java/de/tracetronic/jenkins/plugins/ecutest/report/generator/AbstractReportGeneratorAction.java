@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,9 +29,9 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportAction;
 import hudson.model.Job;
 import hudson.model.Run;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportAction;
 
 /**
  * Common base class for {@link ReportGeneratorBuildAction} and {@link ReportGeneratorProjectAction}.

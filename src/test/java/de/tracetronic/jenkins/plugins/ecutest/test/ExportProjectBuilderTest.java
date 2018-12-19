@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,21 +29,20 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportProjectAttributeConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
-
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportProjectAttributeConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportProjectConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link ExportProjectBuilder}.

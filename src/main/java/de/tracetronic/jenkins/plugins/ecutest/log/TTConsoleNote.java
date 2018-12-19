@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -79,18 +79,25 @@ public class TTConsoleNote extends ConsoleNote<Object> {
                 final int startPos = plainText.indexOf(result);
                 final int endPos = startPos + result.length();
                 String color;
-                if ("NONE".equals(result)) {
-                    color = "#63666A";
-                } else if ("INCONCLUSIVE".equals(result)) {
-                    color = "#ED8B00";
-                } else if ("SUCCESS".equals(result)) {
-                    color = "#A1C057";
-                } else if ("FAILED".equals(result)) {
-                    color = "#F25757";
-                } else if ("ERROR".equals(result)) {
-                    color = "#B40000";
-                } else {
-                    color = "#208CA3";
+                switch (result) {
+                    case "NONE":
+                        color = "#63666A";
+                        break;
+                    case "INCONCLUSIVE":
+                        color = "#ED8B00";
+                        break;
+                    case "SUCCESS":
+                        color = "#A1C057";
+                        break;
+                    case "FAILED":
+                        color = "#F25757";
+                        break;
+                    case "ERROR":
+                        color = "#B40000";
+                        break;
+                    default:
+                        color = "#208CA3";
+                        break;
                 }
                 text.addMarkup(startPos, endPos, "<span style=\"color:" + color + "\">", "</span>");
             }

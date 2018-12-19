@@ -29,8 +29,11 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.log;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogAnnotation.Severity;
 import hudson.FilePath;
+import org.apache.commons.lang.StringUtils;
 
+import javax.annotation.CheckForNull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,12 +44,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-
-import javax.annotation.CheckForNull;
-
-import org.apache.commons.lang.StringUtils;
-
-import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogAnnotation.Severity;
 
 /**
  * Class providing a parser for the ECU-TEST log files.
@@ -79,7 +76,7 @@ public class ETLogParser {
      * @return the list of annotated log messages
      */
     public List<ETLogAnnotation> parse() {
-        final List<ETLogAnnotation> logReports = new ArrayList<ETLogAnnotation>();
+        final List<ETLogAnnotation> logReports = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(logFile.read(),
                 Charset.forName("UTF-8")))) {
             String line;
@@ -165,7 +162,7 @@ public class ETLogParser {
                         }
                         break;
                     } else if (StringUtils.isNotBlank(line)) {
-                        msg.append(line.trim() + "\n");
+                        msg.append(line.trim()).append("\n");
                     }
                     lineReader.mark(4096);
                 }

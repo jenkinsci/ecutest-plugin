@@ -29,20 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
-import hudson.EnvVars;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.Util;
-import hudson.model.TaskListener;
-import hudson.model.Run;
-import hudson.remoting.Callable;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
@@ -52,6 +38,19 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
+import hudson.EnvVars;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.Util;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Class providing the generation of {@link ATXReport}s.
@@ -100,16 +99,14 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
             final boolean isArchiving, final boolean keepAll, final Run<?, ?> run, final Launcher launcher,
             final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
-        final List<FilePath> reportFiles = new ArrayList<FilePath>();
+        final List<FilePath> reportFiles = new ArrayList<>();
         for (final FilePath reportDir : reportDirs) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(reportDir);
             if (reportFile != null && reportFile.exists()) {
                 reportFiles.addAll(Arrays.asList(
                         reportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
             } else {
-                if (allowMissing) {
-                    continue;
-                } else {
+                if (!allowMissing) {
                     logger.logError(String.format("Specified TRF file '%s' does not exist.", reportFile));
                     return false;
                 }
@@ -133,7 +130,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
                 AbstractReportPublisher.removePreviousReports(run, ATXBuildAction.class);
             }
             if (isGenerated && !reportFiles.isEmpty()) {
-                final List<ATXZipReport> atxReports = new ArrayList<ATXZipReport>();
+                final List<ATXZipReport> atxReports = new ArrayList<>();
                 logger.logInfo("- Archiving generated ATX reports...");
                 int index = 0;
                 for (final FilePath reportDir : reportDirs) {
@@ -247,7 +244,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
     private void addBuildAction(final Run<?, ?> run, final List<ATXZipReport> atxReports, final boolean keepAll) {
         ATXBuildAction<ATXZipReport> action = run.getAction(ATXBuildAction.class);
         if (action == null) {
-            action = new ATXBuildAction<ATXZipReport>(!keepAll);
+            action = new ATXBuildAction<>(!keepAll);
             run.addAction(action);
         }
         action.addAll(atxReports);

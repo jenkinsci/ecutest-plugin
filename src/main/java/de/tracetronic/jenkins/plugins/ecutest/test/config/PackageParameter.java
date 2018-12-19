@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,20 +29,20 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
-
-import java.io.Serializable;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
+import javax.annotation.Nonnull;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Class holding a package parameter.
@@ -98,8 +98,8 @@ public class PackageParameter extends AbstractDescribableImpl<PackageParameter> 
         boolean result = false;
         if (other instanceof PackageParameter) {
             final PackageParameter that = (PackageParameter) other;
-            result = (name == null ? that.name == null : name.equals(that.name))
-                    && (value == null ? that.value == null : value.equals(that.value));
+            result = (Objects.equals(name, that.name))
+                    && (Objects.equals(value, that.value));
         }
         return result;
     }
@@ -117,6 +117,7 @@ public class PackageParameter extends AbstractDescribableImpl<PackageParameter> 
 
         private final TestValidator testValidator = new TestValidator();
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return "Package Parameter";

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,11 +29,10 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.log;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitTestResultParser;
+import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogAnnotation.Severity;
 import hudson.FilePath;
+import org.junit.Test;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -41,10 +40,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
-
-import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitTestResultParser;
-import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogAnnotation.Severity;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link JUnitTestResultParser}.

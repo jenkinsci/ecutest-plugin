@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,20 +29,16 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.trf;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertThat;
+import com.gargoylesoftware.htmlunit.WebAssert;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
 import hudson.Launcher;
+import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
-import hudson.model.Result;
-import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
-
-import java.io.IOException;
-
+import hudson.model.Result;
 import jenkins.tasks.SimpleBuildStep;
-
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
@@ -51,10 +47,11 @@ import org.jenkinsci.plugins.workflow.steps.StepConfigTester;
 import org.junit.Test;
 import org.jvnet.hudson.test.TestBuilder;
 
-import com.gargoylesoftware.htmlunit.WebAssert;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import java.io.IOException;
 
-import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link TRFPublisher}.

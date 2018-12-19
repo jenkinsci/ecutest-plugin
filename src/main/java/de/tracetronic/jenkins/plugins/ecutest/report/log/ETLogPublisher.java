@@ -29,34 +29,32 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.log;
 
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.FilePath.FileCallable;
-import hudson.Launcher;
-import hudson.Util;
-import hudson.model.Result;
-import hudson.model.TaskListener;
-import hudson.model.Run;
-import hudson.remoting.VirtualChannel;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import jenkins.MasterToSlaveFileCallable;
-
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
-
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogAnnotation.Severity;
+import hudson.Extension;
+import hudson.FilePath;
+import hudson.FilePath.FileCallable;
+import hudson.Launcher;
+import hudson.Util;
+import hudson.model.Result;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.remoting.VirtualChannel;
+import jenkins.MasterToSlaveFileCallable;
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Publisher parsing the ECU-TEST log files and providing links to saved {@link ETLogReport}s.
@@ -155,7 +153,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
         }
 
         if (isArchiving()) {
-            final List<ETLogReport> logReports = new ArrayList<ETLogReport>();
+            final List<ETLogReport> logReports = new ArrayList<>();
             final FilePath archiveTarget = getArchiveTarget(run);
 
             // Removing old artifacts at project level
@@ -264,9 +262,8 @@ public class ETLogPublisher extends AbstractReportPublisher {
         } else {
             logTitle = logFile.getName();
         }
-        final ETLogReport logReport = new ETLogReport(String.format("%d", id), logTitle, relLogFile,
+        return new ETLogReport(String.format("%d", id), logTitle, relLogFile,
                 logFile.length(), logs, warningLogCount, errorLogCount);
-        return logReport;
     }
 
     /**
@@ -288,7 +285,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
             throws IOException, InterruptedException {
         final ETLogReport logReport = new ETLogReport(String.format("%d", ++id),
                 archiveTargetDir.getName(), archiveTargetDir.getName(), getDirectorySize(archiveTargetDir),
-                Collections.<ETLogAnnotation> emptyList(), 0, 0);
+                Collections.emptyList(), 0, 0);
         logReports.add(logReport);
 
         final FilePath errorLogFile = archiveTargetDir.child(ERROR_LOG_NAME);
@@ -410,7 +407,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
      */
     private List<FilePath> getCompleteLogFiles(final Run<?, ?> run, final FilePath workspace, final Launcher launcher)
             throws IOException, InterruptedException {
-        final List<FilePath> logFiles = new ArrayList<FilePath>();
+        final List<FilePath> logFiles = new ArrayList<>();
         FilePath workspacePath;
         final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
         if (isDownstream()) {
@@ -456,7 +453,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
         @Override
         public List<String> invoke(final File baseDir, final VirtualChannel channel)
                 throws IOException, InterruptedException {
-            final List<String> files = new ArrayList<String>();
+            final List<String> files = new ArrayList<>();
             for (final String includedFile : Util.createFileSet(baseDir, includes, excludes)
                     .getDirectoryScanner().getIncludedFiles()) {
                 final File file = new File(baseDir, includedFile);
@@ -478,6 +475,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
     @Extension(ordinal = 10003)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.ETLogPublisher_DisplayName();

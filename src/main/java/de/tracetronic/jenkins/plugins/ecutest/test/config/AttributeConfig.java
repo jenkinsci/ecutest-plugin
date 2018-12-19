@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,6 +31,8 @@ package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+
+import java.util.Objects;
 
 /**
  * Common base class for {@link ExportAttributeConfig} and {@link ImportAttributeConfig}.
@@ -72,7 +74,7 @@ public abstract class AttributeConfig extends TMSConfig {
             final AttributeConfig that = (AttributeConfig) other;
             final String filePath = getFilePath();
             final String thatFilePath = that.getFilePath();
-            result = (filePath == null ? thatFilePath == null : filePath.equals(thatFilePath))
+            result = (Objects.equals(filePath, thatFilePath))
                     && (getCredentialsId() == null ? that.getCredentialsId() == null :
                         getCredentialsId().equals(that.getCredentialsId()))
                         && (getTimeout() == null ? that.getTimeout() == null :

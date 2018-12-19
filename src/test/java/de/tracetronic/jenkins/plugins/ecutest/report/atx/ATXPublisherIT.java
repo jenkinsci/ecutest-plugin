@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,26 +29,21 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import com.gargoylesoftware.htmlunit.WebAssert;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import hudson.EnvVars;
 import hudson.Launcher;
+import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
-import hudson.model.Result;
-import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
+import hudson.model.Result;
 import hudson.slaves.DumbSlave;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-
 import jenkins.tasks.SimpleBuildStep;
-
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
@@ -60,13 +55,15 @@ import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.TestBuilder;
 import org.jvnet.hudson.test.recipes.LocalData;
 
-import com.gargoylesoftware.htmlunit.WebAssert;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 
-import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link ATXPublisher}.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,9 +29,9 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api;
 
-import java.util.Map;
-
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
+
+import java.util.Map;
 
 /**
  * Represents the ECU-TEST specific COMTestEnvironment API.

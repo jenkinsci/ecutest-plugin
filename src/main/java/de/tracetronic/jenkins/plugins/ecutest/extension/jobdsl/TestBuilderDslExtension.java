@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,18 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
-import hudson.Extension;
-import hudson.util.FormValidation;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javaposse.jobdsl.dsl.Context;
-import javaposse.jobdsl.dsl.helpers.step.StepContext;
-import javaposse.jobdsl.plugin.DslExtensionMethod;
-
 import com.google.common.base.Preconditions;
-
 import de.tracetronic.jenkins.plugins.ecutest.test.ExportPackageBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.ExportProjectBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.test.ImportPackageBuilder;
@@ -64,6 +53,14 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageParameter;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
+import hudson.Extension;
+import hudson.util.FormValidation;
+import javaposse.jobdsl.dsl.Context;
+import javaposse.jobdsl.dsl.helpers.step.StepContext;
+import javaposse.jobdsl.plugin.DslExtensionMethod;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class providing test related DSL extensions.
@@ -195,8 +192,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         final ImportPackageContext context = new ImportPackageContext();
         executeInContext(closure, context);
 
-        final ImportPackageBuilder builder = new ImportPackageBuilder(context.importConfigs);
-        return builder;
+        return new ImportPackageBuilder(context.importConfigs);
     }
 
     /**
@@ -221,8 +217,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         final ImportProjectContext context = new ImportProjectContext();
         executeInContext(closure, context);
 
-        final ImportProjectBuilder publisher = new ImportProjectBuilder(context.importConfigs);
-        return publisher;
+        return new ImportProjectBuilder(context.importConfigs);
     }
 
     /**
@@ -248,8 +243,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         final ExportPackageContext context = new ExportPackageContext();
         executeInContext(closure, context);
 
-        final ExportPackageBuilder builder = new ExportPackageBuilder(context.exportConfigs);
-        return builder;
+        return new ExportPackageBuilder(context.exportConfigs);
     }
 
     /**
@@ -274,8 +268,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         final ExportProjectContext context = new ExportProjectContext();
         executeInContext(closure, context);
 
-        final ExportProjectBuilder builder = new ExportProjectBuilder(context.exportConfigs);
-        return builder;
+        return new ExportProjectBuilder(context.exportConfigs);
     }
 
     /**
@@ -357,7 +350,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             private static final String OPT_PARAM_NAME = "parameter name";
             private static final String OPT_PARAM_VALUE = "parameter value";
 
-            private final List<PackageParameter> parameters = new ArrayList<PackageParameter>();
+            private final List<PackageParameter> parameters = new ArrayList<>();
 
             /**
              * Option defining the package parameter.

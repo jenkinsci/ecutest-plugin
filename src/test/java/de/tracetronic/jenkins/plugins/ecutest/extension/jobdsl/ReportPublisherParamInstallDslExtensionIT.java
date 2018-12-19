@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,24 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import hudson.EnvVars;
-import hudson.model.Descriptor;
-import hudson.model.FreeStyleProject;
-import hudson.tasks.Publisher;
-import hudson.util.DescribableList;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.jvnet.hudson.test.JenkinsRule;
-
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
@@ -54,6 +36,23 @@ import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPu
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.tms.TMSPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import hudson.EnvVars;
+import hudson.model.Descriptor;
+import hudson.model.FreeStyleProject;
+import hudson.tasks.Publisher;
+import hudson.util.DescribableList;
+import org.junit.Before;
+import org.junit.Test;
+import org.jvnet.hudson.test.JenkinsRule;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link ReportPublisherDslExtension} with parameterized tool selection.

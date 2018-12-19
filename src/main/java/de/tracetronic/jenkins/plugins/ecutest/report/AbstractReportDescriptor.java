@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,11 +29,11 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report;
 
+import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 import hudson.tools.ToolInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 
 /**
  * Common base descriptor class for all report related publisher descriptors implemented in this plugin.

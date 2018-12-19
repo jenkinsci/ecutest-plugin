@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,10 +30,11 @@
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
 import hudson.util.FormValidation;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.QueryParameter;
+
+import java.util.Objects;
 
 /**
  * Common base class for {@link ExportPackageConfig} and {@link ExportProjectConfig}.
@@ -100,8 +101,8 @@ public abstract class ExportConfig extends TMSConfig {
             final String exportPath = getExportPath();
             final String thatFilePath = that.getFilePath();
             final String thatExportPath = that.getExportPath();
-            result = (filePath == null ? thatFilePath == null : filePath.equals(thatFilePath))
-                    && (exportPath == null ? thatExportPath == null : exportPath.equals(thatExportPath))
+            result = (Objects.equals(filePath, thatFilePath))
+                    && (Objects.equals(exportPath, thatExportPath))
                     && createNewPath == that.isCreateNewPath()
                     && (getCredentialsId() == null ? that.getCredentialsId() == null :
                             getCredentialsId().equals(that.getCredentialsId()))

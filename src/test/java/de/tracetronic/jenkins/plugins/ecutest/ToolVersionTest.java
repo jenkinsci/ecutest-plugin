@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,14 +29,13 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.Test;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import nl.jqno.equalsverifier.EqualsVerifier;
-
-import org.junit.Test;
-
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 
 /**
  * Unit tests for {@link ToolVersion}.

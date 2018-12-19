@@ -29,17 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
-import hudson.EnvVars;
-import hudson.FilePath;
-import hudson.model.TaskListener;
-import hudson.remoting.Callable;
-
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomBooleanSetting;
@@ -48,6 +37,16 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomT
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting;
+import hudson.EnvVars;
+import hudson.FilePath;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Common base class for {@link ATXReportGenerator} and {@link ATXReportUploader}.
@@ -139,7 +138,7 @@ public abstract class AbstractATXReportHandler {
          */
         @SuppressWarnings("rawtypes")
         protected Map<String, String> getConfigMap(final boolean uploadToServer) {
-            final Map<String, String> configMap = new LinkedHashMap<String, String>();
+            final Map<String, String> configMap = new LinkedHashMap<>();
             for (final List<ATXSetting> settings : config.getConfigMap().values()) {
                 for (final ATXSetting setting : settings) {
                     if (setting instanceof ATXBooleanSetting) {

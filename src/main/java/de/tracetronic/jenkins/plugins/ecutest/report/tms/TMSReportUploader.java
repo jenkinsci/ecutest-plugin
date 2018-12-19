@@ -29,26 +29,9 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.tms;
 
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.Item;
-import hudson.model.TaskListener;
-import hudson.remoting.Callable;
-import hudson.security.ACL;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.CheckForNull;
-
-import jenkins.security.MasterToSlaveCallable;
-
 import com.cloudbees.plugins.credentials.CredentialsMatchers;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-import com.cloudbees.plugins.credentials.domains.DomainRequirement;
-
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFReport;
@@ -57,6 +40,18 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.Item;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import hudson.security.ACL;
+import jenkins.security.MasterToSlaveCallable;
+
+import javax.annotation.CheckForNull;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Class providing the upload of {@link TRFReport}s to a test management system.
@@ -129,7 +124,7 @@ public class TMSReportUploader extends AbstractTMSClient {
             throws IOException, InterruptedException {
         final List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider
                 .lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
-                        Collections.<DomainRequirement> emptyList());
+                        Collections.emptyList());
         return CredentialsMatchers.firstOrNull(credentials, CredentialsMatchers.withId(credentialsId));
     }
 

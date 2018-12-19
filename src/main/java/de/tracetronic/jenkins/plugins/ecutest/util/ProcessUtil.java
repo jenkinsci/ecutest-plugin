@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,21 +29,19 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import hudson.Launcher;
 import hudson.model.Computer;
+import org.apache.commons.lang.StringUtils;
+import org.jvnet.winp.WinProcess;
+import org.jvnet.winp.WinpException;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.jvnet.winp.WinProcess;
-import org.jvnet.winp.WinpException;
-
-import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 
 /**
  * Utility class providing process and system operations.
@@ -60,7 +58,7 @@ public final class ProcessUtil {
     /**
      * Defines Tool-Server related process names.
      */
-    private static final List<String> TS_PROCS = Arrays.asList("Tool-Server.exe");
+    private static final List<String> TS_PROCS = Collections.singletonList("Tool-Server.exe");
 
     /**
      * Instantiates a new {@link ProcessUtil}.
@@ -99,28 +97,23 @@ public final class ProcessUtil {
      * @param kill
      *            specifies whether to task-kill the running processes
      * @return the list of found or killed processes
-     * @throws IOException
-     *             signals that an I/O exception has occurred
      */
     private static List<String> checkProcesses(final List<String> processes, final boolean kill) {
-        final List<String> found = new ArrayList<String>();
+        final List<String> found = new ArrayList<>();
         WinProcess.enableDebugPrivilege();
-        final Iterator<WinProcess> openProcesses = WinProcess.all().iterator();
-        while (openProcesses.hasNext()) {
+        for (final WinProcess winProcess : WinProcess.all()) {
             try {
-                final WinProcess openProcess = openProcesses.next();
-                final String cmdLine = openProcess.getCommandLine();
+                final String cmdLine = winProcess.getCommandLine();
                 for (final String process : processes) {
                     if (StringUtils.containsIgnoreCase(cmdLine, process)) {
                         found.add(process);
                         if (kill) {
-                            killProcess(openProcess);
+                            killProcess(winProcess);
                         }
                     }
                 }
             } catch (final WinpException e) {
                 // Skip system pseudo-processes with insufficient security privileges
-                continue;
             }
         }
         return found;

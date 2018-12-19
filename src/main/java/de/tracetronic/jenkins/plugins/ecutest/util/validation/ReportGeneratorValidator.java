@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,7 +30,6 @@
 package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
 import hudson.util.FormValidation;
-
 import org.apache.commons.lang.StringUtils;
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,15 +29,14 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 import hudson.model.Action;
+import jenkins.tasks.SimpleBuildStep;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import jenkins.tasks.SimpleBuildStep;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 
 /**
  * Action to show a link to {@link GeneratorReport}s at the build page.
@@ -47,7 +46,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 public class ReportGeneratorBuildAction extends AbstractReportGeneratorAction implements
         SimpleBuildStep.LastBuildAction {
 
-    private final List<GeneratorReport> generatorReports = new ArrayList<GeneratorReport>();
+    private final List<GeneratorReport> generatorReports = new ArrayList<>();
 
     /**
      * Instantiates a new {@link ReportGeneratorBuildAction}.

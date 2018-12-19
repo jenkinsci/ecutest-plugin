@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,15 +29,18 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.env.view;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
+import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.InvisibleAction;
 import hudson.model.ParameterValue;
-import hudson.model.TaskListener;
 import hudson.model.Run;
 import hudson.model.StringParameterValue;
+import hudson.model.TaskListener;
 import hudson.model.listeners.RunListener;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
@@ -46,9 +49,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
-import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 
 /**
  * Shows the test related environment variables on a build as an action.
@@ -85,7 +85,7 @@ public class TestEnvActionView extends InvisibleAction {
     public Set<ParameterValue> getEnvVariables() {
         final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
         final int testBuilderSize = testEnvActions.size();
-        final Set<ParameterValue> testEnvVars = new LinkedHashSet<ParameterValue>();
+        final Set<ParameterValue> testEnvVars = new LinkedHashSet<>();
 
         try {
             final EnvVars envVars = build.getEnvironment(listener);
@@ -103,9 +103,7 @@ public class TestEnvActionView extends InvisibleAction {
                     }
                 }
             }
-        } catch (final IOException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
-        } catch (final InterruptedException e) {
+        } catch (final IOException | InterruptedException e) {
             LOGGER.log(Level.SEVERE, e.getMessage());
         }
 
@@ -137,7 +135,7 @@ public class TestEnvActionView extends InvisibleAction {
     public static final class RunListenerImpl extends RunListener<Run<?, ?>> {
 
         @Override
-        public void onCompleted(final Run<?, ?> run, final TaskListener listener) {
+        public void onCompleted(final Run<?, ?> run, @Nonnull final TaskListener listener) {
             if (run.getAction(TestEnvInvisibleAction.class) != null) {
                 run.addAction(new TestEnvActionView(run, listener));
             }

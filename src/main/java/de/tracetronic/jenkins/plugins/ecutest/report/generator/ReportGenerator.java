@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,22 +29,21 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.TaskListener;
-import hudson.remoting.Callable;
-
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Class providing the report generation with a specific generator.
@@ -105,7 +104,7 @@ public class ReportGenerator {
         private final TaskListener listener;
 
         /**
-         * Instantiates a new {@link GenerateUnitReportCallable}.
+         * Instantiates a new {@link GenerateReportCallable}.
          *
          * @param config
          *            the template name
@@ -153,7 +152,7 @@ public class ReportGenerator {
          * @return the configuration map
          */
         private Map<String, String> getConfigMap() {
-            final Map<String, String> configMap = new LinkedHashMap<String, String>();
+            final Map<String, String> configMap = new LinkedHashMap<>();
             for (final ReportGeneratorSetting setting : config.getSettings()) {
                 configMap.put(setting.getName(), setting.getValue());
             }

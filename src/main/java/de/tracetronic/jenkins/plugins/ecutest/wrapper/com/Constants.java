@@ -31,7 +31,6 @@ package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
-
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComConstant;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComConstants;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,20 +29,19 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 
+import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import hudson.FilePath;
 import hudson.FilePath.FileCallable;
 import hudson.model.TaskListener;
 import hudson.remoting.VirtualChannel;
 import hudson.tasks.junit.TestResult;
 import hudson.tasks.test.TestResultParser;
+import jenkins.MasterToSlaveFileCallable;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-
-import jenkins.MasterToSlaveFileCallable;
-import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 
 /**
  * Class providing a {@link TestResult} by parsing the JUnit report.

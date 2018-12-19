@@ -29,6 +29,12 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
+import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -37,19 +43,12 @@ import hudson.matrix.MatrixAggregator;
 import hudson.matrix.MatrixBuild;
 import hudson.model.BuildListener;
 import hudson.model.Result;
-import hudson.model.TaskListener;
 import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.tasks.junit.TestResult;
 import hudson.tasks.junit.TestResultAction;
 import hudson.tasks.test.TestResultAggregator;
 import hudson.util.FormValidation;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
@@ -57,12 +56,10 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
-import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Publisher providing the generation of JUnit reports and adds a {@link TestResultAction} by invoking the
@@ -308,6 +305,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
             unitValidator = new JUnitValidator();
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.JUnitPublisher_DisplayName();

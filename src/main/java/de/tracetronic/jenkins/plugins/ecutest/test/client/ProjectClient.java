@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,19 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.TaskListener;
-import hudson.remoting.Callable;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import jenkins.security.MasterToSlaveCallable;
-
-import org.apache.commons.io.FilenameUtils;
-
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder.Seriousness;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
@@ -54,6 +41,16 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Project;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestExecutionInfo;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+import org.apache.commons.io.FilenameUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Client to execute ECU-TEST projects via COM interface.
@@ -136,11 +133,7 @@ public class ProjectClient extends AbstractTestClient {
         }
 
         // Close project
-        if (!launcher.getChannel().call(new CloseProjectCallable(getTestFile(), listener))) {
-            return false;
-        }
-
-        return true;
+        return launcher.getChannel().call(new CloseProjectCallable(getTestFile(), listener));
     }
 
     /**
@@ -268,7 +261,7 @@ public class ProjectClient extends AbstractTestClient {
                             jobExecutionMode)) {
                 boolean isAborted = false;
                 int tickCounter = 0;
-                final long endTimeMillis = System.currentTimeMillis() + Long.valueOf(timeout) * 1000L;
+                final long endTimeMillis = System.currentTimeMillis() + (long) timeout * 1000L;
                 while ("RUNNING".equals(execInfo.getState())) {
                     if (tickCounter % 60 == 0) {
                         logger.logInfo("-- tick...");
@@ -310,7 +303,7 @@ public class ProjectClient extends AbstractTestClient {
             try (ETComClient comClient = new ETComClient(progId);
                     TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                     TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {
-                logger.logWarn(String.format("-> Build interrupted! Aborting test exection..."));
+                logger.logWarn("-> Build interrupted! Aborting test exection...");
                 execInfo.abort();
                 testInfo = getTestInfo(execInfo, true, logger);
                 postExecution(timeout, comClient, logger);

@@ -30,11 +30,10 @@
 package de.tracetronic.jenkins.plugins.ecutest.report.ta;
 
 import hudson.model.Run;
-
-import javax.annotation.CheckForNull;
-
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
+
+import javax.annotation.CheckForNull;
 
 /**
  * Action to show a link to {@link TraceAnalysisReport}s in side menu of projects.

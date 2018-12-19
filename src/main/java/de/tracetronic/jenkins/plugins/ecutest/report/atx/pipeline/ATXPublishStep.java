@@ -29,18 +29,16 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline;
 
+import com.google.common.collect.ImmutableSet;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.TaskListener;
 import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.remoting.Callable;
-
-import java.io.IOException;
-import java.util.Set;
-
 import jenkins.security.MasterToSlaveCallable;
-
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
@@ -48,11 +46,8 @@ import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.jenkinsci.plugins.workflow.steps.SynchronousNonBlockingStepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import com.google.common.collect.ImmutableSet;
-
-import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import java.io.IOException;
+import java.util.Set;
 
 /**
  * Advanced pipeline step that publishes ATX reports to given {@link ATXInstallation} instance.
@@ -181,9 +176,9 @@ public class ATXPublishStep extends Step {
         private final boolean runOnFailed;
         private final boolean archiving;
         private final boolean keepAll;
-        private final Run<?, ?> run;
+        private final transient Run<?, ?> run;
         private final FilePath workspace;
-        private final Launcher launcher;
+        private final transient Launcher launcher;
         private final TaskListener listener;
 
         /**
@@ -227,7 +222,7 @@ public class ATXPublishStep extends Step {
         }
 
         @Override
-        public Void call() throws IOException, InterruptedException, ETPluginException {
+        public Void call() throws IOException, InterruptedException {
             final ATXPublisher publisher = new ATXPublisher(installation);
             publisher.setAllowMissing(allowMissing);
             publisher.setRunOnFailed(runOnFailed);

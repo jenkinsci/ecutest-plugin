@@ -29,9 +29,8 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.ta;
 
-import org.kohsuke.stapler.StaplerRequest;
-
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractArchiveFileReport;
+import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * Holds a link to the trace analysis report. The build that holds the artifact is resolved by

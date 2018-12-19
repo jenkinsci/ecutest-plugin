@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,28 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
-import hudson.EnvVars;
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.TaskListener;
-import hudson.model.Run;
-import hudson.util.FormValidation;
-import hudson.util.ListBoxModel;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
-import org.kohsuke.stapler.QueryParameter;
-
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.PackageClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.ProjectClient;
@@ -60,6 +38,25 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.scan.TestPackageScanner;
 import de.tracetronic.jenkins.plugins.ecutest.test.scan.TestProjectScanner;
+import hudson.EnvVars;
+import hudson.Extension;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.util.FormValidation;
+import hudson.util.ListBoxModel;
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.QueryParameter;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Builder providing the execution of ECU-TEST packages and projects inside of a test folder.
@@ -275,7 +272,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
      */
     private List<String> scanPackages(final String testFolder, final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
-        List<String> pkgFiles = new ArrayList<String>();
+        List<String> pkgFiles = new ArrayList<>();
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (scanMode.equals(ScanMode.PACKAGES_ONLY) || scanMode.equals(ScanMode.PACKAGES_AND_PROJECTS)) {
             final TestPackageScanner scanner = new TestPackageScanner(testFolder, isRecursiveScan(), launcher);
@@ -306,7 +303,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
      */
     private List<String> scanProjects(final String testFolder, final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
-        List<String> prjFiles = new ArrayList<String>();
+        List<String> prjFiles = new ArrayList<>();
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (scanMode.equals(ScanMode.PROJECTS_ONLY) || scanMode.equals(ScanMode.PACKAGES_AND_PROJECTS)) {
             final TestProjectScanner prjScanner = new TestProjectScanner(testFolder, isRecursiveScan(), launcher);
@@ -367,6 +364,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
             return testValidator.validateTestFolder(value);
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.TestFolderBuilder_DisplayName();

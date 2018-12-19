@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,17 +29,17 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
+import org.junit.Test;
+import org.jvnet.localizer.LocaleProvider;
+
+import java.util.Locale;
+
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-
-import java.util.Locale;
-
-import org.junit.Test;
-import org.jvnet.localizer.LocaleProvider;
 
 /**
  * Unit tests for {@link ATXSetting}.

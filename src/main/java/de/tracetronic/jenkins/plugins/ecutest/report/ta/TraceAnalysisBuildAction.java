@@ -29,15 +29,14 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.ta;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 import hudson.model.Action;
+import jenkins.tasks.SimpleBuildStep;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import jenkins.tasks.SimpleBuildStep;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 
 /**
  * Action to show a link to {@link TraceAnalysisReport}s at the build page.
@@ -46,7 +45,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
  */
 public class TraceAnalysisBuildAction extends AbstractTraceAnalysisAction implements SimpleBuildStep.LastBuildAction {
 
-    private final List<TraceAnalysisReport> taReports = new ArrayList<TraceAnalysisReport>();
+    private final List<TraceAnalysisReport> taReports = new ArrayList<>();
 
     /**
      * Instantiates a new {@link TraceAnalysisBuildAction}.

@@ -29,7 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,7 +41,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link ETComProperty}.

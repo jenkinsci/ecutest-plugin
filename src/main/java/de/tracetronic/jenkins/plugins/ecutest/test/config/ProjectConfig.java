@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,22 +29,22 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
+import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
-
-import java.io.Serializable;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
+import javax.annotation.Nonnull;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Class holding the project configuration.
@@ -136,7 +136,7 @@ ExpandableConfig {
 
     /**
      * Holds the analysis job execution mode.<br/>
-     * Backward compatibility will be retained by {@link #readResolve()}.
+     * Backward compatibility will be retained by {@code readResolve()}.
      *
      * @since 1.2
      */
@@ -193,8 +193,7 @@ ExpandableConfig {
         boolean result = false;
         if (other instanceof ProjectConfig) {
             final ProjectConfig that = (ProjectConfig) other;
-            result = (filterExpression == null ? that.filterExpression == null : filterExpression
-                    .equals(that.filterExpression))
+            result = (Objects.equals(filterExpression, that.filterExpression))
                     && execInCurrentPkgDir == that.execInCurrentPkgDir
                     && jobExecMode == that.jobExecMode;
         }
@@ -222,6 +221,7 @@ ExpandableConfig {
 
         private final TestValidator testValidator = new TestValidator();
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return "Project Configuration";

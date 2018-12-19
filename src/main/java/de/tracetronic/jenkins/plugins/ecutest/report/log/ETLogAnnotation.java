@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -62,7 +62,7 @@ public class ETLogAnnotation implements Serializable {
         /**
          * Severity indication this log message represents an error.
          */
-        ERROR;
+        ERROR
     }
 
     private final int lineNumber;

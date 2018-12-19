@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,21 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
-import hudson.model.TaskListener;
-import hudson.remoting.Callable;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import jenkins.security.MasterToSlaveCallable;
-
-import org.apache.commons.lang.StringUtils;
-
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.GlobalConstant;
@@ -52,6 +37,18 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestConfiguration;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+import org.apache.commons.lang.StringUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Common base class for {@link PackageClient} and {@link ProjectClient}.
@@ -284,7 +281,6 @@ public abstract class AbstractTestClient implements TestClient {
          *            the COM client
          * @param constantMap
          *            the constants to set
-         * @param logger
          * @throws ETComException
          *             in case of a COM exception
          */
@@ -306,7 +302,7 @@ public abstract class AbstractTestClient implements TestClient {
          *             in case of a COM exception
          */
         private Map<String, String> getGlobalConstantMap() throws ETComException {
-            final Map<String, String> constantMap = new LinkedHashMap<String, String>();
+            final Map<String, String> constantMap = new LinkedHashMap<>();
             for (final GlobalConstant constant : testConfig.getConstants()) {
                 constantMap.put(constant.getName(), constant.getValue());
             }
@@ -385,7 +381,7 @@ public abstract class AbstractTestClient implements TestClient {
             /**
              * Seriousness indicating the check represents an error.
              */
-            ERROR;
+            ERROR
         }
 
         private final String filePath;

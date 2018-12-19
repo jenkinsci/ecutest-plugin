@@ -29,6 +29,11 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
+import com.jacob.com.ComThread;
+import com.jacob.com.Dispatch;
+import com.jacob.com.JacobException;
+import com.jacob.com.Variant;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -36,11 +41,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import com.jacob.com.ComThread;
-import com.jacob.com.Dispatch;
-import com.jacob.com.JacobException;
-import com.jacob.com.Variant;
 
 /**
  * Custom dispatch to perform requests on application specific COM API.
@@ -156,7 +156,7 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final Future<Variant> future = executor.submit(new DispatchCallable(method, params));
         try {
-            return future.get(Long.valueOf(timeout), TimeUnit.SECONDS);
+            return future.get((long) timeout, TimeUnit.SECONDS);
         } catch (final TimeoutException e) {
             future.cancel(true);
             throw new ETComTimeoutException(String.format("Request timeout of %d seconds exceeded!", timeout), e);

@@ -29,13 +29,31 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
+import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction.TestType;
+import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.TaskListener;
 import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
+import net.sf.json.groovy.JsonSlurper;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -59,26 +77,6 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import jenkins.security.MasterToSlaveCallable;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONException;
-import net.sf.json.JSONObject;
-import net.sf.json.groovy.JsonSlurper;
-import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction.TestType;
-import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 
 /**
  * Class providing the generation and upload of {@link ATXReport}s.
@@ -125,7 +123,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     public boolean upload(final List<FilePath> reportDirs, final boolean allowMissing, final Run<?, ?> run,
             final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
-        final List<ATXReport> atxReports = new ArrayList<ATXReport>();
+        final List<ATXReport> atxReports = new ArrayList<>();
 
         // Prepare ATX report information
         final EnvVars envVars = run.getEnvironment(listener);
@@ -156,9 +154,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 }
                 index = traverseReports(atxReports, reportDir, index, title, baseUrl, testInfo, projectId);
             } else {
-                if (allowMissing) {
-                    continue;
-                } else {
+                if (!allowMissing) {
                     logger.logError(String.format("Specified TRF file '%s' does not exist.", reportFile));
                     return false;
                 }
@@ -201,7 +197,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             final String title, final String baseUrl, final TestInfoHolder testInfo, final String projectId)
                     throws IOException, InterruptedException {
         // Prepare ATX report information
-        String reportUrl = null;
+        String reportUrl;
         String trendReportUrl = null;
         final TestType testType = testInfo.getTestType();
         if (testType == TestType.PACKAGE) {
@@ -287,7 +283,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     private void addBuildAction(final Run<?, ?> run, final List<ATXReport> atxReports) {
         ATXBuildAction<ATXReport> action = run.getAction(ATXBuildAction.class);
         if (action == null) {
-            action = new ATXBuildAction<ATXReport>(false);
+            action = new ATXBuildAction<>(false);
             run.addAction(action);
         }
         action.addAll(atxReports);
@@ -519,7 +515,9 @@ public class ATXReportUploader extends AbstractATXReportHandler {
 
                                 final URL location = resolveRedirect(text);
                                 testInfo = parseTestInfo(location, uploadFile);
-                                testInfo.setLink(text);
+                                if (testInfo != null) {
+                                    testInfo.setLink(text);
+                                }
                                 break;
                             }
                         }
@@ -605,7 +603,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          *             in case of an unsupported encoding
          */
         private Map<String, String> splitQuery(final URL url) throws UnsupportedEncodingException {
-            final Map<String, String> queryMap = new LinkedHashMap<String, String>();
+            final Map<String, String> queryMap = new LinkedHashMap<>();
             final String query = url.getQuery();
             final String[] pairs = query.split("&");
             for (final String pair : pairs) {
@@ -633,7 +631,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          */
         private URL resolveRedirect(final String redirect)
                 throws MalformedURLException, NoSuchAlgorithmException, KeyManagementException, IOException {
-            HttpURLConnection connection = null;
+            HttpURLConnection connection;
             final URL url = new URL(redirect);
 
             // Handle SSL connection
@@ -678,7 +676,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 final SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 final Date date = fmt.parse(execTime);
                 final float duration = rs.getFloat("duration") * 1000.0f;
-                final long from = (long) date.getTime();
+                final long from = date.getTime();
                 final long to = from + (long) duration;
 
                 rs = sql.query("SELECT name FROM prj");

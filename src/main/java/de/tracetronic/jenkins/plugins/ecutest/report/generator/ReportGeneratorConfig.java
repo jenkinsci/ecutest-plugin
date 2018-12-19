@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,24 +29,23 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExpandableConfig;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.ReportGeneratorValidator;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ExpandableConfig;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.ReportGeneratorValidator;
+import javax.annotation.Nonnull;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Class holding the report generator configuration.
@@ -72,7 +71,7 @@ public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGenerat
     @DataBoundConstructor
     public ReportGeneratorConfig(final String name, final List<ReportGeneratorSetting> settings) {
         this.name = StringUtils.trimToEmpty(name);
-        this.settings = settings == null ? new ArrayList<ReportGeneratorSetting>() : removeEmptySettings(settings);
+        this.settings = settings == null ? new ArrayList<>() : removeEmptySettings(settings);
     }
 
     /**
@@ -99,7 +98,7 @@ public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGenerat
      * @return the list of valid settings
      */
     private static List<ReportGeneratorSetting> removeEmptySettings(final List<ReportGeneratorSetting> settings) {
-        final List<ReportGeneratorSetting> validSettings = new ArrayList<ReportGeneratorSetting>();
+        final List<ReportGeneratorSetting> validSettings = new ArrayList<>();
         for (final ReportGeneratorSetting setting : settings) {
             if (StringUtils.isNotBlank(setting.getName())) {
                 validSettings.add(setting);
@@ -111,7 +110,7 @@ public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGenerat
     @Override
     public ReportGeneratorConfig expand(final EnvVars envVars) {
         final String expName = envVars.expand(getName());
-        final List<ReportGeneratorSetting> settings = new ArrayList<ReportGeneratorSetting>();
+        final List<ReportGeneratorSetting> settings = new ArrayList<>();
         for (final ReportGeneratorSetting setting : getSettings()) {
             settings.add(setting.expand(envVars));
         }
@@ -156,6 +155,7 @@ public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGenerat
             return reportValidator.validateGeneratorName(value);
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return "Report Generator Configuration";

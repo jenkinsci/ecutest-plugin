@@ -29,14 +29,28 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.ta;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
+import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
+import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.Result;
-import hudson.model.TaskListener;
 import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.util.FormValidation;
+import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.QueryParameter;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,23 +59,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
-import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
-import org.kohsuke.stapler.QueryParameter;
-
-import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
-import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 
 /**
  * Class holding the trace analysis configuration.
@@ -202,7 +199,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
         }
 
         boolean isPublished = false;
-        final List<TraceAnalysisReport> reports = new ArrayList<TraceAnalysisReport>();
+        final List<TraceAnalysisReport> reports = new ArrayList<>();
         if (isETRunning(launcher)) {
             reports.addAll(performAnalysis(analysisFiles, run, launcher, listener));
             isPublished = true;
@@ -254,7 +251,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
             final Run<?, ?> run, final Launcher launcher, final TaskListener listener)
                     throws IOException, InterruptedException {
         final TTConsoleLogger logger = getLogger();
-        final List<TraceAnalysisReport> reports = new ArrayList<TraceAnalysisReport>();
+        final List<TraceAnalysisReport> reports = new ArrayList<>();
 
         int index = 0;
         final FilePath archiveTarget = prepareArchive(run);
@@ -269,8 +266,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
                     getParsedTimeout(), launcher, listener);
 
             if (reportFiles.isEmpty() && !isAllowMissing()) {
-                logger.logError(String
-                        .format("-> Empty analysis results are not allowed, setting build status to FAILURE!"));
+                logger.logError("-> Empty analysis results are not allowed, setting build status to FAILURE!");
                 run.setResult(Result.FAILURE);
             }
 
@@ -280,8 +276,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
                 final boolean isMerged = runner.mergeReports(mainReport, reportFiles, launcher, listener);
 
                 if (!isMerged) {
-                    logger.logError(String
-                            .format("-> Failed merging analysis reports, setting build status to FAILURE!"));
+                    logger.logError("-> Failed merging analysis reports, setting build status to FAILURE!");
                     run.setResult(Result.FAILURE);
                 }
 
@@ -400,7 +395,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
      */
     private Map<FilePath, List<FilePath>> getAnalysisFiles(final Run<?, ?> run, final FilePath workspace,
             final Launcher launcher) throws IOException, InterruptedException {
-        final Map<FilePath, List<FilePath>> analysisFiles = new LinkedHashMap<FilePath, List<FilePath>>();
+        final Map<FilePath, List<FilePath>> analysisFiles = new LinkedHashMap<>();
         final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
         for (final FilePath reportDir : reportDirs) {
             final List<FilePath> jobFiles = Arrays.asList(reportDir.list("**/Job_*.ajob"));
@@ -462,6 +457,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
             return testValidator.validateTimeout(value, getDefaultTimeout());
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.TraceAnalysisPublisher_DisplayName();

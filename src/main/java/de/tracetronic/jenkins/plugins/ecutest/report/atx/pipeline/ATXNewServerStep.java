@@ -29,14 +29,9 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import hudson.Extension;
-
-import java.util.Collections;
-import java.util.Set;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
@@ -44,8 +39,10 @@ import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.jenkinsci.plugins.workflow.steps.SynchronousStepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Advanced pipeline step that returns a new {@link ATXServer} instance.
@@ -72,7 +69,7 @@ public class ATXNewServerStep extends Step {
      *            the ATX configuration
      */
     @DataBoundConstructor
-    public ATXNewServerStep(final String atxName, final String toolName, final ATXConfig config) {
+    public ATXNewServerStep(@Nonnull final String atxName, @Nonnull final String toolName, final ATXConfig config) {
         this.atxName = atxName;
         this.toolName = toolName;
         this.config = config != null ? config : new ATXConfig();
@@ -81,6 +78,7 @@ public class ATXNewServerStep extends Step {
     /**
      * @return the ATX name
      */
+    @Nonnull
     public String getAtxName() {
         return atxName;
     }
@@ -88,6 +86,7 @@ public class ATXNewServerStep extends Step {
     /**
      * @return the tool name
      */
+    @Nonnull
     public String getToolName() {
         return toolName;
     }

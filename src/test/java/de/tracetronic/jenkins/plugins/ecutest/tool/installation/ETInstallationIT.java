@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,20 +29,18 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.installation;
 
-import static org.junit.Assert.assertEquals;
+import com.gargoylesoftware.htmlunit.html.HtmlForm;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
 import hudson.EnvVars;
 import hudson.slaves.DumbSlave;
 import hudson.tools.ToolLocationNodeProperty;
-
-import java.util.Collections;
-
 import org.junit.Test;
 import org.jvnet.hudson.test.recipes.LocalData;
 
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import java.util.Collections;
 
-import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Integration tests for {@link ETInstallation}.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,11 +29,9 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
-import hudson.util.FormValidation;
-
-import org.apache.commons.lang.StringUtils;
-
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.Messages;
+import hudson.util.FormValidation;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Validator to check UNIT related form fields.

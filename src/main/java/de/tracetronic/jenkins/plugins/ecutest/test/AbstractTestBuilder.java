@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,26 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
-import hudson.AbortException;
-import hudson.EnvVars;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.Util;
-import hudson.model.TaskListener;
-import hudson.model.Run;
-import hudson.tasks.BuildStepMonitor;
-import hudson.util.IOUtils;
-
-import java.io.IOException;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
-import jenkins.tasks.SimpleBuildStep;
-
-import org.apache.commons.lang.StringUtils;
-import org.kohsuke.stapler.DataBoundSetter;
-
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
@@ -57,6 +37,22 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 import de.tracetronic.jenkins.plugins.ecutest.util.PathUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
+import hudson.AbortException;
+import hudson.EnvVars;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.Util;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.tasks.BuildStepMonitor;
+import hudson.util.IOUtils;
+import jenkins.tasks.SimpleBuildStep;
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.DataBoundSetter;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.io.IOException;
 
 /**
  * Common base class for all test related task builders implemented in this plugin.
@@ -126,8 +122,9 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     }
 
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
+    public void perform(@Nonnull final Run<?, ?> run, @Nonnull final FilePath workspace,
+                        @Nonnull final Launcher launcher, @Nonnull final TaskListener listener)
+        throws InterruptedException, IOException {
 
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         try {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,16 +29,17 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
+import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.util.FormValidation;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
+import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * Class holding the configuration for importing a project from an archive.
@@ -101,8 +102,7 @@ public class ImportProjectArchiveConfig extends ImportConfig {
             final ImportProjectArchiveConfig that = (ImportProjectArchiveConfig) other;
             result = that.canEqual(this)
                     && super.equals(that)
-                    && (importConfigPath == null ? that.importConfigPath == null : importConfigPath
-                    .equals(that.importConfigPath))
+                    && (Objects.equals(importConfigPath, that.importConfigPath))
                     && replaceFiles == that.replaceFiles;
         }
         return result;
@@ -141,6 +141,7 @@ public class ImportProjectArchiveConfig extends ImportConfig {
             return tmsValidator.validateImportConfigPath(value);
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.ImportProjectArchiveConfig_DisplayName();

@@ -29,35 +29,29 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
-import hudson.DescriptorExtensionList;
-import hudson.model.Describable;
-import hudson.model.Item;
-import hudson.model.Descriptor;
-import hudson.security.ACL;
-import hudson.util.FormValidation;
-import hudson.util.ListBoxModel;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.CheckForNull;
-
-import jenkins.model.Jenkins;
-
-import org.apache.commons.lang.StringUtils;
-import org.kohsuke.stapler.AncestorInPath;
-import org.kohsuke.stapler.QueryParameter;
-
 import com.cloudbees.plugins.credentials.CredentialsMatchers;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.common.StandardCredentials;
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-import com.cloudbees.plugins.credentials.domains.DomainRequirement;
-
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.TMSValidator;
+import hudson.DescriptorExtensionList;
+import hudson.model.Describable;
+import hudson.model.Descriptor;
+import hudson.model.Item;
+import hudson.security.ACL;
+import hudson.util.FormValidation;
+import hudson.util.ListBoxModel;
+import jenkins.model.Jenkins;
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.AncestorInPath;
+import org.kohsuke.stapler.QueryParameter;
+
+import javax.annotation.CheckForNull;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Base configuration class for connecting to test management systems.
@@ -134,7 +128,7 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
             InterruptedException {
         final List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider
                 .lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
-                        Collections.<DomainRequirement> emptyList());
+                        Collections.emptyList());
         return CredentialsMatchers.firstOrNull(credentials, CredentialsMatchers.withId(credentialsId));
     }
 
@@ -205,7 +199,7 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
             return result
                     .includeEmptyValue()
                     .includeMatchingAs(ACL.SYSTEM, item, StandardCredentials.class,
-                            Collections.<DomainRequirement> emptyList(),
+                            Collections.emptyList(),
                             CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class));
         }
     }

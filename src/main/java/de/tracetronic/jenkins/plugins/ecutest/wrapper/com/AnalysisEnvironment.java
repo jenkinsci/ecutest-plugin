@@ -29,13 +29,12 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
-import java.util.List;
-
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
-
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComAnalysisEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComAnalysisExecutionInfo;
+
+import java.util.List;
 
 /**
  * COM object representing the currently started analysis environment.

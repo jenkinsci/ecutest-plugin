@@ -29,22 +29,18 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogReport;
+import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFReport;
 import hudson.model.Run;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Logger;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
-
 import jenkins.util.VirtualFile;
-
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
-import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogReport;
-import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFReport;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Common base class for {@link TRFReport} and {@link ETLogReport} holding the archive file information.

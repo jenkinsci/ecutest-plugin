@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,19 +29,16 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import hudson.EnvVars;
+import org.apache.commons.lang.StringUtils;
 
+import javax.annotation.CheckForNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.annotation.CheckForNull;
-
-import org.apache.commons.lang.StringUtils;
-
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 
 /**
  * Utility class providing ATX related functions.
@@ -69,7 +66,7 @@ public final class ATXUtil {
         if (testName != null && StringUtils.countMatches(testName, "_") != testName.length()) {
             validATXName = testName;
 
-            final Map<String, String> specialCharMap = new HashMap<String, String>();
+            final Map<String, String> specialCharMap = new HashMap<>();
             specialCharMap.put("ä", "ae");
             specialCharMap.put("Ä", "Ae");
             specialCharMap.put("ö", "oe");

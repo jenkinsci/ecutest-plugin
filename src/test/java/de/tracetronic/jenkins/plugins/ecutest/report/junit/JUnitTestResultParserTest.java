@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,10 +29,10 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 
-import static org.junit.Assert.assertEquals;
 import hudson.FilePath;
 import hudson.model.TaskListener;
 import hudson.tasks.junit.TestResult;
+import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
@@ -40,7 +40,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link JUnitTestResultParser}.

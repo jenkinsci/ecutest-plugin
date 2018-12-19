@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,19 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.TaskListener;
-import hudson.remoting.Callable;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder.Seriousness;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
@@ -55,6 +42,18 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Package;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestExecutionInfo;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Client to execute ECU-TEST packages via COM interface.
@@ -138,11 +137,7 @@ public class PackageClient extends AbstractTestClient {
         }
 
         // Close package
-        if (!launcher.getChannel().call(new ClosePackageCallable(getTestFile(), listener))) {
-            return false;
-        }
-
-        return true;
+        return launcher.getChannel().call(new ClosePackageCallable(getTestFile(), listener));
     }
 
     /**
@@ -268,7 +263,7 @@ public class PackageClient extends AbstractTestClient {
                             runTraceAnalysis, runTest, paramMap)) {
                 boolean isAborted = false;
                 int tickCounter = 0;
-                final long endTimeMillis = System.currentTimeMillis() + Long.valueOf(timeout) * 1000L;
+                final long endTimeMillis = System.currentTimeMillis() + (long) timeout * 1000L;
                 while ("RUNNING".equals(execInfo.getState())) {
                     if (tickCounter % 60 == 0) {
                         logger.logInfo("-- tick...");
@@ -299,7 +294,7 @@ public class PackageClient extends AbstractTestClient {
          * @return the package parameter map
          */
         private Map<String, String> getParameterMap() {
-            final Map<String, String> paramMap = new LinkedHashMap<String, String>();
+            final Map<String, String> paramMap = new LinkedHashMap<>();
             for (final PackageParameter param : packageConfig.getParameters()) {
                 paramMap.put(param.getName(), param.getValue());
             }
@@ -345,7 +340,7 @@ public class PackageClient extends AbstractTestClient {
             try (ETComClient comClient = new ETComClient(progId);
                     TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                     TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {
-                logger.logWarn(String.format("-> Build interrupted! Aborting test exection..."));
+                logger.logWarn("-> Build interrupted! Aborting test exection...");
                 execInfo.abort();
                 testInfo = getTestInfo(execInfo, true, logger);
                 postExecution(timeout, comClient, logger);

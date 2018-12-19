@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,23 +29,21 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
-import hudson.DescriptorExtensionList;
-import hudson.Extension;
-import hudson.model.Descriptor;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.CheckForNull;
-
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectAttributeConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
+import hudson.DescriptorExtensionList;
+import hudson.Extension;
+import hudson.model.Descriptor;
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Builder providing the import of one or multiple ECU-TEST projects.
@@ -100,6 +98,7 @@ public class ImportProjectBuilder extends AbstractImportBuilder {
             return list;
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.ImportProjectBuilder_DisplayName();

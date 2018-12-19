@@ -29,15 +29,14 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
+import com.jacob.com.Dispatch;
+import com.jacob.com.SafeArray;
+import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder;
+import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder.Seriousness;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import com.jacob.com.Dispatch;
-import com.jacob.com.SafeArray;
-
-import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder;
-import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder.Seriousness;
 
 /**
  * Common base class for {@link Package} and {@link Project} giving access to their properties.
@@ -80,7 +79,7 @@ public abstract class AbstractTestObject extends ETComDispatch {
      *             in case of a COM exception
      */
     public List<CheckInfoHolder> check() throws ETComException {
-        final List<CheckInfoHolder> errorList = new ArrayList<CheckInfoHolder>();
+        final List<CheckInfoHolder> errorList = new ArrayList<>();
         final SafeArray array = performRequest("Check").toSafeArray();
         if (array.getNumDim() == 2) {
             final int lBound = array.getLBound(1);

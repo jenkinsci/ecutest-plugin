@@ -29,44 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
-import hudson.CopyOnWrite;
-import hudson.DescriptorExtensionList;
-import hudson.EnvVars;
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.Result;
-import hudson.model.TaskListener;
-import hudson.model.Descriptor;
-import hudson.model.Run;
-import hudson.remoting.Callable;
-import hudson.util.FormValidation;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
-import jenkins.model.Jenkins;
-import jenkins.security.MasterToSlaveCallable;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
-import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.interceptor.RequirePOST;
-
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
@@ -82,6 +44,39 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
+import hudson.CopyOnWrite;
+import hudson.DescriptorExtensionList;
+import hudson.EnvVars;
+import hudson.Extension;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.Descriptor;
+import hudson.model.Result;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import hudson.util.FormValidation;
+import jenkins.model.Jenkins;
+import jenkins.security.MasterToSlaveCallable;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.interceptor.RequirePOST;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Publisher providing the generation and upload of {@link ATXReport}s to TEST-GUIDE.
@@ -91,7 +86,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
 public class ATXPublisher extends AbstractReportPublisher {
 
     /**
-     * The URL name to {@link ATXTZipReport}s holding by {@link AbstractATXAction}.
+     * The URL name to {@link ATXZipReport}s holding by {@link AbstractATXAction}.
      */
     protected static final String URL_NAME = "atx-reports";
 
@@ -204,7 +199,7 @@ public class ATXPublisher extends AbstractReportPublisher {
             return uploader.upload(reportDirs, isAllowMissing(), run, launcher, listener);
         } else {
             logger.logInfo("- Generating ATX reports...");
-            if (isUploadEnabled && !isServerReachable) {
+            if (!isServerReachable) {
                 logger.logWarn("-> ATX upload will be skipped because selected TEST-GUIDE server is not reachable!");
             }
             final FilePath archiveTarget = getArchiveTarget(run);
@@ -362,7 +357,7 @@ public class ATXPublisher extends AbstractReportPublisher {
          */
         public void setInstallations(final ATXInstallation... installations) {
             // Remove empty installations
-            final List<ATXInstallation> inst = new ArrayList<ATXInstallation>();
+            final List<ATXInstallation> inst = new ArrayList<>();
             if (installations != null) {
                 Collections.addAll(inst, installations);
                 for (final ATXInstallation installation : installations) {
@@ -371,7 +366,7 @@ public class ATXPublisher extends AbstractReportPublisher {
                     }
                 }
             }
-            this.installations = inst.toArray(new ATXInstallation[inst.size()]);
+            this.installations = inst.toArray(new ATXInstallation[0]);
             save();
         }
 
@@ -384,7 +379,7 @@ public class ATXPublisher extends AbstractReportPublisher {
 
         @Override
         public boolean configure(final StaplerRequest req, final JSONObject json) {
-            final List<ATXInstallation> list = new ArrayList<ATXInstallation>();
+            final List<ATXInstallation> list = new ArrayList<>();
             final JSONArray instArray = new JSONArray();
             final JSONArray inst = json.optJSONArray("installation");
             if (inst == null) {
@@ -406,16 +401,12 @@ public class ATXPublisher extends AbstractReportPublisher {
                             instJson.get("customSettings"));
 
                     // Remove duplicates of default configuration
-                    final ListIterator<ATXCustomSetting> iterator = customSettings.listIterator();
-                    while (iterator.hasNext()) {
-                        if (getDefaultConfig().getSettingByName(iterator.next().getName()) != null) {
-                            iterator.remove();
-                        }
-                    }
+                    customSettings.removeIf(atxCustomSetting ->
+                        getDefaultConfig().getSettingByName(atxCustomSetting.getName()) != null);
 
                     // Make unique list
-                    customSettings = new ArrayList<ATXCustomSetting>(new LinkedHashSet<ATXCustomSetting>(
-                            customSettings));
+                    customSettings = new ArrayList<>(new LinkedHashSet<>(
+                        customSettings));
 
                     // Update current values
                     final ATXConfig config = new ATXConfig(updateCurrentValues(instJson, configMap),
@@ -427,7 +418,7 @@ public class ATXPublisher extends AbstractReportPublisher {
                 }
             }
 
-            setInstallations(list.toArray(new ATXInstallation[list.size()]));
+            setInstallations(list.toArray(new ATXInstallation[0]));
             return true;
         }
 
@@ -440,7 +431,7 @@ public class ATXPublisher extends AbstractReportPublisher {
          */
         @SuppressWarnings("unchecked")
         public void syncWithDefaultConfig() {
-            final List<ATXInstallation> list = new ArrayList<ATXInstallation>();
+            final List<ATXInstallation> list = new ArrayList<>();
             for (final ATXInstallation installation : installations.clone()) {
                 final ATXConfig currentConfig = installation.getConfig();
                 final ATXConfig newConfig = defaultConfig.clone();
@@ -459,7 +450,7 @@ public class ATXPublisher extends AbstractReportPublisher {
                     }
                     final List<ATXCustomSetting> customSettings = currentConfig.getCustomSettings();
                     newConfig.setCustomSettings(customSettings == null ?
-                            new ArrayList<ATXCustomSetting>() : customSettings);
+                        new ArrayList<>() : customSettings);
                 }
 
                 // Fill installations
@@ -467,7 +458,7 @@ public class ATXPublisher extends AbstractReportPublisher {
                         installation.getToolName(), newConfig);
                 list.add(inst);
             }
-            setInstallations(list.toArray(new ATXInstallation[list.size()]));
+            setInstallations(list.toArray(new ATXInstallation[0]));
             load(); // Reload from disk
         }
 
@@ -483,9 +474,9 @@ public class ATXPublisher extends AbstractReportPublisher {
         @SuppressWarnings("unchecked")
         private Map<String, List<ATXSetting>> updateCurrentValues(final JSONObject instJson,
                 final Map<String, List<ATXSetting>> configMap) {
-            final Map<String, List<ATXSetting>> newConfigMap = new LinkedHashMap<String, List<ATXSetting>>();
+            final Map<String, List<ATXSetting>> newConfigMap = new LinkedHashMap<>();
             for (final Entry<String, List<ATXSetting>> entry : configMap.entrySet()) {
-                final List<ATXSetting> newSettings = new ArrayList<ATXSetting>();
+                final List<ATXSetting> newSettings = new ArrayList<>();
                 final List<ATXSetting> defaultSettings = entry.getValue();
 
                 // Deep copy setting list
@@ -528,7 +519,7 @@ public class ATXPublisher extends AbstractReportPublisher {
          */
         public List<ATXCustomSetting> getCustomSettings(final ATXInstallation installation) {
             return installation == null ?
-                    new ArrayList<ATXCustomSetting>() : installation.getConfig().getCustomSettings();
+                new ArrayList<>() : installation.getConfig().getCustomSettings();
         }
 
         /**
@@ -541,13 +532,12 @@ public class ATXPublisher extends AbstractReportPublisher {
             final DescriptorExtensionList<ATXCustomSetting, Descriptor<ATXCustomSetting>> settings = ATXCustomSetting
                     .all();
             if (settings != null) {
-                for (final Descriptor<? extends ATXCustomSetting> setting : settings) {
-                    list.add(setting);
-                }
+                list.addAll(settings);
             }
             return list;
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.ATXPublisher_DisplayName();

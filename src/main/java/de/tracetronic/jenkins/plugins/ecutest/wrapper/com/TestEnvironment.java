@@ -29,17 +29,15 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
+import com.jacob.com.Dispatch;
+import com.jacob.com.Variant;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestEnvironment;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestExecutionInfo;
+import org.apache.commons.lang.StringUtils;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.jacob.com.Dispatch;
-import com.jacob.com.Variant;
-
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestEnvironment;
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestExecutionInfo;
 
 /**
  * COM object representing the currently started test environment.
@@ -99,7 +97,7 @@ public class TestEnvironment extends ETComDispatch implements ComTestEnvironment
      */
     public ComTestExecutionInfo executePackage(final String path, final boolean runTraceAnalysis,
             final boolean runTest) throws ETComException {
-        return executePackage(path, runTraceAnalysis, runTest, Collections.<String, String> emptyMap());
+        return executePackage(path, runTraceAnalysis, runTest, Collections.emptyMap());
     }
 
     @Override
@@ -148,7 +146,7 @@ public class TestEnvironment extends ETComDispatch implements ComTestEnvironment
     public boolean generateTestReportDocumentFromDB(final String dbFile, final String reportDir,
             final String reportFormat) throws ETComException {
         return generateTestReportDocumentFromDB(dbFile, reportDir, reportFormat, false,
-                Collections.<String, String> emptyMap());
+                Collections.emptyMap());
     }
 
     /**
@@ -171,7 +169,7 @@ public class TestEnvironment extends ETComDispatch implements ComTestEnvironment
     public boolean generateTestReportDocumentFromDB(final String dbFile, final String reportDir,
             final String reportFormat, final boolean waitUntilFinished) throws ETComException {
         return generateTestReportDocumentFromDB(dbFile, reportDir, reportFormat, waitUntilFinished,
-                Collections.<String, String> emptyMap());
+                Collections.emptyMap());
     }
 
     @Override

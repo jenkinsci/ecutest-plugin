@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,15 +29,12 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
-import hudson.EnvVars;
-import javaposse.jobdsl.dsl.Context;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.google.common.base.Preconditions;
-
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
+import hudson.EnvVars;
+import javaposse.jobdsl.dsl.Context;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Common base class providing report-related DSL extensions.

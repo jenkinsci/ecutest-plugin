@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,16 +29,16 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
 import net.sf.json.JSONObject;
-
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
+import javax.annotation.Nonnull;
 
 /**
  * Common base descriptor class for all test related task build descriptors implemented in this plugin.
@@ -83,7 +83,7 @@ public abstract class AbstractTestDescriptor extends BuildStepDescriptor<Builder
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(
             value = "NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE",
             justification = "False positive")
-    public Builder newInstance(final StaplerRequest req, final JSONObject json) throws FormException {
+    public Builder newInstance(final StaplerRequest req, @Nonnull final JSONObject json) throws FormException {
         final JSONObject testConfig = json.optJSONObject("testConfig");
         if (testConfig != null) {
             // Flip value due to inverted UI behavior

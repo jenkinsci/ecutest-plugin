@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,15 +29,15 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest;
 
-import static org.junit.Assume.assumeFalse;
 import hudson.model.Label;
 import hudson.slaves.DumbSlave;
 import hudson.slaves.SlaveComputer;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Rule;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.JenkinsRule.WebClient;
+
+import static org.junit.Assume.assumeFalse;
 
 /**
  * Base class for all Jenkins related integration tests.

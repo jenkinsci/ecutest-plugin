@@ -29,21 +29,20 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline;
 
+import com.google.common.collect.Maps;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
+import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
+import org.jenkinsci.plugins.workflow.cps.CpsScript;
+
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
-import org.jenkinsci.plugins.workflow.cps.CpsScript;
-
-import com.google.common.collect.Maps;
-
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 
 /**
  * Class providing pipeline methods in order to get or create {@link ATXServer} instances.
@@ -53,6 +52,10 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting
 public class ATXPipeline implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    private static final String KEY_CONFIG = "config";
+    private static final String KEY_ATX_NAME = "atxName";
+    private static final String KEY_TOOL_NAME = "toolName";
 
     private final CpsScript script;
 
@@ -76,7 +79,7 @@ public class ATXPipeline implements Serializable {
     @Whitelisted
     public ATXServer server(final String serverName) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
-        stepVariables.put("atxName", serverName);
+        stepVariables.put(KEY_ATX_NAME, serverName);
         final ATXServer server = (ATXServer) script.invokeMethod("getATXServer", stepVariables);
         server.setScript(script);
         return server;
@@ -91,7 +94,7 @@ public class ATXPipeline implements Serializable {
      */
     @Whitelisted
     public ATXServer server(final Map<String, Object> serverArgs) {
-        final List<String> keysAsList = Arrays.asList("atxName");
+        final List<String> keysAsList = Collections.singletonList(KEY_ATX_NAME);
         if (!keysAsList.containsAll(serverArgs.keySet())) {
             throw new IllegalArgumentException("The newServer method requires the following arguments at least: "
                     + keysAsList);
@@ -129,9 +132,9 @@ public class ATXPipeline implements Serializable {
     @Whitelisted
     public ATXServer newServer(final String atxName, final String toolName, final ATXConfig config) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
-        stepVariables.put("atxName", atxName);
-        stepVariables.put("toolName", toolName);
-        stepVariables.put("config", config);
+        stepVariables.put(KEY_ATX_NAME, atxName);
+        stepVariables.put(KEY_TOOL_NAME, toolName);
+        stepVariables.put(KEY_CONFIG, config);
         final ATXServer server = (ATXServer) script.invokeMethod("newATXServer", stepVariables);
         server.setScript(script);
         return server;
@@ -161,8 +164,8 @@ public class ATXPipeline implements Serializable {
     public ATXServer newServer(final String atxName, final String toolName, final String serverUrl,
             final boolean uploadToServer, final String authKey, final String projectId) throws MalformedURLException {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
-        stepVariables.put("atxName", atxName);
-        stepVariables.put("toolName", toolName);
+        stepVariables.put(KEY_ATX_NAME, atxName);
+        stepVariables.put(KEY_TOOL_NAME, toolName);
 
         final URL url = new URL(serverUrl);
         final String protocol = url.getProtocol();
@@ -176,7 +179,7 @@ public class ATXPipeline implements Serializable {
         for (final ATXSetting setting : uploadSettings) {
             switch (setting.getName()) {
                 case "uploadToServer":
-                    setting.setCurrentValue(true);
+                    setting.setCurrentValue(uploadToServer);
                     break;
                 case "serverURL":
                     setting.setCurrentValue(host);
@@ -197,14 +200,14 @@ public class ATXPipeline implements Serializable {
                     setting.setCurrentValue(projectId);
                     break;
                 default:
-                    continue;
+                    break;
             }
         }
 
         final Map<String, List<ATXSetting>> configMap = config.getConfigMap();
         configMap.put("uploadConfig", uploadSettings);
         config = new ATXConfig(configMap, config.getCustomSettings());
-        stepVariables.put("config", config);
+        stepVariables.put(KEY_CONFIG, config);
 
         final ATXServer server = (ATXServer) script.invokeMethod("newATXServer", stepVariables);
         server.setScript(script);
@@ -222,24 +225,24 @@ public class ATXPipeline implements Serializable {
      */
     @Whitelisted
     public ATXServer newServer(final Map<String, Object> serverArgs) throws MalformedURLException {
-        final List<String> requiredKeys = new ArrayList<String>(Arrays.asList("atxName", "toolName"));
+        final List<String> requiredKeys = new ArrayList<>(Arrays.asList(KEY_ATX_NAME, KEY_TOOL_NAME));
         if (!serverArgs.keySet().containsAll(requiredKeys)) {
             throw new IllegalArgumentException("The newServer method requires the following arguments at least: "
                     + requiredKeys);
         }
 
-        if (serverArgs.containsKey("config") && serverArgs.get("config") instanceof ATXConfig) {
-            return newServer((String) serverArgs.get("atxName"), (String) serverArgs.get("toolName"),
-                    (ATXConfig) serverArgs.get("config"));
+        if (serverArgs.containsKey(KEY_CONFIG) && serverArgs.get(KEY_CONFIG) instanceof ATXConfig) {
+            return newServer((String) serverArgs.get(KEY_ATX_NAME), (String) serverArgs.get(KEY_TOOL_NAME),
+                    (ATXConfig) serverArgs.get(KEY_CONFIG));
         }
 
         requiredKeys.addAll(Arrays.asList("serverUrl", "uploadToServer", "authKey", "projectId"));
         if (serverArgs.keySet().containsAll(requiredKeys)) {
-            return newServer(serverArgs.get("atxName").toString(), serverArgs.get("toolName").toString(),
+            return newServer(serverArgs.get(KEY_ATX_NAME).toString(), serverArgs.get(KEY_TOOL_NAME).toString(),
                     serverArgs.get("serverUrl").toString(), (boolean) serverArgs.get("uploadToServer"),
                     serverArgs.get("authKey").toString(), serverArgs.get("projectId").toString());
         } else {
-            return newServer(serverArgs.get("atxName").toString(), serverArgs.get("toolName").toString());
+            return newServer(serverArgs.get(KEY_ATX_NAME).toString(), serverArgs.get(KEY_TOOL_NAME).toString());
         }
     }
 }

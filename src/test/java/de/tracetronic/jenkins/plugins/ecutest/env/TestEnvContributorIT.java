@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,15 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.env;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import hudson.EnvVars;
-import hudson.model.FreeStyleBuild;
-
-import java.util.List;
-
-import org.junit.Test;
-
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.PackageClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.ProjectClient;
@@ -46,6 +37,14 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
+import hudson.EnvVars;
+import hudson.model.FreeStyleBuild;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Integration tests for {@link TestEnvContributor}.

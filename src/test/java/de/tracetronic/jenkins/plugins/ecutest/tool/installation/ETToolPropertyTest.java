@@ -29,9 +29,9 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.installation;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link ETToolProperty}.

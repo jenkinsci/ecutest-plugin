@@ -29,23 +29,22 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.ta;
 
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.TaskListener;
-import hudson.remoting.Callable;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.AnalysisEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.AnalysisExecutionInfo;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class providing the execution of trace analyses.
@@ -136,7 +135,7 @@ public class TraceAnalysisRunner {
 
         @Override
         public List<FilePath> call() throws IOException {
-            final List<FilePath> reportFiles = new ArrayList<FilePath>();
+            final List<FilePath> reportFiles = new ArrayList<>();
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
@@ -146,7 +145,7 @@ public class TraceAnalysisRunner {
                     final AnalysisExecutionInfo execInfo =
                             (AnalysisExecutionInfo) analysisEnv.executeJob(jobFile.getRemote(), createReportDir);
                     int tickCounter = 0;
-                    final long endTimeMillis = System.currentTimeMillis() + Long.valueOf(timeout) * 1000L;
+                    final long endTimeMillis = System.currentTimeMillis() + (long) timeout * 1000L;
                     while ("RUNNING".equals(execInfo.getState())) {
                         if (tickCounter % 60 == 0) {
                             logger.logInfo("-- tick...");
@@ -217,7 +216,7 @@ public class TraceAnalysisRunner {
 
         @Override
         public Boolean call() throws IOException {
-            boolean isMerged = true;
+            boolean isMerged;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
@@ -241,7 +240,7 @@ public class TraceAnalysisRunner {
          * @return the list of job files
          */
         private List<String> getJobFiles(final List<FilePath> jobReports) {
-            final List<String> jobFiles = new ArrayList<String>();
+            final List<String> jobFiles = new ArrayList<>();
             for (final FilePath jobReport : jobReports) {
                 jobFiles.add(jobReport.getRemote());
             }

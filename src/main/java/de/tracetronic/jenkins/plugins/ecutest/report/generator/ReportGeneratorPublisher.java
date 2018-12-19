@@ -29,31 +29,28 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 
-import hudson.EnvVars;
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.Util;
-import hudson.model.TaskListener;
-import hudson.model.Run;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
-import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
-
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import hudson.EnvVars;
+import hudson.Extension;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.Util;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Publisher providing links to saved {@link GeneratorReport}s.
@@ -70,9 +67,9 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     @Nonnull
     private final String toolName;
     @Nonnull
-    private List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
+    private List<ReportGeneratorConfig> generators = new ArrayList<>();
     @Nonnull
-    private List<ReportGeneratorConfig> customGenerators = new ArrayList<ReportGeneratorConfig>();
+    private List<ReportGeneratorConfig> customGenerators = new ArrayList<>();
 
     /**
      * Instantiates a new {@link ReportGeneratorPublisher}.
@@ -97,6 +94,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     /**
      * @return the reportGenerators
      */
+    @Nonnull
     public List<ReportGeneratorConfig> getGenerators() {
         return generators;
     }
@@ -104,6 +102,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     /**
      * @return the customGenerators
      */
+    @Nonnull
     public List<ReportGeneratorConfig> getCustomGenerators() {
         return customGenerators;
     }
@@ -114,7 +113,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      */
     @DataBoundSetter
     public void setGenerators(final List<ReportGeneratorConfig> generators) {
-        this.generators = generators == null ? new ArrayList<ReportGeneratorConfig>()
+        this.generators = generators == null ? new ArrayList<>()
                 : removeEmptyGenerators(generators);
     }
 
@@ -124,7 +123,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      */
     @DataBoundSetter
     public void setCustomGenerators(final List<ReportGeneratorConfig> customGenerators) {
-        this.customGenerators = customGenerators == null ? new ArrayList<ReportGeneratorConfig>()
+        this.customGenerators = customGenerators == null ? new ArrayList<>()
                 : removeEmptyGenerators(customGenerators);
     }
 
@@ -136,7 +135,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      * @return the list of valid generators
      */
     private static List<ReportGeneratorConfig> removeEmptyGenerators(final List<ReportGeneratorConfig> generators) {
-        final List<ReportGeneratorConfig> validGenerators = new ArrayList<ReportGeneratorConfig>();
+        final List<ReportGeneratorConfig> validGenerators = new ArrayList<>();
         for (final ReportGeneratorConfig generator : generators) {
             if (StringUtils.isNotBlank(generator.getName())) {
                 validGenerators.add(generator);
@@ -160,7 +159,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
             throw new ETPluginException("Empty test results are not allowed, setting build status to FAILURE!");
         }
 
-        final List<GeneratorReport> reports = new ArrayList<GeneratorReport>();
+        final List<GeneratorReport> reports = new ArrayList<>();
         if (isETRunning(launcher)) {
             reports.addAll(generateReports(reportFiles, run, workspace, launcher, listener));
         } else {
@@ -208,9 +207,9 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
             final FilePath workspace, final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
         final TTConsoleLogger logger = getLogger();
-        final List<GeneratorReport> reports = new ArrayList<GeneratorReport>();
+        final List<GeneratorReport> reports = new ArrayList<>();
         final FilePath archiveTarget = getArchiveTarget(run);
-        final List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
+        final List<ReportGeneratorConfig> generators = new ArrayList<>();
         generators.addAll(getGenerators());
         generators.addAll(getCustomGenerators());
 
@@ -290,6 +289,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
     @Extension(ordinal = 10004)
     public static class DescriptorImpl extends AbstractReportDescriptor {
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.ReportGeneratorPublisher_DisplayName();

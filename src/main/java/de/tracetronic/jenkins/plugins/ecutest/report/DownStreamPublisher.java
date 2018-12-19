@@ -29,31 +29,27 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report;
 
+import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import hudson.DescriptorExtensionList;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.TaskListener;
 import hudson.model.Descriptor;
 import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import jenkins.tasks.SimpleBuildStep;
-
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
-import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class holding the downstream configuration.
@@ -65,7 +61,7 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
     @Nonnull
     private final String workspace;
     @Nonnull
-    private List<AbstractReportPublisher> publishers = new ArrayList<AbstractReportPublisher>();
+    private List<AbstractReportPublisher> publishers = new ArrayList<>();
 
     /**
      * Instantiates a new {@link DownStreamPublisher}.
@@ -90,6 +86,7 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
     /**
      * @return the configured publishers
      */
+    @Nonnull
     public List<AbstractReportPublisher> getPublishers() {
         return publishers;
     }
@@ -100,12 +97,13 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
      */
     @DataBoundSetter
     public void setPublishers(final List<AbstractReportPublisher> publishers) {
-        this.publishers = publishers == null ? new ArrayList<AbstractReportPublisher>() : publishers;
+        this.publishers = publishers == null ? new ArrayList<>() : publishers;
     }
 
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
+    public void perform(@Nonnull final Run<?, ?> run, @Nonnull final FilePath workspace,
+                        @Nonnull final Launcher launcher, @Nonnull final TaskListener listener)
+        throws InterruptedException, IOException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing downstream reports...");
         for (final AbstractReportPublisher publisher : getPublishers()) {
@@ -153,6 +151,7 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
             return list;
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.DownStreamPublisher_DisplayName();

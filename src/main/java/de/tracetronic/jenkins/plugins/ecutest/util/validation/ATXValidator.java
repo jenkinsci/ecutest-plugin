@@ -29,9 +29,19 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.Messages;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import hudson.Util;
 import hudson.util.FormValidation;
+import org.apache.commons.lang.StringUtils;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -44,20 +54,6 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.regex.Pattern;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import org.apache.commons.lang.StringUtils;
-
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.Messages;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 
 /**
  * Validator to check ATX related form fields.
@@ -187,7 +183,7 @@ public class ATXValidator extends AbstractValidator {
             if (expression.contains(PARAMETER)) {
                 returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedValue());
             } else {
-                final String pattern = "[A-Za-z0-9./\\*]+";
+                final String pattern = "[A-Za-z0-9./*]+";
                 for (final String token : Util.tokenize(expression, ";")) {
                     if (!Pattern.matches(pattern, token)) {
                         returnValue = FormValidation.error(Messages.ATXPublisher_InvalidFileExpression());
@@ -213,7 +209,7 @@ public class ATXValidator extends AbstractValidator {
                 returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedValue());
             } else {
                 final String pattern = "(Designer|Name|Status|Testlevel|Tools|VersionCounter|"
-                        + "Design Contact|Design Department|Estimated Duration \\[min\\]|"
+                        + "Design Contact|Design Department|Estimated Duration \\[min]|"
                         + "Execution Priority|Test Comment)";
                 for (final String token : Util.tokenize(expression, ";")) {
                     if (!Pattern.matches(pattern, token)) {
@@ -418,13 +414,7 @@ public class ATXValidator extends AbstractValidator {
         connection.setSSLSocketFactory(sslContext.getSocketFactory());
 
         // Create all-trusting host name verifier
-        final HostnameVerifier allHostsValid = new HostnameVerifier() {
-
-            @Override
-            public boolean verify(final String hostname, final SSLSession session) {
-                return true;
-            }
-        };
+        final HostnameVerifier allHostsValid = (hostname, session) -> true;
 
         // Install the all-trusting host verifier
         connection.setHostnameVerifier(allHostsValid);

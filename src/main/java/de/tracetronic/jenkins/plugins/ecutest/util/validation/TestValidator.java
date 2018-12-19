@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,15 +29,10 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
+import de.tracetronic.jenkins.plugins.ecutest.filter.RefFilterLexer;
+import de.tracetronic.jenkins.plugins.ecutest.filter.RefFilterParser;
+import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
 import hudson.util.FormValidation;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -45,9 +40,12 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.apache.commons.lang.StringUtils;
 
-import de.tracetronic.jenkins.plugins.ecutest.filter.RefFilterLexer;
-import de.tracetronic.jenkins.plugins.ecutest.filter.RefFilterParser;
-import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Validator to check test related form fields.
@@ -245,7 +243,7 @@ public class TestValidator extends AbstractValidator {
         public void validate() {
             isValid = true;
 
-            try (InputStream stream = new ByteArrayInputStream(expression.getBytes(StandardCharsets.UTF_8));) {
+            try (InputStream stream = new ByteArrayInputStream(expression.getBytes(StandardCharsets.UTF_8))) {
                 final RefFilterLexer lexer = new RefFilterLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
                 final RefFilterParser parser = new RefFilterParser(new CommonTokenStream(lexer));
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,26 +29,25 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import hudson.model.Descriptor;
-import hudson.model.FreeStyleProject;
-import hudson.tasks.Builder;
-import hudson.util.DescribableList;
-
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.jvnet.hudson.test.JenkinsRule;
-
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopTSBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import hudson.model.Descriptor;
+import hudson.model.FreeStyleProject;
+import hudson.tasks.Builder;
+import hudson.util.DescribableList;
+import org.junit.Before;
+import org.junit.Test;
+import org.jvnet.hudson.test.JenkinsRule;
+
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link ToolBuilderDslExtension}.

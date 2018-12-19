@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,15 +29,14 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.log;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 import hudson.model.Action;
+import jenkins.tasks.SimpleBuildStep;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import jenkins.tasks.SimpleBuildStep;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 
 /**
  * Action to show a link to {@link ETLogReport}s at the build page.
@@ -46,7 +45,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
  */
 public class ETLogBuildAction extends AbstractETLogAction implements SimpleBuildStep.LastBuildAction {
 
-    private final List<ETLogReport> logReports = new ArrayList<ETLogReport>();
+    private final List<ETLogReport> logReports = new ArrayList<>();
 
     /**
      * Instantiates a new {@link ETLogBuildAction}.

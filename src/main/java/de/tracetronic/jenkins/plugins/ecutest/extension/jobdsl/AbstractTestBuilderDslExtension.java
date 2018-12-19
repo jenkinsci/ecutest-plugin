@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,15 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
-import hudson.util.FormValidation;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javaposse.jobdsl.dsl.Context;
-
 import com.google.common.base.Preconditions;
-
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.GlobalConstant;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
@@ -45,6 +37,11 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.TMSValidator;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
+import hudson.util.FormValidation;
+import javaposse.jobdsl.dsl.Context;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Common base class providing test-related DSL extensions.
@@ -198,7 +195,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
              */
             public class GlobalConstantsContext implements Context {
 
-                private final List<GlobalConstant> constants = new ArrayList<GlobalConstant>();
+                private final List<GlobalConstant> constants = new ArrayList<>();
 
                 /**
                  * Option defining the global constant.
@@ -344,7 +341,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
         /**
          * The list of configured test importerts.
          */
-        protected final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
+        protected final List<TMSConfig> importConfigs = new ArrayList<>();
 
         /**
          * The import path.
@@ -430,7 +427,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
         /**
          * The list of configured test exporters.
          */
-        protected final List<TMSConfig> exportConfigs = new ArrayList<TMSConfig>();
+        protected final List<TMSConfig> exportConfigs = new ArrayList<>();
 
         /**
          * The export path.

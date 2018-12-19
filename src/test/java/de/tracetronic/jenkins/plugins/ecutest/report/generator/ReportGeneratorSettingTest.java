@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,11 +29,11 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 
+import hudson.EnvVars;
+import org.junit.Test;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import hudson.EnvVars;
-
-import org.junit.Test;
 
 /**
  * Unit tests for {@link ReportGeneratorSetting}.

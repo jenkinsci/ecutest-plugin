@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,23 +29,21 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.installation;
 
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import hudson.Extension;
 import hudson.tools.ToolProperty;
 import hudson.tools.ToolPropertyDescriptor;
 import hudson.util.FormValidation;
-
-import java.io.Serializable;
-import java.util.regex.Pattern;
-
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
-import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
+import javax.annotation.Nonnull;
+import java.io.Serializable;
+import java.util.regex.Pattern;
 
 /**
  * Contributes additional settings for the {@link ETInstallation}.
@@ -70,7 +68,7 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
     @DataBoundConstructor
     public ETToolProperty(final String progId, final int timeout) {
         super();
-        this.progId = StringUtils.defaultIfBlank(progId, String.valueOf(ETComProperty.DEFAULT_PROG_ID));
+        this.progId = StringUtils.defaultIfBlank(progId, ETComProperty.DEFAULT_PROG_ID);
         this.timeout = timeout;
     }
 
@@ -150,6 +148,7 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
             return true;
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.ETToolProperty_DisplayName();

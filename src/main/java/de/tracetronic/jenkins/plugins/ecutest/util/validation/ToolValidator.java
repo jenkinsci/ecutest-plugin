@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,14 +29,12 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
-import hudson.util.FormValidation;
-import hudson.util.IOUtils;
-
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
-
 import de.tracetronic.jenkins.plugins.ecutest.tool.Messages;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
+import hudson.util.FormValidation;
+import hudson.util.IOUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Validator to check tool related form fields.
@@ -104,7 +102,7 @@ public class ToolValidator extends AbstractValidator {
      * @return the form validation
      */
     public FormValidation validateTcpPort(final String tcpPort) {
-        FormValidation returnValue = FormValidation.ok();
+        FormValidation returnValue;
         if (StringUtils.isBlank(tcpPort)) {
             returnValue = FormValidation.warning(Messages
                     .StartTSBuilder_NoTcpPort(StartTSBuilder.DEFAULT_TCP_PORT));

@@ -29,31 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
-import hudson.AbortException;
-import hudson.EnvVars;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.Util;
-import hudson.model.TaskListener;
-import hudson.model.AbstractProject;
-import hudson.model.Run;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Builder;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
-import jenkins.tasks.SimpleBuildStep;
-
-import org.apache.commons.lang.StringUtils;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
-
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.ExportPackageClient;
@@ -66,6 +41,27 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportProjectAttribute
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
+import hudson.AbortException;
+import hudson.EnvVars;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.Util;
+import hudson.model.AbstractProject;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.Builder;
+import jenkins.tasks.SimpleBuildStep;
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Common base class for all export related task builders implemented in this plugin.
@@ -85,8 +81,8 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
      */
     @DataBoundConstructor
     public AbstractExportBuilder(@CheckForNull final List<TMSConfig> exportConfigs) {
-        this.exportConfigs = (List<TMSConfig>) (exportConfigs == null ? new ArrayList<TMSConfig>()
-                : removeEmptyConfigs(exportConfigs));
+        this.exportConfigs = exportConfigs == null ? new ArrayList<>()
+                : removeEmptyConfigs(exportConfigs);
     }
 
     /**
@@ -103,7 +99,9 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
      */
     @DataBoundSetter
     public void setExportConfigs(@CheckForNull final List<TMSConfig> exportConfigs) {
-        this.exportConfigs.addAll(exportConfigs);
+        if (exportConfigs != null) {
+            this.exportConfigs.addAll(exportConfigs);
+        }
     }
 
     /**
@@ -114,7 +112,7 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
      * @return the list of valid export configurations
      */
     private static List<TMSConfig> removeEmptyConfigs(final List<TMSConfig> exportConfigs) {
-        final List<TMSConfig> validConfigs = new ArrayList<TMSConfig>();
+        final List<TMSConfig> validConfigs = new ArrayList<>();
         for (final TMSConfig config : exportConfigs) {
             if (config instanceof ExportConfig) {
                 final ExportConfig pkgConfig = (ExportConfig) config;
@@ -133,8 +131,9 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
     }
 
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
+    public void perform(@Nonnull final Run<?, ?> run, @Nonnull final FilePath workspace,
+                        @Nonnull final Launcher launcher, @Nonnull final TaskListener listener)
+        throws InterruptedException, IOException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         try {
             ProcessUtil.checkOS(launcher);
@@ -185,22 +184,22 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
             final TMSConfig expExportConfig = (TMSConfig) exportConfig.expand(buildEnv);
             if (exportConfig instanceof ExportPackageConfig) {
                 // Export package
-                final ExportPackageClient exportClient = new ExportPackageClient((ExportPackageConfig) expExportConfig);
+                final ExportPackageClient exportClient = new ExportPackageClient(expExportConfig);
                 isExported = exportClient.exportPackage(run.getParent(), workspace, launcher, listener);
             } else if (exportConfig instanceof ExportPackageAttributeConfig) {
                 // Export package attributes
                 final ExportPackageClient exportClient = new ExportPackageClient(
-                        (ExportPackageAttributeConfig) expExportConfig);
+                    expExportConfig);
                 isExported = exportClient.exportPackageAttributes(run.getParent(), workspace, launcher, listener);
             } else if (exportConfig instanceof ExportProjectConfig) {
                 // Export project
                 final ExportProjectClient exportClient = new ExportProjectClient(
-                        (ExportProjectConfig) expExportConfig);
+                    expExportConfig);
                 isExported = exportClient.exportProject(run.getParent(), workspace, launcher, listener);
             } else if (exportConfig instanceof ExportProjectAttributeConfig) {
                 // Export project attributes
                 final ExportProjectClient exportClient = new ExportProjectClient(
-                        (ExportProjectAttributeConfig) expExportConfig);
+                    expExportConfig);
                 isExported = exportClient.exportProjectAttributes(run.getParent(), workspace, launcher, listener);
             } else {
                 logger.logError("Unsupported export configuration of type: " + exportConfig.getClass());

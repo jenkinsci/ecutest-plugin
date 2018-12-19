@@ -29,9 +29,9 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
-import java.io.Serializable;
-
 import org.apache.commons.lang.StringUtils;
+
+import java.io.Serializable;
 
 /**
  * Serializable singleton class holding the current COM properties.

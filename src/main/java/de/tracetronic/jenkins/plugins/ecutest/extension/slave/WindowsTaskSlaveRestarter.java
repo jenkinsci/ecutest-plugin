@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,10 +30,9 @@
 package de.tracetronic.jenkins.plugins.ecutest.extension.slave;
 
 import hudson.Extension;
+import jenkins.slaves.restarter.SlaveRestarter;
 
 import java.io.IOException;
-
-import jenkins.slaves.restarter.SlaveRestarter;
 
 /**
  * JNLP slave restarter based on Windows Task Scheduler.
@@ -61,7 +60,7 @@ public class WindowsTaskSlaveRestarter extends SlaveRestarter {
         try {
             final int ret = queryTask();
             return ret == 0;
-        } catch (InterruptedException | IOException e) {
+        } catch (InterruptedException | IOException ignored) {
         }
         return false;
     }

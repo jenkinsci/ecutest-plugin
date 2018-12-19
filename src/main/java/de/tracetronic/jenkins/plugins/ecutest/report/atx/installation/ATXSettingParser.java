@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,6 +29,17 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -36,18 +47,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 
 /**
  * Parser for the ATX template configuration to gather all available ATX settings.
@@ -81,7 +80,7 @@ public final class ATXSettingParser {
      * @return the map of settings
      */
     public static Map<String, List<ATXSetting>> parseSettings(final Document doc) {
-        final Map<String, List<ATXSetting>> configMap = new LinkedHashMap<String, List<ATXSetting>>();
+        final Map<String, List<ATXSetting>> configMap = new LinkedHashMap<>();
 
         final List<ATXSetting> uploadSettings = parseSetting(doc, UPLOAD_EXPRESSION);
         final List<ATXSetting> archiveSettings = parseSetting(doc, ARCHIVE_EXPRESSION);
@@ -108,7 +107,7 @@ public final class ATXSettingParser {
      * @return the parsed setting represented by a list of settings
      */
     public static List<ATXSetting> parseSetting(final Document doc, final String expression) {
-        final List<ATXSetting> settings = new ArrayList<ATXSetting>();
+        final List<ATXSetting> settings = new ArrayList<>();
         try {
             final XPath xpath = XPathFactory.newInstance().newXPath();
             final XPathExpression xPathExpression = xpath.compile(expression);
@@ -188,12 +187,8 @@ public final class ATXSettingParser {
      */
     private static boolean isCheckbox(final String defaultValue) {
         final boolean isCheckbox;
-        if ("true".equals(defaultValue.toLowerCase(Locale.getDefault()))
-                || "false".equals(defaultValue.toLowerCase(Locale.getDefault()))) {
-            isCheckbox = true;
-        } else {
-            isCheckbox = false;
-        }
+        isCheckbox = "true".equals(defaultValue.toLowerCase(Locale.getDefault()))
+            || "false".equals(defaultValue.toLowerCase(Locale.getDefault()));
         return isCheckbox;
     }
 
@@ -205,7 +200,7 @@ public final class ATXSettingParser {
      * @return {@code true} if value represents true, {@code false} otherwise
      */
     private static boolean toBoolean(final String value) {
-        return "true".equals(value.toLowerCase(Locale.getDefault())) ? true : false;
+        return "true".equals(value.toLowerCase(Locale.getDefault()));
     }
 
     /**

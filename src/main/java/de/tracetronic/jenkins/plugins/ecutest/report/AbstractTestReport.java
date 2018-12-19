@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,11 +32,10 @@ package de.tracetronic.jenkins.plugins.ecutest.report;
 import hudson.Util;
 import hudson.model.ModelObject;
 import hudson.model.Run;
+import org.kohsuke.stapler.StaplerRequest;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * Common base class for several test reports created by {@link AbstractReportPublisher}s.
@@ -61,7 +60,7 @@ public abstract class AbstractTestReport extends AbstractRequestHandler implemen
         super();
         this.id = id;
         this.title = title;
-        subReports = new ArrayList<AbstractTestReport>();
+        subReports = new ArrayList<>();
     }
 
     /**

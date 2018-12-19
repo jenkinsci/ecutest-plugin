@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,16 +29,21 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertThat;
-import hudson.model.Result;
+import com.cloudbees.plugins.credentials.CredentialsScope;
+import com.cloudbees.plugins.credentials.SystemCredentialsProvider;
+import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl;
+import com.gargoylesoftware.htmlunit.WebAssert;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectAttributeConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.model.FreeStyleProject;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import hudson.model.Result;
 import jenkins.tasks.SimpleBuildStep;
-
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
@@ -47,19 +52,11 @@ import org.jenkinsci.plugins.workflow.steps.StepConfigTester;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.cloudbees.plugins.credentials.CredentialsScope;
-import com.cloudbees.plugins.credentials.SystemCredentialsProvider;
-import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl;
-import com.gargoylesoftware.htmlunit.WebAssert;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import java.util.ArrayList;
+import java.util.List;
 
-import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectAttributeConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link ImportProjectBuilder}.

@@ -29,27 +29,23 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util;
 
+import com.jacob.com.LibraryLoader;
 import hudson.FilePath;
 import hudson.FilePath.FileCallable;
 import hudson.PluginWrapper;
 import hudson.model.Computer;
 import hudson.model.Node;
 import hudson.remoting.VirtualChannel;
+import jenkins.MasterToSlaveFileCallable;
+import jenkins.model.Jenkins;
+import jenkins.model.Jenkins.MasterComputer;
+import org.apache.commons.lang.StringUtils;
 
+import javax.annotation.CheckForNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.annotation.CheckForNull;
-
-import jenkins.MasterToSlaveFileCallable;
-import jenkins.model.Jenkins;
-import jenkins.model.Jenkins.MasterComputer;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.jacob.com.LibraryLoader;
 
 /**
  * Utility class providing library operations, especially for JACOB COM Bridge.

@@ -29,6 +29,12 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.installation;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
+import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
+import de.tracetronic.jenkins.plugins.ecutest.tool.StopETBuilder;
+import de.tracetronic.jenkins.plugins.ecutest.tool.StopTSBuilder;
 import hudson.CopyOnWrite;
 import hudson.EnvVars;
 import hudson.Extension;
@@ -36,13 +42,21 @@ import hudson.Functions;
 import hudson.Launcher;
 import hudson.Util;
 import hudson.XmlFile;
-import hudson.model.TaskListener;
 import hudson.model.Node;
+import hudson.model.TaskListener;
 import hudson.tools.ToolDescriptor;
 import hudson.tools.ToolProperty;
 import hudson.util.FormValidation;
 import hudson.util.XStream2;
+import jenkins.model.Jenkins;
+import jenkins.security.MasterToSlaveCallable;
+import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,23 +64,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.annotation.CheckForNull;
-
-import jenkins.model.Jenkins;
-import jenkins.security.MasterToSlaveCallable;
-
-import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
-
-import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
-import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
-import de.tracetronic.jenkins.plugins.ecutest.tool.StopETBuilder;
-import de.tracetronic.jenkins.plugins.ecutest.tool.StopTSBuilder;
 
 /**
  * Represents a ECU-TEST installation specified by name and home directory.
@@ -123,7 +120,8 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     @Override
-    public ETInstallation forNode(final Node node, final TaskListener log) throws IOException, InterruptedException {
+    public ETInstallation forNode(@Nonnull final Node node, final TaskListener log)
+        throws IOException, InterruptedException {
         return new ETInstallation(this, translateFor(node, log), getProperties().toList());
     }
 
@@ -185,7 +183,9 @@ public class ETInstallation extends AbstractToolInstallation {
     private File getTSExeFile(final String subDir) {
         if (getHome() != null) {
             final String home = Util.replaceMacro(getHome(), EnvVars.masterEnvVars);
-            return getTSExeFile(new File(home), subDir);
+            if (home != null) {
+                return getTSExeFile(new File(home), subDir);
+            }
         }
         return null;
     }
@@ -285,6 +285,7 @@ public class ETInstallation extends AbstractToolInstallation {
             }
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.ET_DisplayName();
@@ -298,7 +299,7 @@ public class ETInstallation extends AbstractToolInstallation {
         @Override
         public void setInstallations(final ETInstallation... installations) {
             // Remove empty installations
-            final List<ETInstallation> inst = new ArrayList<ETInstallation>();
+            final List<ETInstallation> inst = new ArrayList<>();
             if (installations != null) {
                 Collections.addAll(inst, installations);
                 for (final ETInstallation installation : installations) {
@@ -307,7 +308,7 @@ public class ETInstallation extends AbstractToolInstallation {
                     }
                 }
             }
-            this.installations = inst.toArray(new ETInstallation[inst.size()]);
+            this.installations = inst.toArray(new ETInstallation[0]);
             save();
         }
 

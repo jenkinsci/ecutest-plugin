@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,11 +29,12 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting;
 import hudson.EnvVars;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,12 +43,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for {@link ATXUtil}.

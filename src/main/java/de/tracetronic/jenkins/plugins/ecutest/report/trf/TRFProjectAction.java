@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,11 +30,10 @@
 package de.tracetronic.jenkins.plugins.ecutest.report.trf;
 
 import hudson.model.Run;
-
-import javax.annotation.CheckForNull;
-
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
+
+import javax.annotation.CheckForNull;
 
 /**
  * Action to show a link to {@link TRFReport}s in side menu of projects.

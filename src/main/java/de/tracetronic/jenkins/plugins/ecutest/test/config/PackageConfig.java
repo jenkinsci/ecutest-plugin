@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,14 +33,15 @@ import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
+
+import javax.annotation.Nonnull;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Class holding the package configuration.
@@ -72,7 +73,7 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
         super();
         this.runTest = runTest;
         this.runTraceAnalysis = runTraceAnalysis;
-        this.parameters = parameters == null ? new ArrayList<PackageParameter>() : removeEmptyParameters(parameters);
+        this.parameters = parameters == null ? new ArrayList<>() : removeEmptyParameters(parameters);
     }
 
     /**
@@ -87,7 +88,7 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
         super();
         this.runTest = runTest;
         this.runTraceAnalysis = runTraceAnalysis;
-        parameters = new ArrayList<PackageParameter>();
+        parameters = new ArrayList<>();
     }
 
     /**
@@ -119,7 +120,7 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
      * @return the list of valid package parameters
      */
     private static List<PackageParameter> removeEmptyParameters(final List<PackageParameter> parameters) {
-        final List<PackageParameter> validParameters = new ArrayList<PackageParameter>();
+        final List<PackageParameter> validParameters = new ArrayList<>();
         for (final PackageParameter parameter : parameters) {
             if (StringUtils.isNotBlank(parameter.getName())) {
                 validParameters.add(parameter);
@@ -130,7 +131,7 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
 
     @Override
     public PackageConfig expand(final EnvVars envVars) {
-        final List<PackageParameter> parameters = new ArrayList<PackageParameter>();
+        final List<PackageParameter> parameters = new ArrayList<>();
         for (final PackageParameter param : getParameters()) {
             parameters.add(param.expand(envVars));
         }
@@ -142,7 +143,7 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
         boolean result = false;
         if (other instanceof PackageConfig) {
             final PackageConfig that = (PackageConfig) other;
-            result = (parameters == null ? that.parameters == null : parameters.equals(that.parameters))
+            result = (Objects.equals(parameters, that.parameters))
                     && runTest == that.runTest && runTraceAnalysis == that.runTraceAnalysis;
         }
         return result;
@@ -167,6 +168,7 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
     @Extension
     public static class DescriptorImpl extends Descriptor<PackageConfig> {
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return "Package Configuration";

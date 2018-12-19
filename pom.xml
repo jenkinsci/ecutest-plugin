@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Copyright (c) 2015-2017 TraceTronic GmbH
+    Copyright (c) 2015-2018 TraceTronic GmbH
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification,
@@ -84,10 +84,10 @@
         <!-- Jenkins plugins -->
         <matrix-project.version>1.13</matrix-project.version>
         <icon-shim.version>2.0.3</icon-shim.version>
-        <junit.version>1.24</junit.version>
-        <structs.version>1.14</structs.version>
+        <junit.version>1.26.1</junit.version>
+        <structs.version>1.17</structs.version>
         <job-dsl.version>1.67</job-dsl.version>
-        <credentials.version>2.1.17</credentials.version>
+        <credentials.version>2.1.18</credentials.version>
         <jquery-plugin.version>1.12.4-0</jquery-plugin.version>
 
         <!-- Static code analysis -->

@@ -29,13 +29,13 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
-import static org.junit.Assert.assertEquals;
 import hudson.util.FormValidation;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link ATXValidator}.

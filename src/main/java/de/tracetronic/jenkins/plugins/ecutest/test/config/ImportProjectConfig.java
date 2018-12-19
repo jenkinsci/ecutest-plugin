@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,16 +29,16 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
+import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
+import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.util.FormValidation;
-
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
-import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
+import javax.annotation.Nonnull;
 
 /**
  * Class holding the configuration for importing a project from test management system.
@@ -142,6 +142,7 @@ public class ImportProjectConfig extends ImportConfig {
             return tmsValidator.validateTimeout(value, getDefaultTimeout());
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.ImportProjectConfig_DisplayName();

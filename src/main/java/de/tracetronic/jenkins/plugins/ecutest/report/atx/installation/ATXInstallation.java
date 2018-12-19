@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,16 +29,13 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
-import java.io.Serializable;
-
-import javax.annotation.CheckForNull;
-
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
 import jenkins.model.Jenkins;
-
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
+import javax.annotation.CheckForNull;
+import java.io.Serializable;
 
 /**
  * Class holding all the ATX settings.
@@ -99,7 +96,7 @@ public class ATXInstallation implements Serializable {
      *
      * @return all available installations, never {@code null}
      */
-    public static final ATXInstallation[] all() {
+    public static ATXInstallation[] all() {
         final Jenkins instance = Jenkins.getInstanceOrNull();
         if (instance == null) {
             return new ATXInstallation[0];
@@ -117,7 +114,7 @@ public class ATXInstallation implements Serializable {
      * @return installation by name, {@code null} if not found
      */
     @CheckForNull
-    public static final ATXInstallation get(final String name) {
+    public static ATXInstallation get(final String name) {
         final ATXInstallation[] installations = all();
         for (final ATXInstallation installation : installations) {
             if (StringUtils.equals(name, installation.getName())) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,12 +29,12 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
+import org.jvnet.localizer.LocaleProvider;
+
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.jvnet.localizer.LocaleProvider;
 
 /**
  * Class holding the information of a single ATX setting.
@@ -181,7 +181,7 @@ public abstract class ATXSetting<T> implements Serializable, Cloneable {
      * @return {@code true} if checkbox is checked, {@code false} otherwise
      */
     public boolean isCheckbox() {
-        return this instanceof ATXBooleanSetting ? true : false;
+        return this instanceof ATXBooleanSetting;
     }
 
     /**

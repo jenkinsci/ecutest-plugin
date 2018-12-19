@@ -29,18 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.Item;
-import hudson.model.TaskListener;
-import hudson.remoting.Callable;
-
-import java.io.IOException;
-
-import jenkins.security.MasterToSlaveCallable;
-
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageAttributeConfig;
@@ -50,6 +39,14 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.Item;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+
+import java.io.IOException;
 
 /**
  * Client to export ECU-TEST packages via COM interface.
@@ -104,7 +101,7 @@ public class ExportPackageClient extends AbstractTMSClient {
         boolean isExported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = ((ExportPackageConfig) exportConfig)
+                final StandardUsernamePasswordCredentials credentials = exportConfig
                         .getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isExported = exportPackageToTMS(launcher, listener);
@@ -138,7 +135,7 @@ public class ExportPackageClient extends AbstractTMSClient {
         boolean isExported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = ((ExportPackageAttributeConfig) exportConfig)
+                final StandardUsernamePasswordCredentials credentials = exportConfig
                         .getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isExported = exportPackageAttributesToTMS(launcher, listener);

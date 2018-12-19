@@ -29,15 +29,13 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline;
 
-import java.io.Serializable;
-import java.util.Map;
-
+import com.google.common.collect.Maps;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 import org.jenkinsci.plugins.workflow.cps.CpsScript;
 
-import com.google.common.collect.Maps;
-
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Class holding ATX server specific settings in order to publish ATX reports.

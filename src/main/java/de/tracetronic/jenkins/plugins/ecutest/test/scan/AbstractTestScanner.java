@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,15 +31,13 @@ package de.tracetronic.jenkins.plugins.ecutest.test.scan;
 
 import hudson.Launcher;
 import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+import org.apache.tools.ant.DirectoryScanner;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import jenkins.security.MasterToSlaveCallable;
-
-import org.apache.tools.ant.DirectoryScanner;
 
 /**
  * Common base class for the {@link TestPackageScanner} and {@link TestProjectScanner}.
@@ -143,7 +141,7 @@ public abstract class AbstractTestScanner {
 
         @Override
         public List<String> call() throws IOException {
-            final List<String> includeFiles = new ArrayList<String>();
+            final List<String> includeFiles = new ArrayList<>();
             final DirectoryScanner scanner = new DirectoryScanner();
             scanner.setBasedir(inputDir);
             scanner.setIncludes(filePattern);

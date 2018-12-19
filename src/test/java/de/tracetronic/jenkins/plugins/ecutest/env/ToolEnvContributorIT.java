@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,16 +29,15 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.env;
 
-import static org.junit.Assert.assertEquals;
+import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
+import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import hudson.EnvVars;
 import hudson.model.FreeStyleBuild;
+import org.junit.Test;
 
 import java.util.List;
 
-import org.junit.Test;
-
-import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
-import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Integration tests for {@link ToolEnvContributor}.

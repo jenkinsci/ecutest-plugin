@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,20 +29,19 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExpandableConfig;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.ReportGeneratorValidator;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
-
-import java.io.Serializable;
-
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ExpandableConfig;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.ReportGeneratorValidator;
+import javax.annotation.Nonnull;
+import java.io.Serializable;
 
 /**
  * Class holding the report generator settings.
@@ -122,6 +121,7 @@ ExpandableConfig, Serializable {
             return reportValidator.validateSettingValue(value);
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return "Report Generator Setting";

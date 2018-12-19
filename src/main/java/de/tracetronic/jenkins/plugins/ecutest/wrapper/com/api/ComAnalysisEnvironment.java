@@ -29,9 +29,9 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api;
 
-import java.util.List;
-
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
+
+import java.util.List;
 
 /**
  * Represents the ECU-TEST specific COMAnalysisEnvironment API.

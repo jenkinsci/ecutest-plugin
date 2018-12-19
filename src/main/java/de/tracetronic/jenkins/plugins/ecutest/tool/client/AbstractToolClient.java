@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,17 +29,15 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 
+import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import hudson.Launcher;
 import hudson.Proc;
 import hudson.model.TaskListener;
 import hudson.util.ArgumentListBuilder;
-
-import java.io.IOException;
-
 import org.apache.commons.lang.StringUtils;
 
-import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import java.io.IOException;
 
 /**
  * Common base class for {@link ETClient} and {@link TSClient}.
@@ -134,7 +132,7 @@ public abstract class AbstractToolClient implements ToolClient {
             final Proc process = launcher.launch().cmds(args).quiet(true).start();
 
             // Wait for process start up
-            final long endTimeMillis = System.currentTimeMillis() + Long.valueOf(getTimeout()) * 1000L;
+            final long endTimeMillis = System.currentTimeMillis() + (long) getTimeout() * 1000L;
             while (getTimeout() <= 0 || System.currentTimeMillis() < endTimeMillis) {
                 if (process.isAlive()) {
                     isStarted = true;

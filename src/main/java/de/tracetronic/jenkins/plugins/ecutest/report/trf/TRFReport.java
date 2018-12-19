@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,9 +29,8 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.trf;
 
-import org.kohsuke.stapler.StaplerRequest;
-
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractArchiveFileReport;
+import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * Holds a link to the TRF report. The build that holds the artifact is resolved by

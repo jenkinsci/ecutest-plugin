@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,22 +29,18 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report;
 
-import hudson.model.Action;
-import hudson.model.Job;
-import hudson.model.Run;
-
-import java.io.File;
-
-import javax.annotation.CheckForNull;
-
-import jenkins.util.VirtualFile;
-
-import org.jenkins.ui.icon.IconSpec;
-import org.kohsuke.stapler.StaplerRequest;
-
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.AbstractATXAction;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.AbstractTRFAction;
+import hudson.model.Action;
+import hudson.model.Job;
+import hudson.model.Run;
+import jenkins.util.VirtualFile;
+import org.jenkins.ui.icon.IconSpec;
+import org.kohsuke.stapler.StaplerRequest;
+
+import javax.annotation.CheckForNull;
+import java.io.File;
 
 /**
  * Common base class for {@link AbstractATXAction} and {@link AbstractTRFAction}.

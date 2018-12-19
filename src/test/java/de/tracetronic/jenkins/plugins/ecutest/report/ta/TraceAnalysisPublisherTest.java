@@ -29,16 +29,15 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.ta;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.junit.Test;
+
+import java.io.IOException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-
-import org.junit.Test;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Unit tests for {@link TraceAnalysisPublisher}.

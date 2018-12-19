@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,21 +29,21 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
+import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
-
-import java.io.Serializable;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
+import javax.annotation.Nonnull;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Class holding the test execution settings.
@@ -165,7 +165,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
         boolean result = false;
         if (other instanceof ExecutionConfig) {
             final ExecutionConfig that = (ExecutionConfig) other;
-            result = (timeout == null ? that.timeout == null : timeout.equals(that.timeout))
+            result = (Objects.equals(timeout, that.timeout))
                     && stopOnError == that.stopOnError && checkTestFile == that.checkTestFile;
         }
         return result;
@@ -192,6 +192,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
 
         private final TestValidator testValidator = new TestValidator();
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return "Execution Configuration";

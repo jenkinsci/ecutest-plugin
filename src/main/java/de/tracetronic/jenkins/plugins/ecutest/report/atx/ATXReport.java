@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,22 +29,18 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
 import hudson.model.Run;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.logging.Logger;
-
-import javax.servlet.http.HttpServletResponse;
-
 import jenkins.util.VirtualFile;
-
 import org.apache.commons.lang.NotImplementedException;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractTestReport;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.logging.Logger;
 
 /**
  * Holds a link to ATX report. The build that holds the report artifact is resolved by

@@ -29,9 +29,19 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher.DescriptorImpl;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageDirConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirConfig;
 import hudson.init.InitMilestone;
 import hudson.init.Initializer;
 import hudson.model.Items;
+import jenkins.model.Jenkins;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.jenkins.ui.icon.Icon;
+import org.jenkins.ui.icon.IconSet;
+import org.jenkins.ui.icon.IconType;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -40,19 +50,6 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import jenkins.model.Jenkins;
-
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.jenkins.ui.icon.Icon;
-import org.jenkins.ui.icon.IconSet;
-import org.jenkins.ui.icon.IconType;
-
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher.DescriptorImpl;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageDirConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirConfig;
 
 /**
  * Main entry point to this plugin for the {@link Jenkins} instance.
@@ -220,7 +217,7 @@ public class ETPlugin {
             boolean result = false;
             if (other instanceof ToolVersion) {
                 final ToolVersion that = (ToolVersion) other;
-                result = compareTo((ToolVersion) that) == 0;
+                result = compareTo(that) == 0;
             }
             return result;
         }
@@ -264,7 +261,7 @@ public class ETPlugin {
     @Initializer(before = InitMilestone.PLUGINS_STARTED)
     public static void addAliases() {
         final String configPath = "de.tracetronic.jenkins.plugins.ecutest.test.config.";
-        final HashMap<String, Class> classMap = new HashMap<String, Class>();
+        final HashMap<String, Class> classMap = new HashMap<>();
         classMap.put(configPath + "ImportPackageTMSConfig", ImportPackageConfig.class);
         classMap.put(configPath + "ImportPackageTMSDirConfig", ImportPackageDirConfig.class);
         classMap.put(configPath + "ImportProjectTMSConfig", ImportProjectConfig.class);
@@ -344,6 +341,7 @@ public class ETPlugin {
      *            the icon style
      * @return the icon file name
      */
+    @SuppressWarnings("JavaReflectionMemberAccess")
     public static String getIconFileName(final String iconClassName, final String iconStyle) {
         final String iconClass = iconClassName + " " + iconStyle;
         try {

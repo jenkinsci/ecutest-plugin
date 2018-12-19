@@ -31,11 +31,10 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline;
 
 import groovy.lang.Binding;
 import hudson.Extension;
-
-import javax.annotation.Nonnull;
-
 import org.jenkinsci.plugins.workflow.cps.CpsScript;
 import org.jenkinsci.plugins.workflow.cps.GlobalVariable;
+
+import javax.annotation.Nonnull;
 
 /**
  * Binds "ATX" keyword as global variable to pipeline executions.

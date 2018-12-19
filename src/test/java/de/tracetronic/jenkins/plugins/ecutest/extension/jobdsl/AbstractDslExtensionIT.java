@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,19 +29,18 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
 import hudson.model.FreeStyleProject;
+import javaposse.jobdsl.plugin.ExecuteDslScripts;
+import javaposse.jobdsl.plugin.GlobalJobDslSecurityConfiguration;
 import javaposse.jobdsl.plugin.LookupStrategy;
 import javaposse.jobdsl.plugin.RemovedJobAction;
 import javaposse.jobdsl.plugin.RemovedViewAction;
-import javaposse.jobdsl.plugin.ExecuteDslScripts;
-import javaposse.jobdsl.plugin.GlobalJobDslSecurityConfiguration;
-
 import org.apache.commons.io.IOUtils;
 
-import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,8 +29,8 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.env;
 
-import hudson.model.InvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
+import hudson.model.InvisibleAction;
 
 /**
  * Helper invisible action which is used for exchanging information between {@link ETClient}s and other object like

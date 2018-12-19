@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,6 +29,14 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
+import javax.annotation.CheckForNull;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -39,16 +47,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.annotation.CheckForNull;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
 
 /**
  * Class holding the ATX configuration grouped by setting sections.
@@ -70,7 +68,7 @@ public class ATXConfig implements Serializable, Cloneable {
      */
     public ATXConfig() {
         configMap = parseDefaultConfig();
-        customSettings = new ArrayList<ATXCustomSetting>();
+        customSettings = new ArrayList<>();
     }
 
     /**
@@ -83,8 +81,8 @@ public class ATXConfig implements Serializable, Cloneable {
      */
     public ATXConfig(final Map<String, List<ATXSetting>> configMap,
             final List<ATXCustomSetting> customSettings) {
-        this.configMap = configMap == null ? new LinkedHashMap<String, List<ATXSetting>>() : configMap;
-        this.customSettings = customSettings == null ? new ArrayList<ATXCustomSetting>() : customSettings;
+        this.configMap = configMap == null ? new LinkedHashMap<>() : configMap;
+        this.customSettings = customSettings == null ? new ArrayList<>() : customSettings;
     }
 
     @Override
@@ -95,9 +93,9 @@ public class ATXConfig implements Serializable, Cloneable {
             final ATXConfig configClone = (ATXConfig) super.clone();
 
             // Deep clone objects in map
-            final Map<String, List<ATXSetting>> configMap = new LinkedHashMap<String, List<ATXSetting>>();
+            final Map<String, List<ATXSetting>> configMap = new LinkedHashMap<>();
             for (final Entry<String, List<ATXSetting>> config : configClone.getConfigMap().entrySet()) {
-                final List<ATXSetting> settings = new ArrayList<ATXSetting>();
+                final List<ATXSetting> settings = new ArrayList<>();
                 for (final ATXSetting setting : config.getValue()) {
                     settings.add(setting.clone());
                 }
@@ -105,9 +103,9 @@ public class ATXConfig implements Serializable, Cloneable {
             }
 
             // Deep clone custom settings
-            final List<ATXCustomSetting> customSettings = new ArrayList<ATXCustomSetting>();
+            final List<ATXCustomSetting> customSettings = new ArrayList<>();
             for (final ATXCustomSetting setting : configClone.getCustomSettings()) {
-                customSettings.add((ATXCustomSetting) setting.clone());
+                customSettings.add(setting.clone());
             }
             clone = new ATXConfig(configMap, customSettings);
         } catch (final CloneNotSupportedException e) {

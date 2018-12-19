@@ -29,18 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.Item;
-import hudson.model.TaskListener;
-import hudson.remoting.Callable;
-
-import java.io.IOException;
-
-import jenkins.security.MasterToSlaveCallable;
-
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
@@ -52,6 +41,14 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.Item;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+
+import java.io.IOException;
 
 /**
  * Client to import ECU-TEST projects via COM interface.
@@ -114,7 +111,7 @@ public class ImportProjectClient extends AbstractTMSClient {
         } else if (importConfig instanceof ImportProjectConfig
                 && isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = ((ImportProjectConfig) importConfig)
+                final StandardUsernamePasswordCredentials credentials = importConfig
                         .getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     if (importConfig instanceof ImportProjectDirConfig) {
@@ -152,7 +149,7 @@ public class ImportProjectClient extends AbstractTMSClient {
         boolean isImported = false;
         if (isCompatible(ET_MIN_ATTR_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = ((ImportProjectAttributeConfig) importConfig)
+                final StandardUsernamePasswordCredentials credentials = importConfig
                         .getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isImported = importProjectAttributesFromTMS(launcher, listener);
@@ -380,7 +377,7 @@ public class ImportProjectClient extends AbstractTMSClient {
         private final TaskListener listener;
 
         /**
-         * Instantiates a new {@link ImportPackageCallable}.
+         * Instantiates a new {@link ImportProjectAttributeCallable}.
          *
          * @param importConfig
          *            the import configuration

@@ -29,9 +29,9 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.ta;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportAction;
 import hudson.model.Job;
 import hudson.model.Run;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportAction;
 
 /**
  * Common base class for {@link TraceAnalysisBuildAction} and {@link TraceAnalysisProjectAction}.

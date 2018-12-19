@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -89,15 +89,13 @@ public final class PathUtil {
                 try {
                     LOGGER.log(Level.INFO, String.format("Copy %s to %s", src.getRemote(), dest.getRemote()));
                     src.copyTo(dest);
-                } catch (final IOException e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage());
-                    return false;
-                } catch (final InterruptedException e) {
+                } catch (final IOException | InterruptedException e) {
                     LOGGER.log(Level.SEVERE, e.getMessage());
                     return false;
                 }
             } else {
-                LOGGER.log(Level.SEVERE, String.format("Source %s does not exist!", src.getRemote()));
+                LOGGER.log(Level.SEVERE, String.format("Source %s does not exist!",
+                    src != null ? src.getRemote() : ""));
                 return false;
             }
         }

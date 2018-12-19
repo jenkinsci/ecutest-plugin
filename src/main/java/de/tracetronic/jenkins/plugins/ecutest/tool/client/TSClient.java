@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,22 +29,19 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 
+import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 import hudson.util.ArgumentListBuilder;
+import jenkins.security.MasterToSlaveCallable;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
-
-import jenkins.security.MasterToSlaveCallable;
-
-import org.apache.commons.lang.StringUtils;
-
-import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 
 /**
  * Client to start and stop the Tool-Server via command line execution.
@@ -222,7 +219,7 @@ public class TSClient extends AbstractToolClient {
                     isTerminated = true;
                 } else {
                     // Wait for closing
-                    final long endTimeMillis = System.currentTimeMillis() + Long.valueOf(timeout) * 1000L;
+                    final long endTimeMillis = System.currentTimeMillis() + (long) timeout * 1000L;
                     while (timeout <= 0 || System.currentTimeMillis() < endTimeMillis) {
                         if (ProcessUtil.checkTSProcess(true).isEmpty()) {
                             isTerminated = true;

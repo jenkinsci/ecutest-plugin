@@ -29,11 +29,8 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import hudson.Extension;
-
-import java.util.Collections;
-import java.util.Set;
-
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
@@ -41,7 +38,8 @@ import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.jenkinsci.plugins.workflow.steps.SynchronousStepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Advanced pipeline step that returns a pre-configured {@link ATXServer} instance by name.

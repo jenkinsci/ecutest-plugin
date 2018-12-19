@@ -29,34 +29,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report;
 
-import hudson.AbortException;
-import hudson.EnvVars;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.Util;
-import hudson.model.Result;
-import hudson.model.TaskListener;
-import hudson.model.AbstractItem;
-import hudson.model.Computer;
-import hudson.model.Node;
-import hudson.model.Run;
-import hudson.tasks.BuildStepMonitor;
-import hudson.tasks.Recorder;
-import hudson.tools.ToolInstallation;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.CheckForNull;
-
-import jenkins.tasks.SimpleBuildStep;
-
-import org.kohsuke.stapler.DataBoundSetter;
-
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
@@ -70,6 +42,31 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
+import hudson.AbortException;
+import hudson.EnvVars;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.Util;
+import hudson.model.AbstractItem;
+import hudson.model.Computer;
+import hudson.model.Node;
+import hudson.model.Result;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.tasks.BuildStepMonitor;
+import hudson.tasks.Recorder;
+import hudson.tools.ToolInstallation;
+import jenkins.tasks.SimpleBuildStep;
+import org.kohsuke.stapler.DataBoundSetter;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Common base class for {@link ATXPublisher}, {@link ETLogPublisher}, {@link JUnitPublisher} and {@link TRFPublisher}.
@@ -256,8 +253,9 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     }
 
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
+    public void perform(@Nonnull final Run<?, ?> run, @Nonnull final FilePath workspace,
+                        @Nonnull final Launcher launcher, @Nonnull final TaskListener listener)
+        throws InterruptedException, IOException {
         try {
             initLogger(listener);
             performReport(run, workspace, launcher, listener);
@@ -565,7 +563,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      */
     protected List<FilePath> getReportDirs(final Run<?, ?> run, final FilePath workspace, final Launcher launcher)
             throws IOException, InterruptedException {
-        final List<FilePath> reportDirs = new ArrayList<FilePath>();
+        final List<FilePath> reportDirs = new ArrayList<>();
         if (isDownstream()) {
             final FilePath wsDir = workspace.child(getWorkspace());
             if (wsDir.exists()) {
@@ -629,7 +627,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      */
     protected List<FilePath> getReportFiles(final String includes, final String excludes, final Run<?, ?> run,
             final FilePath workspace, final Launcher launcher) throws IOException, InterruptedException {
-        final List<FilePath> reportFiles = new ArrayList<FilePath>();
+        final List<FilePath> reportFiles = new ArrayList<>();
         final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
         for (final FilePath reportDir : reportDirs) {
             reportFiles.addAll(Arrays.asList(

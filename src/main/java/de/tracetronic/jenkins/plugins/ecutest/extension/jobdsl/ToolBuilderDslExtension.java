@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,19 +29,17 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
-import hudson.Extension;
-import hudson.util.FormValidation;
-import javaposse.jobdsl.dsl.Context;
-import javaposse.jobdsl.dsl.helpers.step.StepContext;
-import javaposse.jobdsl.plugin.DslExtensionMethod;
-
 import com.google.common.base.Preconditions;
-
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopTSBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import hudson.Extension;
+import hudson.util.FormValidation;
+import javaposse.jobdsl.dsl.Context;
+import javaposse.jobdsl.dsl.helpers.step.StepContext;
+import javaposse.jobdsl.plugin.DslExtensionMethod;
 
 /**
  * Class providing tool related DSL extensions.

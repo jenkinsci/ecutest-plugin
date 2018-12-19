@@ -29,13 +29,11 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
-
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComConstants;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestConfiguration;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * COM object representing the currently loaded test configuration file and

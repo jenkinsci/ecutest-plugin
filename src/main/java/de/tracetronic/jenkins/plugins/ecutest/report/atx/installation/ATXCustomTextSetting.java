@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,10 +31,12 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
 import hudson.Extension;
 import hudson.util.FormValidation;
-
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
+
+import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * Class holding the information of an additional text ATX setting.
@@ -74,7 +76,7 @@ public class ATXCustomTextSetting extends ATXCustomSetting {
         if (other instanceof ATXCustomTextSetting) {
             final ATXCustomTextSetting that = (ATXCustomTextSetting) other;
             result = that.canEqual(this) && super.equals(that)
-                    && (value == null ? that.value == null : value.equals(that.value));
+                    && (Objects.equals(value, that.value));
         }
         return result;
     }
@@ -106,6 +108,7 @@ public class ATXCustomTextSetting extends ATXCustomSetting {
             return atxValidator.validateCustomSettingValue(value);
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.ATXCustomTextSetting_DisplayName();

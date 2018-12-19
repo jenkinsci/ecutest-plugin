@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,12 +29,12 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
+import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
 import hudson.EnvVars;
 import hudson.Extension;
-
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
+import javax.annotation.Nonnull;
 
 /**
  * Class holding the configuration for importing a project directory from test management system.
@@ -76,6 +76,7 @@ public class ImportProjectDirConfig extends ImportProjectConfig {
     @Extension(ordinal = 2)
     public static class DescriptorImpl extends ImportProjectConfig.DescriptorImpl {
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.ImportProjectDirConfig_DisplayName();

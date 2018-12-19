@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,10 +29,10 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util;
 
-import static org.junit.Assert.assertEquals;
 import hudson.EnvVars;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link EnvUtil}.

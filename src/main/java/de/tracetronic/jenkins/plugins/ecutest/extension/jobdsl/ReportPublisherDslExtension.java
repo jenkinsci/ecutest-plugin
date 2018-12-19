@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,20 +29,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 
-import hudson.Extension;
-import hudson.util.FormValidation;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javaposse.jobdsl.dsl.Context;
-import javaposse.jobdsl.dsl.helpers.publisher.PublisherContext;
-import javaposse.jobdsl.plugin.DslExtensionMethod;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.google.common.base.Preconditions;
-
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorConfig;
@@ -55,6 +42,15 @@ import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ReportGeneratorValidator;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.TMSValidator;
+import hudson.Extension;
+import hudson.util.FormValidation;
+import javaposse.jobdsl.dsl.Context;
+import javaposse.jobdsl.dsl.helpers.publisher.PublisherContext;
+import javaposse.jobdsl.plugin.DslExtensionMethod;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class providing report related DSL extensions.
@@ -424,7 +420,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
 
             private static final String OPT_GENERATOR_NAME = "generator name";
 
-            private final List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
+            private final List<ReportGeneratorConfig> generators = new ArrayList<>();
 
             /**
              * Validator to check report generated related DSL options.
@@ -509,7 +505,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
                 private static final String OPT_SETTING_NAME = "setting name";
                 private static final String OPT_SETTING_VALUE = "setting value";
 
-                private final List<ReportGeneratorSetting> settings = new ArrayList<ReportGeneratorSetting>();
+                private final List<ReportGeneratorSetting> settings = new ArrayList<>();
 
                 /**
                  * Option defining the report generator setting.

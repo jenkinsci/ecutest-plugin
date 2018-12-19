@@ -29,15 +29,11 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
-import java.lang.Thread.UncaughtExceptionHandler;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;
+import com.jacob.com.Dispatch;
 import com.jacob.com.JacobException;
 import com.jacob.com.Variant;
-
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComAnalysisEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComApplication;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComPackage;
@@ -46,6 +42,9 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestBenchConfig
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestConfiguration;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestManagement;
+import org.apache.commons.lang.StringUtils;
+
+import java.lang.Thread.UncaughtExceptionHandler;
 
 /**
  * COM client to initialize a COM connection and to perform requests on application specific COM API.
@@ -130,7 +129,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
     }
 
     /**
-     * Initializes the a single-threaded {@link COMThread} and sets the {@link ETComDispatch} instance using the default
+     * Initializes the a single-threaded {@link ComThread} and sets the {@link ETComDispatch} instance using the default
      * program id returned from the {@link ActiveXComponent}.
      *
      * @param progId
@@ -151,7 +150,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
     }
 
     /**
-     * Initializes the a single-threaded {@link COMThread} and sets the {@link ETComDispatch} instance using the default
+     * Initializes the a single-threaded {@link ComThread} and sets the {@link ETComDispatch} instance using the default
      * program id returned from the {@link ActiveXComponent}.
      *
      * @param progId
@@ -171,7 +170,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
     }
 
     /**
-     * Initializes the a single-threaded {@link COMThread} and sets the {@link ETComDispatch} instance using the default
+     * Initializes the a single-threaded {@link ComThread} and sets the {@link ETComDispatch} instance using the default
      * program id returned from the {@link ActiveXComponent}.
      *
      * @param progId
@@ -189,8 +188,8 @@ public class ETComClient implements ComApplication, AutoCloseable {
             initDispatch.start();
 
             final int timeout = ETComProperty.DEFAULT_CONNECTION_TIMEOUT;
-            final long endTimeMillis = System.currentTimeMillis() + Long.valueOf(timeout) * 1000L;
-            while (timeout <= 0 || System.currentTimeMillis() < endTimeMillis) {
+            final long endTimeMillis = System.currentTimeMillis() + (long) timeout * 1000L;
+            while (System.currentTimeMillis() < endTimeMillis) {
                 if (dispatch != null && dispatch.isAttached()) {
                     return;
                 }
@@ -215,7 +214,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
      *             in case of a COM exception or if the timeout is reached
      */
     private void waitForConnection(final int timeout) throws ETComException {
-        final long endTimeMillis = System.currentTimeMillis() + Long.valueOf(timeout) * 1000L;
+        final long endTimeMillis = System.currentTimeMillis() + (long) timeout * 1000L;
         while (timeout <= 0 || System.currentTimeMillis() < endTimeMillis) {
             try {
                 if (isApplicationRunning()) {

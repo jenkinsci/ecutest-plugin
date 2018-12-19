@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,16 +29,16 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.env;
 
+import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction.TestType;
 import hudson.EnvVars;
 import hudson.Extension;
-import hudson.model.TaskListener;
 import hudson.model.EnvironmentContributor;
 import hudson.model.Run;
+import hudson.model.TaskListener;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
-
-import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction.TestType;
 
 /**
  * Contributor which adds various test related variables into the build environment variables.
@@ -100,8 +100,8 @@ public class TestEnvContributor extends EnvironmentContributor {
 
     @Override
     @SuppressWarnings("rawtypes")
-    public void buildEnvironmentFor(final Run r, final EnvVars envs, final TaskListener listener)
-            throws IOException, InterruptedException {
+    public void buildEnvironmentFor(@Nonnull final Run r, @Nonnull final EnvVars envs,
+                                    @Nonnull final TaskListener listener) throws IOException, InterruptedException {
 
         final List<TestEnvInvisibleAction> envActions = r.getActions(TestEnvInvisibleAction.class);
         if (envActions.size() == 0) {

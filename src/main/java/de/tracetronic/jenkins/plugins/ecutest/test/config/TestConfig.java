@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,22 +29,22 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
+import javax.annotation.Nonnull;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Class holding the test configurations (e.g. TBC, TCF).
@@ -96,7 +96,7 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
         this.forceReload = forceReload;
         this.loadOnly = loadOnly;
         this.keepConfig = keepConfig;
-        this.constants = constants == null ? new ArrayList<GlobalConstant>() : removeEmptyConstants(constants);
+        this.constants = constants == null ? new ArrayList<>() : removeEmptyConstants(constants);
     }
 
     /**
@@ -177,7 +177,7 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
      * @return the list of valid global constants
      */
     private static List<GlobalConstant> removeEmptyConstants(final List<GlobalConstant> constants) {
-        final List<GlobalConstant> validConstants = new ArrayList<GlobalConstant>();
+        final List<GlobalConstant> validConstants = new ArrayList<>();
         for (final GlobalConstant constant : constants) {
             if (StringUtils.isNotBlank(constant.getName())) {
                 validConstants.add(constant);
@@ -190,7 +190,7 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
     public TestConfig expand(final EnvVars envVars) {
         final String expTbcFile = envVars.expand(getTbcFile());
         final String expTcfFile = envVars.expand(getTcfFile());
-        final List<GlobalConstant> constants = new ArrayList<GlobalConstant>();
+        final List<GlobalConstant> constants = new ArrayList<>();
         for (final GlobalConstant constant : getConstants()) {
             constants.add(constant.expand(envVars));
         }
@@ -202,9 +202,9 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
         boolean result = false;
         if (other instanceof TestConfig) {
             final TestConfig that = (TestConfig) other;
-            result = (tbcFile == null ? that.tbcFile == null : tbcFile.equals(that.tbcFile))
-                    && (tcfFile == null ? that.tcfFile == null : tcfFile.equals(that.tcfFile))
-                    && (constants == null ? that.constants == null : constants.equals(that.constants))
+            result = (Objects.equals(tbcFile, that.tbcFile))
+                    && (Objects.equals(tcfFile, that.tcfFile))
+                    && (Objects.equals(constants, that.constants))
                     && forceReload == that.forceReload && loadOnly == that.loadOnly && keepConfig == that.keepConfig;
         }
         return result;
@@ -233,6 +233,7 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
 
         private final TestValidator testValidator = new TestValidator();
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return "Test Configuration";

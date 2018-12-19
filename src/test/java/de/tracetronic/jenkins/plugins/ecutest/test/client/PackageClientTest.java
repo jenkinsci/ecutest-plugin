@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,16 +29,15 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 
 /**
  * Unit tests for {@link PackageClient}.

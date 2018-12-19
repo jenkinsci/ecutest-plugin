@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,16 +34,14 @@ import hudson.Launcher;
 import hudson.Util;
 import hudson.model.EnvironmentSpecific;
 import hudson.slaves.NodeSpecific;
-import hudson.tools.ToolProperty;
 import hudson.tools.ToolInstallation;
+import hudson.tools.ToolProperty;
+import jenkins.security.MasterToSlaveCallable;
 
+import javax.annotation.CheckForNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
-import javax.annotation.CheckForNull;
-
-import jenkins.security.MasterToSlaveCallable;
 
 /**
  * Represents a base tool installation specified by name and home directory.
@@ -118,7 +116,9 @@ EnvironmentSpecific<AbstractToolInstallation>, NodeSpecific<AbstractToolInstalla
     private File getExeFile() {
         if (getHome() != null) {
             final String home = Util.replaceMacro(getHome(), EnvVars.masterEnvVars);
-            return getExeFile(new File(home));
+            if (home != null) {
+                return getExeFile(new File(home));
+            }
         }
         return null;
     }

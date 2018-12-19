@@ -29,25 +29,24 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.trf;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
+import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
 import hudson.model.Result;
-import hudson.model.TaskListener;
 import hudson.model.Run;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import hudson.model.TaskListener;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
-import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Publisher providing links to saved {@link TRFReport}s.
@@ -107,7 +106,7 @@ public class TRFPublisher extends AbstractReportPublisher {
 
         if (isArchiving()) {
             int index = 0;
-            final List<TRFReport> trfReports = new ArrayList<TRFReport>();
+            final List<TRFReport> trfReports = new ArrayList<>();
             final FilePath archiveTarget = getArchiveTarget(run);
 
             // Removing old artifacts at project level
@@ -137,9 +136,7 @@ public class TRFPublisher extends AbstractReportPublisher {
                     }
                     index = traverseReports(trfReports, archiveTargetDir, index);
                 } else {
-                    if (isAllowMissing()) {
-                        continue;
-                    } else {
+                    if (!isAllowMissing()) {
                         logger.logError(String.format("Specified TRF file '%s' does not exist.", reportFile));
                         run.setResult(Result.FAILURE);
                         return;
@@ -252,6 +249,7 @@ public class TRFPublisher extends AbstractReportPublisher {
     @Extension(ordinal = 10006)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.TRFPublisher_DisplayName();

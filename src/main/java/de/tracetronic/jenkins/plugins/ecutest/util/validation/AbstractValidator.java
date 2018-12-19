@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
+ * Copyright (c) 2015-2018 TraceTronic GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,12 +29,10 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
+import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
 import hudson.util.FormValidation;
-
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.QueryParameter;
-
-import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
 
 /**
  * Common base class for the {@link TestValidator} and {@link ToolValidator}.
@@ -58,7 +56,7 @@ public abstract class AbstractValidator {
      * @return the form validation
      */
     public FormValidation validateTimeout(@QueryParameter final String timeout, final int defaultTimeout) {
-        FormValidation returnValue = FormValidation.ok();
+        FormValidation returnValue;
         if (StringUtils.isBlank(timeout)) {
             returnValue = FormValidation.warning(Messages.Builder_NoTimeout(defaultTimeout));
         } else if (timeout.contains(PARAMETER)) {
