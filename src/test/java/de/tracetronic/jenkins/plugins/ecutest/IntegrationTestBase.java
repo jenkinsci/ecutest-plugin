@@ -53,10 +53,7 @@ public class IntegrationTestBase {
      * @return the web client
      */
     protected WebClient getWebClient() {
-        final WebClient webClient = jenkins.createWebClient();
-        webClient.setIncorrectnessListener(new SilentIncorrectnessListener());
-        webClient.setCssErrorHandler(new QuietCssErrorHandler());
-        return webClient;
+        return jenkins.createWebClient();
     }
 
     /**
