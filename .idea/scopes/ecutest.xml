@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="ecutest" pattern="file[ecutest]:src/**/*.java||file[ecutest]:src/**/*.jelly||file[ecutest]:src/**/*.properties||file[ecutest]:src/**/*.html||file[ecutest]:src/**/*.xml" />
+</component>
