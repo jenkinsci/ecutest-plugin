@@ -1,55 +1,23 @@
 /*
- * Copyright (c) 2015-2018 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import com.gargoylesoftware.htmlunit.WebAssert;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
+import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import hudson.EnvVars;
 import hudson.Launcher;
+import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
-import hudson.model.Result;
-import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
+import hudson.model.Result;
 import hudson.slaves.DumbSlave;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
 import jenkins.tasks.SimpleBuildStep;
-
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
@@ -60,11 +28,16 @@ import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.TestBuilder;
 
-import com.gargoylesoftware.htmlunit.WebAssert;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
-import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link ReportGeneratorPublisher}.
@@ -76,7 +49,7 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
     @Before
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
-                .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
     }
 
@@ -165,7 +138,7 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                    final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) throws InterruptedException, IOException {
                 return false;
             }
         });
@@ -175,7 +148,7 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
         assertThat("Skip message should be present in console log", build.getLog(100).toString(),
-                containsString("Skipping publisher"));
+            containsString("Skipping publisher"));
     }
 
     @Test
@@ -185,16 +158,17 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
         project.getPublishersList().add(publisher);
 
         final EnvVars envVars = new EnvVars(
-                Collections.unmodifiableMap(new HashMap<String, String>() {
+            Collections.unmodifiableMap(new HashMap<String, String>() {
 
-                    private static final long serialVersionUID = 1L;
-                    {
-                        put("ECUTEST", "ECU-TEST");
-                    }
-                }));
+                private static final long serialVersionUID = 1L;
+
+                {
+                    put("ECUTEST", "ECU-TEST");
+                }
+            }));
 
         assertEquals("Tool name should be resolved", "ECU-TEST",
-                publisher.getToolInstallation(publisher.getToolName(), envVars).getName());
+            publisher.getToolInstallation(publisher.getToolName(), envVars).getName());
     }
 
     @Test
@@ -220,12 +194,9 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
     /**
      * Asserts the pipeline step execution.
      *
-     * @param scriptName
-     *            the script name
-     * @param emptyResults
-     *            if results are expected
-     * @throws Exception
-     *             the exception
+     * @param scriptName   the script name
+     * @param emptyResults if results are expected
+     * @throws Exception the exception
      */
     private void assertPipelineStep(final String scriptName, final boolean emptyResults) throws Exception {
         assumeWindowsSlave();

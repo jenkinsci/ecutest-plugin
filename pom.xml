@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Copyright (c) 2015-2017 TraceTronic GmbH
-    All rights reserved.
+  Copyright (c) 2015-2019 TraceTronic GmbH
+  All rights reserved.
 
-    Redistribution and use in source and binary forms, with or without modification,
-    are permitted provided that the following conditions are met:
+  Redistribution and use in source and binary forms, with or without modification,
+  are permitted provided that the following conditions are met:
 
-      1. Redistributions of source code must retain the above copyright notice, this
-         list of conditions and the following disclaimer.
+    1. Redistributions of source code must retain the above copyright notice, this
+       list of conditions and the following disclaimer.
 
-      2. Redistributions in binary form must reproduce the above copyright notice, this
-         list of conditions and the following disclaimer in the documentation and/or
-         other materials provided with the distribution.
+    2. Redistributions in binary form must reproduce the above copyright notice, this
+       list of conditions and the following disclaimer in the documentation and/or
+       other materials provided with the distribution.
 
-      3. Neither the name of TraceTronic GmbH nor the names of its
-         contributors may be used to endorse or promote products derived from
-         this software without specific prior written permission.
+    3. Neither the name of TraceTronic GmbH nor the names of its
+       contributors may be used to endorse or promote products derived from
+       this software without specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-    ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-    ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+  ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.18</version>
-        <relativePath />
+        <version>3.37</version>
+        <relativePath/>
     </parent>
 
     <groupId>de.tracetronic.jenkins.plugins</groupId>
@@ -83,19 +84,19 @@
         <!-- Jenkins plugins -->
         <matrix-project.version>1.13</matrix-project.version>
         <icon-shim.version>2.0.3</icon-shim.version>
-        <junit.version>1.24</junit.version>
-        <structs.version>1.14</structs.version>
+        <junit.version>1.26.1</junit.version>
+        <structs.version>1.17</structs.version>
         <job-dsl.version>1.67</job-dsl.version>
-        <credentials.version>2.1.17</credentials.version>
+        <credentials.version>2.1.18</credentials.version>
         <jquery-plugin.version>1.12.4-0</jquery-plugin.version>
 
         <!-- Static code analysis -->
         <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
-        <maven-pmd-plugin.version>3.10.0</maven-pmd-plugin.version>
+        <maven-pmd-plugin.version>3.11.0</maven-pmd-plugin.version>
 
         <!-- Test scope -->
-        <equalsverifier.version>2.4.8</equalsverifier.version>
-        <mockito-core.version>2.19.1</mockito-core.version>
+        <equalsverifier.version>3.0.3</equalsverifier.version>
+        <mockito-core.version>2.23.4</mockito-core.version>
         <concurrency>2</concurrency>
         <skipUTs>false</skipUTs>
         <skipITs>true</skipITs>
@@ -110,23 +111,6 @@
         <!-- SQLite -->
         <sqlite-jdbc.version>3.7.2</sqlite-jdbc.version>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>lib</id>
-            <url>file://${project.basedir}/lib</url>
-        </repository>
-        <repository>
-            <id>repo.jenkins-ci.org</id>
-            <url>https://repo.jenkins-ci.org/public/</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>repo.jenkins-ci.org</id>
-            <url>https://repo.jenkins-ci.org/public/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <dependencies>
         <dependency>
@@ -213,12 +197,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- Test scope -->
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>${sqlite-jdbc.version}</version>
         </dependency>
+        <!-- Test scope -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -292,6 +276,23 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>lib</id>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
+        <repository>
+            <id>repo.jenkins-ci.org</id>
+            <url>https://repo.jenkins-ci.org/public/</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>repo.jenkins-ci.org</id>
+            <url>https://repo.jenkins-ci.org/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <plugins>
             <plugin>
@@ -353,13 +354,13 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
                 <configuration>
-                    <excludeFilterFile>${basedir}/config/findbugs-exclude.xml</excludeFilterFile>
+                    <excludeFilterFile>${basedir}/config/spotbugs-exclude.xml</excludeFilterFile>
                     <effort>Max</effort>
                     <threshold>Medium</threshold>
-                    <findbugsXmlOutput>true</findbugsXmlOutput>
+                    <spotbugsXmlOutput>true</spotbugsXmlOutput>
                     <failOnError>false</failOnError>
                 </configuration>
             </plugin>
@@ -422,89 +423,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <!-- This profile is used to store Eclipse m2e settings only.
-         It has no influence on the Maven build itself. -->
-    <profiles>
-        <profile>
-            <id>only-eclipse</id>
-            <activation>
-                <property>
-                    <name>m2e.version</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.eclipse.m2e</groupId>
-                        <artifactId>lifecycle-mapping</artifactId>
-                        <configuration>
-                            <lifecycleMappingMetadata>
-                                <pluginExecutions>
-                                    <pluginExecution>
-                                        <pluginExecutionFilter>
-                                            <groupId>org.jenkins-ci.tools</groupId>
-                                            <artifactId>maven-dependency-plugin</artifactId>
-                                            <versionRange>[2.3,)</versionRange>
-                                            <goals>
-                                                <goal>copy-dependencies</goal>
-                                            </goals>
-                                        </pluginExecutionFilter>
-                                        <action>
-                                            <ignore />
-                                        </action>
-                                    </pluginExecution>
-                                </pluginExecutions>
-                            </lifecycleMappingMetadata>
-                        </configuration>
-                    </plugin>
-                </plugins>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.eclipse.m2e</groupId>
-                            <artifactId>lifecycle-mapping</artifactId>
-                            <version>1.0.0</version>
-                            <configuration>
-                                <lifecycleMappingMetadata>
-                                    <pluginExecutions>
-                                        <pluginExecution>
-                                            <pluginExecutionFilter>
-                                                <groupId>org.apache.maven.plugins</groupId>
-                                                <artifactId>maven-javadoc-plugin</artifactId>
-                                                <versionRange>[1.0.0,)</versionRange>
-                                                <goals>
-                                                    <goal>javadoc</goal>
-                                                </goals>
-                                            </pluginExecutionFilter>
-                                            <action>
-                                                <ignore />
-                                            </action>
-                                        </pluginExecution>
-                                    </pluginExecutions>
-                                </lifecycleMappingMetadata>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-        <profile>
-            <id>doclint-java8-disable</id>
-            <activation>
-                <jdk>[1.8,)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

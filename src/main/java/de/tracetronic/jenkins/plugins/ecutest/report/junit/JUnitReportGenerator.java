@@ -1,44 +1,10 @@
 /*
- * Copyright (c) 2015-2018 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.TaskListener;
-import hudson.model.Run;
-import hudson.remoting.Callable;
-
-import java.io.IOException;
-import java.util.List;
-
-import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
@@ -48,6 +14,15 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Class providing the generation of JUnit reports with ECU-TEST.
@@ -60,27 +35,19 @@ public class JUnitReportGenerator {
      * Generates UNIT reports by invoking the startup of ECU-TEST if not already running, otherwise using the current
      * instance without closing when finished.
      *
-     * @param installation
-     *            the installation
-     * @param reportFiles
-     *            the report files
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param installation the installation
+     * @param reportFiles  the report files
+     * @param run          the run
+     * @param workspace    the workspace
+     * @param launcher     the launcher
+     * @param listener     the listener
      * @return {@code true} if generation succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean generate(final ETInstallation installation, final List<FilePath> reportFiles,
-            final Run<?, ?> run, final FilePath workspace, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+                            final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+                            final TaskListener listener) throws IOException, InterruptedException {
         boolean isGenerated = false;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
@@ -95,7 +62,7 @@ public class JUnitReportGenerator {
             final String workspaceDir = getWorkspaceDir(run);
             final String settingsDir = getSettingsDir(run);
             final ETClient etClient = new ETClient(toolName, installPath, workspaceDir, settingsDir,
-                    StartETBuilder.DEFAULT_TIMEOUT, false);
+                StartETBuilder.DEFAULT_TIMEOUT, false);
             if (etClient.start(false, workspace, launcher, listener)) {
                 isGenerated = generateReports(reportFiles, launcher, listener);
             } else {
@@ -112,31 +79,25 @@ public class JUnitReportGenerator {
     /**
      * Generate UNIT reports by calling the {@link GenerateUnitReportCallable}.
      *
-     * @param reportFiles
-     *            the report files
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param reportFiles the report files
+     * @param launcher    the launcher
+     * @param listener    the listener
      * @return {@code true} if generation succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean generateReports(final List<FilePath> reportFiles, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                    final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("- Generating UNIT test reports...");
         return launcher.getChannel().call(
-                new GenerateUnitReportCallable(reportFiles, listener));
+            new GenerateUnitReportCallable(reportFiles, listener));
     }
 
     /**
      * Gets the workspace directory, either previous ECU-TEST workspace or default one.
      *
-     * @param run
-     *            the run
+     * @param run the run
      * @return the workspace directory
      */
     private String getWorkspaceDir(final Run<?, ?> run) {
@@ -151,8 +112,7 @@ public class JUnitReportGenerator {
     /**
      * Gets the settings directory, either previous ECU-TEST settings or default one.
      *
-     * @param run
-     *            the run
+     * @param run the run
      * @return the settings directory
      */
     private String getSettingsDir(final Run<?, ?> run) {
@@ -177,10 +137,8 @@ public class JUnitReportGenerator {
         /**
          * Instantiates a new {@link GenerateUnitReportCallable}.
          *
-         * @param dbFiles
-         *            the list of TRF files
-         * @param listener
-         *            the listener
+         * @param dbFiles  the list of TRF files
+         * @param listener the listener
          */
         GenerateUnitReportCallable(final List<FilePath> dbFiles, final TaskListener listener) {
             this.dbFiles = dbFiles;
@@ -198,7 +156,7 @@ public class JUnitReportGenerator {
                     logger.logInfo(String.format("-> Generating UNIT report: %s", dbFile.getRemote()));
                     final FilePath outDir = dbFile.getParent().child(JUnitPublisher.UNIT_TEMPLATE_NAME);
                     if (!testEnv.generateTestReportDocumentFromDB(dbFile.getRemote(),
-                            outDir.getRemote(), JUnitPublisher.UNIT_TEMPLATE_NAME, true)) {
+                        outDir.getRemote(), JUnitPublisher.UNIT_TEMPLATE_NAME, true)) {
                         isGenerated = false;
                         logger.logError("Generating UNIT report failed!");
                     }

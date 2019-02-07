@@ -1,47 +1,10 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.TaskListener;
-import hudson.remoting.Callable;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder.Seriousness;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
@@ -55,6 +18,18 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Package;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestExecutionInfo;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Client to execute ECU-TEST packages via COM interface.
@@ -68,17 +43,13 @@ public class PackageClient extends AbstractTestClient {
     /**
      * Instantiates a new {@link PackageClient}.
      *
-     * @param testFile
-     *            the package file
-     * @param testConfig
-     *            the test configuration
-     * @param packageConfig
-     *            the package configuration
-     * @param executionConfig
-     *            the execution configuration
+     * @param testFile        the package file
+     * @param testConfig      the test configuration
+     * @param packageConfig   the package configuration
+     * @param executionConfig the execution configuration
      */
     public PackageClient(final String testFile, final TestConfig testConfig,
-            final PackageConfig packageConfig, final ExecutionConfig executionConfig) {
+                         final PackageConfig packageConfig, final ExecutionConfig executionConfig) {
         super(testFile, testConfig, executionConfig);
         this.packageConfig = packageConfig;
     }
@@ -92,7 +63,7 @@ public class PackageClient extends AbstractTestClient {
 
     @Override
     public boolean runTestCase(final FilePath workspace, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -103,13 +74,13 @@ public class PackageClient extends AbstractTestClient {
 
         // Load test configuration
         if (!getTestConfig().isKeepConfig() && !launcher.getChannel().call(
-                new LoadConfigCallable(getTestConfig(), listener))) {
+            new LoadConfigCallable(getTestConfig(), listener))) {
             return false;
         }
 
         // Open package
         final PackageInfoHolder pkgInfo = launcher.getChannel().call(
-                new OpenPackageCallable(getTestFile(), getExecutionConfig().isCheckTestFile(), listener));
+            new OpenPackageCallable(getTestFile(), getExecutionConfig().isCheckTestFile(), listener));
 
         // Set package information
         if (pkgInfo != null) {
@@ -122,7 +93,7 @@ public class PackageClient extends AbstractTestClient {
         try {
             // Run package
             final TestInfoHolder testInfo = launcher.getChannel().call(
-                    new RunPackageCallable(getTestFile(), getPackageConfig(), getExecutionConfig(), listener));
+                new RunPackageCallable(getTestFile(), getPackageConfig(), getExecutionConfig(), listener));
 
             // Set test result information
             if (testInfo != null) {
@@ -138,11 +109,7 @@ public class PackageClient extends AbstractTestClient {
         }
 
         // Close package
-        if (!launcher.getChannel().call(new ClosePackageCallable(getTestFile(), listener))) {
-            return false;
-        }
-
-        return true;
+        return launcher.getChannel().call(new ClosePackageCallable(getTestFile(), listener));
     }
 
     /**
@@ -159,12 +126,9 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Instantiates a new {@link OpenPackageCallable}.
          *
-         * @param packageFile
-         *            the package file
-         * @param checkTestFile
-         *            specifies whether to check the package file
-         * @param listener
-         *            the listener
+         * @param packageFile   the package file
+         * @param checkTestFile specifies whether to check the package file
+         * @param listener      the listener
          */
         OpenPackageCallable(final String packageFile, final boolean checkTestFile, final TaskListener listener) {
             this.packageFile = packageFile;
@@ -179,7 +143,7 @@ public class PackageClient extends AbstractTestClient {
             logger.logInfo("- Opening package...");
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
-                    Package pkg = (Package) comClient.openPackage(packageFile)) {
+                 Package pkg = (Package) comClient.openPackage(packageFile)) {
                 logger.logInfo("-> Package opened successfully.");
                 pkgInfo = new PackageInfoHolder(pkg.getName(), pkg.getDescription());
                 if (checkTestFile) {
@@ -187,7 +151,7 @@ public class PackageClient extends AbstractTestClient {
                     final List<CheckInfoHolder> checks = pkg.check();
                     for (final CheckInfoHolder check : checks) {
                         final String logMessage = String.format("%s (line %s): %s", check.getFilePath(),
-                                check.getLineNumber(), check.getErrorMessage());
+                            check.getLineNumber(), check.getErrorMessage());
                         final Seriousness seriousness = check.getSeriousness();
                         switch (seriousness) {
                             case NOTE:
@@ -231,17 +195,13 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Instantiates a new {@link RunPackageCallable}.
          *
-         * @param packageFile
-         *            the package file
-         * @param packageConfig
-         *            the package configuration
-         * @param executionConfig
-         *            the execution configuration
-         * @param listener
-         *            the listener
+         * @param packageFile     the package file
+         * @param packageConfig   the package configuration
+         * @param executionConfig the execution configuration
+         * @param listener        the listener
          */
         RunPackageCallable(final String packageFile, final PackageConfig packageConfig,
-                final ExecutionConfig executionConfig, final TaskListener listener) {
+                           final ExecutionConfig executionConfig, final TaskListener listener) {
             this.packageFile = packageFile;
             this.packageConfig = packageConfig;
             this.executionConfig = executionConfig;
@@ -263,19 +223,19 @@ public class PackageClient extends AbstractTestClient {
             }
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
-                    TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
-                    TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.executePackage(packageFile,
-                            runTraceAnalysis, runTest, paramMap)) {
+                 TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
+                 TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.executePackage(packageFile,
+                     runTraceAnalysis, runTest, paramMap)) {
                 boolean isAborted = false;
                 int tickCounter = 0;
-                final long endTimeMillis = System.currentTimeMillis() + Long.valueOf(timeout) * 1000L;
+                final long endTimeMillis = System.currentTimeMillis() + (long) timeout * 1000L;
                 while ("RUNNING".equals(execInfo.getState())) {
                     if (tickCounter % 60 == 0) {
                         logger.logInfo("-- tick...");
                     }
                     if (timeout > 0 && System.currentTimeMillis() > endTimeMillis) {
                         logger.logWarn(String.format("-> Test execution timeout of %d seconds reached! "
-                                + "Aborting package now...", timeout));
+                            + "Aborting package now...", timeout));
                         isAborted = true;
                         execInfo.abort();
                         break;
@@ -299,7 +259,7 @@ public class PackageClient extends AbstractTestClient {
          * @return the package parameter map
          */
         private Map<String, String> getParameterMap() {
-            final Map<String, String> paramMap = new LinkedHashMap<String, String>();
+            final Map<String, String> paramMap = new LinkedHashMap<>();
             for (final PackageParameter param : packageConfig.getParameters()) {
                 paramMap.put(param.getName(), param.getValue());
             }
@@ -309,18 +269,14 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Gets the information of the executed package.
          *
-         * @param execInfo
-         *            the execution info
-         * @param isAborted
-         *            specifies whether the package execution is aborted
-         * @param logger
-         *            the logger
+         * @param execInfo  the execution info
+         * @param isAborted specifies whether the package execution is aborted
+         * @param logger    the logger
          * @return the test information
-         * @throws ETComException
-         *             in case of a COM exception
+         * @throws ETComException in case of a COM exception
          */
         private TestInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
-                final TTConsoleLogger logger) throws ETComException {
+                                           final TTConsoleLogger logger) throws ETComException {
             final String testResult = execInfo.getResult();
             logger.logInfo(String.format("-> Package execution completed with result: %s", testResult));
             final String testReportDir = new File(execInfo.getReportDb()).getParentFile().getAbsolutePath();
@@ -331,21 +287,18 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Aborts the test execution.
          *
-         * @param timeout
-         *            the timeout
-         * @param progId
-         *            the programmatic id
-         * @param logger
-         *            the logger
+         * @param timeout the timeout
+         * @param progId  the programmatic id
+         * @param logger  the logger
          * @return the test information
          */
         private TestInfoHolder abortTestExecution(final int timeout, final String progId,
-                final TTConsoleLogger logger) {
+                                                  final TTConsoleLogger logger) {
             TestInfoHolder testInfo = null;
             try (ETComClient comClient = new ETComClient(progId);
-                    TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
-                    TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {
-                logger.logWarn(String.format("-> Build interrupted! Aborting test exection..."));
+                 TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
+                 TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {
+                logger.logWarn("-> Build interrupted! Aborting test exection...");
                 execInfo.abort();
                 testInfo = getTestInfo(execInfo, true, logger);
                 postExecution(timeout, comClient, logger);
@@ -358,17 +311,13 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Timeout handling for post execution.
          *
-         * @param timeout
-         *            the timeout
-         * @param comClient
-         *            the COM client
-         * @param logger
-         *            the logger
-         * @throws ETComException
-         *             in case of a COM exception
+         * @param timeout   the timeout
+         * @param comClient the COM client
+         * @param logger    the logger
+         * @throws ETComException in case of a COM exception
          */
         private void postExecution(final int timeout, final ETComClient comClient, final TTConsoleLogger logger)
-                throws ETComException {
+            throws ETComException {
             if (!comClient.waitForIdle(timeout)) {
                 logger.logWarn(String.format("-> Post-execution timeout of %d seconds reached!", timeout));
             }
@@ -388,10 +337,8 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Instantiates a new {@link ClosePackageCallable}.
          *
-         * @param packageFile
-         *            the package file
-         * @param listener
-         *            the listener
+         * @param packageFile the package file
+         * @param listener    the listener
          */
         ClosePackageCallable(final String packageFile, final TaskListener listener) {
             this.packageFile = packageFile;
@@ -431,10 +378,8 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Instantiates a new {@link PackageInfoHolder}.
          *
-         * @param testName
-         *            the test name
-         * @param testDescription
-         *            the test description
+         * @param testName        the test name
+         * @param testDescription the test description
          */
         PackageInfoHolder(final String testName, final String testDescription) {
             this.testName = testName;

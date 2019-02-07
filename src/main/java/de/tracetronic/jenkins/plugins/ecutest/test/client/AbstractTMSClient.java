@@ -1,45 +1,11 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.TaskListener;
-import hudson.remoting.Callable;
-
-import java.io.IOException;
-
-import jenkins.security.MasterToSlaveCallable;
-
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
@@ -47,6 +13,13 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+
+import java.io.IOException;
 
 /**
  * Abstract client providing common used functions to interact with a test management system.
@@ -58,38 +31,29 @@ public abstract class AbstractTMSClient {
     /**
      * Logs in to preconfigured test management service in ECU-TEST.
      *
-     * @param credentials
-     *            the credentials
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param credentials the credentials
+     * @param launcher    the launcher
+     * @param listener    the listener
      * @return {@code true}, if login succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean login(final StandardUsernamePasswordCredentials credentials, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                         final TaskListener listener) throws IOException, InterruptedException {
         return launcher.getChannel().call(new LoginTMSCallable(credentials, listener));
     }
 
     /**
      * Logs out from preconfigured test management service in ECU-TEST.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true}, if logout succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean logout(final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         return launcher.getChannel().call(new LogoutTMSCallable(listener));
     }
 
@@ -97,22 +61,16 @@ public abstract class AbstractTMSClient {
      * Checks the currently running ECU-TEST version for compatibility reasons and
      * tests whether the test management module is available.
      *
-     * @param minVersion
-     *            the minimum required ECU-TEST version
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param minVersion the minimum required ECU-TEST version
+     * @param workspace  the workspace
+     * @param launcher   the launcher
+     * @param listener   the listener
      * @return {@code true} if compatible, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     protected boolean isCompatible(final ToolVersion minVersion, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                   final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         // Load JACOB library
         if (!DllUtil.loadLibrary(workspace.toComputer())) {
@@ -136,10 +94,8 @@ public abstract class AbstractTMSClient {
         /**
          * Instantiates a {@link CompatibleTMSCallable}.
          *
-         * @param minVersion
-         *            the minimum required ECU-TEST version
-         * @param listener
-         *            the listener
+         * @param minVersion the minimum required ECU-TEST version
+         * @param listener   the listener
          */
         CompatibleTMSCallable(final ToolVersion minVersion, final TaskListener listener) {
             this.listener = listener;
@@ -158,14 +114,14 @@ public abstract class AbstractTMSClient {
                 final ToolVersion comToolVersion = ToolVersion.parse(comVersion);
                 if (comToolVersion.compareTo(minVersion) < 0) {
                     logger.logError(String.format(
-                            "The configured ECU-TEST version %s does not support this test management method. "
-                                    + "Please use at least ECU-TEST %s!", comVersion, minVersion.toMicroString()));
+                        "The configured ECU-TEST version %s does not support this test management method. "
+                            + "Please use at least ECU-TEST %s!", comVersion, minVersion.toMicroString()));
                 } else if (comClient.getTestManagement() != null) {
                     isAvailable = true;
                 }
             } catch (final ETComException e) {
                 logger.logError("The test management module is not available in running ECU-TEST instance! "
-                        + "Enable it by setting the feature flag 'TEST-MANAGEMENT-SERVICE'.");
+                    + "Enable it by setting the feature flag 'TEST-MANAGEMENT-SERVICE'.");
                 logger.logComException(e.getMessage());
             }
             return isAvailable;
@@ -185,10 +141,8 @@ public abstract class AbstractTMSClient {
         /**
          * Instantiates a new {@link LoginTMSCallable}.
          *
-         * @param credentials
-         *            the credentials
-         * @param listener
-         *            the listener
+         * @param credentials the credentials
+         * @param listener    the listener
          */
         LoginTMSCallable(final StandardUsernamePasswordCredentials credentials, final TaskListener listener) {
             this.credentials = credentials;
@@ -232,8 +186,7 @@ public abstract class AbstractTMSClient {
         /**
          * Instantiates a new {@link LogoutTMSCallable}.
          *
-         * @param listener
-         *            the listener
+         * @param listener the listener
          */
         LogoutTMSCallable(final TaskListener listener) {
             this.listener = listener;

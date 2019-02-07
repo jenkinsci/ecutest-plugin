@@ -1,43 +1,22 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.env.view;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
+import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.InvisibleAction;
 import hudson.model.ParameterValue;
-import hudson.model.TaskListener;
 import hudson.model.Run;
 import hudson.model.StringParameterValue;
+import hudson.model.TaskListener;
 import hudson.model.listeners.RunListener;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
@@ -47,11 +26,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
-import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
-
 /**
- * Shows the test related environment variables on a build as an action.
+ * Shows the test related environment variables as an build action.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
@@ -65,10 +41,8 @@ public class TestEnvActionView extends InvisibleAction {
     /**
      * Instantiates a new {@link TestEnvActionView}.
      *
-     * @param run
-     *            the build
-     * @param listener
-     *            the listener
+     * @param run      the build
+     * @param listener the listener
      */
     public TestEnvActionView(final Run<?, ?> run, final TaskListener listener) {
         super();
@@ -77,15 +51,15 @@ public class TestEnvActionView extends InvisibleAction {
     }
 
     /**
-     * Gets the test related build environment variables from the {@link TestEnvInvisibleAction} previously added to the
-     * build.
+     * Gets the test related build environment variables from the {@link TestEnvInvisibleAction}
+     * previously added to the build.
      *
      * @return set of {@link ParameterValue}'s to show in the build page.
      */
     public Set<ParameterValue> getEnvVariables() {
         final List<TestEnvInvisibleAction> testEnvActions = build.getActions(TestEnvInvisibleAction.class);
         final int testBuilderSize = testEnvActions.size();
-        final Set<ParameterValue> testEnvVars = new LinkedHashSet<ParameterValue>();
+        final Set<ParameterValue> testEnvVars = new LinkedHashSet<>();
 
         try {
             final EnvVars envVars = build.getEnvironment(listener);
@@ -103,9 +77,7 @@ public class TestEnvActionView extends InvisibleAction {
                     }
                 }
             }
-        } catch (final IOException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
-        } catch (final InterruptedException e) {
+        } catch (final IOException | InterruptedException e) {
             LOGGER.log(Level.SEVERE, e.getMessage());
         }
 
@@ -137,7 +109,7 @@ public class TestEnvActionView extends InvisibleAction {
     public static final class RunListenerImpl extends RunListener<Run<?, ?>> {
 
         @Override
-        public void onCompleted(final Run<?, ?> run, final TaskListener listener) {
+        public void onCompleted(final Run<?, ?> run, @Nonnull final TaskListener listener) {
             if (run.getAction(TestEnvInvisibleAction.class) != null) {
                 run.addAction(new TestEnvActionView(run, listener));
             }

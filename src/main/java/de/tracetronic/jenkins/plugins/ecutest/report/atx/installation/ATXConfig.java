@@ -1,34 +1,18 @@
 /*
- * Copyright (c) 2015 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
+import javax.annotation.CheckForNull;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -39,16 +23,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.annotation.CheckForNull;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
 
 /**
  * Class holding the ATX configuration grouped by setting sections.
@@ -70,21 +44,19 @@ public class ATXConfig implements Serializable, Cloneable {
      */
     public ATXConfig() {
         configMap = parseDefaultConfig();
-        customSettings = new ArrayList<ATXCustomSetting>();
+        customSettings = new ArrayList<>();
     }
 
     /**
      * Instantiates a new {@link ATXConfig}.
      *
-     * @param configMap
-     *            the configuration map
-     * @param customSettings
-     *            the custom settings
+     * @param configMap      the configuration map
+     * @param customSettings the custom settings
      */
     public ATXConfig(final Map<String, List<ATXSetting>> configMap,
-            final List<ATXCustomSetting> customSettings) {
-        this.configMap = configMap == null ? new LinkedHashMap<String, List<ATXSetting>>() : configMap;
-        this.customSettings = customSettings == null ? new ArrayList<ATXCustomSetting>() : customSettings;
+                     final List<ATXCustomSetting> customSettings) {
+        this.configMap = configMap == null ? new LinkedHashMap<>() : configMap;
+        this.customSettings = customSettings == null ? new ArrayList<>() : customSettings;
     }
 
     @Override
@@ -95,9 +67,9 @@ public class ATXConfig implements Serializable, Cloneable {
             final ATXConfig configClone = (ATXConfig) super.clone();
 
             // Deep clone objects in map
-            final Map<String, List<ATXSetting>> configMap = new LinkedHashMap<String, List<ATXSetting>>();
+            final Map<String, List<ATXSetting>> configMap = new LinkedHashMap<>();
             for (final Entry<String, List<ATXSetting>> config : configClone.getConfigMap().entrySet()) {
-                final List<ATXSetting> settings = new ArrayList<ATXSetting>();
+                final List<ATXSetting> settings = new ArrayList<>();
                 for (final ATXSetting setting : config.getValue()) {
                     settings.add(setting.clone());
                 }
@@ -105,9 +77,9 @@ public class ATXConfig implements Serializable, Cloneable {
             }
 
             // Deep clone custom settings
-            final List<ATXCustomSetting> customSettings = new ArrayList<ATXCustomSetting>();
+            final List<ATXCustomSetting> customSettings = new ArrayList<>();
             for (final ATXCustomSetting setting : configClone.getCustomSettings()) {
-                customSettings.add((ATXCustomSetting) setting.clone());
+                customSettings.add(setting.clone());
             }
             clone = new ATXConfig(configMap, customSettings);
         } catch (final CloneNotSupportedException e) {
@@ -145,8 +117,7 @@ public class ATXConfig implements Serializable, Cloneable {
     /**
      * Gets the ATX setting group by given configuration name.
      *
-     * @param configName
-     *            the configuration name
+     * @param configName the configuration name
      * @return the ATX setting group list
      */
     public List<ATXSetting> getConfigByName(final String configName) {
@@ -156,8 +127,7 @@ public class ATXConfig implements Serializable, Cloneable {
     /**
      * Gets the ATX setting by given setting name.
      *
-     * @param settingName
-     *            the setting name
+     * @param settingName the setting name
      * @return the ATX setting or {@code null} if not found
      */
     @CheckForNull
@@ -182,10 +152,8 @@ public class ATXConfig implements Serializable, Cloneable {
     /**
      * Gets the ATX setting by given setting name and a list of ATX settings.
      *
-     * @param settingName
-     *            the setting name
-     * @param settings
-     *            the setting list to search in
+     * @param settingName the setting name
+     * @param settings    the setting list to search in
      * @return the ATX setting or {@code null} if not found
      */
     @CheckForNull
@@ -210,8 +178,7 @@ public class ATXConfig implements Serializable, Cloneable {
     }
 
     /**
-     * @param customSettings
-     *            the custom settings to set
+     * @param customSettings the custom settings to set
      */
     public void setCustomSettings(final List<ATXCustomSetting> customSettings) {
         this.customSettings = customSettings;

@@ -1,59 +1,9 @@
 /*
- * Copyright (c) 2015-2018 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.ta;
-
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.Result;
-import hudson.model.TaskListener;
-import hudson.model.Run;
-import hudson.util.FormValidation;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
-import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
-import org.kohsuke.stapler.QueryParameter;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
@@ -62,6 +12,29 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
+import hudson.Extension;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.Result;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.util.FormValidation;
+import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.QueryParameter;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Class holding the trace analysis configuration.
@@ -89,13 +62,34 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
     /**
      * Instantiates a new {@link TraceAnalysisPublisher}.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
+     * @param toolName the tool name identifying the {@link ETInstallation} to be used
      */
     @DataBoundConstructor
     public TraceAnalysisPublisher(@Nonnull final String toolName) {
         super();
         this.toolName = StringUtils.trimToEmpty(toolName);
+    }
+
+    /**
+     * Parses a string-based parameter to integer.
+     *
+     * @param param the parameter string
+     * @return the parsed integer value represented by the String parameter,
+     * defaults to {@link #DEFAULT_TIMEOUT} if null or invalid value
+     */
+    public static int parse(final String param) {
+        try {
+            return Integer.parseInt(param);
+        } catch (final NumberFormatException e) {
+            return DEFAULT_TIMEOUT;
+        }
+    }
+
+    /**
+     * @return the default timeout
+     */
+    public static int getDefaultTimeout() {
+        return DEFAULT_TIMEOUT;
     }
 
     /**
@@ -114,6 +108,15 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
     }
 
     /**
+     * @param mergeReports specifies whether to merge reports of
+     *                     analysis job executions into a main report.
+     */
+    @DataBoundSetter
+    public void setMergeReports(final boolean mergeReports) {
+        this.mergeReports = mergeReports;
+    }
+
+    /**
      * @return whether to create a new report directory, defaults to {@code true}
      */
     public boolean isCreateReportDir() {
@@ -121,19 +124,12 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Parses a string-based parameter to integer.
-     *
-     * @param param
-     *            the parameter string
-     * @return the parsed integer value represented by the String parameter,
-     *         defaults to {@link #DEFAULT_TIMEOUT} if null or invalid value
+     * @param createReportDir specifies whether a new report directory is created
+     *                        or whether the report should be stored next to the job
      */
-    public static int parse(final String param) {
-        try {
-            return Integer.parseInt(param);
-        } catch (final NumberFormatException e) {
-            return DEFAULT_TIMEOUT;
-        }
+    @DataBoundSetter
+    public void setCreateReportDir(final boolean createReportDir) {
+        this.createReportDir = createReportDir;
     }
 
     /**
@@ -151,35 +147,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * @return the default timeout
-     */
-    public static int getDefaultTimeout() {
-        return DEFAULT_TIMEOUT;
-    }
-
-    /**
-     * @param mergeReports
-     *            specifies whether to merge reports of
-     *            analysis job executions into a main report.
-     */
-    @DataBoundSetter
-    public void setMergeReports(final boolean mergeReports) {
-        this.mergeReports = mergeReports;
-    }
-
-    /**
-     * @param createReportDir
-     *            specifies whether a new report directory is created
-     *            or whether the report should be stored next to the job
-     */
-    @DataBoundSetter
-    public void setCreateReportDir(final boolean createReportDir) {
-        this.createReportDir = createReportDir;
-    }
-
-    /**
-     * @param timeout
-     *            the timeout running each trace analysis
+     * @param timeout the timeout running each trace analysis
      */
     @DataBoundSetter
     public void setTimeout(@CheckForNull final String timeout) {
@@ -188,7 +156,8 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
 
     @Override
     protected void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
+                                 final TaskListener listener)
+        throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = getLogger();
         logger.logInfo("Publishing trace analysis...");
 
@@ -202,7 +171,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
         }
 
         boolean isPublished = false;
-        final List<TraceAnalysisReport> reports = new ArrayList<TraceAnalysisReport>();
+        final List<TraceAnalysisReport> reports = new ArrayList<>();
         if (isETRunning(launcher)) {
             reports.addAll(performAnalysis(analysisFiles, run, launcher, listener));
             isPublished = true;
@@ -236,25 +205,20 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
     /**
      * Performs the trace analysis.
      *
-     * @param analysisFiles
-     *            the analysis files
-     * @param run
-     *            the run
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param analysisFiles the analysis files
+     * @param run           the run
+     * @param launcher      the launcher
+     * @param listener      the listener
      * @return the list of trace analysis reports
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private List<TraceAnalysisReport> performAnalysis(final Map<FilePath, List<FilePath>> analysisFiles,
-            final Run<?, ?> run, final Launcher launcher, final TaskListener listener)
-                    throws IOException, InterruptedException {
+                                                      final Run<?, ?> run, final Launcher launcher,
+                                                      final TaskListener listener)
+        throws IOException, InterruptedException {
         final TTConsoleLogger logger = getLogger();
-        final List<TraceAnalysisReport> reports = new ArrayList<TraceAnalysisReport>();
+        final List<TraceAnalysisReport> reports = new ArrayList<>();
 
         int index = 0;
         final FilePath archiveTarget = prepareArchive(run);
@@ -266,11 +230,10 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
             // Run trace analysis
             final TraceAnalysisRunner runner = new TraceAnalysisRunner();
             final List<FilePath> reportFiles = runner.runAnalysis(jobFiles, isCreateReportDir(),
-                    getParsedTimeout(), launcher, listener);
+                getParsedTimeout(), launcher, listener);
 
             if (reportFiles.isEmpty() && !isAllowMissing()) {
-                logger.logError(String
-                        .format("-> Empty analysis results are not allowed, setting build status to FAILURE!"));
+                logger.logError("-> Empty analysis results are not allowed, setting build status to FAILURE!");
                 run.setResult(Result.FAILURE);
             }
 
@@ -280,8 +243,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
                 final boolean isMerged = runner.mergeReports(mainReport, reportFiles, launcher, listener);
 
                 if (!isMerged) {
-                    logger.logError(String
-                            .format("-> Failed merging analysis reports, setting build status to FAILURE!"));
+                    logger.logError("-> Failed merging analysis reports, setting build status to FAILURE!");
                     run.setResult(Result.FAILURE);
                 }
 
@@ -312,13 +274,10 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
      * Prepares the target archive directory and removes old artifacts
      * at project level when keeping the most recent artifacts only.
      *
-     * @param run
-     *            the run
+     * @param run the run
      * @return the archive file path
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
      */
     private FilePath prepareArchive(final Run<?, ?> run) throws IOException, InterruptedException {
         final FilePath archiveTarget = getArchiveTarget(run);
@@ -333,26 +292,20 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
     /**
      * Archives the analysis report on master.
      *
-     * @param reportFile
-     *            the report file
-     * @param archiveTarget
-     *            the archive target
-     * @param run
-     *            the run
-     * @param logger
-     *            the logger
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @param reportFile    the report file
+     * @param archiveTarget the archive target
+     * @param run           the run
+     * @param logger        the logger
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
      */
     private void archiveReport(final FilePath reportFile, final FilePath archiveTarget, final Run<?, ?> run,
-            final TTConsoleLogger logger) throws IOException, InterruptedException {
+                               final TTConsoleLogger logger) throws IOException, InterruptedException {
         if (reportFile.exists()) {
             reportFile.copyTo(archiveTarget.child(reportFile.getName()));
         } else if (!isAllowMissing()) {
             logger.logError(String.format("-> Specified report file '%s' does not exist.",
-                    reportFile.getName()));
+                reportFile.getName()));
             run.setResult(Result.FAILURE);
         }
     }
@@ -360,25 +313,19 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
     /**
      * Adds an analysis report to list of reports.
      *
-     * @param reports
-     *            the reports
-     * @param index
-     *            the current report index
-     * @param targetDir
-     *            the target directory
-     * @param report
-     *            the report to add
+     * @param reports   the reports
+     * @param index     the current report index
+     * @param targetDir the target directory
+     * @param report    the report to add
      * @return the increased report index
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
      */
     private int addReport(final List<TraceAnalysisReport> reports, int index, final FilePath targetDir,
-            final FilePath report) throws IOException, InterruptedException {
+                          final FilePath report) throws IOException, InterruptedException {
         final String relFilePath = targetDir.getParent().toURI().relativize(report.toURI()).getPath();
         final TraceAnalysisReport trfReport = new TraceAnalysisReport(String.format("%d", ++index),
-                report.getParent().getName(), relFilePath, report.length());
+            report.getParent().getName(), relFilePath, report.length());
         reports.add(trfReport);
         return index;
     }
@@ -386,21 +333,17 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
     /**
      * Collects the analysis job files from all report directories.
      *
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
+     * @param run       the run
+     * @param workspace the workspace
+     * @param launcher  the launcher
      * @return the analysis files
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
      */
     private Map<FilePath, List<FilePath>> getAnalysisFiles(final Run<?, ?> run, final FilePath workspace,
-            final Launcher launcher) throws IOException, InterruptedException {
-        final Map<FilePath, List<FilePath>> analysisFiles = new LinkedHashMap<FilePath, List<FilePath>>();
+                                                           final Launcher launcher)
+        throws IOException, InterruptedException {
+        final Map<FilePath, List<FilePath>> analysisFiles = new LinkedHashMap<>();
         final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
         for (final FilePath reportDir : reportDirs) {
             final List<FilePath> jobFiles = Arrays.asList(reportDir.list("**/Job_*.ajob"));
@@ -413,10 +356,8 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
     /**
      * Adds the {@link TraceAnalysisBuildAction} to the build holding the found {@link TraceAnalysisReport}s.
      *
-     * @param run
-     *            the run
-     * @param analysisReports
-     *            the list of {@link TraceAnalysisReport}s to add
+     * @param run             the run
+     * @param analysisReports the list of {@link TraceAnalysisReport}s to add
      */
     private void addBuildAction(final Run<?, ?> run, final List<TraceAnalysisReport> analysisReports) {
         TraceAnalysisBuildAction action = run.getAction(TraceAnalysisBuildAction.class);
@@ -454,14 +395,14 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
         /**
          * Validates the timeout.
          *
-         * @param value
-         *            the timeout
+         * @param value the timeout
          * @return the form validation
          */
         public FormValidation doCheckTimeout(@QueryParameter final String value) {
             return testValidator.validateTimeout(value, getDefaultTimeout());
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.TraceAnalysisPublisher_DisplayName();

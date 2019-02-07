@@ -1,45 +1,19 @@
 /*
- * Copyright (c) 2015-2016 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.scan;
 
 import hudson.Launcher;
 import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+import org.apache.tools.ant.DirectoryScanner;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import jenkins.security.MasterToSlaveCallable;
-
-import org.apache.tools.ant.DirectoryScanner;
 
 /**
  * Common base class for the {@link TestPackageScanner} and {@link TestProjectScanner}.
@@ -55,12 +29,9 @@ public abstract class AbstractTestScanner {
     /**
      * Instantiates a {@link AbstractTestScanner}.
      *
-     * @param inputDir
-     *            the input directory
-     * @param recursive
-     *            specifies whether to scan recursively
-     * @param launcher
-     *            the launcher
+     * @param inputDir  the input directory
+     * @param recursive specifies whether to scan recursively
+     * @param launcher  the launcher
      */
     public AbstractTestScanner(final String inputDir, final boolean recursive, final Launcher launcher) {
         super();
@@ -87,10 +58,8 @@ public abstract class AbstractTestScanner {
      * Scans the test files.
      *
      * @return the test files
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public List<String> scanTestFiles() throws IOException, InterruptedException {
         return launcher.getChannel().call(new ScanTestCallable(inputDir, getFilePattern()));
@@ -101,12 +70,12 @@ public abstract class AbstractTestScanner {
      *
      * @return the file pattern
      */
-    protected String[] getFilePattern() {
-        final String[] filePattern;
+    protected String getFilePattern() {
+        final String filePattern;
         if (isRecursive()) {
-            filePattern = new String[] { "**/**" + getFileExtension() };
+            filePattern = "**/**" + getFileExtension();
         } else {
-            filePattern = new String[] { "*" + getFileExtension() };
+            filePattern = "*" + getFileExtension();
         }
         return filePattern;
     }
@@ -126,27 +95,25 @@ public abstract class AbstractTestScanner {
         private static final long serialVersionUID = 1L;
 
         private final String inputDir;
-        private final String[] filePattern;
+        private final String filePattern;
 
         /**
          * Instantiates a new {@link ScanTestCallable}.
          *
-         * @param inputDir
-         *            the input directory
-         * @param filePattern
-         *            the file pattern
+         * @param inputDir    the input directory
+         * @param filePattern the file pattern
          */
-        ScanTestCallable(final String inputDir, final String[] filePattern) {
+        ScanTestCallable(final String inputDir, final String filePattern) {
             this.inputDir = inputDir;
             this.filePattern = filePattern;
         }
 
         @Override
         public List<String> call() throws IOException {
-            final List<String> includeFiles = new ArrayList<String>();
+            final List<String> includeFiles = new ArrayList<>();
             final DirectoryScanner scanner = new DirectoryScanner();
             scanner.setBasedir(inputDir);
-            scanner.setIncludes(filePattern);
+            scanner.setIncludes(new String[]{filePattern});
             scanner.scan();
 
             final String[] fileNames = scanner.getIncludedFiles();

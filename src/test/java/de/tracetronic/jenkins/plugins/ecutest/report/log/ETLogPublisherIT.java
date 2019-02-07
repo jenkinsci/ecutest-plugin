@@ -1,51 +1,21 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.log;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertThat;
+import com.gargoylesoftware.htmlunit.WebAssert;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
-import hudson.model.Result;
-import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
+import hudson.model.Result;
 import jenkins.tasks.SimpleBuildStep;
-
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
@@ -54,10 +24,13 @@ import org.jenkinsci.plugins.workflow.steps.StepConfigTester;
 import org.junit.Test;
 import org.jvnet.hudson.test.TestBuilder;
 
-import com.gargoylesoftware.htmlunit.WebAssert;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
-import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link ETLogPublisher}.
@@ -96,7 +69,7 @@ public class ETLogPublisherIT extends IntegrationTestBase {
 
         final ETLogPublisher after = jenkins.configRoundtrip(before);
         jenkins.assertEqualBeans(before, after,
-                "unstableOnWarning,failedOnError,testSpecific,allowMissing,runOnFailed,archiving,keepAll");
+            "unstableOnWarning,failedOnError,testSpecific,allowMissing,runOnFailed,archiving,keepAll");
     }
 
     @Test
@@ -141,7 +114,7 @@ public class ETLogPublisherIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                    final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) throws InterruptedException, IOException {
                 return false;
             }
         });
@@ -153,7 +126,7 @@ public class ETLogPublisherIT extends IntegrationTestBase {
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
         assertThat("Skip message should be present in console log", build.getLog(100).toString(),
-                containsString("Skipping publisher"));
+            containsString("Skipping publisher"));
     }
 
     @Test
@@ -209,12 +182,9 @@ public class ETLogPublisherIT extends IntegrationTestBase {
     /**
      * Asserts the pipeline step execution.
      *
-     * @param scriptName
-     *            the script name
-     * @param status
-     *            the expected build status
-     * @throws Exception
-     *             the exception
+     * @param scriptName the script name
+     * @param status     the expected build status
+     * @throws Exception the exception
      */
     private void assertPipelineStep(final String scriptName, final boolean status) throws Exception {
         assumeWindowsSlave();

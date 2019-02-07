@@ -1,37 +1,23 @@
 /*
- * Copyright (c) 2015-2018 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.Messages;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import hudson.Util;
 import hudson.util.FormValidation;
+import org.apache.commons.lang.StringUtils;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -45,20 +31,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import org.apache.commons.lang.StringUtils;
-
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.Messages;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
-
 /**
  * Validator to check ATX related form fields.
  *
@@ -69,17 +41,69 @@ public class ATXValidator extends AbstractValidator {
     /**
      * Instantiates a new {@link ATXValidator}.
      * ATX settings needs permission check.
-     *
      */
     public ATXValidator() {
         super();
     }
 
     /**
+     * Checks if given URL is valid.
+     *
+     * @param url the URL
+     * @return {@code true} if URL is valid, {@code false} otherwise
+     */
+    private static boolean isValidURL(final String url) {
+        try {
+            final URL u = new URL(url);
+            u.toURI();
+        } catch (final MalformedURLException | URISyntaxException e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Ignores SSL certification errors by trusting all certificates and host names.
+     *
+     * @param connection the current connection
+     * @throws NoSuchAlgorithmException the no such algorithm exception
+     * @throws KeyManagementException   the key management exception
+     */
+    public static void ignoreSSLIssues(final HttpsURLConnection connection)
+        throws NoSuchAlgorithmException, KeyManagementException {
+        // Create a trust manager that does not validate certificate chains
+        final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return new X509Certificate[0];
+            }
+
+            @Override
+            public void checkClientTrusted(final X509Certificate[] certs, final String authType) {
+            }
+
+            @Override
+            public void checkServerTrusted(final X509Certificate[] certs, final String authType) {
+            }
+        },};
+
+        // Install the all-trusting trust manager
+        final SSLContext sslContext = SSLContext.getInstance("SSL");
+        sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+        connection.setSSLSocketFactory(sslContext.getSocketFactory());
+
+        // Create all-trusting host name verifier
+        final HostnameVerifier allHostsValid = (hostname, session) -> true;
+
+        // Install the all-trusting host verifier
+        connection.setHostnameVerifier(allHostsValid);
+    }
+
+    /**
      * Validates the TEST-GUIDE name.
      *
-     * @param value
-     *            the value
+     * @param value the value
      * @return the form validation
      */
     public FormValidation validateName(final String value) {
@@ -89,8 +113,7 @@ public class ATXValidator extends AbstractValidator {
     /**
      * Validates the server URL.
      *
-     * @param serverUrl
-     *            the server URL
+     * @param serverUrl the server URL
      * @return the form validation
      */
     public FormValidation validateServerUrl(final String serverUrl) {
@@ -108,28 +131,10 @@ public class ATXValidator extends AbstractValidator {
     }
 
     /**
-     * Checks if given URL is valid.
-     *
-     * @param url
-     *            the URL
-     * @return {@code true} if URL is valid, {@code false} otherwise
-     */
-    private static boolean isValidURL(final String url) {
-        try {
-            final URL u = new URL(url);
-            u.toURI();
-        } catch (final MalformedURLException | URISyntaxException e) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * Validates the server port which must be non negative and in the range of 1-65535. A port less than 1024
      * requires root permission on an Unix-based system.
      *
-     * @param serverPort
-     *            the server port
+     * @param serverPort the server port
      * @return the form validation
      */
     public FormValidation validateServerPort(final String serverPort) {
@@ -155,8 +160,7 @@ public class ATXValidator extends AbstractValidator {
     /**
      * Validates the server context path.
      *
-     * @param contextPath
-     *            the context path
+     * @param contextPath the context path
      * @return the form validation
      */
     public FormValidation validateServerContextPath(final String contextPath) {
@@ -177,8 +181,7 @@ public class ATXValidator extends AbstractValidator {
     /**
      * Validates the archive miscellaneous files.
      *
-     * @param expression
-     *            the files expression
+     * @param expression the files expression
      * @return the form validation
      */
     public FormValidation validateArchiveMiscFiles(final String expression) {
@@ -187,7 +190,7 @@ public class ATXValidator extends AbstractValidator {
             if (expression.contains(PARAMETER)) {
                 returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedValue());
             } else {
-                final String pattern = "[A-Za-z0-9./\\*]+";
+                final String pattern = "[A-Za-z0-9./*]+";
                 for (final String token : Util.tokenize(expression, ";")) {
                     if (!Pattern.matches(pattern, token)) {
                         returnValue = FormValidation.error(Messages.ATXPublisher_InvalidFileExpression());
@@ -202,8 +205,7 @@ public class ATXValidator extends AbstractValidator {
     /**
      * Validates the covered attributes.
      *
-     * @param expression
-     *            the attribute expression
+     * @param expression the attribute expression
      * @return the form validation
      */
     public FormValidation validateCoveredAttributes(final String expression) {
@@ -213,8 +215,8 @@ public class ATXValidator extends AbstractValidator {
                 returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedValue());
             } else {
                 final String pattern = "(Designer|Name|Status|Testlevel|Tools|VersionCounter|"
-                        + "Design Contact|Design Department|Estimated Duration \\[min\\]|"
-                        + "Execution Priority|Test Comment)";
+                    + "Design Contact|Design Department|Estimated Duration \\[min]|"
+                    + "Execution Priority|Test Comment)";
                 for (final String token : Util.tokenize(expression, ";")) {
                     if (!Pattern.matches(pattern, token)) {
                         returnValue = FormValidation.warning(Messages.ATXPublisher_CustomAttributeExpression());
@@ -229,10 +231,8 @@ public class ATXValidator extends AbstractValidator {
     /**
      * Validates a setting field.
      *
-     * @param name
-     *            the setting name
-     * @param value
-     *            the current setting value
+     * @param name  the setting name
+     * @param value the current setting value
      * @return the form validation
      */
     public FormValidation validateSetting(final String name, final String value) {
@@ -265,8 +265,7 @@ public class ATXValidator extends AbstractValidator {
     /**
      * Validates the custom setting name and checks for duplicate entries.
      *
-     * @param name
-     *            the setting name
+     * @param name the setting name
      * @return the form validation
      */
     public FormValidation validateCustomSettingName(final String name) {
@@ -288,8 +287,7 @@ public class ATXValidator extends AbstractValidator {
     /**
      * Validates the custom setting value.
      *
-     * @param value
-     *            the setting value
+     * @param value the setting value
      * @return the form validation
      */
     public FormValidation validateCustomSettingValue(final String value) {
@@ -299,20 +297,16 @@ public class ATXValidator extends AbstractValidator {
     /**
      * Tests the server connection by given server settings.
      *
-     * @param serverUrl
-     *            the server URL
-     * @param serverPort
-     *            the server port
-     * @param serverContextPath
-     *            the server context path
-     * @param useHttpsConnection
-     *            if secure connection is used
-     * @param ignoreSSL
-     *            specifies whether to ignore SSL issues
+     * @param serverUrl          the server URL
+     * @param serverPort         the server port
+     * @param serverContextPath  the server context path
+     * @param useHttpsConnection if secure connection is used
+     * @param ignoreSSL          specifies whether to ignore SSL issues
      * @return the form validation
      */
     public FormValidation testConnection(final String serverUrl, final String serverPort,
-            final String serverContextPath, final boolean useHttpsConnection, final boolean ignoreSSL) {
+                                         final String serverContextPath, final boolean useHttpsConnection,
+                                         final boolean ignoreSSL) {
         final String baseUrl = ATXUtil.getBaseUrl(serverUrl, serverPort, serverContextPath, useHttpsConnection);
         return testConnection(baseUrl, ignoreSSL);
     }
@@ -320,10 +314,8 @@ public class ATXValidator extends AbstractValidator {
     /**
      * Tests the server connection by given base server URL.
      *
-     * @param baseUrl
-     *            the base server URL
-     * @param ignoreSSL
-     *            specifies whether to ignore SSL issues
+     * @param baseUrl   the base server URL
+     * @param ignoreSSL specifies whether to ignore SSL issues
      * @return the form validation
      */
     public FormValidation testConnection(final String baseUrl, final boolean ignoreSSL) {
@@ -332,8 +324,8 @@ public class ATXValidator extends AbstractValidator {
         }
         final String appVersionUrl = String.format("%s/app-version-info", baseUrl);
         FormValidation returnValue = FormValidation.okWithMarkup(String.format(
-                "<span style=\"font-weight: bold; color: #208CA3\">%s</span>",
-                Messages.ATXPublisher_ValidConnection(baseUrl)));
+            "<span style=\"font-weight: bold; color: #208CA3\">%s</span>",
+            Messages.ATXPublisher_ValidConnection(baseUrl)));
         if (appVersionUrl.contains(PARAMETER)) {
             returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedConnection());
         } else {
@@ -360,10 +352,10 @@ public class ATXValidator extends AbstractValidator {
                 final int httpResponse = connection.getResponseCode();
                 if (httpResponse != HttpURLConnection.HTTP_OK) {
                     returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(baseUrl,
-                            "Status code: " + httpResponse));
+                        "Status code: " + httpResponse));
                 } else {
                     try (BufferedReader in = new BufferedReader(new InputStreamReader(
-                            connection.getInputStream(), Charset.forName("UTF-8")))) {
+                        connection.getInputStream(), Charset.forName("UTF-8")))) {
                         final String inputLine = in.readLine();
                         if (inputLine == null || !inputLine.contains("TraceTronic")) {
                             returnValue = FormValidation.warning(Messages.ATXPublisher_InvalidServer(baseUrl));
@@ -381,52 +373,5 @@ public class ATXValidator extends AbstractValidator {
             }
         }
         return returnValue;
-    }
-
-    /**
-     * Ignores SSL certification errors by trusting all certificates and host names.
-     *
-     * @param connection
-     *            the current connection
-     * @throws NoSuchAlgorithmException
-     *             the no such algorithm exception
-     * @throws KeyManagementException
-     *             the key management exception
-     */
-    public static void ignoreSSLIssues(final HttpsURLConnection connection) 
-            throws NoSuchAlgorithmException, KeyManagementException {
-        // Create a trust manager that does not validate certificate chains
-        final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-
-            @Override
-            public X509Certificate[] getAcceptedIssuers() {
-                return new X509Certificate[0];
-            }
-
-            @Override
-            public void checkClientTrusted(final X509Certificate[] certs, final String authType) {
-            }
-
-            @Override
-            public void checkServerTrusted(final X509Certificate[] certs, final String authType) {
-            }
-        }, };
-
-        // Install the all-trusting trust manager
-        final SSLContext sslContext = SSLContext.getInstance("SSL");
-        sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-        connection.setSSLSocketFactory(sslContext.getSocketFactory());
-
-        // Create all-trusting host name verifier
-        final HostnameVerifier allHostsValid = new HostnameVerifier() {
-
-            @Override
-            public boolean verify(final String hostname, final SSLSession session) {
-                return true;
-            }
-        };
-
-        // Install the all-trusting host verifier
-        connection.setHostnameVerifier(allHostsValid);
     }
 }

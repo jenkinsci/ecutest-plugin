@@ -1,92 +1,68 @@
 <!--
-    Copyright (c) 2015-2017 TraceTronic GmbH
-    All rights reserved.
+  Copyright (c) 2015-2019 TraceTronic GmbH
 
-    Redistribution and use in source and binary forms, with or without modification,
-    are permitted provided that the following conditions are met:
-
-      1. Redistributions of source code must retain the above copyright notice, this
-         list of conditions and the following disclaimer.
-
-      2. Redistributions in binary form must reproduce the above copyright notice, this
-         list of conditions and the following disclaimer in the documentation and/or
-         other materials provided with the distribution.
-
-      3. Neither the name of TraceTronic GmbH nor the names of its
-         contributors may be used to endorse or promote products derived from
-         this software without specific prior written permission.
-
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-    ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-    ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--->
+  SPDX-License-Identifier: BSD-3-Clause
+  -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
-    <link type="text/css" href="${resURL}/plugin/ecutest/css/style.css" rel="stylesheet" />
+<j:jelly xmlns:j="jelly:core" xmlns:t="/lib/hudson">
+    <link type="text/css" href="${resURL}/plugin/ecutest/css/style.css" rel="stylesheet"/>
     <script type="text/javascript">jQuery.noConflict(true);</script>
-    <script type="text/javascript" src="${resURL}/plugin/ecutest/js/expand.js" />
-    <j:set var="toolActions" value="${it.getToolEnvActions()}" />
+    <script type="text/javascript" src="${resURL}/plugin/ecutest/js/expand.js"/>
+    <j:set var="toolActions" value="${it.getToolEnvActions()}"/>
     <j:if test="${!empty(toolActions)}">
         <t:summary icon="${it.iconFile}">
             <h3 class="results">${%parameters}</h3>
             <a href="#" class="expander">${%expand}</a>
             <div class="results">
-            <j:forEach var="action" items="${toolActions}">
-                <j:set var="toolId" value="${action.getToolId()}" />
-                <table class="pane" id="envAction">
-                    <colgroup>
-                        <col class="column-param" />
-                        <col class="column-value" />
-                    </colgroup>
-                    <tr class="parent tool" id="${toolId}">
-                        <td class="pane-header open NONE" colspan="2">${action.getToolName()}</td>
-                    </tr>
-                    <tr class="child-${toolId}">
-                        <td class="tooltip" tooltip="${%name}">TT_TOOL_NAME_${toolId}</td>
-                        <td>${action.getToolName()}</td>
-                    </tr>
-                    <tr class="child-${toolId}">
-                        <td class="tooltip" tooltip="${%install}">TT_TOOL_INSTALL_${toolId}</td>
-                        <td>${action.getToolInstallation()}</td>
-                    </tr>
-                    <tr class="child-${toolId}">
-                        <td class="tooltip" tooltip="${%version}">TT_TOOL_VERSION_${toolId}</td>
-                        <td>${action.getToolVersion()}</td>
-                    </tr>
-                    <tr class="child-${toolId}">
-                        <td class="tooltip" tooltip="${%workspace}">TT_TOOL_WORKSPACE_${toolId}</td>
-                        <td>${action.getToolWorkspace()}</td>
-                    </tr>
-                    <tr class="child-${toolId}">
-                        <td class="tooltip" tooltip="${%settings}">TT_TOOL_SETTINGS_${toolId}</td>
-                        <td>${action.getToolSettings()}</td>
-                    </tr>
-                    <tr class="child-${toolId}">
-                        <td class="tooltip" tooltip="${%lastTbc}">TT_TOOL_LAST_TBC_${toolId}</td>
-                        <td>${action.getLastTbc()}</td>
-                    </tr>
-                    <tr class="child-${toolId}">
-                        <td class="tooltip" tooltip="${%lastTcf}">TT_TOOL_LAST_TCF_${toolId}</td>
-                        <td>${action.getLastTcf()}</td>
-                    </tr>
-                    <tr class="child-${toolId}">
-                        <td class="tooltip" tooltip="${%debug}">TT_TOOL_DEBUG_${toolId}</td>
-                        <td>${action.isDebug()}</td>
-                    </tr>
-                    <tr class="child-${toolId}">
-                        <td class="tooltip" tooltip="${%timeout}">TT_TOOL_TIMEOUT_${toolId}</td>
-                        <td>${action.getTimeout()}</td>
-                    </tr>
-                </table>
-            </j:forEach>
+                <j:forEach var="action" items="${toolActions}">
+                    <j:set var="toolId" value="${action.getToolId()}"/>
+                    <table class="pane" id="envAction">
+                        <colgroup>
+                            <col class="column-param"/>
+                            <col class="column-value"/>
+                        </colgroup>
+                        <tr class="parent tool" id="${toolId}">
+                            <td class="pane-header open NONE" colspan="2">${action.getToolName()}</td>
+                        </tr>
+                        <tr class="child-${toolId}">
+                            <td class="tooltip" tooltip="${%name}">TT_TOOL_NAME_${toolId}</td>
+                            <td>${action.getToolName()}</td>
+                        </tr>
+                        <tr class="child-${toolId}">
+                            <td class="tooltip" tooltip="${%install}">TT_TOOL_INSTALL_${toolId}</td>
+                            <td>${action.getToolInstallation()}</td>
+                        </tr>
+                        <tr class="child-${toolId}">
+                            <td class="tooltip" tooltip="${%version}">TT_TOOL_VERSION_${toolId}</td>
+                            <td>${action.getToolVersion()}</td>
+                        </tr>
+                        <tr class="child-${toolId}">
+                            <td class="tooltip" tooltip="${%workspace}">TT_TOOL_WORKSPACE_${toolId}</td>
+                            <td>${action.getToolWorkspace()}</td>
+                        </tr>
+                        <tr class="child-${toolId}">
+                            <td class="tooltip" tooltip="${%settings}">TT_TOOL_SETTINGS_${toolId}</td>
+                            <td>${action.getToolSettings()}</td>
+                        </tr>
+                        <tr class="child-${toolId}">
+                            <td class="tooltip" tooltip="${%lastTbc}">TT_TOOL_LAST_TBC_${toolId}</td>
+                            <td>${action.getLastTbc()}</td>
+                        </tr>
+                        <tr class="child-${toolId}">
+                            <td class="tooltip" tooltip="${%lastTcf}">TT_TOOL_LAST_TCF_${toolId}</td>
+                            <td>${action.getLastTcf()}</td>
+                        </tr>
+                        <tr class="child-${toolId}">
+                            <td class="tooltip" tooltip="${%debug}">TT_TOOL_DEBUG_${toolId}</td>
+                            <td>${action.isDebug()}</td>
+                        </tr>
+                        <tr class="child-${toolId}">
+                            <td class="tooltip" tooltip="${%timeout}">TT_TOOL_TIMEOUT_${toolId}</td>
+                            <td>${action.getTimeout()}</td>
+                        </tr>
+                    </table>
+                </j:forEach>
             </div>
         </t:summary>
     </j:if>

@@ -1,44 +1,23 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertThat;
-import hudson.model.Result;
+import com.cloudbees.plugins.credentials.CredentialsScope;
+import com.cloudbees.plugins.credentials.SystemCredentialsProvider;
+import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl;
+import com.gargoylesoftware.htmlunit.WebAssert;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageAttributeConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.model.FreeStyleProject;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import hudson.model.Result;
 import jenkins.tasks.SimpleBuildStep;
-
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
@@ -47,17 +26,11 @@ import org.jenkinsci.plugins.workflow.steps.StepConfigTester;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.cloudbees.plugins.credentials.CredentialsScope;
-import com.cloudbees.plugins.credentials.SystemCredentialsProvider;
-import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl;
-import com.gargoylesoftware.htmlunit.WebAssert;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import java.util.ArrayList;
+import java.util.List;
 
-import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageAttributeConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageConfig;
-import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link ExportPackageBuilder}.
@@ -69,7 +42,7 @@ public class ExportPackageBuilderIT extends IntegrationTestBase {
     @Before
     public void setUp() throws Exception {
         SystemCredentialsProvider.getInstance().getCredentials().add(new UsernamePasswordCredentialsImpl(
-                CredentialsScope.GLOBAL, "credentialsId", "test", "user", "password"));
+            CredentialsScope.GLOBAL, "credentialsId", "test", "user", "password"));
     }
 
     @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
@@ -183,10 +156,8 @@ public class ExportPackageBuilderIT extends IntegrationTestBase {
     /**
      * Asserts the pipeline step execution.
      *
-     * @param scriptName
-     *            the script name
-     * @throws Exception
-     *             the exception
+     * @param scriptName the script name
+     * @throws Exception the exception
      */
     private void assertPipelineStep(final String scriptName) throws Exception {
         assumeWindowsSlave();
@@ -202,10 +173,8 @@ public class ExportPackageBuilderIT extends IntegrationTestBase {
     /**
      * Performs a default configuration round-trip testing for a {@link ExportPackageBuilder}.
      *
-     * @param before
-     *            the instance before
-     * @throws Exception
-     *             the exception
+     * @param before the instance before
+     * @throws Exception the exception
      */
     private void testDefaultConfigRoundTripStep(final ExportPackageBuilder before) throws Exception {
         CoreStep step = new CoreStep(before);
@@ -220,10 +189,8 @@ public class ExportPackageBuilderIT extends IntegrationTestBase {
     /**
      * Performs a configuration round-trip testing for a {@link ExportPackageBuilder}.
      *
-     * @param before
-     *            the instance before
-     * @throws Exception
-     *             the exception
+     * @param before the instance before
+     * @throws Exception the exception
      */
     private void testConfigRoundTripStep(final ExportPackageBuilder before) throws Exception {
         CoreStep step = new CoreStep(before);
@@ -243,7 +210,7 @@ public class ExportPackageBuilderIT extends IntegrationTestBase {
     private ExportPackageBuilder createExportPackageBuilder() {
         final List<TMSConfig> exportConfigs = new ArrayList<TMSConfig>();
         final ExportPackageConfig tmsConfig = new ExportPackageConfig("test.pkg", "export", true,
-                "credentialsId", "600");
+            "credentialsId", "600");
         exportConfigs.add(tmsConfig);
         return new ExportPackageBuilder(exportConfigs);
     }
@@ -256,7 +223,7 @@ public class ExportPackageBuilderIT extends IntegrationTestBase {
     private ExportPackageBuilder createExportPackageAttributeBuilder() {
         final List<TMSConfig> exportConfigs = new ArrayList<TMSConfig>();
         final ExportPackageAttributeConfig attributeConfig = new ExportPackageAttributeConfig("test.pkg",
-                "credentialsId", "600");
+            "credentialsId", "600");
         exportConfigs.add(attributeConfig);
         return new ExportPackageBuilder(exportConfigs);
     }

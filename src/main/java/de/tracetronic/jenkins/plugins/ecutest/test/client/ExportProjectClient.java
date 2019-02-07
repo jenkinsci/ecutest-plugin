@@ -1,46 +1,11 @@
 /*
- * Copyright (c) 2015-2018 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.Item;
-import hudson.model.TaskListener;
-import hudson.remoting.Callable;
-
-import java.io.IOException;
-
-import jenkins.security.MasterToSlaveCallable;
-
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportProjectAttributeConfig;
@@ -50,6 +15,14 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.Item;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+
+import java.io.IOException;
 
 /**
  * Client to export ECU-TEST projects via COM interface.
@@ -73,8 +46,7 @@ public class ExportProjectClient extends AbstractTMSClient {
     /**
      * Instantiates a new {@link ExportProjectClient}.
      *
-     * @param exportConfig
-     *            the export configuration
+     * @param exportConfig the export configuration
      */
     public ExportProjectClient(final TMSConfig exportConfig) {
         this.exportConfig = exportConfig;
@@ -90,27 +62,21 @@ public class ExportProjectClient extends AbstractTMSClient {
     /**
      * Exports a project according to given export configuration.
      *
-     * @param project
-     *            the project
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param project   the project
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
      * @return {@code true} if successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean exportProject(final Item project, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                 final TaskListener listener) throws IOException, InterruptedException {
         boolean isExported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = ((ExportProjectConfig) exportConfig)
-                        .getCredentials(project);
+                final StandardUsernamePasswordCredentials credentials = exportConfig
+                    .getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isExported = exportProjectToTMS(launcher, listener);
                 }
@@ -124,27 +90,21 @@ public class ExportProjectClient extends AbstractTMSClient {
     /**
      * Exports project attributes according to given export configuration.
      *
-     * @param project
-     *            the project
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param project   the project
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
      * @return {@code true} if successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean exportProjectAttributes(final Item project, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                           final TaskListener listener) throws IOException, InterruptedException {
         boolean isExported = false;
         if (isCompatible(ET_MIN_ATTR_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = ((ExportProjectAttributeConfig) exportConfig)
-                        .getCredentials(project);
+                final StandardUsernamePasswordCredentials credentials = exportConfig
+                    .getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isExported = exportProjectAttributesToTMS(launcher, listener);
                 }
@@ -158,39 +118,31 @@ public class ExportProjectClient extends AbstractTMSClient {
     /**
      * Exports a project to test management service.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true}, if export succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean exportProjectToTMS(final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         return launcher.getChannel().call(
-                new ExportProjectCallable((ExportProjectConfig) exportConfig, listener));
+            new ExportProjectCallable((ExportProjectConfig) exportConfig, listener));
     }
 
     /**
      * Exports project attributes to test management service.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true}, if export succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean exportProjectAttributesToTMS(final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         return launcher.getChannel().call(
-                new ExportProjectAttributeCallable((ExportProjectAttributeConfig) exportConfig, listener));
+            new ExportProjectAttributeCallable((ExportProjectAttributeConfig) exportConfig, listener));
     }
 
     /**
@@ -206,10 +158,8 @@ public class ExportProjectClient extends AbstractTMSClient {
         /**
          * Instantiates a new {@link ExportProjectCallable}.
          *
-         * @param exportConfig
-         *            the export configuration
-         * @param listener
-         *            the listener
+         * @param exportConfig the export configuration
+         * @param listener     the listener
          */
         ExportProjectCallable(final ExportProjectConfig exportConfig, final TaskListener listener) {
             this.exportConfig = exportConfig;
@@ -221,14 +171,14 @@ public class ExportProjectClient extends AbstractTMSClient {
             boolean isExported = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo(String.format("- Exporting project %s to test management system...",
-                    exportConfig.getFilePath()));
+                exportConfig.getFilePath()));
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 if (isExported = tm.exportProject(exportConfig.getFilePath(), exportConfig.getExportPath(),
-                        exportConfig.isCreateNewPath(), exportConfig.getParsedTimeout())) {
+                    exportConfig.isCreateNewPath(), exportConfig.getParsedTimeout())) {
                     logger.logInfo(String.format("-> Project exported successfully to target directory %s.",
-                            exportConfig.getExportPath()));
+                        exportConfig.getExportPath()));
                 }
             } catch (final ETComException e) {
                 logger.logError("-> Exporting project failed: " + e.getMessage());
@@ -250,10 +200,8 @@ public class ExportProjectClient extends AbstractTMSClient {
         /**
          * Instantiates a new {@link ExportProjectAttributeCallable}.
          *
-         * @param exportConfig
-         *            the export configuration
-         * @param listener
-         *            the listener
+         * @param exportConfig the export configuration
+         * @param listener     the listener
          */
         ExportProjectAttributeCallable(final ExportProjectAttributeConfig exportConfig, final TaskListener listener) {
             this.exportConfig = exportConfig;
@@ -265,12 +213,12 @@ public class ExportProjectClient extends AbstractTMSClient {
             boolean isExported = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo(String.format("- Exporting attributes of project %s to test management system...",
-                    exportConfig.getFilePath()));
+                exportConfig.getFilePath()));
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 if (isExported = tm.exportProjectAttributes(exportConfig.getFilePath(),
-                        exportConfig.getParsedTimeout())) {
+                    exportConfig.getParsedTimeout())) {
                     logger.logInfo("-> Project attributes exported successfully.");
                 }
             } catch (final ETComException e) {

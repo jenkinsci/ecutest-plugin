@@ -1,36 +1,15 @@
 /*
- * Copyright (c) 2015-2018 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.log;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogAnnotation.Severity;
 import hudson.FilePath;
+import org.apache.commons.lang.StringUtils;
 
+import javax.annotation.CheckForNull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,12 +20,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-
-import javax.annotation.CheckForNull;
-
-import org.apache.commons.lang.StringUtils;
-
-import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogAnnotation.Severity;
 
 /**
  * Class providing a parser for the ECU-TEST log files.
@@ -66,8 +39,7 @@ public class ETLogParser {
     /**
      * Instantiates a new {@link ETLogParser}.
      *
-     * @param logFile
-     *            the log file
+     * @param logFile the log file
      */
     public ETLogParser(final FilePath logFile) {
         this.logFile = logFile;
@@ -79,16 +51,16 @@ public class ETLogParser {
      * @return the list of annotated log messages
      */
     public List<ETLogAnnotation> parse() {
-        final List<ETLogAnnotation> logReports = new ArrayList<ETLogAnnotation>();
+        final List<ETLogAnnotation> logReports = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(logFile.read(),
-                Charset.forName("UTF-8")))) {
+            Charset.forName("UTF-8")))) {
             String line;
             int warnLogCount = 0;
             int errorLogCount = 0;
             final int maxLogCount = AbstractETLogAction.getMaxLogSize();
             try (LineNumberReader lineReader = new LineNumberReader(reader)) {
                 while ((line = lineReader.readLine()) != null
-                        && (warnLogCount < maxLogCount || errorLogCount < maxLogCount)) {
+                    && (warnLogCount < maxLogCount || errorLogCount < maxLogCount)) {
                     ETLogAnnotation logAnnotation = null;
                     if (warnLogCount < maxLogCount && isWarningLog(line)) {
                         logAnnotation = parseLine(line, lineReader, Severity.WARNING);
@@ -104,7 +76,7 @@ public class ETLogParser {
             }
         } catch (final IOException | InterruptedException e) {
             LOGGER.log(Level.SEVERE,
-                    String.format("Failed parsing log file %s: %s", logFile.getRemote(), e.getMessage()));
+                String.format("Failed parsing log file %s: %s", logFile.getRemote(), e.getMessage()));
         }
         return logReports;
     }
@@ -112,26 +84,25 @@ public class ETLogParser {
     /**
      * Parses the total count of log messages matching the given severity.
      *
-     * @param severity
-     *            the severity to match
+     * @param severity the severity to match
      * @return the total log count by severity
      */
     public int parseLogCount(final Severity severity) {
         int logCount = 0;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(logFile.read(),
-                Charset.forName("UTF-8")))) {
+            Charset.forName("UTF-8")))) {
             String line;
             try (LineNumberReader lineReader = new LineNumberReader(reader)) {
                 while ((line = lineReader.readLine()) != null) {
                     if (severity == Severity.WARNING && isWarningLog(line)
-                            || severity == Severity.ERROR && isErrorLog(line)) {
+                        || severity == Severity.ERROR && isErrorLog(line)) {
                         logCount++;
                     }
                 }
             }
         } catch (final IOException | InterruptedException e) {
             LOGGER.log(Level.SEVERE,
-                    String.format("Failed parsing log file %s: %s", logFile.getRemote(), e.getMessage()));
+                String.format("Failed parsing log file %s: %s", logFile.getRemote(), e.getMessage()));
         }
         return logCount;
     }
@@ -139,19 +110,15 @@ public class ETLogParser {
     /**
      * Parses a single log message.
      *
-     * @param line
-     *            the current line
-     * @param lineReader
-     *            the line number reader
-     * @param severity
-     *            the severity to annotate the message.
+     * @param line       the current line
+     * @param lineReader the line number reader
+     * @param severity   the severity to annotate the message.
      * @return the annotated message, can be {@code null}
-     * @throws IOException
-     *             signals that an I/O exception has occurred
+     * @throws IOException signals that an I/O exception has occurred
      */
     @CheckForNull
     private ETLogAnnotation parseLine(String line, final LineNumberReader lineReader, final Severity severity)
-            throws IOException {
+        throws IOException {
         ETLogAnnotation logAnnotation = null;
         if (line != null) {
             final String[] lineSplit = line.split("\\s+");
@@ -165,12 +132,12 @@ public class ETLogParser {
                         }
                         break;
                     } else if (StringUtils.isNotBlank(line)) {
-                        msg.append(line.trim() + "\n");
+                        msg.append(line.trim()).append("\n");
                     }
                     lineReader.mark(4096);
                 }
                 logAnnotation = new ETLogAnnotation(lineNumber, lineSplit[0] + " "
-                        + lineSplit[1], lineSplit[3], severity, msg.toString());
+                    + lineSplit[1], lineSplit[3], severity, msg.toString());
             }
         }
         return logAnnotation;
@@ -179,8 +146,7 @@ public class ETLogParser {
     /**
      * Checks whether the given log line is a warning message.
      *
-     * @param line
-     *            the log line
+     * @param line the log line
      * @return {@code true} if warning message, {@code false} otherwise
      */
     private boolean isWarningLog(final String line) {
@@ -190,8 +156,7 @@ public class ETLogParser {
     /**
      * Checks whether the given log line is an error message.
      *
-     * @param line
-     *            the log line
+     * @param line the log line
      * @return {@code true} if error message, {@code false} otherwise
      */
     private boolean isErrorLog(final String line) {

@@ -1,51 +1,25 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.log;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
 import hudson.Launcher;
+import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
-import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
-
-import java.io.IOException;
-
 import org.junit.Test;
 import org.jvnet.hudson.test.TestBuilder;
 import org.xml.sax.SAXException;
 
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import java.io.IOException;
 
-import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Integration tests for {@link TTConsoleLogger}.
@@ -61,7 +35,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                    final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) throws InterruptedException, IOException {
                 final TTConsoleLogger logger = new TTConsoleLogger(listener);
                 logger.log("TTConsoleLogger");
                 return true;
@@ -71,7 +45,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
         final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
         final HtmlPage consoleLog = getWebClient().getPage(build, "console");
         assertTrue("Plain text log output should be present in build console log",
-                consoleLog.asText().contains("TTConsoleLogger"));
+            consoleLog.asText().contains("TTConsoleLogger"));
     }
 
     @Test
@@ -81,7 +55,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                    final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) throws InterruptedException, IOException {
                 final TTConsoleLogger logger = new TTConsoleLogger(listener);
                 logger.logInfo("TTConsoleLogger");
                 return true;
@@ -91,7 +65,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
         final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
         final HtmlPage consoleLog = getWebClient().getPage(build, "console");
         assertTrue("Annotated info log output should be present in build console log",
-                consoleLog.asText().contains("[TT] INFO: TTConsoleLogger"));
+            consoleLog.asText().contains("[TT] INFO: TTConsoleLogger"));
     }
 
     @Test
@@ -101,7 +75,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                    final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) throws InterruptedException, IOException {
                 final TTConsoleLogger logger = new TTConsoleLogger(listener);
                 logger.logWarn("TTConsoleLogger");
                 return true;
@@ -111,7 +85,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
         final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
         final HtmlPage consoleLog = getWebClient().getPage(build, "console");
         assertTrue("Annotated warn log output should be present in build console log",
-                consoleLog.asText().contains("[TT] WARN: TTConsoleLogger"));
+            consoleLog.asText().contains("[TT] WARN: TTConsoleLogger"));
     }
 
     @Test
@@ -121,7 +95,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                    final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) throws InterruptedException, IOException {
                 final TTConsoleLogger logger = new TTConsoleLogger(listener);
                 logger.logError("TTConsoleLogger");
                 return true;
@@ -131,7 +105,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
         final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
         final HtmlPage consoleLog = getWebClient().getPage(build, "console");
         assertTrue("Annotated error log output should be present in build console log",
-                consoleLog.asText().contains("[TT] ERROR: TTConsoleLogger"));
+            consoleLog.asText().contains("[TT] ERROR: TTConsoleLogger"));
     }
 
     @Test
@@ -141,7 +115,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                    final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) throws InterruptedException, IOException {
                 final TTConsoleLogger logger = new TTConsoleLogger(listener);
                 logger.logComException("TTConsoleLogger");
                 return true;
@@ -151,7 +125,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
         final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
         final HtmlPage consoleLog = getWebClient().getPage(build, "console");
         assertTrue("Annotated error log output should be present in build console log",
-                consoleLog.asText().contains("[TT] ERROR: Caught ComException: TTConsoleLogger"));
+            consoleLog.asText().contains("[TT] ERROR: Caught ComException: TTConsoleLogger"));
     }
 
     @Test
@@ -159,7 +133,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
         System.setProperty("ecutest.debugLog", "true");
         final HtmlPage consoleLog = logDebug();
         assertTrue("Annotated debug log output should be present in build console log",
-                consoleLog.asText().contains("[TT] DEBUG: TTConsoleLogger"));
+            consoleLog.asText().contains("[TT] DEBUG: TTConsoleLogger"));
     }
 
     @Test
@@ -167,16 +141,16 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
         System.setProperty("ecutest.debugLog", "false");
         final HtmlPage consoleLog = logDebug();
         assertFalse("Annotated debug log output should NOT be present in build console log",
-                consoleLog.asText().contains("[TT] DEBUG: TTConsoleLogger"));
+            consoleLog.asText().contains("[TT] DEBUG: TTConsoleLogger"));
     }
 
-    private HtmlPage logDebug() throws IOException, Exception, SAXException {
+    private HtmlPage logDebug() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.getBuildersList().add(new TestBuilder() {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                    final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) throws InterruptedException, IOException {
                 final TTConsoleLogger logger = new TTConsoleLogger(listener);
                 logger.logDebug("TTConsoleLogger");
                 return true;

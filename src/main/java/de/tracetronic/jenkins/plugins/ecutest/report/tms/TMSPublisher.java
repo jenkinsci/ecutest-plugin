@@ -1,54 +1,33 @@
 /*
- * Copyright (c) 2015-2018 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.tms;
 
+import com.cloudbees.plugins.credentials.CredentialsMatchers;
+import com.cloudbees.plugins.credentials.CredentialsProvider;
+import com.cloudbees.plugins.credentials.common.StandardCredentials;
+import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
+import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
+import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
+import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.TMSValidator;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.Item;
 import hudson.model.Result;
-import hudson.model.TaskListener;
 import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.security.ACL;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
 import jenkins.model.Jenkins;
-
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
@@ -57,20 +36,11 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
-import com.cloudbees.plugins.credentials.CredentialsMatchers;
-import com.cloudbees.plugins.credentials.CredentialsProvider;
-import com.cloudbees.plugins.credentials.common.StandardCredentials;
-import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
-import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-import com.cloudbees.plugins.credentials.domains.DomainRequirement;
-
-import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
-import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.TMSValidator;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Publisher providing the export of reports to a test management system.
@@ -93,16 +63,21 @@ public class TMSPublisher extends AbstractReportPublisher {
     /**
      * Instantiates a new {@link TMSPublisher}.
      *
-     * @param toolName
-     *            the tool name identifying the {@link ETInstallation} to be used
-     * @param credentialsId
-     *            the credentials id
+     * @param toolName      the tool name identifying the {@link ETInstallation} to be used
+     * @param credentialsId the credentials id
      */
     @DataBoundConstructor
     public TMSPublisher(@Nonnull final String toolName, @Nonnull final String credentialsId) {
         super();
         this.toolName = StringUtils.trimToEmpty(toolName);
         this.credentialsId = StringUtils.trimToEmpty(credentialsId);
+    }
+
+    /**
+     * @return the default timeout
+     */
+    public static int getDefaultTimeout() {
+        return DEFAULT_TIMEOUT;
     }
 
     /**
@@ -122,15 +97,6 @@ public class TMSPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * @param timeout
-     *            the timeout
-     */
-    @DataBoundSetter
-    public void setTimeout(@CheckForNull final String timeout) {
-        this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(getDefaultTimeout()));
-    }
-
-    /**
      * @return the export timeout
      */
     @Nonnull
@@ -139,15 +105,16 @@ public class TMSPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * @return the default timeout
+     * @param timeout the timeout
      */
-    public static int getDefaultTimeout() {
-        return DEFAULT_TIMEOUT;
+    @DataBoundSetter
+    public void setTimeout(@CheckForNull final String timeout) {
+        this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(getDefaultTimeout()));
     }
 
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
+                              final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = getLogger();
         logger.logInfo("Publishing reports to test management system...");
 
@@ -186,26 +153,20 @@ public class TMSPublisher extends AbstractReportPublisher {
     /**
      * Publishes the reports to the test management system.
      *
-     * @param reportFiles
-     *            the report files
-     * @param project
-     *            the project
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param reportFiles the report files
+     * @param project     the project
+     * @param workspace   the workspace
+     * @param launcher    the launcher
+     * @param listener    the listener
      * @return {@code true}, if upload succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean publishReports(final List<FilePath> reportFiles, final Item project, final FilePath workspace,
-            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
+                                   final Launcher launcher, final TaskListener listener)
+        throws IOException, InterruptedException {
         return new TMSReportUploader().upload(reportFiles, credentialsId, timeout, project, workspace, launcher,
-                listener);
+            listener);
     }
 
     @Override
@@ -242,8 +203,7 @@ public class TMSPublisher extends AbstractReportPublisher {
         /**
          * Validates the timeout.
          *
-         * @param value
-         *            the timeout
+         * @param value the timeout
          * @return the form validation
          */
         public FormValidation doCheckTimeout(@QueryParameter final String value) {
@@ -253,14 +213,12 @@ public class TMSPublisher extends AbstractReportPublisher {
         /**
          * Fills the credentials drop-down menu.
          *
-         * @param item
-         *            the item
-         * @param credentialsId
-         *            the credentials id
+         * @param item          the item
+         * @param credentialsId the credentials id
          * @return the credentials items
          */
         public ListBoxModel doFillCredentialsIdItems(@AncestorInPath final Item item,
-                @QueryParameter final String credentialsId) {
+                                                     @QueryParameter final String credentialsId) {
             final StandardListBoxModel result = new StandardListBoxModel();
             if (item == null) {
                 if (!Jenkins.getInstance().hasPermission(Jenkins.ADMINISTER)) {
@@ -268,17 +226,18 @@ public class TMSPublisher extends AbstractReportPublisher {
                 }
             } else {
                 if (!item.hasPermission(Item.EXTENDED_READ)
-                        && !item.hasPermission(CredentialsProvider.USE_ITEM)) {
+                    && !item.hasPermission(CredentialsProvider.USE_ITEM)) {
                     return result.includeCurrentValue(credentialsId);
                 }
             }
             return result
-                    .includeEmptyValue()
-                    .includeMatchingAs(ACL.SYSTEM, item, StandardCredentials.class,
-                            Collections.<DomainRequirement> emptyList(),
-                            CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class));
+                .includeEmptyValue()
+                .includeMatchingAs(ACL.SYSTEM, item, StandardCredentials.class,
+                    Collections.emptyList(),
+                    CredentialsMatchers.instanceOf(StandardUsernamePasswordCredentials.class));
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.TMSPublisher_DisplayName();

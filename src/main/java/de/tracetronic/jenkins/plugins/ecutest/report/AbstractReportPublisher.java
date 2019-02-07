@@ -1,61 +1,9 @@
 /*
- * Copyright (c) 2015-2018 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.report;
-
-import hudson.AbortException;
-import hudson.EnvVars;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.Util;
-import hudson.model.Result;
-import hudson.model.TaskListener;
-import hudson.model.AbstractItem;
-import hudson.model.Computer;
-import hudson.model.Node;
-import hudson.model.Run;
-import hudson.tasks.BuildStepMonitor;
-import hudson.tasks.Recorder;
-import hudson.tools.ToolInstallation;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.CheckForNull;
-
-import jenkins.tasks.SimpleBuildStep;
-
-import org.kohsuke.stapler.DataBoundSetter;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
@@ -70,6 +18,31 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
+import hudson.AbortException;
+import hudson.EnvVars;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.Util;
+import hudson.model.AbstractItem;
+import hudson.model.Computer;
+import hudson.model.Node;
+import hudson.model.Result;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.tasks.BuildStepMonitor;
+import hudson.tasks.Recorder;
+import hudson.tools.ToolInstallation;
+import jenkins.tasks.SimpleBuildStep;
+import org.kohsuke.stapler.DataBoundSetter;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Common base class for {@link ATXPublisher}, {@link ETLogPublisher}, {@link JUnitPublisher} and {@link TRFPublisher}.
@@ -107,23 +80,54 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Instantiates a new {@link AbstractReportPublisher}.
      *
-     * @param allowMissing
-     *            specifies whether missing reports are allowed
-     * @param runOnFailed
-     *            specifies whether this publisher even runs on a failed build
-     * @param archiving
-     *            specifies whether archiving artifacts is enabled
-     * @param keepAll
-     *            specifies whether artifacts are archived for all successful builds,
-     *            otherwise only the most recent
+     * @param allowMissing specifies whether missing reports are allowed
+     * @param runOnFailed  specifies whether this publisher even runs on a failed build
+     * @param archiving    specifies whether archiving artifacts is enabled
+     * @param keepAll      specifies whether artifacts are archived for all successful builds,
+     *                     otherwise only the most recent
      */
     public AbstractReportPublisher(final boolean allowMissing, final boolean runOnFailed, final boolean archiving,
-            final boolean keepAll) {
+                                   final boolean keepAll) {
         super();
         this.allowMissing = allowMissing;
         this.runOnFailed = runOnFailed;
         this.archiving = archiving;
         this.keepAll = keepAll;
+    }
+
+    /**
+     * Gets the first TRF file found in given report directory.
+     *
+     * @param reportDir the report directory
+     * @return the first report file or {@code null} if not found
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
+     */
+    @CheckForNull
+    public static FilePath getFirstReportFile(final FilePath reportDir) throws IOException, InterruptedException {
+        final FilePath[] files = reportDir.list(TRFPublisher.TRF_INCLUDE, TRFPublisher.TRF_EXCLUDE);
+        return files.length > 0 ? files[0] : null;
+    }
+
+    /**
+     * Removes the report actions from all previous builds which published at project level.
+     *
+     * @param run   the run
+     * @param clazz the report action class to remove
+     * @throws IOException signals that an I/O exception has occurred
+     */
+    @SuppressWarnings("deprecation")
+    public static void removePreviousReports(final Run<?, ?> run,
+                                             final Class<? extends AbstractReportAction> clazz) throws IOException {
+        Run<?, ?> prevBuild = run.getPreviousBuild();
+        while (prevBuild != null) {
+            final AbstractReportAction buildAction = prevBuild.getAction(clazz);
+            if (buildAction != null && buildAction.isProjectLevel()) {
+                prevBuild.getActions().remove(buildAction);
+                prevBuild.save();
+            }
+            prevBuild = prevBuild.getPreviousBuild();
+        }
     }
 
     /**
@@ -136,12 +140,28 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     }
 
     /**
+     * @param allowMissing specifies whether missing reports are allowed
+     */
+    @DataBoundSetter
+    public void setAllowMissing(final boolean allowMissing) {
+        this.allowMissing = allowMissing;
+    }
+
+    /**
      * Returns whether this publisher can run for failed builds, too.
      *
      * @return {@code true} if this publisher can run for failed builds, {@code false} otherwise
      */
     public boolean isRunOnFailed() {
         return runOnFailed;
+    }
+
+    /**
+     * @param runOnFailed specifies whether this publisher even runs on a failed build
+     */
+    @DataBoundSetter
+    public void setRunOnFailed(final boolean runOnFailed) {
+        this.runOnFailed = runOnFailed;
     }
 
     /**
@@ -156,11 +176,19 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Equivalent getter with {@code boolean} return type.
      *
-     * @see #isArchiving()
      * @return {@code true} if archiving artifacts is enabled, {@code false} otherwise
+     * @see #isArchiving()
      */
     public boolean getArchiving() {
         return archiving;
+    }
+
+    /**
+     * @param archiving specifies whether archiving artifacts is enabled
+     */
+    @DataBoundSetter
+    public void setArchiving(final boolean archiving) {
+        this.archiving = archiving;
     }
 
     /**
@@ -175,44 +203,16 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Equivalent getter with {@code boolean} return type.
      *
-     * @see #isKeepAll()
      * @return {@code true} if artifacts should be archived for all successful builds, {@code false} otherwise
+     * @see #isKeepAll()
      */
     public boolean getKeepAll() {
         return keepAll;
     }
 
     /**
-     * @param allowMissing
-     *            specifies whether missing reports are allowed
-     */
-    @DataBoundSetter
-    public void setAllowMissing(final boolean allowMissing) {
-        this.allowMissing = allowMissing;
-    }
-
-    /**
-     * @param runOnFailed
-     *            specifies whether this publisher even runs on a failed build
-     */
-    @DataBoundSetter
-    public void setRunOnFailed(final boolean runOnFailed) {
-        this.runOnFailed = runOnFailed;
-    }
-
-    /**
-     * @param archiving
-     *            specifies whether archiving artifacts is enabled
-     */
-    @DataBoundSetter
-    public void setArchiving(final boolean archiving) {
-        this.archiving = archiving;
-    }
-
-    /**
-     * @param keepAll
-     *            specifies whether artifacts are archived for all successful builds,
-     *            otherwise only the most recent
+     * @param keepAll specifies whether artifacts are archived for all successful builds,
+     *                otherwise only the most recent
      */
     @DataBoundSetter
     public void setKeepAll(final boolean keepAll) {
@@ -221,7 +221,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
 
     /**
      * Returns whether this publisher is part of {@link DownStreamPublisher} actions.
-     * 
+     *
      * @return {@code true}, if downstream-based, {@code false} otherwise
      */
     public boolean isDownstream() {
@@ -231,8 +231,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Transient setter to inform this publisher that it is part of a {@link DownStreamPublisher}.
      *
-     * @param downstream
-     *            the downstream flag
+     * @param downstream the downstream flag
      */
     public void setDownstream(final boolean downstream) {
         this.downstream = downstream;
@@ -248,16 +247,16 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Transient setter for the downstream workspace.
      *
-     * @param workspace
-     *            the downstream workspace
+     * @param workspace the downstream workspace
      */
     public void setWorkspace(final String workspace) {
         this.workspace = workspace;
     }
 
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
+    public void perform(@Nonnull final Run<?, ?> run, @Nonnull final FilePath workspace,
+                        @Nonnull final Launcher launcher, @Nonnull final TaskListener listener)
+        throws InterruptedException, IOException {
         try {
             initLogger(listener);
             performReport(run, workspace, launcher, listener);
@@ -273,23 +272,16 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Performs the report-specific post-build operations.
      *
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
-     * @throws InterruptedException
-     *             the interrupted exception
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws ETPluginException
-     *             in case of report operation errors
+     * @param run       the run
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
+     * @throws InterruptedException the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws ETPluginException    in case of report operation errors
      */
     protected abstract void performReport(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
-            throws InterruptedException, IOException, ETPluginException;
+        throws InterruptedException, IOException, ETPluginException;
 
     /**
      * Gets the logger instance.
@@ -303,8 +295,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Initializes the logger.
      *
-     * @param listener
-     *            the listener
+     * @param listener the listener
      */
     private void initLogger(final TaskListener listener) {
         logger = new TTConsoleLogger(listener);
@@ -314,18 +305,14 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * Determines whether this publisher will be skipped
      * depending on OS architecture and current build result.
      *
-     * @param checkOS
-     *            specifies whether to check OS
-     * @param run
-     *            the run
-     * @param launcher
-     *            the launcher
+     * @param checkOS  specifies whether to check OS
+     * @param run      the run
+     * @param launcher the launcher
      * @return {@code true} when to skip, {@code false} otherwise
-     * @throws ETPluginException
-     *             if Unix-based launcher
+     * @throws ETPluginException if Unix-based launcher
      */
     protected boolean isSkipped(final boolean checkOS, final Run<?, ?> run, final Launcher launcher)
-            throws ETPluginException {
+        throws ETPluginException {
         if (checkOS) {
             ProcessUtil.checkOS(launcher);
         }
@@ -341,8 +328,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * Returns whether this publisher can continue processing. Returns {@code true} if the property {@code runOnFailed}
      * is set or if the build is not aborted or failed.
      *
-     * @param result
-     *            the run result
+     * @param result the run result
      * @return {@code true} if the build can continue
      */
     protected boolean canContinue(final Result result) {
@@ -356,13 +342,10 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Checks whether an ECU-TEST instance is still running.
      *
-     * @param launcher
-     *            the launcher
+     * @param launcher the launcher
      * @return {@code true} if ECU-TEST is running, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
      */
     protected boolean isETRunning(final Launcher launcher) throws IOException, InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
@@ -372,59 +355,44 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Configures an ECU-TEST client with given workspace settings.
      *
-     * @param toolName
-     *            the tool name
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param toolName  the tool name
+     * @param run       the run
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
      * @return the ECU-TEST client
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
-     * @throws ETPluginException
-     *             in case of a COM exception
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
+     * @throws ETPluginException    in case of a COM exception
      */
     protected ETClient getToolClient(final String toolName, final Run<?, ?> run, final FilePath workspace,
-            final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException, ETPluginException {
+                                     final Launcher launcher, final TaskListener listener)
+        throws IOException, InterruptedException, ETPluginException {
         final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
-                run.getEnvironment(listener));
+            run.getEnvironment(listener));
         final String installPath = installation.getExecutable(launcher);
         final String workspaceDir = getWorkspaceDir(run, workspace);
         final String settingsDir = getSettingsDir(run, workspace);
         final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
         return new ETClient(expandedToolName, installPath, workspaceDir,
-                settingsDir, StartETBuilder.DEFAULT_TIMEOUT, false);
+            settingsDir, StartETBuilder.DEFAULT_TIMEOUT, false);
     }
 
     /**
      * Configures the tool installation for functioning in the node and the environment.
      *
-     * @param toolName
-     *            the tool name identifying the specific tool
-     * @param computer
-     *            the computer
-     * @param listener
-     *            the listener
-     * @param envVars
-     *            the environment variables
+     * @param toolName the tool name identifying the specific tool
+     * @param computer the computer
+     * @param listener the listener
+     * @param envVars  the environment variables
      * @return the tool installation
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
-     * @throws ETPluginException
-     *             if the selected tool installation is not configured
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
+     * @throws ETPluginException    if the selected tool installation is not configured
      */
     protected ETInstallation configureToolInstallation(final String toolName, final Computer computer,
-            final TaskListener listener, final EnvVars envVars) throws IOException, InterruptedException,
-            ETPluginException {
+                                                       final TaskListener listener, final EnvVars envVars)
+        throws IOException, InterruptedException, ETPluginException {
         ETInstallation installation = getToolInstallation(toolName, envVars);
         if (installation != null && computer != null) {
             final Node node = computer.getNode();
@@ -444,10 +412,8 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Gets the tool installation by descriptor and tool name.
      *
-     * @param toolName
-     *            the tool name identifying the specific tool
-     * @param envVars
-     *            the environment variables
+     * @param toolName the tool name identifying the specific tool
+     * @param envVars  the environment variables
      * @return the tool installation
      */
     public ETInstallation getToolInstallation(final String toolName, final EnvVars envVars) {
@@ -467,10 +433,8 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Gets the workspace directory, either previous ECU-TEST workspace or default one.
      *
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
+     * @param run       the run
+     * @param workspace the workspace
      * @return the workspace directory
      */
     protected String getWorkspaceDir(final Run<?, ?> run, final FilePath workspace) {
@@ -489,10 +453,8 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Gets the settings directory, either previous ECU-TEST settings or default one.
      *
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
+     * @param run       the run
+     * @param workspace the workspace
      * @return the settings directory
      */
     protected String getSettingsDir(final Run<?, ?> run, final FilePath workspace) {
@@ -511,8 +473,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Gets the archive target.
      *
-     * @param run
-     *            the run
+     * @param run the run
      * @return the archive target
      */
     protected FilePath getArchiveTarget(final Run<?, ?> run) {
@@ -522,8 +483,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Gets the directory where the reports are stored for the given project.
      *
-     * @param project
-     *            the project
+     * @param project the project
      * @return the project archive directory
      */
     private File getProjectArchiveDir(final AbstractItem project) {
@@ -533,8 +493,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Gets the directory where the reports are stored for the given build.
      *
-     * @param run
-     *            the run
+     * @param run the run
      * @return the build archive directory
      */
     private File getBuildArchiveDir(final Run<?, ?> run) {
@@ -551,21 +510,16 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Gets the report directories either from test environment actions or downstream workspace.
      *
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
+     * @param run       the run
+     * @param workspace the workspace
+     * @param launcher  the launcher
      * @return the report directories
-     * @throws IOException
-     *             signals that an I/O exception has occurred.
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred.
+     * @throws InterruptedException the interrupted exception
      */
     protected List<FilePath> getReportDirs(final Run<?, ?> run, final FilePath workspace, final Launcher launcher)
-            throws IOException, InterruptedException {
-        final List<FilePath> reportDirs = new ArrayList<FilePath>();
+        throws IOException, InterruptedException {
+        final List<FilePath> reportDirs = new ArrayList<>();
         if (isDownstream()) {
             final FilePath wsDir = workspace.child(getWorkspace());
             if (wsDir.exists()) {
@@ -590,20 +544,15 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * Builds a list of TRF files for report generation.
      * Includes the TRF files generated during separate sub-project execution.
      *
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
+     * @param run       the run
+     * @param workspace the workspace
+     * @param launcher  the launcher
      * @return the list of report files
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     protected List<FilePath> getReportFiles(final Run<?, ?> run, final FilePath workspace, final Launcher launcher)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         return getReportFiles(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES, run, workspace, launcher);
     }
 
@@ -611,29 +560,23 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * Builds a list of report files for report generation.
      * Includes the report files generated during separate sub-project execution.
      *
-     * @param includes
-     *            the includes
-     * @param excludes
-     *            the excludes
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
+     * @param includes  the includes
+     * @param excludes  the excludes
+     * @param run       the run
+     * @param workspace the workspace
+     * @param launcher  the launcher
      * @return the list of report files
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     protected List<FilePath> getReportFiles(final String includes, final String excludes, final Run<?, ?> run,
-            final FilePath workspace, final Launcher launcher) throws IOException, InterruptedException {
-        final List<FilePath> reportFiles = new ArrayList<FilePath>();
+                                            final FilePath workspace, final Launcher launcher)
+        throws IOException, InterruptedException {
+        final List<FilePath> reportFiles = new ArrayList<>();
         final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
         for (final FilePath reportDir : reportDirs) {
             reportFiles.addAll(Arrays.asList(
-                    reportDir.list(includes, excludes)));
+                reportDir.list(includes, excludes)));
         }
         Collections.reverse(reportFiles);
         return reportFiles;
@@ -642,13 +585,10 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Gets the size of given file.
      *
-     * @param file
-     *            the file
+     * @param file the file
      * @return the file size
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
      */
     protected long getFileSize(final FilePath file) throws IOException, InterruptedException {
         return file.length();
@@ -657,13 +597,10 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     /**
      * Gets the total size of given directory recursively.
      *
-     * @param directory
-     *            the directory
+     * @param directory the directory
      * @return the directory size
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
      */
     protected long getDirectorySize(final FilePath directory) throws IOException, InterruptedException {
         long size = 0;
@@ -672,47 +609,6 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
             size += file.length();
         }
         return size;
-    }
-
-    /**
-     * Gets the first TRF file found in given report directory.
-     *
-     * @param reportDir
-     *            the report directory
-     * @return the first report file or {@code null} if not found
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
-     */
-    @CheckForNull
-    public static FilePath getFirstReportFile(final FilePath reportDir) throws IOException, InterruptedException {
-        final FilePath[] files = reportDir.list(TRFPublisher.TRF_INCLUDE, TRFPublisher.TRF_EXCLUDE);
-        return files.length > 0 ? files[0] : null;
-    }
-
-    /**
-     * Removes the report actions from all previous builds which published at project level.
-     *
-     * @param run
-     *            the run
-     * @param clazz
-     *            the report action class to remove
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     */
-    @SuppressWarnings("deprecation")
-    public static void removePreviousReports(final Run<?, ?> run,
-            final Class<? extends AbstractReportAction> clazz) throws IOException {
-        Run<?, ?> prevBuild = run.getPreviousBuild();
-        while (prevBuild != null) {
-            final AbstractReportAction buildAction = prevBuild.getAction(clazz);
-            if (buildAction != null && buildAction.isProjectLevel()) {
-                prevBuild.getActions().remove(buildAction);
-                prevBuild.save();
-            }
-            prevBuild = prevBuild.getPreviousBuild();
-        }
     }
 
     @Override

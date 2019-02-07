@@ -1,49 +1,25 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
+import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
-
-import java.io.Serializable;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
+import javax.annotation.Nonnull;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Class holding the test execution settings.
@@ -51,15 +27,13 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
-        implements Serializable, ExpandableConfig {
-
-    private static final long serialVersionUID = 1L;
+    implements Serializable, ExpandableConfig {
 
     /**
      * Defines the default timeout running a test.
      */
     protected static final int DEFAULT_TIMEOUT = 3600;
-
+    private static final long serialVersionUID = 1L;
     private final String timeout;
     private final boolean stopOnError;
     /**
@@ -70,13 +44,10 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     /**
      * Instantiates a new {@link ExecutionConfig}.
      *
-     * @param timeout
-     *            the timeout to run the test
-     * @param stopOnError
-     *            specifies whether to stop ECU-TEST and
-     *            Tool-Server instances if an error occurred
-     * @param checkTestFile
-     *            specifies whether to check the test file
+     * @param timeout       the timeout to run the test
+     * @param stopOnError   specifies whether to stop ECU-TEST and
+     *                      Tool-Server instances if an error occurred
+     * @param checkTestFile specifies whether to check the test file
      */
     @DataBoundConstructor
     public ExecutionConfig(final String timeout, final boolean stopOnError, final boolean checkTestFile) {
@@ -89,13 +60,10 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     /**
      * Instantiates a new {@link ExecutionConfig}.
      *
-     * @param timeout
-     *            the timeout to run the test
-     * @param stopOnError
-     *            specifies whether to stop ECU-TEST and
-     *            Tool-Server instances if an error occurred
-     * @param checkTestFile
-     *            specifies whether to check the test file
+     * @param timeout       the timeout to run the test
+     * @param stopOnError   specifies whether to stop ECU-TEST and
+     *                      Tool-Server instances if an error occurred
+     * @param checkTestFile specifies whether to check the test file
      */
     public ExecutionConfig(final int timeout, final boolean stopOnError, final boolean checkTestFile) {
         this(String.valueOf(timeout), stopOnError, checkTestFile);
@@ -104,10 +72,9 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     /**
      * Parses a string-based parameter to integer.
      *
-     * @param param
-     *            the parameter string
+     * @param param the parameter string
      * @return the parsed integer value represented by the String parameter,
-     *         defaults to {@link #DEFAULT_TIMEOUT} if null or invalid value
+     * defaults to {@link #DEFAULT_TIMEOUT} if null or invalid value
      */
     public static int parse(final String param) {
         try {
@@ -115,6 +82,20 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
         } catch (final NumberFormatException e) {
             return DEFAULT_TIMEOUT;
         }
+    }
+
+    /**
+     * @return the default timeout
+     */
+    public static int getDefaultTimeout() {
+        return DEFAULT_TIMEOUT;
+    }
+
+    /**
+     * @return the instance of a {@link ExecutionConfig}.
+     */
+    public static ExecutionConfig newInstance() {
+        return new ExecutionConfig(null, true, true);
     }
 
     /**
@@ -132,15 +113,8 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     }
 
     /**
-     * @return the default timeout
-     */
-    public static int getDefaultTimeout() {
-        return DEFAULT_TIMEOUT;
-    }
-
-    /**
      * @return {@code true} to stop ECU-TEST and Tool-Server instances
-     *         if an error occurred, {@code false} otherwise
+     * if an error occurred, {@code false} otherwise
      */
     public boolean isStopOnError() {
         return stopOnError;
@@ -156,7 +130,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     @Override
     public ExecutionConfig expand(final EnvVars envVars) {
         final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars,
-                String.valueOf(DEFAULT_TIMEOUT));
+            String.valueOf(DEFAULT_TIMEOUT));
         return new ExecutionConfig(expTimeout, isStopOnError(), isCheckTestFile());
     }
 
@@ -165,8 +139,8 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
         boolean result = false;
         if (other instanceof ExecutionConfig) {
             final ExecutionConfig that = (ExecutionConfig) other;
-            result = (timeout == null ? that.timeout == null : timeout.equals(that.timeout))
-                    && stopOnError == that.stopOnError && checkTestFile == that.checkTestFile;
+            result = Objects.equals(timeout, that.timeout)
+                && stopOnError == that.stopOnError && checkTestFile == that.checkTestFile;
         }
         return result;
     }
@@ -174,14 +148,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     @Override
     public final int hashCode() {
         return new HashCodeBuilder(17, 31).append(timeout).append(stopOnError).append(checkTestFile)
-                .toHashCode();
-    }
-
-    /**
-     * @return the instance of a {@link ExecutionConfig}.
-     */
-    public static ExecutionConfig newInstance() {
-        return new ExecutionConfig(null, true, true);
+            .toHashCode();
     }
 
     /**
@@ -192,11 +159,6 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
 
         private final TestValidator testValidator = new TestValidator();
 
-        @Override
-        public String getDisplayName() {
-            return "Execution Configuration";
-        }
-
         /**
          * @return the default timeout
          */
@@ -204,11 +166,16 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
             return DEFAULT_TIMEOUT;
         }
 
+        @Nonnull
+        @Override
+        public String getDisplayName() {
+            return "Execution Configuration";
+        }
+
         /**
          * Validates the timeout.
          *
-         * @param value
-         *            the timeout
+         * @param value the timeout
          * @return the form validation
          */
         public FormValidation doCheckTimeout(@QueryParameter final String value) {

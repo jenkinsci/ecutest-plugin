@@ -1,42 +1,9 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.env;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import hudson.EnvVars;
-import hudson.model.FreeStyleBuild;
-
-import java.util.List;
-
-import org.junit.Test;
 
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.PackageClient;
@@ -46,6 +13,14 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
+import hudson.EnvVars;
+import hudson.model.FreeStyleBuild;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Integration tests for {@link TestEnvContributor}.
@@ -84,23 +59,23 @@ public class TestEnvContributorIT extends IntegrationTestBase {
         assertEquals("Only one test env action should exist", 1, envActions.size());
 
         assertEquals("TT_TEST_NAME_0 should match env action", testEnvAction.getTestName(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_NAME + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_NAME + testId));
         assertEquals("TT_TEST_DESCRIPTION_0 should match env action", testEnvAction.getTestDescription(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_DESCRIPTION + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_DESCRIPTION + testId));
         assertEquals("TT_TEST_TYPE_0 should match env action", testEnvAction.getTestType().name(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TYPE + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TYPE + testId));
         assertEquals("TT_TEST_FILE_0 should match env action", testEnvAction.getTestFile(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_FILE + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_FILE + testId));
         assertEquals("TT_TEST_TBC_0 should match env action", testEnvAction.getTestTbc(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TBC + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TBC + testId));
         assertEquals("TT_TEST_TCF_0 should match env action", String.valueOf(testEnvAction.getTestTcf()),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TCF + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TCF + testId));
         assertEquals("TT_TEST_REPORT_0 should match env action", testEnvAction.getTestReportDir(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_REPORT + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_REPORT + testId));
         assertEquals("TT_TEST_RESULT_0 should match env action", testEnvAction.getTestResult(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_RESULT + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_RESULT + testId));
         assertEquals("TT_TEST_TIMEOUT_0 should match env action", String.valueOf(testEnvAction.getTimeout()),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TIMEOUT + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TIMEOUT + testId));
     }
 
     @Test
@@ -121,22 +96,22 @@ public class TestEnvContributorIT extends IntegrationTestBase {
         assertEquals("Only one test env action should exist", 1, envActions.size());
 
         assertEquals("TT_TEST_NAME_0 should match env action", testEnvAction.getTestName(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_NAME + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_NAME + testId));
         assertNull("TT_TEST_DESCRIPTION_0 should not exist for projects",
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_DESCRIPTION + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_DESCRIPTION + testId));
         assertEquals("TT_TEST_TYPE_0 should match env action", testEnvAction.getTestType().name(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TYPE + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TYPE + testId));
         assertEquals("TT_TEST_FILE_0 should match env action", testEnvAction.getTestFile(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_FILE + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_FILE + testId));
         assertEquals("TT_TEST_TBC_0 should match env action", testEnvAction.getTestTbc(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TBC + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TBC + testId));
         assertEquals("TT_TEST_TCF_0 should match env action", String.valueOf(testEnvAction.getTestTcf()),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TCF + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TCF + testId));
         assertEquals("TT_TEST_REPORT_0 should match env action", testEnvAction.getTestReportDir(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_REPORT + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_REPORT + testId));
         assertEquals("TT_TEST_RESULT_0 should match env action", testEnvAction.getTestResult(),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_RESULT + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_RESULT + testId));
         assertEquals("TT_TEST_TIMEOUT_0 should match env action", String.valueOf(testEnvAction.getTimeout()),
-                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TIMEOUT + testId));
+            envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TIMEOUT + testId));
     }
 }

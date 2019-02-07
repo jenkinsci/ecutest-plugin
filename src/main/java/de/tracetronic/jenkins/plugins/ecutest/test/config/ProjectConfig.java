@@ -1,50 +1,26 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
+import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
+import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
-
-import java.io.Serializable;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
+import javax.annotation.Nonnull;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Class holding the project configuration.
@@ -52,9 +28,86 @@ import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implements Serializable,
-ExpandableConfig {
+    ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
+    private final boolean execInCurrentPkgDir;
+    private final String filterExpression;
+    /**
+     * Holds the analysis job execution mode.<br/>
+     * Backward compatibility will be retained by {@code readResolve()}.
+     *
+     * @since 1.2
+     */
+    private final JobExecutionMode jobExecMode;
+
+    /**
+     * Instantiates a new {@link ProjectConfig}.
+     *
+     * @param execInCurrentPkgDir specifies whether to search the references in the current package directory
+     * @param filterExpression    the filter expression to filter the package and project references
+     * @param jobExecMode         the analysis job execution mode
+     */
+    @DataBoundConstructor
+    public ProjectConfig(final boolean execInCurrentPkgDir, final String filterExpression,
+                         final JobExecutionMode jobExecMode) {
+        super();
+        this.execInCurrentPkgDir = execInCurrentPkgDir;
+        this.filterExpression = StringUtils.defaultIfBlank(filterExpression, "");
+        this.jobExecMode = jobExecMode;
+    }
+
+    /**
+     * @return the instance of a {@link ProjectConfig}.
+     */
+    public static ProjectConfig newInstance() {
+        return new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
+    }
+
+    /**
+     * @return the execInCurrentPkgDir
+     */
+    public boolean isExecInCurrentPkgDir() {
+        return execInCurrentPkgDir;
+    }
+
+    /**
+     * @return the filterExpression
+     */
+    public String getFilterExpression() {
+        return filterExpression;
+    }
+
+    /**
+     * @return the jobExecutionMode
+     */
+    public JobExecutionMode getJobExecMode() {
+        return jobExecMode;
+    }
+
+    @Override
+    public ProjectConfig expand(final EnvVars envVars) {
+        final String expFilterExpression = envVars.expand(getFilterExpression());
+        return new ProjectConfig(isExecInCurrentPkgDir(), expFilterExpression, getJobExecMode());
+    }
+
+    @Override
+    public final boolean equals(final Object other) {
+        boolean result = false;
+        if (other instanceof ProjectConfig) {
+            final ProjectConfig that = (ProjectConfig) other;
+            result = Objects.equals(filterExpression, that.filterExpression)
+                && execInCurrentPkgDir == that.execInCurrentPkgDir
+                && jobExecMode == that.jobExecMode;
+        }
+        return result;
+    }
+
+    @Override
+    public final int hashCode() {
+        return new HashCodeBuilder(17, 31).append(execInCurrentPkgDir).append(filterExpression)
+            .append(jobExecMode).toHashCode();
+    }
 
     /**
      * Defines the analysis job execution modes.
@@ -98,25 +151,16 @@ ExpandableConfig {
         /**
          * Instantiates a new {@link JobExecutionMode} by value.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         JobExecutionMode(final int value) {
             this.value = value;
         }
 
         /**
-         * @return the value
-         */
-        public int getValue() {
-            return value;
-        }
-
-        /**
          * Gets the job execution mode by Integer value.
          *
-         * @param value
-         *            the value
+         * @param value the value
          * @return the related {@code JobExecutionMode}
          */
         public static JobExecutionMode fromValue(final Integer value) {
@@ -129,89 +173,13 @@ ExpandableConfig {
             }
             return execMode;
         }
-    }
 
-    private final boolean execInCurrentPkgDir;
-    private final String filterExpression;
-
-    /**
-     * Holds the analysis job execution mode.<br/>
-     * Backward compatibility will be retained by {@link #readResolve()}.
-     *
-     * @since 1.2
-     */
-    private final JobExecutionMode jobExecMode;
-
-    /**
-     * Instantiates a new {@link ProjectConfig}.
-     *
-     * @param execInCurrentPkgDir
-     *            specifies whether to search the references in the current package directory
-     * @param filterExpression
-     *            the filter expression to filter the package and project references
-     * @param jobExecMode
-     *            the analysis job execution mode
-     */
-    @DataBoundConstructor
-    public ProjectConfig(final boolean execInCurrentPkgDir, final String filterExpression,
-            final JobExecutionMode jobExecMode) {
-        super();
-        this.execInCurrentPkgDir = execInCurrentPkgDir;
-        this.filterExpression = StringUtils.defaultIfBlank(filterExpression, "");
-        this.jobExecMode = jobExecMode;
-    }
-
-    /**
-     * @return the execInCurrentPkgDir
-     */
-    public boolean isExecInCurrentPkgDir() {
-        return execInCurrentPkgDir;
-    }
-
-    /**
-     * @return the filterExpression
-     */
-    public String getFilterExpression() {
-        return filterExpression;
-    }
-
-    /**
-     * @return the jobExecutionMode
-     */
-    public JobExecutionMode getJobExecMode() {
-        return jobExecMode;
-    }
-
-    @Override
-    public ProjectConfig expand(final EnvVars envVars) {
-        final String expFilterExpression = envVars.expand(getFilterExpression());
-        return new ProjectConfig(isExecInCurrentPkgDir(), expFilterExpression, getJobExecMode());
-    }
-
-    @Override
-    public final boolean equals(final Object other) {
-        boolean result = false;
-        if (other instanceof ProjectConfig) {
-            final ProjectConfig that = (ProjectConfig) other;
-            result = (filterExpression == null ? that.filterExpression == null : filterExpression
-                    .equals(that.filterExpression))
-                    && execInCurrentPkgDir == that.execInCurrentPkgDir
-                    && jobExecMode == that.jobExecMode;
+        /**
+         * @return the value
+         */
+        public int getValue() {
+            return value;
         }
-        return result;
-    }
-
-    @Override
-    public final int hashCode() {
-        return new HashCodeBuilder(17, 31).append(execInCurrentPkgDir).append(filterExpression)
-                .append(jobExecMode).toHashCode();
-    }
-
-    /**
-     * @return the instance of a {@link ProjectConfig}.
-     */
-    public static ProjectConfig newInstance() {
-        return new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
     }
 
     /**
@@ -222,6 +190,7 @@ ExpandableConfig {
 
         private final TestValidator testValidator = new TestValidator();
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return "Project Configuration";
@@ -242,25 +211,24 @@ ExpandableConfig {
         public ListBoxModel doFillJobExecModeItems() {
             final ListBoxModel items = new ListBoxModel();
             items.add(Messages.TestProjectBuilder_JobExecutionMode_0(),
-                    JobExecutionMode.NO_EXECUTION.toString());
+                JobExecutionMode.NO_EXECUTION.toString());
             items.add(Messages.TestProjectBuilder_JobExecutionMode_1(),
-                    JobExecutionMode.SEQUENTIAL_EXECUTION.toString());
+                JobExecutionMode.SEQUENTIAL_EXECUTION.toString());
             items.add(Messages.TestProjectBuilder_JobExecutionMode_2(),
-                    JobExecutionMode.PARALLEL_EXECUTION.toString());
+                JobExecutionMode.PARALLEL_EXECUTION.toString());
             items.add(Messages.TestProjectBuilder_JobExecutionMode_5(),
-                    JobExecutionMode.SEPARATE_SEQUENTIAL_EXECUTION.toString());
+                JobExecutionMode.SEPARATE_SEQUENTIAL_EXECUTION.toString());
             items.add(Messages.TestProjectBuilder_JobExecutionMode_6(),
-                    JobExecutionMode.SEPARATE_PARALLEL_EXECUTION.toString());
+                JobExecutionMode.SEPARATE_PARALLEL_EXECUTION.toString());
             items.add(Messages.TestProjectBuilder_JobExecutionMode_9(),
-                    JobExecutionMode.NO_TESTCASE_EXECUTION.toString());
+                JobExecutionMode.NO_TESTCASE_EXECUTION.toString());
             return items;
         }
 
         /**
          * Validates the filter expression.
          *
-         * @param value
-         *            the filter expression
+         * @param value the filter expression
          * @return the form validation
          */
         public FormValidation doCheckFilterExpression(@QueryParameter final String value) {

@@ -1,48 +1,9 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
-
-import hudson.model.TaskListener;
-import hudson.remoting.Callable;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import jenkins.security.MasterToSlaveCallable;
-
-import org.apache.commons.lang.StringUtils;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
@@ -52,6 +13,18 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestConfiguration;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+import org.apache.commons.lang.StringUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Common base class for {@link PackageClient} and {@link ProjectClient}.
@@ -72,15 +45,12 @@ public abstract class AbstractTestClient implements TestClient {
     /**
      * Instantiates a new {@link AbstractTestClient}.
      *
-     * @param testFile
-     *            the test file
-     * @param testConfig
-     *            the test configuration
-     * @param executionConfig
-     *            the execution configuration
+     * @param testFile        the test file
+     * @param testConfig      the test configuration
+     * @param executionConfig the execution configuration
      */
     public AbstractTestClient(final String testFile, final TestConfig testConfig,
-            final ExecutionConfig executionConfig) {
+                              final ExecutionConfig executionConfig) {
         this.testFile = StringUtils.trimToEmpty(testFile);
         this.testConfig = testConfig;
         this.executionConfig = executionConfig;
@@ -120,8 +90,7 @@ public abstract class AbstractTestClient implements TestClient {
     }
 
     /**
-     * @param testName
-     *            the test name to set
+     * @param testName the test name to set
      */
     public void setTestName(final String testName) {
         this.testName = testName;
@@ -135,8 +104,7 @@ public abstract class AbstractTestClient implements TestClient {
     }
 
     /**
-     * @param testDescription
-     *            the test description to set
+     * @param testDescription the test description to set
      */
     public void setTestDescription(final String testDescription) {
         this.testDescription = testDescription;
@@ -150,8 +118,7 @@ public abstract class AbstractTestClient implements TestClient {
     }
 
     /**
-     * @param testReportDir
-     *            the test report directory to set
+     * @param testReportDir the test report directory to set
      */
     public void setTestReportDir(final String testReportDir) {
         this.testReportDir = testReportDir;
@@ -165,8 +132,7 @@ public abstract class AbstractTestClient implements TestClient {
     }
 
     /**
-     * @param testResult
-     *            the test result to set
+     * @param testResult the test result to set
      */
     public void setTestResult(final String testResult) {
         this.testResult = testResult;
@@ -180,8 +146,7 @@ public abstract class AbstractTestClient implements TestClient {
     }
 
     /**
-     * @param isAborted
-     *            the test abort status
+     * @param isAborted the test abort status
      */
     public void setAborted(final boolean isAborted) {
         this.isAborted = isAborted;
@@ -200,10 +165,8 @@ public abstract class AbstractTestClient implements TestClient {
         /**
          * Instantiates a new {@link LoadConfigCallable}.
          *
-         * @param testConfig
-         *            the test configuration
-         * @param listener
-         *            the listener
+         * @param testConfig the test configuration
+         * @param listener   the listener
          */
         public LoadConfigCallable(final TestConfig testConfig, final TaskListener listener) {
             this.testConfig = testConfig;
@@ -262,8 +225,7 @@ public abstract class AbstractTestClient implements TestClient {
         /**
          * Gets the name of the given configuration file.
          *
-         * @param configFile
-         *            the configuration file
+         * @param configFile the configuration file
          * @return the configuration name
          */
         private String getConfigName(final String configFile) {
@@ -280,16 +242,12 @@ public abstract class AbstractTestClient implements TestClient {
          * Sets the new global constants for the currently loaded test configuration.
          * This requires to start the configuration, add the constants and reload the configuration.
          *
-         * @param comClient
-         *            the COM client
-         * @param constantMap
-         *            the constants to set
-         * @param logger
-         * @throws ETComException
-         *             in case of a COM exception
+         * @param comClient   the COM client
+         * @param constantMap the constants to set
+         * @throws ETComException in case of a COM exception
          */
         private void setGlobalConstants(final ETComClient comClient, final Map<String, String> constantMap)
-                throws ETComException {
+            throws ETComException {
             comClient.start();
             final TestConfiguration testConfig = (TestConfiguration) comClient.getCurrentTestConfiguration();
             for (final Entry<String, String> newConstant : constantMap.entrySet()) {
@@ -302,11 +260,10 @@ public abstract class AbstractTestClient implements TestClient {
          * Converts the global constant list to a map.
          *
          * @return the global constant map
-         * @throws ETComException
-         *             in case of a COM exception
+         * @throws ETComException in case of a COM exception
          */
         private Map<String, String> getGlobalConstantMap() throws ETComException {
-            final Map<String, String> constantMap = new LinkedHashMap<String, String>();
+            final Map<String, String> constantMap = new LinkedHashMap<>();
             for (final GlobalConstant constant : testConfig.getConstants()) {
                 constantMap.put(constant.getName(), constant.getValue());
             }
@@ -328,12 +285,9 @@ public abstract class AbstractTestClient implements TestClient {
         /**
          * Instantiates a new {@link TestInfoHolder}.
          *
-         * @param testResult
-         *            the test result
-         * @param testReportDir
-         *            the test report directory
-         * @param isAborted
-         *            specifies whether test execution is aborted
+         * @param testResult    the test result
+         * @param testReportDir the test report directory
+         * @param isAborted     specifies whether test execution is aborted
          */
         public TestInfoHolder(final String testResult, final String testReportDir, final boolean isAborted) {
             this.testResult = testResult;
@@ -368,26 +322,6 @@ public abstract class AbstractTestClient implements TestClient {
      */
     public static final class CheckInfoHolder {
 
-        /**
-         * Defines the seriousness types for checks.
-         */
-        public enum Seriousness {
-            /**
-             * Seriousness indicating the check is informational only.
-             */
-            NOTE,
-
-            /**
-             * Seriousness indicating the check represents a warning.
-             */
-            WARNING,
-
-            /**
-             * Seriousness indicating the check represents an error.
-             */
-            ERROR;
-        }
-
         private final String filePath;
         private final Seriousness seriousness;
         private final String errorMessage;
@@ -396,17 +330,13 @@ public abstract class AbstractTestClient implements TestClient {
         /**
          * Instantiates a new {@link CheckInfoHolder}.
          *
-         * @param filePath
-         *            the file path
-         * @param seriousness
-         *            the seriousness
-         * @param errorMessage
-         *            the error message
-         * @param lineNumber
-         *            the line number
+         * @param filePath     the file path
+         * @param seriousness  the seriousness
+         * @param errorMessage the error message
+         * @param lineNumber   the line number
          */
         public CheckInfoHolder(final String filePath, final Seriousness seriousness, final String errorMessage,
-                final String lineNumber) {
+                               final String lineNumber) {
             super();
             this.filePath = filePath;
             this.seriousness = seriousness;
@@ -440,6 +370,26 @@ public abstract class AbstractTestClient implements TestClient {
          */
         public String getLineNumber() {
             return lineNumber;
+        }
+
+        /**
+         * Defines the seriousness types for checks.
+         */
+        public enum Seriousness {
+            /**
+             * Seriousness indicating the check is informational only.
+             */
+            NOTE,
+
+            /**
+             * Seriousness indicating the check represents a warning.
+             */
+            WARNING,
+
+            /**
+             * Seriousness indicating the check represents an error.
+             */
+            ERROR
         }
     }
 }

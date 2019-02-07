@@ -1,50 +1,25 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.TaskListener;
-import hudson.remoting.Callable;
-
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import jenkins.security.MasterToSlaveCallable;
+
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Class providing the report generation with a specific generator.
@@ -58,8 +33,7 @@ public class ReportGenerator {
     /**
      * Instantiates a new {@link ReportGenerator}.
      *
-     * @param config
-     *            the configuration
+     * @param config the configuration
      */
     public ReportGenerator(final ReportGeneratorConfig config) {
         super();
@@ -76,20 +50,15 @@ public class ReportGenerator {
     /**
      * Generate reports by calling the {@link GenerateReportCallable}.
      *
-     * @param reportFiles
-     *            the report files
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param reportFiles the report files
+     * @param launcher    the launcher
+     * @param listener    the listener
      * @return {@code true} if generation succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean generate(final List<FilePath> reportFiles, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                            final TaskListener listener) throws IOException, InterruptedException {
         return launcher.getChannel().call(new GenerateReportCallable(config, reportFiles, listener));
     }
 
@@ -105,17 +74,14 @@ public class ReportGenerator {
         private final TaskListener listener;
 
         /**
-         * Instantiates a new {@link GenerateUnitReportCallable}.
+         * Instantiates a new {@link GenerateReportCallable}.
          *
-         * @param config
-         *            the template name
-         * @param dbFiles
-         *            the list of TRF files
-         * @param listener
-         *            the listener
+         * @param config   the template name
+         * @param dbFiles  the list of TRF files
+         * @param listener the listener
          */
         GenerateReportCallable(final ReportGeneratorConfig config, final List<FilePath> dbFiles,
-                final TaskListener listener) {
+                               final TaskListener listener) {
             this.config = config;
             this.dbFiles = dbFiles;
             this.listener = listener;
@@ -135,7 +101,7 @@ public class ReportGenerator {
                     logger.logInfo(String.format("-> Generating %s report: %s", templateName, dbFile.getRemote()));
                     final FilePath outDir = dbFile.getParent().child(templateName);
                     if (!testEnv.generateTestReportDocumentFromDB(dbFile.getRemote(),
-                            outDir.getRemote(), templateName, true, configMap)) {
+                        outDir.getRemote(), templateName, true, configMap)) {
                         isGenerated = false;
                         logger.logError(String.format("Generating %s report failed!", templateName));
                     }
@@ -153,7 +119,7 @@ public class ReportGenerator {
          * @return the configuration map
          */
         private Map<String, String> getConfigMap() {
-            final Map<String, String> configMap = new LinkedHashMap<String, String>();
+            final Map<String, String> configMap = new LinkedHashMap<>();
             for (final ReportGeneratorSetting setting : config.getSettings()) {
                 configMap.put(setting.getName(), setting.getValue());
             }

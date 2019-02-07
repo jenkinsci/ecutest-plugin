@@ -1,46 +1,10 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.TaskListener;
-import hudson.model.Run;
-import hudson.remoting.Callable;
-import hudson.tasks.Builder;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import jenkins.security.MasterToSlaveCallable;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
@@ -48,6 +12,17 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.client.TSClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import hudson.tasks.Builder;
+import jenkins.security.MasterToSlaveCallable;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Helper class providing common used functionalities for all test related task builders.
@@ -83,18 +58,14 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * Checks already opened ECU-TEST instances.
      *
-     * @param launcher
-     *            the launcher
-     * @param kill
-     *            specifies whether to task-kill the running processes
+     * @param launcher the launcher
+     * @param kill     specifies whether to task-kill the running processes
      * @return {@code true} if processes found, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     protected boolean checkETInstance(final Launcher launcher, final boolean kill) throws IOException,
-            InterruptedException {
+        InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }
@@ -103,18 +74,14 @@ public abstract class AbstractTestHelper extends Builder {
      * Tries to close already opened ECU-TEST instances via COM first.
      * If this is not successful tries to task-kill the running process.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true} if processes found, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     protected boolean closeETInstance(final Launcher launcher, final TaskListener listener) throws IOException,
-            InterruptedException {
+        InterruptedException {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
         if (foundProcesses.isEmpty()) {
             return false;
@@ -125,18 +92,14 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * Checks already opened Tool-Server instances.
      *
-     * @param launcher
-     *            the launcher
-     * @param kill
-     *            specifies whether to task-kill the running processes
+     * @param launcher the launcher
+     * @param kill     specifies whether to task-kill the running processes
      * @return {@code true} if processes found, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     protected boolean checkTSInstance(final Launcher launcher, final boolean kill) throws IOException,
-            InterruptedException {
+        InterruptedException {
         final List<String> foundProcesses = TSClient.checkProcesses(launcher, kill);
         return !foundProcesses.isEmpty();
     }
@@ -144,8 +107,7 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * Gets the test identifier by the size of {@link TestEnvInvisibleAction}s already added to the build.
      *
-     * @param run
-     *            the build
+     * @param run the build
      * @return the test id
      */
     protected int getTestId(final Run<?, ?> run) {
@@ -156,22 +118,16 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * Gets the absolute test file path.
      *
-     * @param testFile
-     *            the expanded test file
-     * @param pkgDir
-     *            the packages directory containing the test file
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param testFile the expanded test file
+     * @param pkgDir   the packages directory containing the test file
+     * @param launcher the launcher
+     * @param listener the listener
      * @return the absolute test file path
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     protected String getTestFilePath(final String testFile, final String pkgDir, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                     final TaskListener listener) throws IOException, InterruptedException {
         String testFilePath = null;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (testFile.isEmpty()) {
@@ -191,22 +147,16 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * Gets the absolute configuration file path.
      *
-     * @param configFile
-     *            the expanded configuration file
-     * @param configDir
-     *            the expanded configuration directory containing the configuration file
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param configFile the expanded configuration file
+     * @param configDir  the expanded configuration directory containing the configuration file
+     * @param launcher   the launcher
+     * @param listener   the listener
      * @return the absolute configuration file path
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     protected String getConfigFilePath(final String configFile, final String configDir, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                       final TaskListener listener) throws IOException, InterruptedException {
         String configFilePath = null;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (configFile.isEmpty()) {
@@ -226,13 +176,10 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * Gets the configuration directory of the current ECU-TEST workspace by querying the settings file via COM.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return the configuration directory
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     protected String getConfigDir(final Launcher launcher, final TaskListener listener) throws InterruptedException {
         String configDir;
@@ -249,13 +196,10 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * Gets the packages directory of the current ECU-TEST workspace by querying the settings file via COM.
      *
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param launcher the launcher
+     * @param listener the listener
      * @return the package directory
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     protected String getPackagesDir(final Launcher launcher, final TaskListener listener) throws InterruptedException {
         String packagesDir;
@@ -281,8 +225,7 @@ public abstract class AbstractTestHelper extends Builder {
         /**
          * Instantiates a new {@link GetSettingCallable}.
          *
-         * @param settingName
-         *            the setting name to request
+         * @param settingName the setting name to request
          */
         GetSettingCallable(final String settingName) {
             this.settingName = settingName;

@@ -1,55 +1,27 @@
 /*
- * Copyright (c) 2015-2018 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.util;
 
+import com.jacob.com.LibraryLoader;
 import hudson.FilePath;
 import hudson.FilePath.FileCallable;
 import hudson.PluginWrapper;
 import hudson.model.Computer;
 import hudson.model.Node;
 import hudson.remoting.VirtualChannel;
+import jenkins.MasterToSlaveFileCallable;
+import jenkins.model.Jenkins;
+import jenkins.model.Jenkins.MasterComputer;
+import org.apache.commons.lang.StringUtils;
 
+import javax.annotation.CheckForNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.annotation.CheckForNull;
-
-import jenkins.MasterToSlaveFileCallable;
-import jenkins.model.Jenkins;
-import jenkins.model.Jenkins.MasterComputer;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.jacob.com.LibraryLoader;
 
 /**
  * Utility class providing library operations, especially for JACOB COM Bridge.
@@ -80,13 +52,10 @@ public final class DllUtil {
     /**
      * Loads the JACOB library.
      *
-     * @param computer
-     *            the computer
+     * @param computer the computer
      * @return {@code true} if successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public static boolean loadLibrary(@CheckForNull final Computer computer) throws IOException, InterruptedException {
         if (computer == null) {
@@ -99,13 +68,10 @@ public final class DllUtil {
     /**
      * Gets the file path to the JACOB library.
      *
-     * @param computer
-     *            the computer
+     * @param computer the computer
      * @return the library file path
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     private static FilePath getJacobLibrary(final Computer computer) throws IOException, InterruptedException {
         final FilePath jacobLib;
@@ -124,13 +90,10 @@ public final class DllUtil {
     /**
      * Gets the local file path to the JACOB library.
      *
-     * @param computer
-     *            the computer
+     * @param computer the computer
      * @return the local library file path
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     private static FilePath getLocalLibrary(final Computer computer) throws IOException, InterruptedException {
         FilePath localLib = null;
@@ -143,7 +106,7 @@ public final class DllUtil {
         final PluginWrapper wrapper = instance.getPluginManager().getPlugin("ecutest");
         if (wrapper != null) {
             localLib = new FilePath(FilePath.localChannel, rootDir.getAbsolutePath() + "/plugins/"
-                    + wrapper.getShortName() + "/WEB-INF/lib/" + libFile);
+                + wrapper.getShortName() + "/WEB-INF/lib/" + libFile);
         }
         return localLib;
     }
@@ -151,13 +114,10 @@ public final class DllUtil {
     /**
      * Gets the remote file path to the JACOB library.
      *
-     * @param computer
-     *            the computer
+     * @param computer the computer
      * @return the remote library file path
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     private static FilePath getRemoteLibrary(final Computer computer) throws IOException, InterruptedException {
         FilePath remoteLib = null;
@@ -176,13 +136,10 @@ public final class DllUtil {
     /**
      * Gets the library file for the respective system architecture.
      *
-     * @param computer
-     *            the computer
+     * @param computer the computer
      * @return the library file
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public static String getLibraryFile(final Computer computer) throws IOException, InterruptedException {
         return "amd64".equals(computer.getSystemProperties().get("os.arch")) ? JACOB_DLL_X64 : JACOB_DLL_X86;
@@ -191,18 +148,14 @@ public final class DllUtil {
     /**
      * Copies the library file from source to the destination which can be on remote.
      *
-     * @param src
-     *            the source file
-     * @param dest
-     *            the destination file
+     * @param src  the source file
+     * @param dest the destination file
      * @return {@code true} if successful, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the current thread is interrupted while waiting for the completion
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     private static boolean copyLibrary(final FilePath src, final FilePath dest) throws IOException,
-            InterruptedException {
+        InterruptedException {
         return PathUtil.copyRemoteFile(src, dest);
     }
 
@@ -221,7 +174,7 @@ public final class DllUtil {
 
         @Override
         public Boolean invoke(final File libFile, final VirtualChannel channel) throws IOException,
-        InterruptedException {
+            InterruptedException {
             if (libFile.exists() && libFile.isFile()) {
                 final String libProperty = System.getProperty(LibraryLoader.JACOB_DLL_PATH);
                 if (!StringUtils.isBlank(libProperty)) {
@@ -232,7 +185,7 @@ public final class DllUtil {
                         LibraryLoader.loadJacobLibrary();
                     } catch (final UnsatisfiedLinkError e) {
                         LOGGER.log(Level.SEVERE,
-                                String.format("Loading local library %s failed: %s", libFile, e.getMessage()));
+                            String.format("Loading local library %s failed: %s", libFile, e.getMessage()));
                         return false;
                     }
                 }

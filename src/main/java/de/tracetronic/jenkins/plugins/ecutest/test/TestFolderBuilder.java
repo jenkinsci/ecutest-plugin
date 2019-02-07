@@ -1,55 +1,9 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
-
-import hudson.EnvVars;
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.TaskListener;
-import hudson.model.Run;
-import hudson.util.FormValidation;
-import hudson.util.ListBoxModel;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
-import org.kohsuke.stapler.QueryParameter;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.PackageClient;
@@ -60,6 +14,25 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.scan.TestPackageScanner;
 import de.tracetronic.jenkins.plugins.ecutest.test.scan.TestProjectScanner;
+import hudson.EnvVars;
+import hudson.Extension;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.util.FormValidation;
+import hudson.util.ListBoxModel;
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.QueryParameter;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Builder providing the execution of ECU-TEST packages and projects inside of a test folder.
@@ -72,32 +45,10 @@ public class TestFolderBuilder extends AbstractTestBuilder {
      * Defines the default {@link ScanMode}.
      */
     protected static final ScanMode DEFAULT_SCANMODE = ScanMode.PACKAGES_AND_PROJECTS;
-
-    /**
-     * Defines the modes to scan the test folder.
-     */
-    public enum ScanMode {
-        /**
-         * Scan packages only.
-         */
-        PACKAGES_ONLY,
-
-        /**
-         * Scan projects only.
-         */
-        PROJECTS_ONLY,
-
-        /**
-         * Scan both packages and projects.
-         */
-        PACKAGES_AND_PROJECTS
-    }
-
     // Scan settings
     @Nonnull
     private ScanMode scanMode = DEFAULT_SCANMODE;
     private boolean recursiveScan;
-
     // Test settings
     @Nonnull
     private PackageConfig packageConfig = PackageConfig.newInstance();
@@ -107,8 +58,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     /**
      * Instantiates a new {@link TestFolderBuilder}.
      *
-     * @param testFile
-     *            the test folder
+     * @param testFile the test folder
      */
     @DataBoundConstructor
     public TestFolderBuilder(@Nonnull final String testFile) {
@@ -124,10 +74,26 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     }
 
     /**
+     * @param scanMode the scan mode
+     */
+    @DataBoundSetter
+    public void setScanMode(@Nonnull final ScanMode scanMode) {
+        this.scanMode = scanMode;
+    }
+
+    /**
      * @return the recursiveScan
      */
     public boolean isRecursiveScan() {
         return recursiveScan;
+    }
+
+    /**
+     * @param recursiveScan the recursive scan mode
+     */
+    @DataBoundSetter
+    public void setRecursiveScan(final boolean recursiveScan) {
+        this.recursiveScan = recursiveScan;
     }
 
     /**
@@ -139,6 +105,14 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     }
 
     /**
+     * @param packageConfig the package configuration
+     */
+    @DataBoundSetter
+    public void setPackageConfig(@CheckForNull final PackageConfig packageConfig) {
+        this.packageConfig = packageConfig == null ? PackageConfig.newInstance() : packageConfig;
+    }
+
+    /**
      * @return the project configuration
      */
     @Nonnull
@@ -147,35 +121,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     }
 
     /**
-     * @param scanMode
-     *            the scan mode
-     */
-    @DataBoundSetter
-    public void setScanMode(@Nonnull final ScanMode scanMode) {
-        this.scanMode = scanMode;
-    }
-
-    /**
-     * @param recursiveScan
-     *            the recursive scan mode
-     */
-    @DataBoundSetter
-    public void setRecursiveScan(final boolean recursiveScan) {
-        this.recursiveScan = recursiveScan;
-    }
-
-    /**
-     * @param packageConfig
-     *            the package configuration
-     */
-    @DataBoundSetter
-    public void setPackageConfig(@CheckForNull final PackageConfig packageConfig) {
-        this.packageConfig = packageConfig == null ? PackageConfig.newInstance() : packageConfig;
-    }
-
-    /**
-     * @param projectConfig
-     *            the project configuration
+     * @param projectConfig the project configuration
      */
     @DataBoundSetter
     public void setProjectConfig(@CheckForNull final ProjectConfig projectConfig) {
@@ -184,7 +130,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
 
     @Override
     protected String getTestFilePath(final String testFile, final String pkgDir, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                     final TaskListener listener) throws IOException, InterruptedException {
         String testFolderPath = null;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (testFile.isEmpty()) {
@@ -203,8 +149,9 @@ public class TestFolderBuilder extends AbstractTestBuilder {
 
     @Override
     protected boolean runTest(final String testFolder, final TestConfig testConfig,
-            final ExecutionConfig executionConfig, final Run<?, ?> run, final FilePath workspace,
-            final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
+                              final ExecutionConfig executionConfig, final Run<?, ?> run, final FilePath workspace,
+                              final Launcher launcher, final TaskListener listener)
+        throws IOException, InterruptedException {
         // Scan test folder for tests
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Executing test folder...");
@@ -261,21 +208,16 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     /**
      * Scans for ECU-TEST packages.
      *
-     * @param testFolder
-     *            the test folder
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param testFolder the test folder
+     * @param launcher   the launcher
+     * @param listener   the listener
      * @return the list of found packages
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private List<String> scanPackages(final String testFolder, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
-        List<String> pkgFiles = new ArrayList<String>();
+        throws IOException, InterruptedException {
+        List<String> pkgFiles = new ArrayList<>();
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (scanMode.equals(ScanMode.PACKAGES_ONLY) || scanMode.equals(ScanMode.PACKAGES_AND_PROJECTS)) {
             final TestPackageScanner scanner = new TestPackageScanner(testFolder, isRecursiveScan(), launcher);
@@ -292,21 +234,16 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     /**
      * Scan for ECU-TEST projects.
      *
-     * @param testFolder
-     *            the test folder
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param testFolder the test folder
+     * @param launcher   the launcher
+     * @param listener   the listener
      * @return the list of found projects
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private List<String> scanProjects(final String testFolder, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
-        List<String> prjFiles = new ArrayList<String>();
+        throws IOException, InterruptedException {
+        List<String> prjFiles = new ArrayList<>();
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         if (scanMode.equals(ScanMode.PROJECTS_ONLY) || scanMode.equals(ScanMode.PACKAGES_AND_PROJECTS)) {
             final TestProjectScanner prjScanner = new TestProjectScanner(testFolder, isRecursiveScan(), launcher);
@@ -318,6 +255,26 @@ public class TestFolderBuilder extends AbstractTestBuilder {
             }
         }
         return prjFiles;
+    }
+
+    /**
+     * Defines the modes to scan the test folder.
+     */
+    public enum ScanMode {
+        /**
+         * Scan packages only.
+         */
+        PACKAGES_ONLY,
+
+        /**
+         * Scan projects only.
+         */
+        PROJECTS_ONLY,
+
+        /**
+         * Scan both packages and projects.
+         */
+        PACKAGES_AND_PROJECTS
     }
 
     /**
@@ -358,8 +315,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
         /**
          * Validates the test folder.
          *
-         * @param value
-         *            the test folder
+         * @param value the test folder
          * @return the form validation
          */
         @Override
@@ -367,6 +323,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
             return testValidator.validateTestFolder(value);
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.TestFolderBuilder_DisplayName();

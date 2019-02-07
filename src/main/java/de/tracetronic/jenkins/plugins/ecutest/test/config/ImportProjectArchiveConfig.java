@@ -1,44 +1,21 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.config;
 
+import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.util.FormValidation;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
+import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * Class holding the configuration for importing a project from an archive.
@@ -55,18 +32,14 @@ public class ImportProjectArchiveConfig extends ImportConfig {
     /**
      * Instantiates a new {@link ImportProjectArchiveConfig}.
      *
-     * @param tmsPath
-     *            the project path
-     * @param importPath
-     *            the import path
-     * @param importConfigPath
-     *            the import config path
-     * @param replaceFiles
-     *            the replace files
+     * @param tmsPath          the project path
+     * @param importPath       the import path
+     * @param importConfigPath the import config path
+     * @param replaceFiles     the replace files
      */
     @DataBoundConstructor
     public ImportProjectArchiveConfig(final String tmsPath, final String importPath,
-            final String importConfigPath, final boolean replaceFiles) {
+                                      final String importConfigPath, final boolean replaceFiles) {
         super(tmsPath, importPath, null, null);
         this.importConfigPath = StringUtils.trimToEmpty(importConfigPath);
         this.replaceFiles = replaceFiles;
@@ -100,10 +73,9 @@ public class ImportProjectArchiveConfig extends ImportConfig {
         if (other instanceof ImportProjectArchiveConfig) {
             final ImportProjectArchiveConfig that = (ImportProjectArchiveConfig) other;
             result = that.canEqual(this)
-                    && super.equals(that)
-                    && (importConfigPath == null ? that.importConfigPath == null : importConfigPath
-                    .equals(that.importConfigPath))
-                    && replaceFiles == that.replaceFiles;
+                && super.equals(that)
+                && Objects.equals(importConfigPath, that.importConfigPath)
+                && replaceFiles == that.replaceFiles;
         }
         return result;
     }
@@ -116,7 +88,7 @@ public class ImportProjectArchiveConfig extends ImportConfig {
     @Override
     public final int hashCode() {
         return new HashCodeBuilder(17, 31).append(super.hashCode())
-                .append(importConfigPath).append(replaceFiles).toHashCode();
+            .append(importConfigPath).append(replaceFiles).toHashCode();
     }
 
     /**
@@ -133,14 +105,14 @@ public class ImportProjectArchiveConfig extends ImportConfig {
         /**
          * Validates the import configuration target path.
          *
-         * @param value
-         *            the import configuration path
+         * @param value the import configuration path
          * @return the form validation
          */
         public FormValidation doCheckImportConfigPath(@QueryParameter final String value) {
             return tmsValidator.validateImportConfigPath(value);
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.ImportProjectArchiveConfig_DisplayName();

@@ -1,58 +1,9 @@
 /*
- * Copyright (c) 2015-2018 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
-
-import hudson.AbortException;
-import hudson.EnvVars;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.Util;
-import hudson.model.TaskListener;
-import hudson.model.AbstractProject;
-import hudson.model.Run;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Builder;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
-import jenkins.tasks.SimpleBuildStep;
-
-import org.apache.commons.lang.StringUtils;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
@@ -67,6 +18,27 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectAttribute
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
+import hudson.AbortException;
+import hudson.EnvVars;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.Util;
+import hudson.model.AbstractProject;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.Builder;
+import jenkins.tasks.SimpleBuildStep;
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Common base class for all import related task builders implemented in this plugin.
@@ -81,41 +53,22 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
     /**
      * Instantiates a new {@link AbstractImportBuilder}.
      *
-     * @param importConfigs
-     *            the list of configured test importers
+     * @param importConfigs the list of configured test importers
      */
     @DataBoundConstructor
     public AbstractImportBuilder(@CheckForNull final List<TMSConfig> importConfigs) {
-        this.importConfigs = (List<TMSConfig>) (importConfigs == null ? new ArrayList<TMSConfig>()
-                : removeEmptyConfigs(importConfigs));
-    }
-
-    /**
-     * @return the list of configured test importers
-     */
-    @Nonnull
-    public List<TMSConfig> getImportConfigs() {
-        return Collections.unmodifiableList(importConfigs);
-    }
-
-    /**
-     * @param importConfigs
-     *            the list of configured test importers
-     */
-    @DataBoundSetter
-    public void setImportConfigs(@CheckForNull final List<TMSConfig> importConfigs) {
-        this.importConfigs.addAll(importConfigs);
+        this.importConfigs = importConfigs == null ? new ArrayList<>()
+            : removeEmptyConfigs(importConfigs);
     }
 
     /**
      * Removes empty import configurations.
      *
-     * @param importConfigs
-     *            the import configurations
+     * @param importConfigs the import configurations
      * @return the list of valid import configurations
      */
     private static List<TMSConfig> removeEmptyConfigs(final List<TMSConfig> importConfigs) {
-        final List<TMSConfig> validConfigs = new ArrayList<TMSConfig>();
+        final List<TMSConfig> validConfigs = new ArrayList<>();
         for (final TMSConfig config : importConfigs) {
             if (config instanceof ImportConfig) {
                 final ImportConfig pkgConfig = (ImportConfig) config;
@@ -132,9 +85,28 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
         return validConfigs;
     }
 
+    /**
+     * @return the list of configured test importers
+     */
+    @Nonnull
+    public List<TMSConfig> getImportConfigs() {
+        return Collections.unmodifiableList(importConfigs);
+    }
+
+    /**
+     * @param importConfigs the list of configured test importers
+     */
+    @DataBoundSetter
+    public void setImportConfigs(@CheckForNull final List<TMSConfig> importConfigs) {
+        if (importConfigs != null) {
+            this.importConfigs.addAll(importConfigs);
+        }
+    }
+
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
+    public void perform(@Nonnull final Run<?, ?> run, @Nonnull final FilePath workspace,
+                        @Nonnull final Launcher launcher, @Nonnull final TaskListener listener)
+        throws InterruptedException, IOException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         try {
             ProcessUtil.checkOS(launcher);
@@ -154,22 +126,16 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
     /**
      * Performs the test imports.
      *
-     * @param run
-     *            the run
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param run       the run
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
      * @return {@code true} if import succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     private boolean performImport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                  final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Check for running ECU-TEST instance
@@ -185,27 +151,27 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
             final TMSConfig expImportConfig = (TMSConfig) importConfig.expand(buildEnv);
             if (importConfig instanceof ImportPackageConfig) {
                 // Import package
-                final ImportPackageClient importClient = new ImportPackageClient((ImportPackageConfig) expImportConfig);
+                final ImportPackageClient importClient = new ImportPackageClient(expImportConfig);
                 isImported = importClient.importPackage(run.getParent(), workspace, launcher, listener);
             } else if (importConfig instanceof ImportPackageAttributeConfig) {
                 // Import package attributes
                 final ImportPackageClient importClient = new ImportPackageClient(
-                        (ImportPackageAttributeConfig) expImportConfig);
+                    expImportConfig);
                 isImported = importClient.importPackageAttributes(run.getParent(), workspace, launcher, listener);
             } else if (importConfig instanceof ImportProjectConfig) {
                 // Import project
                 final ImportProjectClient importClient = new ImportProjectClient(
-                        (ImportProjectConfig) expImportConfig);
+                    expImportConfig);
                 isImported = importClient.importProject(run.getParent(), workspace, launcher, listener);
             } else if (importConfig instanceof ImportProjectAttributeConfig) {
                 // Import project attributes
                 final ImportProjectClient importClient = new ImportProjectClient(
-                        (ImportProjectAttributeConfig) expImportConfig);
+                    expImportConfig);
                 isImported = importClient.importProjectAttributes(run.getParent(), workspace, launcher, listener);
             } else if (importConfig instanceof ImportProjectArchiveConfig) {
                 // Import project archive
                 final ImportProjectClient importClient = new ImportProjectClient(
-                        (ImportProjectArchiveConfig) expImportConfig);
+                    expImportConfig);
                 isImported = importClient.importProjectArchive(launcher, listener);
             } else {
                 logger.logError("Unsupported import configuration of type: " + importConfig.getClass());
@@ -225,8 +191,7 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
         /**
          * Instantiates a {@link AbstractImportBuilder}.
          *
-         * @param clazz
-         *            the {@link AbstractImportBuilder} class name
+         * @param clazz the {@link AbstractImportBuilder} class name
          */
         public DescriptorImpl(final Class<? extends AbstractImportBuilder> clazz) {
             super(clazz);

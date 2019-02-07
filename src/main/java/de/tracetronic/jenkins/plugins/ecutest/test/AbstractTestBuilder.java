@@ -1,53 +1,9 @@
 /*
- * Copyright (c) 2015-2017 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
-
-import hudson.AbortException;
-import hudson.EnvVars;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.Util;
-import hudson.model.TaskListener;
-import hudson.model.Run;
-import hudson.tasks.BuildStepMonitor;
-import hudson.util.IOUtils;
-
-import java.io.IOException;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
-import jenkins.tasks.SimpleBuildStep;
-
-import org.apache.commons.lang.StringUtils;
-import org.kohsuke.stapler.DataBoundSetter;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
@@ -57,6 +13,22 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 import de.tracetronic.jenkins.plugins.ecutest.util.PathUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
+import hudson.AbortException;
+import hudson.EnvVars;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.Util;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import hudson.tasks.BuildStepMonitor;
+import hudson.util.IOUtils;
+import jenkins.tasks.SimpleBuildStep;
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.DataBoundSetter;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.io.IOException;
 
 /**
  * Common base class for all test related task builders implemented in this plugin.
@@ -75,8 +47,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     /**
      * Instantiates a new {@link AbstractTestBuilder}.
      *
-     * @param testFile
-     *            the test file
+     * @param testFile the test file
      */
     public AbstractTestBuilder(final String testFile) {
         super();
@@ -100,6 +71,14 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     }
 
     /**
+     * @param testConfig the test configuration
+     */
+    @DataBoundSetter
+    public void setTestConfig(@CheckForNull final TestConfig testConfig) {
+        this.testConfig = testConfig == null ? TestConfig.newInstance() : testConfig;
+    }
+
+    /**
      * @return the execution configuration
      */
     @Nonnull
@@ -108,17 +87,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     }
 
     /**
-     * @param testConfig
-     *            the test configuration
-     */
-    @DataBoundSetter
-    public void setTestConfig(@CheckForNull final TestConfig testConfig) {
-        this.testConfig = testConfig == null ? TestConfig.newInstance() : testConfig;
-    }
-
-    /**
-     * @param executionConfig
-     *            the execution configuration
+     * @param executionConfig the execution configuration
      */
     @DataBoundSetter
     public void setExecutionConfig(@CheckForNull final ExecutionConfig executionConfig) {
@@ -126,8 +95,9 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     }
 
     @Override
-    public void perform(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws InterruptedException, IOException {
+    public void perform(@Nonnull final Run<?, ?> run, @Nonnull final FilePath workspace,
+                        @Nonnull final Launcher launcher, @Nonnull final TaskListener listener)
+        throws InterruptedException, IOException {
 
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         try {
@@ -161,23 +131,17 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     /**
      * Performs the test execution.
      *
-     * @param run
-     *            the build
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param run       the build
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
      * @return {@code true} if running the test passed, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private boolean performTest(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-            final TaskListener listener) throws IOException, InterruptedException {
+                                final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Check for running ECU-TEST instance
@@ -233,11 +197,11 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
 
             // Configure test bench configuration file
             expTbcFilePath = getConfigFilePath(expTestConfig.getTbcFile(),
-                    expTbcConfigDir, launcher, listener);
+                expTbcConfigDir, launcher, listener);
 
             // Configure test configuration file
             expTcfFilePath = getConfigFilePath(expTestConfig.getTcfFile(),
-                    expTcfConfigDir, launcher, listener);
+                expTcfConfigDir, launcher, listener);
 
             // Check configuration file existence
             if (expTbcFilePath == null || expTcfFilePath == null) {
@@ -247,7 +211,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
 
         // Set expanded test configuration
         expTestConfig = new TestConfig(expTbcFilePath, expTcfFilePath, expTestConfig.isForceReload(),
-                expTestConfig.isLoadOnly(), expTestConfig.isKeepConfig(), expTestConfig.getConstants());
+            expTestConfig.isLoadOnly(), expTestConfig.isKeepConfig(), expTestConfig.getConstants());
 
         // Run tests
         return runTest(expTestFilePath, expTestConfig, expExecConfig, run, workspace, launcher, listener);
@@ -256,10 +220,8 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     /**
      * Adds the build action holding test information by injecting environment variables.
      *
-     * @param run
-     *            the run
-     * @param testClient
-     *            the test client
+     * @param run        the run
+     * @param testClient the test client
      */
     protected void addBuildAction(final Run<?, ?> run, final AbstractTestClient testClient) {
         final int builderId = getTestId(run);
@@ -270,29 +232,20 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     /**
      * Run the test with given configurations within a defined timeout.
      *
-     * @param testFile
-     *            the full test file path
-     * @param testConfig
-     *            the expanded test configuration
-     * @param executionConfig
-     *            the expanded execution configuration
-     * @param run
-     *            the build
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param testFile        the full test file path
+     * @param testConfig      the expanded test configuration
+     * @param executionConfig the expanded execution configuration
+     * @param run             the build
+     * @param workspace       the workspace
+     * @param launcher        the launcher
+     * @param listener        the listener
      * @return {@code true} if running the test passed, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     protected abstract boolean runTest(String testFile, TestConfig testConfig, ExecutionConfig executionConfig,
-            Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
-                    throws IOException, InterruptedException;
+                                       Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
+        throws IOException, InterruptedException;
 
     @Override
     public BuildStepMonitor getRequiredMonitorService() {

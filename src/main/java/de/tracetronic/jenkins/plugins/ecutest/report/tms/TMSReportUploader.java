@@ -1,54 +1,13 @@
 /*
- * Copyright (c) 2015-2018 TraceTronic GmbH
- * All rights reserved.
+ * Copyright (c) 2015-2019 TraceTronic GmbH
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- *   1. Redistributions of source code must retain the above copyright notice, this
- *      list of conditions and the following disclaimer.
- *
- *   2. Redistributions in binary form must reproduce the above copyright notice, this
- *      list of conditions and the following disclaimer in the documentation and/or
- *      other materials provided with the distribution.
- *
- *   3. Neither the name of TraceTronic GmbH nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.tms;
-
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.Item;
-import hudson.model.TaskListener;
-import hudson.remoting.Callable;
-import hudson.security.ACL;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.CheckForNull;
-
-import jenkins.security.MasterToSlaveCallable;
 
 import com.cloudbees.plugins.credentials.CredentialsMatchers;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-import com.cloudbees.plugins.credentials.domains.DomainRequirement;
-
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFReport;
@@ -57,6 +16,18 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestManagement;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.Item;
+import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import hudson.security.ACL;
+import jenkins.security.MasterToSlaveCallable;
+
+import javax.annotation.CheckForNull;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Class providing the upload of {@link TRFReport}s to a test management system.
@@ -73,36 +44,27 @@ public class TMSReportUploader extends AbstractTMSClient {
     /**
      * Uploads the reports to the test management system.
      *
-     * @param reportFiles
-     *            the report files
-     * @param credentialsId
-     *            the credentials id
-     * @param timeout
-     *            the export timeout
-     * @param project
-     *            the project
-     * @param workspace
-     *            the workspace
-     * @param launcher
-     *            the launcher
-     * @param listener
-     *            the listener
+     * @param reportFiles   the report files
+     * @param credentialsId the credentials id
+     * @param timeout       the export timeout
+     * @param project       the project
+     * @param workspace     the workspace
+     * @param launcher      the launcher
+     * @param listener      the listener
      * @return {@code true} if upload succeeded, {@code false} otherwise
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             if the build gets interrupted
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
      */
     public boolean upload(final List<FilePath> reportFiles, final String credentialsId, final String timeout,
-            final Item project, final FilePath workspace, final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+                          final Item project, final FilePath workspace, final Launcher launcher,
+                          final TaskListener listener) throws IOException, InterruptedException {
         boolean isUploaded = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
                 final StandardUsernamePasswordCredentials credentials = getCredentials(credentialsId, project);
                 if (login(credentials, launcher, listener)) {
                     isUploaded = launcher.getChannel().call(
-                            new UploadReportCallable(reportFiles, timeout, listener));
+                        new UploadReportCallable(reportFiles, timeout, listener));
                 }
             } finally {
                 logout(launcher, listener);
@@ -114,22 +76,18 @@ public class TMSReportUploader extends AbstractTMSClient {
     /**
      * Gets the credentials providing access to user name and password.
      *
-     * @param credentialsId
-     *            the credentials id
-     * @param project
-     *            the project
+     * @param credentialsId the credentials id
+     * @param project       the project
      * @return the credentials
-     * @throws IOException
-     *             signals that an I/O exception has occurred
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException the interrupted exception
      */
     @CheckForNull
     private StandardUsernamePasswordCredentials getCredentials(final String credentialsId, final Item project)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         final List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider
-                .lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
-                        Collections.<DomainRequirement> emptyList());
+            .lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
+                Collections.emptyList());
         return CredentialsMatchers.firstOrNull(credentials, CredentialsMatchers.withId(credentialsId));
     }
 
@@ -147,15 +105,12 @@ public class TMSReportUploader extends AbstractTMSClient {
         /**
          * Instantiates a new {@link UploadReportCallable}.
          *
-         * @param reportFiles
-         *            the list of TRF files
-         * @param timeout
-         *            the export timeout
-         * @param listener
-         *            the listener
+         * @param reportFiles the list of TRF files
+         * @param timeout     the export timeout
+         * @param listener    the listener
          */
         UploadReportCallable(final List<FilePath> reportFiles, final String timeout,
-                final TaskListener listener) {
+                             final TaskListener listener) {
             this.reportFiles = reportFiles;
             this.timeout = timeout;
             this.listener = listener;

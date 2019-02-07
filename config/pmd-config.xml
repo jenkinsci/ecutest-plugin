@@ -1,41 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ruleset xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
          name=""
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
-   <description>pmd-ecutest</description>
-   <rule ref="rulesets/java/basic.xml/AvoidBranchingStatementAsLastInLoop"/>
-   <rule ref="rulesets/java/basic.xml/AvoidDecimalLiteralsInBigDecimalConstructor"/>
-   <rule ref="rulesets/java/basic.xml/AvoidMultipleUnaryOperators"/>
-   <rule ref="rulesets/java/basic.xml/AvoidThreadGroup"/>
-   <rule ref="rulesets/java/basic.xml/AvoidUsingHardCodedIP"/>
-   <rule ref="rulesets/java/basic.xml/AvoidUsingOctalValues"/>
-   <rule ref="rulesets/java/basic.xml/BigIntegerInstantiation"/>
-   <rule ref="rulesets/java/basic.xml/BooleanInstantiation"/>
-   <rule ref="rulesets/java/basic.xml/BrokenNullCheck"/>
-   <rule ref="rulesets/java/basic.xml/CheckResultSet"/>
-   <rule ref="rulesets/java/basic.xml/CheckSkipResult"/>
-   <rule ref="rulesets/java/basic.xml/ClassCastExceptionWithToArray"/>
-   <rule ref="rulesets/java/basic.xml/CollapsibleIfStatements"/>
-   <rule ref="rulesets/java/basic.xml/DontCallThreadRun"/>
-   <rule ref="rulesets/java/basic.xml/DontUseFloatTypeForLoopIndices"/>
-   <rule ref="rulesets/java/basic.xml/DoubleCheckedLocking"/>
-   <rule ref="rulesets/java/basic.xml/ExtendsObject"/>
-   <rule ref="rulesets/java/basic.xml/ForLoopShouldBeWhileLoop"/>
-   <rule ref="rulesets/java/basic.xml/JumbledIncrementer"/>
-   <rule ref="rulesets/java/basic.xml/MisplacedNullCheck"/>
-   <rule ref="rulesets/java/basic.xml/OverrideBothEqualsAndHashcode"/>
-   <rule ref="rulesets/java/basic.xml/ReturnFromFinallyBlock"/>
-   <rule ref="rulesets/java/basic.xml/UnconditionalIfStatement"/>
-   <rule ref="rulesets/java/imports.xml/DontImportJavaLang"/>
-   <rule ref="rulesets/java/imports.xml/DuplicateImports"/>
-   <rule ref="rulesets/java/imports.xml/ImportFromSamePackage"/>
-   <rule ref="rulesets/java/imports.xml/TooManyStaticImports"/>
-   <rule ref="rulesets/java/imports.xml/UnnecessaryFullyQualifiedName"/>
-   <rule ref="rulesets/java/imports.xml/UnusedImports"/>
-   <rule ref="rulesets/java/unusedcode.xml/UnusedFormalParameter"/>
-   <rule ref="rulesets/java/unusedcode.xml/UnusedLocalVariable"/>
-   <rule ref="rulesets/java/unusedcode.xml/UnusedPrivateField"/>
-   <rule ref="rulesets/java/unusedcode.xml/UnusedPrivateMethod"/>
-   <rule ref="rulesets/java/unnecessary.xml/UnnecessaryModifier"/>
+    <description>pmd-ecutest</description>
+
+    <rule ref="category/java/bestpractices.xml/AvoidUsingHardCodedIP"/>
+    <rule ref="category/java/bestpractices.xml/CheckResultSet"/>
+    <rule ref="category/java/bestpractices.xml/UnusedImports"/>
+    <rule ref="category/java/bestpractices.xml/UnusedFormalParameter"/>
+    <rule ref="category/java/bestpractices.xml/UnusedLocalVariable"/>
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateField"/>
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod"/>
+
+    <rule ref="category/java/codestyle.xml/DontImportJavaLang"/>
+    <rule ref="category/java/codestyle.xml/DuplicateImports"/>
+    <rule ref="category/java/codestyle.xml/ExtendsObject"/>
+    <rule ref="category/java/codestyle.xml/ForLoopShouldBeWhileLoop"/>
+    <rule ref="category/java/codestyle.xml/TooManyStaticImports"/>
+    <rule ref="category/java/codestyle.xml/UnnecessaryFullyQualifiedName"/>
+    <rule ref="category/java/codestyle.xml/UnnecessaryModifier"/>
+
+    <rule ref="category/java/design.xml/CollapsibleIfStatements"/>
+
+    <rule ref="category/java/errorprone.xml/AvoidBranchingStatementAsLastInLoop"/>
+    <rule ref="category/java/errorprone.xml/AvoidDecimalLiteralsInBigDecimalConstructor"/>
+    <rule ref="category/java/errorprone.xml/AvoidMultipleUnaryOperators"/>
+    <rule ref="category/java/errorprone.xml/AvoidUsingOctalValues"/>
+    <rule ref="category/java/errorprone.xml/BrokenNullCheck"/>
+    <rule ref="category/java/errorprone.xml/CheckSkipResult"/>
+    <rule ref="category/java/errorprone.xml/ClassCastExceptionWithToArray"/>
+    <rule ref="category/java/errorprone.xml/DontUseFloatTypeForLoopIndices"/>
+    <rule ref="category/java/errorprone.xml/ImportFromSamePackage"/>
+    <rule ref="category/java/errorprone.xml/JumbledIncrementer"/>
+    <rule ref="category/java/errorprone.xml/MisplacedNullCheck"/>
+    <rule ref="category/java/errorprone.xml/OverrideBothEqualsAndHashcode"/>
+    <rule ref="category/java/errorprone.xml/ReturnFromFinallyBlock"/>
+    <rule ref="category/java/errorprone.xml/UnconditionalIfStatement"/>
+
+    <rule ref="category/java/multithreading.xml/AvoidThreadGroup"/>
+    <rule ref="category/java/multithreading.xml/DontCallThreadRun"/>
+    <rule ref="category/java/multithreading.xml/DoubleCheckedLocking"/>
+
+    <rule ref="category/java/performance.xml/BigIntegerInstantiation"/>
+    <rule ref="category/java/performance.xml/BooleanInstantiation"/>
 </ruleset>
