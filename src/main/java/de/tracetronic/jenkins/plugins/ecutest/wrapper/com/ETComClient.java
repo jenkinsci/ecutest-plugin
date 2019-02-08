@@ -365,6 +365,11 @@ public class ETComClient implements ComApplication, AutoCloseable {
         }
     }
 
+    @Override
+    public boolean updateUserLibraries() throws ETComException {
+        return dispatch.performDirectRequest("UpdateUserLibraries").getBoolean();
+    }
+
     /**
      * Separate MTA COM thread that initializes and keeps the COM dispatch alive until the client gets closed.
      * Calling methods to this dispatch can be made from main or other MTA threads.

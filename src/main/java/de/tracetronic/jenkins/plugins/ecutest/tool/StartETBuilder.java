@@ -57,6 +57,10 @@ public class StartETBuilder extends AbstractToolBuilder {
      * @since 1.18
      */
     private boolean keepInstance;
+    /**
+     * @since 2.6
+     */
+    private boolean updateUserLibs;
 
     /**
      * Instantiates a new {@link StartETBuilder}.
@@ -109,14 +113,14 @@ public class StartETBuilder extends AbstractToolBuilder {
     }
 
     /**
-     * @return the debug mode
+     * @return specifies whether to enable debug mode
      */
     public boolean isDebugMode() {
         return debugMode;
     }
 
     /**
-     * @param debugMode the debug mode
+     * @param debugMode specifies whether to enable debug mode
      */
     @DataBoundSetter
     public void setDebugMode(final boolean debugMode) {
@@ -131,11 +135,26 @@ public class StartETBuilder extends AbstractToolBuilder {
     }
 
     /**
-     * @param keepInstance the specifies whether to re-use the previous instance
+     * @param keepInstance specifies whether to re-use the previous instance
      */
     @DataBoundSetter
     public void setKeepInstance(final boolean keepInstance) {
         this.keepInstance = keepInstance;
+    }
+
+    /**
+     * @return specifies whether to update all user libraries
+     */
+    public boolean isUpdateUserLibs() {
+        return updateUserLibs;
+    }
+
+    /**
+     * @param updateUserLibs specifies whether to update all user libraries
+     */
+    @DataBoundSetter
+    public void setUpdateUserLibs(final boolean updateUserLibs) {
+        this.updateUserLibs = updateUserLibs;
     }
 
     @Override
@@ -180,6 +199,10 @@ public class StartETBuilder extends AbstractToolBuilder {
                 expTimeout, isDebugMode());
             if (!etClient.start(true, workspace, launcher, listener)) {
                 throw new ETPluginException(String.format("Starting %s failed!", toolName));
+            }
+
+            if (isUpdateUserLibs() && !etClient.updateUserLibs(launcher, listener)) {
+                throw new ETPluginException("Updating user libraries failed!");
             }
 
             // Add action for injecting environment variables

@@ -37,6 +37,7 @@ public class StartETBuilderTest {
         builder.setTimeout(null);
         builder.setDebugMode(false);
         builder.setKeepInstance(false);
+        builder.setUpdateUserLibs(false);
         assertBuilder(builder);
     }
 
@@ -57,5 +58,6 @@ public class StartETBuilderTest {
         assertEquals(String.valueOf(builder.getDefaultTimeout()), builder.getTimeout());
         assertFalse(builder.isDebugMode());
         assertFalse(builder.isKeepInstance());
+        assertFalse(builder.isUpdateUserLibs());
     }
 }

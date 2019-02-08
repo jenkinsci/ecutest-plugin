@@ -312,6 +312,22 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
+     * Updates all user libraries.
+     *
+     * @param launcher the launcher
+     * @param listener the listener
+     * @return {@code true} if update is successful, {@code false} otherwise
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
+     */
+    public boolean updateUserLibs(Launcher launcher, TaskListener listener) throws IOException, InterruptedException {
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        logger.logInfo("Updating user libraries...");
+
+        return launcher.getChannel().call(new UpdateUserLibsCallable(listener));
+    }
+
+    /**
      * {@link Callable} providing remote access to establish a COM connection.
      */
     private static final class StartCallable extends MasterToSlaveCallable<String, IOException> {
@@ -545,6 +561,37 @@ public class ETClient extends AbstractToolClient {
         public Boolean call() throws IOException {
             final boolean is64BitProc = ProcessUtil.is64BitExecutable(processPath);
             return is64BitJVM || !is64BitProc;
+        }
+    }
+
+    /**
+     * {@link Callable} providing remote access to update all user libraries
+     */
+    private static final class UpdateUserLibsCallable extends MasterToSlaveCallable<Boolean, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final TaskListener listener;
+
+        /**
+         * Instantiates a new {@link UpdateUserLibsCallable}.
+         *
+         * @param listener the listener
+         */
+        UpdateUserLibsCallable(final TaskListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public Boolean call() throws IOException {
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final String progId = ETComProperty.getInstance().getProgId();
+            try(ETComClient comClient = new ETComClient(progId)) {
+                return comClient.updateUserLibraries();
+            }  catch (final ETComException e) {
+                logger.logError("-> Caught COM exception: " + e.getMessage());
+            }
+            return false;
         }
     }
 }

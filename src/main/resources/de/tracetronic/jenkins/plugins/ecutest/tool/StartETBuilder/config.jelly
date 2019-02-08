@@ -23,5 +23,8 @@
         <f:entry title="${%keepInstance.title}" description="${%keepInstance.description}" field="keepInstance">
             <f:checkbox/>
         </f:entry>
+        <f:entry title="${%updateUserLibs.title}" description="${%updateUserLibs.description}" field="updateUserLibs">
+            <f:checkbox/>
+        </f:entry>
     </f:advanced>
 </j:jelly>
