@@ -48,7 +48,7 @@ public class ReportGenerator {
     }
 
     /**
-     * Generate reports by calling the {@link GenerateReportCallable}.
+     * Generate reports by calling the {@link ReportGenerator.GenerateReportCallable}.
      *
      * @param reportFiles the report files
      * @param launcher    the launcher

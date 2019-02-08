@@ -67,6 +67,7 @@ public class StartETBuilderIT extends IntegrationTestBase {
         before.setTimeout("120");
         before.setDebugMode(false);
         before.setKeepInstance(false);
+        before.setUpdateUserLibs(false);
 
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
@@ -74,7 +75,7 @@ public class StartETBuilderIT extends IntegrationTestBase {
         assertThat(delegate, instanceOf(StartETBuilder.class));
 
         final StartETBuilder after = (StartETBuilder) delegate;
-        jenkins.assertEqualBeans(before, after, "workspaceDir,settingsDir,timeout,debugMode,keepInstance");
+        jenkins.assertEqualBeans(before, after, "workspaceDir,settingsDir,timeout,debugMode,keepInstance,updateUserLibs");
     }
 
     @Test
@@ -86,6 +87,7 @@ public class StartETBuilderIT extends IntegrationTestBase {
         builder.setTimeout("120");
         builder.setDebugMode(true);
         builder.setKeepInstance(true);
+        builder.setUpdateUserLibs(true);
         project.getBuildersList().add(builder);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
@@ -100,6 +102,7 @@ public class StartETBuilderIT extends IntegrationTestBase {
         WebAssert.assertInputContainsValue(page, "_.timeout", "120");
         jenkins.assertXPath(page, "//input[@name='_.debugMode' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.keepInstance' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.updateUserLibs' and @checked='true']");
     }
 
     @Test
@@ -167,6 +170,6 @@ public class StartETBuilderIT extends IntegrationTestBase {
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
-        jenkins.assertLogContains("seems not to be a valid ECU-TEST workspace!", run);
+        jenkins.assertLogContains("ECU-TEST executable could not be found!", run);
     }
 }

@@ -214,4 +214,12 @@ public interface ComApplication {
      */
     boolean waitForIdle(int timeout) throws ETComException;
 
+    /**
+     * Update all user libraries. Only possible if neither a test nor the analysis is running.
+     *
+     * @return {@code true} if success, {@code false} otherwise
+     * @throws ETComException in case of a COM exception
+     */
+    boolean updateUserLibraries() throws ETComException;
+
 }
