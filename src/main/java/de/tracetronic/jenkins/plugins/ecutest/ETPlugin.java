@@ -245,7 +245,7 @@ public class ETPlugin {
          *
          * @param version the version to be compared
          * @return integer indicating comparison result
-         * @see ToolVersion#compareTo(ToolVersion)
+         * @see ToolVersion#compareTo(ETPlugin.ToolVersion)
          */
         public int compareWithoutMicroTo(final ToolVersion version) {
             if (major != version.major) {
@@ -262,7 +262,7 @@ public class ETPlugin {
          *
          * @param version the version to be compared
          * @return integer indicating comparison result
-         * @see ToolVersion#compareTo(ToolVersion)
+         * @see ToolVersion#compareTo(ETPlugin.ToolVersion)
          */
         public int compareWithoutQualifierTo(final ToolVersion version) {
             if (major != version.major) {
