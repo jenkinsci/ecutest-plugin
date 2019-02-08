@@ -27,9 +27,9 @@ timestamps {
         }
 
         stage('Static Code Analysis') {
-            mvn 'checkstyle:check pmd:check pmd:cpd-check findbugs:check -B -e'
+            mvn 'checkstyle:check pmd:check pmd:cpd-check spotbugs:check -B -e'
             step([$class: 'CheckStylePublisher', pattern: 'target/checkstyle-result.xml'])
-            step([$class: 'FindBugsPublisher', pattern: 'target/findbugsXml.xml'])
+            step([$class: 'FindBugsPublisher', pattern: 'target/spotbugsXml.xml'])
             step([$class: 'PmdPublisher', pattern: 'target/pmd.xml'])
             step([$class: 'DryPublisher', pattern: 'target/cpd.xml'])
             step([$class: 'TasksPublisher', high: 'FIXME', low: '', normal: 'TODO', pattern: 'src/**/*.java'])
