@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**
- * Builder providing to stop ECU-TEST.
+ * Builder providing the tear down of ECU-TEST.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */

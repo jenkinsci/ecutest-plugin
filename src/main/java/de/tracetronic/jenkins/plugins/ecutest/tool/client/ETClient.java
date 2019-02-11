@@ -565,7 +565,7 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
-     * {@link Callable} providing remote access to update all user libraries
+     * {@link Callable} providing remote access to update all user libraries.
      */
     private static final class UpdateUserLibsCallable extends MasterToSlaveCallable<Boolean, IOException> {
 

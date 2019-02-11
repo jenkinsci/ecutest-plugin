@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**
- * Builder providing to stop the Tool-Server.
+ * Builder providing the tear down of the Tool-Server.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
