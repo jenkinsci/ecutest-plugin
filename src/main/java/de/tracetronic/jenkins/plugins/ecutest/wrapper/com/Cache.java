@@ -42,14 +42,39 @@ public class Cache extends ETComDispatch implements ComCache {
         return type;
     }
 
+    /**
+     * Same as {@link #insert(String, String)} but without database channel.
+     *
+     * @param filePath the file path of the database to be added to the cache
+     * @throws ETComException in case of a COM exception
+     * @see #insert(String, String)
+     */
+    public void insert(final String filePath) throws ETComException {
+        performRequest("Insert", new Variant(filePath));
+    }
+
     @Override
     public void insert(final String filePath, final String dbChannel) throws ETComException {
-        performRequest("Insert", new Variant(filePath), new Variant(dbChannel));
+        if (dbChannel.isEmpty()) {
+            insert(filePath);
+        } else {
+            performRequest("Insert", new Variant(filePath), new Variant(dbChannel));
+        }
+    }
+
+    /**
+     * Same as {@link #clear(boolean)} but with default parameters.
+     *
+     * @throws ETComException in case of a COM exception
+     * @see #clear(boolean)
+     */
+    public void clear() throws ETComException {
+        performRequest("Clear", false);
     }
 
     @Override
     public void clear(final boolean force) throws ETComException {
-        performRequest("Insert", new Variant(force));
+        performRequest("Clear", new Variant(force));
     }
 
     @Override

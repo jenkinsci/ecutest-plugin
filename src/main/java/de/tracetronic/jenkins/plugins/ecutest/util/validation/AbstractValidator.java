@@ -50,7 +50,7 @@ public abstract class AbstractValidator {
      * @param value the form value
      * @return the form validation
      */
-    protected FormValidation validateRequiredValue(final String value) {
+    public FormValidation validateRequiredValue(final String value) {
         return FormValidation.validateRequired(value);
     }
 
@@ -60,7 +60,7 @@ public abstract class AbstractValidator {
      * @param value the form value
      * @return the form validation
      */
-    protected FormValidation validateParameterizedValue(final String value) {
+    public FormValidation validateParameterizedValue(final String value) {
         FormValidation returnValue = FormValidation.ok();
         if (!StringUtils.isEmpty(value) && value.contains(PARAMETER)) {
             returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
@@ -74,7 +74,7 @@ public abstract class AbstractValidator {
      * @param value the form value
      * @return the form validation
      */
-    protected FormValidation validateRequiredParamValue(final String value) {
+    public FormValidation validateRequiredParamValue(final String value) {
         FormValidation returnValue = FormValidation.ok();
         if (StringUtils.isBlank(value)) {
             returnValue = FormValidation.validateRequired(value);

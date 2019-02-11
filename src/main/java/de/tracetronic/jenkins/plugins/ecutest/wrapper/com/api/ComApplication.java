@@ -55,6 +55,14 @@ public interface ComApplication {
     ComTestManagement getTestManagement() throws ETComException;
 
     /**
+     * Returns the cache module.
+     *
+     * @return the {@link ComCaches} dispatch
+     * @throws ETComException in case of a COM exception
+     */
+    ComCaches getCaches() throws ETComException;
+
+    /**
      * Checks if the application process is running and ready to use.
      *
      * @return {@code true} if application is already running, {@code false} otherwise

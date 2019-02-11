@@ -12,6 +12,7 @@ import com.jacob.com.JacobException;
 import com.jacob.com.Variant;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComAnalysisEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComApplication;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComCaches;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComPackage;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComProject;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestBenchConfiguration;
@@ -266,6 +267,11 @@ public class ETComClient implements ComApplication, AutoCloseable {
     @Override
     public ComTestManagement getTestManagement() throws ETComException {
         return new TestManagement(dispatch.performRequest("GetTestManagementModule").toDispatch(), useTimeout);
+    }
+
+    @Override
+    public ComCaches getCaches() throws ETComException {
+        return new Caches(dispatch.performRequest("Caches").toDispatch(), useTimeout);
     }
 
     @Override

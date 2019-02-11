@@ -1,0 +1,25 @@
+<!--
+  Copyright (c) 2015-2019 TraceTronic GmbH
+
+  SPDX-License-Identifier: BSD-3-Clause
+  -->
+
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <f:entry title="${%type.title}" description="${%type.description}" field="type">
+        <f:select/>
+    </f:entry>
+    <f:entry title="${%filePath.title}" description="${%filePath.description}" field="filePath">
+        <f:textbox/>
+    </f:entry>
+    <f:entry title="${%dbChannel.title}" description="${%dbChannel.description}" field="dbChannel">
+        <f:textbox/>
+    </f:entry>
+    <f:entry title="${%clear.title}" description="${%clear.description}" field="clear">
+        <f:checkbox/>
+    </f:entry>
+    <f:entry title="">
+        <div align="right">
+            <f:repeatableDeleteButton value="${%cache.delete}"/>
+        </div>
+    </f:entry>
+</j:jelly>

@@ -19,11 +19,26 @@ public class Caches extends ETComDispatch implements ComCaches {
     /**
      * Available file caches.
      */
-    enum CacheType {
+    public enum CacheType {
+        /**
+         * A2L cache type.
+         */
         A2L,
+        /**
+         * ELF cache type.
+         */
         ELF,
+        /**
+         * Bus cache type.
+         */
         BUS,
+        /**
+         * Model cache type.
+         */
         MODEL,
+        /**
+         * Service cache type.
+         */
         SERVICE
     }
 
@@ -38,6 +53,30 @@ public class Caches extends ETComDispatch implements ComCaches {
      */
     public Caches(final Dispatch dispatch, final boolean useTimeout) {
         super(dispatch, useTimeout);
+    }
+
+    /**
+     * Gets the cache object by type.
+     *
+     * @param type the cache type
+     * @return the cache by type
+     * @throws ETComException in case of a COM exception or unsuppored cache type
+     */
+    public Cache getCacheByType(CacheType type) throws ETComException {
+        switch (type) {
+            case A2L:
+                return (Cache) getA2lCache();
+            case ELF:
+                return (Cache) getElfCache();
+            case BUS:
+                return (Cache) getBusCache();
+            case MODEL:
+                return (Cache) getModelCache();
+            case SERVICE:
+                return (Cache) getServiceCache();
+            default:
+                throw new ETComException("Unsupported cache type:" + type.name());
+        }
     }
 
     @Override
