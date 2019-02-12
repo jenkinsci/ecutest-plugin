@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
-
-  SPDX-License-Identifier: BSD-3-Clause
-  -->
 <REPORT-CONFIG
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <TYPE xsi:type="unicode">
+    <TYPE xsi:type="string">
         PYTHON
     </TYPE>
-    <REPORT-NAME xsi:type="unicode">
+    <REPORT-NAME xsi:type="string">
         reportATX.xml
     </REPORT-NAME>
-    <PACKAGE-TEMPLATE xsi:type="unicode">
+    <PACKAGE-TEMPLATE xsi:type="string">
         ReportPackage
     </PACKAGE-TEMPLATE>
-    <PROJECT-TEMPLATE xsi:type="unicode">
+    <PROJECT-TEMPLATE xsi:type="string">
         ReportProject
     </PROJECT-TEMPLATE>
     <SETTINGS>
@@ -25,15 +20,15 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Automatischen Upload zum Server
+                        <DVALUE xsi:type="string">Automatischen Upload zum Server
                             aktivieren?
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Enable auto upload to the server?</DVALUE>
+                        <DVALUE xsi:type="string">Enable auto upload to the server?</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="serverURL" default="127.0.0.1"
@@ -43,17 +38,17 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Optionaler Name für die angegebene
+                        <DVALUE xsi:type="string">Optionaler Name für die angegebene
                             Server-Instanz, welcher bei Log-Nachrichten verwendet wird.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Optional name for the server-instance,
+                        <DVALUE xsi:type="string">Optional name for the server-instance,
                             which is used for log messages.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="useHttpsConnection" default="False"
@@ -63,14 +58,14 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Verifizierung von SSL-Zertifikaten deaktivieren?
+                        <DVALUE xsi:type="string">Verifizierung von SSL-Zertifikaten deaktivieren?
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Disable the SSL certificate verification?</DVALUE>
+                        <DVALUE xsi:type="string">Disable the SSL certificate verification?</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="serverPort" default="8085"
@@ -80,17 +75,17 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Pfad von der Server URL zur
+                        <DVALUE xsi:type="string">Pfad von der Server URL zur
                             Serveranwendung z.B. atx -> localhost:8085/atx
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Path of the server URL to the server
+                        <DVALUE xsi:type="string">Path of the server URL to the server
                             application e.g. atx -> localhost:8085/atx
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="uploadAuthenticationKey" default=""
@@ -98,19 +93,19 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Authentifizierungsschlüssel für den Upload
+                        <DVALUE xsi:type="string">Authentifizierungsschlüssel für den Upload
                             zum Server (nur bei aktivierter Authentifizierung notwendig).
                             Kann im TEST-GUIDE unter dem Benutzerprofil abgerufen werden.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Authentication key for upload to the
+                        <DVALUE xsi:type="string">Authentication key for upload to the
                             server (only by activated authentication required). Can be found
                             under the user profile in the TEST GUIDE.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="uploadAsync" default="True"
@@ -118,21 +113,21 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn der Upload der Daten asynchron
+                        <DVALUE xsi:type="string">True, wenn der Upload der Daten asynchron
                             mit TEST-GUIDE geschehen soll, damit die Verbindungsdauern zu
                             TEST-GUIDE kurz sind, sonst False. Die Empfehlung ist einen
                             asynchronen Upload vorzunehmen.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True if the data upload is to be
+                        <DVALUE xsi:type="string">True if the data upload is to be
                             asynchronous with TEST-GUIDE so that the connection times to
                             TEST-GUIDE are short, otherwise False. The recommendation is to
                             perform an asynchronous upload.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="projectId" default="1"
@@ -140,19 +135,19 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Eindeutige Projekt-Id in TEST-GUIDE. Muss
+                        <DVALUE xsi:type="string">Eindeutige Projekt-Id in TEST-GUIDE. Muss
                             angegeben werden, wenn mehr als ein Projekt in einer TEST-GUIDE
                             Instanz verwaltet wird.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Unique project id in TEST-GUIDE. Have to
+                        <DVALUE xsi:type="string">Unique project id in TEST-GUIDE. Have to
                             specified, if more than one project is managed in one TEST-GUIDE
                             instance.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="compressUpload" default="False"
@@ -160,7 +155,7 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn die Daten vor dem Upload (bei
+                        <DVALUE xsi:type="string">True, wenn die Daten vor dem Upload (bei
                             minimaler Bandbreite) extra
                             komprimiert werden sollen, sonst
                             False. Achtung: Bei Aktivierung
@@ -171,7 +166,7 @@
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True, if the data is to be extra
+                        <DVALUE xsi:type="string">True, if the data is to be extra
                             compressed before uploading (at minimum bandwidth), otherwise
                             False. Attention: With activation the generation of the ATX-Zip
                             takes longer and also the processing time on the TEST-GUIDE side
@@ -179,7 +174,7 @@
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="cleanAfterSuccessUpload" default="True"
@@ -187,17 +182,17 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Nach erfolgreichem Upload die generierte
+                        <DVALUE xsi:type="string">Nach erfolgreichem Upload die generierte
                             Dateien löschen?
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">After successfully upload delete all
+                        <DVALUE xsi:type="string">After successfully upload delete all
                             generated files?
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="uploadOnlyProjectReport" default="False"
@@ -205,15 +200,15 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Sollen nur Projekt-Reports hochgeladen
+                        <DVALUE xsi:type="string">Sollen nur Projekt-Reports hochgeladen
                             werden?
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Only upload project reports?</DVALUE>
+                        <DVALUE xsi:type="string">Only upload project reports?</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <!-- Archiveinstellungen -->
@@ -222,13 +217,13 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Archivierung aktivieren?</DVALUE>
+                        <DVALUE xsi:type="string">Archivierung aktivieren?</DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Enable archiving?</DVALUE>
+                        <DVALUE xsi:type="string">Enable archiving?</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="archiveTrf" default="True"
@@ -236,13 +231,13 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">TRF-Dateien archivieren?</DVALUE>
+                        <DVALUE xsi:type="string">TRF-Dateien archivieren?</DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Archive TRF files?</DVALUE>
+                        <DVALUE xsi:type="string">Archive TRF files?</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="archivePkg" default="False"
@@ -250,13 +245,13 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Package-Dateien archivieren?</DVALUE>
+                        <DVALUE xsi:type="string">Package-Dateien archivieren?</DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Archive package files?</DVALUE>
+                        <DVALUE xsi:type="string">Archive package files?</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="archiveTcf" default="False"
@@ -264,13 +259,13 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">TCF-Dateien archivieren?</DVALUE>
+                        <DVALUE xsi:type="string">TCF-Dateien archivieren?</DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Archive TCF files?</DVALUE>
+                        <DVALUE xsi:type="string">Archive TCF files?</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="archiveTbc" default="False"
@@ -278,13 +273,13 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">TBC-Dateien archivieren?</DVALUE>
+                        <DVALUE xsi:type="string">TBC-Dateien archivieren?</DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Archive TBC files?</DVALUE>
+                        <DVALUE xsi:type="string">Archive TBC files?</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="archiveMapping" default="False"
@@ -292,17 +287,17 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn die geladenen Mappings mit
+                        <DVALUE xsi:type="string">True, wenn die geladenen Mappings mit
                             archivert werden sollen, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True if the loaded mappings should be
+                        <DVALUE xsi:type="string">True if the loaded mappings should be
                             archived, otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="archiveRecordings" default="False"
@@ -310,17 +305,17 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Produzierte oder konsumierte Aufnahmen als
+                        <DVALUE xsi:type="string">Produzierte oder konsumierte Aufnahmen als
                             komprimierte ZIP Datei archivieren?
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Archive produced or consumed recordings as
+                        <DVALUE xsi:type="string">Archive produced or consumed recordings as
                             compressed ZIP file?
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="archivePlots" default="True"
@@ -328,18 +323,18 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn die erstellten Plots aus der
+                        <DVALUE xsi:type="string">True, wenn die erstellten Plots aus der
                             Trace-Analyse für die Anzeige in TEST-GUIDE archviert werden
                             sollen, sonst False
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True, if you want archive trace analysis
+                        <DVALUE xsi:type="string">True, if you want archive trace analysis
                             plots to show in TEST-GUIDE, otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="archiveMiscFiles" default=""
@@ -347,14 +342,14 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Angabe der Suchausdrücke für zusätzliche
+                        <DVALUE xsi:type="string">Angabe der Suchausdrücke für zusätzliche
                             Dateien, welche archiviert werden sollen. Die Ausdrücke werden
                             mit ';' (Semikolon) getrennt. Die Suche erfolgt ausgehend vom
                             Report-Verzeichnis. Beispiele: myFile*.asc;asc/**/myDirFile.*
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Specify the search expression for
+                        <DVALUE xsi:type="string">Specify the search expression for
                             additional files to be archived. Expressions are seperated
                             by ';'
                             (semicolon). Search base directory is the report
@@ -363,7 +358,7 @@
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="archiveMiscFilesOnlyInTestReportDir"
@@ -371,20 +366,20 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn nur dann die 'misc files'
+                        <DVALUE xsi:type="string">True, wenn nur dann die 'misc files'
                             archiviert werden sollen, wenn sich der ausgewählt Testreport in
                             einem
                             ECU-TEST Testreport-Verzeichnis befindet, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True, if you only want archive 'misc
+                        <DVALUE xsi:type="string">True, if you only want archive 'misc
                             files' which are in a ECU-TEST 'test report directory' of the
                             given test report, otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="archiveBy"
@@ -393,17 +388,17 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Gibt die Package-Ergebnisse an, bei
+                        <DVALUE xsi:type="string">Gibt die Package-Ergebnisse an, bei
                             welchen die Dateien für den Upload mit erfasst werden sollen.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Specifies the package results for which
+                        <DVALUE xsi:type="string">Specifies the package results for which
                             the files are to be uploaded.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <!-- Attributeinstellungen -->
@@ -413,18 +408,18 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Angabe der Package-Attribute durch ';'
+                        <DVALUE xsi:type="string">Angabe der Package-Attribute durch ';'
                             getrennt, welche als ATX-Attribut für die Suche erfasst werden
                             sollen.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Specifying the package attributes by ';',
+                        <DVALUE xsi:type="string">Specifying the package attributes by ';',
                             which are mapped to ATX attributes.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="attributeDelimiter" default=""
@@ -432,7 +427,7 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Angabe der Package-Attribut samt
+                        <DVALUE xsi:type="string">Angabe der Package-Attribut samt
                             Trennzeichen
                             z.B. ReqId=_;Ref=- um Attributwerte getrennt für die
                             Suche zu
@@ -442,7 +437,7 @@
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Specify the package attribute including
+                        <DVALUE xsi:type="string">Specify the package attribute including
                             separator
                             e.g. ReqId=_;Ref=- to separate attribute values for the
                             search for e.g. of the following attributes
@@ -451,7 +446,7 @@
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="mapIsTestCaseAsAttribute" default="True"
@@ -459,17 +454,17 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Den Haken der Packageeigenschaft
+                        <DVALUE xsi:type="string">Den Haken der Packageeigenschaft
                             'Testfall' als ATX-Attribut 'isTestCase' erfassen?
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Map the package property 'Testcase' to ATX
+                        <DVALUE xsi:type="string">Map the package property 'Testcase' to ATX
                             attribut 'isTestCase'?
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="mapTestCaseVersionAsAttribute" default="True"
@@ -477,19 +472,19 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn die Packageeigenschaft
+                        <DVALUE xsi:type="string">True, wenn die Packageeigenschaft
                             'Version' als ATX-Attribut 'TestCaseVersion' erfasst werden soll,
                             sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True if the package property 'version'
+                        <DVALUE xsi:type="string">True if the package property 'version'
                             should be
                             mapped as attribute 'TestCaseVersion', otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="mapRootPrjAttrToPkgAttr" default="True"
@@ -497,19 +492,19 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn die Root-Projektattribute
+                        <DVALUE xsi:type="string">True, wenn die Root-Projektattribute
                             (siehe coveredAttributes) auf alle Package-Attribute mit dem
                             Präfix 'Project_' vererbt werden sollen, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True if the root project attributes (see
+                        <DVALUE xsi:type="string">True if the root project attributes (see
                             coveredAttributes) should be inherited to all package attributes
                             with the prefix 'Project_', otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="includePkgSVNRevision" default="True"
@@ -517,18 +512,58 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn die SVN Revision als Attribut
+                        <DVALUE xsi:type="string">True, wenn die SVN Revision als Attribut
                             "Revision" erfasst werden soll, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True if the SVN revision should be
+                        <DVALUE xsi:type="string">True if the SVN revision should be
                             recorded
                             as attribute "Revision", otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="mapSwkIdsAsAttribute" default="True"
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">True, wenn vorhandene SWK-Ids im Package
+                            als Attribut TT_SWK_ID gemappt werden sollen, sonst False.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">True, if existing SWK-Ids in the package
+                            are to be mapped as attribute TT_SWK_ID, otherwise False.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <!-- TBC-Globale Konstanteneinstellungen -->
+        <SETTING name="mapTbcToolAsConstant" default="True"
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">True, wenn die TBC Tool Informationen wie
+                            z.B. eine aktive Matlab-Verbindung als ATX-Konstante
+                            TBC_TOOL_MATLAB mit der verwendeten Matlab-Version abgebildet
+                            werden soll, sonst False.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">True, if the TBC Tool information like
+                            e.g. an active Matlab connection should be mapped as ATX constant
+                            TBC_TOOL_MATLAB with the used Matlab version, otherwise False.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <!-- TCF-Globale Konstanteneinstellungen -->
@@ -537,19 +572,19 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn die TCF Informationen wie z.B.
+                        <DVALUE xsi:type="string">True, wenn die TCF Informationen wie z.B.
                             die verwendete A2L Datei als ATX-Konstante TCF_A2L_DME abgebildet
                             werden soll, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True, if the TCF info, for example the
+                        <DVALUE xsi:type="string">True, if the TCF info, for example the
                             used A2L file is mapped as ATX constant TCF_A2L_DME, otherwise
                             False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="mapUserDefinedReportDataAsConstant"
@@ -557,21 +592,21 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn die TCF Informationen der
+                        <DVALUE xsi:type="string">True, wenn die TCF Informationen der
                             benutzerdefinierten Report Informationen als ATX-Konstante mit
                             Präfix TCF_ abgebildet werden soll, sonst
                             False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True, if the TCF info of the user-defined
+                        <DVALUE xsi:type="string">True, if the TCF info of the user-defined
                             report data is mapped as ATX constant with TCF_ prefix ,
                             otherwise
                             False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="setConstants" default=""
@@ -579,19 +614,19 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Angabe zu setzender Konstanten für jeden
+                        <DVALUE xsi:type="string">Angabe zu setzender Konstanten für jeden
                             Testfall durch ';' getrennt. Beispiel: myConstant=NightlyTest;
                             Buildnumber=42
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Specifying special constants for each
+                        <DVALUE xsi:type="string">Specifying special constants for each
                             testcase
                             by ';'. Example: myConstant=NightlyTest; Buildnumber=42
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="setAttributes" default=""
@@ -599,7 +634,7 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Angabe zu setzender Attribute für jeden
+                        <DVALUE xsi:type="string">Angabe zu setzender Attribute für jeden
                             Testfall durch ';' getrennt. Beispiel: env=HiL; reqId=42 . Die
                             Attribute müssen nicht im Parameter 'coveredAttributes' extra
                             spezifiziert werden. Bei Überschneidungen zu Bestandsattributen
@@ -607,7 +642,7 @@
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Specifying special attributes for each
+                        <DVALUE xsi:type="string">Specifying special attributes for each
                             testcase
                             by ';'. Example: env=HiL; reqId=42. The attributes do not
                             have to be extra specified in the'coveredAttributes' parameter.
@@ -616,7 +651,7 @@
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <!-- Spezielle Einstellungen -->
@@ -625,17 +660,17 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn sich der ATX-Generator
+                        <DVALUE xsi:type="string">True, wenn sich der ATX-Generator
                             automatisch aktualisieren soll, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True, if the ATX generator automatically
+                        <DVALUE xsi:type="string">True, if the ATX generator automatically
                             to update, otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="includeToolIdentifier" default="False"
@@ -643,19 +678,19 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn der Produktname, -version und
+                        <DVALUE xsi:type="string">True, wenn der Produktname, -version und
                             -Revision als ToolIdentifierXYZ-Attribute erfasst werden sollen,
                             sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True if the product name, version and
+                        <DVALUE xsi:type="string">True if the product name, version and
                             revision should be recorded as attribute "ToolIdentifierXYZ",
                             otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="onlyIncludePkgTestCases" default="False"
@@ -663,19 +698,19 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn nur Packages, welche als
+                        <DVALUE xsi:type="string">True, wenn nur Packages, welche als
                             Testfall gekennzeichnet sind umgewandelt und erfasst werden
                             sollen, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True, if convert only packages which are
+                        <DVALUE xsi:type="string">True, if convert only packages which are
                             marked
                             as testcase, otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="overrideParamSetNameMapping" default="False"
@@ -683,17 +718,17 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Parametersatznamen statt der Packagenamen
+                        <DVALUE xsi:type="string">Parametersatznamen statt der Packagenamen
                             als Testfallnamen verwenden im ATX?
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Use the parameter set name instead of the
+                        <DVALUE xsi:type="string">Use the parameter set name instead of the
                             package name as a ATX testcase name?
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="mapProjectElementNameAsTestCaseName"
@@ -701,21 +736,21 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn der Projektreferenzname statt
+                        <DVALUE xsi:type="string">True, wenn der Projektreferenzname statt
                             der Packagenamen
                             als Testfallnamen verwenden werden soll im ATX,
                             sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True, if the project reference name should
+                        <DVALUE xsi:type="string">True, if the project reference name should
                             be used instead of the
                             package name as a ATX testcase name,
                             otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="mapSubPackageAsTestCaseLevel" default="0"
@@ -723,7 +758,7 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Legt die Tiefe fest, bis in welche die
+                        <DVALUE xsi:type="string">Legt die Tiefe fest, bis in welche die
                             SubPackages als Testfälle
                             erfasst werden sollen. Bei 0
                             (Standardwert) werden keine SubPackages
@@ -731,14 +766,14 @@
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Depth to which sub packages will be
+                        <DVALUE xsi:type="string">Depth to which sub packages will be
                             recorded
                             as testcases. For 0 (default value) no sub packages are
                             recorded.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="captureSubPackageOnVerdict" default=""
@@ -746,18 +781,18 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Legt fest bei welchen Ergebnissen der
+                        <DVALUE xsi:type="string">Legt fest bei welchen Ergebnissen der
                             SubPackages deren TestSteps mit erfasst werden sollen. Beispiel:
                             FAILED; ERROR
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Defines the results of the sub packages on
+                        <DVALUE xsi:type="string">Defines the results of the sub packages on
                             which the test steps have to be recorded. Example: FAILED; ERROR
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="mapSeparateProjectExecutionAsSingleTestplan"
@@ -765,20 +800,20 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn bei der separaten
+                        <DVALUE xsi:type="string">True, wenn bei der separaten
                             Unterprojektausführung diese Projekte als eigener Testplan
                             gelistet werden sollen, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True, if you want to map separate project
+                        <DVALUE xsi:type="string">True, if you want to map separate project
                             execution reports as own testplan,
                             otherwise
                             False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="mapAttributeAsConstant" default=""
@@ -786,18 +821,18 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">Angabe der Package-Attribute durch ';'
+                        <DVALUE xsi:type="string">Angabe der Package-Attribute durch ';'
                             getrennt, welche als ATX-Konstante für die Suche zusätzlich
                             erfasst werden sollen.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">Specifying the package attributes by ';',
+                        <DVALUE xsi:type="string">Specifying the package attributes by ';',
                             which are mapped additionaly to ATX constants.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="mapTestReportPathAsConstant" default="False"
@@ -805,19 +840,19 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn der TRF-Reportpfad als
+                        <DVALUE xsi:type="string">True, wenn der TRF-Reportpfad als
                             ATX-Konstante TRF_Link abgebildet
                             werden soll, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True, if the TRF report path should be
+                        <DVALUE xsi:type="string">True, if the TRF report path should be
                             mapped as ATX constant TRF_Link, otherwise
                             False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
         <SETTING name="includeResourceAdapterInfo" default="True"
@@ -825,20 +860,20 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="unicode">True, wenn die ResourceAdapter
+                        <DVALUE xsi:type="string">True, wenn die ResourceAdapter
                             Informationen als
                             ATX-Konstanten erfasst werden sollen, sonst
                             False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="unicode">True, if the ResourceAdapter info should
+                        <DVALUE xsi:type="string">True, if the ResourceAdapter info should
                             be
                             recorded as ATX constant, otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="unicode">de_DE</INITIAL-LANGUAGE>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
     </SETTINGS>
