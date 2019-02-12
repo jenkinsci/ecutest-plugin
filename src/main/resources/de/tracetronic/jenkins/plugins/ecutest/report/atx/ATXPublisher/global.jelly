@@ -51,6 +51,10 @@
                             <j:set var="settings" value="${config.getConfigByName('attributeConfig')}"/>
                             <st:include class="${descriptor.clazz}" page="setting.jelly"/>
                         </f:section>
+                        <f:section title="${%atx.tbcConstantConfig.title}" name="tbcConstantConfig">
+                            <j:set var="settings" value="${config.getConfigByName('tbcConstantConfig')}"/>
+                            <st:include class="${descriptor.clazz}" page="setting.jelly"/>
+                        </f:section>
                         <f:section title="${%atx.tcfConstantConfig.title}" name="tcfConstantConfig">
                             <j:set var="settings" value="${config.getConfigByName('tcfConstantConfig')}"/>
                             <st:include class="${descriptor.clazz}" page="setting.jelly"/>
