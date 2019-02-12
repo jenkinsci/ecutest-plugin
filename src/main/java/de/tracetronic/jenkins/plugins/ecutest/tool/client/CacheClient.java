@@ -106,12 +106,33 @@ public class CacheClient {
     public static boolean isCompatible(final FilePath workspace, final Launcher launcher, final TaskListener listener)
         throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
+
+        // Check for running ECU-TEST instance
+        if (!checkETInstance(launcher)) {
+            logger.logError("No running ECU-TEST instance found, please configure one at first!");
+            return false;
+        }
+
         // Load JACOB library
         if (!DllUtil.loadLibrary(workspace.toComputer())) {
             logger.logError("Could not load JACOB library!");
             return false;
         }
+
         return launcher.getChannel().call(new CompatibleCacheCallable(ET_MIN_VERSION, listener));
+    }
+
+    /**
+     * Checks already opened ECU-TEST instances.
+     *
+     * @param launcher the launcher
+     * @return {@code true} if processes found, {@code false} otherwise
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
+     */
+    private static boolean checkETInstance(final Launcher launcher) throws IOException, InterruptedException {
+        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
+        return !foundProcesses.isEmpty();
     }
 
     /**

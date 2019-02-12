@@ -8,7 +8,6 @@ package de.tracetronic.jenkins.plugins.ecutest.tool;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.CacheClient;
-import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.PathUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import hudson.AbortException;
@@ -112,12 +111,11 @@ public class CacheBuilder extends Builder implements SimpleBuildStep {
         final EnvVars buildEnvVars = run.getEnvironment(listener);
         for (CacheConfig cache : caches) {
             // Absolutize database file path and channel, if not absolute assume relative to build workspace
-            String expFilePath = EnvUtil.expandEnvVar(cache.getFilePath(), buildEnvVars, workspace.getRemote());
-            expFilePath = PathUtil.makeAbsolutePath(expFilePath, workspace);
-            String expDbChannel = EnvUtil.expandEnvVar(cache.getDbChannel(), buildEnvVars, workspace.getRemote());
-            expDbChannel = PathUtil.makeAbsolutePath(expDbChannel, workspace);
+            CacheConfig expCache = cache.expand(buildEnvVars);
+            String expFilePath = PathUtil.makeAbsolutePath(expCache.getFilePath(), workspace);
+            String expDbChannel = PathUtil.makeAbsolutePath(expCache.getDbChannel(), workspace);
 
-            CacheClient client = new CacheClient(cache.getType(), expFilePath, expDbChannel, cache.isClear());
+            CacheClient client = new CacheClient(expCache.getType(), expFilePath, expDbChannel, expCache.isClear());
             client.generateCache(launcher, listener);
         }
     }
