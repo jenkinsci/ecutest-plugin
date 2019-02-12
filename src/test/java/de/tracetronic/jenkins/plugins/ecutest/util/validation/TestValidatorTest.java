@@ -7,7 +7,6 @@ package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
 import hudson.util.FormValidation;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -19,7 +18,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class TestValidatorTest {
 
-    TestValidator testValidator;
+    private TestValidator testValidator;
 
     @Before
     public void setUp() throws Exception {
@@ -308,9 +307,7 @@ public class TestValidatorTest {
         assertEquals("Error if bracket missing in filter expression", FormValidation.Kind.WARNING, validation.kind);
     }
 
-    @Ignore
     @Test
-    // FIXME: Check regression in antlr4.7
     public void testMissingLogicOperatorExpression() {
         final FormValidation validation = testValidator.validateFilterExpression("Name='test' Status='FAILED'");
         assertEquals("Error if logical operator missing in filter expression", FormValidation.Kind.WARNING,

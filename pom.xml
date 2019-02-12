@@ -105,8 +105,8 @@
         <jacob.version>1.19</jacob.version>
 
         <!-- ANTLR -->
-        <antlr4-maven-plugin.version>4.7.1</antlr4-maven-plugin.version>
-        <antlr4-runtime.version>4.7.1</antlr4-runtime.version>
+        <antlr4-maven-plugin.version>4.5.3</antlr4-maven-plugin.version>
+        <antlr4-runtime.version>4.5.3</antlr4-runtime.version>
 
         <!-- SQLite -->
         <sqlite-jdbc.version>3.7.2</sqlite-jdbc.version>
