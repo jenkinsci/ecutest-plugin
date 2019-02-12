@@ -18,7 +18,8 @@ import java.io.IOException;
  * </p>
  * <p>
  * In order to work a new task in the Windows Task Scheduler has to be created named <br>
- * <i>RESTART_JENKINS_SLAVE</i> and configured with actions how to restart the slave.
+ * <i>RESTART_JENKINS_SLAVE</i> or renamed individually by system property <i>ecutest.taskName</i>.
+ * This task should be configured with actions how to restart the slave.
  * </p>
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
@@ -29,7 +30,11 @@ public class WindowsTaskSlaveRestarter extends SlaveRestarter {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String TASKNAME = "RESTART_JENKINS_SLAVE";
+    /**
+     * Change the task name by invoking -Decutest.taskName={@code taskName} to Jenkins slave JVM
+     * or setting system property ecutest.taskName directly.
+     */
+    private static final String TASKNAME = System.getProperty("ecutest.taskName", "RESTART_JENKINS_SLAVE");
 
     @Override
     public boolean canWork() {
