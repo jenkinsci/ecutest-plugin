@@ -319,57 +319,71 @@ public class ATXValidator extends AbstractValidator {
      * @return the form validation
      */
     public FormValidation testConnection(final String baseUrl, final boolean ignoreSSL) {
+        FormValidation returnValue;
         if (StringUtils.isBlank(baseUrl)) {
-            return FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(null));
+            returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(null));
+        } else if (baseUrl.contains(PARAMETER)) {
+            returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedConnection());
+        } else {
+            returnValue = checkConnection(baseUrl, ignoreSSL);
         }
-        final String appVersionUrl = String.format("%s/app-version-info", baseUrl);
+        return returnValue;
+    }
+
+    /**
+     * Checks the server connection by requesting the TEST-GUIDE API version endpoint.
+     *
+     * @param baseUrl   the base server URL
+     * @param ignoreSSL specifies whether to ignore SSL issues
+     * @return the form validation
+     */
+    private FormValidation checkConnection(final String baseUrl, final boolean ignoreSSL) {
         FormValidation returnValue = FormValidation.okWithMarkup(String.format(
             "<span style=\"font-weight: bold; color: #208CA3\">%s</span>",
             Messages.ATXPublisher_ValidConnection(baseUrl)));
-        if (appVersionUrl.contains(PARAMETER)) {
-            returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedConnection());
-        } else {
-            HttpURLConnection connection = null;
-            try {
-                final URL url = new URL(appVersionUrl);
-                // Handle SSL connection
-                if (appVersionUrl.startsWith("https://")) {
-                    connection = (HttpsURLConnection) url.openConnection();
-                    if (ignoreSSL) {
-                        ignoreSSLIssues((HttpsURLConnection) connection);
-                    }
-                } else {
-                    connection = (HttpURLConnection) url.openConnection();
-                }
 
-                // Check URL connection
-                connection.setConnectTimeout(30000);
-                connection.setReadTimeout(30000);
-                connection.setUseCaches(false);
-                connection.setRequestMethod("GET");
-                connection.connect();
+        HttpURLConnection connection = null;
+        try {
+            final String appVersionUrl = String.format("%s/api/app-version-info", baseUrl);
+            final URL url = new URL(appVersionUrl);
 
-                final int httpResponse = connection.getResponseCode();
-                if (httpResponse != HttpURLConnection.HTTP_OK) {
-                    returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(baseUrl,
-                        "Status code: " + httpResponse));
-                } else {
-                    try (BufferedReader in = new BufferedReader(new InputStreamReader(
-                        connection.getInputStream(), Charset.forName("UTF-8")))) {
-                        final String inputLine = in.readLine();
-                        if (inputLine == null || !inputLine.contains("TraceTronic")) {
-                            returnValue = FormValidation.warning(Messages.ATXPublisher_InvalidServer(baseUrl));
-                        }
+            // Handle SSL connection
+            if (appVersionUrl.startsWith("https://")) {
+                connection = (HttpsURLConnection) url.openConnection();
+                if (ignoreSSL) {
+                    ignoreSSLIssues((HttpsURLConnection) connection);
+                }
+            } else {
+                connection = (HttpURLConnection) url.openConnection();
+            }
+
+            // Check URL connection
+            connection.setConnectTimeout(30000);
+            connection.setReadTimeout(30000);
+            connection.setUseCaches(false);
+            connection.setRequestMethod("GET");
+            connection.connect();
+
+            final int httpResponse = connection.getResponseCode();
+            if (httpResponse != HttpURLConnection.HTTP_OK) {
+                returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(baseUrl,
+                    "Status code: " + httpResponse));
+            } else {
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(
+                    connection.getInputStream(), Charset.forName("UTF-8")))) {
+                    final String inputLine = in.readLine();
+                    if (inputLine == null || !inputLine.contains("TraceTronic")) {
+                        returnValue = FormValidation.warning(Messages.ATXPublisher_InvalidServer(baseUrl));
                     }
                 }
-            } catch (final MalformedURLException e) {
-                returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(baseUrl));
-            } catch (final IOException | NoSuchAlgorithmException | KeyManagementException e) {
-                returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(baseUrl, e.getMessage()));
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
+            }
+        } catch (final MalformedURLException e) {
+            returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(baseUrl));
+        } catch (final IOException | NoSuchAlgorithmException | KeyManagementException e) {
+            returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(baseUrl, e.getMessage()));
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
             }
         }
         return returnValue;

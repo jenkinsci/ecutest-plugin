@@ -38,6 +38,8 @@ public final class ATXSettingParser {
     private static final String UPLOAD_EXPRESSION = PRECEDING_COMMENT + "[.=' Uploadeinstellungen ']]";
     private static final String ARCHIVE_EXPRESSION = PRECEDING_COMMENT + "[.=' Archiveinstellungen ']]";
     private static final String ATTRIBUTE_EXPRESSION = PRECEDING_COMMENT + "[.=' Attributeinstellungen ']]";
+    private static final String TBC_CONSTANT_EXPRESSION = PRECEDING_COMMENT
+        + "[.=' TBC-Globale Konstanteneinstellungen ']]";
     private static final String TCF_CONSTANT_EXPRESSION = PRECEDING_COMMENT
         + "[.=' TCF-Globale Konstanteneinstellungen ']]";
     private static final String SPECIAL_EXPRESSION = PRECEDING_COMMENT + "[.=' Spezielle Einstellungen ']]";
@@ -60,12 +62,14 @@ public final class ATXSettingParser {
         final List<ATXSetting> uploadSettings = parseSetting(doc, UPLOAD_EXPRESSION);
         final List<ATXSetting> archiveSettings = parseSetting(doc, ARCHIVE_EXPRESSION);
         final List<ATXSetting> attributeSettings = parseSetting(doc, ATTRIBUTE_EXPRESSION);
+        final List<ATXSetting> tbcConstantSettings = parseSetting(doc, TBC_CONSTANT_EXPRESSION);
         final List<ATXSetting> tcfConstantSettings = parseSetting(doc, TCF_CONSTANT_EXPRESSION);
         final List<ATXSetting> specialSettings = parseSetting(doc, SPECIAL_EXPRESSION);
 
         configMap.put("uploadConfig", uploadSettings);
         configMap.put("archiveConfig", archiveSettings);
         configMap.put("attributeConfig", attributeSettings);
+        configMap.put("tbcConstantConfig", tbcConstantSettings);
         configMap.put("tcfConstantConfig", tcfConstantSettings);
         configMap.put("specialConfig", specialSettings);
 
