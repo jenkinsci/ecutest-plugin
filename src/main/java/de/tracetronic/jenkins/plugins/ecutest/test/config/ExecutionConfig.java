@@ -29,11 +29,13 @@ import java.util.Objects;
 public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     implements Serializable, ExpandableConfig {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Defines the default timeout running a test.
      */
     protected static final int DEFAULT_TIMEOUT = 3600;
-    private static final long serialVersionUID = 1L;
+
     private final String timeout;
     private final boolean stopOnError;
     /**

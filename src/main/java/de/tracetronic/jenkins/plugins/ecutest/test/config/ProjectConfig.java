@@ -31,6 +31,7 @@ public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implem
     ExpandableConfig {
 
     private static final long serialVersionUID = 1L;
+
     private final boolean execInCurrentPkgDir;
     private final String filterExpression;
     /**

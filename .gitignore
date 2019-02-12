@@ -57,6 +57,7 @@ local.properties
 .idea/markdown-navigator/
 .idea/markdown-exported-files.xml
 .idea/markdown-navigator.xml
+.idea/resourceBundles.xml
 
 # File-based project format:
 *.iml
