@@ -9,17 +9,13 @@ import de.tracetronic.jenkins.plugins.ecutest.filter.RefFilterLexer;
 import de.tracetronic.jenkins.plugins.ecutest.filter.RefFilterParser;
 import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
 import hudson.util.FormValidation;
+import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BaseErrorListener;
-import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.apache.commons.lang.StringUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -209,37 +205,32 @@ public class TestValidator extends AbstractValidator {
         public void validate() {
             isValid = true;
 
-            try (InputStream stream = new ByteArrayInputStream(expression.getBytes(StandardCharsets.UTF_8))) {
-                final RefFilterLexer lexer = new RefFilterLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-                final RefFilterParser parser = new RefFilterParser(new CommonTokenStream(lexer));
+            final RefFilterLexer lexer = new RefFilterLexer(new ANTLRInputStream(expression));
+            final RefFilterParser parser = new RefFilterParser(new CommonTokenStream(lexer));
 
-                lexer.removeErrorListeners();
-                lexer.addErrorListener(new BaseErrorListener() {
+            lexer.removeErrorListeners();
+            lexer.addErrorListener(new BaseErrorListener() {
 
-                    @Override
-                    public void syntaxError(final Recognizer<?, ?> recognizer, final Object offendingSymbol,
-                                            final int line, final int charPositionInLine,
-                                            final String msg, final RecognitionException e) {
-                        isValid = false;
-                    }
-                });
+                @Override
+                public void syntaxError(final Recognizer<?, ?> recognizer, final Object offendingSymbol,
+                                        final int line, final int charPositionInLine,
+                                        final String msg, final RecognitionException e) {
+                    isValid = false;
+                }
+            });
 
-                parser.removeErrorListeners();
-                parser.addErrorListener(new BaseErrorListener() {
+            parser.removeErrorListeners();
+            parser.addErrorListener(new BaseErrorListener() {
 
-                    @Override
-                    public void syntaxError(final Recognizer<?, ?> recognizer, final Object offendingSymbol,
-                                            final int line, final int charPositionInLine,
-                                            final String msg, final RecognitionException e) {
-                        isValid = false;
-                    }
-                });
+                @Override
+                public void syntaxError(final Recognizer<?, ?> recognizer, final Object offendingSymbol,
+                                        final int line, final int charPositionInLine,
+                                        final String msg, final RecognitionException e) {
+                    isValid = false;
+                }
+            });
 
-                parser.filterExpression();
-            } catch (final IOException e) {
-                e.printStackTrace();
-                isValid = false;
-            }
+            parser.filterExpression();
         }
 
         /**
