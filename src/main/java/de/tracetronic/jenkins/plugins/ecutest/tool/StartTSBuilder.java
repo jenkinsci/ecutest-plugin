@@ -169,7 +169,7 @@ public class StartTSBuilder extends AbstractToolBuilder {
      * DescriptorImpl for {@link StartTSBuilder}.
      */
     @Symbol("startTS")
-    @Extension(ordinal = 10008)
+    @Extension(ordinal = 10009)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
 
         @Override

@@ -124,7 +124,7 @@ public class CacheBuilder extends Builder implements SimpleBuildStep {
      * DescriptorImpl for {@link CacheBuilder}.
      */
     @Symbol("generateCache")
-    @Extension(ordinal = 10009)
+    @Extension(ordinal = 10007)
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
         @Override
