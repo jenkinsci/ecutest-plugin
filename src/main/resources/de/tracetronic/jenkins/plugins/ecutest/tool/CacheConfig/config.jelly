@@ -5,7 +5,7 @@
   -->
 
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
-    <f:entry title="${%type.title}" description="${%type.description}" field="type">
+    <f:entry title="${%type.title}" field="type">
         <f:select/>
     </f:entry>
     <f:entry title="${%filePath.title}" description="${%filePath.description}" field="filePath">
