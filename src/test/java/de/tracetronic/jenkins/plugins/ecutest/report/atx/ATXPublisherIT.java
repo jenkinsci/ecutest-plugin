@@ -263,7 +263,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
-        jenkins.assertLogContains("Publishing ATX reports...", run);
+        jenkins.assertLogContains("Publishing ATX reports to TEST-GUIDE...", run);
         jenkins.assertLogContains("Starting ECU-TEST failed.", run);
     }
 }
