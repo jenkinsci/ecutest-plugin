@@ -11,7 +11,7 @@
             <f:repeatable var="installation" items="${descriptor.installations}" add="${%atx.add}">
                 <table width="100%">
                     <f:section title="${%atx.title}">
-                        <f:entry title="${%Name}" field="name">
+                        <f:entry title="${%atx.name}" field="name">
                             <f:textbox value="${installation.getName()}"/>
                         </f:entry>
                         <j:set var="instanceCopy" value="${instance}"/>

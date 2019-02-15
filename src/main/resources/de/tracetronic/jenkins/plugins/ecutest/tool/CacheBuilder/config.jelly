@@ -1,0 +1,12 @@
+<!--
+  Copyright (c) 2015-2019 TraceTronic GmbH
+
+  SPDX-License-Identifier: BSD-3-Clause
+  -->
+
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <f:entry title="${%caches.title}" description="${%caches.description}" field="caches">
+        <f:repeatableProperty field="caches" add="${%caches.add}" minimum="0"/>
+    </f:entry>
+</j:jelly>

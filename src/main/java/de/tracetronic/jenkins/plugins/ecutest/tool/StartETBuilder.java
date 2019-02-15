@@ -237,7 +237,7 @@ public class StartETBuilder extends AbstractToolBuilder {
      * DescriptorImpl for {@link StartETBuilder}.
      */
     @Symbol("startET")
-    @Extension(ordinal = 10010)
+    @Extension(ordinal = 10011)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
 
         @Override

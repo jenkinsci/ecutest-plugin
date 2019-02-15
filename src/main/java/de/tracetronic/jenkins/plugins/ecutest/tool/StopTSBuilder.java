@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**
- * Builder providing to stop the Tool-Server.
+ * Builder providing the tear down of the Tool-Server.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
@@ -68,7 +68,7 @@ public class StopTSBuilder extends AbstractToolBuilder {
      * DescriptorImpl for {@link StopTSBuilder}.
      */
     @Symbol("stopTS")
-    @Extension(ordinal = 10007)
+    @Extension(ordinal = 10008)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
 
         @Override

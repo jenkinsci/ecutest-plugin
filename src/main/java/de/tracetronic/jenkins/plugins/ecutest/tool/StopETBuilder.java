@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**
- * Builder providing to stop ECU-TEST.
+ * Builder providing the tear down of ECU-TEST.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
@@ -73,7 +73,7 @@ public class StopETBuilder extends AbstractToolBuilder {
      * DescriptorImpl for {@link StopETBuilder}.
      */
     @Symbol("stopET")
-    @Extension(ordinal = 10009)
+    @Extension(ordinal = 10010)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
 
         @Override

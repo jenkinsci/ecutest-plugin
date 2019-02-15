@@ -145,7 +145,7 @@ public class TMSPublisher extends AbstractReportPublisher {
         if (isPublished) {
             logger.logInfo("Reports published successfully to test management system.");
         } else {
-            logger.logInfo("Failed publishing report to test management system.");
+            logger.logError("Failed publishing report to test management system.");
             run.setResult(Result.FAILURE);
         }
     }
