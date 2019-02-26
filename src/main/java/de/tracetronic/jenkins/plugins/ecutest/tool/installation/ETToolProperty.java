@@ -13,6 +13,7 @@ import hudson.util.FormValidation;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -72,6 +73,7 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
     /**
      * DescriptorImpl for {@link ETToolProperty}.
      */
+    @Symbol("ecu-test-property")
     @Extension
     public static final class DescriptorImpl extends ToolPropertyDescriptor {
 
