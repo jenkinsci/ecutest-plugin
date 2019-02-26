@@ -280,7 +280,7 @@ public class ETInstallation extends AbstractToolInstallation {
         @Nonnull
         @Override
         public String getDisplayName() {
-            return Messages.ET_DisplayName();
+            return Messages.ETInstallation_DisplayName();
         }
 
         @Override
@@ -325,18 +325,18 @@ public class ETInstallation extends AbstractToolInstallation {
             Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
             FormValidation returnValue = FormValidation.ok();
             if (!Functions.isWindows()) {
-                returnValue = FormValidation.warning(Messages.ET_IsUnixSystem());
+                returnValue = FormValidation.warning(Messages.ETInstallation_IsUnixSystem());
             } else if (StringUtils.isNotEmpty(value.toString())) {
                 if (value.isDirectory()) {
                     final File etExe = getExeFile(value);
                     if (etExe == null || !etExe.exists()) {
-                        returnValue = FormValidation.error(Messages.ET_NotHomeDirectory(value));
+                        returnValue = FormValidation.error(Messages.ETInstallation_NotHomeDirectory(value));
                     }
                 } else {
-                    returnValue = FormValidation.error(Messages.ET_NotADirectory(value));
+                    returnValue = FormValidation.error(Messages.ETInstallation_NotADirectory(value));
                 }
             } else {
-                returnValue = FormValidation.warning(Messages.ET_NotRequired());
+                returnValue = FormValidation.warning(Messages.ETInstallation_NotRequired());
             }
             return returnValue;
         }

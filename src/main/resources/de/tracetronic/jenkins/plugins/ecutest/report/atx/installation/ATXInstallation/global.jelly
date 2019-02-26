@@ -68,7 +68,7 @@
                                      description="${%atx.customSettings.description}">
                                 <f:hetero-list name="customSettings"
                                                descriptors="${descriptor.getApplicableCustomSettings()}"
-                                               items="${instance.getCustomSettings(inst)}"
+                                               items="${instance.getCustomSettings(installation)}"
                                                addCaption="${%atx.customSetting.add}"
                                                deleteCaption="${%atx.customSetting.delete}" hasHeader="true"/>
                             </f:entry>

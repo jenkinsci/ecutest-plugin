@@ -16,7 +16,7 @@
                 <j:otherwise>
                     <f:textbox name="${setting.getName()}" value="${setting.getCurrentValue()}"
                                default="${setting.getDefaultValue()}"
-                               checkUrl="'descriptorByName/ATXPublisher/checkSetting?name='+this.name+'&amp;value='+this.value"/>
+                               checkUrl="'descriptorByName/ATXInstallation/checkSetting?name='+this.name+'&amp;value='+this.value"/>
                 </j:otherwise>
             </j:choose>
         </f:entry>
