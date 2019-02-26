@@ -1,0 +1,12 @@
+---
+tool:
+    ecu-test:
+        installations:
+            - name: "ECU-TEST"
+              home: "C:\\ECU-TEST"
+            - name: "ECU-TEST 7.2"
+              home: "C:\\Program Files\\ECU-TEST 7.2"
+              properties:
+                  - ecu-test-property:
+                        progId: "ECU-TEST.Application.7.2"
+                        timeout: 60
