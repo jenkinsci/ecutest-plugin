@@ -220,7 +220,6 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
         final TTConsoleLogger logger = getLogger();
         final List<TraceAnalysisReport> reports = new ArrayList<>();
 
-        int index = 0;
         final FilePath archiveTarget = prepareArchive(run);
         for (final Entry<FilePath, List<FilePath>> analysisEntry : analysisFiles.entrySet()) {
             final FilePath reportDir = analysisEntry.getKey();
@@ -250,7 +249,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
                 if (isArchiving()) {
                     logger.logInfo(String.format("- Archiving main report: %s", mainReport));
                     archiveReport(mainReport, archiveTargetDir, run, logger);
-                    index = addReport(reports, index, reportDir, mainReport);
+                    addReport(reports, reportDir, mainReport);
                 }
             } else if (isArchiving()) {
                 for (final FilePath reportFile : reportFiles) {
@@ -262,7 +261,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
                         targetDir = archiveTargetDir.child(reportFile.getParent().getName());
                     }
                     archiveReport(reportFile, targetDir, run, logger);
-                    index = addReport(reports, index, reportDir, reportFile);
+                    addReport(reports, reportDir, reportFile);
                 }
             }
         }
@@ -314,20 +313,17 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
      * Adds an analysis report to list of reports.
      *
      * @param reports   the reports
-     * @param index     the current report index
      * @param targetDir the target directory
      * @param report    the report to add
-     * @return the increased report index
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException the interrupted exception
      */
-    private int addReport(final List<TraceAnalysisReport> reports, int index, final FilePath targetDir,
-                          final FilePath report) throws IOException, InterruptedException {
+    private void addReport(final List<TraceAnalysisReport> reports, final FilePath targetDir,
+                           final FilePath report) throws IOException, InterruptedException {
         final String relFilePath = targetDir.getParent().toURI().relativize(report.toURI()).getPath();
-        final TraceAnalysisReport trfReport = new TraceAnalysisReport(String.format("%d", ++index),
-            report.getParent().getName(), relFilePath, report.length());
+        final TraceAnalysisReport trfReport = new TraceAnalysisReport(randomId(), report.getParent().getName(),
+            relFilePath, report.length());
         reports.add(trfReport);
-        return index;
     }
 
     /**

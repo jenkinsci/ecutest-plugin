@@ -33,6 +33,7 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Recorder;
 import hudson.tools.ToolInstallation;
 import jenkins.tasks.SimpleBuildStep;
+import org.apache.commons.lang.RandomStringUtils;
 import org.kohsuke.stapler.DataBoundSetter;
 
 import javax.annotation.CheckForNull;
@@ -609,6 +610,15 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
             size += file.length();
         }
         return size;
+    }
+
+    /**
+     * Generates a random alphanumeric id to be used for linking reports.
+     *
+     * @return the random id string
+     */
+    public static String randomId() {
+        return RandomStringUtils.randomAlphanumeric(8);
     }
 
     @Override

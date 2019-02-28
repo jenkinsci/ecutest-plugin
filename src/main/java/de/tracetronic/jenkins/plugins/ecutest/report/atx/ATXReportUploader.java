@@ -35,7 +35,6 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.security.KeyManagementException;
@@ -105,7 +104,6 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             return false;
         }
 
-        int index = 0;
         for (final FilePath reportDir : reportDirs) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(reportDir);
             if (reportFile != null && reportFile.exists()) {
@@ -121,7 +119,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 if (testInfo == null) {
                     testInfo = launcher.getChannel().call(new ParseTRFCallable(reportFile.getRemote()));
                 }
-                index = traverseReports(atxReports, reportDir, index, title, baseUrl, testInfo, projectId);
+                traverseReports(atxReports, reportDir, title, baseUrl, testInfo, projectId);
             } else {
                 if (!allowMissing) {
                     logger.logError(String.format("Specified TRF file '%s' does not exist.", reportFile));
@@ -144,18 +142,16 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      *
      * @param atxReports    the ATX reports
      * @param testReportDir the test report directory
-     * @param id            the report id
      * @param title         the report title
      * @param baseUrl       the base URL
      * @param testInfo      the test info
      * @param projectId     the project id
-     * @return the current report id
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
      */
-    private int traverseReports(final List<ATXReport> atxReports, final FilePath testReportDir, int id,
-                                final String title, final String baseUrl, final TestInfoHolder testInfo,
-                                final String projectId) throws IOException, InterruptedException {
+    private void traverseReports(final List<ATXReport> atxReports, final FilePath testReportDir,
+                                 final String title, final String baseUrl, final TestInfoHolder testInfo,
+                                 final String projectId) throws IOException, InterruptedException {
         // Prepare ATX report information
         String reportUrl;
         String trendReportUrl = null;
@@ -167,20 +163,19 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             reportUrl = getPrjReportUrl(baseUrl, testInfo, null, projectId);
         }
 
-        final ATXReport atxReport = new ATXReport(String.format("%d", ++id), title, reportUrl);
+        final ATXReport atxReport = new ATXReport(AbstractReportPublisher.randomId(), title, reportUrl);
         if (trendReportUrl != null) {
-            atxReport.addSubReport(new ATXReport(String.format("%d", ++id), title, trendReportUrl, true));
+            atxReport.addSubReport(new ATXReport(AbstractReportPublisher.randomId(), title, trendReportUrl, true));
         }
         atxReports.add(atxReport);
 
         // Search for sub-reports
         final boolean isSingleTestplanMap = ATXUtil.isSingleTestplanMap(getInstallation().getConfig());
         if (isSingleTestplanMap) {
-            id = traverseSubReports(atxReport, testReportDir, id, baseUrl, testInfo, null, projectId);
+            traverseSubReports(atxReport, testReportDir, baseUrl, testInfo, null, projectId);
         } else {
-            id = traverseSubReports(atxReport, testReportDir, id, baseUrl, testInfo, testInfo.getTestName(), projectId);
+            traverseSubReports(atxReport, testReportDir, baseUrl, testInfo, testInfo.getTestName(), projectId);
         }
-        return id;
     }
 
     /**
@@ -189,22 +184,19 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      *
      * @param atxReport     the ATX report
      * @param testReportDir the main test report directory
-     * @param id            the id increment
      * @param baseUrl       the base URL
      * @param testInfo      the test info
      * @param projectName   the main project name, can be {@code null}
      * @param projectId     the project id
-     * @return the current id increment
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
      */
-    private int traverseSubReports(final ATXReport atxReport, final FilePath testReportDir, int id,
-                                   final String baseUrl, final TestInfoHolder testInfo, final String projectName,
-                                   final String projectId) throws IOException, InterruptedException {
+    private void traverseSubReports(final ATXReport atxReport, final FilePath testReportDir,
+                                    final String baseUrl, final TestInfoHolder testInfo, final String projectName,
+                                    final String projectId) throws IOException, InterruptedException {
         for (final FilePath subDir : testReportDir.listDirectories()) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(subDir);
             if (reportFile != null && reportFile.exists()) {
-                // Prepare ATX report information for sub-report
                 String testName;
                 // Ensure compatibility with ECU-TEST 6.x using report.trf as report name
                 if ("report.trf".equals(reportFile.getName())) {
@@ -214,12 +206,11 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 }
                 final String subTestName = ATXUtil.getValidATXName(testName);
                 final String reportUrl = getPrjSubReportUrl(baseUrl, testInfo, subTestName, projectName, projectId);
-                final ATXReport subReport = new ATXReport(String.format("%d", ++id), testName, reportUrl);
+                final ATXReport subReport = new ATXReport(AbstractReportPublisher.randomId(), testName, reportUrl);
                 atxReport.addSubReport(subReport);
-                id = traverseSubReports(subReport, subDir, id, baseUrl, testInfo, projectName, projectId);
+                traverseSubReports(subReport, subDir, baseUrl, testInfo, projectName, projectId);
             }
         }
-        return id;
     }
 
     /**
@@ -447,7 +438,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                         }
                     }
                 }
-            } catch (final JSONException | InterruptedException | URISyntaxException | UnsupportedEncodingException |
+            } catch (final JSONException | InterruptedException | UnsupportedEncodingException |
                 KeyManagementException | NoSuchAlgorithmException | MalformedURLException e) {
                 logger.logError("-> Could not parse ATX JSON response: " + e.getMessage());
             }
@@ -488,11 +479,10 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          * @param url        the URL location
          * @param uploadFile the upload file
          * @return the test info holder
-         * @throws URISyntaxException           the URI syntax exception
          * @throws UnsupportedEncodingException the unsupported encoding exception
          */
         private TestInfoHolder parseTestInfo(final URL url, final FilePath uploadFile)
-            throws URISyntaxException, UnsupportedEncodingException {
+            throws UnsupportedEncodingException {
             final Map<String, String> params = splitQuery(url);
             if (params.isEmpty()) {
                 return null;
