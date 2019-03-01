@@ -81,7 +81,6 @@ public class TRFPublisher extends AbstractReportPublisher {
         }
 
         if (isArchiving()) {
-            int index = 0;
             final List<TRFReport> trfReports = new ArrayList<>();
             final FilePath archiveTarget = getArchiveTarget(run);
 
@@ -110,7 +109,7 @@ public class TRFPublisher extends AbstractReportPublisher {
                         run.setResult(Result.FAILURE);
                         return;
                     }
-                    index = traverseReports(trfReports, archiveTargetDir, index);
+                    traverseReports(trfReports, archiveTargetDir);
                 } else {
                     if (!isAllowMissing()) {
                         logger.logError(String.format("Specified TRF file '%s' does not exist.", reportFile));
@@ -138,24 +137,21 @@ public class TRFPublisher extends AbstractReportPublisher {
      *
      * @param trfReports       the TRF reports
      * @param archiveTargetDir the archive target directory
-     * @param id               the report id
-     * @return the current report id
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
      */
-    private int traverseReports(final List<TRFReport> trfReports, final FilePath archiveTargetDir, int id)
+    private void traverseReports(final List<TRFReport> trfReports, final FilePath archiveTargetDir)
         throws IOException, InterruptedException {
         final FilePath trfFile = getFirstReportFile(archiveTargetDir);
         if (trfFile != null && trfFile.exists()) {
             final String relFilePath = archiveTargetDir.getParent().toURI().relativize(trfFile.toURI()).getPath();
-            final TRFReport trfReport = new TRFReport(String.format("%d", ++id),
-                trfFile.getParent().getName(), relFilePath, trfFile.length());
+            final TRFReport trfReport = new TRFReport(randomId(), trfFile.getParent().getName(),
+                relFilePath, trfFile.length());
             trfReports.add(trfReport);
 
             // Search for sub-reports
-            id = traverseSubReports(trfReport, archiveTargetDir.getParent(), archiveTargetDir, id);
+            traverseSubReports(trfReport, archiveTargetDir.getParent(), archiveTargetDir);
         }
-        return id;
     }
 
     /**
@@ -165,24 +161,21 @@ public class TRFPublisher extends AbstractReportPublisher {
      * @param trfReport        the TRF report
      * @param testReportDir    the main test report directory
      * @param subTestReportDir the sub test report directory
-     * @param id               the report id
-     * @return the current report id
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
      */
-    private int traverseSubReports(final TRFReport trfReport, final FilePath testReportDir,
-                                   final FilePath subTestReportDir, int id) throws IOException, InterruptedException {
+    private void traverseSubReports(final TRFReport trfReport, final FilePath testReportDir,
+                                    final FilePath subTestReportDir) throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
             final FilePath reportFile = getFirstReportFile(subDir);
             if (reportFile != null && reportFile.exists()) {
                 final String relFilePath = testReportDir.toURI().relativize(reportFile.toURI()).getPath();
-                final TRFReport subReport = new TRFReport(String.format("%d", ++id), reportFile.getParent()
+                final TRFReport subReport = new TRFReport(randomId(), reportFile.getParent()
                     .getName().replaceFirst("^Report\\s", ""), relFilePath, reportFile.length());
                 trfReport.addSubReport(subReport);
-                id = traverseSubReports(subReport, testReportDir, subDir, id);
+                traverseSubReports(subReport, testReportDir, subDir);
             }
         }
-        return id;
     }
 
     /**

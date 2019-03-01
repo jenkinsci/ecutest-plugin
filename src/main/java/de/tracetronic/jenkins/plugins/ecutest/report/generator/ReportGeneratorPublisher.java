@@ -186,7 +186,6 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
         }
 
         // Generate reports with all generators
-        int index = 0;
         for (final ReportGeneratorConfig config : generators) {
             final EnvVars envVars = run.getEnvironment(listener);
             final ReportGeneratorConfig expConfig = config.expand(envVars);
@@ -210,11 +209,11 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
                 }
                 // Collect reports
                 if (archiveTargetDir.exists()) {
-                    final GeneratorReport report = new GeneratorReport(String.format("%d", ++index), templateName,
+                    final GeneratorReport report = new GeneratorReport(randomId(), templateName,
                         templateName, getDirectorySize(archiveTargetDir));
                     reports.add(report);
                     for (final FilePath testReportDir : archiveTargetDir.listDirectories()) {
-                        final GeneratorReport subReport = new GeneratorReport(String.format("%d", ++index),
+                        final GeneratorReport subReport = new GeneratorReport(randomId(),
                             testReportDir.getBaseName(), String.format("%s/%s", templateName,
                             testReportDir.getBaseName()), getDirectorySize(testReportDir));
                         report.addSubReport(subReport);

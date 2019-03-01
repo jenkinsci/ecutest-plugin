@@ -136,7 +136,6 @@ public class ETLogPublisher extends AbstractReportPublisher {
             }
 
             if (isTestSpecific()) {
-                int index = 0;
                 final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
                 for (final FilePath reportDir : reportDirs) {
                     final FilePath archiveTargetDir = archiveTarget.child(reportDir.getName());
@@ -156,7 +155,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
                             run.setResult(Result.FAILURE);
                             return;
                         }
-                        index = traverseReports(logReports, archiveTargetDir, index);
+                        traverseReports(logReports, archiveTargetDir);
                     }
                 }
             } else {
@@ -183,7 +182,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
                         run.setResult(Result.FAILURE);
                         return;
                     }
-                    final ETLogReport logReport = parseLogFile(logFile, logFile.getParent(), logReports.size() + 1);
+                    final ETLogReport logReport = parseLogFile(logFile, logFile.getParent());
                     logReports.add(logReport);
                 }
             }
@@ -211,12 +210,11 @@ public class ETLogPublisher extends AbstractReportPublisher {
      *
      * @param logFile          the log file
      * @param archiveTargetDir the archive target directory
-     * @param id               the report id
      * @return the parsed {@link ETLogReport}
      * @throws IOException          signals that an I/O exception has occurred.
      * @throws InterruptedException if the build gets interrupted
      */
-    private ETLogReport parseLogFile(final FilePath logFile, final FilePath archiveTargetDir, final int id)
+    private ETLogReport parseLogFile(final FilePath logFile, final FilePath archiveTargetDir)
         throws IOException, InterruptedException {
         final ETLogParser logParser = new ETLogParser(logFile);
         final List<ETLogAnnotation> logs = logParser.parse();
@@ -230,8 +228,8 @@ public class ETLogPublisher extends AbstractReportPublisher {
         } else {
             logTitle = logFile.getName();
         }
-        return new ETLogReport(String.format("%d", id), logTitle, relLogFile,
-            logFile.length(), logs, warningLogCount, errorLogCount);
+        return new ETLogReport(randomId(), logTitle, relLogFile, logFile.length(), logs,
+            warningLogCount, errorLogCount);
     }
 
     /**
@@ -239,30 +237,26 @@ public class ETLogPublisher extends AbstractReportPublisher {
      *
      * @param logReports       the TRF reports
      * @param archiveTargetDir the archive target directory
-     * @param id               the report id
-     * @return the current report id
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
      */
-    private int traverseReports(final List<ETLogReport> logReports, final FilePath archiveTargetDir, int id)
+    private void traverseReports(final List<ETLogReport> logReports, final FilePath archiveTargetDir)
         throws IOException, InterruptedException {
-        final ETLogReport logReport = new ETLogReport(String.format("%d", ++id),
-            archiveTargetDir.getName(), archiveTargetDir.getName(), getDirectorySize(archiveTargetDir),
-            Collections.emptyList(), 0, 0);
+        final ETLogReport logReport = new ETLogReport(randomId(), archiveTargetDir.getName(),
+            archiveTargetDir.getName(), getDirectorySize(archiveTargetDir), Collections.emptyList(), 0, 0);
         logReports.add(logReport);
 
         final FilePath errorLogFile = archiveTargetDir.child(ERROR_LOG_NAME);
         final FilePath infoLogFile = archiveTargetDir.child(INFO_LOG_NAME);
         if (errorLogFile.exists() && infoLogFile.exists()) {
-            final ETLogReport errorlogReport = parseLogFile(errorLogFile, archiveTargetDir.getParent(), ++id);
+            final ETLogReport errorlogReport = parseLogFile(errorLogFile, archiveTargetDir.getParent());
             logReport.addSubReport(errorlogReport);
-            final ETLogReport infoLogReport = parseLogFile(infoLogFile, archiveTargetDir.getParent(), ++id);
+            final ETLogReport infoLogReport = parseLogFile(infoLogFile, archiveTargetDir.getParent());
             logReport.addSubReport(infoLogReport);
         }
 
         // Search for sub-reports
-        id = traverseSubReports(logReport, archiveTargetDir.getParent(), archiveTargetDir, id);
-        return id;
+        traverseSubReports(logReport, archiveTargetDir.getParent(), archiveTargetDir);
     }
 
     /**
@@ -272,29 +266,25 @@ public class ETLogPublisher extends AbstractReportPublisher {
      * @param logReport        the TRF report
      * @param testReportDir    the main test report directory
      * @param subTestReportDir the sub test report directory
-     * @param id               the report id
-     * @return the current report id
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
      */
-    private int traverseSubReports(final ETLogReport logReport, final FilePath testReportDir,
-                                   final FilePath subTestReportDir, int id)
-        throws IOException, InterruptedException {
+    private void traverseSubReports(final ETLogReport logReport, final FilePath testReportDir,
+                                    final FilePath subTestReportDir) throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
             FilePath logFile = subDir.child(ERROR_LOG_NAME);
             if (logFile.exists()) {
-                final ETLogReport subReport = parseLogFile(logFile, testReportDir, ++id);
+                final ETLogReport subReport = parseLogFile(logFile, testReportDir);
                 logReport.addSubReport(subReport);
 
             }
             logFile = subDir.child(INFO_LOG_NAME);
             if (logFile.exists()) {
-                final ETLogReport subReport = parseLogFile(logFile, testReportDir, ++id);
+                final ETLogReport subReport = parseLogFile(logFile, testReportDir);
                 logReport.addSubReport(subReport);
-                id = traverseSubReports(subReport, testReportDir, subDir, id);
+                traverseSubReports(subReport, testReportDir, subDir);
             }
         }
-        return id;
     }
 
     /**
@@ -402,8 +392,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
         }
 
         @Override
-        public List<String> invoke(final File baseDir, final VirtualChannel channel)
-            throws IOException, InterruptedException {
+        public List<String> invoke(final File baseDir, final VirtualChannel channel) {
             final List<String> files = new ArrayList<>();
             for (final String includedFile : Util.createFileSet(baseDir, includes, excludes)
                 .getDirectoryScanner().getIncludedFiles()) {
