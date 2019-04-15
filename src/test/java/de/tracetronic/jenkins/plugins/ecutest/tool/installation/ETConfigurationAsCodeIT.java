@@ -18,8 +18,6 @@ import io.jenkins.plugins.casc.model.Sequence;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.Collections;
-
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
@@ -72,8 +70,6 @@ public class ETConfigurationAsCodeIT {
     public void testExportConfiguration() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST",
-            Collections.singletonList(new ETToolProperty("ECU-TEST.Application", 120))));
 
         final ConfiguratorRegistry registry = ConfiguratorRegistry.get();
         final ConfigurationContext context = new ConfigurationContext(registry);
@@ -84,15 +80,22 @@ public class ETConfigurationAsCodeIT {
         assertThat(node, instanceOf(Mapping.class));
 
         final Sequence installations = node.asMapping().get("installations").asSequence();
-        assertThat(installations.size(), is(1));
+        assertThat(installations.size(), is(2));
 
-        final Mapping installation = installations.get(0).asMapping();
+        Mapping installation = installations.get(0).asMapping();
         assertThat(installation.getScalarValue("name"), equalTo("ECU-TEST"));
         assertThat(installation.getScalarValue("home"), equalTo("C:\\ECU-TEST"));
 
-        final Sequence properties = installation.get("properties").asSequence();
+        Sequence properties = installation.get("properties").asSequence();
+        assertThat(properties, empty());
+
+        installation = installations.get(1).asMapping();
+        assertThat(installation.getScalarValue("name"), equalTo("ECU-TEST 7.2"));
+        assertThat(installation.getScalarValue("home"), equalTo("C:\\Program Files\\ECU-TEST 7.2"));
+
+        properties = installation.get("properties").asSequence();
         final Mapping property = properties.get(0).asMapping().get("ecu-test-property").asMapping();
-        assertThat(property.getScalarValue("progId"), equalTo("ECU-TEST.Application"));
-        assertThat(property.getScalarValue("timeout"), equalTo("120"));
+        assertThat(property.getScalarValue("progId"), equalTo("ECU-TEST.Application.7.2"));
+        assertThat(property.getScalarValue("timeout"), equalTo("60"));
     }
 }
