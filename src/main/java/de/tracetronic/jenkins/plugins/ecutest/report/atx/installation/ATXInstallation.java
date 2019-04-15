@@ -33,10 +33,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -150,6 +149,15 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
             atxValidator = new ATXValidator();
         }
 
+        /**
+         * Gets the ATX version that this ATX configuration is based on.
+         *
+         * @return the related ATX version
+         */
+        public static String getATXVersion() {
+            return ETPlugin.ATX_VERSION.toMicroString();
+        }
+
         @Override
         public synchronized void load() {
             if (getConfigFile().exists()) {
@@ -168,7 +176,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          * @since 2.7
          */
         @SuppressWarnings("rawtypes")
-        private void migrateFromOldConfigFile(final Class oldClass) {
+        private void migrateFromOldConfigFile(final Class<ATXPublisher.DescriptorImpl> oldClass) {
             LOGGER.log(Level.FINE, "Migrating ATX installations from: " + oldClass.getName());
 
             final XStream2 stream = new XStream2();
@@ -185,15 +193,6 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                     file.delete();
                 }
             }
-        }
-
-        /**
-         * Gets the ATX version that this ATX configuration is based on.
-         *
-         * @return the related ATX version
-         */
-        public static String getATXVersion() {
-            return ETPlugin.ATX_VERSION.toMicroString();
         }
 
         /**
@@ -247,7 +246,8 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                     final JSONObject instJson = (JSONObject) instObject;
                     final String name = instJson.getString("name");
                     final String toolName = instJson.getString("toolName");
-                    final Map<String, List<ATXSetting>> configMap = getDefaultConfig().getConfigMap();
+                    final ATXConfig defaultConfig = getDefaultConfig().clone();
+                    final List<ATXSetting> settings = defaultConfig.getSettings();
 
                     // Update custom settings
                     List<ATXCustomSetting> customSettings = req.bindJSONToList(ATXCustomSetting.class,
@@ -255,13 +255,13 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
 
                     // Remove duplicates of default configuration
                     customSettings.removeIf(atxCustomSetting ->
-                        getDefaultConfig().getSettingByName(atxCustomSetting.getName()) != null);
+                        getDefaultConfig().getSettingByName(atxCustomSetting.getName()).isPresent());
 
                     // Make unique list
                     customSettings = new ArrayList<>(new LinkedHashSet<>(customSettings));
 
                     // Update current values
-                    final ATXConfig config = new ATXConfig(updateCurrentValues(instJson, configMap), customSettings);
+                    final ATXConfig config = new ATXConfig(updateCurrentValues(instJson, settings), customSettings);
 
                     // Fill installations
                     final ATXInstallation installation = new ATXInstallation(name, toolName, config);
@@ -289,11 +289,15 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
 
                 // Synchronize settings
                 if (currentConfig != null) {
-                    for (final Map.Entry<String, List<ATXSetting>> newConfigMap : newConfig.getConfigMap().entrySet()) {
-                        for (final ATXSetting newSetting : newConfigMap.getValue()) {
-                            final ATXSetting currentSetting = currentConfig.getSettingByName(newSetting.getName());
-                            if (currentSetting != null) {
-                                newSetting.setCurrentValue(currentSetting.getCurrentValue());
+                    for (final ATXSetting newSetting : newConfig.getSettings()) {
+                        Optional<ATXSetting> currentSetting = currentConfig.getSettingByName(newSetting.getName());
+                        if (currentSetting.isPresent()) {
+                            if (currentSetting.get() instanceof ATXTextSetting) {
+                                ATXTextSetting textSetting = (ATXTextSetting) currentSetting.get();
+                                newSetting.setValue(textSetting.getValue());
+                            } else if (currentSetting.get() instanceof ATXBooleanSetting) {
+                                ATXBooleanSetting booleanSetting = (ATXBooleanSetting) currentSetting.get();
+                                newSetting.setValue(booleanSetting.getValue());
                             }
                         }
                     }
@@ -307,44 +311,27 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                 list.add(inst);
             }
             setInstallations(list.toArray(new ATXInstallation[0]));
-            load(); // Reload from disk
         }
 
         /**
          * Updates the current values for each ATX setting.
          *
-         * @param instJson  the JSONObject representing one installation
-         * @param configMap the default ATX configuration
-         * @return the updated ATX configuration
+         * @param installation the JSONObject representing one installation
+         * @param settings     the default ATX settings
+         * @return the updated ATX settings
          */
         @SuppressWarnings("unchecked")
-        private Map<String, List<ATXSetting>> updateCurrentValues(final JSONObject instJson,
-                                                                  final Map<String, List<ATXSetting>> configMap) {
-            final Map<String, List<ATXSetting>> newConfigMap = new LinkedHashMap<>();
-            for (final Map.Entry<String, List<ATXSetting>> entry : configMap.entrySet()) {
-                final List<ATXSetting> newSettings = new ArrayList<>();
-                final List<ATXSetting> defaultSettings = entry.getValue();
-
-                // Deep copy setting list
-                for (final ATXSetting defaultSetting : defaultSettings) {
-                    newSettings.add(defaultSetting.clone());
-                }
-
-                // Update each setting
-                final JSONObject configObject = instJson.optJSONObject(entry.getKey());
-                if (configObject != null) {
-                    for (final ATXSetting newSetting : newSettings) {
-                        final Object configSetting = configObject.opt(newSetting.getName());
-                        if (configSetting != null) {
-                            newSetting.setCurrentValue(configSetting);
-                        }
+        private List<ATXSetting> updateCurrentValues(final JSONObject installation, final List<ATXSetting> settings) {
+            for (final ATXSetting setting : settings) {
+                final JSONObject settingsGroup = installation.optJSONObject(setting.getGroup().getConfigName());
+                if (settingsGroup != null) {
+                    final Object currentSetting = settingsGroup.opt(setting.getName());
+                    if (currentSetting != null) {
+                        setting.setValue(currentSetting);
                     }
                 }
-
-                // Fill configuration
-                newConfigMap.put(entry.getKey(), newSettings);
             }
-            return newConfigMap;
+            return settings;
         }
 
         /**

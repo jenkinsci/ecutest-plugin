@@ -5,6 +5,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting.SettingsGroup;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -17,10 +18,8 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,34 +55,39 @@ public final class ATXSettingParser {
      * @param doc the XML document representation
      * @return the map of settings
      */
-    public static Map<String, List<ATXSetting>> parseSettings(final Document doc) {
-        final Map<String, List<ATXSetting>> configMap = new LinkedHashMap<>();
+    public static List<ATXSetting> parseSettings(final Document doc) {
+        final List<ATXSetting> settings = new ArrayList<>();
 
-        final List<ATXSetting> uploadSettings = parseSetting(doc, UPLOAD_EXPRESSION);
-        final List<ATXSetting> archiveSettings = parseSetting(doc, ARCHIVE_EXPRESSION);
-        final List<ATXSetting> attributeSettings = parseSetting(doc, ATTRIBUTE_EXPRESSION);
-        final List<ATXSetting> tbcConstantSettings = parseSetting(doc, TBC_CONSTANT_EXPRESSION);
-        final List<ATXSetting> tcfConstantSettings = parseSetting(doc, TCF_CONSTANT_EXPRESSION);
-        final List<ATXSetting> specialSettings = parseSetting(doc, SPECIAL_EXPRESSION);
+        final List<ATXSetting> uploadSettings = parseSetting(doc, SettingsGroup.UPLOAD, UPLOAD_EXPRESSION);
+        final List<ATXSetting> archiveSettings = parseSetting(doc, SettingsGroup.ARCHIVE, ARCHIVE_EXPRESSION);
+        final List<ATXSetting> attributeSettings = parseSetting(doc, SettingsGroup.ATTRIBUTE, ATTRIBUTE_EXPRESSION);
+        final List<ATXSetting> tbcConstantSettings = parseSetting(doc,
+            SettingsGroup.TBC_CONSTANTS, TBC_CONSTANT_EXPRESSION);
+        final List<ATXSetting> tcfConstantSettings = parseSetting(doc,
+            SettingsGroup.TCF_CONSTANTS, TCF_CONSTANT_EXPRESSION);
+        final List<ATXSetting> specialSettings = parseSetting(doc, SettingsGroup.SPECIAL, SPECIAL_EXPRESSION);
 
-        configMap.put("uploadConfig", uploadSettings);
-        configMap.put("archiveConfig", archiveSettings);
-        configMap.put("attributeConfig", attributeSettings);
-        configMap.put("tbcConstantConfig", tbcConstantSettings);
-        configMap.put("tcfConstantConfig", tcfConstantSettings);
-        configMap.put("specialConfig", specialSettings);
+        settings.addAll(uploadSettings);
+        settings.addAll(archiveSettings);
+        settings.addAll(attributeSettings);
+        settings.addAll(tbcConstantSettings);
+        settings.addAll(tcfConstantSettings);
+        settings.addAll(specialSettings);
 
-        return configMap;
+        return settings;
     }
 
     /**
      * Parses a single setting of the ATX template configuration.
      *
      * @param doc        the XML document representation
+     * @param group      the settings group
      * @param expression the XPath expression for a separated setting
      * @return the parsed setting represented by a list of settings
      */
-    public static List<ATXSetting> parseSetting(final Document doc, final String expression) {
+    public static List<ATXSetting> parseSetting(final Document doc,
+                                                final SettingsGroup group,
+                                                final String expression) {
         final List<ATXSetting> settings = new ArrayList<>();
         try {
             final XPath xpath = XPathFactory.newInstance().newXPath();
@@ -102,12 +106,12 @@ public final class ATXSettingParser {
 
                 // Add sub setting
                 if (isCheckbox) {
-                    final ATXBooleanSetting setting = new ATXBooleanSetting(settingName, descGerman,
-                        descEnglish, toBoolean(defaultValue));
+                    final ATXBooleanSetting setting = new ATXBooleanSetting(settingName, group,
+                        descGerman, descEnglish, toBoolean(defaultValue));
                     settings.add(setting);
                 } else {
-                    final ATXTextSetting setting = new ATXTextSetting(settingName, descGerman, descEnglish,
-                        defaultValue);
+                    final ATXTextSetting setting = new ATXTextSetting(settingName, group,
+                        descGerman, descEnglish, defaultValue);
                     settings.add(setting);
                 }
             }
@@ -126,7 +130,7 @@ public final class ATXSettingParser {
      */
     private static String parseDescription(final Node node, final String languageKey) {
         String description = "";
-        final String expression = "./DESCRIPTION/MULTILANGDATA/ELEMENT[@dkey='" + languageKey + "']/DVALUE";
+        final String expression = String.format("./DESCRIPTION/MULTILANGDATA/ELEMENT[@dkey='%s']/DVALUE", languageKey);
         try {
             final XPath xpath = XPathFactory.newInstance().newXPath();
             final XPathExpression xPathExpression = xpath.compile(expression);

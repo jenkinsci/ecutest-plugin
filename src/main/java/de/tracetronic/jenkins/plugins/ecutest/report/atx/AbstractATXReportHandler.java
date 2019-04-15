@@ -105,21 +105,18 @@ public abstract class AbstractATXReportHandler {
          * @param uploadToServer specifies whether ATX upload is enabled or not
          * @return the configuration map
          */
-        @SuppressWarnings("rawtypes")
         protected Map<String, String> getConfigMap(final boolean uploadToServer) {
             final Map<String, String> configMap = new LinkedHashMap<>();
-            for (final List<ATXSetting> settings : config.getConfigMap().values()) {
-                for (final ATXSetting setting : settings) {
-                    if (setting instanceof ATXBooleanSetting) {
-                        if ("uploadToServer".equals(setting.getName())) {
-                            configMap.put(setting.getName(), ATXSetting.toString(uploadToServer));
-                        } else {
-                            configMap.put(setting.getName(),
-                                ATXSetting.toString(((ATXBooleanSetting) setting).getCurrentValue()));
-                        }
+            for (final ATXSetting setting : config.getSettings()) {
+                if (setting instanceof ATXBooleanSetting) {
+                    if ("uploadToServer".equals(setting.getName())) {
+                        configMap.put(setting.getName(), ATXSetting.toString(uploadToServer));
                     } else {
-                        configMap.put(setting.getName(), envVars.expand(((ATXTextSetting) setting).getCurrentValue()));
+                        configMap.put(setting.getName(),
+                            ATXSetting.toString(((ATXBooleanSetting) setting).getValue()));
                     }
+                } else {
+                    configMap.put(setting.getName(), envVars.expand(((ATXTextSetting) setting).getValue()));
                 }
             }
             for (final ATXCustomSetting setting : config.getCustomSettings()) {

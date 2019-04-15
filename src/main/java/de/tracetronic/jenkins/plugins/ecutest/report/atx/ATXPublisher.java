@@ -36,6 +36,7 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Publisher providing the generation and upload of {@link ATXReport}s to TEST-GUIDE.
@@ -167,12 +168,10 @@ public class ATXPublisher extends AbstractReportPublisher {
      * @param installation the ATX installation
      * @return {@code true} if upload is possible, {@code false} otherwise
      */
-    @SuppressWarnings("rawtypes")
     private boolean isUploadEnabled(final ATXInstallation installation) {
         final ATXConfig config = installation.getConfig();
-        final List<ATXSetting> uploadSettings = config.getConfigByName("uploadConfig");
-        final Object uploadToServer = config.getSettingValueByName("uploadToServer", uploadSettings);
-        return uploadToServer != null && (boolean) uploadToServer;
+        Optional<ATXSetting> uploadSetting = config.getSettingByName("uploadToServer");
+        return uploadSetting.isPresent() && ((ATXBooleanSetting) uploadSetting.get()).getValue();
     }
 
     /**
@@ -245,14 +244,12 @@ public class ATXPublisher extends AbstractReportPublisher {
             final String baseUrl = ATXUtil.getBaseUrl(config, envVars);
             final ATXValidator validator = new ATXValidator();
 
-            boolean ignoreSSL = false;
-            final ATXBooleanSetting sslSetting = (ATXBooleanSetting) config.getSettingByName("ignoreSSL");
-            if (sslSetting != null) {
-                ignoreSSL = sslSetting.getCurrentValue();
+            Object ignoreSSL = config.getSettingValueByGroup("ignoreSSL", ATXSetting.SettingsGroup.UPLOAD);
+            if (ignoreSSL != null) {
+                final FormValidation validation = validator.testConnection(baseUrl, (boolean) ignoreSSL);
+                return validation.kind.equals(FormValidation.Kind.OK);
             }
-
-            final FormValidation validation = validator.testConnection(baseUrl, ignoreSSL);
-            return validation.kind.equals(FormValidation.Kind.OK);
+            return false;
         }
     }
 

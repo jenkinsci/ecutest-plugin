@@ -8,6 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 import hudson.Extension;
 import hudson.util.FormValidation;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -68,6 +69,7 @@ public class ATXCustomTextSetting extends ATXCustomSetting {
     /**
      * DescriptorImpl for {@link ATXTextSetting}.
      */
+    @Symbol("atx-custom-text-setting")
     @Extension
     public static class DescriptorImpl extends ATXCustomSetting.DescriptorImpl {
 
@@ -84,7 +86,7 @@ public class ATXCustomTextSetting extends ATXCustomSetting {
         @Nonnull
         @Override
         public String getDisplayName() {
-            return Messages.ATXCustomTextSetting_DisplayName();
+            return Messages.ATXTextSetting_DisplayName();
         }
     }
 }

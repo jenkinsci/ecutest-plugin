@@ -7,7 +7,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
 import hudson.DescriptorExtensionList;
-import hudson.model.Describable;
+import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
 import jenkins.model.Jenkins;
@@ -24,7 +24,8 @@ import java.util.logging.Logger;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public abstract class ATXCustomSetting implements Serializable, Cloneable, Describable<ATXCustomSetting> {
+public abstract class ATXCustomSetting extends AbstractDescribableImpl<ATXCustomSetting>
+    implements Cloneable, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -92,12 +93,6 @@ public abstract class ATXCustomSetting implements Serializable, Cloneable, Descr
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 31).append(name).toHashCode();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public Descriptor<ATXCustomSetting> getDescriptor() {
-        return (Descriptor<ATXCustomSetting>) Jenkins.getInstance().getDescriptor(getClass());
     }
 
     /**

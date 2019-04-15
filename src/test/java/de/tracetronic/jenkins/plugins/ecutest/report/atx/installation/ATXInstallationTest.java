@@ -8,10 +8,8 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 import org.junit.Test;
 
 import java.util.Collections;
-import java.util.List;
 
 import static org.hamcrest.Matchers.emptyArray;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -34,18 +32,16 @@ public class ATXInstallationTest {
     }
 
     @Test
-    public void testEmptyConfigMap() {
-        final ATXConfig config = new ATXConfig(Collections.emptyMap(),
-            Collections.emptyList());
+    public void testEmptySettings() {
+        final ATXConfig config = new ATXConfig(Collections.emptyList(), Collections.emptyList());
         final ATXInstallation inst = new ATXInstallation("TG", "ET", config);
         assertNotNull(inst.getConfig());
-        assertTrue(inst.getConfig().getConfigMap().isEmpty());
+        assertTrue(inst.getConfig().getSettings().isEmpty());
     }
 
     @Test
     public void testEmptyCustomSettings() {
-        final ATXConfig config = new ATXConfig(Collections.emptyMap(),
-            Collections.emptyList());
+        final ATXConfig config = new ATXConfig(Collections.emptyList(), Collections.emptyList());
         final ATXInstallation inst = new ATXInstallation("TG", "ET", config);
         assertNotNull(inst.getConfig());
         assertTrue(inst.getConfig().getCustomSettings().isEmpty());
