@@ -11,6 +11,8 @@ import org.jvnet.localizer.LocaleProvider;
 
 import java.util.Locale;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;

@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -112,7 +113,6 @@ public class ATXUtilTest {
         assertThat(ATXUtil.getBaseUrl(atxConfig, new EnvVars()), is("http://127.0.0.1:8085"));
     }
 
-    @SuppressWarnings("rawtypes")
     @Test
     public void testBaseUrlBySpecificConfig() {
         final List<ATXSetting> uploadSettings = new ArrayList<>();
@@ -130,7 +130,6 @@ public class ATXUtilTest {
         assertThat(ATXUtil.getBaseUrl(atxConfig, new EnvVars()), is("https://localhost:8086/context"));
     }
 
-    @SuppressWarnings("rawtypes")
     @Test
     public void testBaseUrlByExpandedConfig() {
         final List<ATXSetting> uploadSettings = new ArrayList<>();
@@ -160,7 +159,6 @@ public class ATXUtilTest {
         assertThat(ATXUtil.getBaseUrl(atxConfig, envVars), is("https://localhost:8086/context"));
     }
 
-    @SuppressWarnings("rawtypes")
     @Test
     public void testProjectId() {
         final List<ATXSetting> uploadSettings = new ArrayList<>();
@@ -172,7 +170,6 @@ public class ATXUtilTest {
         assertThat(ATXUtil.getProjectId(atxConfig, new EnvVars()), is("2"));
     }
 
-    @SuppressWarnings("rawtypes")
     @Test
     public void testProjectIdByExpandedConfig() {
         final List<ATXSetting> uploadSettings = new ArrayList<>();
@@ -194,7 +191,6 @@ public class ATXUtilTest {
         assertThat(ATXUtil.getProjectId(atxConfig, envVars), is("2"));
     }
 
-    @SuppressWarnings("rawtypes")
     @Test
     public void testUnavailableProjectId() {
         final List<ATXSetting> uploadSettings = new ArrayList<>();
@@ -204,7 +200,6 @@ public class ATXUtilTest {
         assertThat(ATXUtil.getProjectId(atxConfig, new EnvVars()), nullValue());
     }
 
-    @SuppressWarnings("rawtypes")
     @Test
     public void testSingleTestplanMap() {
         final List<ATXSetting> specialSettings = new ArrayList<>();

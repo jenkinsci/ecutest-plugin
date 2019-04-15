@@ -11,6 +11,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertFalse;
@@ -23,7 +25,6 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-@SuppressWarnings("rawtypes")
 public class ATXConfigTest {
 
     @Test
