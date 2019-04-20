@@ -96,7 +96,7 @@
         <maven-pmd-plugin.version>3.11.0</maven-pmd-plugin.version>
 
         <!-- Test scope -->
-        <configuration-as-code.version>1.11</configuration-as-code.version>
+        <configuration-as-code.version>1.12-rc751.66c47b7035f0</configuration-as-code.version>
         <equalsverifier.version>3.0.3</equalsverifier.version>
         <mockito-core.version>2.23.4</mockito-core.version>
         <concurrency>2</concurrency>

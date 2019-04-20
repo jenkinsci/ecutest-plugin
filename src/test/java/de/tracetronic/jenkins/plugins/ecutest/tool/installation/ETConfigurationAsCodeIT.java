@@ -15,7 +15,7 @@ import io.jenkins.plugins.casc.misc.JenkinsConfiguredWithCodeRule;
 import io.jenkins.plugins.casc.model.CNode;
 import io.jenkins.plugins.casc.model.Mapping;
 import io.jenkins.plugins.casc.model.Sequence;
-import org.junit.Rule;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.empty;
@@ -33,11 +33,11 @@ import static org.junit.Assert.assertThat;
  */
 public class ETConfigurationAsCodeIT {
 
-    @Rule
-    public JenkinsConfiguredWithCodeRule jenkins = new JenkinsConfiguredWithCodeRule();
+    @ClassRule
+    @ConfiguredWithCode("configuration-as-code.yml")
+    public static JenkinsConfiguredWithCodeRule jenkins = new JenkinsConfiguredWithCodeRule();
 
     @Test
-    @ConfiguredWithCode("configuration-as-code.yml")
     public void testImportConfiguration() throws Exception {
         final ETInstallation.DescriptorImpl descriptor = jenkins.jenkins.getDescriptorByType(
             ETInstallation.DescriptorImpl.class);
@@ -66,7 +66,6 @@ public class ETConfigurationAsCodeIT {
 
     @Test
     @SuppressWarnings("unchecked")
-    @ConfiguredWithCode("configuration-as-code.yml")
     public void testExportConfiguration() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
