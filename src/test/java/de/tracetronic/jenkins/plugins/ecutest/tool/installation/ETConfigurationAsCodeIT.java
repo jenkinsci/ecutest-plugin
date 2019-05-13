@@ -12,18 +12,15 @@ import io.jenkins.plugins.casc.Configurator;
 import io.jenkins.plugins.casc.ConfiguratorRegistry;
 import io.jenkins.plugins.casc.misc.ConfiguredWithCode;
 import io.jenkins.plugins.casc.misc.JenkinsConfiguredWithCodeRule;
+import io.jenkins.plugins.casc.misc.Util;
 import io.jenkins.plugins.casc.model.CNode;
-import io.jenkins.plugins.casc.model.Mapping;
-import io.jenkins.plugins.casc.model.Sequence;
-import org.junit.Rule;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -33,14 +30,14 @@ import static org.junit.Assert.assertThat;
  */
 public class ETConfigurationAsCodeIT {
 
-    @Rule
-    public JenkinsConfiguredWithCodeRule jenkins = new JenkinsConfiguredWithCodeRule();
+    @ClassRule
+    @ConfiguredWithCode("casc.yml")
+    public static JenkinsConfiguredWithCodeRule jenkins = new JenkinsConfiguredWithCodeRule();
 
     @Test
-    @ConfiguredWithCode("configuration-as-code.yml")
     public void testImportConfiguration() {
-        final ETInstallation.DescriptorImpl descriptor = jenkins.jenkins.getDescriptorByType(
-            ETInstallation.DescriptorImpl.class);
+        final ETInstallation.DescriptorImpl descriptor = jenkins.jenkins
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         assertThat(descriptor, notNullValue());
 
         final ETInstallation[] installations = descriptor.getInstallations();
@@ -59,43 +56,26 @@ public class ETConfigurationAsCodeIT {
         assertThat(installation.getProgId(), is("ECU-TEST.Application.7.2"));
         assertThat(installation.getTimeout(), is(60));
         assertThat(installation.getProperties().size(), is(1));
-        assertEquals(installation.getProperties().get(0).getClass(), ETToolProperty.class);
+        assertThat(installation.getProperties().get(0), is(instanceOf(ETToolProperty.class)));
         assertThat(((ETToolProperty) installation.getProperties().get(0)).getProgId(), is("ECU-TEST.Application.7.2"));
         assertThat(((ETToolProperty) installation.getProperties().get(0)).getTimeout(), is(60));
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    @ConfiguredWithCode("configuration-as-code.yml")
     public void testExportConfiguration() throws Exception {
-        final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
+        final ETInstallation.DescriptorImpl descriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+        assertThat(descriptor, notNullValue());
 
         final ConfiguratorRegistry registry = ConfiguratorRegistry.get();
         final ConfigurationContext context = new ConfigurationContext(registry);
         final Configurator configurator = context.lookupOrFail(ETInstallation.DescriptorImpl.class);
+        final CNode node = configurator.describe(descriptor, context);
 
-        final CNode node = configurator.describe(etDescriptor, context);
-        assertThat(node, notNullValue());
-        assertThat(node, instanceOf(Mapping.class));
+        final String exported = Util.toYamlString(node);
+        final String expected = Util.toStringFromYamlFile(this, "casc-export.yml");
 
-        final Sequence installations = node.asMapping().get("installations").asSequence();
-        assertThat(installations.size(), is(2));
-
-        Mapping installation = installations.get(0).asMapping();
-        assertThat(installation.getScalarValue("name"), equalTo("ECU-TEST"));
-        assertThat(installation.getScalarValue("home"), equalTo("C:\\ECU-TEST"));
-
-        Sequence properties = installation.get("properties").asSequence();
-        assertThat(properties, empty());
-
-        installation = installations.get(1).asMapping();
-        assertThat(installation.getScalarValue("name"), equalTo("ECU-TEST 7.2"));
-        assertThat(installation.getScalarValue("home"), equalTo("C:\\Program Files\\ECU-TEST 7.2"));
-
-        properties = installation.get("properties").asSequence();
-        final Mapping property = properties.get(0).asMapping().get("ecu-test-property").asMapping();
-        assertThat(property.getScalarValue("progId"), equalTo("ECU-TEST.Application.7.2"));
-        assertThat(property.getScalarValue("timeout"), equalTo("60"));
+        assertThat(exported, is(expected));
     }
 }
