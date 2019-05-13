@@ -88,7 +88,7 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
      * @since 2.7.0
      */
     protected Object readResolve() {
-        if (configMap != null && settings == null) {
+        if (configMap != null) {
             settings = new ArrayList<>();
 
             for (final Entry<String, List<ATXSetting>> config : configMap.entrySet()) {

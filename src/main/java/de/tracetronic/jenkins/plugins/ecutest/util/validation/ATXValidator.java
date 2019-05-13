@@ -276,7 +276,7 @@ public class ATXValidator extends AbstractValidator {
             final ATXInstallation[] installations = ATXInstallation.all();
             if (installations.length > 0) {
                 final ATXConfig config = installations[0].getConfig();
-                if (config != null && config.getSettingByName(name) != null) {
+                if (config != null && config.getSettingByName(name).isPresent()) {
                     returnValue = FormValidation.warning(Messages.ATXInstallation_DuplicateSetting());
                 }
             }

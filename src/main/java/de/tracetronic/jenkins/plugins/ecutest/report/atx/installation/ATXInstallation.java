@@ -153,8 +153,8 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         /**
          * Validator to check form fields.
          */
-        private final transient ATXValidator atxValidator;
-        private final transient ATXConfig defaultConfig;
+        private final transient ATXValidator atxValidator = new ATXValidator();
+        private final transient ATXConfig defaultConfig = new ATXConfig();
 
         @CopyOnWrite
         private volatile ATXInstallation[] installations = new ATXInstallation[0];
@@ -165,8 +165,6 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         public DescriptorImpl() {
             super();
             load();
-            defaultConfig = new ATXConfig();
-            atxValidator = new ATXValidator();
         }
 
         /**

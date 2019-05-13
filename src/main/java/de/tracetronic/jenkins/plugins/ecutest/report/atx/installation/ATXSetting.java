@@ -33,6 +33,13 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
     protected T value;
 
     /**
+     * @see #readResolve()
+     * @since 2.7.0
+     */
+    @Deprecated
+    private transient T currentValue;
+
+    /**
      * Transient setting properties which will not be saved to disk.
      *
      * @since 2.7.0
@@ -76,6 +83,18 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
 
         // Initially set to default
         this.value = defaultValue;
+    }
+
+    /**
+     * Used for backward compatibility using deprecated configuration map.
+     *
+     * @since 2.7.0
+     */
+    protected Object readResolve() {
+        if (currentValue != null) {
+            value = currentValue;
+        }
+        return this;
     }
 
     @SuppressWarnings("unchecked")
