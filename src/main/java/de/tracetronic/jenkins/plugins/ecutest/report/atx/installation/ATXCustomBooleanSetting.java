@@ -7,6 +7,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
 import hudson.Extension;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import javax.annotation.Nonnull;
@@ -64,13 +65,14 @@ public class ATXCustomBooleanSetting extends ATXCustomSetting {
     /**
      * DescriptorImpl for {@link ATXBooleanSetting}.
      */
+    @Symbol("atx-custom-boolean-setting")
     @Extension
     public static class DescriptorImpl extends ATXCustomSetting.DescriptorImpl {
 
         @Nonnull
         @Override
         public String getDisplayName() {
-            return Messages.ATXCustomBooleanSetting_DisplayName();
+            return Messages.ATXBooleanSetting_DisplayName();
         }
     }
 }

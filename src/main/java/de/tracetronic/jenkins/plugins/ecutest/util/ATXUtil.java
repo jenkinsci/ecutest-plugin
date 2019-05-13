@@ -93,11 +93,10 @@ public final class ATXUtil {
      * @return the ATX base URL or {@code null} if invalid URL
      */
     @CheckForNull
-    @SuppressWarnings("rawtypes")
     public static String getBaseUrl(final ATXConfig config, final EnvVars envVars) {
         String fullServerUrl = null;
         if (config != null && envVars != null) {
-            final List<ATXSetting> uploadSettings = config.getConfigByName("uploadConfig");
+            List<ATXSetting> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
             final Object useHttpsConnection = config.getSettingValueByName("useHttpsConnection", uploadSettings);
             final String serverUrl = envVars.expand((String) config.getSettingValueByName("serverURL", uploadSettings));
             final String serverPort = envVars.expand((String) config
@@ -142,8 +141,8 @@ public final class ATXUtil {
     public static String getProjectId(final ATXConfig config, final EnvVars envVars) {
         String projectId = null;
         if (config != null && envVars != null) {
-            final List<ATXSetting> uploadSettings = config.getConfigByName("uploadConfig");
-            final Object projectIdSetting = config.getSettingValueByName("projectId", uploadSettings);
+            List<ATXSetting> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
+            Object projectIdSetting = config.getSettingValueByName("projectId", uploadSettings);
             if (projectIdSetting != null) {
                 projectId = envVars.expand((String) projectIdSetting);
             }
@@ -161,7 +160,7 @@ public final class ATXUtil {
     public static boolean isSingleTestplanMap(final ATXConfig config) {
         boolean isMapEnabled = true;
         if (config != null) {
-            final List<ATXSetting> specialSettings = config.getConfigByName("specialConfig");
+            final List<ATXSetting> specialSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.SPECIAL);
             final Object settingValue = config.getSettingValueByName("mapSeparateProjectExecutionAsSingleTestplan",
                 specialSettings);
             if (settingValue != null) {

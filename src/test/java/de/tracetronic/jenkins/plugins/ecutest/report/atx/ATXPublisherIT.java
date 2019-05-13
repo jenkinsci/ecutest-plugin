@@ -53,8 +53,8 @@ public class ATXPublisherIT extends IntegrationTestBase {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
-        final ATXPublisher.DescriptorImpl atxImpl = jenkins.jenkins
-            .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
+        final ATXInstallation.DescriptorImpl atxImpl = jenkins.jenkins
+            .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
         final ATXInstallation inst = new ATXInstallation("TEST-GUIDE", "ECU-TEST", new ATXConfig());
         atxImpl.setInstallations(inst);
     }
@@ -113,14 +113,14 @@ public class ATXPublisherIT extends IntegrationTestBase {
     @Test
     public void testGlobalConfigPresence() throws Exception {
         final HtmlPage page = getWebClient().goTo("configure");
-        jenkins.assertXPath(page, "//tr[@name='de-tracetronic-jenkins-plugins-ecutest-report-atx-ATXPublisher']");
+        jenkins.assertXPath(page, "//tr[@name='de-tracetronic-jenkins-plugins-ecutest-report-atx-installation-ATXInstallation']");
     }
 
     @Test
     @LocalData
     public void testDefaultConfig() {
-        final ATXPublisher.DescriptorImpl atxImpl = jenkins.jenkins
-            .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
+        final ATXInstallation.DescriptorImpl atxImpl = jenkins.jenkins
+            .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
         assertNotNull(atxImpl.getDefaultConfig());
     }
 
@@ -133,8 +133,8 @@ public class ATXPublisherIT extends IntegrationTestBase {
 
     @Test
     public void testFormRoundTrip() {
-        final ATXPublisher.DescriptorImpl atxImpl = jenkins.jenkins
-            .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
+        final ATXInstallation.DescriptorImpl atxImpl = jenkins.jenkins
+            .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
         assertEquals(1, atxImpl.getInstallations().length);
 
         final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");

@@ -5,9 +5,9 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.Messages;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.Messages;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import hudson.Util;
 import hudson.util.FormValidation;
@@ -120,11 +120,11 @@ public class ATXValidator extends AbstractValidator {
         FormValidation returnValue = FormValidation.validateRequired(serverUrl);
         if (returnValue == FormValidation.ok()) {
             if (serverUrl.contains(PARAMETER)) {
-                returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedValue());
+                returnValue = FormValidation.warning(Messages.ATXInstallation_NoValidatedValue());
             } else if (serverUrl.startsWith("http://") || serverUrl.startsWith("https://")) {
-                returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrlProtocol());
+                returnValue = FormValidation.error(Messages.ATXInstallation_InvalidServerUrlProtocol());
             } else if (isValidURL(serverUrl)) {
-                returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(serverUrl));
+                returnValue = FormValidation.error(Messages.ATXInstallation_InvalidServerUrl(serverUrl));
             }
         }
         return returnValue;
@@ -141,15 +141,15 @@ public class ATXValidator extends AbstractValidator {
         FormValidation returnValue = FormValidation.validateRequired(serverPort);
         if (returnValue == FormValidation.ok()) {
             if (serverPort.contains(PARAMETER)) {
-                returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedValue());
+                returnValue = FormValidation.warning(Messages.ATXInstallation_NoValidatedValue());
             } else {
                 returnValue = FormValidation.validatePositiveInteger(serverPort);
                 if (returnValue == FormValidation.ok()) {
                     final int port = Integer.parseInt(serverPort);
                     if (port > 65535) {
-                        returnValue = FormValidation.error(Messages.ATXPublisher_InvalidPort());
+                        returnValue = FormValidation.error(Messages.ATXInstallation_InvalidPort());
                     } else if (port <= 1024) {
-                        returnValue = FormValidation.warning(Messages.ATXPublisher_NeedsAdmin());
+                        returnValue = FormValidation.warning(Messages.ATXInstallation_NeedsAdmin());
                     }
                 }
             }
@@ -167,11 +167,11 @@ public class ATXValidator extends AbstractValidator {
         FormValidation returnValue = FormValidation.ok();
         if (!StringUtils.isEmpty(contextPath)) {
             if (contextPath.contains(PARAMETER)) {
-                returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedValue());
+                returnValue = FormValidation.warning(Messages.ATXInstallation_NoValidatedValue());
             } else {
                 final String pattern = "^[A-Za-z0-9./\\-_]+";
                 if (!Pattern.matches(pattern, contextPath)) {
-                    returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerContextPath());
+                    returnValue = FormValidation.error(Messages.ATXInstallation_InvalidServerContextPath());
                 }
             }
         }
@@ -188,12 +188,12 @@ public class ATXValidator extends AbstractValidator {
         FormValidation returnValue = FormValidation.ok();
         if (!StringUtils.isEmpty(expression)) {
             if (expression.contains(PARAMETER)) {
-                returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedValue());
+                returnValue = FormValidation.warning(Messages.ATXInstallation_NoValidatedValue());
             } else {
                 final String pattern = "[A-Za-z0-9./*]+";
                 for (final String token : Util.tokenize(expression, ";")) {
                     if (!Pattern.matches(pattern, token)) {
-                        returnValue = FormValidation.error(Messages.ATXPublisher_InvalidFileExpression());
+                        returnValue = FormValidation.error(Messages.ATXInstallation_InvalidFileExpression());
                         break;
                     }
                 }
@@ -212,14 +212,14 @@ public class ATXValidator extends AbstractValidator {
         FormValidation returnValue = FormValidation.ok();
         if (!StringUtils.isEmpty(expression)) {
             if (expression.contains(PARAMETER)) {
-                returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedValue());
+                returnValue = FormValidation.warning(Messages.ATXInstallation_NoValidatedValue());
             } else {
                 final String pattern = "(Designer|Name|Status|Testlevel|Tools|VersionCounter|"
                     + "Design Contact|Design Department|Estimated Duration \\[min]|"
                     + "Execution Priority|Test Comment)";
                 for (final String token : Util.tokenize(expression, ";")) {
                     if (!Pattern.matches(pattern, token)) {
-                        returnValue = FormValidation.warning(Messages.ATXPublisher_CustomAttributeExpression());
+                        returnValue = FormValidation.warning(Messages.ATXInstallation_CustomAttributeExpression());
                         break;
                     }
                 }
@@ -271,13 +271,13 @@ public class ATXValidator extends AbstractValidator {
     public FormValidation validateCustomSettingName(final String name) {
         FormValidation returnValue = FormValidation.validateRequired(name);
         if (!StringUtils.isAlpha(name)) {
-            returnValue = FormValidation.error(Messages.ATXPublisher_InvalidSettingName());
+            returnValue = FormValidation.error(Messages.ATXInstallation_InvalidSettingName());
         } else {
             final ATXInstallation[] installations = ATXInstallation.all();
             if (installations.length > 0) {
                 final ATXConfig config = installations[0].getConfig();
-                if (config != null && config.getSettingByName(name) != null) {
-                    returnValue = FormValidation.warning(Messages.ATXPublisher_DuplicateSetting());
+                if (config != null && config.getSettingByName(name).isPresent()) {
+                    returnValue = FormValidation.warning(Messages.ATXInstallation_DuplicateSetting());
                 }
             }
         }
@@ -321,9 +321,9 @@ public class ATXValidator extends AbstractValidator {
     public FormValidation testConnection(final String baseUrl, final boolean ignoreSSL) {
         FormValidation returnValue;
         if (StringUtils.isBlank(baseUrl)) {
-            returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(null));
+            returnValue = FormValidation.error(Messages.ATXInstallation_InvalidServerUrl(null));
         } else if (baseUrl.contains(PARAMETER)) {
-            returnValue = FormValidation.warning(Messages.ATXPublisher_NoValidatedConnection());
+            returnValue = FormValidation.warning(Messages.ATXInstallation_NoValidatedConnection());
         } else {
             returnValue = checkConnection(baseUrl, ignoreSSL);
         }
@@ -340,7 +340,7 @@ public class ATXValidator extends AbstractValidator {
     private FormValidation checkConnection(final String baseUrl, final boolean ignoreSSL) {
         FormValidation returnValue = FormValidation.okWithMarkup(String.format(
             "<span style=\"font-weight: bold; color: #208CA3\">%s</span>",
-            Messages.ATXPublisher_ValidConnection(baseUrl)));
+            Messages.ATXInstallation_ValidConnection(baseUrl)));
 
         HttpURLConnection connection = null;
         try {
@@ -366,21 +366,21 @@ public class ATXValidator extends AbstractValidator {
 
             final int httpResponse = connection.getResponseCode();
             if (httpResponse != HttpURLConnection.HTTP_OK) {
-                returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(baseUrl,
+                returnValue = FormValidation.warning(Messages.ATXInstallation_ServerNotReachable(baseUrl,
                     "Status code: " + httpResponse));
             } else {
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(
                     connection.getInputStream(), Charset.forName("UTF-8")))) {
                     final String inputLine = in.readLine();
                     if (inputLine == null || !inputLine.contains("TraceTronic")) {
-                        returnValue = FormValidation.warning(Messages.ATXPublisher_InvalidServer(baseUrl));
+                        returnValue = FormValidation.warning(Messages.ATXInstallation_InvalidServer(baseUrl));
                     }
                 }
             }
         } catch (final MalformedURLException e) {
-            returnValue = FormValidation.error(Messages.ATXPublisher_InvalidServerUrl(baseUrl));
+            returnValue = FormValidation.error(Messages.ATXInstallation_InvalidServerUrl(baseUrl));
         } catch (final IOException | NoSuchAlgorithmException | KeyManagementException e) {
-            returnValue = FormValidation.warning(Messages.ATXPublisher_ServerNotReachable(baseUrl, e.getMessage()));
+            returnValue = FormValidation.warning(Messages.ATXInstallation_ServerNotReachable(baseUrl, e.getMessage()));
         } finally {
             if (connection != null) {
                 connection.disconnect();

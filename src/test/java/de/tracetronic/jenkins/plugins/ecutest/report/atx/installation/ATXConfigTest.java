@@ -5,20 +5,18 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -27,36 +25,26 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-@SuppressWarnings("rawtypes")
 public class ATXConfigTest {
 
     @Test
     public void testNullConfigMap() {
         final ATXConfig config = new ATXConfig(null, null);
-        assertTrue(config.getConfigMap().isEmpty());
+        assertFalse(config.getSettings().isEmpty());
         assertTrue(config.getCustomSettings().isEmpty());
     }
 
     @Test
     public void testEmptyConfigMap() {
-        final ATXConfig config = new ATXConfig(Collections.emptyMap(),
-            Collections.emptyList());
-        assertTrue(config.getConfigMap().isEmpty());
+        final ATXConfig config = new ATXConfig(Collections.emptyList(), Collections.emptyList());
+        assertTrue(config.getSettings().isEmpty());
         assertTrue(config.getCustomSettings().isEmpty());
-    }
-
-    @Test
-    public void testOwnConfigMap() {
-        final Map<String, List<ATXSetting>> configMap = new LinkedHashMap<String, List<ATXSetting>>();
-        configMap.put("testConfig", new ArrayList<ATXSetting>());
-        final ATXConfig config = new ATXConfig(configMap, null);
-        assertNotNull(config.getConfigByName("testConfig"));
     }
 
     @Test
     public void testDefaultConfigMap() {
         final ATXConfig config = new ATXConfig();
-        assertTrue(!config.getConfigMap().isEmpty());
+        assertFalse(config.getSettings().isEmpty());
     }
 
     @Test
@@ -70,20 +58,20 @@ public class ATXConfigTest {
     public void testManipulatedClone() {
         final ATXConfig config = new ATXConfig();
         final ATXConfig clone = config.clone();
-        clone.getConfigMap().clear();
-        assertThat(clone.getConfigMap(), is(not(config.getConfigMap())));
+        clone.getSettings().clear();
+        assertThat(clone.getSettings(), is(not(config.getSettings())));
     }
 
     @Test
     public void testGetConfigByName() {
         final ATXConfig config = new ATXConfig();
-        assertNotNull(config.getConfigByName("uploadConfig"));
+        assertNotNull(config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD));
     }
 
     @Test
     public void testGetInvalidConfigByName() {
         final ATXConfig config = new ATXConfig(null, null);
-        assertNull(config.getConfigByName("invalid"));
+        assertThat(config.getSettingsByGroup(null), Matchers.empty());
     }
 
     @Test
@@ -95,31 +83,31 @@ public class ATXConfigTest {
     @Test
     public void testGetInvalidSettingByName() {
         final ATXConfig config = new ATXConfig(null, null);
-        assertNull(config.getSettingByName("invalid"));
+        assertFalse(config.getSettingByName("invalid").isPresent());
     }
 
     @Test
     public void testGetNotExistingSettingByName() {
         final ATXConfig config = new ATXConfig();
-        assertNull(config.getSettingByName("notexisting"));
+        assertFalse(config.getSettingByName("notexisting").isPresent());
     }
 
     @Test
     public void testGetSettingValueByName() {
         final ATXConfig config = new ATXConfig();
-        assertThat(config.getSettingValueByName("serverPort", config.getConfigByName("uploadConfig")),
-            is("8085"));
+        assertThat(config.getSettingValueByName("serverPort",
+            config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD)), is("8085"));
     }
 
     @Test
     public void testGetInvalidSettingValueByName() {
         final ATXConfig config = new ATXConfig(null, null);
-        assertThat(config.getSettingValueByName("invalid", config.getConfigByName("invalid")), nullValue());
+        assertThat(config.getSettingValueByName("invalid", config.getSettingsByGroup(null)), nullValue());
     }
 
     @Test
     public void testGetEmptySettingValueByName() {
         final ATXConfig config = new ATXConfig(null, null);
-        assertThat(config.getSettingValueByName("empty", new ArrayList<ATXSetting>()), nullValue());
+        assertThat(config.getSettingValueByName("empty", new ArrayList<>()), nullValue());
     }
 }

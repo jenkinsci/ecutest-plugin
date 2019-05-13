@@ -60,8 +60,8 @@ public class ReportPublisherDslExtensionIT extends AbstractDslExtensionIT {
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
 
-        final ATXPublisher.DescriptorImpl atxImpl = jenkins.jenkins
-            .getDescriptorByType(ATXPublisher.DescriptorImpl.class);
+        final ATXInstallation.DescriptorImpl atxImpl = jenkins.jenkins
+            .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
         final ATXInstallation inst = new ATXInstallation("TEST-GUIDE", "ECU-TEST", new ATXConfig());
         atxImpl.setInstallations(inst);
     }

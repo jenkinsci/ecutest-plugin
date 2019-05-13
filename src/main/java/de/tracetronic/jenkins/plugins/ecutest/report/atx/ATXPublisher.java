@@ -5,14 +5,12 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline.ATXPublishStep;
@@ -20,39 +18,25 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
-import hudson.CopyOnWrite;
-import hudson.DescriptorExtensionList;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.Descriptor;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 import hudson.util.FormValidation;
-import jenkins.model.Jenkins;
 import jenkins.security.MasterToSlaveCallable;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.interceptor.RequirePOST;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Optional;
 
 /**
  * Publisher providing the generation and upload of {@link ATXReport}s to TEST-GUIDE.
@@ -184,12 +168,10 @@ public class ATXPublisher extends AbstractReportPublisher {
      * @param installation the ATX installation
      * @return {@code true} if upload is possible, {@code false} otherwise
      */
-    @SuppressWarnings("rawtypes")
     private boolean isUploadEnabled(final ATXInstallation installation) {
         final ATXConfig config = installation.getConfig();
-        final List<ATXSetting> uploadSettings = config.getConfigByName("uploadConfig");
-        final Object uploadToServer = config.getSettingValueByName("uploadToServer", uploadSettings);
-        return uploadToServer != null && (boolean) uploadToServer;
+        Optional<ATXSetting> uploadSetting = config.getSettingByName("uploadToServer");
+        return uploadSetting.isPresent() && ((ATXBooleanSetting) uploadSetting.get()).getValue();
     }
 
     /**
@@ -262,14 +244,12 @@ public class ATXPublisher extends AbstractReportPublisher {
             final String baseUrl = ATXUtil.getBaseUrl(config, envVars);
             final ATXValidator validator = new ATXValidator();
 
-            boolean ignoreSSL = false;
-            final ATXBooleanSetting sslSetting = (ATXBooleanSetting) config.getSettingByName("ignoreSSL");
-            if (sslSetting != null) {
-                ignoreSSL = sslSetting.getCurrentValue();
+            Object ignoreSSL = config.getSettingValueByGroup("ignoreSSL", ATXSetting.SettingsGroup.UPLOAD);
+            if (ignoreSSL != null) {
+                final FormValidation validation = validator.testConnection(baseUrl, (boolean) ignoreSSL);
+                return validation.kind.equals(FormValidation.Kind.OK);
             }
-
-            final FormValidation validation = validator.testConnection(baseUrl, ignoreSSL);
-            return validation.kind.equals(FormValidation.Kind.OK);
+            return false;
         }
     }
 
@@ -281,261 +261,19 @@ public class ATXPublisher extends AbstractReportPublisher {
     @Extension(ordinal = 10007)
     public static class DescriptorImpl extends AbstractReportDescriptor {
 
-        private final transient ATXConfig defaultConfig;
         /**
-         * Validator to check form fields.
-         */
-        private final transient ATXValidator atxValidator;
-        @CopyOnWrite
-        private volatile ATXInstallation[] installations = new ATXInstallation[0];
-
-        /**
-         * Instantiates a new {@link DescriptorImpl}.
-         */
-        public DescriptorImpl() {
-            super();
-            load();
-            atxValidator = new ATXValidator();
-            defaultConfig = new ATXConfig();
-        }
-
-        /**
-         * Gets the ATX version that this ATX configuration is based on.
+         * Gets all configured {@link ATXInstallation}s.
          *
-         * @return the related ATX version
-         */
-        public static String getATXVersion() {
-            return ETPlugin.ATX_VERSION.toMicroString();
-        }
-
-        /**
-         * @return the list of ATX installations
+         * @return the list of {@link ATXInstallation}s
          */
         public ATXInstallation[] getInstallations() {
-            return installations.clone();
-        }
-
-        /**
-         * Sets the installations.
-         *
-         * @param installations the new installations
-         */
-        public void setInstallations(final ATXInstallation... installations) {
-            // Remove empty installations
-            final List<ATXInstallation> inst = new ArrayList<>();
-            if (installations != null) {
-                Collections.addAll(inst, installations);
-                for (final ATXInstallation installation : installations) {
-                    if (StringUtils.isBlank(installation.getName())) {
-                        inst.remove(installation);
-                    }
-                }
-            }
-            this.installations = inst.toArray(new ATXInstallation[0]);
-            save();
-        }
-
-        /**
-         * @return the default ATX configuration
-         */
-        public ATXConfig getDefaultConfig() {
-            return defaultConfig;
-        }
-
-        @Override
-        public boolean configure(final StaplerRequest req, final JSONObject json) {
-            final List<ATXInstallation> list = new ArrayList<>();
-            final JSONArray instArray = new JSONArray();
-            final JSONArray inst = json.optJSONArray("installation");
-            if (inst == null) {
-                instArray.add(json.getJSONObject("installation"));
-            } else {
-                instArray.addAll(inst);
-            }
-
-            // Parse installations
-            for (final Object instObject : instArray) {
-                if (instObject instanceof JSONObject) {
-                    final JSONObject instJson = (JSONObject) instObject;
-                    final String name = instJson.getString("name");
-                    final String toolName = instJson.getString("toolName");
-                    final Map<String, List<ATXSetting>> configMap = getDefaultConfig().getConfigMap();
-
-                    // Update custom settings
-                    List<ATXCustomSetting> customSettings = req.bindJSONToList(ATXCustomSetting.class,
-                        instJson.get("customSettings"));
-
-                    // Remove duplicates of default configuration
-                    customSettings.removeIf(atxCustomSetting ->
-                        getDefaultConfig().getSettingByName(atxCustomSetting.getName()) != null);
-
-                    // Make unique list
-                    customSettings = new ArrayList<>(new LinkedHashSet<>(
-                        customSettings));
-
-                    // Update current values
-                    final ATXConfig config = new ATXConfig(updateCurrentValues(instJson, configMap),
-                        customSettings);
-
-                    // Fill installations
-                    final ATXInstallation installation = new ATXInstallation(name, toolName, config);
-                    list.add(installation);
-                }
-            }
-
-            setInstallations(list.toArray(new ATXInstallation[0]));
-            return true;
-        }
-
-        /**
-         * Synchronizes current ATX configuration with default configuration
-         * by overriding their current values and saving them as new ATX installation.
-         * <p>
-         * This method will be automatically called by {@link ETPlugin#syncATXConfiguration()} to
-         * avoid circular dependencies while loading other plugins.
-         */
-        @SuppressWarnings("unchecked")
-        public void syncWithDefaultConfig() {
-            final List<ATXInstallation> list = new ArrayList<>();
-            for (final ATXInstallation installation : installations.clone()) {
-                final ATXConfig currentConfig = installation.getConfig();
-                final ATXConfig newConfig = defaultConfig.clone();
-
-                // Synchronize settings
-                if (currentConfig != null) {
-                    for (final Entry<String, List<ATXSetting>> newConfigMap : newConfig.getConfigMap()
-                        .entrySet()) {
-                        for (final ATXSetting newSetting : newConfigMap.getValue()) {
-                            final ATXSetting currentSetting = currentConfig.getSettingByName(newSetting
-                                .getName());
-                            if (currentSetting != null) {
-                                newSetting.setCurrentValue(currentSetting.getCurrentValue());
-                            }
-                        }
-                    }
-                    final List<ATXCustomSetting> customSettings = currentConfig.getCustomSettings();
-                    newConfig.setCustomSettings(customSettings == null ?
-                        new ArrayList<>() : customSettings);
-                }
-
-                // Fill installations
-                final ATXInstallation inst = new ATXInstallation(installation.getName(),
-                    installation.getToolName(), newConfig);
-                list.add(inst);
-            }
-            setInstallations(list.toArray(new ATXInstallation[0]));
-            load(); // Reload from disk
-        }
-
-        /**
-         * Updates the current values for each ATX setting.
-         *
-         * @param instJson  the JSONObject representing one installation
-         * @param configMap the default ATX configuration
-         * @return the updated ATX configuration
-         */
-        @SuppressWarnings("unchecked")
-        private Map<String, List<ATXSetting>> updateCurrentValues(final JSONObject instJson,
-                                                                  final Map<String, List<ATXSetting>> configMap) {
-            final Map<String, List<ATXSetting>> newConfigMap = new LinkedHashMap<>();
-            for (final Entry<String, List<ATXSetting>> entry : configMap.entrySet()) {
-                final List<ATXSetting> newSettings = new ArrayList<>();
-                final List<ATXSetting> defaultSettings = entry.getValue();
-
-                // Deep copy setting list
-                for (final ATXSetting defaultSetting : defaultSettings) {
-                    newSettings.add(defaultSetting.clone());
-                }
-
-                // Update each setting
-                final JSONObject configObject = instJson.optJSONObject(entry.getKey());
-                if (configObject != null) {
-                    for (final ATXSetting newSetting : newSettings) {
-                        final Object configSetting = configObject.opt(newSetting.getName());
-                        if (configSetting != null) {
-                            newSetting.setCurrentValue(configSetting);
-                        }
-                    }
-                }
-
-                // Fill configuration
-                newConfigMap.put(entry.getKey(), newSettings);
-            }
-            return newConfigMap;
-        }
-
-        /**
-         * Gets the custom settings of a given ATX installation.
-         *
-         * @param installation the installation
-         * @return the custom settings list
-         */
-        public List<ATXCustomSetting> getCustomSettings(final ATXInstallation installation) {
-            return installation == null ?
-                new ArrayList<>() : installation.getConfig().getCustomSettings();
-        }
-
-        /**
-         * Gets the applicable custom settings.
-         *
-         * @return the applicable custom settings
-         */
-        public List<Descriptor<? extends ATXCustomSetting>> getApplicableCustomSettings() {
-            final List<Descriptor<? extends ATXCustomSetting>> list = new ArrayList<>();
-            final DescriptorExtensionList<ATXCustomSetting, Descriptor<ATXCustomSetting>> settings = ATXCustomSetting
-                .all();
-            if (settings != null) {
-                list.addAll(settings);
-            }
-            return list;
+            return ATXInstallation.all();
         }
 
         @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.ATXPublisher_DisplayName();
-        }
-
-        /**
-         * Validates the TEST-GUIDE name which is a required field.
-         *
-         * @param value the name
-         * @return the form validation
-         */
-        public FormValidation doCheckName(@QueryParameter final String value) {
-            return atxValidator.validateName(value);
-        }
-
-        /**
-         * Validates the current setting field.
-         *
-         * @param name  the field name
-         * @param value the field value
-         * @return the form validation
-         */
-        public FormValidation doCheckSetting(@QueryParameter final String name,
-                                             @QueryParameter final String value) {
-            return atxValidator.validateSetting(name, value);
-        }
-
-        /**
-         * Tests the server connection.
-         *
-         * @param serverURL          the server URL
-         * @param serverPort         the server port
-         * @param serverContextPath  the server context path
-         * @param useHttpsConnection if secure connection is used
-         * @param ignoreSSL          specifies whether to ignore SSL issues
-         * @return the form validation
-         */
-        @RequirePOST
-        public FormValidation doTestConnection(@QueryParameter final String serverURL,
-                                               @QueryParameter final String serverPort,
-                                               @QueryParameter final String serverContextPath,
-                                               @QueryParameter final boolean useHttpsConnection,
-                                               @QueryParameter final boolean ignoreSSL) {
-            Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
-            return atxValidator.testConnection(serverURL, serverPort, serverContextPath, useHttpsConnection, ignoreSSL);
         }
     }
 }

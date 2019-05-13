@@ -120,7 +120,7 @@ public class ATXPipeline implements Serializable {
      * @return the ATX server
      * @throws MalformedURLException the malformed URL exception
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Whitelisted
     public ATXServer newServer(final String atxName, final String toolName, final String serverUrl,
                                final boolean uploadToServer, final String authKey, final String projectId)
@@ -137,38 +137,34 @@ public class ATXPipeline implements Serializable {
         final String path = url.getPath().replaceFirst("/", "");
 
         ATXConfig config = new ATXConfig();
-        final List<ATXSetting> uploadSettings = config.getConfigByName("uploadConfig");
+        final List<ATXSetting> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
         for (final ATXSetting setting : uploadSettings) {
             switch (setting.getName()) {
                 case "uploadToServer":
-                    setting.setCurrentValue(uploadToServer);
+                    setting.setValue(uploadToServer);
                     break;
                 case "serverURL":
-                    setting.setCurrentValue(host);
+                    setting.setValue(host);
                     break;
                 case "useHttpsConnection":
-                    setting.setCurrentValue(useHttpsConnection);
+                    setting.setValue(useHttpsConnection);
                     break;
                 case "serverPort":
-                    setting.setCurrentValue(port);
+                    setting.setValue(port);
                     break;
                 case "serverContextPath":
-                    setting.setCurrentValue(path);
+                    setting.setValue(path);
                     break;
                 case "uploadAuthenticationKey":
-                    setting.setCurrentValue(authKey);
+                    setting.setValue(authKey);
                     break;
                 case "projectId":
-                    setting.setCurrentValue(projectId);
+                    setting.setValue(projectId);
                     break;
                 default:
                     break;
             }
         }
-
-        final Map<String, List<ATXSetting>> configMap = config.getConfigMap();
-        configMap.put("uploadConfig", uploadSettings);
-        config = new ATXConfig(configMap, config.getCustomSettings());
         stepVariables.put(KEY_CONFIG, config);
 
         final ATXServer server = (ATXServer) script.invokeMethod("newATXServer", stepVariables);

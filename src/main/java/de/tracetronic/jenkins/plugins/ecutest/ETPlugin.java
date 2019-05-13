@@ -5,7 +5,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest;
 
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher.DescriptorImpl;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportPackageDirConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
@@ -92,9 +92,11 @@ public class ETPlugin {
      */
     @Initializer(after = InitMilestone.PLUGINS_STARTED)
     public void syncATXConfiguration() {
-        final DescriptorImpl descriptor = Jenkins.getInstance().getDescriptorByType(DescriptorImpl.class);
+        final ATXInstallation.DescriptorImpl descriptor = Jenkins.getInstance()
+            .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
         if (descriptor != null) {
             descriptor.syncWithDefaultConfig();
+            descriptor.save();
         }
     }
 

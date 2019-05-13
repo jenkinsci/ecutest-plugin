@@ -31,7 +31,7 @@
                         </j:otherwise>
                     </j:choose>
                     <f:section title="${%atx.uploadConfig.title}" name="uploadConfig">
-                        <j:set var="settings" value="${config.getConfigByName('uploadConfig')}"/>
+                        <j:set var="settings" value="${config.getSettingsByGroupName('uploadConfig')}"/>
                         <st:include class="${descriptor.clazz}" page="setting.jelly"/>
                         <f:entry title="">
                             <div align="right">
@@ -44,23 +44,23 @@
                     </f:section>
                     <f:advanced>
                         <f:section title="${%atx.archiveConfig.title}" name="archiveConfig">
-                            <j:set var="settings" value="${config.getConfigByName('archiveConfig')}"/>
+                            <j:set var="settings" value="${config.getSettingsByGroupName('archiveConfig')}"/>
                             <st:include class="${descriptor.clazz}" page="setting.jelly"/>
                         </f:section>
                         <f:section title="${%atx.attributeConfig.title}" name="attributeConfig">
-                            <j:set var="settings" value="${config.getConfigByName('attributeConfig')}"/>
+                            <j:set var="settings" value="${config.getSettingsByGroupName('attributeConfig')}"/>
                             <st:include class="${descriptor.clazz}" page="setting.jelly"/>
                         </f:section>
                         <f:section title="${%atx.tbcConstantConfig.title}" name="tbcConstantConfig">
-                            <j:set var="settings" value="${config.getConfigByName('tbcConstantConfig')}"/>
+                            <j:set var="settings" value="${config.getSettingsByGroupName('tbcConstantConfig')}"/>
                             <st:include class="${descriptor.clazz}" page="setting.jelly"/>
                         </f:section>
                         <f:section title="${%atx.tcfConstantConfig.title}" name="tcfConstantConfig">
-                            <j:set var="settings" value="${config.getConfigByName('tcfConstantConfig')}"/>
+                            <j:set var="settings" value="${config.getSettingsByGroupName('tcfConstantConfig')}"/>
                             <st:include class="${descriptor.clazz}" page="setting.jelly"/>
                         </f:section>
                         <f:section title="${%atx.specialConfig.title}" name="specialConfig">
-                            <j:set var="settings" value="${config.getConfigByName('specialConfig')}"/>
+                            <j:set var="settings" value="${config.getSettingsByGroupName('specialConfig')}"/>
                             <st:include class="${descriptor.clazz}" page="setting.jelly"/>
                         </f:section>
                         <f:section title="${%atx.customConfig.title}">
@@ -68,7 +68,7 @@
                                      description="${%atx.customSettings.description}">
                                 <f:hetero-list name="customSettings"
                                                descriptors="${descriptor.getApplicableCustomSettings()}"
-                                               items="${instance.getCustomSettings(inst)}"
+                                               items="${instance.getCustomSettings(installation)}"
                                                addCaption="${%atx.customSetting.add}"
                                                deleteCaption="${%atx.customSetting.delete}" hasHeader="true"/>
                             </f:entry>
