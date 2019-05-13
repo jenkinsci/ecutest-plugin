@@ -7,6 +7,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
 import hudson.CopyOnWrite;
 import hudson.DescriptorExtensionList;
@@ -14,6 +15,9 @@ import hudson.Extension;
 import hudson.XmlFile;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
+import hudson.model.Saveable;
+import hudson.model.listeners.SaveableListener;
+import hudson.tools.ToolInstallation;
 import hudson.util.FormValidation;
 import hudson.util.XStream2;
 import jenkins.model.Jenkins;
@@ -122,6 +126,22 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
     }
 
     /**
+     * Listen to {@link Saveable} actions of this descriptor in order to update
+     * the default ATX setting values when invoked by CasC configuration reloads.
+     */
+    @Extension
+    public static class SaveableListenerImpl extends SaveableListener {
+
+        @Override
+        public final void onChange(Saveable o, XmlFile file) {
+            if (o instanceof DescriptorImpl) {
+                ((DescriptorImpl) o).syncWithDefaultConfig();
+            }
+            super.onChange(o, file);
+        }
+    }
+
+    /**
      * DescriptorImpl of {@link ATXInstallation}.
      */
     @Symbol("test-guide")
@@ -219,7 +239,6 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                 }
             }
             this.installations = inst.toArray(new ATXInstallation[0]);
-            save();
         }
 
         /**
@@ -270,6 +289,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
             }
 
             setInstallations(list.toArray(new ATXInstallation[0]));
+            save();
             return true;
         }
 
@@ -278,7 +298,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          * by overriding their current values and saving them as new ATX installation.
          * <p>
          * This method will be automatically called by {@link ETPlugin#syncATXConfiguration()} to
-         * avoid circular dependencies while loading other plugins.
+         * avoid circular dependencies while loading other plugins. Explicit call to {@link #save()} is required.
          */
         @SuppressWarnings("unchecked")
         public void syncWithDefaultConfig() {
@@ -358,6 +378,15 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                 list.addAll(settings);
             }
             return list;
+        }
+
+        /**
+         * Gets the tool descriptor holding the ECU-TEST installations.
+         *
+         * @return the tool descriptor
+         */
+        public ETInstallation.DescriptorImpl getToolDescriptor() {
+            return ToolInstallation.all().get(ETInstallation.DescriptorImpl.class);
         }
 
         @Nonnull

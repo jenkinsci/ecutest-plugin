@@ -96,6 +96,7 @@ public class ETPlugin {
             .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
         if (descriptor != null) {
             descriptor.syncWithDefaultConfig();
+            descriptor.save();
         }
     }
 
