@@ -38,7 +38,7 @@ public class ETConfigurationAsCodeIT {
 
     @Test
     @ConfiguredWithCode("configuration-as-code.yml")
-    public void testImportConfiguration() throws Exception {
+    public void testImportConfiguration() {
         final ETInstallation.DescriptorImpl descriptor = jenkins.jenkins.getDescriptorByType(
             ETInstallation.DescriptorImpl.class);
         assertThat(descriptor, notNullValue());

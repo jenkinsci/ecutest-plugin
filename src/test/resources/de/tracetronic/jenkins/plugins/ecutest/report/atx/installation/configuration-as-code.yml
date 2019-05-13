@@ -5,7 +5,7 @@ unclassified:
                   settings:
                       - atx-boolean-setting:
                             name: "uploadToServer"
-                            value: false
+                            value: true
                       - atx-text-setting:
                             name: "serverURL"
                             value: "127.0.0.1"
@@ -144,5 +144,12 @@ unclassified:
                       - atx-boolean-setting:
                             name: "includeResourceAdapterInfo"
                             value: true
+                  customSettings:
+                      - atx-custom-boolean-setting:
+                            name: "customOption"
+                            checked: true
+                      - atx-custom-text-setting:
+                            name: "customLabel"
+                            value: "test"
               name: "TEST-GUIDE"
               toolName: "ECU-TEST"

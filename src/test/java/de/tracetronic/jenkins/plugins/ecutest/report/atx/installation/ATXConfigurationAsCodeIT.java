@@ -37,7 +37,7 @@ public class ATXConfigurationAsCodeIT {
 
     @Test
     @ConfiguredWithCode("configuration-as-code.yml")
-    public void testImportConfiguration() throws Exception {
+    public void testImportConfiguration() {
         final ATXInstallation.DescriptorImpl descriptor = jenkins.jenkins.getDescriptorByType(
             ATXInstallation.DescriptorImpl.class);
         assertThat(descriptor, notNullValue());
@@ -48,7 +48,21 @@ public class ATXConfigurationAsCodeIT {
         ATXInstallation installation = installations[0];
         assertThat(installation.getName(), is("TEST-GUIDE"));
         assertThat(installation.getToolName(), is("ECU-TEST"));
-        assertThat(installation.getConfig(), notNullValue());
+
+        ATXConfig config = installation.getConfig();
+        assertThat(config, notNullValue());
+        assertThat(config.getSettings(), not(empty()));
+        assertThat(config.getCustomSettings(), not(empty()));
+
+        assertThat(config.getSettingValueByGroup("uploadToServer", ATXSetting.SettingsGroup.UPLOAD), is(true));
+        assertThat(config.getSettingValueByGroup("serverURL", ATXSetting.SettingsGroup.UPLOAD), is("127.0.0.1"));
+
+        assertThat(config.getCustomSettings().get(0), is(instanceOf(ATXCustomBooleanSetting.class)));
+        assertThat(config.getCustomSettings().get(0).getName(), is("customOption"));
+        assertThat(((ATXCustomBooleanSetting) config.getCustomSettings().get(0)).isChecked(), is(true));
+        assertThat(config.getCustomSettings().get(1), is(instanceOf(ATXCustomTextSetting.class)));
+        assertThat(config.getCustomSettings().get(1).getName(), is("customLabel"));
+        assertThat(((ATXCustomTextSetting) config.getCustomSettings().get(1)).getValue(), is("test"));
     }
 
     @Test
@@ -75,5 +89,21 @@ public class ATXConfigurationAsCodeIT {
 
         Sequence settings = installation.get("config").asMapping().get("settings").asSequence();
         assertThat(settings, not(empty()));
+        Sequence customSettings = installation.get("config").asMapping().get("customSettings").asSequence();
+        assertThat(customSettings, not(empty()));
+
+        Mapping uploadSetting = settings.get(0).asMapping().get("atx-boolean-setting").asMapping();
+        assertThat(uploadSetting.getScalarValue("name"), is("uploadToServer"));
+        assertThat(uploadSetting.getScalarValue("value"), is("true"));
+        Mapping serverSetting = settings.get(1).asMapping().get("atx-text-setting").asMapping();
+        assertThat(serverSetting.getScalarValue("name"), is("serverURL"));
+        assertThat(serverSetting.getScalarValue("value"), is("127.0.0.1"));
+
+        Mapping booleanSetting = customSettings.get(0).asMapping().get("atx-custom-boolean-setting").asMapping();
+        assertThat(booleanSetting.getScalarValue("name"), is("customOption"));
+        assertThat(booleanSetting.getScalarValue("checked"), is("true"));
+        Mapping textSetting = customSettings.get(1).asMapping().get("atx-custom-text-setting").asMapping();
+        assertThat(textSetting.getScalarValue("name"), is("customLabel"));
+        assertThat(textSetting.getScalarValue("value"), is("test"));
     }
 }
