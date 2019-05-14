@@ -8,7 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.junit;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractToolPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
 import hudson.Extension;
@@ -26,7 +26,6 @@ import hudson.tasks.junit.TestResultAction;
 import hudson.tasks.test.TestResultAggregator;
 import hudson.util.FormValidation;
 import org.apache.commons.lang.NotImplementedException;
-import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
@@ -43,7 +42,7 @@ import java.util.List;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class JUnitPublisher extends AbstractReportPublisher implements MatrixAggregatable {
+public class JUnitPublisher extends AbstractToolPublisher implements MatrixAggregatable {
 
     /**
      * File name of the UNIT report file.
@@ -55,8 +54,6 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
      */
     protected static final String UNIT_TEMPLATE_NAME = "UNIT";
 
-    @Nonnull
-    private final String toolName;
     private double unstableThreshold;
     private double failedThreshold;
 
@@ -67,8 +64,7 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
      */
     @DataBoundConstructor
     public JUnitPublisher(@Nonnull final String toolName) {
-        super();
-        this.toolName = StringUtils.trimToEmpty(toolName);
+        super(toolName);
     }
 
     /**
@@ -114,14 +110,6 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
         } else {
             return value;
         }
-    }
-
-    /**
-     * @return the {@link ETInstallation} name
-     */
-    @Nonnull
-    public String getToolName() {
-        return toolName;
     }
 
     /**
@@ -176,10 +164,11 @@ public class JUnitPublisher extends AbstractReportPublisher implements MatrixAgg
         }
 
         // Generate JUnit reports
-        final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
-            run.getEnvironment(listener));
+        if (getInstallation() == null) {
+            setInstallation(configureToolInstallation(workspace.toComputer(), listener, run.getEnvironment(listener)));
+        }
         final JUnitReportGenerator generator = new JUnitReportGenerator();
-        if (!generator.generate(installation, reportFiles, run, workspace, launcher, listener)) {
+        if (!generator.generate(getInstallation(), reportFiles, run, workspace, launcher, listener)) {
             run.setResult(Result.FAILURE);
             return;
         }

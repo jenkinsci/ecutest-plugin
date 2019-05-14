@@ -13,7 +13,7 @@ import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredenti
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractToolPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.TMSValidator;
@@ -47,15 +47,13 @@ import java.util.List;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class TMSPublisher extends AbstractReportPublisher {
+public class TMSPublisher extends AbstractToolPublisher {
 
     /**
      * Defines the default timeout for importing a project.
      */
     private static final int DEFAULT_TIMEOUT = 60;
 
-    @Nonnull
-    private final String toolName;
     @Nonnull
     private final String credentialsId;
     private String timeout = String.valueOf(getDefaultTimeout());
@@ -68,8 +66,7 @@ public class TMSPublisher extends AbstractReportPublisher {
      */
     @DataBoundConstructor
     public TMSPublisher(@Nonnull final String toolName, @Nonnull final String credentialsId) {
-        super();
-        this.toolName = StringUtils.trimToEmpty(toolName);
+        super(toolName);
         this.credentialsId = StringUtils.trimToEmpty(credentialsId);
     }
 
@@ -78,14 +75,6 @@ public class TMSPublisher extends AbstractReportPublisher {
      */
     public static int getDefaultTimeout() {
         return DEFAULT_TIMEOUT;
-    }
-
-    /**
-     * @return the {@link ETInstallation} name
-     */
-    @Nonnull
-    public String getToolName() {
-        return toolName;
     }
 
     /**
@@ -131,14 +120,14 @@ public class TMSPublisher extends AbstractReportPublisher {
         if (isETRunning(launcher)) {
             isPublished = publishReports(reportFiles, run.getParent(), workspace, launcher, listener);
         } else {
-            final ETClient etClient = getToolClient(toolName, run, workspace, launcher, listener);
+            final ETClient etClient = getToolClient(run, workspace, launcher, listener);
             if (etClient.start(false, workspace, launcher, listener)) {
                 isPublished = publishReports(reportFiles, run.getParent(), workspace, launcher, listener);
             } else {
-                logger.logError(String.format("Starting %s failed.", toolName));
+                logger.logError(String.format("Starting %s failed.", getToolName()));
             }
             if (!etClient.stop(true, workspace, launcher, listener)) {
-                logger.logError(String.format("Stopping %s failed.", toolName));
+                logger.logError(String.format("Stopping %s failed.", getToolName()));
             }
         }
 

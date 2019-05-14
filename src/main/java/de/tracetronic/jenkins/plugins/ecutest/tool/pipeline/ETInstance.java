@@ -6,6 +6,9 @@
 package de.tracetronic.jenkins.plugins.ecutest.tool.pipeline;
 
 import com.google.common.collect.Maps;
+import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorConfig;
+import de.tracetronic.jenkins.plugins.ecutest.report.ta.TraceAnalysisPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.tms.TMSPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopETBuilder;
@@ -15,6 +18,7 @@ import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 import org.jenkinsci.plugins.workflow.cps.CpsScript;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,6 +29,10 @@ import java.util.Map;
 public class ETInstance implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    private static final String KEY_TOOL_NAME = "toolName";
+    private static final String KEY_INSTALLATION = "installation";
+    private static final String KEY_TIMEOUT = "timeout";
 
     private final ETInstallation installation;
 
@@ -89,11 +97,11 @@ public class ETInstance implements Serializable {
     public void start(final String workspaceDir, final String settingsDir, final int timeout, final boolean debug,
                       final boolean keepInstance, final boolean updateUserLibs) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
-        stepVariables.put("toolName", installation.getName());
-        stepVariables.put("installation", installation);
+        stepVariables.put(KEY_TOOL_NAME, installation.getName());
+        stepVariables.put(KEY_INSTALLATION, installation);
+        stepVariables.put(KEY_TIMEOUT, String.valueOf(timeout));
         stepVariables.put("workspaceDir", workspaceDir);
         stepVariables.put("settingsDir", settingsDir);
-        stepVariables.put("timeout", String.valueOf(timeout));
         stepVariables.put("debug", debug);
         stepVariables.put("keepInstance", keepInstance);
         stepVariables.put("updateUserLibs", updateUserLibs);
@@ -116,9 +124,9 @@ public class ETInstance implements Serializable {
     @Whitelisted
     public void stop(final int timeout) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
-        stepVariables.put("toolName", installation.getName());
-        stepVariables.put("installation", installation);
-        stepVariables.put("timeout", String.valueOf(timeout));
+        stepVariables.put(KEY_TOOL_NAME, installation.getName());
+        stepVariables.put(KEY_INSTALLATION, installation);
+        stepVariables.put(KEY_TIMEOUT, String.valueOf(timeout));
         script.invokeMethod("stopET", stepVariables);
     }
 
@@ -142,11 +150,11 @@ public class ETInstance implements Serializable {
     public void startTS(final String toolLibsIniPath, final int tcpPort,
                         final int timeout, final boolean keepInstance) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
-        stepVariables.put("toolName", installation.getName());
-        stepVariables.put("installation", installation);
+        stepVariables.put(KEY_TOOL_NAME, installation.getName());
+        stepVariables.put(KEY_INSTALLATION, installation);
+        stepVariables.put(KEY_TIMEOUT, String.valueOf(timeout));
         stepVariables.put("toolLibsIniPath", toolLibsIniPath);
         stepVariables.put("tcpPort", tcpPort);
-        stepVariables.put("timeout", String.valueOf(timeout));
         stepVariables.put("keepInstance", keepInstance);
         script.invokeMethod("startTS", stepVariables);
     }
@@ -167,11 +175,152 @@ public class ETInstance implements Serializable {
     @Whitelisted
     public void stopTS(final int timeout) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
-        stepVariables.put("toolName", installation.getName());
-        stepVariables.put("installation", installation);
-        stepVariables.put("timeout", String.valueOf(timeout));
+        stepVariables.put(KEY_TOOL_NAME, installation.getName());
+        stepVariables.put(KEY_INSTALLATION, installation);
+        stepVariables.put(KEY_TIMEOUT, String.valueOf(timeout));
         script.invokeMethod("stopTS", stepVariables);
     }
 
-    // TODO: publish UNIT, Generator, TA, TMS
+    /**
+     * Publishes UNIT reports with default settings.
+     */
+    @Whitelisted
+    public void publishUNIT() {
+        publishUNIT(0, 0, false, false);
+    }
+
+    /**
+     * Publishes UNIT reports with all available settings.
+     *
+     * @param unstableThreshold the unstable threshold
+     * @param failedThreshold   the failed threshold
+     * @param allowMissing      specifies whether missing reports are allowed
+     * @param runOnFailed       specifies whether this publisher even runs on a failed build
+     */
+    @Whitelisted
+    public void publishUNIT(final double unstableThreshold, final double failedThreshold,
+                            final boolean allowMissing, final boolean runOnFailed) {
+        final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
+        stepVariables.put(KEY_TOOL_NAME, installation.getName());
+        stepVariables.put(KEY_INSTALLATION, installation);
+        stepVariables.put("unstableThreshold", unstableThreshold);
+        stepVariables.put("failedThreshold", failedThreshold);
+        stepVariables.put("allowMissing", allowMissing);
+        stepVariables.put("runOnFailed", runOnFailed);
+        script.invokeMethod("publishUNIT", stepVariables);
+    }
+
+    /**
+     * Publishes generator reports with default settings.
+     *
+     * @param generators       the report generators
+     * @param customGenerators the custom report generators
+     */
+    @Whitelisted
+    public void publishGenerators(final List<ReportGeneratorConfig> generators,
+                                  final List<ReportGeneratorConfig> customGenerators) {
+        publishGenerators(generators, customGenerators, false, false, true, true);
+    }
+
+    /**
+     * Publishes generator reports with all available settings.
+     *
+     * @param generators       the report generators
+     * @param customGenerators the custom report generators
+     * @param allowMissing     specifies whether missing reports are allowed
+     * @param runOnFailed      specifies whether this publisher even runs on a failed build
+     * @param archiving        specifies whether archiving artifacts is enabled
+     * @param keepAll          specifies whether artifacts are archived for all successful builds,
+     *                         otherwise only the most recent
+     */
+    @Whitelisted
+    public void publishGenerators(final List<ReportGeneratorConfig> generators,
+                                  final List<ReportGeneratorConfig> customGenerators,
+                                  final boolean allowMissing, final boolean runOnFailed,
+                                  final boolean archiving, final boolean keepAll) {
+        final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
+        stepVariables.put(KEY_TOOL_NAME, installation.getName());
+        stepVariables.put(KEY_INSTALLATION, installation);
+        stepVariables.put("generators", generators);
+        stepVariables.put("customGenerators", customGenerators);
+        stepVariables.put("allowMissing", allowMissing);
+        stepVariables.put("runOnFailed", runOnFailed);
+        stepVariables.put("archiving", archiving);
+        stepVariables.put("keepAll", keepAll);
+        script.invokeMethod("publishGenerators", stepVariables);
+    }
+
+    /**
+     * Publishes reports to a test management system with default settings.
+     *
+     * @param credentialsId the credentials id
+     */
+    @Whitelisted
+    public void publishTMS(final String credentialsId) {
+        publishTMS(credentialsId, TMSPublisher.getDefaultTimeout(), false, false, true, true);
+    }
+
+    /**
+     * Publishes reports to a test management system with all available settings.
+     *
+     * @param credentialsId the credentials id
+     * @param timeout       the timeout
+     * @param allowMissing  specifies whether missing reports are allowed
+     * @param runOnFailed   specifies whether this publisher even runs on a failed build
+     * @param archiving     specifies whether archiving artifacts is enabled
+     * @param keepAll       specifies whether artifacts are archived for all successful builds,
+     *                      otherwise only the most recent
+     */
+    @Whitelisted
+    public void publishTMS(final String credentialsId, final int timeout,
+                           final boolean allowMissing, final boolean runOnFailed,
+                           final boolean archiving, final boolean keepAll) {
+        final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
+        stepVariables.put(KEY_TOOL_NAME, installation.getName());
+        stepVariables.put(KEY_INSTALLATION, installation);
+        stepVariables.put(KEY_TIMEOUT, String.valueOf(timeout));
+        stepVariables.put("credentialsId", credentialsId);
+        stepVariables.put("allowMissing", allowMissing);
+        stepVariables.put("runOnFailed", runOnFailed);
+        stepVariables.put("archiving", archiving);
+        stepVariables.put("keepAll", keepAll);
+        script.invokeMethod("publishTMS", stepVariables);
+    }
+
+    /**
+     * Runs the trace analyses and publishes the generated reports with default settings.
+     */
+    @Whitelisted
+    public void publishTraceAnalysis() {
+        publishTraceAnalysis(true, false, TraceAnalysisPublisher.getDefaultTimeout(), false, false, true, true);
+    }
+
+    /**
+     * Runs the trace analyses and publishes the generated reports with all available settings.
+     *
+     * @param mergeReports    specifies whether to merge analysis job reports,
+     * @param createReportDir specifies whether to create a new report directory,
+     * @param timeout         the timeout
+     * @param allowMissing    specifies whether missing reports are allowed
+     * @param runOnFailed     specifies whether this publisher even runs on a failed build
+     * @param archiving       specifies whether archiving artifacts is enabled
+     * @param keepAll         specifies whether artifacts are archived for all successful builds,
+     *                        otherwise only the most recent
+     */
+    @Whitelisted
+    public void publishTraceAnalysis(boolean mergeReports, boolean createReportDir, final int timeout,
+                                     final boolean allowMissing, final boolean runOnFailed,
+                                     final boolean archiving, final boolean keepAll) {
+        final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
+        stepVariables.put(KEY_TOOL_NAME, installation.getName());
+        stepVariables.put(KEY_INSTALLATION, installation);
+        stepVariables.put(KEY_TIMEOUT, String.valueOf(timeout));
+        stepVariables.put("mergeReports", mergeReports);
+        stepVariables.put("createReportDir", createReportDir);
+        stepVariables.put("allowMissing", allowMissing);
+        stepVariables.put("runOnFailed", runOnFailed);
+        stepVariables.put("archiving", archiving);
+        stepVariables.put("keepAll", keepAll);
+        script.invokeMethod("publishTraceAnalysis", stepVariables);
+    }
 }

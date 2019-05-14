@@ -9,9 +9,6 @@ import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
-import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
@@ -46,7 +43,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Common base class for {@link ATXPublisher}, {@link ETLogPublisher}, {@link JUnitPublisher} and {@link TRFPublisher}.
+ * Common base class for all report publishers.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
