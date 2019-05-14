@@ -14,6 +14,7 @@ import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.jenkinsci.plugins.workflow.steps.SynchronousStepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ import java.util.Set;
  */
 public class ATXGetServerStep extends Step {
 
+    @Nonnull
     private final String atxName;
 
     /**
@@ -32,7 +34,7 @@ public class ATXGetServerStep extends Step {
      * @param atxName the ATX name
      */
     @DataBoundConstructor
-    public ATXGetServerStep(final String atxName) {
+    public ATXGetServerStep(@Nonnull final String atxName) {
         super();
         this.atxName = atxName;
     }
@@ -40,6 +42,7 @@ public class ATXGetServerStep extends Step {
     /**
      * @return the ATX name
      */
+    @Nonnull
     public String getAtxName() {
         return atxName;
     }
@@ -88,7 +91,7 @@ public class ATXGetServerStep extends Step {
 
         @Override
         public String getDisplayName() {
-            return "Get TEST-GUIDE installation by name";
+            return "Get TEST-GUIDE server by name";
         }
 
         @Override

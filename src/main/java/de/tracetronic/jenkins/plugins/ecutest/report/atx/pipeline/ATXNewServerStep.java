@@ -116,7 +116,7 @@ public class ATXNewServerStep extends Step {
 
         @Override
         public String getDisplayName() {
-            return "Return new TEST-GUIDE installation";
+            return "Return new TEST-GUIDE server";
         }
 
         @Override
