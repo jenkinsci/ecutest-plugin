@@ -153,8 +153,10 @@ public class StartTSBuilder extends AbstractToolBuilder {
             }
 
             // Get selected ECU-TEST installation
-            final ETInstallation installation = configureToolInstallation(workspace.toComputer(), listener,
-                run.getEnvironment(listener));
+            if (installation == null) {
+                installation = configureToolInstallation(workspace.toComputer(), listener,
+                    run.getEnvironment(listener));
+            }
 
             // Start selected Tool-Server of related ECU-TEST installation
             final String installPath = installation.getTSExecutable(launcher);
