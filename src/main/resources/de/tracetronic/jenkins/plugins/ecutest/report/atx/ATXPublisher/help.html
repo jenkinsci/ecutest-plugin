@@ -6,5 +6,23 @@
 
 <div>
     Publishes the ATX reports of all configured ECU-TEST packages or projects in this job.<br/>
-    These ATX reports are generated automatically in this post-build step and uploaded to TEST-GUIDE.
+    These ATX reports are generated automatically in this post-build step and uploaded to TEST-GUIDE.<br/>
+    <br/>
+    Pipeline usage:<br/>
+    <div>
+        <br/>Signatures:<br/>
+        <pre>publishATX(String atxName, boolean allowMissing, boolean runOnFailed, boolean archiving, boolean keepAll) : void</pre>
+        or<br/>
+        <pre>publishATX(ATXInstallation installation, boolean allowMissing, boolean runOnFailed, boolean archiving, boolean keepAll) : void</pre>
+        or<br/>
+        <pre>ATXServer.publish(boolean allowMissing, boolean runOnFailed, boolean archiving, boolean keepAll) : void</pre>
+        <br/>Examples:<br/>
+        <pre>publishATX('TEST-GUIDE', false, false, true, true)</pre>
+        or<br/>
+        <pre>ATXServer server = ATX.server('TEST-GUIDE')</pre>
+        <pre>publishATX atxInstallation: server.installation</pre>
+        or<br/>
+        <pre>ATXServer atx = ATX.newServer('TEST-GUIDE', 'ECU-TEST')</pre>
+        <pre>atx.publish()</pre>
+    </div>
 </div>
