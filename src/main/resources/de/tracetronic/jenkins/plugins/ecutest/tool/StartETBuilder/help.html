@@ -5,5 +5,39 @@
   -->
 
 <div>
-    Configure and start a preconfigured ECU-TEST installation.
+    <p>Configure and start a preconfigured ECU-TEST installation.</p>
+    <strong>Pipeline usage</strong>
+    <dl>Signatures:
+        <dd>
+            <pre>
+startET(String toolName) : void
+            </pre>
+            <pre>
+startET(String toolName, String workspaceDir, String settingsDir, int timeout,
+        boolean debug, boolean keepInstance, boolean updateUserLibs) : void
+            </pre>
+            <pre>
+ETInstance.start(String toolName) : void
+            </pre>
+            <pre>
+ETInstance.start(String toolName, String workspaceDir, String settingsDir, int timeout,
+         boolean debug, boolean keepInstance, boolean updateUserLibs) : void
+            </pre>
+        </dd>
+    </dl>
+    <dl>Examples:
+        <dd>
+            <pre>
+startET('ECU-TEST')
+            </pre>
+            <pre>
+def instance = ET.installation('ECU-TEST')
+startET installation: instance.installation, workspaceDir: 'C:\\Data'
+            </pre>
+            <pre>
+def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+instance.start()
+            </pre>
+        </dd>
+    </dl>
 </div>

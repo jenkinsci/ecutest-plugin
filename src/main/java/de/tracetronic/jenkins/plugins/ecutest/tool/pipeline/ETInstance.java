@@ -308,7 +308,7 @@ public class ETInstance implements Serializable {
      *                        otherwise only the most recent
      */
     @Whitelisted
-    public void publishTraceAnalysis(boolean mergeReports, boolean createReportDir, final int timeout,
+    public void publishTraceAnalysis(final boolean mergeReports, final boolean createReportDir, final int timeout,
                                      final boolean allowMissing, final boolean runOnFailed,
                                      final boolean archiving, final boolean keepAll) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();

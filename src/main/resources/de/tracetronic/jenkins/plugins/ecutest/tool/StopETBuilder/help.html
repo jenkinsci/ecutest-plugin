@@ -5,5 +5,37 @@
   -->
 
 <div>
-    Shutdown ECU-TEST.
+    <p>Shutdown ECU-TEST.</p>
+    <strong>Pipelines usage:</strong>
+    <dl>Signatures:
+        <dd>
+            <pre>
+stopET(String toolName) : void
+            </pre>
+            <pre>
+stopET(String toolName, int timeout) : void
+            </pre>
+            <pre>
+ETInstance.stop(String toolName) : void
+            </pre>
+            <pre>
+ETInstance.stop(String toolName, int timeout) : void
+            </pre>
+        </dd>
+    </dl>
+    <dl>Examples:
+        <dd>
+            <pre>
+stopET('ECU-TEST')
+            </pre>
+            <pre>
+def instance = ET.installation('ECU-TEST')
+stopET installation: instance.installation
+            </pre>
+            <pre>
+def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+instance.stop()
+            </pre>
+        </dd>
+    </dl>
 </div>

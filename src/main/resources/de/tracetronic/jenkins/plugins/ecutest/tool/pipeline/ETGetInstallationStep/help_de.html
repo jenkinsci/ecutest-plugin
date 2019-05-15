@@ -1,0 +1,27 @@
+<!--
+  Copyright (c) 2015-2019 TraceTronic GmbH
+
+  SPDX-License-Identifier: BSD-3-Clause
+  -->
+
+<div>
+    <p>Gibt eine ECU-TEST-Installationsinstanz mit dem angegebenen Namen zurück, die in der Konfiguration der
+        Hilfsprogramme vorhanden sein muss.</p>
+    <dl>Signaturen:
+        <dd>
+            <pre>
+ET.installation(String toolName) : ETInstance
+            </pre>
+        </dd>
+    </dl>
+    <dl>Beispiele:
+        <dd>
+            <pre>
+ET.installation('ECU-TEST')
+            </pre>
+            <pre>
+ET.installation toolName: 'ECU-TEST'
+            </pre>
+        </dd>
+    </dl>
+</div>

@@ -5,6 +5,35 @@
   -->
 
 <div>
-    Veröffentlicht die UNIT-Reports aller in diesem Job konfigurierten ECU-TEST-Packages bzw. -Projekte.<br/>
-    Die UNIT-Reports werden automatisiert in diesem Post-Buildschritt generiert.
+    <p>Veröffentlicht die UNIT-Reports aller in diesem Job konfigurierten ECU-TEST-Packages bzw. -Projekte.<br/>
+        Die UNIT-Reports werden automatisiert in diesem Post-Buildschritt generiert.</p>
+    <strong>Verwendung in Pipelines</strong>
+    <dl>Signaturen:
+        <dd>
+            <pre>
+publishUNIT(String toolName, double unstableThreshold, double failedThreshold) : void
+            </pre>
+            <pre>
+publishUNIT(ETInstallation installation, double unstableThreshold, double failedThreshold, boolean archiving, boolean keepAll) : void
+            </pre>
+            <pre>
+ETInstance.publishUNIT(double unstableThreshold, double failedThreshold, boolean archiving, boolean keepAll) : void
+            </pre>
+        </dd>
+    </dl>
+    <dl>Beispiele:
+        <dd>
+            <pre>
+publishUNIT('ECU-TEST', 10, 20)
+            </pre>
+            <pre>
+def instance = ET.installation('ECU-TEST')
+publishUNIT installation: instance.installation, unstableThreshold: 10, failedThreshold: 20
+            </pre>
+            <pre>
+def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+instance.publishUNIT()
+            </pre>
+        </dd>
+    </dl>
 </div>

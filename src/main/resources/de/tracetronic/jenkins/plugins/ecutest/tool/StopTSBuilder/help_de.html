@@ -5,5 +5,37 @@
   -->
 
 <div>
-    Beenden des Tool-Servers.
+    <p>Beenden des Tool-Servers.</p>
+    <strong>Verwendung in Pipelines:</strong>
+    <dl>Signaturen:
+        <dd>
+            <pre>
+stopTS(String toolName) : void
+            </pre>
+            <pre>
+stopTS(String toolName, int timeout) : void
+            </pre>
+            <pre>
+ETInstance.stopTS(String toolName) : void
+            </pre>
+            <pre>
+ETInstance.stopTS(String toolName, int timeout) : void
+            </pre>
+        </dd>
+    </dl>
+    <dl>Beispiele:
+        <dd>
+            <pre>
+stopTS('ECU-TEST')
+            </pre>
+            <pre>
+def instance = ET.installation('ECU-TEST')
+stopTS installation: instance.installation
+            </pre>
+            <pre>
+def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+instance.stopTS()
+            </pre>
+        </dd>
+    </dl>
 </div>

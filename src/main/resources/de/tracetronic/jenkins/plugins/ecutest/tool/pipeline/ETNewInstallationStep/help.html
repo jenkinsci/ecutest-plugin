@@ -1,0 +1,32 @@
+<!--
+  Copyright (c) 2015-2019 TraceTronic GmbH
+
+  SPDX-License-Identifier: BSD-3-Clause
+  -->
+
+<div>
+    <p>Creates a new dynamic ECU-TEST installation instance which is only accessible during pipeline execution.</p>
+    <dl>Signatures:
+        <dd>
+            <pre>
+ET.newInstallation(String toolName, String installPath) : ETInstance
+            </pre>
+            <pre>
+ET.newInstallation(String toolName, String installPath, String progId, int timeout) : ETInstance
+            </pre>
+        </dd>
+    </dl>
+    <dl>Examples:
+        <dd>
+            <pre>
+ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+            </pre>
+            <pre>
+ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0', 'ECU-TEST.Application', 120)
+            </pre>
+            <pre>
+ET.newInstallation toolName: 'ECU-TEST', installPath: 'C:\\Program Files\\ECU-TEST 8.0', progId: 'ECU-TEST.Application', timeout: 120
+            </pre>
+        </dd>
+    </dl>
+</div>

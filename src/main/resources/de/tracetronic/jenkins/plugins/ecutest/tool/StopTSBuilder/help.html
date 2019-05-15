@@ -5,5 +5,37 @@
   -->
 
 <div>
-    Shutdown Tool-Server.
+    <p>Shutdown Tool-Server.</p>
+    <strong>Pipelines usage:</strong>
+    <dl>Signatures:
+        <dd>
+            <pre>
+stopTS(String toolName) : void
+            </pre>
+            <pre>
+stopTS(String toolName, int timeout) : void
+            </pre>
+            <pre>
+ETInstance.stopTS(String toolName) : void
+            </pre>
+            <pre>
+ETInstance.stopTS(String toolName, int timeout) : void
+            </pre>
+        </dd>
+    </dl>
+    <dl>Examples:
+        <dd>
+            <pre>
+stopTS('ECU-TEST')
+            </pre>
+            <pre>
+def instance = ET.installation('ECU-TEST')
+stopTS installation: instance.installation
+            </pre>
+            <pre>
+def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+instance.stopTS()
+            </pre>
+        </dd>
+    </dl>
 </div>
