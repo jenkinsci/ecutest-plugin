@@ -35,6 +35,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
     /**
      * @see #readResolve()
      * @since 2.7.0
+     * @deprecated due to CasC compatibility
      */
     @Deprecated
     private transient T currentValue;

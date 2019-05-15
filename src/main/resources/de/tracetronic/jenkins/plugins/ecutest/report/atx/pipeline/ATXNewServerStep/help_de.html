@@ -5,19 +5,28 @@
   -->
 
 <div>
-    Erzeugt eine neue dynamische TEST-GUIDE-Serverinstanz, die nur während der Pipelineausführung gültig ist.
-    <div>
-        <br/>Signaturen:<br/>
-        <pre>ATX.newServer(String atxName, StringtoolName) : ATXServer</pre>
-        oder<br/>
-        <pre>ATX.newServer(String atxName, String toolName, ATXConfig config) : ATXServer</pre>
-        oder<br/>
-        <pre>ATX.newServer(String atxName, String toolName, String serverUrl, boolean uploadToServer, String authKey, String projectId) : ATXServer</pre>
-        <br/>Beispiele:<br/>
-        <pre>ATX.newServer('TEST-GUIDE', 'ECU-TEST')</pre>
-        ist äquivalent zu:<br/>
-        <pre>ATX.newServer('TEST-GUIDE', 'ECU-TEST', 'http://localhost:8085', false, '', '1')</pre>
-        oder
-        <pre>ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST', serverUrl: 'http://localhost:8085', uploadToServer: false, authKey: '', projectId: '1'</pre>
-    </div>
+    <p>Erzeugt eine neue dynamische TEST-GUIDE-Serverinstanz, die nur während der Pipelineausführung verfügbar ist.</p>
+    <dl>Signaturen:
+        <dd>
+            <pre>
+ATX.newServer(String atxName, String toolName) : ATXServer
+            </pre>
+            <pre>
+ATX.newServer(String atxName, String toolName, String serverUrl, boolean uploadToServer, String authKey, String projectId) : ATXServer
+            </pre>
+        </dd>
+    </dl>
+    <dl>Beispiele:
+        <dd>
+            <pre>
+ATX.newServer('TEST-GUIDE', 'ECU-TEST')
+            </pre>
+            <pre>
+ATX.newServer('TEST-GUIDE', 'ECU-TEST', 'http://localhost:8085', false, '', '1')
+            </pre>
+            <pre>
+ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST', serverUrl: 'http://localhost:8085', uploadToServer: false, authKey: '', projectId: '1'
+            </pre>
+        </dd>
+    </dl>
 </div>

@@ -29,9 +29,9 @@ public class ATXPipeline implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String KEY_CONFIG = "config";
     private static final String KEY_ATX_NAME = "atxName";
     private static final String KEY_TOOL_NAME = "toolName";
+    private static final String KEY_CONFIG = "config";
 
     private final CpsScript script;
 
@@ -69,7 +69,7 @@ public class ATXPipeline implements Serializable {
     public ATXServer server(final Map<String, Object> serverArgs) {
         final List<String> keysAsList = Collections.singletonList(KEY_ATX_NAME);
         if (!keysAsList.containsAll(serverArgs.keySet())) {
-            throw new IllegalArgumentException("The newServer method requires the following arguments at least: "
+            throw new IllegalArgumentException("The server method requires the following arguments at least: "
                 + keysAsList);
         }
         final ATXServer server = (ATXServer) script.invokeMethod("getATXServer", serverArgs);

@@ -13,7 +13,6 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBoolean
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline.ATXPublishStep;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
@@ -31,6 +30,7 @@ import jenkins.security.MasterToSlaveCallable;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -51,8 +51,8 @@ public class ATXPublisher extends AbstractReportPublisher {
     protected static final String URL_NAME = "atx-reports";
 
     @Nonnull
-    private final String atxName;
-    private transient ATXInstallation atxInstallation;
+    private String atxName;
+    private ATXInstallation atxInstallation;
 
     /**
      * Instantiates a new {@link ATXPublisher}.
@@ -66,22 +66,29 @@ public class ATXPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Instantiates a new {@link ATXPublisher} for direct use from {@link ATXPublishStep}.
-     *
-     * @param atxInstallation the {@link ATXInstallation}
-     */
-    public ATXPublisher(@Nonnull final ATXInstallation atxInstallation) {
-        super();
-        atxName = StringUtils.trimToEmpty(atxInstallation.getName());
-        this.atxInstallation = atxInstallation;
-    }
-
-    /**
      * @return the {@link ATXInstallation} name
      */
     @Nonnull
     public String getAtxName() {
         return atxName;
+    }
+
+    /**
+     * @return the ATX installation
+     */
+    public ATXInstallation getAtxInstallation() {
+        return atxInstallation;
+    }
+
+    /**
+     * Sets the ATX installation and the derived name.
+     *
+     * @param atxInstallation the ATX installation
+     */
+    @DataBoundSetter
+    public void setAtxInstallation(final ATXInstallation atxInstallation) {
+        this.atxInstallation = atxInstallation;
+        this.atxName = atxInstallation.getName();
     }
 
     @Override
@@ -170,7 +177,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean isUploadEnabled(final ATXInstallation installation) {
         final ATXConfig config = installation.getConfig();
-        Optional<ATXSetting> uploadSetting = config.getSettingByName("uploadToServer");
+        final Optional<ATXSetting> uploadSetting = config.getSettingByName("uploadToServer");
         return uploadSetting.isPresent() && ((ATXBooleanSetting) uploadSetting.get()).getValue();
     }
 
