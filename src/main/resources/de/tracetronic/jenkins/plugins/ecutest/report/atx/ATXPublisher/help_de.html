@@ -5,24 +5,35 @@
   -->
 
 <div>
-    Veröffentlicht die ATX-Reports aller in diesem Job konfigurierten ECU-TEST-Packages bzw. -Projekte.<br/>
-    Die ATX-Reports werden automatisiert in diesem Post-Buildschritt generiert und nach TEST-GUIDE hochgeladen.<br/>
-    <br/>
-    Verwendung in Pipelines:<br/>
-    <div>
-        <br/>Signaturen:<br/>
-        <pre>publishATX(String atxName, boolean allowMissing, boolean runOnFailed, boolean archiving, boolean keepAll) : void</pre>
-        or<br/>
-        <pre>publishATX(ATXInstallation installation, boolean allowMissing, boolean runOnFailed, boolean archiving, boolean keepAll) : void</pre>
-        or<br/>
-        <pre>ATXServer.publish(boolean allowMissing, boolean runOnFailed, boolean archiving, boolean keepAll) : void</pre>
-        <br/>Beispiele:<br/>
-        <pre>publishATX('TEST-GUIDE')</pre>
-        or<br/>
-        <pre>ATXServer atx = ATX.server('TEST-GUIDE')</pre>
-        <pre>publishATX('TEST-GUIDE', atx.installation, false, false, true, true)</pre>
-        or<br/>
-        <pre>ATXServer atx = ATX.newServer('TEST-GUIDE', 'ECU-TEST')</pre>
-        <pre>atx.publish()</pre>
-    </div>
+    <p>Veröffentlicht die ATX-Reports aller in diesem Job konfigurierten ECU-TEST-Packages bzw. -Projekte.<br/>
+        Die ATX-Reports werden automatisiert in diesem Post-Buildschritt generiert und nach TEST-GUIDE hochgeladen.</p>
+    <strong>Verwendung in Pipelines</strong>
+    <dl>Signaturen:
+        <dd>
+            <pre>
+publishATX(String atxName, boolean allowMissing, boolean runOnFailed, boolean archiving, boolean keepAll) : void
+            </pre>
+            <pre>
+publishATX(ATXInstallation installation, boolean allowMissing, boolean runOnFailed, boolean archiving, boolean keepAll) : void
+            </pre>
+            <pre>
+ATXServer.publish(boolean allowMissing, boolean runOnFailed, boolean archiving, boolean keepAll) : void
+            </pre>
+        </dd>
+    </dl>
+    <dl>Beispiele:
+        <dd>
+            <pre>
+publishATX('TEST-GUIDE', false, false, true, true)
+            </pre>
+            <pre>
+def server = ATX.server('TEST-GUIDE')
+publishATX atxInstallation: server.installation
+            </pre>
+            <pre>
+def server = ATX.newServer('TEST-GUIDE', 'ECU-TEST')
+atx.publish()
+            </pre>
+        </dd>
+    </dl>
 </div>

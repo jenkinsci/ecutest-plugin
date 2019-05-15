@@ -63,10 +63,11 @@ public class ATXServer implements Serializable {
     /**
      * Publishes ATX reports with given archiving settings.
      *
-     * @param allowMissing the allow missing
-     * @param runOnFailed  the run on failed
-     * @param archiving    the archiving
-     * @param keepAll      the keep all
+     * @param allowMissing specifies whether missing reports are allowed
+     * @param runOnFailed  specifies whether this publisher even runs on a failed build
+     * @param archiving    specifies whether archiving artifacts is enabled
+     * @param keepAll      specifies whether artifacts are archived for all successful builds,
+     *                     otherwise only the most recent
      */
     @Whitelisted
     public void publish(final boolean allowMissing, final boolean runOnFailed,
