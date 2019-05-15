@@ -6,7 +6,6 @@
 package de.tracetronic.jenkins.plugins.ecutest.report;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
-import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
@@ -16,7 +15,6 @@ import hudson.Launcher;
 import hudson.model.Computer;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-import hudson.tools.ToolInstallation;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundSetter;
 
@@ -128,64 +126,5 @@ public abstract class AbstractToolPublisher extends AbstractReportPublisher {
                                                        final TaskListener listener, final EnvVars envVars)
         throws IOException, InterruptedException, ETPluginException {
         return configureToolInstallation(toolName, computer, listener, envVars);
-    }
-
-    /**
-     * Gets the tool installation by descriptor and tool name.
-     *
-     * @param envVars the environment variables
-     * @return the tool installation
-     */
-    public ETInstallation getToolInstallation(final EnvVars envVars) {
-        return getToolInstallation(toolName, envVars);
-    }
-
-    /**
-     * Gets the tool descriptor holding the installations.
-     *
-     * @return the tool descriptor
-     */
-    public ETInstallation.DescriptorImpl getToolDescriptor() {
-        return ToolInstallation.all().get(ETInstallation.DescriptorImpl.class);
-    }
-
-    /**
-     * Gets the workspace directory, either previous ECU-TEST workspace or default one.
-     *
-     * @param run       the run
-     * @param workspace the workspace
-     * @return the workspace directory
-     */
-    protected String getWorkspaceDir(final Run<?, ?> run, final FilePath workspace) {
-        String workspaceDir;
-        final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
-        if (toolEnvAction != null) {
-            workspaceDir = toolEnvAction.getToolWorkspace();
-        } else if (isDownstream()) {
-            workspaceDir = workspace.child(getWorkspace()).getRemote();
-        } else {
-            workspaceDir = "";
-        }
-        return workspaceDir;
-    }
-
-    /**
-     * Gets the settings directory, either previous ECU-TEST settings or default one.
-     *
-     * @param run       the run
-     * @param workspace the workspace
-     * @return the settings directory
-     */
-    protected String getSettingsDir(final Run<?, ?> run, final FilePath workspace) {
-        String settingsDir;
-        final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
-        if (toolEnvAction != null) {
-            settingsDir = toolEnvAction.getToolSettings();
-        } else if (isDownstream()) {
-            settingsDir = workspace.child(getWorkspace()).getRemote();
-        } else {
-            settingsDir = "";
-        }
-        return settingsDir;
     }
 }

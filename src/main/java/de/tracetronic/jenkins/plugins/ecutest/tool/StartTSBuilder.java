@@ -153,13 +153,13 @@ public class StartTSBuilder extends AbstractToolBuilder {
             }
 
             // Get selected ECU-TEST installation
-            if (installation == null) {
-                installation = configureToolInstallation(workspace.toComputer(), listener,
-                    run.getEnvironment(listener));
+            if (getInstallation() == null) {
+                setInstallation(configureToolInstallation(workspace.toComputer(), listener,
+                    run.getEnvironment(listener)));
             }
 
             // Start selected Tool-Server of related ECU-TEST installation
-            final String installPath = installation.getTSExecutable(launcher);
+            final String installPath = getInstallation().getTSExecutable(launcher);
             final TSClient tsClient = new TSClient(getToolName(), installPath, expTimeout, expToolLibs, expTcpPort);
             if (!tsClient.start(true, workspace, launcher, listener)) {
                 throw new ETPluginException("Starting Tool-Server failed!");

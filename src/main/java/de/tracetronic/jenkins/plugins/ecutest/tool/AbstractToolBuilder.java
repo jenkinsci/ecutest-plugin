@@ -42,7 +42,7 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     private String toolName;
     @Nonnull
     private String timeout = String.valueOf(getDefaultTimeout());
-    protected ETInstallation installation;
+    private ETInstallation installation;
 
     /**
      * Instantiates a {@link AbstractToolBuilder}.
@@ -85,10 +85,18 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
      */
     public abstract int getDefaultTimeout();
 
+    /**
+     * @return the ECU-TEST installation
+     */
     public ETInstallation getInstallation() {
         return installation;
     }
 
+    /**
+     * Sets the ECU-TEST installation and the derived name.
+     *
+     * @param installation the ECU-TEST installation
+     */
     @DataBoundSetter
     public void setInstallation(final ETInstallation installation) {
         this.installation = installation;
