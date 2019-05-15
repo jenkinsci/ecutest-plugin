@@ -5,5 +5,37 @@
   -->
 
 <div>
-    Configure and start Tool-Server.
+    <p>Configure and start Tool-Server.</p>
+    <strong>Pipeline usage</strong>
+    <dl>Signatures:
+        <dd>
+            <pre>
+startTS(String toolName) : void
+            </pre>
+            <pre>
+startTS(String toolName, String toolLibsIniPath, int tcpPort, int timeout, boolean keepInstance) : void
+            </pre>
+            <pre>
+ETInstance.startTS(String toolName) : void
+            </pre>
+            <pre>
+ETInstance.startTS(String toolName, String toolLibsIniPath, int tcpPort, int timeout, boolean keepInstance) : void
+            </pre>
+        </dd>
+    </dl>
+    <dl>Examples:
+        <dd>
+            <pre>
+startTS('ECU-TEST')
+            </pre>
+            <pre>
+def instance = ET.installation('ECU-TEST')
+startTS installation: instance.installation
+            </pre>
+            <pre>
+def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+instance.startTS()
+            </pre>
+        </dd>
+    </dl>
 </div>

@@ -5,5 +5,36 @@
   -->
 
 <div>
-    Veröffentlicht die Ergebnisse der Traceanalyse aller in diesem Job konfigurierten ECU-TEST-Packages bzw. -Projekte.
+    <p>Veröffentlicht die Ergebnisse der Traceanalyse aller in diesem Job konfigurierten ECU-TEST-Packages bzw.
+        -Projekte.</p>
+    <strong>Verwendung in Pipelines</strong>
+    <dl>Signaturen:
+        <dd>
+            <pre>
+publishTraceAnalysis(String toolName, boolean mergeReports, boolean createReportDir, int timeout) : void
+            </pre>
+            <pre>
+publishTraceAnalysis(ETInstallation installation, boolean mergeReports, boolean createReportDir, int timeout,
+                     boolean allowMissing, boolean runOnFailed, boolean archiving, boolean keepAll) : void
+            </pre>
+            <pre>
+ETInstance.publishTraceAnalysis(boolean mergeReports, boolean createReportDir, int timeout) : void
+            </pre>
+        </dd>
+    </dl>
+    <dl>Beispiele:
+        <dd>
+            <pre>
+publishTraceAnalysis('ECU-TEST')
+            </pre>
+            <pre>
+def instance = ET.installation('ECU-TEST')
+publishTraceAnalysis installation: instance.installation, mergeReports: true, createReportDir: false
+            </pre>
+            <pre>
+def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+instance.publishTraceAnalysis()
+            </pre>
+        </dd>
+    </dl>
 </div>

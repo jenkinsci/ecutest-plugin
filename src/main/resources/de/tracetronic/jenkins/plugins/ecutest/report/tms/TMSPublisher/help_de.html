@@ -5,6 +5,36 @@
   -->
 
 <div>
-    Veröffentlicht die Testergebnisse aller in diesem Job konfigurierten ECU-TEST-Packages bzw. -Projekte
-    in ein vorkonfiguriertes Testmanagementsystem wie RQM oder ALM.
+    <p>Veröffentlicht die Testergebnisse aller in diesem Job konfigurierten ECU-TEST-Packages bzw. -Projekte
+        in ein vorkonfiguriertes Testmanagementsystem wie RQM oder ALM.</p>
+    <strong>Verwendung in Pipelines</strong>
+    <dl>Signaturen:
+        <dd>
+            <pre>
+publishTMS(String toolName, String credentialsId, int timeout) : void
+            </pre>
+            <pre>
+publishTMS(ETInstallation installation, String credentialsId, int timeout,
+           boolean allowMissing, boolean runOnFailed, boolean archiving, boolean keepAll) : void
+            </pre>
+            <pre>
+ETInstance.publishTMS(String credentialsId, int timeout) : void
+            </pre>
+        </dd>
+    </dl>
+    <dl>Beispiele:
+        <dd>
+            <pre>
+publishTMS('ECU-TEST')
+            </pre>
+            <pre>
+def instance = ET.installation('ECU-TEST')
+publishTMS installation: instance.installation, credentialsId: 'id', timeout: 120
+            </pre>
+            <pre>
+def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+instance.publishTMS('id')
+            </pre>
+        </dd>
+    </dl>
 </div>

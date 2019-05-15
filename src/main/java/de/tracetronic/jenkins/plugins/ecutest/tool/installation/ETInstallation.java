@@ -187,6 +187,38 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
+     * Gets all ECU-TEST installations.
+     *
+     * @return all available installations, never {@code null}
+     */
+    public static ETInstallation[] installs() {
+        final Jenkins instance = Jenkins.getInstanceOrNull();
+        if (instance == null) {
+            return new ETInstallation[0];
+        }
+        final DescriptorImpl etDescriptor = instance
+            .getDescriptorByType(DescriptorImpl.class);
+        return etDescriptor.getInstallations();
+    }
+
+    /**
+     * Gets the ECU-TEST installation by name.
+     *
+     * @param name the name
+     * @return installation by name, {@code null} if not found
+     */
+    @CheckForNull
+    public static ETInstallation get(final String name) {
+        final ETInstallation[] installations = installs();
+        for (final ETInstallation installation : installations) {
+            if (StringUtils.equals(name, installation.getName())) {
+                return installation;
+            }
+        }
+        return null;
+    }
+
+    /**
      * DescriptorImpl of {@link ETInstallation}.
      */
     @Symbol("ecu-test")

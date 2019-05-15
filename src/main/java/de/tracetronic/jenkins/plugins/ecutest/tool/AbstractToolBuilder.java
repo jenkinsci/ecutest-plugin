@@ -39,9 +39,10 @@ import java.util.List;
 public abstract class AbstractToolBuilder extends Builder implements SimpleBuildStep {
 
     @Nonnull
-    private final String toolName;
+    private String toolName;
     @Nonnull
     private String timeout = String.valueOf(getDefaultTimeout());
+    private ETInstallation installation;
 
     /**
      * Instantiates a {@link AbstractToolBuilder}.
@@ -83,6 +84,24 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
      * @return the default timeout
      */
     public abstract int getDefaultTimeout();
+
+    /**
+     * @return the ECU-TEST installation
+     */
+    public ETInstallation getInstallation() {
+        return installation;
+    }
+
+    /**
+     * Sets the ECU-TEST installation and the derived name.
+     *
+     * @param installation the ECU-TEST installation
+     */
+    @DataBoundSetter
+    public void setInstallation(final ETInstallation installation) {
+        this.installation = installation;
+        this.toolName = installation.getName();
+    }
 
     @Override
     public void perform(@Nonnull final Run<?, ?> run, @Nonnull final FilePath workspace,

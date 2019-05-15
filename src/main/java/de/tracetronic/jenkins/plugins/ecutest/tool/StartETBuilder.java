@@ -189,12 +189,14 @@ public class StartETBuilder extends AbstractToolBuilder {
             }
 
             // Get selected ECU-TEST installation
-            final ETInstallation installation = configureToolInstallation(workspace.toComputer(), listener,
-                run.getEnvironment(listener));
+            if (getInstallation() == null) {
+                setInstallation(configureToolInstallation(workspace.toComputer(), listener,
+                    run.getEnvironment(listener)));
+            }
 
             // Start selected ECU-TEST
-            final String toolName = run.getEnvironment(listener).expand(installation.getName());
-            final String installPath = installation.getExecutable(launcher);
+            final String toolName = run.getEnvironment(listener).expand(getToolName());
+            final String installPath = getInstallation().getExecutable(launcher);
             final ETClient etClient = new ETClient(toolName, installPath, expWorkspaceDir, expSettingsDir,
                 expTimeout, isDebugMode());
             if (!etClient.start(true, workspace, launcher, listener)) {

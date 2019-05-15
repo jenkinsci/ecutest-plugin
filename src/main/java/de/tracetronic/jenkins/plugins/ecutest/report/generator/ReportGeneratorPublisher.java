@@ -8,7 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractToolPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import hudson.EnvVars;
@@ -33,15 +33,13 @@ import java.util.List;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ReportGeneratorPublisher extends AbstractReportPublisher {
+public class ReportGeneratorPublisher extends AbstractToolPublisher {
 
     /**
      * The URL name to {@link GeneratorReport}s holding by {@link AbstractReportGeneratorAction}.
      */
     protected static final String URL_NAME = "generator-reports";
 
-    @Nonnull
-    private final String toolName;
     @Nonnull
     private List<ReportGeneratorConfig> generators = new ArrayList<>();
     @Nonnull
@@ -54,8 +52,7 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
      */
     @DataBoundConstructor
     public ReportGeneratorPublisher(@Nonnull final String toolName) {
-        super();
-        this.toolName = StringUtils.trimToEmpty(toolName);
+        super(toolName);
     }
 
     /**
@@ -72,14 +69,6 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
             }
         }
         return validGenerators;
-    }
-
-    /**
-     * @return the {@link ETInstallation} name
-     */
-    @Nonnull
-    public String getToolName() {
-        return toolName;
     }
 
     /**
@@ -135,14 +124,14 @@ public class ReportGeneratorPublisher extends AbstractReportPublisher {
         if (isETRunning(launcher)) {
             reports.addAll(generateReports(reportFiles, run, workspace, launcher, listener));
         } else {
-            final ETClient etClient = getToolClient(toolName, run, workspace, launcher, listener);
+            final ETClient etClient = getToolClient(run, workspace, launcher, listener);
             if (etClient.start(false, workspace, launcher, listener)) {
                 reports.addAll(generateReports(reportFiles, run, workspace, launcher, listener));
             } else {
-                logger.logError(String.format("Starting %s failed.", toolName));
+                logger.logError(String.format("Starting %s failed.", getToolName()));
             }
             if (!etClient.stop(true, workspace, launcher, listener)) {
-                logger.logError(String.format("Stopping %s failed.", toolName));
+                logger.logError(String.format("Stopping %s failed.", getToolName()));
             }
         }
 

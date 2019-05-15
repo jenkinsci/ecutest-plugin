@@ -8,7 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.ta;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
-import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.report.AbstractToolPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
@@ -41,7 +41,7 @@ import java.util.Map.Entry;
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class TraceAnalysisPublisher extends AbstractReportPublisher {
+public class TraceAnalysisPublisher extends AbstractToolPublisher {
 
     /**
      * Defines the default timeout running each trace analysis.
@@ -53,8 +53,6 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
      */
     protected static final String URL_NAME = "trace-analysis";
 
-    @Nonnull
-    private final String toolName;
     private boolean mergeReports = true;
     private boolean createReportDir = false;
     private String timeout = String.valueOf(getDefaultTimeout());
@@ -66,8 +64,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
      */
     @DataBoundConstructor
     public TraceAnalysisPublisher(@Nonnull final String toolName) {
-        super();
-        this.toolName = StringUtils.trimToEmpty(toolName);
+        super(toolName);
     }
 
     /**
@@ -93,14 +90,6 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * @return the {@link ETInstallation} name
-     */
-    @Nonnull
-    public String getToolName() {
-        return toolName;
-    }
-
-    /**
      * @return whether to merge analysis job reports, defaults to {@code true}
      */
     public boolean isMergeReports() {
@@ -117,7 +106,7 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * @return whether to create a new report directory, defaults to {@code true}
+     * @return whether to create a new report directory, defaults to {@code false}
      */
     public boolean isCreateReportDir() {
         return createReportDir;
@@ -176,15 +165,15 @@ public class TraceAnalysisPublisher extends AbstractReportPublisher {
             reports.addAll(performAnalysis(analysisFiles, run, launcher, listener));
             isPublished = true;
         } else {
-            final ETClient etClient = getToolClient(toolName, run, workspace, launcher, listener);
+            final ETClient etClient = getToolClient(run, workspace, launcher, listener);
             if (etClient.start(false, workspace, launcher, listener)) {
                 reports.addAll(performAnalysis(analysisFiles, run, launcher, listener));
                 isPublished = true;
             } else {
-                logger.logError(String.format("Starting %s failed.", toolName));
+                logger.logError(String.format("Starting %s failed.", getToolName()));
             }
             if (!etClient.stop(true, workspace, launcher, listener)) {
-                logger.logError(String.format("Stopping %s failed.", toolName));
+                logger.logError(String.format("Stopping %s failed.", getToolName()));
             }
         }
 
