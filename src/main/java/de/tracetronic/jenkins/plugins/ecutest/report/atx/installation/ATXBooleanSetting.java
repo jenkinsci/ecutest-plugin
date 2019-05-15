@@ -25,18 +25,19 @@ public class ATXBooleanSetting extends ATXSetting<Boolean> {
      * Instantiates a new {@link ATXBooleanSetting}.
      *
      * @param name  the name
-     * @param value the value
+     * @param group the settings group
+     * @param value the current value
      */
     @DataBoundConstructor
-    public ATXBooleanSetting(final String name, final boolean value) {
-        super(name, value);
+    public ATXBooleanSetting(final String name, final SettingsGroup group, final boolean value) {
+        super(name, group, value);
     }
 
     /**
      * Instantiates a new {@link ATXBooleanSetting} with default values.
      *
-     * @param name         the name of the setting
-     * @param group        the related settings group
+     * @param name         the name
+     * @param group        the settings group
      * @param descGerman   the German description
      * @param descEnglish  the English description
      * @param defaultValue the default value

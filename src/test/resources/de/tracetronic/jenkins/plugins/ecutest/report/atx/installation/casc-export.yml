@@ -9,135 +9,182 @@ installations:
         value: "test"
     settings:
     - atx-boolean-setting:
+        group: UPLOAD
         name: "uploadToServer"
         value: true
     - atx-text-setting:
+        group: UPLOAD
         name: "serverURL"
         value: "127.0.0.1"
     - atx-text-setting:
+        group: UPLOAD
         name: "serverLabel"
     - atx-boolean-setting:
+        group: UPLOAD
         name: "useHttpsConnection"
         value: false
     - atx-boolean-setting:
+        group: UPLOAD
         name: "ignoreSSL"
         value: false
     - atx-text-setting:
+        group: UPLOAD
         name: "serverPort"
         value: "8085"
     - atx-text-setting:
+        group: UPLOAD
         name: "serverContextPath"
     - atx-text-setting:
+        group: UPLOAD
         name: "uploadAuthenticationKey"
     - atx-boolean-setting:
+        group: UPLOAD
         name: "uploadAsync"
         value: true
     - atx-text-setting:
+        group: UPLOAD
         name: "projectId"
         value: "1"
     - atx-boolean-setting:
+        group: UPLOAD
         name: "compressUpload"
         value: false
     - atx-boolean-setting:
+        group: UPLOAD
         name: "cleanAfterSuccessUpload"
         value: true
     - atx-boolean-setting:
+        group: UPLOAD
         name: "uploadOnlyProjectReport"
         value: false
     - atx-boolean-setting:
+        group: ARCHIVE
         name: "enableArchive"
         value: true
     - atx-boolean-setting:
+        group: ARCHIVE
         name: "archiveTrf"
         value: true
     - atx-boolean-setting:
+        group: ARCHIVE
         name: "archivePkg"
         value: false
     - atx-boolean-setting:
+        group: ARCHIVE
         name: "archiveTcf"
         value: false
     - atx-boolean-setting:
+        group: ARCHIVE
         name: "archiveTbc"
         value: false
     - atx-boolean-setting:
+        group: ARCHIVE
         name: "archiveMapping"
         value: false
     - atx-boolean-setting:
+        group: ARCHIVE
         name: "archiveRecordings"
         value: false
     - atx-boolean-setting:
+        group: ARCHIVE
         name: "archivePlots"
         value: true
     - atx-text-setting:
+        group: ARCHIVE
         name: "archiveMiscFiles"
     - atx-boolean-setting:
+        group: ARCHIVE
         name: "archiveMiscFilesOnlyInTestReportDir"
         value: true
     - atx-text-setting:
+        group: ARCHIVE
         name: "archiveBy"
         value: "NONE;SUCCESS;INCONCLUSIVE;FAILED;ERROR"
     - atx-text-setting:
+        group: ATTRIBUTE
         name: "coveredAttributes"
         value: "Testlevel;Designer;Execution Priority;Estimated Duration [min];"
     - atx-text-setting:
+        group: ATTRIBUTE
         name: "attributeDelimiter"
     - atx-boolean-setting:
+        group: ATTRIBUTE
         name: "mapIsTestCaseAsAttribute"
         value: true
     - atx-boolean-setting:
+        group: ATTRIBUTE
         name: "mapTestCaseVersionAsAttribute"
         value: true
     - atx-boolean-setting:
+        group: ATTRIBUTE
         name: "mapRootPrjAttrToPkgAttr"
         value: true
     - atx-boolean-setting:
+        group: ATTRIBUTE
         name: "includePkgSVNRevision"
         value: true
     - atx-boolean-setting:
+        group: ATTRIBUTE
         name: "mapSwkIdsAsAttribute"
         value: true
     - atx-boolean-setting:
+        group: TBC_CONSTANTS
         name: "mapTbcToolAsConstant"
         value: true
     - atx-boolean-setting:
+        group: TCF_CONSTANTS
         name: "mapTCFPropertyAsConstant"
         value: true
     - atx-boolean-setting:
+        group: TCF_CONSTANTS
         name: "mapUserDefinedReportDataAsConstant"
         value: true
     - atx-text-setting:
+        group: TCF_CONSTANTS
         name: "setConstants"
     - atx-text-setting:
+        group: TCF_CONSTANTS
         name: "setAttributes"
     - atx-boolean-setting:
+        group: SPECIAL
         name: "autoATXGeneratorUpdate"
         value: true
     - atx-boolean-setting:
+        group: SPECIAL
         name: "includeToolIdentifier"
         value: false
     - atx-boolean-setting:
+        group: SPECIAL
         name: "onlyIncludePkgTestCases"
         value: false
     - atx-boolean-setting:
+        group: SPECIAL
         name: "overrideParamSetNameMapping"
         value: false
     - atx-boolean-setting:
+        group: SPECIAL
         name: "mapProjectElementNameAsTestCaseName"
         value: false
     - atx-text-setting:
+        group: SPECIAL
         name: "mapSubPackageAsTestCaseLevel"
         value: "0"
     - atx-text-setting:
+        group: SPECIAL
         name: "captureSubPackageOnVerdict"
     - atx-boolean-setting:
+        group: SPECIAL
         name: "mapSeparateProjectExecutionAsSingleTestplan"
         value: false
     - atx-text-setting:
+        group: SPECIAL
         name: "mapAttributeAsConstant"
     - atx-boolean-setting:
+        group: SPECIAL
         name: "mapTestReportPathAsConstant"
         value: false
     - atx-boolean-setting:
+        group: SPECIAL
         name: "includeResourceAdapterInfo"
         value: true
   name: "TEST-GUIDE"

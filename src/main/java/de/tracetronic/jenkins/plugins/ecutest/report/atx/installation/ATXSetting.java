@@ -27,6 +27,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
     private static final Logger LOGGER = Logger.getLogger(ATXSetting.class.getName());
 
     private final String name;
+    private final SettingsGroup group;
     /**
      * The current value of the setting as generic type.
      */
@@ -45,7 +46,6 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
      *
      * @since 2.7.0
      */
-    private transient SettingsGroup group;
     private transient String descGerman;
     private transient String descEnglish;
     private transient T defaultValue;
@@ -55,11 +55,13 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
      * Settings group, descriptions and default value are synchronized during plugin startup.
      *
      * @param name  the name
+     * @param group the settings group
      * @param value the current value
      */
-    public ATXSetting(final String name, final T value) {
+    public ATXSetting(final String name, SettingsGroup group, final T value) {
         super();
         this.name = name;
+        this.group = group;
         this.value = value;
     }
 

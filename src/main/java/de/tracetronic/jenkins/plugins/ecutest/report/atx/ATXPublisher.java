@@ -192,8 +192,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      * @throws InterruptedException if the build gets interrupted
      */
     private boolean isServerReachable(final ATXInstallation installation, final Launcher launcher,
-                                      final EnvVars envVars) throws IOException,
-        InterruptedException {
+                                      final EnvVars envVars) throws IOException, InterruptedException {
         final ATXConfig config = installation.getConfig();
         return launcher.getChannel().call(new TestConnectionCallable(config, envVars));
     }
@@ -248,11 +247,10 @@ public class ATXPublisher extends AbstractReportPublisher {
 
         @Override
         public Boolean call() throws IOException {
-            final String baseUrl = ATXUtil.getBaseUrl(config, envVars);
-            final ATXValidator validator = new ATXValidator();
-
             Object ignoreSSL = config.getSettingValueByGroup("ignoreSSL", ATXSetting.SettingsGroup.UPLOAD);
             if (ignoreSSL != null) {
+                final String baseUrl = ATXUtil.getBaseUrl(config, envVars);
+                final ATXValidator validator = new ATXValidator();
                 final FormValidation validation = validator.testConnection(baseUrl, (boolean) ignoreSSL);
                 return validation.kind.equals(FormValidation.Kind.OK);
             }
