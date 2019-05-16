@@ -632,7 +632,14 @@ public class ETClient extends AbstractToolClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
-                return comClient.isStarted();
+                String comVersion = comClient.getVersion();
+                final ToolVersion toolVersion = ToolVersion.parse(comVersion);
+                if (toolVersion.compareWithoutMicroTo(new ToolVersion(8, 0, 0)) >= 0) {
+                    return comClient.isStarted();
+                } else {
+                    logger.logWarn("-> Checking configuration status is not supported. " +
+                        "Please use at least ECU-TEST 8.0!");
+                }
             } catch (final ETComException e) {
                 logger.logError("-> Caught COM exception: " + e.getMessage());
             }
