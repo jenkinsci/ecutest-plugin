@@ -17,6 +17,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 import org.jenkinsci.plugins.workflow.cps.CpsScript;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ public class ETInstance implements Serializable {
     private static final String KEY_INSTALLATION = "installation";
     private static final String KEY_TIMEOUT = "timeout";
 
+    @Nonnull
     private final ETInstallation installation;
 
     private transient CpsScript script;
@@ -43,7 +45,7 @@ public class ETInstance implements Serializable {
      *
      * @param installation the ECU-TEST installation
      */
-    public ETInstance(final ETInstallation installation) {
+    public ETInstance(@Nonnull final ETInstallation installation) {
         this.installation = installation;
     }
 
@@ -322,5 +324,12 @@ public class ETInstance implements Serializable {
         stepVariables.put("archiving", archiving);
         stepVariables.put("keepAll", keepAll);
         script.invokeMethod("publishTraceAnalysis", stepVariables);
+    }
+
+    @Whitelisted
+    public boolean isConfigStarted() {
+        final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
+        stepVariables.put(KEY_TOOL_NAME, installation.getName());
+        return (boolean) script.invokeMethod("isConfigStarted", stepVariables);
     }
 }
