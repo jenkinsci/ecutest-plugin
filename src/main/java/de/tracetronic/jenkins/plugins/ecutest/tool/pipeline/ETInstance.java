@@ -326,6 +326,11 @@ public class ETInstance implements Serializable {
         script.invokeMethod("publishTraceAnalysis", stepVariables);
     }
 
+    /**
+     * Checks whether the currently selected configurations are started.
+     *
+     * @return {@code true} if configurations are started, {@code false} otherwise
+     */
     @Whitelisted
     public boolean isConfigStarted() {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
