@@ -5,8 +5,11 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.pipeline;
 
+import com.google.common.collect.ImmutableSet;
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import hudson.Extension;
+import hudson.model.TaskListener;
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
@@ -14,7 +17,6 @@ import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.jenkinsci.plugins.workflow.steps.SynchronousStepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -71,7 +73,14 @@ public class ETGetInstallationStep extends Step {
 
         @Override
         protected ETInstance run() throws Exception {
-            return new ETInstance(ETInstallation.get(step.toolName));
+            ETInstallation installation = ETInstallation.get(step.toolName);
+            if (installation == null) {
+                TaskListener listener = getContext().get(TaskListener.class);
+                final String message = String.format("ECU-TEST installation with name '%s' is not configured!",
+                    step.toolName);
+                throw new ETPluginException(message, listener);
+            }
+            return new ETInstance(installation);
         }
     }
 
@@ -98,7 +107,7 @@ public class ETGetInstallationStep extends Step {
 
         @Override
         public Set<? extends Class<?>> getRequiredContext() {
-            return Collections.emptySet();
+            return ImmutableSet.of(TaskListener.class);
         }
     }
 }
