@@ -117,7 +117,7 @@ public class ETClient extends AbstractToolClient {
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
-    public static String getComVersion(final Launcher launcher, final TaskListener listener)
+    public static ToolVersion getComVersion(final Launcher launcher, final TaskListener listener)
         throws IOException, InterruptedException {
         return launcher.getChannel().call(new VersionCallable(listener));
     }
@@ -395,7 +395,7 @@ public class ETClient extends AbstractToolClient {
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId, timeout)) {
                 if (comClient.isApplicationRunning()) {
-                    isTerminated = comClient.quit() || comClient.exit();
+                    isTerminated = quit(progId, logger) || exit(progId, logger);
                 } else {
                     logger.logError("ECU-TEST COM instance is not ready to use!");
                 }
@@ -405,9 +405,40 @@ public class ETClient extends AbstractToolClient {
                 if (checkProcesses) {
                     final List<String> foundProcesses = ProcessUtil.checkETProcesses(true);
                     if (!foundProcesses.isEmpty()) {
+                        isTerminated = true;
                         logger.logInfo(String.format("Terminated running processes: %s", foundProcesses));
                     }
                 }
+            }
+            return isTerminated;
+        }
+
+        /**
+         * Tries to soft exit ECU-TEST with given timeout.
+         *
+         * @return {@code true} if terminated successfully, {@code false} otherwise
+         */
+        private boolean quit(final String progId, final TTConsoleLogger logger) {
+            boolean isTerminated = false;
+            try (ETComClient comClient = new ETComClient(progId, timeout)) {
+                isTerminated = comClient.quit(timeout);
+            } catch (ETComException e) {
+                logger.logDebug(e.getMessage());
+            }
+            return isTerminated;
+        }
+
+        /**
+         * Tries to hard exit ECU-TEST with given timeout.
+         *
+         * @return {@code true} if terminated successfully, {@code false} otherwise
+         */
+        private boolean exit(final String progId, final TTConsoleLogger logger) {
+            boolean isTerminated = false;
+            try (ETComClient comClient = new ETComClient(progId, timeout)) {
+                isTerminated = comClient.exit(timeout);
+            } catch (ETComException e) {
+                logger.logDebug(e.getMessage());
             }
             return isTerminated;
         }
@@ -440,7 +471,7 @@ public class ETClient extends AbstractToolClient {
     /**
      * {@link Callable} providing remote access to request the COM version of currently running ECU-TEST instance.
      */
-    private static final class VersionCallable extends MasterToSlaveCallable<String, IOException> {
+    private static final class VersionCallable extends MasterToSlaveCallable<ToolVersion, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -456,16 +487,17 @@ public class ETClient extends AbstractToolClient {
         }
 
         @Override
-        public String call() throws IOException {
-            String comVersion = "";
+        public ToolVersion call() throws IOException {
+            ToolVersion toolVersion = null;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
-                comVersion = comClient.getVersion();
+                String comVersion = comClient.getVersion();
+                toolVersion = ToolVersion.parse(comVersion);
             } catch (final ETComException e) {
                 logger.logError("-> Caught COM exception: " + e.getMessage());
             }
-            return comVersion;
+            return toolVersion;
         }
     }
 
@@ -586,9 +618,9 @@ public class ETClient extends AbstractToolClient {
         public Boolean call() throws IOException {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
-            try(ETComClient comClient = new ETComClient(progId)) {
+            try (ETComClient comClient = new ETComClient(progId)) {
                 return comClient.updateUserLibraries();
-            }  catch (final ETComException e) {
+            } catch (final ETComException e) {
                 logger.logError("-> Caught COM exception: " + e.getMessage());
             }
             return false;
