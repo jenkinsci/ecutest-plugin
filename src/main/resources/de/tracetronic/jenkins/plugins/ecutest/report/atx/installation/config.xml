@@ -361,6 +361,33 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
+        <SETTING name="archiveMiscFilePrefix" default=""
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Präfix für den Dateinamen, welcher für
+                            die
+                            Option 'archiveMiscFiles' angegeben werden kann z.B.
+                            MyPrefix_ ->
+                            MyPrefix_2019-04-24_161212.zip. Damit kann beim
+                            Upload in
+                            TEST-GUIDE geprüft werden, ob die erforderliche
+                            Zip-Datei mit
+                            erfasst wurde.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Prefix for the file name, which can be
+                            specified for the option 'archiveMiscFiles' e.g. MyPrefix_ ->
+                            MyPrefix_2019-04-24_161212.zip. This allows you to check if the
+                            required zip file has been included when uploading to TEST-GUIDE.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
         <SETTING name="archiveMiscFilesOnlyInTestReportDir"
                  default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
@@ -513,13 +540,14 @@
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">True, wenn die SVN Revision als Attribut
-                            "Revision" erfasst werden soll, sonst False.
+                            "Revision" und "RevisionUrl" erfasst werden soll, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True if the SVN revision should be
                             recorded
-                            as attribute "Revision", otherwise False.
+                            as attribute "Revision" and "RevisionUrl", otherwise
+                            False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -567,6 +595,25 @@
             </DESCRIPTION>
         </SETTING>
         <!-- TCF-Globale Konstanteneinstellungen -->
+        <SETTING name="mapTcfTesterAsConstant" default="False"
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">True, wenn der in der TCF hinterlegte Name
+                            des Testers als Konstante TCF_TESTER abgebildet werden soll,
+                            sonst False.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">True, if the name of the tester defined in
+                            the TCF is to be mapped as constant TCF_TESTER, otherwise False.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
         <SETTING name="mapTCFPropertyAsConstant" default="True"
                  xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
