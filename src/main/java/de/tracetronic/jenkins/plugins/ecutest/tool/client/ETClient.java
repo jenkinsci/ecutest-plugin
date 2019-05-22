@@ -328,6 +328,20 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
+     * Checks whether the currently selected configurations are started.
+     *
+     * @param launcher the launcher
+     * @param listener the listener
+     * @return {@code true} if configurations are started, {@code false} otherwise
+     * @throws IOException          the io exception
+     * @throws InterruptedException the interrupted exception
+     */
+    public boolean checkConfigStatus(final Launcher launcher, TaskListener listener)
+        throws IOException, InterruptedException {
+        return launcher.getChannel().call(new CheckConfigStatus(listener));
+    }
+
+    /**
      * {@link Callable} providing remote access to establish a COM connection.
      */
     private static final class StartCallable extends MasterToSlaveCallable<String, IOException> {
@@ -620,6 +634,44 @@ public class ETClient extends AbstractToolClient {
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 return comClient.updateUserLibraries();
+            } catch (final ETComException e) {
+                logger.logError("-> Caught COM exception: " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
+    /**
+     * {@link Callable} providing remote access to check whether the currently selected configurations are started.
+     */
+    private static final class CheckConfigStatus extends MasterToSlaveCallable<Boolean, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final TaskListener listener;
+
+        /**
+         * Instantiates a new {@link CheckConfigStatus}.
+         *
+         * @param listener the listener
+         */
+        CheckConfigStatus(final TaskListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public Boolean call() throws IOException {
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final String progId = ETComProperty.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId)) {
+                String comVersion = comClient.getVersion();
+                final ToolVersion toolVersion = ToolVersion.parse(comVersion);
+                if (toolVersion.compareWithoutMicroTo(new ToolVersion(8, 0, 0)) >= 0) {
+                    return comClient.isStarted();
+                } else {
+                    logger.logWarn("-> Checking configuration status is not supported. " +
+                        "Please use at least ECU-TEST 8.0!");
+                }
             } catch (final ETComException e) {
                 logger.logError("-> Caught COM exception: " + e.getMessage());
             }

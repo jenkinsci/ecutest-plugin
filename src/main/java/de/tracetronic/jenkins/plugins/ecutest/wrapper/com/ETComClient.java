@@ -396,6 +396,11 @@ public class ETComClient implements ComApplication, AutoCloseable {
     }
 
     @Override
+    public boolean isStarted() throws ETComException {
+        return dispatch.performRequest("IsStarted").getBoolean();
+    }
+
+    @Override
     public boolean waitForIdle(final int timeout) throws ETComException {
         if (timeout == 0) {
             return dispatch.performDirectRequest("WaitForIdle").getBoolean();

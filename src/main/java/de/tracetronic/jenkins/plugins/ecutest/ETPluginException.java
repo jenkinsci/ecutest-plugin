@@ -5,6 +5,9 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest;
 
+import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import hudson.model.TaskListener;
+
 /**
  * Exception thrown if an error occurs while performing plugin-specific operations.
  *
@@ -40,6 +43,18 @@ public class ETPluginException extends Exception {
      */
     public ETPluginException(final String message) {
         super(message);
+    }
+
+    /**
+     * Instantiates a new {@link ETPluginException} and logs the message to the build console output.
+     *
+     * @param message  the message to attach to the {@link Exception}
+     * @param listener the listener
+     */
+    public ETPluginException(final String message, TaskListener listener) {
+        super(message);
+        TTConsoleLogger logger = new TTConsoleLogger(listener);
+        logger.logError(message);
     }
 
     /**

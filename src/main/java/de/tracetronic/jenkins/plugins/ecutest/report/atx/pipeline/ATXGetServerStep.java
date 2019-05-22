@@ -5,8 +5,11 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline;
 
+import com.google.common.collect.ImmutableSet;
+import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import hudson.Extension;
+import hudson.model.TaskListener;
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
@@ -15,7 +18,6 @@ import org.jenkinsci.plugins.workflow.steps.SynchronousStepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -74,6 +76,13 @@ public class ATXGetServerStep extends Step {
 
         @Override
         protected ATXServer run() throws Exception {
+            ATXInstallation installation = ATXInstallation.get(step.atxName);
+            if (installation == null) {
+                TaskListener listener = getContext().get(TaskListener.class);
+                final String message = String.format("TEST-GUIDE installation with name '%s' is not configured!",
+                    step.atxName);
+                throw new ETPluginException(message, listener);
+            }
             return new ATXServer(ATXInstallation.get(step.atxName));
         }
     }
@@ -101,7 +110,7 @@ public class ATXGetServerStep extends Step {
 
         @Override
         public Set<? extends Class<?>> getRequiredContext() {
-            return Collections.emptySet();
+            return ImmutableSet.of(TaskListener.class);
         }
     }
 }
