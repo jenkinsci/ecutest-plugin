@@ -213,11 +213,19 @@ public interface ComApplication {
     ComTestBenchConfiguration getCurrentTestBenchConfiguration() throws ETComException;
 
     /**
+     * Returns whether the currently selected test configuration and testbench configuration are started.
+     *
+     * @return {@code true} if configurations are started, {@code false} otherwise
+     * @throws ETComException in case of a COM exception
+     */
+    boolean isStarted() throws ETComException;
+
+    /**
      * Waits until the job count in the task manager reaches zero. The timeout parameter specifies the maximum waiting
      * time in seconds.
      *
      * @param timeout the timeout in seconds
-     * @return {@code true} if if a job count of zero was reached within the timeout
+     * @return {@code true} if a job count of zero was reached within the timeout
      * @throws ETComException in case of a COM exception
      */
     boolean waitForIdle(int timeout) throws ETComException;

@@ -6,35 +6,37 @@
 package de.tracetronic.jenkins.plugins.ecutest.tool.pipeline;
 
 import com.google.common.collect.ImmutableSet;
-import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
-import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import hudson.Extension;
+import hudson.Launcher;
 import hudson.model.TaskListener;
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
 import org.jenkinsci.plugins.workflow.steps.StepExecution;
-import org.jenkinsci.plugins.workflow.steps.SynchronousStepExecution;
+import org.jenkinsci.plugins.workflow.steps.SynchronousNonBlockingStepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import java.util.Objects;
 import java.util.Set;
 
 /**
- * Advanced pipeline step that returns a pre-configured {@link ETInstance} instance by name.
+ * Advanced pipeline step that checks whether the currently selected configurations are started.
  *
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
-public class ETGetInstallationStep extends Step {
+public class ETConfigStartedStep extends Step {
 
     private final String toolName;
 
     /**
-     * Instantiates a new {@link ETGetInstallationStep}.
+     * Instantiates a new {@link ETConfigStartedStep}.
      *
      * @param toolName the tool name
      */
     @DataBoundConstructor
-    public ETGetInstallationStep(final String toolName) {
+    public ETConfigStartedStep(final String toolName) {
         super();
         this.toolName = toolName;
     }
@@ -52,13 +54,13 @@ public class ETGetInstallationStep extends Step {
     }
 
     /**
-     * Synchronous pipeline step execution that returns a pre-configured {@link ETInstance} instance by name.
+     * Synchronous pipeline step execution that checks whether the currently selected configurations are started.
      */
-    private static class Execution extends SynchronousStepExecution<ETInstance> {
+    private static class Execution extends SynchronousNonBlockingStepExecution<Boolean> {
 
         private static final long serialVersionUID = 1L;
 
-        private final transient ETGetInstallationStep step;
+        private final transient ETConfigStartedStep step;
 
         /**
          * Instantiates a new {@link Execution}.
@@ -66,38 +68,33 @@ public class ETGetInstallationStep extends Step {
          * @param step    the step
          * @param context the context
          */
-        Execution(final ETGetInstallationStep step, final StepContext context) {
+        Execution(final ETConfigStartedStep step, final StepContext context) {
             super(context);
             this.step = step;
         }
 
         @Override
-        protected ETInstance run() throws Exception {
-            ETInstallation installation = ETInstallation.get(step.toolName);
-            if (installation == null) {
-                TaskListener listener = getContext().get(TaskListener.class);
-                final String message = String.format("ECU-TEST installation with name '%s' is not configured!",
-                    step.toolName);
-                throw new ETPluginException(message, listener);
-            }
-            return new ETInstance(installation);
+        protected Boolean run() throws Exception {
+            ETClient client = new ETClient(step.toolName, ETComProperty.DEFAULT_TIMEOUT);
+            return client.checkConfigStatus(Objects.requireNonNull(getContext().get(Launcher.class)),
+                getContext().get(TaskListener.class));
         }
     }
 
     /**
-     * DescriptorImpl for {@link ETGetInstallationStep}.
+     * DescriptorImpl for {@link ETConfigStartedStep}.
      */
     @Extension
     public static final class DescriptorImpl extends StepDescriptor {
 
         @Override
         public String getFunctionName() {
-            return "getETInstallation";
+            return "isConfigStarted";
         }
 
         @Override
         public String getDisplayName() {
-            return "Get ECU-TEST installation by name";
+            return "Check ECU-TEST configuration status";
         }
 
         @Override
@@ -107,7 +104,7 @@ public class ETGetInstallationStep extends Step {
 
         @Override
         public Set<? extends Class<?>> getRequiredContext() {
-            return ImmutableSet.of(TaskListener.class);
+            return ImmutableSet.of(Launcher.class, TaskListener.class);
         }
     }
 }
