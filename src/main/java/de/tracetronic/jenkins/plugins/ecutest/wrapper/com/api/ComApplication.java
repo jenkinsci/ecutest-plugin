@@ -108,19 +108,23 @@ public interface ComApplication {
 
     /**
      * Exits the currently running instance of the application (Soft Exit).
+     * The optional timeout parameter was introduced with ECU-TEST 8.0.
      *
+     * @param timeout the timeout in seconds before giving up to wait for application shutdown and raising an exception
      * @return {@code true} if successful
      * @throws ETComException in case of a COM exception
      */
-    boolean quit() throws ETComException;
+    boolean quit(int timeout) throws ETComException;
 
     /**
-     * Exits the currently running instance of the application (Hard Exit). Prefer the method {@link #quit()} instead.
+     * Exits the currently running instance of the application (Hard Exit), prefer {@link #quit(int)} instead.
+     * The optional timeout parameter was introduced with ECU-TEST 8.0.
      *
+     * @param timeout the timeout in seconds before giving up to wait for application shutdown and raising an exception
      * @return {@code true} if successful
      * @throws ETComException in case of a COM exception
      */
-    boolean exit() throws ETComException;
+    boolean exit(int timeout) throws ETComException;
 
     /**
      * Opens an existing package in COM-Application.
