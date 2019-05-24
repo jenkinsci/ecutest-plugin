@@ -392,7 +392,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                     }
                 }
             } catch (final ETComException e) {
-                logger.logComException(e.getMessage());
+                logger.logComException(e);
             }
             return testInfo;
         }

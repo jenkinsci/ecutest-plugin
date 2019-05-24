@@ -75,8 +75,7 @@ public class ExportProjectClient extends AbstractTMSClient {
         boolean isExported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = exportConfig
-                    .getCredentials(project);
+                final StandardUsernamePasswordCredentials credentials = exportConfig.getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isExported = exportProjectToTMS(launcher, listener);
                 }
@@ -103,8 +102,7 @@ public class ExportProjectClient extends AbstractTMSClient {
         boolean isExported = false;
         if (isCompatible(ET_MIN_ATTR_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = exportConfig
-                    .getCredentials(project);
+                final StandardUsernamePasswordCredentials credentials = exportConfig.getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isExported = exportProjectAttributesToTMS(launcher, listener);
                 }
@@ -181,7 +179,7 @@ public class ExportProjectClient extends AbstractTMSClient {
                         exportConfig.getExportPath()));
                 }
             } catch (final ETComException e) {
-                logger.logError("-> Exporting project failed: " + e.getMessage());
+                logger.logComException("-> Exporting project failed", e);
             }
             return isExported;
         }
@@ -222,7 +220,7 @@ public class ExportProjectClient extends AbstractTMSClient {
                     logger.logInfo("-> Project attributes exported successfully.");
                 }
             } catch (final ETComException e) {
-                logger.logError("-> Exporting project attributes failed: " + e.getMessage());
+                logger.logComException("-> Exporting project attributes failed", e);
             }
             return isExported;
         }

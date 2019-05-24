@@ -173,8 +173,7 @@ public class PackageClient extends AbstractTestClient {
                     }
                 }
             } catch (final ETComException e) {
-                logger.logError("-> Opening package failed!");
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException("-> Opening package failed", e);
             }
             return pkgInfo;
         }
@@ -246,7 +245,7 @@ public class PackageClient extends AbstractTestClient {
                 testInfo = getTestInfo(execInfo, isAborted, logger);
                 postExecution(timeout, comClient, logger);
             } catch (final ETComException e) {
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e);
             } catch (final InterruptedException e) {
                 testInfo = abortTestExecution(timeout, progId, logger);
             }
@@ -278,7 +277,8 @@ public class PackageClient extends AbstractTestClient {
         private TestInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
                                            final TTConsoleLogger logger) throws ETComException {
             final String testResult = execInfo.getResult();
-            logger.logInfo(String.format("-> Package execution completed with result: %s", testResult));
+            logger.logInfo(String.format("-> Package execution %s with result: %s",
+                isAborted ? "aborted" : "completed", testResult));
             final String testReportDir = new File(execInfo.getReportDb()).getParentFile().getAbsolutePath();
             logger.logInfo(String.format("-> Test report directory: %s", testReportDir));
             return new TestInfoHolder(testResult, testReportDir, isAborted);
@@ -302,8 +302,8 @@ public class PackageClient extends AbstractTestClient {
                 execInfo.abort();
                 testInfo = getTestInfo(execInfo, true, logger);
                 postExecution(timeout, comClient, logger);
-            } catch (final ETComException exc) {
-                logger.logError("Caught ComException: " + exc.getMessage());
+            } catch (final ETComException e) {
+                logger.logComException(e);
             }
             return testInfo;
         }
@@ -359,7 +359,7 @@ public class PackageClient extends AbstractTestClient {
                     logger.logError("-> Closing package failed!");
                 }
             } catch (final ETComException e) {
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e);
             }
             return isClosed;
         }

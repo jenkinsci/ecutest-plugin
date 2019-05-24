@@ -160,7 +160,7 @@ public class StartETBuilder extends AbstractToolBuilder {
     @Override
     public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
                             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
-        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
+        final List<String> foundProcesses = ETClient.checkProcesses(launcher, listener, false);
         if (isKeepInstance() && !foundProcesses.isEmpty()) {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("Re-using already running ECU-TEST instance...");

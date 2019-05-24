@@ -176,8 +176,7 @@ public class ProjectClient extends AbstractTestClient {
                 }
             } catch (final ETComException e) {
                 isOpened = false;
-                logger.logError("-> Opening project failed!");
-                logger.logComException(e.getMessage());
+                logger.logComException("-> Opening project failed", e);
             }
             return isOpened;
         }
@@ -243,7 +242,7 @@ public class ProjectClient extends AbstractTestClient {
                 testInfo = getTestInfo(execInfo, isAborted, logger);
                 postExecution(timeout, comClient, logger);
             } catch (final ETComException e) {
-                logger.logComException(e.getMessage());
+                logger.logComException(e);
             } catch (final InterruptedException e) {
                 testInfo = abortTestExecution(timeout, progId, logger);
             }
@@ -268,8 +267,8 @@ public class ProjectClient extends AbstractTestClient {
                 execInfo.abort();
                 testInfo = getTestInfo(execInfo, true, logger);
                 postExecution(timeout, comClient, logger);
-            } catch (final ETComException exc) {
-                logger.logError("Caught ComException: " + exc.getMessage());
+            } catch (final ETComException e) {
+                logger.logComException(e);
             }
             return testInfo;
         }
@@ -286,7 +285,8 @@ public class ProjectClient extends AbstractTestClient {
         private TestInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
                                            final TTConsoleLogger logger) throws ETComException {
             final String testResult = execInfo.getResult();
-            logger.logInfo(String.format("-> Project execution completed with result: %s", testResult));
+            logger.logInfo(String.format("-> Project execution %s with result: %s",
+                isAborted ? "aborted" : "completed", testResult));
             final String testReportDir = new File(execInfo.getReportDb()).getParentFile().getAbsolutePath();
             logger.logInfo(String.format("-> Test report directory: %s", testReportDir));
             return new TestInfoHolder(testResult, testReportDir, isAborted);
@@ -343,7 +343,7 @@ public class ProjectClient extends AbstractTestClient {
                     logger.logError("-> Closing project failed!");
                 }
             } catch (final ETComException e) {
-                logger.logComException(e.getMessage());
+                logger.logComException(e);
             }
             return isClosed;
         }

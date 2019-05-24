@@ -161,7 +161,7 @@ public class TraceAnalysisPublisher extends AbstractToolPublisher {
 
         boolean isPublished = false;
         final List<TraceAnalysisReport> reports = new ArrayList<>();
-        if (isETRunning(launcher)) {
+        if (isETRunning(launcher, listener)) {
             reports.addAll(performAnalysis(analysisFiles, run, launcher, listener));
             isPublished = true;
         } else {

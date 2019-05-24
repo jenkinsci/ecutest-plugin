@@ -345,8 +345,9 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException the interrupted exception
      */
-    protected boolean isETRunning(final Launcher launcher) throws IOException, InterruptedException {
-        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
+    protected boolean isETRunning(final Launcher launcher, final TaskListener listener)
+        throws IOException, InterruptedException {
+        final List<String> foundProcesses = ETClient.checkProcesses(launcher, listener, false);
         return !foundProcesses.isEmpty();
     }
 

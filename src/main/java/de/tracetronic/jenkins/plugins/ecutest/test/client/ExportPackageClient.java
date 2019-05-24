@@ -70,8 +70,7 @@ public class ExportPackageClient extends AbstractTMSClient {
         boolean isExported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = exportConfig
-                    .getCredentials(project);
+                final StandardUsernamePasswordCredentials credentials = exportConfig.getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isExported = exportPackageToTMS(launcher, listener);
                 }
@@ -98,8 +97,7 @@ public class ExportPackageClient extends AbstractTMSClient {
         boolean isExported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = exportConfig
-                    .getCredentials(project);
+                final StandardUsernamePasswordCredentials credentials = exportConfig.getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isExported = exportPackageAttributesToTMS(launcher, listener);
                 }
@@ -176,7 +174,7 @@ public class ExportPackageClient extends AbstractTMSClient {
                         exportConfig.getExportPath()));
                 }
             } catch (final ETComException e) {
-                logger.logError("-> Exporting package failed: " + e.getMessage());
+                logger.logComException("-> Exporting package failed", e);
             }
             return isExported;
         }
@@ -217,7 +215,7 @@ public class ExportPackageClient extends AbstractTMSClient {
                     logger.logInfo("-> Package attributes exported successfully.");
                 }
             } catch (final ETComException e) {
-                logger.logError("-> Exporting package attributes failed: " + e.getMessage());
+                logger.logComException("-> Exporting package attributes failed", e);
             }
             return isExported;
         }

@@ -123,7 +123,7 @@ public class TraceAnalysisRunner {
                     reportFiles.add(jobFile.child(execInfo.getReportDb()));
                 }
             } catch (final ETComException | InterruptedException e) {
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e);
             }
             return reportFiles;
         }
@@ -181,7 +181,7 @@ public class TraceAnalysisRunner {
                 isMerged = analysisEnv.mergeJobReports(mainReport.getRemote(), jobFiles);
             } catch (final ETComException e) {
                 isMerged = false;
-                logger.logError("Caught ComException: " + e.getMessage());
+                logger.logComException(e);
             }
             return isMerged;
         }
