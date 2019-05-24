@@ -20,8 +20,11 @@ import hudson.model.Computer;
 import hudson.model.Node;
 import hudson.model.Run;
 import hudson.model.TaskListener;
+import hudson.remoting.Callable;
+import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Builder;
+import jenkins.security.MasterToSlaveCallable;
 import jenkins.tasks.SimpleBuildStep;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundSetter;
@@ -157,8 +160,8 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
      * @throws InterruptedException if the build gets interrupted
      * @throws ETPluginException    if the selected tool installation is not configured
      */
-    protected ETInstallation configureToolInstallation(final Computer computer, final TaskListener listener,
-                                                       final EnvVars envVars)
+    public ETInstallation configureToolInstallation(final Computer computer, final TaskListener listener,
+                                                    final EnvVars envVars)
         throws IOException, InterruptedException, ETPluginException {
         ETInstallation installation = getToolInstallation(envVars);
         if (installation != null && computer != null) {
@@ -171,9 +174,42 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
             throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }
         // Set the COM settings for the current ECU-TEST instance
+        VirtualChannel channel = computer.getChannel();
+        if (channel != null) {
+            channel.call(new SetComPropertyCallable(installation.getProgId(), installation.getTimeout()));
+        }
         ETComProperty.getInstance().setProgId(installation.getProgId());
         ETComProperty.getInstance().setTimeout(installation.getTimeout());
         return installation;
+    }
+
+    /**
+     * {@link Callable} providing remote access to set the current COM properties.
+     */
+    public static final class SetComPropertyCallable extends MasterToSlaveCallable<Void, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final String progId;
+        private final int timeout;
+
+        /**
+         * Instantiates a new {@link SetComPropertyCallable}.
+         *
+         * @param progId  the programmatic identifier
+         * @param timeout the timeout
+         */
+        public SetComPropertyCallable(final String progId, final int timeout) {
+            this.progId = progId;
+            this.timeout = timeout;
+        }
+
+        @Override
+        public Void call() throws IOException {
+            ETComProperty.getInstance().setProgId(progId);
+            ETComProperty.getInstance().setTimeout(timeout);
+            return null;
+        }
     }
 
     /**

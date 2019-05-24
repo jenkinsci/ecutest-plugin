@@ -10,6 +10,7 @@ import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
+import de.tracetronic.jenkins.plugins.ecutest.tool.AbstractToolBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
@@ -26,6 +27,7 @@ import hudson.model.Node;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
+import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Recorder;
 import hudson.tools.ToolInstallation;
@@ -403,6 +405,11 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
             throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }
         // Set the COM settings for the current ECU-TEST instance
+        VirtualChannel channel = computer.getChannel();
+        if (channel != null) {
+            channel.call(new AbstractToolBuilder.SetComPropertyCallable(
+                installation.getProgId(), installation.getTimeout()));
+        }
         ETComProperty.getInstance().setProgId(installation.getProgId());
         ETComProperty.getInstance().setTimeout(installation.getTimeout());
         return installation;
