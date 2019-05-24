@@ -8,6 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
+import de.tracetronic.jenkins.plugins.ecutest.test.AbstractTestHelper;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
@@ -26,6 +27,8 @@ import jenkins.security.MasterToSlaveCallable;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -97,9 +100,9 @@ public class ETClient extends AbstractToolClient {
     /**
      * Closes already opened ECU-TEST instances.
      *
-     * @param kill     specifies whether to task-kill the running processes
      * @param launcher the launcher
      * @param listener the listener
+     * @param kill     specifies whether to task-kill the running processes
      * @return {@code true} if ECU-TEST instance has been stopped successfully
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
@@ -229,12 +232,12 @@ public class ETClient extends AbstractToolClient {
             return false;
         }
 
-        // Read currently loaded configurations
+        // Query additional tool information
+        queryLoadedPatches(launcher, listener, comToolVersion);
+        querySettings(launcher, logger);
         if (comToolVersion.compareWithoutMicroTo(new ToolVersion(7, 0, 0)) >= 0) {
             lastTbc = launcher.getChannel().call(new LastTbcCallable(listener));
             lastTcf = launcher.getChannel().call(new LastTcfCallable(listener));
-            logger.logDebug("Last loaded TBC: " + lastTbc);
-            logger.logDebug("Last loaded TCF: " + lastTcf);
         }
 
         logger.logInfo(String.format("%s started successfully.", getToolName()));
@@ -326,7 +329,6 @@ public class ETClient extends AbstractToolClient {
     public boolean updateUserLibs(Launcher launcher, TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Updating user libraries...");
-
         return launcher.getChannel().call(new UpdateUserLibsCallable(listener));
     }
 
@@ -341,7 +343,66 @@ public class ETClient extends AbstractToolClient {
      */
     public boolean checkConfigStatus(final Launcher launcher, TaskListener listener)
         throws IOException, InterruptedException {
-        return launcher.getChannel().call(new CheckConfigStatus(listener));
+        return launcher.getChannel().call(new CheckConfigStatusCallable(listener));
+    }
+
+    /**
+     * Queries all available workspace settings and logs them as debug messages.
+     *
+     * @param launcher the launcher
+     */
+    private void querySettings(final Launcher launcher, final TTConsoleLogger logger) {
+        if (Boolean.getBoolean("ecutest.debugLog")) {
+            List<String> settings = Arrays.asList(
+                "workspacePath",
+                "settingsPath",
+                "configPath",
+                "packagePath",
+                "reportPath",
+                "templatePath",
+                "generatorPath",
+                "parameterPath",
+                "traceStepPath",
+                "userPyModulesPath",
+                "utilityPath",
+                "offlineModelPath",
+                "offlineSgbdPath",
+                "offlineFiuPath",
+                "logFile",
+                "errorLogFile",
+                "language");
+            logger.logDebug("Workspace settings:");
+            settings.forEach(setting ->
+                {
+                    try {
+                        logger.logDebug(String.format("- %s: %s", setting,
+                            launcher.getChannel().call(new AbstractTestHelper.GetSettingCallable(setting))));
+                    } catch (IOException | InterruptedException e) {
+                        logger.logDebug(String.format("- %s: not available", setting));
+                    }
+                }
+            );
+        }
+    }
+
+    /**
+     * Queries the loaded patches and and logs them as debug messages.
+     *
+     * @param launcher the launcher
+     * @param listener the listener
+     */
+    private void queryLoadedPatches(final Launcher launcher, final TaskListener listener,
+                                    final ToolVersion comToolVersion) {
+        if (Boolean.getBoolean("ecutest.debugLog") &&
+            comToolVersion.compareWithoutMicroTo(new ToolVersion(7, 1, 0)) >= 0) {
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            try {
+                List<String> loadedPatches = launcher.getChannel().call(new GetLoadedPatchesCallable(listener));
+                logger.logDebug("Loaded patches: " + loadedPatches);
+            } catch (IOException | InterruptedException e) {
+                logger.logDebug("Loaded patches: not available");
+            }
+        }
     }
 
     /**
@@ -551,6 +612,7 @@ public class ETClient extends AbstractToolClient {
                  TestBenchConfiguration tbc = (TestBenchConfiguration)
                      comClient.getCurrentTestBenchConfiguration()) {
                 tbcFilePath = StringUtils.trimToEmpty(tbc.getFileName());
+                logger.logDebug("Last loaded TBC: " + tbcFilePath);
             } catch (final ETComException e) {
                 logger.logComException(e);
             }
@@ -584,6 +646,7 @@ public class ETClient extends AbstractToolClient {
             try (ETComClient comClient = new ETComClient(progId);
                  TestConfiguration tcf = (TestConfiguration) comClient.getCurrentTestConfiguration()) {
                 tcfFilePath = StringUtils.trimToEmpty(tcf.getFileName());
+                logger.logDebug("Last loaded TCF: " + tcfFilePath);
             } catch (final ETComException e) {
                 logger.logComException(e);
             }
@@ -653,18 +716,18 @@ public class ETClient extends AbstractToolClient {
     /**
      * {@link Callable} providing remote access to check whether the currently selected configurations are started.
      */
-    private static final class CheckConfigStatus extends MasterToSlaveCallable<Boolean, IOException> {
+    private static final class CheckConfigStatusCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
         private static final long serialVersionUID = 1L;
 
         private final TaskListener listener;
 
         /**
-         * Instantiates a new {@link CheckConfigStatus}.
+         * Instantiates a new {@link CheckConfigStatusCallable}.
          *
          * @param listener the listener
          */
-        CheckConfigStatus(final TaskListener listener) {
+        CheckConfigStatusCallable(final TaskListener listener) {
             this.listener = listener;
         }
 
@@ -685,6 +748,38 @@ public class ETClient extends AbstractToolClient {
                 logger.logComException(e);
             }
             return false;
+        }
+    }
+
+    /**
+     * {@link Callable} providing remote access to get the list of loaded patches.
+     */
+    private static final class GetLoadedPatchesCallable extends MasterToSlaveCallable<List<String>, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final TaskListener listener;
+
+        /**
+         * Instantiates a new {@link GetLoadedPatchesCallable}.
+         *
+         * @param listener the listener
+         */
+        GetLoadedPatchesCallable(final TaskListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public List<String> call() throws IOException {
+            List<String> loadedPatches = new ArrayList<>();
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final String progId = ETComProperty.getInstance().getProgId();
+            try (ETComClient comClient = new ETComClient(progId)) {
+                loadedPatches.addAll(comClient.getLoadedPatches());
+            } catch (final ETComException e) {
+                logger.logComException(e);
+            }
+            return loadedPatches;
         }
     }
 }

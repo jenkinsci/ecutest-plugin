@@ -7,6 +7,8 @@ package de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api;
 
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 
+import java.util.List;
+
 /**
  * Represents the ECU-TEST specific COMApplication API.
  *
@@ -90,6 +92,7 @@ public interface ComApplication {
      * <li>packagePath</li>
      * <li>reportPath</li>
      * <li>templatePath</li>
+     * <li>parameterPath</li>
      * <li>traceStepPath</li>
      * <li>userPyModulesPath</li>
      * <li>utilityPath</li>
@@ -105,6 +108,14 @@ public interface ComApplication {
      * @throws ETComException in case of a COM exception
      */
     String getSetting(String settingName) throws ETComException;
+
+    /**
+     * Queries the list of loaded patches of the COM-Application.
+     *
+     * @return the list of loaded patches
+     * @throws ETComException in case of a COM exception
+     */
+    List<String> getLoadedPatches() throws ETComException;
 
     /**
      * Exits the currently running instance of the application (Soft Exit).

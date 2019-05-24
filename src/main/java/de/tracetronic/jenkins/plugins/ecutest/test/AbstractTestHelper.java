@@ -216,7 +216,7 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * {@link Callable} providing remote access to get a ECU-TEST workspace setting value via COM.
      */
-    private static final class GetSettingCallable extends MasterToSlaveCallable<String, IOException> {
+    public static final class GetSettingCallable extends MasterToSlaveCallable<String, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -227,7 +227,7 @@ public abstract class AbstractTestHelper extends Builder {
          *
          * @param settingName the setting name to request
          */
-        GetSettingCallable(final String settingName) {
+        public GetSettingCallable(final String settingName) {
             this.settingName = settingName;
         }
 

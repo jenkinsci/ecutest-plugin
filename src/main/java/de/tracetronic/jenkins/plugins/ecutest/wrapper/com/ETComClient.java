@@ -9,6 +9,7 @@ import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
 import com.jacob.com.JacobException;
+import com.jacob.com.SafeArray;
 import com.jacob.com.Variant;
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComAnalysisEnvironment;
@@ -24,6 +25,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -295,6 +298,12 @@ public class ETComClient implements ComApplication, AutoCloseable {
     @Override
     public String getSetting(final String settingName) throws ETComException {
         return dispatch.performRequest("GetSetting", new Variant(settingName)).getString();
+    }
+
+    @Override
+    public List<String> getLoadedPatches() throws ETComException {
+        final SafeArray array = dispatch.performRequest("GetLoadedPatches").toSafeArray();
+        return Arrays.asList(array.toStringArray());
     }
 
     /**
