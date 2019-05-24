@@ -214,16 +214,16 @@ public class ETClient extends AbstractToolClient {
 
         // Check ECU-TEST version
         final ToolVersion comToolVersion = ToolVersion.parse(comVersion);
-        if (comToolVersion.compareWithoutMicroTo(ETPlugin.ET_MAX_VERSION) > 0) {
+        if (comToolVersion.compareWithoutMicroTo(ETPlugin.ET_MAX_VERSION) > 0 ||
+            comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
             logger.logWarn(String.format(
                 "The configured ECU-TEST version %s might be incompatible with this plugin. "
                     + "Currently supported versions: %s up to %s", comVersion,
                 ETPlugin.ET_MIN_VERSION.toMinorString(), ETPlugin.ET_MAX_VERSION.toMinorString()));
-        } else if (comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
+        } else if (comToolVersion.compareTo(new ToolVersion(6, 3, 0)) < 0) {
             logger.logError(String.format(
                 "The configured ECU-TEST version %s is not compatible with this plugin. "
                     + "Please use at least ECU-TEST %s!", comVersion, ETPlugin.ET_MIN_VERSION.toMicroString()));
-            // Close ECU-TEST
             stop(checkProcesses, workspace, launcher, listener);
             return false;
         }
