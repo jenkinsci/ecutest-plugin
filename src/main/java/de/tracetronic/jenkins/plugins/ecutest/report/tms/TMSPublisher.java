@@ -117,7 +117,7 @@ public class TMSPublisher extends AbstractToolPublisher {
         }
 
         boolean isPublished = false;
-        if (isETRunning(launcher)) {
+        if (isETRunning(launcher, listener)) {
             isPublished = publishReports(reportFiles, run.getParent(), workspace, launcher, listener);
         } else {
             final ETClient etClient = getToolClient(run, workspace, launcher, listener);

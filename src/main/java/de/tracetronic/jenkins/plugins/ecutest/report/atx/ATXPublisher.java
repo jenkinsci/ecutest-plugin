@@ -110,7 +110,7 @@ public class ATXPublisher extends AbstractReportPublisher {
         }
 
         boolean isPublished = false;
-        if (isETRunning(launcher)) {
+        if (isETRunning(launcher, listener)) {
             isPublished = publishReports(atxInstallation, run, workspace, launcher, listener);
         } else {
             final String toolName = atxInstallation.getToolName();

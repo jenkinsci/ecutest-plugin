@@ -21,8 +21,10 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestConfigurati
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestManagement;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.logging.Logger;
 
 /**
  * COM client to initialize a COM connection and to perform requests on application specific COM API.
@@ -33,6 +35,8 @@ import java.lang.Thread.UncaughtExceptionHandler;
  * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETComClient implements ComApplication, AutoCloseable {
+
+    public static final Logger LOGGER = Logger.getLogger(ETComClient.class.getName());
 
     /**
      * The COMApplication dispatch.
@@ -106,8 +110,8 @@ public class ETComClient implements ComApplication, AutoCloseable {
      * @throws ETComException in case of a COM exception
      */
     private void initDispatch(final String progId) throws ETComException {
-        final ETComProperty properties = ETComProperty.getInstance();
-        final int timeout = properties.getTimeout();
+        final int timeout = ETComProperty.getInstance().getTimeout();
+        LOGGER.fine(String.format("Initializing COM dispatch on %s with timeout of %s seconds...", progId, timeout));
         if (timeout == 0) {
             useTimeout = false;
             initSTA(progId);
@@ -176,6 +180,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
      * @throws ETComException in case of a COM exception or if the timeout is reached
      */
     private void waitForConnection(final int timeout) throws ETComException {
+        LOGGER.fine(String.format("Waiting for COM connection with timeout of %s seconds...", timeout));
         final long endTimeMillis = System.currentTimeMillis() + (long) timeout * 1000L;
         while (timeout <= 0 || System.currentTimeMillis() < endTimeMillis) {
             try {
@@ -203,6 +208,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     @Override
     public void close() {
+        LOGGER.fine("Closing COM connection...");
         if (useTimeout) {
             releaseDispatch = true;
             ComThread.quitMainSTA();
@@ -220,6 +226,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
     @SuppressWarnings("checkstyle:superfinalize")
     @Override
     protected void finalize() throws Throwable {
+        LOGGER.fine("Finalizing COM connection...");
         if (!useTimeout) {
             try {
                 releaseDispatch();
@@ -446,7 +453,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
                     sleep(100L);
                 }
             } catch (final InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.fine(ExceptionUtils.getFullStackTrace(e));
             } finally {
                 if (component != null) {
                     component.safeRelease();

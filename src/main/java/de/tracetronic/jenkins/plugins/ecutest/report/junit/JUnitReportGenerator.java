@@ -50,7 +50,7 @@ public class JUnitReportGenerator {
                             final TaskListener listener) throws IOException, InterruptedException {
         boolean isGenerated = false;
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
-        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
+        final List<String> foundProcesses = ETClient.checkProcesses(launcher, listener, false);
         final boolean isETRunning = !foundProcesses.isEmpty();
 
         // Start ECU-TEST if necessary and generate the UNIT reports
@@ -163,7 +163,7 @@ public class JUnitReportGenerator {
                 }
             } catch (final ETComException e) {
                 isGenerated = false;
-                logger.logComException(e.getMessage());
+                logger.logComException(e);
             }
             return isGenerated;
         }

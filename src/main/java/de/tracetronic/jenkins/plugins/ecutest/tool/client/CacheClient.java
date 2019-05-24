@@ -108,7 +108,7 @@ public class CacheClient {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Check for running ECU-TEST instance
-        if (!checkETInstance(launcher)) {
+        if (!checkETInstance(launcher, listener)) {
             logger.logError("No running ECU-TEST instance found, please configure one at first!");
             return false;
         }
@@ -130,8 +130,9 @@ public class CacheClient {
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
-    private static boolean checkETInstance(final Launcher launcher) throws IOException, InterruptedException {
-        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
+    private static boolean checkETInstance(final Launcher launcher, final TaskListener listener)
+        throws IOException, InterruptedException {
+        final List<String> foundProcesses = ETClient.checkProcesses(launcher, listener, false);
         return !foundProcesses.isEmpty();
     }
 
@@ -174,7 +175,7 @@ public class CacheClient {
                 List<String> files = cache.getFiles();
                 logger.logInfo(String.format("-> Available %s cache files: %s", cacheType, files.toString()));
             } catch (final ETComException e) {
-                logger.logError("-> Caught COM exception: " + e.getMessage());
+                logger.logComException(e);
                 return false;
             }
             return true;
@@ -222,7 +223,7 @@ public class CacheClient {
             } catch (final ETComException e) {
                 logger.logError(String.format("The cache module is not available in running ECU-TEST instance! "
                     + "Please use at least ECU-TEST %s!", minVersion.toMicroString()));
-                logger.logComException(e.getMessage());
+                logger.logComException(e);
             }
             return isAvailable;
         }

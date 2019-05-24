@@ -83,14 +83,15 @@ public class ETClient extends AbstractToolClient {
      * Checks already opened ECU-TEST instances.
      *
      * @param launcher the launcher
+     * @param listener the listener
      * @param kill     specifies whether to task-kill the running processes
      * @return list of found processes, can be empty but never {@code null}
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
-    public static List<String> checkProcesses(final Launcher launcher, final boolean kill)
+    public static List<String> checkProcesses(final Launcher launcher, final TaskListener listener, final boolean kill)
         throws IOException, InterruptedException {
-        return launcher.getChannel().call(new CheckProcessCallable(kill));
+        return launcher.getChannel().call(new CheckProcessCallable(kill, listener));
     }
 
     /**
@@ -173,7 +174,7 @@ public class ETClient extends AbstractToolClient {
 
         // Check open processes
         if (checkProcesses) {
-            final List<String> foundProcesses = checkProcesses(launcher, true);
+            final List<String> foundProcesses = checkProcesses(launcher, listener, true);
             if (!foundProcesses.isEmpty()) {
                 logger.logInfo(String.format("Terminated running processes: %s", foundProcesses));
             }
@@ -204,7 +205,7 @@ public class ETClient extends AbstractToolClient {
         }
         final String comVersion = launcher.getChannel().call(new StartCallable(getTimeout(), listener));
         if (comVersion.isEmpty()) {
-            logger.logError("Could not determine ECU-TEST version!");
+            logger.logError("Could not determine ECU-TEST COM version!");
             return false;
         } else {
             version = comVersion;
@@ -232,6 +233,8 @@ public class ETClient extends AbstractToolClient {
         if (comToolVersion.compareWithoutMicroTo(new ToolVersion(7, 0, 0)) >= 0) {
             lastTbc = launcher.getChannel().call(new LastTbcCallable(listener));
             lastTcf = launcher.getChannel().call(new LastTcfCallable(listener));
+            logger.logDebug("Last loaded TBC: " + lastTbc);
+            logger.logDebug("Last loaded TCF: " + lastTcf);
         }
 
         logger.logInfo(String.format("%s started successfully.", getToolName()));
@@ -246,7 +249,7 @@ public class ETClient extends AbstractToolClient {
 
         // Check open processes
         if (checkProcesses) {
-            final List<String> foundProcesses = checkProcesses(launcher, false);
+            final List<String> foundProcesses = checkProcesses(launcher, listener, false);
             if (foundProcesses.isEmpty()) {
                 logger.logWarn("No running ECU-TEST instance found!");
                 return true;
@@ -372,7 +375,7 @@ public class ETClient extends AbstractToolClient {
                     version = comClient.getVersion();
                 }
             } catch (final ETComException e) {
-                logger.logComException(e.getMessage());
+                logger.logComException(e);
             }
             return version;
         }
@@ -414,7 +417,7 @@ public class ETClient extends AbstractToolClient {
                     logger.logError("ECU-TEST COM instance is not ready to use!");
                 }
             } catch (final ETComException e) {
-                logger.logComException(e.getMessage());
+                logger.logComException(e);
             } finally {
                 if (checkProcesses) {
                     final List<String> foundProcesses = ProcessUtil.checkETProcesses(true);
@@ -437,7 +440,7 @@ public class ETClient extends AbstractToolClient {
             try (ETComClient comClient = new ETComClient(progId, timeout)) {
                 isTerminated = comClient.quit(timeout);
             } catch (ETComException e) {
-                logger.logDebug(e.getMessage());
+                logger.logStackTrace(e);
             }
             return isTerminated;
         }
@@ -452,7 +455,7 @@ public class ETClient extends AbstractToolClient {
             try (ETComClient comClient = new ETComClient(progId, timeout)) {
                 isTerminated = comClient.exit(timeout);
             } catch (ETComException e) {
-                logger.logDebug(e.getMessage());
+                logger.logStackTrace(e);
             }
             return isTerminated;
         }
@@ -466,19 +469,25 @@ public class ETClient extends AbstractToolClient {
         private static final long serialVersionUID = 1L;
 
         private final boolean kill;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link CheckProcessCallable}.
          *
-         * @param kill specifies whether to task-kill running processes
+         * @param kill     specifies whether to task-kill running processes
+         * @param listener the listener
          */
-        CheckProcessCallable(final boolean kill) {
+        CheckProcessCallable(final boolean kill, final TaskListener listener) {
             this.kill = kill;
+            this.listener = listener;
         }
 
         @Override
         public List<String> call() throws IOException {
-            return ProcessUtil.checkETProcesses(kill);
+            final List<String> procs = ProcessUtil.checkETProcesses(kill);
+            TTConsoleLogger logger = new TTConsoleLogger(listener);
+            logger.logDebug("Found open processes: " + procs);
+            return procs;
         }
     }
 
@@ -509,7 +518,7 @@ public class ETClient extends AbstractToolClient {
                 String comVersion = comClient.getVersion();
                 toolVersion = ToolVersion.parse(comVersion);
             } catch (final ETComException e) {
-                logger.logError("-> Caught COM exception: " + e.getMessage());
+                logger.logComException(e);
             }
             return toolVersion;
         }
@@ -543,7 +552,7 @@ public class ETClient extends AbstractToolClient {
                      comClient.getCurrentTestBenchConfiguration()) {
                 tbcFilePath = StringUtils.trimToEmpty(tbc.getFileName());
             } catch (final ETComException e) {
-                logger.logError("-> Caught COM exception: " + e.getMessage());
+                logger.logComException(e);
             }
             return tbcFilePath;
         }
@@ -576,7 +585,7 @@ public class ETClient extends AbstractToolClient {
                  TestConfiguration tcf = (TestConfiguration) comClient.getCurrentTestConfiguration()) {
                 tcfFilePath = StringUtils.trimToEmpty(tcf.getFileName());
             } catch (final ETComException e) {
-                logger.logError("-> Caught COM exception: " + e.getMessage());
+                logger.logComException(e);
             }
             return tcfFilePath;
         }
@@ -635,7 +644,7 @@ public class ETClient extends AbstractToolClient {
             try (ETComClient comClient = new ETComClient(progId)) {
                 return comClient.updateUserLibraries();
             } catch (final ETComException e) {
-                logger.logError("-> Caught COM exception: " + e.getMessage());
+                logger.logComException(e);
             }
             return false;
         }
@@ -673,7 +682,7 @@ public class ETClient extends AbstractToolClient {
                         "Please use at least ECU-TEST 8.0!");
                 }
             } catch (final ETComException e) {
-                logger.logError("-> Caught COM exception: " + e.getMessage());
+                logger.logComException(e);
             }
             return false;
         }

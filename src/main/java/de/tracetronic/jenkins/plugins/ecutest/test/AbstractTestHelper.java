@@ -64,9 +64,9 @@ public abstract class AbstractTestHelper extends Builder {
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
-    protected boolean checkETInstance(final Launcher launcher, final boolean kill) throws IOException,
-        InterruptedException {
-        final List<String> foundProcesses = ETClient.checkProcesses(launcher, kill);
+    protected boolean checkETInstance(final Launcher launcher, final TaskListener listener, final boolean kill)
+        throws IOException, InterruptedException {
+        final List<String> foundProcesses = ETClient.checkProcesses(launcher, listener, kill);
         return !foundProcesses.isEmpty();
     }
 
@@ -82,7 +82,7 @@ public abstract class AbstractTestHelper extends Builder {
      */
     protected boolean closeETInstance(final Launcher launcher, final TaskListener listener) throws IOException,
         InterruptedException {
-        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
+        final List<String> foundProcesses = ETClient.checkProcesses(launcher, listener, false);
         if (foundProcesses.isEmpty()) {
             return false;
         }

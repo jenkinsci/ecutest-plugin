@@ -7,6 +7,7 @@ package de.tracetronic.jenkins.plugins.ecutest.log;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
@@ -14,7 +15,6 @@ import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import org.junit.Test;
 import org.jvnet.hudson.test.TestBuilder;
-import org.xml.sax.SAXException;
 
 import java.io.IOException;
 
@@ -117,7 +117,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
                                    final BuildListener listener) throws InterruptedException, IOException {
                 final TTConsoleLogger logger = new TTConsoleLogger(listener);
-                logger.logComException("TTConsoleLogger");
+                logger.logComException(new ETComException("TTConsoleLogger"));
                 return true;
             }
         });

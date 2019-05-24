@@ -132,7 +132,7 @@ public class TMSReportUploader extends AbstractTMSClient {
                 }
             } catch (final ETComException e) {
                 isUploaded = false;
-                logger.logComException(e.getMessage());
+                logger.logComException(e);
             }
             return isUploaded;
         }

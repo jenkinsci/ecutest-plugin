@@ -6,6 +6,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.log;
 
 import hudson.model.TaskListener;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -78,16 +79,28 @@ public class TTConsoleLogger {
     }
 
     /**
-     * Logs error message caused by COM exception.
+     * Logs error message caused by COM exception and prints stacktrace for debugging purposes.
      *
-     * @param message the message to log
+     * @param exception the exception
      */
-    public void logComException(final String message) {
+    public void logComException(final Exception exception) {
         logError(String
             .format("Caught ComException: %s%n"
                     + "For further information see FAQ: "
                     + "https://wiki.jenkins-ci.org/x/joLtB#TraceTronicECU-TESTPlugin-FAQ",
-                message));
+                exception.getMessage()));
+        logStackTrace(exception);
+    }
+
+    /**
+     * Logs custom error message with caused COM exception and prints stacktrace for debugging purposes.
+     *
+     * @param exception the exception
+     * @param message   the error message
+     */
+    public void logComException(final String message, final Exception exception) {
+        logError(String.format("%s: %s", message, exception.getMessage()));
+        logStackTrace(exception);
     }
 
     /**
@@ -101,6 +114,15 @@ public class TTConsoleLogger {
         if (Boolean.getBoolean("ecutest.debugLog")) {
             logAnnot("[TT] DEBUG: ", message);
         }
+    }
+
+    /**
+     * Logs an exception stacktrace as debug message.
+     *
+     * @param exception the exception
+     */
+    public void logStackTrace(final Exception exception) {
+        logDebug(ExceptionUtils.getFullStackTrace(exception));
     }
 
     /**
