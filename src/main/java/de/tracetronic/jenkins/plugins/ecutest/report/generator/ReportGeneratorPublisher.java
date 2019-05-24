@@ -121,7 +121,7 @@ public class ReportGeneratorPublisher extends AbstractToolPublisher {
         }
 
         final List<GeneratorReport> reports = new ArrayList<>();
-        if (isETRunning(launcher)) {
+        if (isETRunning(launcher, listener)) {
             reports.addAll(generateReports(reportFiles, run, workspace, launcher, listener));
         } else {
             final ETClient etClient = getToolClient(run, workspace, launcher, listener);

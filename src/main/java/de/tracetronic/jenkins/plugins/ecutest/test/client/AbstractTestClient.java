@@ -175,17 +175,19 @@ public abstract class AbstractTestClient implements TestClient {
 
         @Override
         public Boolean call() throws IOException {
+            boolean isLoaded = false;
             final String tbcFile = testConfig.getTbcFile();
             final String tcfFile = testConfig.getTcfFile();
             final List<GlobalConstant> constants = testConfig.getConstants();
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            boolean isLoaded = false;
 
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final String tbcName = getConfigName(tbcFile);
                 final String tcfName = getConfigName(tcfFile);
                 logger.logInfo(String.format("- Loading configurations: TBC=%s TCF=%s", tbcName, tcfName));
+                logger.logDebug(String.format("TBC=%s", tbcFile));
+                logger.logDebug(String.format("TCF=%s", tcfFile));
                 if (testConfig.isForceReload()) {
                     logger.logInfo("-> Forcing reload configurations...");
                     comClient.stop();
@@ -216,7 +218,7 @@ public abstract class AbstractTestClient implements TestClient {
                     }
                 }
             } catch (final ETComException e) {
-                logger.logComException(e.getMessage());
+                logger.logComException(e);
                 isLoaded = false;
             }
             return isLoaded;

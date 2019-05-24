@@ -71,8 +71,7 @@ public class ImportPackageClient extends AbstractTMSClient {
         boolean isImported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = importConfig
-                    .getCredentials(project);
+                final StandardUsernamePasswordCredentials credentials = importConfig.getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     if (importConfig instanceof ImportPackageDirConfig) {
                         isImported = importPackageDirFromTMS(launcher, listener);
@@ -103,8 +102,7 @@ public class ImportPackageClient extends AbstractTMSClient {
         boolean isImported = false;
         if (isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = importConfig
-                    .getCredentials(project);
+                final StandardUsernamePasswordCredentials credentials = importConfig.getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isImported = importPackageAttributesFromTMS(launcher, listener);
                 }
@@ -196,7 +194,7 @@ public class ImportPackageClient extends AbstractTMSClient {
                         importConfig.getImportPath()));
                 }
             } catch (final ETComException e) {
-                logger.logError("-> Importing package failed: " + e.getMessage());
+                logger.logComException("-> Importing package failed", e);
             }
             return isImported;
         }
@@ -232,12 +230,13 @@ public class ImportPackageClient extends AbstractTMSClient {
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
-                isImported = tm.importPackageDirectory(importConfig.getTmsPath(), importConfig.getImportPath(),
-                    importConfig.getParsedTimeout());
-                logger.logInfo(String.format("-> Package directory imported successfully to target directory %s.",
-                    importConfig.getImportPath()));
+                if (isImported = tm.importPackageDirectory(importConfig.getTmsPath(), importConfig.getImportPath(),
+                    importConfig.getParsedTimeout())) {
+                    logger.logInfo(String.format("-> Package directory imported successfully to target directory %s.",
+                        importConfig.getImportPath()));
+                }
             } catch (final ETComException e) {
-                logger.logError("-> Importing package directory failed: " + e.getMessage());
+                logger.logComException("-> Importing package directory failed", e);
             }
             return isImported;
         }
@@ -273,10 +272,12 @@ public class ImportPackageClient extends AbstractTMSClient {
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
-                isImported = tm.importPackageAttributes(importConfig.getFilePath(), importConfig.getParsedTimeout());
-                logger.logInfo("-> Package attributes imported successfully.");
+                if (isImported = tm.importPackageAttributes(importConfig.getFilePath(),
+                    importConfig.getParsedTimeout())) {
+                    logger.logInfo("-> Package attributes imported successfully.");
+                }
             } catch (final ETComException e) {
-                logger.logError("-> Importing package attributes failed: " + e.getMessage());
+                logger.logComException("-> Importing package attributes failed", e);
             }
             return isImported;
         }

@@ -80,8 +80,7 @@ public class ImportProjectClient extends AbstractTMSClient {
         } else if (importConfig instanceof ImportProjectConfig
             && isCompatible(ET_MIN_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = importConfig
-                    .getCredentials(project);
+                final StandardUsernamePasswordCredentials credentials = importConfig.getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     if (importConfig instanceof ImportProjectDirConfig) {
                         isImported = importProjectDirFromTMS(launcher, listener);
@@ -112,8 +111,7 @@ public class ImportProjectClient extends AbstractTMSClient {
         boolean isImported = false;
         if (isCompatible(ET_MIN_ATTR_VERSION, workspace, launcher, listener)) {
             try {
-                final StandardUsernamePasswordCredentials credentials = importConfig
-                    .getCredentials(project);
+                final StandardUsernamePasswordCredentials credentials = importConfig.getCredentials(project);
                 if (login(credentials, launcher, listener)) {
                     isImported = importProjectAttributesFromTMS(launcher, listener);
                 }
@@ -218,7 +216,7 @@ public class ImportProjectClient extends AbstractTMSClient {
                         importConfig.getImportPath()));
                 }
             } catch (final ETComException e) {
-                logger.logError("-> Importing project failed: " + e.getMessage());
+                logger.logComException("-> Importing project failed", e);
             }
             return isImported;
         }
@@ -260,7 +258,7 @@ public class ImportProjectClient extends AbstractTMSClient {
                         importConfig.getImportPath()));
                 }
             } catch (final ETComException e) {
-                logger.logError("-> Importing project failed: " + e.getMessage());
+                logger.logComException("-> Importing project failed", e);
             }
             return isImported;
         }
@@ -296,12 +294,13 @@ public class ImportProjectClient extends AbstractTMSClient {
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
-                isImported = tm.importProjectDirectory(importConfig.getTmsPath(), importConfig.getImportPath(),
-                    importConfig.getParsedTimeout());
-                logger.logInfo(String.format("-> Project directory imported successfully to target directory %s.",
-                    importConfig.getImportPath()));
+                if (isImported = tm.importProjectDirectory(importConfig.getTmsPath(), importConfig.getImportPath(),
+                    importConfig.getParsedTimeout())) {
+                    logger.logInfo(String.format("-> Project directory imported successfully to target directory %s.",
+                        importConfig.getImportPath()));
+                }
             } catch (final ETComException e) {
-                logger.logError("-> Importing project directory failed: " + e.getMessage());
+                logger.logComException("-> Importing project directory failed", e);
             }
             return isImported;
         }
@@ -337,10 +336,12 @@ public class ImportProjectClient extends AbstractTMSClient {
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
-                isImported = tm.importProjectAttributes(importConfig.getFilePath(), importConfig.getParsedTimeout());
-                logger.logInfo("-> Project attributes imported successfully.");
+                if (isImported = tm.importProjectAttributes(importConfig.getFilePath(),
+                    importConfig.getParsedTimeout())) {
+                    logger.logInfo("-> Project attributes imported successfully.");
+                }
             } catch (final ETComException e) {
-                logger.logError("-> Importing project attributes failed: " + e.getMessage());
+                logger.logComException("-> Importing project attributes failed", e);
             }
             return isImported;
         }

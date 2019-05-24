@@ -237,7 +237,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
                 }
             } catch (final ETComException e) {
                 isGenerated = false;
-                logger.logComException(e.getMessage());
+                logger.logComException(e);
             }
             return isGenerated;
         }

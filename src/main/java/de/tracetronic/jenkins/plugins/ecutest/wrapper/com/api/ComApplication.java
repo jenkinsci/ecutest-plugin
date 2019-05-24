@@ -7,6 +7,8 @@ package de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api;
 
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 
+import java.util.List;
+
 /**
  * Represents the ECU-TEST specific COMApplication API.
  *
@@ -90,6 +92,7 @@ public interface ComApplication {
      * <li>packagePath</li>
      * <li>reportPath</li>
      * <li>templatePath</li>
+     * <li>parameterPath</li>
      * <li>traceStepPath</li>
      * <li>userPyModulesPath</li>
      * <li>utilityPath</li>
@@ -107,20 +110,32 @@ public interface ComApplication {
     String getSetting(String settingName) throws ETComException;
 
     /**
-     * Exits the currently running instance of the application (Soft Exit).
+     * Queries the list of loaded patches of the COM-Application.
      *
-     * @return {@code true} if successful
+     * @return the list of loaded patches
      * @throws ETComException in case of a COM exception
      */
-    boolean quit() throws ETComException;
+    List<String> getLoadedPatches() throws ETComException;
 
     /**
-     * Exits the currently running instance of the application (Hard Exit). Prefer the method {@link #quit()} instead.
+     * Exits the currently running instance of the application (Soft Exit).
+     * The optional timeout parameter was introduced with ECU-TEST 8.0.
      *
+     * @param timeout the timeout in seconds before giving up to wait for application shutdown and raising an exception
      * @return {@code true} if successful
      * @throws ETComException in case of a COM exception
      */
-    boolean exit() throws ETComException;
+    boolean quit(int timeout) throws ETComException;
+
+    /**
+     * Exits the currently running instance of the application (Hard Exit), prefer {@link #quit(int)} instead.
+     * The optional timeout parameter was introduced with ECU-TEST 8.0.
+     *
+     * @param timeout the timeout in seconds before giving up to wait for application shutdown and raising an exception
+     * @return {@code true} if successful
+     * @throws ETComException in case of a COM exception
+     */
+    boolean exit(int timeout) throws ETComException;
 
     /**
      * Opens an existing package in COM-Application.

@@ -145,7 +145,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Check for running ECU-TEST instance
-        if (!checkETInstance(launcher, false)) {
+        if (!checkETInstance(launcher, listener, false)) {
             logger.logError("No running ECU-TEST instance found, please configure one at first!");
             return false;
         }

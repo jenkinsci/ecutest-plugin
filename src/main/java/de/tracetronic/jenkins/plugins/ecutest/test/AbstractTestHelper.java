@@ -64,9 +64,9 @@ public abstract class AbstractTestHelper extends Builder {
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
-    protected boolean checkETInstance(final Launcher launcher, final boolean kill) throws IOException,
-        InterruptedException {
-        final List<String> foundProcesses = ETClient.checkProcesses(launcher, kill);
+    protected boolean checkETInstance(final Launcher launcher, final TaskListener listener, final boolean kill)
+        throws IOException, InterruptedException {
+        final List<String> foundProcesses = ETClient.checkProcesses(launcher, listener, kill);
         return !foundProcesses.isEmpty();
     }
 
@@ -82,7 +82,7 @@ public abstract class AbstractTestHelper extends Builder {
      */
     protected boolean closeETInstance(final Launcher launcher, final TaskListener listener) throws IOException,
         InterruptedException {
-        final List<String> foundProcesses = ETClient.checkProcesses(launcher, false);
+        final List<String> foundProcesses = ETClient.checkProcesses(launcher, listener, false);
         if (foundProcesses.isEmpty()) {
             return false;
         }
@@ -216,7 +216,7 @@ public abstract class AbstractTestHelper extends Builder {
     /**
      * {@link Callable} providing remote access to get a ECU-TEST workspace setting value via COM.
      */
-    private static final class GetSettingCallable extends MasterToSlaveCallable<String, IOException> {
+    public static final class GetSettingCallable extends MasterToSlaveCallable<String, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -227,7 +227,7 @@ public abstract class AbstractTestHelper extends Builder {
          *
          * @param settingName the setting name to request
          */
-        GetSettingCallable(final String settingName) {
+        public GetSettingCallable(final String settingName) {
             this.settingName = settingName;
         }
 

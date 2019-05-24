@@ -106,9 +106,9 @@ public abstract class AbstractTMSClient {
         public Boolean call() throws IOException {
             boolean isAvailable = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            final String progId = ETComProperty.getInstance().getProgId();
 
             // Check ECU-TEST version and TMS module
+            final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final String comVersion = comClient.getVersion();
                 final ToolVersion comToolVersion = ToolVersion.parse(comVersion);
@@ -122,7 +122,7 @@ public abstract class AbstractTMSClient {
             } catch (final ETComException e) {
                 logger.logError("The test management module is not available in running ECU-TEST instance! "
                     + "Enable it by setting the feature flag 'TEST-MANAGEMENT-SERVICE'.");
-                logger.logComException(e.getMessage());
+                logger.logComException(e);
             }
             return isAvailable;
         }
@@ -167,7 +167,7 @@ public abstract class AbstractTMSClient {
                         logger.logError("-> Login failed due to invalid credentials!");
                     }
                 } catch (final ETComException e) {
-                    logger.logError("-> Login failed: " + e.getMessage());
+                    logger.logComException("-> Login failed", e);
                 }
             }
             return isLogin;
@@ -206,7 +206,7 @@ public abstract class AbstractTMSClient {
                     logger.logError("-> Logout failed!");
                 }
             } catch (final ETComException e) {
-                logger.logError("-> Logout failed: " + e.getMessage());
+                logger.logComException("-> Logout failed", e);
             }
             return isLogout;
         }

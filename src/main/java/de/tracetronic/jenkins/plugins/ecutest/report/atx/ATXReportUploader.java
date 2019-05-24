@@ -385,16 +385,14 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                         comClient.waitForIdle(0);
 
                         final FilePath successFile = outDir.child(SUCCESS_FILE_NAME);
-                        if (testInfo == null) {
-                            testInfo = checkSuccessLog(successFile, uploadFile, logger);
-                        }
+                        testInfo = checkSuccessLog(successFile, uploadFile, logger);
 
                         final FilePath errorFile = outDir.child(ERROR_FILE_NAME);
                         checkErrorLog(errorFile, logger);
                     }
                 }
             } catch (final ETComException e) {
-                logger.logComException(e.getMessage());
+                logger.logComException(e);
             }
             return testInfo;
         }
