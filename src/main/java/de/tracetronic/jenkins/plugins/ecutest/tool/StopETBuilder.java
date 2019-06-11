@@ -55,11 +55,13 @@ public class StopETBuilder extends AbstractToolBuilder {
     public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
                             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         // Get selected ECU-TEST installation
-        final ETInstallation installation = configureToolInstallation(workspace.toComputer(), listener,
-            run.getEnvironment(listener));
+        if (getInstallation() == null) {
+            setInstallation(configureToolInstallation(workspace.toComputer(), listener,
+                run.getEnvironment(listener)));
+        }
 
         // Stop selected ECU-TEST
-        final String toolName = run.getEnvironment(listener).expand(installation.getName());
+        final String toolName = run.getEnvironment(listener).expand(getInstallation().getName());
         final EnvVars buildEnvVars = run.getEnvironment(listener);
         final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
             String.valueOf(DEFAULT_TIMEOUT)));
