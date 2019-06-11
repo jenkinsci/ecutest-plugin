@@ -86,12 +86,12 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final List<ReportGeneratorSetting> settings = new ArrayList<ReportGeneratorSetting>();
+        final List<ReportGeneratorSetting> settings = new ArrayList<>();
         settings.add(new ReportGeneratorSetting("name", "value"));
-        final List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
-        generators.add(new ReportGeneratorConfig("HTML", settings));
-        final List<ReportGeneratorConfig> customGenerators = new ArrayList<ReportGeneratorConfig>();
-        customGenerators.add(new ReportGeneratorConfig("Custom", settings));
+        final List<ReportGeneratorConfig> generators = new ArrayList<>();
+        generators.add(new ReportGeneratorConfig("HTML", settings, true));
+        final List<ReportGeneratorConfig> customGenerators = new ArrayList<>();
+        customGenerators.add(new ReportGeneratorConfig("Custom", settings, false));
         final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
         publisher.setGenerators(generators);
         publisher.setCustomGenerators(customGenerators);
@@ -106,6 +106,7 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
         jenkins.assertXPath(page, "//select[@name='toolName']");
         jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
         jenkins.assertXPath(page, "//select[@name='_.name' and @value='HTML']");
+        jenkins.assertXPath(page, "//input[@name='_.usePersistedSettings' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.name' and @value='Custom']");
         jenkins.assertXPath(page, "//input[@name='_.name' and @value='name']");
         jenkins.assertXPath(page, "//input[@name='_.value' and @value='value']");

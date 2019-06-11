@@ -152,12 +152,14 @@ public class ReportPublisherDslExtensionIT extends AbstractDslExtensionIT {
     private void testGeneratorConfigWithDsl(final List<ReportGeneratorConfig> list) throws Exception {
         assertThat("Generator should exist", list, hasSize(1));
         assertThat(list.get(0).getName(), is("HTML"));
+        assertThat(list.get(0).isUsePersistedSettings(), is(true));
         testGeneratorSettingsWithDsl(list.get(0).getSettings());
     }
 
     private void testCustomGeneratorConfigWithDsl(final List<ReportGeneratorConfig> list) throws Exception {
         assertThat("Custom generator should exist", list, hasSize(1));
         assertThat(list.get(0).getName(), is("Custom"));
+        assertThat(list.get(0).isUsePersistedSettings(), is(false));
         testGeneratorSettingsWithDsl(list.get(0).getSettings());
     }
 
