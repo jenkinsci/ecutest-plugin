@@ -331,7 +331,7 @@ public class TraceAnalysisPublisher extends AbstractToolPublisher {
         final Map<FilePath, List<FilePath>> analysisFiles = new LinkedHashMap<>();
         final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
         for (final FilePath reportDir : reportDirs) {
-            final List<FilePath> jobFiles = Arrays.asList(reportDir.list("**/Job_*.ajob"));
+            final List<FilePath> jobFiles = Arrays.asList(reportDir.list("**/*.ajob"));
             Collections.reverse(jobFiles);
             analysisFiles.put(reportDir, jobFiles);
         }
