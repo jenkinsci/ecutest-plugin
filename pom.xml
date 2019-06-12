@@ -90,7 +90,7 @@
         <jquery-plugin.version>1.12.4-0</jquery-plugin.version>
 
         <!-- Static code analysis -->
-        <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
+        <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
         <maven-pmd-plugin.version>3.11.0</maven-pmd-plugin.version>
 
         <!-- Test scope -->
