@@ -86,7 +86,7 @@
         <junit.version>1.26.1</junit.version>
         <structs.version>1.17</structs.version>
         <job-dsl.version>1.67</job-dsl.version>
-        <credentials.version>2.1.18</credentials.version>
+        <credentials.version>2.2.0</credentials.version>
         <jquery-plugin.version>1.12.4-0</jquery-plugin.version>
 
         <!-- Static code analysis -->
