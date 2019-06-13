@@ -35,17 +35,24 @@ public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGenerat
 
     private final String name;
     private final List<ReportGeneratorSetting> settings;
+    /**
+     * @since 2.9
+     */
+    private boolean usePersistedSettings;
 
     /**
      * Instantiates a new {@link ReportGeneratorConfig}.
      *
-     * @param name     the name
-     * @param settings the settings
+     * @param name                 the name
+     * @param settings             the settings
+     * @param usePersistedSettings the use persisted settings
      */
     @DataBoundConstructor
-    public ReportGeneratorConfig(final String name, final List<ReportGeneratorSetting> settings) {
+    public ReportGeneratorConfig(final String name, final List<ReportGeneratorSetting> settings,
+                                 final boolean usePersistedSettings) {
         this.name = StringUtils.trimToEmpty(name);
         this.settings = settings == null ? new ArrayList<>() : removeEmptySettings(settings);
+        this.usePersistedSettings = usePersistedSettings;
     }
 
     /**
@@ -80,6 +87,14 @@ public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGenerat
         return settings;
     }
 
+
+    /**
+     * @return specifies whether to use report generator settings from persisted configurations files (XML)
+     */
+    public boolean isUsePersistedSettings() {
+        return usePersistedSettings;
+    }
+
     @Override
     public ReportGeneratorConfig expand(final EnvVars envVars) {
         final String expName = envVars.expand(getName());
@@ -87,7 +102,7 @@ public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGenerat
         for (final ReportGeneratorSetting setting : getSettings()) {
             settings.add(setting.expand(envVars));
         }
-        return new ReportGeneratorConfig(expName, settings);
+        return new ReportGeneratorConfig(expName, settings, usePersistedSettings);
     }
 
     /**

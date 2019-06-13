@@ -134,12 +134,18 @@ public class TestEnvironment extends ETComDispatch implements ComTestEnvironment
     @Override
     public boolean generateTestReportDocumentFromDB(final String dbFile, final String reportDir,
                                                     final String reportFormat, final boolean waitUntilFinished,
-                                                    final Map<String, String> parameters)
-        throws ETComException {
+                                                    final Map<String, String> parameters) throws ETComException {
         final Object[][] settings = getArrayFromMap(parameters, false);
         return performDirectRequest("GenerateTestReportDocumentFromDB", new Variant(dbFile),
             new Variant(reportDir), new Variant(reportFormat), new Variant(waitUntilFinished), settings)
             .getBoolean();
+    }
+
+    @Override
+    public boolean generateTestReportDocument(final String dbFile, final String reportDir, final String reportConfig,
+                                              final boolean waitUntilFinished) throws ETComException {
+        return performDirectRequest("GenerateTestReportDocument", new Variant(dbFile),
+            new Variant(reportDir), new Variant(reportConfig), new Variant(waitUntilFinished)).getBoolean();
     }
 
     /**

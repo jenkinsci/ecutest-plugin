@@ -386,7 +386,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
 
                 final FormValidation validation = reportValidator.validateGeneratorName(name.toString());
                 Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
-                generators.add(new ReportGeneratorConfig(name.toString(), null));
+                generators.add(new ReportGeneratorConfig(name.toString(), null, false));
             }
 
             /**
@@ -398,7 +398,8 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
             public void generator(final CharSequence name, final Runnable closure) {
                 final ReportGeneratorConfigContext context = new ReportGeneratorConfigContext();
                 executeInContext(closure, context);
-                generators.add(new ReportGeneratorConfig(name.toString(), context.settings));
+                generators.add(new ReportGeneratorConfig(name.toString(), context.settings,
+                    context.usePersistedSettings));
             }
 
             /**
@@ -426,6 +427,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
             public class ReportGeneratorConfigContext implements Context {
 
                 private List<ReportGeneratorSetting> settings;
+                private boolean usePersistedSettings;
 
                 /**
                  * Option defining the report generator settings.
@@ -436,6 +438,15 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
                     final ReportGeneratorSettingsContext context = new ReportGeneratorSettingsContext();
                     executeInContext(closure, context);
                     settings = context.settings;
+                }
+
+                /**
+                 * Option defining whether to use report generator settings from persisted configurations files (XML).
+                 *
+                 * @param value the value
+                 */
+                public void usePersistedSettings(final boolean value) {
+                    usePersistedSettings = value;
                 }
             }
 

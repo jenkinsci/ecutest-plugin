@@ -91,7 +91,7 @@ public class ReportGenerator {
         public Boolean call() throws IOException {
             boolean isGenerated = true;
             final String templateName = config.getName();
-            final Map<String, String> configMap = getConfigMap();
+
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
@@ -99,9 +99,7 @@ public class ReportGenerator {
                 logger.logInfo(String.format("- Generating %s test reports...", templateName));
                 for (final FilePath dbFile : dbFiles) {
                     logger.logInfo(String.format("-> Generating %s report: %s", templateName, dbFile.getRemote()));
-                    final FilePath outDir = dbFile.getParent().child(templateName);
-                    if (!testEnv.generateTestReportDocumentFromDB(dbFile.getRemote(),
-                        outDir.getRemote(), templateName, true, configMap)) {
+                    if (!generateReport(testEnv, dbFile, templateName)) {
                         isGenerated = false;
                         logger.logError(String.format("Generating %s report failed!", templateName));
                     }
@@ -124,6 +122,26 @@ public class ReportGenerator {
                 configMap.put(setting.getName(), setting.getValue());
             }
             return configMap;
+        }
+
+        /**
+         * Generates a test report from either predefined template or persisted settings file.
+         *
+         * @return the configuration map
+         */
+        private boolean generateReport(TestEnvironment testEnv, FilePath dbFile, String templateName)
+            throws ETComException {
+            if (config.isUsePersistedSettings()) {
+                final FilePath reportDir = dbFile.getParent();
+                final FilePath configPath = reportDir.child(templateName + ".xml");
+                return testEnv.generateTestReportDocument(
+                    dbFile.getRemote(), reportDir.getRemote(), configPath.getRemote(), true);
+            } else {
+                final FilePath outDir = dbFile.getParent().child(templateName);
+                final Map<String, String> configMap = getConfigMap();
+                return testEnv.generateTestReportDocumentFromDB(
+                    dbFile.getRemote(), outDir.getRemote(), templateName, true, configMap);
+            }
         }
     }
 }
