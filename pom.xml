@@ -84,7 +84,7 @@
         <matrix-project.version>1.13</matrix-project.version>
         <icon-shim.version>2.0.3</icon-shim.version>
         <junit.version>1.26.1</junit.version>
-        <structs.version>1.17</structs.version>
+        <structs.version>1.19</structs.version>
         <job-dsl.version>1.67</job-dsl.version>
         <credentials.version>2.1.18</credentials.version>
         <jquery-plugin.version>1.12.4-0</jquery-plugin.version>
