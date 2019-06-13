@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  */
 public class ETComClient implements ComApplication, AutoCloseable {
 
-    public static final Logger LOGGER = Logger.getLogger(ETComClient.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ETComClient.class.getName());
 
     /**
      * The COMApplication dispatch.
