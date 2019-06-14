@@ -360,9 +360,9 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>${maven-checkstyle-plugin.version}</version>
                 <configuration>
-                    <configLocation>${basedir}/config/checkstyle-config.xml</configLocation>
-                    <suppressionsLocation>${basedir}/config/checkstyle-exclude.xml</suppressionsLocation>
-                    <propertyExpansion>config_loc=config</propertyExpansion>
+                    <configLocation>${basedir}/.mvn/checkstyle-config.xml</configLocation>
+                    <suppressionsLocation>${basedir}/.mvn/checkstyle-exclude.xml</suppressionsLocation>
+                    <propertyExpansion>config_loc=.mvn</propertyExpansion>
                     <consoleOutput>true</consoleOutput>
                     <failOnViolation>false</failOnViolation>
                 </configuration>
@@ -371,7 +371,7 @@
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <configuration>
-                    <excludeFilterFile>${basedir}/config/spotbugs-exclude.xml</excludeFilterFile>
+                    <excludeFilterFile>${basedir}/.mvn/spotbugs-exclude.xml</excludeFilterFile>
                     <effort>Max</effort>
                     <threshold>Medium</threshold>
                     <spotbugsXmlOutput>true</spotbugsXmlOutput>
@@ -384,7 +384,7 @@
                 <version>${maven-pmd-plugin.version}</version>
                 <configuration>
                     <rulesets>
-                        <ruleset>${basedir}/config/pmd-config.xml</ruleset>
+                        <ruleset>${basedir}/.mvn/pmd-config.xml</ruleset>
                     </rulesets>
                     <excludeRoots>
                         <excludeRoot>target/generated-sources/localizer</excludeRoot>
