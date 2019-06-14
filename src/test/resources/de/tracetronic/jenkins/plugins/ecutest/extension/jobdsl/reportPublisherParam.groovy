@@ -9,6 +9,7 @@ def dUnstableThreshold = 15
 def dFailedThreshold = 30
 def bUnstableOnWarning = true
 def bFailedOnError = true
+def bUsePersistedSettings = true
 def strGeneratorName = 'HTML'
 def strCustomGeneratorName = 'Custom'
 def strSettingName = 'param'
@@ -58,6 +59,7 @@ freeStyleJob("${strJobName}") {
                             value("${strSettingValue2}")
                         }
                     }
+                    usePersistedSettings(bUsePersistedSettings)
                 }
             }
             customGenerators {

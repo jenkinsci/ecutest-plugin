@@ -92,6 +92,9 @@ installations:
     - atx-text-setting:
         group: ARCHIVE
         name: "archiveMiscFiles"
+    - atx-text-setting:
+        group: ARCHIVE
+        name: "archiveMiscFilePrefix"
     - atx-boolean-setting:
         group: ARCHIVE
         name: "archiveMiscFilesOnlyInTestReportDir"
@@ -131,6 +134,10 @@ installations:
         group: TBC_CONSTANTS
         name: "mapTbcToolAsConstant"
         value: true
+    - atx-boolean-setting:
+        group: TCF_CONSTANTS
+        name: "mapTcfTesterAsConstant"
+        value: false
     - atx-boolean-setting:
         group: TCF_CONSTANTS
         name: "mapTCFPropertyAsConstant"
