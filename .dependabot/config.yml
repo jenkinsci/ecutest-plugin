@@ -14,3 +14,7 @@ update_configs:
         dependency_name: "org.jenkins-ci.plugins*"
     - match:
         dependency_name: "io.jenkins.plugins*"
+    - match:
+        dependency_name: "antlr4*"
+    - match:
+        dependency_name: "sqlite-jdbc"
