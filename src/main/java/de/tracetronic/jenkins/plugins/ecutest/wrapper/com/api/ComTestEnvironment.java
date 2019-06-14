@@ -46,12 +46,12 @@ public interface ComTestEnvironment {
      * @param closeProgressDialog determines whether the progress dialog will be closed when finished
      * @param jobExecutionMode    specifies whether and how the analysis jobs should be executed:
      *                            <pre>
-     *                            0 .. no job execution
-     *                            1 .. sequential job execution (default)
-     *                            2 .. parallel job execution
-     *                            5 .. sequential job execution with separate test report
-     *                            6 .. parallel job execution with separate test report
-     *                            </pre>
+     *                                                       0 .. no job execution
+     *                                                       1 .. sequential job execution (default)
+     *                                                       2 .. parallel job execution
+     *                                                       5 .. sequential job execution with separate test report
+     *                                                       6 .. parallel job execution with separate test report
+     *                                                       </pre>
      * @return the {@link ComTestExecutionInfo} dispatch
      * @throws ETComException if the project was not opened before
      */
@@ -63,7 +63,7 @@ public interface ComTestEnvironment {
      *
      * @param dbFile            the full path name of the data base file
      * @param reportDir         the full path name of output directory
-     * @param reportFormat      name of the report format or handler which should be used
+     * @param reportFormat      the name of the report format or handler which should be used
      * @param waitUntilFinished defines whether the API call should block until generation is finished
      * @param parameters        the configuration parameters
      * @return {@code true} if successful, {@code false} otherwise
@@ -73,4 +73,16 @@ public interface ComTestEnvironment {
                                              boolean waitUntilFinished, Map<String, String> parameters)
         throws ETComException;
 
+    /**
+     * Generates a handler based test report on the file system.
+     *
+     * @param dbFile            the full path name of the data base file
+     * @param reportDir         the full path name of output directory
+     * @param reportConfig      the full path to persisted report generator settings file (XML)
+     * @param waitUntilFinished defines whether the API call should block until generation is finished
+     * @return {@code true} if successful, {@code false} otherwise
+     * @throws ETComException in case of a COM exception or invalid parameters
+     */
+    boolean generateTestReportDocument(String dbFile, String reportDir, String reportConfig, boolean waitUntilFinished)
+        throws ETComException;
 }

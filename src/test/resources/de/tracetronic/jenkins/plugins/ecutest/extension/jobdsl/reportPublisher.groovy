@@ -38,6 +38,7 @@ freeStyleJob("reportPublisher") {
                             value("456")
                         }
                     }
+                    usePersistedSettings(true)
                 }
             }
             customGenerators {
@@ -49,6 +50,7 @@ freeStyleJob("reportPublisher") {
                             value("456")
                         }
                     }
+                    usePersistedSettings(false)
                 }
             }
             allowMissing(true)

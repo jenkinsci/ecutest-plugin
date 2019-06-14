@@ -2,7 +2,7 @@
 <project version="4">
   <component name="FindBugs-IDEA">
     <excludeFilterFiles>
-      <filter file="$PROJECT_DIR$/config/findbugs-exclude.xml" enabled="true" />
+      <filter file="$PROJECT_DIR$/.mvn/findbugs-exclude.xml" enabled="true" />
     </excludeFilterFiles>
   </component>
 </project>

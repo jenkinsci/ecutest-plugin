@@ -10,7 +10,7 @@
   <component name="PDMPlugin">
     <option name="customRuleSets">
       <list>
-        <option value="file://$PROJECT_DIR$/config/pmd-config.xml" />
+        <option value="file://$PROJECT_DIR$/.mvn/pmd-config.xml" />
       </list>
     </option>
     <option name="options">

@@ -25,14 +25,14 @@ public class ReportGeneratorConfigTest {
 
     @Test
     public void testNullConstructor() {
-        final ReportGeneratorConfig config = new ReportGeneratorConfig(null, null);
+        final ReportGeneratorConfig config = new ReportGeneratorConfig(null, null, false);
         assertNotNull(config.getName());
         assertNotNull(config.getSettings());
     }
 
     @Test
     public void testEmptyConstructor() {
-        final ReportGeneratorConfig config = new ReportGeneratorConfig("", null);
+        final ReportGeneratorConfig config = new ReportGeneratorConfig("", null, false);
         assertTrue(config.getName().isEmpty());
         assertNotNull(config.getSettings());
     }
@@ -41,7 +41,7 @@ public class ReportGeneratorConfigTest {
     public void testEmptySettings() {
         final List<ReportGeneratorSetting> settings = new ArrayList<ReportGeneratorSetting>();
         settings.add(new ReportGeneratorSetting(" ", " "));
-        final ReportGeneratorConfig config = new ReportGeneratorConfig("", settings);
+        final ReportGeneratorConfig config = new ReportGeneratorConfig("", settings, false);
         assertTrue(config.getSettings().isEmpty());
     }
 
@@ -49,7 +49,7 @@ public class ReportGeneratorConfigTest {
     public void testExpand() {
         final List<ReportGeneratorSetting> settings = new ArrayList<ReportGeneratorSetting>();
         settings.add(new ReportGeneratorSetting("${NAME}", "${VALUE}"));
-        final ReportGeneratorConfig config = new ReportGeneratorConfig("", settings);
+        final ReportGeneratorConfig config = new ReportGeneratorConfig("", settings, false);
         final EnvVars envVars = new EnvVars();
         envVars.put("NAME", "name");
         envVars.put("VALUE", "value");

@@ -90,12 +90,12 @@
         <jquery-plugin.version>1.12.4-0</jquery-plugin.version>
 
         <!-- Static code analysis -->
-        <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
+        <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
         <maven-pmd-plugin.version>3.11.0</maven-pmd-plugin.version>
 
         <!-- Test scope -->
         <configuration-as-code.version>1.15</configuration-as-code.version>
-        <equalsverifier.version>3.0.3</equalsverifier.version>
+        <equalsverifier.version>3.1.9</equalsverifier.version>
         <mockito-core.version>2.23.4</mockito-core.version>
         <concurrency>2</concurrency>
         <skipUTs>false</skipUTs>
@@ -360,9 +360,9 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>${maven-checkstyle-plugin.version}</version>
                 <configuration>
-                    <configLocation>${basedir}/config/checkstyle-config.xml</configLocation>
-                    <suppressionsLocation>${basedir}/config/checkstyle-exclude.xml</suppressionsLocation>
-                    <propertyExpansion>config_loc=config</propertyExpansion>
+                    <configLocation>${basedir}/.mvn/checkstyle-config.xml</configLocation>
+                    <suppressionsLocation>${basedir}/.mvn/checkstyle-exclude.xml</suppressionsLocation>
+                    <propertyExpansion>config_loc=.mvn</propertyExpansion>
                     <consoleOutput>true</consoleOutput>
                     <failOnViolation>false</failOnViolation>
                 </configuration>
@@ -371,7 +371,7 @@
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <configuration>
-                    <excludeFilterFile>${basedir}/config/spotbugs-exclude.xml</excludeFilterFile>
+                    <excludeFilterFile>${basedir}/.mvn/spotbugs-exclude.xml</excludeFilterFile>
                     <effort>Max</effort>
                     <threshold>Medium</threshold>
                     <spotbugsXmlOutput>true</spotbugsXmlOutput>
@@ -384,7 +384,7 @@
                 <version>${maven-pmd-plugin.version}</version>
                 <configuration>
                     <rulesets>
-                        <ruleset>${basedir}/config/pmd-config.xml</ruleset>
+                        <ruleset>${basedir}/.mvn/pmd-config.xml</ruleset>
                     </rulesets>
                     <excludeRoots>
                         <excludeRoot>target/generated-sources/localizer</excludeRoot>

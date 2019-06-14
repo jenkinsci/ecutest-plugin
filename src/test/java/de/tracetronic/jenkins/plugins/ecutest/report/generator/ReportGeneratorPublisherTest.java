@@ -8,7 +8,6 @@ package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 public class ReportGeneratorPublisherTest {
 
     @Test
-    public void testDefaultStep() throws IOException {
+    public void testDefaultStep() {
         final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("");
         assertPublisher(publisher);
     }
@@ -49,9 +48,9 @@ public class ReportGeneratorPublisherTest {
     @Test
     public void testConstructor() {
         final List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
-        generators.add(new ReportGeneratorConfig("HTML", null));
+        generators.add(new ReportGeneratorConfig("HTML", null, true));
         final List<ReportGeneratorConfig> customGenerators = new ArrayList<ReportGeneratorConfig>();
-        customGenerators.add(new ReportGeneratorConfig("Custom", null));
+        customGenerators.add(new ReportGeneratorConfig("Custom", null, false));
         final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
         publisher.setGenerators(generators);
         publisher.setCustomGenerators(customGenerators);
@@ -61,6 +60,7 @@ public class ReportGeneratorPublisherTest {
         assertThat(publisher.getCustomGenerators(), hasSize(1));
         assertThat(publisher.getGenerators().get(0).getName(), is("HTML"));
         assertTrue(publisher.getGenerators().get(0).getSettings().isEmpty());
+        assertTrue(publisher.getGenerators().get(0).isUsePersistedSettings());
         assertThat(publisher.getCustomGenerators().get(0).getName(), is("Custom"));
         assertTrue(publisher.getCustomGenerators().get(0).getSettings().isEmpty());
     }
@@ -68,7 +68,7 @@ public class ReportGeneratorPublisherTest {
     @Test
     public void testEmptyGenerators() {
         final List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
-        generators.add(new ReportGeneratorConfig(" ", null));
+        generators.add(new ReportGeneratorConfig(" ", null, false));
         final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
         publisher.setGenerators(generators);
         assertTrue(publisher.getGenerators().isEmpty());
@@ -77,7 +77,7 @@ public class ReportGeneratorPublisherTest {
     @Test
     public void testEmptyCustomGenerators() {
         final List<ReportGeneratorConfig> customGenerators = new ArrayList<ReportGeneratorConfig>();
-        customGenerators.add(new ReportGeneratorConfig(" ", null));
+        customGenerators.add(new ReportGeneratorConfig(" ", null, false));
         final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
         publisher.setCustomGenerators(customGenerators);
         assertTrue(publisher.getCustomGenerators().isEmpty());
