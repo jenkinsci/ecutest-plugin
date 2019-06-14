@@ -1,0 +1,3 @@
+# from https://github.com/jenkinsci/.github/blob/master/.github/release-drafter.yml
+_extends: .github
+tag-template: ecutest-$NEXT_MINOR_VERSION
