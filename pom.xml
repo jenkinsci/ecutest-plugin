@@ -109,7 +109,7 @@
         <antlr4-runtime.version>4.5.3</antlr4-runtime.version>
 
         <!-- SQLite -->
-        <sqlite-jdbc.version>3.7.2</sqlite-jdbc.version>
+        <sqlite-jdbc.version>3.28.0</sqlite-jdbc.version>
     </properties>
 
     <dependencies>
