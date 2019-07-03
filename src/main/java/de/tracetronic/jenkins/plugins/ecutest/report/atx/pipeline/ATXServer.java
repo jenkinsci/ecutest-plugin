@@ -74,7 +74,7 @@ public class ATXServer implements Serializable {
                         final boolean archiving, final boolean keepAll) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
         stepVariables.put("atxName", installation.getName());
-        stepVariables.put("installation", installation);
+        stepVariables.put("atxInstallation", installation);
         stepVariables.put("allowMissing", allowMissing);
         stepVariables.put("runOnFailed", runOnFailed);
         stepVariables.put("archiving", archiving);
