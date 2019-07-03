@@ -73,7 +73,7 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
     /**
      * DescriptorImpl for {@link ETToolProperty}.
      */
-    @Symbol("ecu-test-property")
+    @Symbol("ecuTestProperty")
     @Extension
     public static final class DescriptorImpl extends ToolPropertyDescriptor {
 

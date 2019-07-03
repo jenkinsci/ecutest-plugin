@@ -51,7 +51,7 @@ public class ATXTextSetting extends ATXSetting<String> {
     /**
      * DescriptorImpl of {@link ATXTextSetting}.
      */
-    @Symbol("atx-text-setting")
+    @Symbol("atxTextSetting")
     @Extension
     public static class DescriptorImpl extends Descriptor<ATXSetting<?>> {
 

@@ -256,7 +256,7 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
     /**
      * DescriptorImpl of {@link ATXConfig}.
      */
-    @Symbol("atx-config")
+    @Symbol("atxConfig")
     @Extension
     public static class DescriptorImpl extends Descriptor<ATXConfig> {
 

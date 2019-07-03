@@ -144,7 +144,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
     /**
      * DescriptorImpl of {@link ATXInstallation}.
      */
-    @Symbol("test-guide")
+    @Symbol("testGuide")
     @Extension(ordinal = 1001)
     public static class DescriptorImpl extends Descriptor<ATXInstallation> {
 
