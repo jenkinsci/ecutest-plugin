@@ -51,7 +51,7 @@ public class ATXBooleanSetting extends ATXSetting<Boolean> {
     /**
      * DescriptorImpl of {@link ATXBooleanSetting}.
      */
-    @Symbol("atx-boolean-setting")
+    @Symbol("atxBooleanSetting")
     @Extension
     public static class DescriptorImpl extends Descriptor<ATXSetting<?>> {
 

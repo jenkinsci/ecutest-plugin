@@ -79,6 +79,7 @@
         <!-- Jenkins base -->
         <jenkins.version>2.60.3</jenkins.version>
         <java.level>8</java.level>
+        <hpi.compatibleSinceVersion>2.10.0</hpi.compatibleSinceVersion>
 
         <!-- Jenkins plugins -->
         <matrix-project.version>1.13</matrix-project.version>

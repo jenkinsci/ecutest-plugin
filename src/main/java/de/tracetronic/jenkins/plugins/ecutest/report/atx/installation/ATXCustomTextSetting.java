@@ -69,7 +69,7 @@ public class ATXCustomTextSetting extends ATXCustomSetting {
     /**
      * DescriptorImpl for {@link ATXTextSetting}.
      */
-    @Symbol("atx-custom-text-setting")
+    @Symbol("atxCustomTextSetting")
     @Extension
     public static class DescriptorImpl extends ATXCustomSetting.DescriptorImpl {
 

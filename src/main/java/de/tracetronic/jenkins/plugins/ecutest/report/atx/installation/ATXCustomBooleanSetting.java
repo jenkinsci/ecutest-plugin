@@ -65,7 +65,7 @@ public class ATXCustomBooleanSetting extends ATXCustomSetting {
     /**
      * DescriptorImpl for {@link ATXBooleanSetting}.
      */
-    @Symbol("atx-custom-boolean-setting")
+    @Symbol("atxCustomBooleanSetting")
     @Extension
     public static class DescriptorImpl extends ATXCustomSetting.DescriptorImpl {
 
