@@ -130,6 +130,42 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
+        <SETTING name="httpProxy" default=""
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Angabe eines optionalen HTTP Proxies für
+                            den Upload. Beispiel: http://user:pass@10.10.10.2:8080
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Specification of an optional HTTP proxy
+                            for the upload. Example: http://user:pass@10.10.10.2:8080
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="httpsProxy" default=""
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Angabe eines optionalen HTTPS Proxies für
+                            den Upload. Beispiel: http://user:pass@10.10.10.2:8080
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Specification of an optional HTTPS proxy
+                            for the upload. Example: http://user:pass@10.10.10.2:8080
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
         <SETTING name="projectId" default="1"
                  xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
@@ -318,6 +354,26 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
+        <SETTING name="archiveRecordingMetadata" default="True"
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Aufnahmemetadaten archivieren,
+                            um später beliebige Trace-Analysen auf Aufnahmen auszuführen?
+                            Nur aktiv wenn archiveRecordings auch True ist.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Archive recording metadata to later run arbitrary
+                            trace analyses on the recordings? Only active when archiveRecordings is
+                            also True.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
         <SETTING name="archivePlots" default="True"
                  xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
@@ -403,6 +459,31 @@
                         <DVALUE xsi:type="string">True, if you only want archive 'misc
                             files' which are in a ECU-TEST 'test report directory' of the
                             given test report, otherwise False.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="archiveFilesPerPackage" default=""
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Angabe der Suchausdrücke für zusätzliche
+                            Dateien, welche pro Package-Report-Unterordner archiviert werden
+                            sollen. Die Ausdrücke werden mit ';' (Semikolon) getrennt.
+                            Die
+                            Suche erfolgt ausgehend vom Report-Verzeichnis. Beispiele:
+                            package1*.asc;zip/**/special.*
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Specifies the search expressions for
+                            additional files that are to be archived per Package Report
+                            subfolder. The expressions are separated by ';' (semicolon). The
+                            search is performed from the report directory. Examples:
+                            package1*.asc;zip/**/special.*
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -663,13 +744,17 @@
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Angabe zu setzender Konstanten für jeden
                             Testfall durch ';' getrennt. Beispiel: myConstant=NightlyTest;
-                            Buildnumber=42
+                            Buildnumber=42. Bei Überschneidungen zu Bestandskonstanten
+                            wird
+                            die Bestandskonstante übernommen.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Specifying special constants for each
                             testcase
-                            by ';'. Example: myConstant=NightlyTest; Buildnumber=42
+                            by ';'. Example: myConstant=NightlyTest; Buildnumber=42.
+                            If there are overlaps for existing constants, the existing
+                            constant is copied.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -740,6 +825,24 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
+        <SETTING name="includePkgTestSteps" default="True"
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">True, wenn die Package Teststeps
+                            mit erfasst werden sollen, sonst False.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">True, if the package teststeps are to be
+                            included, otherwise False.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
         <SETTING name="onlyIncludePkgTestCases" default="False"
                  xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
@@ -752,8 +855,7 @@
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True, if convert only packages which are
-                            marked
-                            as testcase, otherwise False.
+                            marked as testcase, otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
