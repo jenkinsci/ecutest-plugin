@@ -45,7 +45,7 @@
 
     <name>TraceTronic ECU-TEST Plugin</name>
     <description>This plugin integrates Jenkins with ECU-TEST and generates reports on automated test execution.</description>
-    <url>https://wiki.jenkins.io/display/JENKINS/TraceTronic+ECU-TEST+Plugin</url>
+    <url>https://github.com/jenkinsci/ecutest-plugin</url>
     <inceptionYear>2015</inceptionYear>
     <organization>
         <name>TraceTronic GmbH</name>
