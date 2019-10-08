@@ -1,11 +1,14 @@
+
 # TraceTronic ECU-TEST Plugin
 [![Build Status](https://ci.jenkins.io/buildStatus/icon?job=plugins/ecutest-plugin/master)](https://ci.jenkins.io/job/plugins/job/ecutest-plugin/job/master) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjenkinsci%2Fecutest-plugin.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjenkinsci%2Fecutest-plugin?ref=badge_shield) [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=jenkinsci/ecutest-plugin)](https://dependabot.com) [![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/ecutest.svg)](https://plugins.jenkins.io/ecutest) [![License](https://img.shields.io/badge/license-3--clause%20BSD-blue.svg?style=flat)](https://github.com/jenkinsci/ecutest-plugin/blob/master/LICENSE)
 
 This plugin integrates Jenkins with [ECU-TEST](https://www.tracetronic.com/products/ecu-test) and generates reports on automated test execution.
 
-ECU-TEST is a test automation software for the validation of embedded systems in automotive environments developed by TraceTronic GmbH.
-This software executes regression tests which are essential for validating complex technical products such as electronic control units (ECUs).
-It supports standardized access to a broad range of test tools and provides an extensive automation of distributed test environments (SiL – MiL – HiL – vehicle).
+<img src="docs/images/ecutest_logo.png" align="left" alt="ECU-TEST Logo">
+
+ECU-TEST is a test automation software for the validation of embedded systems in automotive environments developed by TraceTronic GmbH.<br/>
+This software executes regression tests which are essential for validating complex technical products such as electronic control units (ECUs).<br/>
+It supports standardized access to a broad range of test tools and provides automation of distributed test environments (SiL – MiL – HiL – vehicle).
 
 ## Features
 
@@ -32,6 +35,8 @@ Advanced workflows integrated for:
 ECU-TEST installations are administrated in the Jenkins system configuration or starting with Jenkins 2.0 in the global tool configuration at section "ECU-TEST".
 An installation entry is specified by an arbitrary name and the path to the installation directory.
 The execution on a Jenkins slave requires the adaption of the ECU-TEST installation directory on the slave configuration page.
+
+![ECU-TEST](docs/images/ecutest.png "ECU-TEST")
     
 ### TEST-GUIDE configuration
 
@@ -39,9 +44,13 @@ TEST-GUIDE is also configured in the Jenkins system configuration at section "TE
 A new entry requires both an arbitrary name and the selection of a previously configured ECU-TEST installation.
 Further settings like the server or ATX specific configuration can be found in the advanced block.
 
+![TEST-GUIDE](docs/images/testguide.png "TEST-GUIDE")
+
 ### Job configuration
 
 The plugin provides several new build steps:
+
+![Build Steps](docs/images/build_steps.png "Build Steps")
 
 **Note:**
 
@@ -51,11 +60,17 @@ The plugin provides several new build steps:
 
 The post-build actions are extended by these test report related post-build steps:
 
+![Post-Build Steps](docs/images/post_build_steps.png "Post-Build Steps")
+
 ### Job execution
 
 - After job configuration is done a new build can be triggerd by clicking on the "Build now" button
 - The console log contains detailed information per build step execution
 - The test results are published both on the build page and the job page based on the latest build
+
+![Demo Job](docs/images/demo_job.png "Demo Job")
+![Demo Build](docs/images/demo_build.png "Demo Build")
+![Demo Log](docs/images/demo_log.png "Demo Log")
 
 ### Environment variables
 
@@ -103,6 +118,8 @@ Therefore the report artifacts like TRF reports etc. must be archived after the 
 This downstream project acts like a central reporting service which waits for inputs from other test executions. It will be an ease to scale this service with help of Jenkins parallelization and distribution features.
 The big advantage of this approach is to save time for the report generation and uploading process on expensive testing resources like HiL test benches. These resources can be directly used for the next test.
 
+![Downstream Report Generation](docs/images/downstream_report_generation.png "Downstream Report Generation")
+
 ### Example configurations
 
 #### Preconditions
@@ -116,7 +133,13 @@ To transfer the report artifacts from one node to another the [Copy Artifact Plu
 
 Executing tests and archiving the artifacts (_upstream_)
 
+![Upstream Build Steps](docs/images/upstream_build_steps.png "Upstream Build Steps")
+![Upstream Post-Build Steps](docs/images/upstream_post_build_steps.png "Upstream Post-Build Steps")
+
 Copying artifacts and generating ATX report (_downstream_)
+
+![Downstream Build Steps](docs/images/downstream_build_steps.png "Downstream Build Steps")
+![Downstream Post-Build Steps](docs/images/downstream_post_build_steps.png "Downstream Post-Build Steps")
 
 #### Pipeline configuration
 
@@ -163,6 +186,8 @@ Afterwards all trace analysis artifacts like analysis job files, traces, trace s
 This downstream project acts like a central trace analysis service which waits for inputs from other test executions and is designed to be highly scalable.
 The huge advantage of better ressource efficiency is the same as for downstream report generation and can also be used in combination.
 
+![Downstream Trace Analysis](docs/images/downstream_trace_analysis.png "Downstream Trace Analysis")
+
 ### Example configurations
 
 #### Preconditions
@@ -171,9 +196,15 @@ Same as in [downstream report generation](#downstream-report-generation).
 
 #### Freestyle configuration
 
-Executing test cases without trace analysis and archiving the artifacts (upstream)
+Executing test cases without trace analysis and archiving the artifacts (_upstream_)
 
-Copying artifacts and running the trace analysis (downstream)
+![Upstream Build Steps](docs/images/upstream_build_steps.png "Upstream Build Steps")
+![Upstream Post-Build Steps](docs/images/upstream_post_build_steps.png "Upstream Post-Build Steps")
+
+Copying artifacts and running the trace analysis (_downstream_)
+
+![Downstream Build Steps](docs/images/downstream_build_steps.png "Downstream Build Steps")
+![Downstream Post-Build Steps](docs/images/downstream_post_build_steps.png "Downstream Post-Build Steps")
 
 #### Pipeline configuration
 
