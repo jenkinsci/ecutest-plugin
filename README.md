@@ -10,6 +10,31 @@ ECU-TEST is a test automation software for the validation of embedded systems in
 This software executes regression tests which are essential for validating complex technical products such as electronic control units (ECUs).<br/>
 It supports standardized access to a broad range of test tools and provides automation of distributed test environments (SiL – MiL – HiL – vehicle).
 
+## Table of Contents
+
+- [Features](#features)
+- [Configuration](#configuration)
+    - [ECU-TEST configuration](#ecu-test-configuration)
+    - [TEST-GUIDE configuration](#test-guide-configuration)
+    - [Job configuration](#job-configuration)
+    - [Job execution](#job-execution)
+    - [Environment variables](#environment-variables)
+- [Downstream report generation](#downstream-report-generation)
+    - [Example configurations](#example-configurations)
+- [Downstream trace analysis](#downstream-trace-analysis)
+    - [Example configurations](#example-configurations-1)
+- [Extensions](#extensions)
+    - [Job DSL](#job-dsl)
+    - [Pipeline](#pipeline)
+- [Issues](#issues)
+- [Known limitations](#known-limitations)
+- [FAQ](#faq)
+    - [Common issues](#large_blue_circle-common-issues)
+    - [Error messages](#red_circle-error-messages)
+- [Compatibility](#compatibility)
+- [License](#license)
+- [Changelog](#changelog)
+
 ## Features
 
 - Provides an easy integration and control of ECU-TEST and the Tool-Server with Jenkins
