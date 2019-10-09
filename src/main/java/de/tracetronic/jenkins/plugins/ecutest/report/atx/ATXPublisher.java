@@ -53,6 +53,10 @@ public class ATXPublisher extends AbstractReportPublisher {
     @Nonnull
     private String atxName;
     private ATXInstallation atxInstallation;
+    /**
+     * @since 2.11
+     */
+    private boolean failOnOffline;
 
     /**
      * Instantiates a new {@link ATXPublisher}.
@@ -89,6 +93,21 @@ public class ATXPublisher extends AbstractReportPublisher {
     public void setAtxInstallation(final ATXInstallation atxInstallation) {
         this.atxInstallation = atxInstallation;
         this.atxName = atxInstallation.getName();
+    }
+
+    /**
+     * @return whether to fail the build if upload is enabled and the server is offline
+     */
+    public boolean isFailOnOffline() {
+        return failOnOffline;
+    }
+
+    /**
+     * @param failOnOffline whether to fail the build if upload is enabled and the server is offline
+     */
+    @DataBoundSetter
+    public void setFailOnOffline(final boolean failOnOffline) {
+        this.failOnOffline = failOnOffline;
     }
 
     @Override
@@ -156,6 +175,9 @@ public class ATXPublisher extends AbstractReportPublisher {
             logger.logInfo("- Generating and uploading ATX reports...");
             final ATXReportUploader uploader = new ATXReportUploader(installation);
             return uploader.upload(reportDirs, isAllowMissing(), run, launcher, listener);
+        } else if (isUploadEnabled) {
+            logger.logError("-> TEST-GUIDE server is not reachable, setting build status to FAILURE!");
+            return false;
         } else {
             logger.logInfo("- Generating ATX reports...");
             if (!isServerReachable) {
