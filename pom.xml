@@ -82,7 +82,7 @@
         <hpi.compatibleSinceVersion>2.10.0</hpi.compatibleSinceVersion>
 
         <!-- Jenkins plugins -->
-        <matrix-project.version>1.14</matrix-project.version>
+        <matrix-project.version>1.13</matrix-project.version>
         <icon-shim.version>2.0.3</icon-shim.version>
         <junit.version>1.27</junit.version>
         <structs.version>1.19</structs.version>
