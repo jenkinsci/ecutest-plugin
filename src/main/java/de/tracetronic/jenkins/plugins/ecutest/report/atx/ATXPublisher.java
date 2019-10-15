@@ -175,7 +175,7 @@ public class ATXPublisher extends AbstractReportPublisher {
             logger.logInfo("- Generating and uploading ATX reports...");
             final ATXReportUploader uploader = new ATXReportUploader(installation);
             return uploader.upload(reportDirs, isAllowMissing(), run, launcher, listener);
-        } else if (isUploadEnabled) {
+        } else if (isUploadEnabled && failOnOffline) {
             logger.logError("-> TEST-GUIDE server is not reachable, setting build status to FAILURE!");
             return false;
         } else {
