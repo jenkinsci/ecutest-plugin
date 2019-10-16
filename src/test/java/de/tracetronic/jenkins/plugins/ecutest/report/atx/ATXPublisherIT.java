@@ -75,6 +75,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
     @Test
     public void testConfigRoundTripStep() throws Exception {
         final ATXPublisher before = new ATXPublisher("TEST-GUIDE");
+        before.setFailOnOffline(false);
         before.setRunOnFailed(false);
         before.setAllowMissing(false);
         before.setRunOnFailed(false);
@@ -87,13 +88,14 @@ public class ATXPublisherIT extends IntegrationTestBase {
         assertThat(delegate, instanceOf(ATXPublisher.class));
 
         final ATXPublisher after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "allowMissing,runOnFailed,archiving,keepAll");
+        jenkins.assertEqualBeans(before, after, "failOnOffline,allowMissing,runOnFailed,archiving,keepAll");
     }
 
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        publisher.setFailOnOffline(true);
         publisher.setAllowMissing(true);
         publisher.setRunOnFailed(true);
         publisher.setArchiving(false);
@@ -104,6 +106,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
         WebAssert.assertTextPresent(page, Messages.ATXPublisher_DisplayName());
         jenkins.assertXPath(page, "//select[@name='atxName']");
         jenkins.assertXPath(page, "//option[@value='TEST-GUIDE']");
+        jenkins.assertXPath(page, "//input[@name='_.failOnOffline' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.allowMissing' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runOnFailed' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.archiving']");
@@ -142,6 +145,19 @@ public class ATXPublisherIT extends IntegrationTestBase {
         assertNotNull(installation);
         assertEquals(installation.getName(), "TEST-GUIDE");
         assertEquals(installation.getToolName(), "ECU-TEST");
+    }
+
+    @Test
+    public void testFailOnOffline() throws Exception {
+        final DumbSlave slave = assumeWindowsSlave();
+
+        final FreeStyleProject project = jenkins.createFreeStyleProject();
+        project.setAssignedNode(slave);
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        publisher.setFailOnOffline(true);
+        project.getPublishersList().add(publisher);
+        final FreeStyleBuild build = project.scheduleBuild2(0).get();
+        jenkins.assertBuildStatus(Result.FAILURE, build);
     }
 
     @Test

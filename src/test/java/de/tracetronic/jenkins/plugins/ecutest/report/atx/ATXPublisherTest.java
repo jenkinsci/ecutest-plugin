@@ -5,6 +5,8 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 
@@ -18,6 +20,13 @@ import static org.junit.Assert.assertNotNull;
  */
 public class ATXPublisherTest {
 
+    @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
+    @Test
+    public void testNullStep() {
+        final ATXPublisher publisher = new ATXPublisher("");
+        assertPublisher(publisher, true);
+    }
+
     @Test
     public void testDefaultStep() {
         final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
@@ -25,11 +34,16 @@ public class ATXPublisherTest {
         assertEquals("TEST-GUIDE", publisher.getAtxName());
     }
 
-    @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
     @Test
-    public void testNullStep() {
-        final ATXPublisher publisher = new ATXPublisher("");
-        assertPublisher(publisher, true);
+    public void testNonDefaultStep() {
+        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        publisher.setAtxInstallation(new ATXInstallation("TEST-GUIDE", "ECU-TEST", new ATXConfig()));
+        publisher.setFailOnOffline(true);
+        publisher.setAllowMissing(true);
+        publisher.setRunOnFailed(true);
+        publisher.setArchiving(false);
+        publisher.setKeepAll(false);
+        assertPublisher(publisher, false);
     }
 
     /**
@@ -41,6 +55,8 @@ public class ATXPublisherTest {
     private void assertPublisher(final ATXPublisher publisher, final boolean isDefault) {
         assertNotNull(publisher);
         assertNotNull(publisher.getAtxName());
+        assertEquals(isDefault, publisher.getAtxInstallation() == null);
+        assertEquals(!isDefault, publisher.isFailOnOffline());
         assertEquals(!isDefault, publisher.isAllowMissing());
         assertEquals(!isDefault, publisher.isRunOnFailed());
         assertEquals(isDefault, publisher.isArchiving());
