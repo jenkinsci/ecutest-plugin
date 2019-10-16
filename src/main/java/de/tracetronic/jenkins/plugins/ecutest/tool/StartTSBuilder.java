@@ -136,14 +136,14 @@ public class StartTSBuilder extends AbstractToolBuilder {
             logger.logInfo("Re-using already running Tool-Server instance...");
         } else {
             // Expand build parameters
-            final EnvVars buildEnvVars = run.getEnvironment(listener);
-            final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
+            final EnvVars envVars = run.getEnvironment(listener);
+            final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), envVars,
                 String.valueOf(DEFAULT_TIMEOUT)));
 
-            final int expTcpPort = Integer.parseInt(EnvUtil.expandEnvVar(getTcpPort(), buildEnvVars,
+            final int expTcpPort = Integer.parseInt(EnvUtil.expandEnvVar(getTcpPort(), envVars,
                 String.valueOf(DEFAULT_TCP_PORT)));
 
-            final String expToolLibs = buildEnvVars.expand(getToolLibsIni());
+            final String expToolLibs = envVars.expand(getToolLibsIni());
             final FilePath expToolLibsPath = new FilePath(launcher.getChannel(), expToolLibs);
 
             // Check ToolLibs.ini path
@@ -154,8 +154,7 @@ public class StartTSBuilder extends AbstractToolBuilder {
 
             // Get selected ECU-TEST installation
             if (getInstallation() == null) {
-                setInstallation(configureToolInstallation(workspace.toComputer(), listener,
-                    run.getEnvironment(listener)));
+                setInstallation(configureToolInstallation(workspace.toComputer(), listener, envVars));
             }
 
             // Start selected Tool-Server of related ECU-TEST installation

@@ -108,10 +108,10 @@ public class CacheBuilder extends Builder implements SimpleBuildStep {
                               @Nonnull final Launcher launcher, @Nonnull final TaskListener listener)
         throws IOException, InterruptedException, ETPluginException {
         // Expand build parameters
-        final EnvVars buildEnvVars = run.getEnvironment(listener);
+        final EnvVars envVars = run.getEnvironment(listener);
         for (CacheConfig cache : caches) {
             // Absolutize database file path and channel, if not absolute assume relative to build workspace
-            CacheConfig expCache = cache.expand(buildEnvVars);
+            CacheConfig expCache = cache.expand(envVars);
             String expFilePath = PathUtil.makeAbsolutePath(expCache.getFilePath(), workspace);
             String expDbChannel = PathUtil.makeAbsolutePath(expCache.getDbChannel(), workspace);
 

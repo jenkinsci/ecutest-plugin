@@ -166,14 +166,14 @@ public class StartETBuilder extends AbstractToolBuilder {
             logger.logInfo("Re-using already running ECU-TEST instance...");
         } else {
             // Expand build parameters
-            final EnvVars buildEnvVars = run.getEnvironment(listener);
-            final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), buildEnvVars,
+            final EnvVars envVars = run.getEnvironment(listener);
+            final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), envVars,
                 String.valueOf(DEFAULT_TIMEOUT)));
 
             // Absolutize ECU-TEST workspace directory, if not absolute assume relative to build workspace
-            String expWorkspaceDir = EnvUtil.expandEnvVar(getWorkspaceDir(), buildEnvVars, workspace.getRemote());
+            String expWorkspaceDir = EnvUtil.expandEnvVar(getWorkspaceDir(), envVars, workspace.getRemote());
             expWorkspaceDir = PathUtil.makeAbsolutePath(expWorkspaceDir, workspace);
-            String expSettingsDir = EnvUtil.expandEnvVar(getSettingsDir(), buildEnvVars, workspace.getRemote());
+            String expSettingsDir = EnvUtil.expandEnvVar(getSettingsDir(), envVars, workspace.getRemote());
             expSettingsDir = PathUtil.makeAbsolutePath(expSettingsDir, workspace);
 
             // Check existence of workspace and settings directory
@@ -190,12 +190,11 @@ public class StartETBuilder extends AbstractToolBuilder {
 
             // Get selected ECU-TEST installation
             if (getInstallation() == null) {
-                setInstallation(configureToolInstallation(workspace.toComputer(), listener,
-                    run.getEnvironment(listener)));
+                setInstallation(configureToolInstallation(workspace.toComputer(), listener, envVars));
             }
 
             // Start selected ECU-TEST
-            final String toolName = run.getEnvironment(listener).expand(getToolName());
+            final String toolName = envVars.expand(getToolName());
             final String installPath = getInstallation().getExecutable(launcher);
             final ETClient etClient = new ETClient(toolName, installPath, expWorkspaceDir, expSettingsDir,
                 expTimeout, isDebugMode());

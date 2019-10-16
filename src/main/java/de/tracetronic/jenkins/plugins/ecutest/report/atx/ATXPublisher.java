@@ -15,6 +15,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstall
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
+import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
 import hudson.EnvVars;
@@ -88,14 +89,12 @@ public class ATXPublisher extends AbstractReportPublisher {
     @DataBoundSetter
     public void setAtxInstallation(final ATXInstallation atxInstallation) {
         this.atxInstallation = atxInstallation;
-        this.atxName = atxInstallation.getName();
     }
 
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
                               final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
-        final TTConsoleLogger logger = getLogger();
-        logger.logInfo(String.format("Publishing ATX reports to %s...", atxName));
+        final EnvVars envVars = run.getEnvironment(listener);
         ProcessUtil.checkOS(launcher);
 
         if (isSkipped(true, run, launcher)) {
@@ -103,11 +102,15 @@ public class ATXPublisher extends AbstractReportPublisher {
         }
 
         if (atxInstallation == null) {
-            atxInstallation = getInstallation(run.getEnvironment(listener));
+            atxInstallation = getInstallation(envVars);
             if (atxInstallation == null) {
                 throw new ETPluginException("Selected TEST-GUIDE installation is not configured!");
             }
         }
+
+        final TTConsoleLogger logger = getLogger();
+        final String serverName = EnvUtil.expandEnvVar(getAtxName(), envVars, atxInstallation.getName());
+        logger.logInfo(String.format("Publishing ATX reports to %s...", serverName));
 
         boolean isPublished = false;
         if (isETRunning(launcher, listener)) {

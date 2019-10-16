@@ -103,7 +103,6 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     @DataBoundSetter
     public void setInstallation(final ETInstallation installation) {
         this.installation = installation;
-        this.toolName = installation.getName();
     }
 
     @Override
