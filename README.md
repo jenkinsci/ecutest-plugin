@@ -561,7 +561,7 @@ To report a bug or request an enhancement to this plugin please raise a new [Git
 When using the plugin in a slave-based setup (especially running the slave at command line via JNLP) you also need to restart the slave when restarting the master.
 This is due to already loaded libraries, for more information see this [blog post](http://jenkins-ci.org/content/your-java-web-start-slaves-will-be-always-clean) and related issue [JENKINS-31961](https://issues.jenkins-ci.org/browse/JENKINS-31961).
 
-Release 1.8 implemented an extension point that will workaround this issue. In order to work a new task has to be created in the Windows Task Scheduler named [RESTART_JENKINS_SLAVE](https://wiki.jenkins.io/download/attachments/82674318/RESTART_JENKINS_SLAVE.xml?version=1&modificationDate=1512657163000&api=v2) and configured with actions how to restart the slave.
+Release 1.8 implemented an extension point that will workaround this issue. In order to work a new task has to be created in the Windows Task Scheduler named [RESTART_JENKINS_SLAVE](docs/RESTART_JENKINS_SLAVE.xml) and configured with actions how to restart the slave.
 
 ## FAQ
 
@@ -654,7 +654,7 @@ To solve this architecture incompatibility install a [64-bit Java Runtime Enviro
     <summary>java.io.IOException: Remote call on xxx failed at hudson.remoting.Channel.call</summary>
 
 > When using the [Swarm Plugin](https://plugins.jenkins.io/swarm) there exists an incompatibility with the plugin dependencies regarding the [Apache Commons Lang Library](https://commons.apache.org/proper/commons-lang/).
-Please download the modified Swarm client from [here](https://wiki.jenkins.io/download/attachments/82674318/swarm-client-jar-with-dependencies.zip?version=1&modificationDate=1512656124000&api=v2) and replace it with the existing _swarm-client-jar-with-dependencies.jar_.
+Please download the modified Swarm client from [here](https://github.com/jenkinsci/ecutest-plugin/files/3743523/swarm-client-jar-with-dependencies.zip) and replace it with the existing _swarm-client-jar-with-dependencies.jar_.
 </details>
 
 <details>
@@ -662,11 +662,11 @@ Please download the modified Swarm client from [here](https://wiki.jenkins.io/do
 
 > This is a [known limitation](#known-limitations) when running the ECU-TEST slave in a user session while the master restarts and reconnects to the slave. Ensure that the slave agent is always restarted when the master restarts.
 
-> This can be achieved by creating an appropriate Windows task named _RESTART_JENKINS_SLAVE_.
+> This can be achieved by creating an appropriate Windows task named _RESTART_JENKINS_SLAVE_. Prepared task configuration file can be found [here](docs/RESTART_JENKINS_SLAVE.xml).
 
 > Starting with release 2.6 the default Windows task name can be overridden by system property _ecutest.taskName_ on each slave individually.
 
-> An example configuration export is attached [here](https://wiki.jenkins.io/download/attachments/82674318/RESTART_JENKINS_SLAVE.xml?version=1&modificationDate=1512657163000&api=v2) and can be easily imported and modified in the Windows Task Scheduler.
+> An example configuration export is attached [here](https://github.com/jenkinsci/ecutest-plugin/files/3743523/swarm-client-jar-with-dependencies.zip) and can be easily imported and modified in the Windows Task Scheduler.
 </details>
 
 ## Compatibility
