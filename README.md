@@ -662,11 +662,11 @@ Please download the modified Swarm client from [here](https://github.com/jenkins
 
 > This is a [known limitation](#known-limitations) when running the ECU-TEST slave in a user session while the master restarts and reconnects to the slave. Ensure that the slave agent is always restarted when the master restarts.
 
-> This can be achieved by creating an appropriate Windows task named _RESTART_JENKINS_SLAVE_. Prepared task configuration file can be found [here](docs/RESTART_JENKINS_SLAVE.xml).
+> This can be achieved by creating an appropriate Windows task named _RESTART_JENKINS_SLAVE_.
 
 > Starting with release 2.6 the default Windows task name can be overridden by system property _ecutest.taskName_ on each slave individually.
 
-> An example configuration export is attached [here](https://github.com/jenkinsci/ecutest-plugin/files/3743523/swarm-client-jar-with-dependencies.zip) and can be easily imported and modified in the Windows Task Scheduler.
+> An example configuration export is attached [here](docs/RESTART_JENKINS_SLAVE.xml) and can be easily imported and modified in the Windows Task Scheduler.
 </details>
 
 ## Compatibility
