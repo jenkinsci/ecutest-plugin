@@ -6,12 +6,23 @@
 
 <div>
     <p>Gibt eine TEST-GUIDE-Serverinstanz mit dem angegebenen Namen zurück, die in den TEST-GUIDE-Installationen
-        vorhanden
-        sein muss.</p>
+        vorhanden sein muss. Vorhandene Einstellungen können abgefragt und nachträglich überschrieben werden.</p>
     <dl>Signatures:
         <dd>
             <pre>
 ATX.server(String atxName) : ATXServer
+            </pre>
+            <pre>
+ATXServer.getSetting(String settingName) : ATXSetting
+            </pre>
+            <pre>
+ATXServer.getSettings() : Map&lt;String, Object&gt;
+            </pre>
+            <pre>
+ATXServer.overrideSetting(String settingName, Object settingValue) : void
+            </pre>
+            <pre>
+ATXServer.overrideSettings(Map&lt;String, Object&gt; settings) : void
             </pre>
         </dd>
     </dl>
@@ -22,6 +33,13 @@ ATX.server('TEST-GUIDE')
             </pre>
             <pre>
 ATX.server atxName: 'TEST-GUIDE'
+            </pre>
+            <pre>
+def server ATX.server atxName: 'TEST-GUIDE'
+server.getSetting('serverURL')
+server.getSettings()
+server.overrideSetting('uploadToServer', true)
+server.overrideSettings([serverURL: 'localhost', useHttpsConnection: true])
             </pre>
         </dd>
     </dl>

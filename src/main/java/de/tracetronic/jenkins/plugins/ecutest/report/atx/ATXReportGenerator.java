@@ -59,7 +59,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
      */
-    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
+    @SuppressWarnings({"checkstyle:cyclomaticcomplexity", "checkstyle:npathcomplexity"})
     public boolean generate(final FilePath archiveTarget, final List<FilePath> reportDirs,
                             final boolean allowMissing, final boolean isArchiving, final boolean keepAll,
                             final Run<?, ?> run, final Launcher launcher, final TaskListener listener)

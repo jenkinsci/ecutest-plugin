@@ -6,6 +6,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
 import hudson.model.AbstractDescribableImpl;
+import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 import org.jvnet.localizer.LocaleProvider;
 
 import java.io.Serializable;
@@ -115,6 +116,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
     /**
      * @return the name of the setting
      */
+    @Whitelisted
     public String getName() {
         return name;
     }
@@ -171,6 +173,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
     /**
      * @return the current value
      */
+    @Whitelisted
     public T getValue() {
         return value;
     }

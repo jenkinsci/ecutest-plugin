@@ -7,11 +7,14 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline;
 
 import com.google.common.collect.Maps;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 import org.jenkinsci.plugins.workflow.cps.CpsScript;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Class holding ATX server specific settings in order to publish ATX reports.
@@ -80,5 +83,61 @@ public class ATXServer implements Serializable {
         stepVariables.put("archiving", archiving);
         stepVariables.put("keepAll", keepAll);
         script.invokeMethod("publishATX", stepVariables);
+    }
+
+    /**
+     * Gets a single ATX setting by name.
+     *
+     * @param settingName the setting name
+     * @return the setting
+     */
+    @Whitelisted
+    public ATXSetting getSetting(String settingName) {
+        return installation.getConfig().getSettingByName(settingName).orElse(null);
+    }
+
+    /**
+     * Gets all ATX settings as map.
+     *
+     * @return the settings map
+     */
+    @Whitelisted
+    public Map<String, Object> getSettings() {
+        Map<String, Object> settings = new LinkedHashMap<>();
+        installation.getConfig().getSettings().forEach(setting -> {
+            settings.put(setting.getName(), setting.getValue());
+        });
+        return settings;
+    }
+
+    /**
+     * Overrides an existing ATX setting with the specified value.
+     *
+     * @param settingName  the setting name
+     * @param settingValue the setting value as {@code String} or {@code Boolean}
+     */
+    @Whitelisted
+    public void overrideSetting(String settingName, Object settingValue) {
+        final Optional<ATXSetting> setting = installation.getConfig().getSettingByName(settingName);
+        if (setting.isPresent()) {
+            if (settingValue instanceof String || settingValue instanceof Boolean) {
+                script.println(String.format("[TT] INFO: Overriding ATX setting %s=%s", settingName, settingValue));
+                setting.get().setValue(settingValue);
+            } else {
+                script.println("[TT] WARN: Ignore overriding ATX setting due to invalid value!");
+            }
+        } else {
+            script.println("[TT] WARN: Ignore overriding ATX setting due to invalid key!");
+        }
+    }
+
+    /**
+     * Override multiple ATX settings via map.
+     *
+     * @param settings the settings map
+     */
+    @Whitelisted
+    public void overrideSettings(final Map<String, Object> settings) {
+        settings.forEach(this::overrideSetting);
     }
 }

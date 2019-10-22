@@ -5,14 +5,22 @@
   -->
 
 <div>
-    <p>Creates a new dynamic TEST-GUIDE server instance which is only accessible during pipeline execution.</p>
+    <p>Creates a new dynamic TEST-GUIDE server instance which is only accessible during pipeline execution.
+       TEST-GUIDE name (<i>atxName</i>) and used ECU-TEST installation (<i>toolName</i>) are required
+       whereas missing optional settings will be initialized to their default values.</p>
     <dl>Signatures:
         <dd>
             <pre>
 ATX.newServer(String atxName, String toolName) : ATXServer
             </pre>
             <pre>
-ATX.newServer(String atxName, String toolName, String serverUrl, boolean uploadToServer, String authKey, String projectId) : ATXServer
+ATX.newServer(String atxName, String toolName, ATXConfig config) : ATXServer
+            </pre>
+            <pre>
+ATX.newServer(String atxName, String toolName, String fullServerURL, boolean uploadToServer, String authKey, String projectId) : ATXServer
+            </pre>
+            <pre>
+ATXServer.newServer(Map&lt;String, Object&gt; serverArgs) : ATXServer
             </pre>
         </dd>
     </dl>
@@ -25,7 +33,81 @@ ATX.newServer('TEST-GUIDE', 'ECU-TEST')
 ATX.newServer('TEST-GUIDE', 'ECU-TEST', 'http://localhost:8085', false, '', '1')
             </pre>
             <pre>
-ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST', serverUrl: 'http://localhost:8085', uploadToServer: false, authKey: '', projectId: '1'
+ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST', fullServerURL: 'https://127.0.0.1:8086/context', uploadToServer: true
+            </pre>
+            <p>is equivalent to:</p>
+            <pre>
+def server =  ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST'
+server.overrideSetting('serverURL', '127.0.0.1')
+server.overrideSetting('serverPort', '8086')
+server.overrideSetting('serverContextPath', 'context')
+server.overrideSetting('useHttpsConnection', true)
+server.overrideSetting('uploadToServer', true)
+            </pre>
+            <pre>
+ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST', enableArchive: false
+            </pre>
+            <p>is equivalent to:</p>
+            <pre>
+def server =  ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST'
+server.overrideSetting('enableArchive', false)
+            </pre>
+            <pre>
+ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST',
+    config: atxConfig(
+        settings: [
+            atxBooleanSetting(group: 'UPLOAD', name: 'uploadToServer', value: false),
+            atxTextSetting(group: 'UPLOAD', name: 'serverURL', value: '127.0.0.1'),
+            atxTextSetting(group: 'UPLOAD', name: 'serverLabel', value: ''),
+            atxBooleanSetting(group: 'UPLOAD', name: 'useHttpsConnection', value: false),
+            atxBooleanSetting(group: 'UPLOAD', name: 'ignoreSSL', value: false),
+            atxTextSetting(group: 'UPLOAD', name: 'serverPort', value: '8085'),
+            atxTextSetting(group: 'UPLOAD', name: 'serverContextPath', value: ''),
+            atxTextSetting(group: 'UPLOAD', name: 'uploadAuthenticationKey', value: ''),
+            atxBooleanSetting(group: 'UPLOAD', name: 'uploadAsync', value: true),
+            atxTextSetting(group: 'UPLOAD', name: 'projectId', value: '1'),
+            atxBooleanSetting(group: 'UPLOAD', name: 'compressUpload', value: false),
+            atxBooleanSetting(group: 'UPLOAD', name: 'cleanAfterSuccessUpload', value: true),
+            atxBooleanSetting(group: 'UPLOAD', name: 'uploadOnlyProjectReport', value: false),
+            atxBooleanSetting(group: 'ARCHIVE', name: 'enableArchive', value: true),
+            atxBooleanSetting(group: 'ARCHIVE', name: 'archiveTrf', value: true),
+            atxBooleanSetting(group: 'ARCHIVE', name: 'archivePkg', value: false),
+            atxBooleanSetting(group: 'ARCHIVE', name: 'archiveTcf', value: false),
+            atxBooleanSetting(group: 'ARCHIVE', name: 'archiveTbc', value: false),
+            atxBooleanSetting(group: 'ARCHIVE', name: 'archiveMapping', value: false),
+            atxBooleanSetting(group: 'ARCHIVE', name: 'archiveRecordings', value: false),
+            atxBooleanSetting(group: 'ARCHIVE', name: 'archivePlots', value: true),
+            atxTextSetting(group: 'ARCHIVE', name: 'archiveMiscFiles', value: ''),
+            atxTextSetting(group: 'ARCHIVE', name: 'archiveMiscFilePrefix', value: ''),
+            atxBooleanSetting(group: 'ARCHIVE', name: 'archiveMiscFilesOnlyInTestReportDir', value: true),
+            atxTextSetting(group: 'ARCHIVE', name: 'archiveBy', value: 'NONE;SUCCESS;INCONCLUSIVE;FAILED;ERROR'),
+            atxTextSetting(group: 'ATTRIBUTE', name: 'coveredAttributes', value: 'Testlevel;Designer;Execution Priority;Estimated Duration [min];'),
+            atxTextSetting(group: 'ATTRIBUTE', name: 'attributeDelimiter', value: ''),
+            atxBooleanSetting(group: 'ATTRIBUTE', name: 'mapIsTestCaseAsAttribute', value: true),
+            atxBooleanSetting(group: 'ATTRIBUTE', name: 'mapTestCaseVersionAsAttribute', value: true),
+            atxBooleanSetting(group: 'ATTRIBUTE', name: 'mapRootPrjAttrToPkgAttr', value: true),
+            atxBooleanSetting(group: 'ATTRIBUTE', name: 'includePkgSVNRevision', value: true),
+            atxBooleanSetting(group: 'ATTRIBUTE', name: 'mapSwkIdsAsAttribute', value: true),
+            atxBooleanSetting(group: 'TBC_CONSTANTS', name: 'mapTbcToolAsConstant', value: true),
+            atxBooleanSetting(group: 'TCF_CONSTANTS', name: 'mapTcfTesterAsConstant', value: false),
+            atxBooleanSetting(group: 'TCF_CONSTANTS', name: 'mapTCFPropertyAsConstant', value: true),
+            atxBooleanSetting(group: 'TCF_CONSTANTS', name: 'mapUserDefinedReportDataAsConstant', value: true),
+            atxTextSetting(group: 'TCF_CONSTANTS', name: 'setConstants', value: ''),
+            atxTextSetting(group: 'TCF_CONSTANTS', name: 'setAttributes', value: ''),
+            atxBooleanSetting(group: 'SPECIAL', name: 'autoATXGeneratorUpdate', value: true),
+            atxBooleanSetting(group: 'SPECIAL', name: 'includeToolIdentifier', value: false),
+            atxBooleanSetting(group: 'SPECIAL', name: 'onlyIncludePkgTestCases', value: false),
+            atxBooleanSetting(group: 'SPECIAL', name: 'overrideParamSetNameMapping', value: false),
+            atxBooleanSetting(group: 'SPECIAL', name: 'mapProjectElementNameAsTestCaseName', value: false),
+            atxTextSetting(group: 'SPECIAL', name: 'mapSubPackageAsTestCaseLevel', value: '0'),
+            atxTextSetting(group: 'SPECIAL', name: 'captureSubPackageOnVerdict', value: ''),
+            atxBooleanSetting(group: 'SPECIAL', name: 'mapSeparateProjectExecutionAsSingleTestplan', value: false),
+            atxTextSetting(group: 'SPECIAL', name: 'mapAttributeAsConstant', value: ''),
+            atxBooleanSetting(group: 'SPECIAL', name: 'mapTestReportPathAsConstant', value: false),
+            atxBooleanSetting(group: 'SPECIAL', name: 'includeResourceAdapterInfo', value: true)],
+        customSettings: [
+            atxCustomBooleanSetting(name: 'customOption', checked: true),
+            atxCustomTextSetting(name: 'customLabel', value: 'test')])
             </pre>
         </dd>
     </dl>
