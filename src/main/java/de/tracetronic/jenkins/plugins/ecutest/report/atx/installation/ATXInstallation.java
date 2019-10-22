@@ -25,6 +25,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
+import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -105,6 +106,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
     /**
      * @return the name of the installation
      */
+    @Whitelisted
     public String getName() {
         return name;
     }
@@ -114,6 +116,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
      *
      * @return the toolName
      */
+    @Whitelisted
     public String getToolName() {
         return toolName;
     }
