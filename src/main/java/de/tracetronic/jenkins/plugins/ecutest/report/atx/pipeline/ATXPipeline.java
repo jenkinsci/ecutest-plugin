@@ -7,7 +7,6 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline;
 
 import com.google.common.collect.Maps;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
-import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 import org.jenkinsci.plugins.workflow.cps.CpsScript;
 
@@ -17,6 +16,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +31,7 @@ public class ATXPipeline implements Serializable {
 
     private static final String KEY_ATX_NAME = "atxName";
     private static final String KEY_TOOL_NAME = "toolName";
+    private static final String KEY_SERVER_URL = "fullServerURL";
     private static final String KEY_CONFIG = "config";
 
     private final CpsScript script;
@@ -54,6 +55,7 @@ public class ATXPipeline implements Serializable {
     public ATXServer server(final String serverName) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
         stepVariables.put(KEY_ATX_NAME, serverName);
+
         final ATXServer server = (ATXServer) script.invokeMethod("getATXServer", stepVariables);
         server.setScript(script);
         return server;
@@ -72,6 +74,7 @@ public class ATXPipeline implements Serializable {
             throw new IllegalArgumentException("The server method requires the following arguments at least: "
                 + keysAsList);
         }
+
         final ATXServer server = (ATXServer) script.invokeMethod("getATXServer", serverArgs);
         server.setScript(script);
         return server;
@@ -86,7 +89,7 @@ public class ATXPipeline implements Serializable {
      */
     @Whitelisted
     public ATXServer newServer(final String atxName, final String toolName) {
-        return newServer(atxName, toolName, null);
+        return newServer(atxName, toolName, new ATXConfig());
     }
 
     /**
@@ -103,73 +106,34 @@ public class ATXPipeline implements Serializable {
         stepVariables.put(KEY_ATX_NAME, atxName);
         stepVariables.put(KEY_TOOL_NAME, toolName);
         stepVariables.put(KEY_CONFIG, config);
+
         final ATXServer server = (ATXServer) script.invokeMethod("newATXServer", stepVariables);
         server.setScript(script);
         return server;
     }
 
     /**
-     * Creates a new {@link ATXServer} instance with server specific settings.
+     * Creates a new {@link ATXServer} instance with given commonly used settings.
      *
      * @param atxName        the ATX name
      * @param toolName       the tool name
-     * @param serverUrl      the server URL
-     * @param uploadToServer the upload to server
-     * @param authKey        the authentication key
+     * @param fullServerUrl  the full server URL
+     * @param uploadToServer specifies whether ATX upload is enabled or not
+     * @param authKey        the upload authentication key
      * @param projectId      the project id
      * @return the ATX server
-     * @throws MalformedURLException the malformed URL exception
+     * @throws MalformedURLException the malformed url exception
      */
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @Whitelisted
-    public ATXServer newServer(final String atxName, final String toolName, final String serverUrl,
+    public ATXServer newServer(final String atxName, final String toolName, final String fullServerUrl,
                                final boolean uploadToServer, final String authKey, final String projectId)
         throws MalformedURLException {
-        final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
-        stepVariables.put(KEY_ATX_NAME, atxName);
-        stepVariables.put(KEY_TOOL_NAME, toolName);
+        Map<String, Object> additionalSettings = Maps.newLinkedHashMap();
+        additionalSettings.put("uploadToServer", uploadToServer);
+        additionalSettings.put("uploadAuthenticationKey", authKey);
+        additionalSettings.put("projectId", projectId);
 
-        final URL url = new URL(serverUrl);
-        final String protocol = url.getProtocol();
-        final boolean useHttpsConnection = "https".equals(protocol);
-        final String port = String.valueOf(url.getPort());
-        final String host = url.getHost();
-        final String path = url.getPath().replaceFirst("/", "");
-
-        ATXConfig config = new ATXConfig();
-        final List<ATXSetting> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
-        for (final ATXSetting setting : uploadSettings) {
-            switch (setting.getName()) {
-                case "uploadToServer":
-                    setting.setValue(uploadToServer);
-                    break;
-                case "serverURL":
-                    setting.setValue(host);
-                    break;
-                case "useHttpsConnection":
-                    setting.setValue(useHttpsConnection);
-                    break;
-                case "serverPort":
-                    setting.setValue(port);
-                    break;
-                case "serverContextPath":
-                    setting.setValue(path);
-                    break;
-                case "uploadAuthenticationKey":
-                    setting.setValue(authKey);
-                    break;
-                case "projectId":
-                    setting.setValue(projectId);
-                    break;
-                default:
-                    break;
-            }
-        }
-        stepVariables.put(KEY_CONFIG, config);
-
-        final ATXServer server = (ATXServer) script.invokeMethod("newATXServer", stepVariables);
-        server.setScript(script);
-        return server;
+        return newServer(atxName, toolName, fullServerUrl, additionalSettings);
     }
 
     /**
@@ -188,17 +152,86 @@ public class ATXPipeline implements Serializable {
         }
 
         if (serverArgs.containsKey(KEY_CONFIG) && serverArgs.get(KEY_CONFIG) instanceof ATXConfig) {
-            return newServer((String) serverArgs.get(KEY_ATX_NAME), (String) serverArgs.get(KEY_TOOL_NAME),
+            return newServer(serverArgs.get(KEY_ATX_NAME).toString(), serverArgs.get(KEY_TOOL_NAME).toString(),
                 (ATXConfig) serverArgs.get(KEY_CONFIG));
         }
 
-        requiredKeys.addAll(Arrays.asList("serverUrl", "uploadToServer", "authKey", "projectId"));
+        requiredKeys.add(KEY_SERVER_URL);
+        final Map<String, Object> additionalArgs = new HashMap<>(serverArgs);
+        requiredKeys.forEach(additionalArgs::remove);
+
         if (serverArgs.keySet().containsAll(requiredKeys)) {
             return newServer(serverArgs.get(KEY_ATX_NAME).toString(), serverArgs.get(KEY_TOOL_NAME).toString(),
-                serverArgs.get("serverUrl").toString(), (boolean) serverArgs.get("uploadToServer"),
-                serverArgs.get("authKey").toString(), serverArgs.get("projectId").toString());
+                serverArgs.get(KEY_SERVER_URL).toString(), additionalArgs);
         } else {
-            return newServer(serverArgs.get(KEY_ATX_NAME).toString(), serverArgs.get(KEY_TOOL_NAME).toString());
+            return newServer(serverArgs.get(KEY_ATX_NAME).toString(), serverArgs.get(KEY_TOOL_NAME).toString(),
+                additionalArgs);
         }
+    }
+
+    /**
+     * Creates a new {@link ATXServer} instance with server specific settings.
+     *
+     * @param atxName            the ATX name
+     * @param toolName           the tool name
+     * @param fullServerUrl      the full server URL
+     * @param additionalSettings the additional settings
+     * @return the ATX server
+     * @throws MalformedURLException the malformed URL exception
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private ATXServer newServer(final String atxName, final String toolName, final String fullServerUrl,
+                                final Map<String, Object> additionalSettings) throws MalformedURLException {
+        final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
+        stepVariables.put(KEY_ATX_NAME, atxName);
+        stepVariables.put(KEY_TOOL_NAME, toolName);
+
+        final URL url = new URL(fullServerUrl);
+        final String protocol = url.getProtocol();
+        final boolean useHttpsConnection = "https".equals(protocol);
+        final String port = String.valueOf(url.getPort());
+        final String host = url.getHost();
+        final String path = url.getPath().replaceFirst("/", "");
+
+        ATXConfig config = new ATXConfig();
+        config.getSettingByName("serverURL").ifPresent(setting -> setting.setValue(host));
+        config.getSettingByName("serverPort").ifPresent(setting -> setting.setValue(port));
+        config.getSettingByName("serverContextPath").ifPresent(setting -> setting.setValue(path));
+        config.getSettingByName("useHttpsConnection").ifPresent(setting -> setting.setValue(useHttpsConnection));
+
+        additionalSettings.forEach((settingName, settingValue) -> {
+            config.getSettingByName(settingName).ifPresent(setting -> setting.setValue(settingValue));
+        });
+        stepVariables.put(KEY_CONFIG, config);
+
+        final ATXServer server = (ATXServer) script.invokeMethod("newATXServer", stepVariables);
+        server.setScript(script);
+        return server;
+    }
+
+
+    /**
+     * Creates a new {@link ATXServer} instance with server specific settings.
+     *
+     * @param atxName    the ATX name
+     * @param toolName   the tool name
+     * @param serverArgs the server arguments
+     * @return the ATX server
+     */
+    @SuppressWarnings({"unchecked"})
+    private ATXServer newServer(final String atxName, final String toolName, final Map<String, Object> serverArgs) {
+        final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
+        stepVariables.put(KEY_ATX_NAME, atxName);
+        stepVariables.put(KEY_TOOL_NAME, toolName);
+
+        ATXConfig config = new ATXConfig();
+        serverArgs.forEach((settingName, settingValue) -> {
+            config.getSettingByName(settingName).ifPresent(setting -> setting.setValue(settingValue));
+        });
+        stepVariables.put(KEY_CONFIG, config);
+
+        final ATXServer server = (ATXServer) script.invokeMethod("newATXServer", stepVariables);
+        server.setScript(script);
+        return server;
     }
 }

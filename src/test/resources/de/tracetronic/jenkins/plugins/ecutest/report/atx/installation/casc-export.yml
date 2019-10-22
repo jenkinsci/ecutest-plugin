@@ -43,6 +43,12 @@ installations:
         value: true
     - atxTextSetting:
         group: UPLOAD
+        name: "httpProxy"
+    - atxTextSetting:
+        group: UPLOAD
+        name: "httpsProxy"
+    - atxTextSetting:
+        group: UPLOAD
         name: "projectId"
         value: "1"
     - atxBooleanSetting:
@@ -87,6 +93,10 @@ installations:
         value: false
     - atxBooleanSetting:
         group: ARCHIVE
+        name: "archiveRecordingMetadata"
+        value: true
+    - atxBooleanSetting:
+        group: ARCHIVE
         name: "archivePlots"
         value: true
     - atxTextSetting:
@@ -99,6 +109,9 @@ installations:
         group: ARCHIVE
         name: "archiveMiscFilesOnlyInTestReportDir"
         value: true
+    - atxTextSetting:
+        group: ARCHIVE
+        name: "archiveFilesPerPackage"
     - atxTextSetting:
         group: ARCHIVE
         name: "archiveBy"
@@ -160,6 +173,10 @@ installations:
         group: SPECIAL
         name: "includeToolIdentifier"
         value: false
+    - atxBooleanSetting:
+        group: SPECIAL
+        name: "includePkgTestSteps"
+        value: true
     - atxBooleanSetting:
         group: SPECIAL
         name: "onlyIncludePkgTestCases"
