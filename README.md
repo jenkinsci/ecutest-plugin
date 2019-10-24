@@ -198,7 +198,7 @@ node('windows') {
     // Class notation is required for publisher steps inside downstream wrapper!
     // Available: ATXPublisher, ETLogPublisher, JUnitPublisher, ReportGeneratorPublisher, TMSPublisher, TRFPublisher
     downstreamPublisher workspace: '', publishers: [
-        [$class: 'ATXPublisher', atxName: 'ECU-TEST'],
+        [$class: 'ATXPublisher', atxName: 'TEST-GUIDE'],
         [$class: 'JUnitPublisher', toolName: 'ECU-TEST']]
 }
 ```
@@ -540,11 +540,15 @@ node('windows') {
      
     // TEST-GUIDE server instantiation using global variable ATX
     def atx = ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST', 
-                            serverUrl: 'http://localhost:8085', uploadToServer: false, 
+                            fullServerURL: 'http://localhost:8085', uploadToServer: false, 
                             authKey: 'xxx', projectId: '1'
  
     // or getting existing instance from global configuration
     def atx = ATX.server('TEST-GUIDE')
+    
+    // Override one or multiple settings explicitly
+    atx.overrideSetting('useHttpsConnection', true) 
+    atx.overrideSettings([serverURL: '127.0.0.1', useHttpsConnection: true])
  
     // Publish ATX reports directly
     atx.publish()
