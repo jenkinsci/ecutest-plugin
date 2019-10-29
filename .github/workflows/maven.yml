@@ -9,11 +9,11 @@ jobs:
     strategy:
       matrix:
         java: [1.8, 11]
-        jenkins-version: [2.60.3, 2.190.2]
+        jenkins-version: [2.60.3, 2.176.4]
         os: [ubuntu-latest, windows-latest]
         include:
-          - jenkins-version: '2.190.2'
-            flags: '-Djenkins.version=2.190.2'
+          - jenkins-version: '2.176.4'
+            flags: '-Djenkins.version=2.176.4'
         exclude:
           - java: '11'
             jenkins-version: '2.60.3'
@@ -24,4 +24,4 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
       - name: Build with Maven
-        run: mvn install -B -V --no-transfer-progress ${{ matrix.flags }}
+        run: mvn package -B -V --no-transfer-progress ${{ matrix.flags }}
