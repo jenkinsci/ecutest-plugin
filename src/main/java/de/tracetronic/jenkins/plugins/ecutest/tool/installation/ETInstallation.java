@@ -11,13 +11,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopTSBuilder;
-import hudson.CopyOnWrite;
-import hudson.EnvVars;
-import hudson.Extension;
-import hudson.Functions;
-import hudson.Launcher;
-import hudson.Util;
-import hudson.XmlFile;
+import hudson.*;
 import hudson.model.Node;
 import hudson.model.TaskListener;
 import hudson.tools.ToolDescriptor;
@@ -122,19 +116,24 @@ public class ETInstallation extends AbstractToolInstallation {
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public String getTSExecutable(final Launcher launcher) throws IOException, InterruptedException {
-        return launcher.getChannel().call(new MasterToSlaveCallable<String, IOException>() {
+        return launcher.getChannel().call(new GetTSExecutableCallable());
+    }
 
-            private static final long serialVersionUID = 1L;
+    /**
+     * {@link MasterToSlaveCallable} providing remote access to return the Tool-Server executable path.
+     */
+    private final class GetTSExecutableCallable extends MasterToSlaveCallable<String, IOException> {
 
-            @Override
-            public String call() throws IOException {
-                File exe = getTSExeFile("");
-                if (exe == null || !exe.exists()) {
-                    exe = getTSExeFile("ToolServer");
-                }
-                return exe != null && exe.exists() ? exe.getPath() : null;
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public String call() {
+            File exe = getTSExeFile("");
+            if (exe == null || !exe.exists()) {
+                exe = getTSExeFile("ToolServer");
             }
-        });
+            return exe != null && exe.exists() ? exe.getPath() : null;
+        }
     }
 
     /**
