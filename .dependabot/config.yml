@@ -15,6 +15,6 @@ update_configs:
     - match:
         dependency_name: "io.jenkins.plugins*"
     - match:
-        dependency_name: "antlr4*"
+        dependency_name: "org.antlr:antlr4*"
     - match:
-        dependency_name: "sqlite-jdbc"
+        dependency_name: "org.xerial:sqlite-jdbc"
