@@ -62,16 +62,21 @@ public abstract class AbstractToolInstallation extends ToolInstallation implemen
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public String getExecutable(final Launcher launcher) throws IOException, InterruptedException {
-        return launcher.getChannel().call(new MasterToSlaveCallable<String, IOException>() {
+        return launcher.getChannel().call(new GetExecutableCallable());
+    }
 
-            private static final long serialVersionUID = 1L;
+    /**
+     * {@link MasterToSlaveCallable} providing remote access to return the tool executable path.
+     */
+    private final class GetExecutableCallable extends MasterToSlaveCallable<String, IOException> {
 
-            @Override
-            public String call() throws IOException {
-                final File exe = getExeFile();
-                return exe != null && exe.exists() ? exe.getPath() : null;
-            }
-        });
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public String call() {
+            final File exe = getExeFile();
+            return exe != null && exe.exists() ? exe.getPath() : null;
+        }
     }
 
     /**
