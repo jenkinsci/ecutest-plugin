@@ -63,7 +63,7 @@ An installation entry is specified by an arbitrary name and the path to the inst
 The execution on a Jenkins slave requires the adaption of the ECU-TEST installation directory on the slave configuration page.
 
 ![ECU-TEST](docs/images/ecutest.png "ECU-TEST")
-    
+
 ### TEST-GUIDE configuration
 
 TEST-GUIDE is also configured in the Jenkins system configuration at section "TEST-GUIDE".
@@ -175,11 +175,11 @@ Copying artifacts and generating ATX report (_downstream_)
 ```groovy
 node('windows') {
     deleteDir()
-     
+
     startET 'ECU-TEST'
     testPackage testFile: 'sample.pkg', testConfig: [tbcFile: 'sample.tbc', tcfFile: 'sample.tcf']
     stopET 'ECU-TEST'
-     
+
     archiveArtifacts 'TestReports/**/*.trf'
     build job: 'downstream', wait: false
 }
@@ -192,9 +192,9 @@ node('windows') {
 ```groovy
 node('windows') {
     deleteDir()
-     
+
     copyArtifacts filter: 'TestReports/**/*.trf', projectName: 'upstream', selector: lastSuccessful()
-     
+
     // Class notation is required for publisher steps inside downstream wrapper!
     // Available: ATXPublisher, ETLogPublisher, JUnitPublisher, ReportGeneratorPublisher, TMSPublisher, TRFPublisher
     downstreamPublisher workspace: '', publishers: [
@@ -240,11 +240,11 @@ Copying artifacts and running the trace analysis (_downstream_)
 ```groovy
 node('windows') {
     deleteDir()
-     
+
     startET 'ECU-TEST'
     testPackage testFile: 'sample.pkg', testConfig: [tbcFile: 'sample.tbc', tcfFile: 'sample.tcf'], packageConfig: [runTraceAnalysis: false]
     stopET 'ECU-TEST'
-     
+
     archiveArtifacts 'TestReports/**/*.trf, TestReports/**/*.ajob, Packages/**, Traces/**, TraceStepTemplates/**'
     build job: 'downstream', wait: false
 }
@@ -257,9 +257,9 @@ node('windows') {
 ```groovy
 node('windows') {
     deleteDir()
-     
+
     copyArtifacts filter: 'TestReports/**/*.trf, TestReports/**/*.ajob, Packages/**, Traces/**, TraceStepTemplates/**', projectName: 'upstream', selector: lastSuccessful()
-     
+
     // Class notation is required for publisher steps inside downstream wrapper!
     downstreamPublisher workspace: '', publishers: [
         [$class: 'TraceAnalysisPublisher', toolName: 'ECU-TEST', mergeReports: true]]
@@ -398,7 +398,7 @@ steps {
     importAttributesFromTMS(String credentialsId, String projectPath) {
       timeout(int | String timeout = 60)
     }
-  } 
+  }
   // Import packages
   importPackages {
     importFromTMS { (...) }
@@ -417,7 +417,7 @@ steps {
     exportAttributesToTMS(String credentialsId, String projectPath) {
       timeout(int | String timeout = 60)
     }
-  } 
+  }
   // Export packages
   exportPackages {
     exportToTMS { (...) }
@@ -517,13 +517,13 @@ node('windows') {
 node('windows') {
     // ECU-TEST installation using global variable ET
     def et = ET.newInstallation toolName: 'ECU-TEST', installPath: 'C:\\Program Files\\ECU-TEST 8.0'
- 
+
     // or getting existing installation from global tool configuration
     def et = ET.installation('ECU-TEST')
- 
+
     // Start ECU-TEST
     et.start('C:\\Data\\workspace', 'C:\\Data\\settings')
- 
+
     // Stop ECU-TEST
     et.stop()
 }
@@ -537,19 +537,19 @@ node('windows') {
 node('windows') {
     // Start tools, execute tests
     ...
-     
+
     // TEST-GUIDE server instantiation using global variable ATX
-    def atx = ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST', 
-                            fullServerURL: 'http://localhost:8085', uploadToServer: false, 
+    def atx = ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST',
+                            fullServerURL: 'http://localhost:8085', uploadToServer: false,
                             authKey: 'xxx', projectId: '1'
- 
+
     // or getting existing instance from global configuration
     def atx = ATX.server('TEST-GUIDE')
-    
+
     // Override one or multiple settings explicitly
-    atx.overrideSetting('useHttpsConnection', true) 
+    atx.overrideSetting('useHttpsConnection', true)
     atx.overrideSettings([serverURL: '127.0.0.1', useHttpsConnection: true])
- 
+
     // Publish ATX reports directly
     atx.publish()
 }
@@ -576,7 +576,7 @@ If the problem still exists search the following list of issues for possible sol
 
 <details>
     <summary>The configured tests are aborted after 60 minutes.</summary>
-    
+
 > There is a default maximum execution timeout of 3600 seconds that can be changed in the advanced build step section under execution settings. Setting the value to 0 disables the timeout.
 </details>
 
@@ -623,19 +623,19 @@ Additionally, other problems with external tools connected to ECU-TEST or the To
 
 <details>
     <summary>[TT] ERROR: Caught ComException: Invoke of: Item Source: Description: &lt;Fault 1: 'Exception: method "CurrentTestConfiguration.GlobalConstants.Tell.GetName" is not supported'&gt;</summary>
-    
+
 > This exception is already fixed in release 2.0, please update to at least this version.
 </details>
 
 <details>
     <summary>[TT] ERROR: Caught ComException: Invoke of: Abort Source: Description: &lt;Fault 1: 'tt.Error: Fehler bei Abbruch per API! Status ABORTED nach 20.0s nicht erreicht.'&gt;</summary>
-    
+
 > This is a known defect in ECU-TEST and occurs when the test execution could not be aborted within a fixed timeout of 20 seconds.
 </details>
 
 <details>
     <summary>[TT] ERROR: Error while uploading ATX report: 401: report - ErrorCode-1118: Upload nicht möglich, da die Berechtigung fehlt. API-Schlüssel und Benutzerrechte überprüfen.</summary>
-    
+
 > An upload authentication key is required to upload reports to TEST-GUIDE, which can be set in the TEST-GUIDE upload configuration.
 </details>
 
@@ -687,5 +687,5 @@ More information can be found inside the [LICENSE](LICENSE) file.
 
 ## Changelog
 
-- See [GitHub Releases](https://github.com/jenkinsci/ecutest-plugin/releases) for recent versions
-- See [Jenkins Wiki](https://wiki.jenkins.io/display/JENKINS/TraceTronic+ECU-TEST+Plugin#TraceTronicECU-TESTPlugin-Changelog) for previous releases
+- See [GitHub Releases](https://github.com/jenkinsci/ecutest-plugin/releases) for recent versions (2.9 and above)
+- See [CHANGELOG.md](docs/CHANGELOG.md) for previous releases (2.8 and below)
