@@ -343,7 +343,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         /**
          * File name of the error file which is created in case of an ATX upload error.
          */
-        private static final String ERROR_FILE_NAME = "error.log.raw.json";
+        private static final String ERROR_FILE_NAME = "error.raw.json";
 
         /**
          * File name of the success file which is created in case of a regular ATX upload.
@@ -385,7 +385,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                         comClient.waitForIdle(0);
 
                         final FilePath successFile = outDir.child(SUCCESS_FILE_NAME);
-                        testInfo = checkSuccessLog(successFile, uploadFile, logger);
+                        final boolean uploadAsync = configMap.get("uploadAsync").equals("True");
+                        testInfo = checkSuccessLog(successFile, uploadFile, uploadAsync, logger);
 
                         final FilePath errorFile = outDir.child(ERROR_FILE_NAME);
                         checkErrorLog(errorFile, logger);
@@ -403,6 +404,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          *
          * @param successFile the success file
          * @param uploadFile  the upload file
+         * @param uploadAsync specifies whether asynchronous upload is enabled
          * @param logger      the logger
          * @return the parsed test information
          * @throws IOException                  signals that an I/O exception has occurred
@@ -410,21 +412,22 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          * @throws UnsupportedEncodingException in case of an unsupported encoding
          */
         private TestInfoHolder checkSuccessLog(final FilePath successFile, final FilePath uploadFile,
-                                               final TTConsoleLogger logger) throws IOException {
+                                               boolean uploadAsync, final TTConsoleLogger logger) throws IOException {
             TestInfoHolder testInfo = null;
             try {
                 if (successFile.exists()) {
-                    logger.logDebug("Uploading ATX report succeded:");
-                    final JSONObject jsonObject = (JSONObject) new JsonSlurper()
-                        .parseText(successFile.readToString());
-                    final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
+                    logger.logDebug("ATX report uploaded successfully.");
+                    final String content = successFile.readToString();
+                    logger.logDebug(String.format("Response: %s", content));
+
+                    final JSONObject jsonObject = (JSONObject) new JsonSlurper().parseText(content);
+                    final JSONArray jsonArray = jsonObject.optJSONArray(uploadAsync ? "messages" : "ENTRIES");
                     if (jsonArray != null) {
                         for (int i = 0; i < jsonArray.size(); i++) {
-                            final String status = jsonArray.getJSONObject(i).getString("STATUS");
+                            final String status = jsonArray.getJSONObject(i).getString(
+                                uploadAsync ? "statusCode" : "STATUS");
                             if ("200".equals(status)) {
-                                final String file = jsonArray.getJSONObject(i).getString("FILE");
-                                final String text = jsonArray.getJSONObject(i).getString("TEXT");
-                                logger.logDebug(String.format("%s: %s - %s", status, file, text));
+                                final String text = jsonArray.getJSONObject(i).getString(uploadAsync ? "body" : "TEXT");
 
                                 final URL location = resolveRedirect(text);
                                 testInfo = parseTestInfo(location, uploadFile);
@@ -453,9 +456,11 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         private void checkErrorLog(final FilePath errorFile, final TTConsoleLogger logger) throws IOException {
             try {
                 if (errorFile.exists()) {
-                    logger.logError("Error while uploading ATX report:");
-                    final JSONObject jsonObject = (JSONObject) new JsonSlurper()
-                        .parseText(errorFile.readToString());
+                    logger.logError("Error while uploading ATX report!");
+                    final String content = errorFile.readToString();
+                    logger.logDebug(String.format("Response: %s", content));
+
+                    final JSONObject jsonObject = (JSONObject) new JsonSlurper().parseText(content);
                     final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
                     if (jsonArray != null) {
                         for (int i = 0; i < jsonArray.size(); i++) {
