@@ -10,6 +10,7 @@ import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
@@ -102,6 +103,13 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             logger.logError(String.format("Error getting base URL for selected TEST-GUIDE installation: %s",
                 getInstallation().getName()));
             return false;
+        }
+
+        boolean isCleanupEnabled = (boolean) config.getSettingValueByGroup("cleanAfterSuccessUpload",
+            ATXSetting.SettingsGroup.UPLOAD);
+        if (isCleanupEnabled) {
+            logger.logWarn("-> In order to generate ATX report links with unique ATX identifiers " +
+                "disable the upload setting 'Clean After Success Upload' in the TEST-GUIDE configuration.");
         }
 
         for (final FilePath reportDir : reportDirs) {
@@ -428,7 +436,6 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                                 uploadAsync ? "statusCode" : "STATUS");
                             if ("200".equals(status)) {
                                 final String text = jsonArray.getJSONObject(i).getString(uploadAsync ? "body" : "TEXT");
-
                                 final URL location = resolveRedirect(text);
                                 testInfo = parseTestInfo(location, uploadFile);
                                 if (testInfo != null) {
