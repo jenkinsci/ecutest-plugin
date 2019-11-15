@@ -1,5 +1,5 @@
 ---
-name: ":rocket: Feature Request"
+name: "🚀 Feature Request"
 about: Suggest an idea for the plugin
 labels: feature
 ---
