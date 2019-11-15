@@ -369,7 +369,7 @@ public class ATXValidator extends AbstractValidator {
 
             final int httpResponse = connection.getResponseCode();
             if (httpResponse != HttpURLConnection.HTTP_OK) {
-                returnValue = FormValidation.warning(Messages.ATXInstallation_ServerNotReachable(baseUrl,
+                returnValue = FormValidation.error(Messages.ATXInstallation_ServerNotReachable(baseUrl,
                     "Status code: " + httpResponse));
             } else {
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -381,7 +381,7 @@ public class ATXValidator extends AbstractValidator {
         } catch (final MalformedURLException e) {
             returnValue = FormValidation.error(Messages.ATXInstallation_InvalidServerUrl(baseUrl));
         } catch (final IOException | NoSuchAlgorithmException | KeyManagementException e) {
-            returnValue = FormValidation.warning(Messages.ATXInstallation_ServerNotReachable(baseUrl, e.getMessage()));
+            returnValue = FormValidation.error(Messages.ATXInstallation_ServerNotReachable(baseUrl, e.getMessage()));
         } finally {
             if (connection != null) {
                 connection.disconnect();
