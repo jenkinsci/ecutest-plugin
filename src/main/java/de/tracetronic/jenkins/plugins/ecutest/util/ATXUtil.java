@@ -96,7 +96,7 @@ public final class ATXUtil {
     public static String getBaseUrl(final ATXConfig config, final EnvVars envVars) {
         String fullServerUrl = null;
         if (config != null && envVars != null) {
-            List<ATXSetting> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
+            final List<ATXSetting> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
             final Object useHttpsConnection = config.getSettingValueByName("useHttpsConnection", uploadSettings);
             final String serverUrl = envVars.expand((String) config.getSettingValueByName("serverURL", uploadSettings));
             final String serverPort = envVars.expand((String) config
@@ -128,6 +128,29 @@ public final class ATXUtil {
                 : String.format("%s://%s:%s/%s", protocol, serverUrl, serverPort, contextPath);
         }
         return fullServerUrl;
+    }
+
+    /**
+     * Gets the server base URL of the ATX installation.
+     * Parameterized settings are expanded by given environment variables.
+     *
+     * @param config  the ATX configuration
+     * @param envVars the environment variables
+     * @return the ATX base URL or {@code null} if invalid URL
+     */
+    @CheckForNull
+    public static String getProxyUrl(final ATXConfig config, final EnvVars envVars) {
+        String proxyUrl = null;
+        if (config != null && envVars != null) {
+            final List<ATXSetting> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
+            final Object useHttpsConnection = config.getSettingValueByName("useHttpsConnection", uploadSettings);
+            if (useHttpsConnection != null && (boolean) useHttpsConnection) {
+                proxyUrl = envVars.expand((String) config.getSettingValueByName("httpsProxy", uploadSettings));
+            } else {
+                proxyUrl = envVars.expand((String) config.getSettingValueByName("httpProxy", uploadSettings));
+            }
+        }
+        return proxyUrl;
     }
 
     /**

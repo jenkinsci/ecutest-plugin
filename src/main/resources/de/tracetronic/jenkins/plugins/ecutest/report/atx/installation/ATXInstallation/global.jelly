@@ -7,7 +7,7 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
     <f:section title="${%atx.title}">
-        <f:entry title="${%atx.settings(descriptor.getATXVersion())}" description="${%atx.description}">
+        <f:entry title="${%atx.settings(descriptor.getATXConfigVersion())}" description="${%atx.description}">
             <f:repeatable var="installation" items="${descriptor.installations}" add="${%atx.add}">
                 <table width="100%">
                     <f:section title="${%atx.title}">
@@ -38,7 +38,7 @@
                                 <f:validateButton title="${%testConnection.title}"
                                                   progress="${%testConnection.progress}"
                                                   method="testConnection"
-                                                  with="serverURL,serverPort,serverContextPath,useHttpsConnection,ignoreSSL"/>
+                                                  with="serverURL,serverPort,serverContextPath,useHttpsConnection,httpProxy,httpsProxy,ignoreSSL"/>
                             </div>
                         </f:entry>
                     </f:section>

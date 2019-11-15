@@ -96,6 +96,13 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             return false;
         }
 
+        config.getSettingByName("cleanAfterSuccessUpload").ifPresent(setting -> {
+            if ((boolean) setting.getValue()) {
+                logger.logWarn("-> In order to generate ATX report links with unique ATX identifiers " +
+                    "disable the upload setting 'Clean After Success Upload' in the TEST-GUIDE configuration.");
+            }
+        });
+
         for (final FilePath reportDir : reportDirs) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(reportDir);
             if (reportFile != null && reportFile.exists()) {
@@ -103,15 +110,17 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                     reportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES));
 
                 // Upload ATX reports
-                TestInfoHolder testInfo = launcher.getChannel().call(
+                UploadInfoHolder uploadInfo = launcher.getChannel().call(
                     new UploadReportCallable(config, uploadFiles, envVars, listener));
 
-                // Prepare ATX report links
-                final String title = reportFile.getParent().getName();
-                if (testInfo == null) {
-                    testInfo = launcher.getChannel().call(new ParseTRFCallable(reportFile.getRemote()));
+                if (uploadInfo.isUploaded()) {
+                    // Prepare ATX report links
+                    final String title = reportFile.getParent().getName();
+                    if (uploadInfo.getTestInfo() == null) {
+                        uploadInfo.setTestInfo(launcher.getChannel().call(new ParseTRFCallable(reportFile.getRemote())));
+                    }
+                    traverseReports(atxReports, reportDir, title, baseUrl, uploadInfo.getTestInfo(), projectId);
                 }
-                traverseReports(atxReports, reportDir, title, baseUrl, testInfo, projectId);
             } else {
                 if (!allowMissing) {
                     logger.logError(String.format("Specified TRF file '%s' does not exist.", reportFile));
@@ -328,14 +337,14 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     /**
      * {@link Callable} enabling generating and uploading ATX reports remotely.
      */
-    private static final class UploadReportCallable extends AbstractReportCallable<TestInfoHolder> {
+    private static final class UploadReportCallable extends AbstractReportCallable<UploadInfoHolder> {
 
         private static final long serialVersionUID = 1L;
 
         /**
          * File name of the error file which is created in case of an ATX upload error.
          */
-        private static final String ERROR_FILE_NAME = "error.log.raw.json";
+        private static final String ERROR_FILE_NAME = "error.raw.json";
 
         /**
          * File name of the success file which is created in case of a regular ATX upload.
@@ -357,8 +366,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         }
 
         @Override
-        public TestInfoHolder call() throws IOException {
-            TestInfoHolder testInfo = null;
+        public UploadInfoHolder call() throws IOException {
+            UploadInfoHolder uploadInfo = new UploadInfoHolder(false);
             final TTConsoleLogger logger = new TTConsoleLogger(getListener());
             final Map<String, String> configMap = getConfigMap(true);
             final String progId = ETComProperty.getInstance().getProgId();
@@ -376,17 +385,19 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                             outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
                         comClient.waitForIdle(0);
 
-                        final FilePath successFile = outDir.child(SUCCESS_FILE_NAME);
-                        testInfo = checkSuccessLog(successFile, uploadFile, logger);
-
                         final FilePath errorFile = outDir.child(ERROR_FILE_NAME);
-                        checkErrorLog(errorFile, logger);
+                        if(checkErrorLog(errorFile, logger)) {
+                            final FilePath successFile = outDir.child(SUCCESS_FILE_NAME);
+                            final boolean uploadAsync = configMap.get("uploadAsync").equals("True");
+                            uploadInfo.setTestInfo(checkSuccessLog(successFile, uploadFile, uploadAsync, logger));
+                            uploadInfo.setUploaded(true);
+                        }
                     }
                 }
             } catch (final ETComException e) {
                 logger.logComException(e);
             }
-            return testInfo;
+            return uploadInfo;
         }
 
         /**
@@ -395,6 +406,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          *
          * @param successFile the success file
          * @param uploadFile  the upload file
+         * @param uploadAsync specifies whether asynchronous upload is enabled
          * @param logger      the logger
          * @return the parsed test information
          * @throws IOException                  signals that an I/O exception has occurred
@@ -402,22 +414,22 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          * @throws UnsupportedEncodingException in case of an unsupported encoding
          */
         private TestInfoHolder checkSuccessLog(final FilePath successFile, final FilePath uploadFile,
-                                               final TTConsoleLogger logger) throws IOException {
+                                               boolean uploadAsync, final TTConsoleLogger logger) throws IOException {
             TestInfoHolder testInfo = null;
             try {
                 if (successFile.exists()) {
-                    logger.logDebug("Uploading ATX report succeded:");
-                    final JSONObject jsonObject = (JSONObject) new JsonSlurper()
-                        .parseText(successFile.readToString());
-                    final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
+                    logger.logDebug("ATX report uploaded successfully.");
+                    final String content = successFile.readToString();
+                    logger.logDebug(String.format("Response: %s", content));
+
+                    final JSONObject jsonObject = (JSONObject) new JsonSlurper().parseText(content);
+                    final JSONArray jsonArray = jsonObject.optJSONArray(uploadAsync ? "messages" : "ENTRIES");
                     if (jsonArray != null) {
                         for (int i = 0; i < jsonArray.size(); i++) {
-                            final String status = jsonArray.getJSONObject(i).getString("STATUS");
+                            final String status = jsonArray.getJSONObject(i).getString(
+                                uploadAsync ? "statusCode" : "STATUS");
                             if ("200".equals(status)) {
-                                final String file = jsonArray.getJSONObject(i).getString("FILE");
-                                final String text = jsonArray.getJSONObject(i).getString("TEXT");
-                                logger.logDebug(String.format("%s: %s - %s", status, file, text));
-
+                                final String text = jsonArray.getJSONObject(i).getString(uploadAsync ? "body" : "TEXT");
                                 final URL location = resolveRedirect(text);
                                 testInfo = parseTestInfo(location, uploadFile);
                                 if (testInfo != null) {
@@ -440,14 +452,19 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          *
          * @param errorFile the error file
          * @param logger    the logger
+         * @return whether error log file does not exists or no errors found inside
          * @throws IOException signals that an I/O exception has occurred
          */
-        private void checkErrorLog(final FilePath errorFile, final TTConsoleLogger logger) throws IOException {
+        private boolean checkErrorLog(final FilePath errorFile, final TTConsoleLogger logger) throws IOException {
+            boolean hasNoErrors = true;
             try {
                 if (errorFile.exists()) {
-                    logger.logError("Error while uploading ATX report:");
-                    final JSONObject jsonObject = (JSONObject) new JsonSlurper()
-                        .parseText(errorFile.readToString());
+                    hasNoErrors = false;
+                    logger.logError("Error while uploading ATX report!");
+                    final String content = errorFile.readToString();
+                    logger.logDebug(String.format("Response: %s", content));
+
+                    final JSONObject jsonObject = (JSONObject) new JsonSlurper().parseText(content);
                     final JSONArray jsonArray = jsonObject.optJSONArray("ENTRIES");
                     if (jsonArray != null) {
                         for (int i = 0; i < jsonArray.size(); i++) {
@@ -460,7 +477,9 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 }
             } catch (final JSONException | InterruptedException e) {
                 logger.logError("-> Could not parse ATX JSON response: " + e.getMessage());
+                hasNoErrors = false;
             }
+            return hasNoErrors;
         }
 
         /**
@@ -623,6 +642,59 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                     connection.close();
                 }
             }
+        }
+    }
+
+    /**
+     * Helper class storing information about the report upload.
+     * Used as data model for {@link UploadReportCallable}.
+     */
+    private static final class UploadInfoHolder implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        private boolean uploaded;
+        private TestInfoHolder testInfo;
+
+        /**
+         * Instantiates a new {@link UploadInfoHolder}.
+         *
+         * @param uploaded the uploaded
+         */
+        public UploadInfoHolder(final boolean uploaded) {
+            this.uploaded = uploaded;
+        }
+
+        /**
+         * @return whether the report upload was successful
+         */
+        public boolean isUploaded() {
+            return uploaded;
+        }
+
+        /**
+         * Sets the upload state.
+         *
+         * @param uploaded specifies whether the report upload was successful
+         */
+        public void setUploaded(final boolean uploaded) {
+            this.uploaded = uploaded;
+        }
+
+        /**
+         * @return the test info
+         */
+        public TestInfoHolder getTestInfo() {
+            return testInfo;
+        }
+
+        /**
+         * Sets test information.
+         *
+         * @param testInfo the test info
+         */
+        public void setTestInfo(final TestInfoHolder testInfo) {
+            this.testInfo = testInfo;
         }
     }
 

@@ -173,7 +173,7 @@ public class ATXPublisher extends AbstractReportPublisher {
         final TTConsoleLogger logger = getLogger();
         final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
         final boolean isUploadEnabled = isUploadEnabled(installation);
-        final boolean isServerReachable = isServerReachable(installation, launcher, run.getEnvironment(listener));
+        final boolean isServerReachable = isServerReachable(installation, run, launcher, listener);
         if (isUploadEnabled && isServerReachable) {
             logger.logInfo("- Generating and uploading ATX reports...");
             final ATXReportUploader uploader = new ATXReportUploader(installation);
@@ -210,16 +210,18 @@ public class ATXPublisher extends AbstractReportPublisher {
      * Checks whether the selected TEST-GUIDE server is reachable.
      *
      * @param installation the ATX installation
+     * @param run          the run
      * @param launcher     the launcher
-     * @param envVars      the the environment variables
+     * @param listener     the listener
      * @return {@code true} if server is reachable, {@code false} otherwise
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
      */
-    private boolean isServerReachable(final ATXInstallation installation, final Launcher launcher,
-                                      final EnvVars envVars) throws IOException, InterruptedException {
+    private boolean isServerReachable(final ATXInstallation installation, final Run<?, ?> run, final Launcher launcher,
+                                      final TaskListener listener) throws IOException, InterruptedException {
         final ATXConfig config = installation.getConfig();
-        return launcher.getChannel().call(new TestConnectionCallable(config, envVars));
+        final EnvVars envVars = run.getEnvironment(listener);
+        return launcher.getChannel().call(new TestConnectionCallable(config, envVars, listener));
     }
 
     /**
@@ -258,16 +260,19 @@ public class ATXPublisher extends AbstractReportPublisher {
 
         private final ATXConfig config;
         private final EnvVars envVars;
+        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link TestConnectionCallable}.
          *
-         * @param config  the ATX configuration
-         * @param envVars the environment variables
+         * @param config   the ATX configuration
+         * @param envVars  the environment variables
+         * @param listener the listener
          */
-        TestConnectionCallable(final ATXConfig config, final EnvVars envVars) {
+        TestConnectionCallable(final ATXConfig config, final EnvVars envVars,  final TaskListener listener) {
             this.config = config;
             this.envVars = envVars;
+            this.listener = listener;
         }
 
         @Override
@@ -275,8 +280,14 @@ public class ATXPublisher extends AbstractReportPublisher {
             Object ignoreSSL = config.getSettingValueByGroup("ignoreSSL", ATXSetting.SettingsGroup.UPLOAD);
             if (ignoreSSL != null) {
                 final String baseUrl = ATXUtil.getBaseUrl(config, envVars);
+                final String proxyUrl = ATXUtil.getProxyUrl(config, envVars);
                 final ATXValidator validator = new ATXValidator();
-                final FormValidation validation = validator.testConnection(baseUrl, (boolean) ignoreSSL);
+                final FormValidation validation = validator.testConnection(baseUrl, proxyUrl, (boolean) ignoreSSL);
+                if (validation.kind.equals(FormValidation.Kind.WARNING)) {
+                    TTConsoleLogger logger = new TTConsoleLogger(listener);
+                    logger.logWarn(validation.getMessage());
+                    return true;
+                }
                 return validation.kind.equals(FormValidation.Kind.OK);
             }
             return false;
