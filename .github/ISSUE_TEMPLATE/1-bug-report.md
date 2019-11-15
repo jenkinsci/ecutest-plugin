@@ -1,14 +1,12 @@
 ---
-name: Bug report
+name: ":bug: Bug Report"
 about: Create a report to help us improve
-title: ''
 labels: bug
-assignees: ''
-
 ---
 
 <!--
-Never report security issues on GitHub or other public channels (Gitter/Twitter/etc.). Follow the instruction from [Jenkins Security](https://jenkins.io/security/) or use our [TraceTronic Support Center](https://support.tracetronic.com). For reporting issues containing NDA relevant information please also use our [TraceTronic Support Center](https://support.tracetronic.com).
+Never report security issues on GitHub or other public channels (Gitter/Twitter/etc.). Follow the instruction from [Jenkins Security](https://jenkins.io/security/) or use our [TraceTronic Support Center](https://support.tracetronic.com).
+For reporting issues containing NDA relevant information please also use our [TraceTronic Support Center](https://support.tracetronic.com).
 -->
 
 **Describe the bug**

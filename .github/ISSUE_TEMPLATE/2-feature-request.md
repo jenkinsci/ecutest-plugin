@@ -1,14 +1,11 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
-title: ''
+name: ":rocket: Feature Request"
+about: Suggest an idea for the plugin
 labels: feature
-assignees: ''
-
 ---
 
 <!--
-For reporting issues containing NDA relevant information please also use our [TraceTronic Support Center](https://support.tracetronic.com).
+For reporting issues containing NDA relevant information please use our [TraceTronic Support Center](https://support.tracetronic.com).
 -->
 
 **Describe the feature request**
