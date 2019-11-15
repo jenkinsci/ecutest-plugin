@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -157,6 +158,93 @@ public class ATXUtilTest {
             }));
 
         assertThat(ATXUtil.getBaseUrl(atxConfig, envVars), is("https://localhost:8086/context"));
+    }
+
+    @Test
+    public void testInvalidProxyUrl() {
+        assertNull(ATXUtil.getProxyUrl(null, null));
+    }
+
+    @Test
+    public void testProxyUrlByDefaultConfig() {
+        final ATXConfig atxConfig = new ATXConfig();
+        assertThat(ATXUtil.getProxyUrl(atxConfig, new EnvVars()), isEmptyString());
+    }
+
+    @Test
+    public void testHttpProxyUrlBySpecificConfig() {
+        final List<ATXSetting> uploadSettings = new ArrayList<>();
+        final ATXTextSetting httpProxy = new ATXTextSetting("httpProxy", SettingsGroup.UPLOAD, "", "", "http://user:pass@127.0.0.1:8080");
+        final ATXTextSetting httpsProxy = new ATXTextSetting("httpsProxy", SettingsGroup.UPLOAD, "", "", "http://user:pass@127.0.0.1:8081");
+        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.UPLOAD, "", "", false);
+        uploadSettings.add(httpProxy);
+        uploadSettings.add(httpsProxy);
+        uploadSettings.add(useHttpsConnection);
+
+        final ATXConfig atxConfig = new ATXConfig(uploadSettings, null);
+
+        assertThat(ATXUtil.getProxyUrl(atxConfig, new EnvVars()), is("http://user:pass@127.0.0.1:8080"));
+    }
+
+    @Test
+    public void testHttpsProxyUrlBySpecificConfig() {
+        final List<ATXSetting> uploadSettings = new ArrayList<>();
+        final ATXTextSetting httpProxy = new ATXTextSetting("httpProxy", SettingsGroup.UPLOAD, "", "", "http://user:pass@127.0.0.1:8080");
+        final ATXTextSetting httpsProxy = new ATXTextSetting("httpsProxy", SettingsGroup.UPLOAD, "", "", "http://user:pass@127.0.0.1:8081");
+        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.UPLOAD, "", "", true);
+        uploadSettings.add(httpProxy);
+        uploadSettings.add(httpsProxy);
+        uploadSettings.add(useHttpsConnection);
+
+        final ATXConfig atxConfig = new ATXConfig(uploadSettings, null);
+
+        assertThat(ATXUtil.getProxyUrl(atxConfig, new EnvVars()), is("http://user:pass@127.0.0.1:8081"));
+    }
+
+    @Test
+    public void testHttpProxyUrlByExpandedConfig() {
+        final List<ATXSetting> uploadSettings = new ArrayList<>();
+        final ATXTextSetting httpProxy = new ATXTextSetting("httpProxy", SettingsGroup.UPLOAD, "", "", "${PROXY_URL}");
+        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.UPLOAD, "", "", false);
+        uploadSettings.add(httpProxy);
+        uploadSettings.add(useHttpsConnection);
+
+        final ATXConfig atxConfig = new ATXConfig(uploadSettings, null);
+
+        final EnvVars envVars = new EnvVars(
+            Collections.unmodifiableMap(new HashMap<String, String>() {
+
+                private static final long serialVersionUID = 1L;
+
+                {
+                    put("PROXY_URL", "http://user:pass@127.0.0.1:8080");
+                }
+            }));
+
+        assertThat(ATXUtil.getProxyUrl(atxConfig, envVars), is("http://user:pass@127.0.0.1:8080"));
+    }
+
+    @Test
+    public void testHttpsProxyUrlByExpandedConfig() {
+        final List<ATXSetting> uploadSettings = new ArrayList<>();
+        final ATXTextSetting httpsProxy = new ATXTextSetting("httpsProxy", SettingsGroup.UPLOAD, "", "", "${PROXY_URL}");
+        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.UPLOAD, "", "", true);
+        uploadSettings.add(httpsProxy);
+        uploadSettings.add(useHttpsConnection);
+
+        final ATXConfig atxConfig = new ATXConfig(uploadSettings, null);
+
+        final EnvVars envVars = new EnvVars(
+            Collections.unmodifiableMap(new HashMap<String, String>() {
+
+                private static final long serialVersionUID = 1L;
+
+                {
+                    put("PROXY_URL", "http://user:pass@127.0.0.1:8081");
+                }
+            }));
+
+        assertThat(ATXUtil.getProxyUrl(atxConfig, envVars), is("http://user:pass@127.0.0.1:8081"));
     }
 
     @Test

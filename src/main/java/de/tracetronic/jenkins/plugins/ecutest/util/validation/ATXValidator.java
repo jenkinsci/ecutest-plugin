@@ -24,10 +24,16 @@ import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.PasswordAuthentication;
+import java.net.Proxy;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -311,7 +317,25 @@ public class ATXValidator extends AbstractValidator {
                                          final String serverContextPath, final boolean useHttpsConnection,
                                          final boolean ignoreSSL) {
         final String baseUrl = ATXUtil.getBaseUrl(serverUrl, serverPort, serverContextPath, useHttpsConnection);
-        return testConnection(baseUrl, ignoreSSL);
+        return testConnection(baseUrl, "", ignoreSSL);
+    }
+
+    /**
+     * Tests the server connection by given server settings.
+     *
+     * @param serverUrl          the server URL
+     * @param serverPort         the server port
+     * @param serverContextPath  the server context path
+     * @param useHttpsConnection if secure connection is used
+     * @param proxyUrl           the proxy URL
+     * @param ignoreSSL          specifies whether to ignore SSL issues
+     * @return the form validation
+     */
+    public FormValidation testConnection(final String serverUrl, final String serverPort,
+                                         final String serverContextPath, final boolean useHttpsConnection,
+                                         final String proxyUrl, final boolean ignoreSSL) {
+        final String baseUrl = ATXUtil.getBaseUrl(serverUrl, serverPort, serverContextPath, useHttpsConnection);
+        return testConnection(baseUrl, proxyUrl, ignoreSSL);
     }
 
     /**
@@ -322,13 +346,25 @@ public class ATXValidator extends AbstractValidator {
      * @return the form validation
      */
     public FormValidation testConnection(final String baseUrl, final boolean ignoreSSL) {
+        return testConnection(baseUrl, "", ignoreSSL);
+    }
+
+    /**
+     * Tests the server connection by given base server URL.
+     *
+     * @param baseUrl   the base server URL
+     * @param proxyUrl  the proxy URL
+     * @param ignoreSSL specifies whether to ignore SSL issues
+     * @return the form validation
+     */
+    public FormValidation testConnection(final String baseUrl, final String proxyUrl, final boolean ignoreSSL) {
         FormValidation returnValue;
         if (StringUtils.isBlank(baseUrl)) {
             returnValue = FormValidation.error(Messages.ATXInstallation_InvalidServerUrl(null));
         } else if (baseUrl.contains(PARAMETER)) {
             returnValue = FormValidation.warning(Messages.ATXInstallation_NoValidatedConnection());
         } else {
-            returnValue = checkConnection(baseUrl, ignoreSSL);
+            returnValue = checkConnection(baseUrl, proxyUrl, ignoreSSL);
         }
         return returnValue;
     }
@@ -340,7 +376,7 @@ public class ATXValidator extends AbstractValidator {
      * @param ignoreSSL specifies whether to ignore SSL issues
      * @return the form validation
      */
-    private FormValidation checkConnection(final String baseUrl, final boolean ignoreSSL) {
+    private FormValidation checkConnection(final String baseUrl, final String proxyUrl, final boolean ignoreSSL) {
         FormValidation returnValue = FormValidation.okWithMarkup(String.format(
             "<span style=\"font-weight: bold; color: #208CA3\">%s</span>",
             Messages.ATXInstallation_ValidConnection(baseUrl)));
@@ -350,14 +386,17 @@ public class ATXValidator extends AbstractValidator {
             final String appVersionUrl = String.format("%s/api/app-version-info", baseUrl);
             final URL url = new URL(appVersionUrl);
 
+            // Handle proxy setting
+            Proxy proxy = configureProxy(proxyUrl);
+
             // Handle SSL connection
             if (appVersionUrl.startsWith("https://")) {
-                connection = (HttpsURLConnection) url.openConnection();
+                connection = (HttpsURLConnection) url.openConnection(proxy);
                 if (ignoreSSL) {
                     ignoreSSLIssues((HttpsURLConnection) connection);
                 }
             } else {
-                connection = (HttpURLConnection) url.openConnection();
+                connection = (HttpURLConnection) url.openConnection(proxy);
             }
 
             // Check URL connection
@@ -386,17 +425,64 @@ public class ATXValidator extends AbstractValidator {
             if (connection != null) {
                 connection.disconnect();
             }
+            Authenticator.setDefault(null);
         }
         return returnValue;
     }
 
-    private FormValidation parseServerInfo(String content, String baseUrl, FormValidation returnValue){
+    /**
+     * Configures a HTTP proxy based on given proxy URL.
+     * Extracts user name and password from URL and sets as the default {@link Authenticator}.
+     *
+     * @param proxyUrl the proxy URL
+     * @return the proxy instance or direct connection if proxy URL is empty
+     */
+    private Proxy configureProxy(String proxyUrl) throws MalformedURLException, UnsupportedEncodingException {
+        if (StringUtils.isBlank(proxyUrl)) {
+            return Proxy.NO_PROXY;
+        }
+
+        final URL url = new URL(proxyUrl);
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(url.getHost(), url.getPort()));
+        String userInfo = url.getUserInfo();
+        if (StringUtils.isNotBlank(userInfo)) {
+            final String userName;
+            final String password;
+            int delimiter = userInfo.indexOf(':');
+            if (delimiter == -1) {
+                userName = URLDecoder.decode(userInfo, StandardCharsets.UTF_8.name());
+                password = "";
+            } else {
+                userName = URLDecoder.decode(userInfo.substring(0, delimiter++), StandardCharsets.UTF_8.name());
+                password = URLDecoder.decode(userInfo.substring(delimiter), StandardCharsets.UTF_8.name());
+            }
+
+            Authenticator authenticator = new Authenticator() {
+                public PasswordAuthentication getPasswordAuthentication() {
+                    return (new PasswordAuthentication(userName, password.toCharArray()));
+                }
+            };
+            Authenticator.setDefault(authenticator);
+        }
+        return proxy;
+    }
+
+    /**
+     * Parses the TEST-GUIDE server information from JSON response.
+     * Checks for valid license content and minimum supported TEST-GUIDE version.
+     *
+     * @param content     the JSON content
+     * @param baseUrl     the base server URL
+     * @param returnValue the current form validation
+     * @return the form validation
+     */
+    private FormValidation parseServerInfo(String content, String baseUrl, FormValidation returnValue) {
         final JSONObject jsonObject = (JSONObject) new JsonSlurper().parseText(content);
         if (jsonObject != null) {
             final JSONObject info = jsonObject.optJSONObject("info");
             if (info != null) {
                 final String license = info.getString("license");
-                if (!license.contains("TraceTronic") ) {
+                if (!license.contains("TraceTronic")) {
                     returnValue = FormValidation.warning(Messages.ATXInstallation_InvalidServer(baseUrl));
                 } else {
                     final String version = info.getString("version");
@@ -409,7 +495,7 @@ public class ATXValidator extends AbstractValidator {
                 }
             }
         } else {
-            returnValue = FormValidation.warning(Messages.ATXInstallation_InvalidServer(baseUrl));
+            returnValue = FormValidation.error(Messages.ATXInstallation_InvalidServer(baseUrl));
         }
         return returnValue;
     }

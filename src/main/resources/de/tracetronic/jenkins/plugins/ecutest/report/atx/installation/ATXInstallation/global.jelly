@@ -38,7 +38,7 @@
                                 <f:validateButton title="${%testConnection.title}"
                                                   progress="${%testConnection.progress}"
                                                   method="testConnection"
-                                                  with="serverURL,serverPort,serverContextPath,useHttpsConnection,ignoreSSL"/>
+                                                  with="serverURL,serverPort,serverContextPath,useHttpsConnection,httpProxy,httpsProxy,ignoreSSL"/>
                             </div>
                         </f:entry>
                     </f:section>

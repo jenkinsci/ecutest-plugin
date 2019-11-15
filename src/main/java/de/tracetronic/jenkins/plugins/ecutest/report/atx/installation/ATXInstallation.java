@@ -425,6 +425,8 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          * @param serverPort         the server port
          * @param serverContextPath  the server context path
          * @param useHttpsConnection if secure connection is used
+         * @param httpProxy          the HTTP proxy
+         * @param httpsProxy         the HTTPS proxy
          * @param ignoreSSL          specifies whether to ignore SSL issues
          * @return the form validation
          */
@@ -433,9 +435,13 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                                                @QueryParameter final String serverPort,
                                                @QueryParameter final String serverContextPath,
                                                @QueryParameter final boolean useHttpsConnection,
+                                               @QueryParameter final String httpProxy,
+                                               @QueryParameter final String httpsProxy,
                                                @QueryParameter final boolean ignoreSSL) {
             Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
-            return atxValidator.testConnection(serverURL, serverPort, serverContextPath, useHttpsConnection, ignoreSSL);
+            final String proxyUrl = useHttpsConnection ? httpsProxy : httpProxy;
+            return atxValidator.testConnection(serverURL, serverPort, serverContextPath, useHttpsConnection,
+                proxyUrl, ignoreSSL);
         }
     }
 }

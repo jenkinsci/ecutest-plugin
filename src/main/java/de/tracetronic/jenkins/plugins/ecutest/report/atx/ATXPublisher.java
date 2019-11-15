@@ -280,8 +280,9 @@ public class ATXPublisher extends AbstractReportPublisher {
             Object ignoreSSL = config.getSettingValueByGroup("ignoreSSL", ATXSetting.SettingsGroup.UPLOAD);
             if (ignoreSSL != null) {
                 final String baseUrl = ATXUtil.getBaseUrl(config, envVars);
+                final String proxyUrl = ATXUtil.getProxyUrl(config, envVars);
                 final ATXValidator validator = new ATXValidator();
-                final FormValidation validation = validator.testConnection(baseUrl, (boolean) ignoreSSL);
+                final FormValidation validation = validator.testConnection(baseUrl, proxyUrl, (boolean) ignoreSSL);
                 if (validation.kind.equals(FormValidation.Kind.WARNING)) {
                     TTConsoleLogger logger = new TTConsoleLogger(listener);
                     logger.logWarn(validation.getMessage());
