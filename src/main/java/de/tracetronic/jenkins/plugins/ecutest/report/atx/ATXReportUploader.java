@@ -105,7 +105,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         }
 
         config.getSettingByName("cleanAfterSuccessUpload").ifPresent(setting -> {
-            if ((boolean)setting.getValue()) {
+            if ((boolean) setting.getValue()) {
                 logger.logWarn("-> In order to generate ATX report links with unique ATX identifiers " +
                     "disable the upload setting 'Clean After Success Upload' in the TEST-GUIDE configuration.");
             }
@@ -118,15 +118,17 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                     reportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES));
 
                 // Upload ATX reports
-                TestInfoHolder testInfo = launcher.getChannel().call(
+                UploadInfoHolder uploadInfo = launcher.getChannel().call(
                     new UploadReportCallable(config, uploadFiles, envVars, listener));
 
-                // Prepare ATX report links
-                final String title = reportFile.getParent().getName();
-                if (testInfo == null) {
-                    testInfo = launcher.getChannel().call(new ParseTRFCallable(reportFile.getRemote()));
+                if (uploadInfo.isUploaded()) {
+                    // Prepare ATX report links
+                    final String title = reportFile.getParent().getName();
+                    if (uploadInfo.getTestInfo() == null) {
+                        uploadInfo.setTestInfo(launcher.getChannel().call(new ParseTRFCallable(reportFile.getRemote())));
+                    }
+                    traverseReports(atxReports, reportDir, title, baseUrl, uploadInfo.getTestInfo(), projectId);
                 }
-                traverseReports(atxReports, reportDir, title, baseUrl, testInfo, projectId);
             } else {
                 if (!allowMissing) {
                     logger.logError(String.format("Specified TRF file '%s' does not exist.", reportFile));
@@ -343,7 +345,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     /**
      * {@link Callable} enabling generating and uploading ATX reports remotely.
      */
-    private static final class UploadReportCallable extends AbstractReportCallable<TestInfoHolder> {
+    private static final class UploadReportCallable extends AbstractReportCallable<UploadInfoHolder> {
 
         private static final long serialVersionUID = 1L;
 
@@ -372,8 +374,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         }
 
         @Override
-        public TestInfoHolder call() throws IOException {
-            TestInfoHolder testInfo = null;
+        public UploadInfoHolder call() throws IOException {
+            UploadInfoHolder uploadInfo = new UploadInfoHolder(false);
             final TTConsoleLogger logger = new TTConsoleLogger(getListener());
             final Map<String, String> configMap = getConfigMap(true);
             final String progId = ETComProperty.getInstance().getProgId();
@@ -391,18 +393,19 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                             outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
                         comClient.waitForIdle(0);
 
-                        final FilePath successFile = outDir.child(SUCCESS_FILE_NAME);
-                        final boolean uploadAsync = configMap.get("uploadAsync").equals("True");
-                        testInfo = checkSuccessLog(successFile, uploadFile, uploadAsync, logger);
-
                         final FilePath errorFile = outDir.child(ERROR_FILE_NAME);
-                        checkErrorLog(errorFile, logger);
+                        if(checkErrorLog(errorFile, logger)) {
+                            final FilePath successFile = outDir.child(SUCCESS_FILE_NAME);
+                            final boolean uploadAsync = configMap.get("uploadAsync").equals("True");
+                            uploadInfo.setTestInfo(checkSuccessLog(successFile, uploadFile, uploadAsync, logger));
+                            uploadInfo.setUploaded(true);
+                        }
                     }
                 }
             } catch (final ETComException e) {
                 logger.logComException(e);
             }
-            return testInfo;
+            return uploadInfo;
         }
 
         /**
@@ -457,11 +460,14 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          *
          * @param errorFile the error file
          * @param logger    the logger
+         * @return whether error log file does not exists or no errors found inside
          * @throws IOException signals that an I/O exception has occurred
          */
-        private void checkErrorLog(final FilePath errorFile, final TTConsoleLogger logger) throws IOException {
+        private boolean checkErrorLog(final FilePath errorFile, final TTConsoleLogger logger) throws IOException {
+            boolean hasNoErrors = true;
             try {
                 if (errorFile.exists()) {
+                    hasNoErrors = false;
                     logger.logError("Error while uploading ATX report!");
                     final String content = errorFile.readToString();
                     logger.logDebug(String.format("Response: %s", content));
@@ -479,7 +485,9 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 }
             } catch (final JSONException | InterruptedException e) {
                 logger.logError("-> Could not parse ATX JSON response: " + e.getMessage());
+                hasNoErrors = false;
             }
+            return hasNoErrors;
         }
 
         /**
@@ -642,6 +650,59 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                     connection.close();
                 }
             }
+        }
+    }
+
+    /**
+     * Helper class storing information about the report upload.
+     * Used as data model for {@link UploadReportCallable}.
+     */
+    private static final class UploadInfoHolder implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        private boolean uploaded;
+        private TestInfoHolder testInfo;
+
+        /**
+         * Instantiates a new {@link UploadInfoHolder}.
+         *
+         * @param uploaded the uploaded
+         */
+        public UploadInfoHolder(final boolean uploaded) {
+            this.uploaded = uploaded;
+        }
+
+        /**
+         * @return whether the report upload was successful
+         */
+        public boolean isUploaded() {
+            return uploaded;
+        }
+
+        /**
+         * Sets the upload state.
+         *
+         * @param uploaded specifies whether the report upload was successful
+         */
+        public void setUploaded(final boolean uploaded) {
+            this.uploaded = uploaded;
+        }
+
+        /**
+         * @return the test info
+         */
+        public TestInfoHolder getTestInfo() {
+            return testInfo;
+        }
+
+        /**
+         * Sets test information.
+         *
+         * @param testInfo the test info
+         */
+        public void setTestInfo(final TestInfoHolder testInfo) {
+            this.testInfo = testInfo;
         }
     }
 
