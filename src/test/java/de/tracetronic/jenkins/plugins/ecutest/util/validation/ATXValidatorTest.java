@@ -382,13 +382,13 @@ public class ATXValidatorTest {
     @Test
     public void testNotReachableUnsecuredConnection() {
         final FormValidation validation = atxValidator.testConnection("http://localhost:0", false);
-        assertEquals("Warning if connection URL is not reachable", FormValidation.Kind.WARNING, validation.kind);
+        assertEquals("Error if connection URL is not reachable", FormValidation.Kind.ERROR, validation.kind);
     }
 
     @Test
     public void testNotReachableSecuredConnection() {
         final FormValidation validation = atxValidator.testConnection("https://localhost:0", false);
-        assertEquals("Warning if secured connection URL is not reachable", FormValidation.Kind.WARNING, validation.kind);
+        assertEquals("Error if secured connection URL is not reachable", FormValidation.Kind.ERROR, validation.kind);
     }
 
     @Test
@@ -400,7 +400,7 @@ public class ATXValidatorTest {
     @Test
     public void testValidConnectionBySettings() {
         final FormValidation validation = atxValidator.testConnection("localhost", "0", "", false, false);
-        assertEquals("Warning if connection URL is not reachable", FormValidation.Kind.WARNING, validation.kind);
+        assertEquals("Error if connection URL is not reachable", FormValidation.Kind.ERROR, validation.kind);
     }
 
     @Test
