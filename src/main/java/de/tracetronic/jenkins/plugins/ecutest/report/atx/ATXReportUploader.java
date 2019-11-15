@@ -39,19 +39,11 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class providing the generation and upload of {@link ATXReport}s.
@@ -64,7 +56,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      * Defines the API URL for linking ATX trend reports.
      */
     private static final String ATX_TREND_URL = "wicket/bookmarkable/"
-        + "de.tracetronic.ttstm.web.detail.TestReportViewPage?testCase";
+        + "de.tracetronic.ttstm.web.detail.TestCaseDetailPage?testCase";
 
     /**
      * Instantiates a new {@code ATXReportUploader}.
