@@ -175,8 +175,8 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          *
          * @return the related ATX version
          */
-        public static String getATXVersion() {
-            return ETPlugin.ATX_VERSION.toMicroString();
+        public static String getATXConfigVersion() {
+            return ETPlugin.ATX_CONFIG_VERSION.toMicroString();
         }
 
         @Override

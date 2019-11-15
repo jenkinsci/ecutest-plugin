@@ -45,9 +45,14 @@ public class ETPlugin {
     public static final ToolVersion ET_MAX_VERSION = new ToolVersion(8, 0, 0);
 
     /**
+     * Defines the minimum TEST-GUIDE version supported by this plugin.
+     */
+    public static final ToolVersion ATX_MIN_VERSION = new ToolVersion(1, 65, 0);
+
+    /**
      * Defines the TEST-GUIDE version that the provided ATX configuration is based on.
      */
-    public static final ToolVersion ATX_VERSION = new ToolVersion(1, 72, 0);
+    public static final ToolVersion ATX_CONFIG_VERSION = new ToolVersion(1, 72, 0);
 
     /**
      * Retains backward compatibility for renamed classes.
@@ -203,7 +208,7 @@ public class ETPlugin {
          * @throws IllegalArgumentException if the format of the version string is invalid
          */
         public static ToolVersion parse(final String version) throws IllegalArgumentException {
-            final Pattern pattern = Pattern.compile("^(\\d+)\\.(\\d+)\\.(\\d+)(?:\\.(.*))?$");
+            final Pattern pattern = Pattern.compile("^(\\d+)\\.(\\d+)\\.(\\d+)(?:[.#](.*))?$");
             final Matcher matcher = pattern.matcher(version);
             if (!matcher.find() || matcher.groupCount() != 4) {
                 throw new IllegalArgumentException(

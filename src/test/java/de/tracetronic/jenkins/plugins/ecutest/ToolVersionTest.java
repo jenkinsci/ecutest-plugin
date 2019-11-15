@@ -38,6 +38,13 @@ public class ToolVersionTest {
         assertEquals("Check parsed version", expectedToolVersion, parsedToolVersion);
     }
 
+    @Test
+    public void testParseValidHashtagToolVersion() {
+        final ToolVersion expectedToolVersion = new ToolVersion(1, 2, 3, "4");
+        final ToolVersion parsedToolVersion = ToolVersion.parse("1.2.3#4");
+        assertEquals("Check parsed hashtag version", expectedToolVersion, parsedToolVersion);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testParseInvalidToolVersion() throws IllegalArgumentException {
         ToolVersion.parse("a.b.c.d");

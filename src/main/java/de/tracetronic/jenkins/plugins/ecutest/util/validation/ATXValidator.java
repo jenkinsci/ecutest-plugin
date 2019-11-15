@@ -5,12 +5,15 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.util.validation;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.Messages;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import hudson.Util;
 import hudson.util.FormValidation;
+import net.sf.json.JSONObject;
+import net.sf.json.groovy.JsonSlurper;
 import org.apache.commons.lang.StringUtils;
 
 import javax.net.ssl.HostnameVerifier;
@@ -25,7 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -370,11 +373,9 @@ public class ATXValidator extends AbstractValidator {
                     "Status code: " + httpResponse));
             } else {
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(
-                    connection.getInputStream(), Charset.forName("UTF-8")))) {
-                    final String inputLine = in.readLine();
-                    if (inputLine == null || !inputLine.contains("TraceTronic")) {
-                        returnValue = FormValidation.warning(Messages.ATXInstallation_InvalidServer(baseUrl));
-                    }
+                    connection.getInputStream(), StandardCharsets.UTF_8))) {
+                    final String content = in.readLine();
+                    returnValue = parseServerInfo(content, baseUrl, returnValue);
                 }
             }
         } catch (final MalformedURLException e) {
@@ -385,6 +386,30 @@ public class ATXValidator extends AbstractValidator {
             if (connection != null) {
                 connection.disconnect();
             }
+        }
+        return returnValue;
+    }
+
+    private FormValidation parseServerInfo(String content, String baseUrl, FormValidation returnValue){
+        final JSONObject jsonObject = (JSONObject) new JsonSlurper().parseText(content);
+        if (jsonObject != null) {
+            final JSONObject info = jsonObject.optJSONObject("info");
+            if (info != null) {
+                final String license = info.getString("license");
+                if (!license.contains("TraceTronic") ) {
+                    returnValue = FormValidation.warning(Messages.ATXInstallation_InvalidServer(baseUrl));
+                } else {
+                    final String version = info.getString("version");
+                    final ETPlugin.ToolVersion atxVersion = ETPlugin.ToolVersion.parse(version);
+                    if (atxVersion.compareWithoutQualifierTo(ETPlugin.ATX_MIN_VERSION) < 0) {
+                        returnValue = FormValidation.warning(
+                            Messages.ATXInstallation_IncompatibleVersion(version,
+                                ETPlugin.ATX_MIN_VERSION.toMicroString()));
+                    }
+                }
+            }
+        } else {
+            returnValue = FormValidation.warning(Messages.ATXInstallation_InvalidServer(baseUrl));
         }
         return returnValue;
     }
