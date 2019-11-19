@@ -168,7 +168,8 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
         try {
             String parameters = Joiner.on(',').join(params);
             Variant result = Dispatch.call(this, method, params);
-            LOGGER.fine(String.format("Dispatch.call: %s (%s) --> %s", method, parameters, result));
+            String dispatchName = this.getClass().getSimpleName();
+            LOGGER.fine(String.format("%s.call(): %s (%s) --> %s", dispatchName, method, parameters, result));
             return result;
         } catch (final JacobException e) {
             throw new ETComException(e.getMessage(), e);
@@ -180,7 +181,8 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     @Override
     public boolean isAttached() {
         final boolean isAttached = super.isAttached();
-        LOGGER.finer("Dispatch.isAttached() --> " + isAttached);
+        String dispatchName = this.getClass().getSimpleName();
+        LOGGER.finer(String.format("%s.isAttached() --> %s", dispatchName, isAttached));
         return isAttached;
     }
 
@@ -191,7 +193,8 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      */
     private void releaseDispatch() throws ETComException {
         try {
-            LOGGER.finer("Dispatch.safeRelease()");
+            String dispatchName = this.getClass().getSimpleName();
+            LOGGER.finer(String.format("%s.safeRelease()", dispatchName));
             safeRelease();
         } catch (final JacobException e) {
             throw new ETComException(e.getMessage(), e);
