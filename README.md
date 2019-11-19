@@ -562,7 +562,8 @@ To set the job console log level to debug following system property should be pa
 
 `java -Decutest.debugLog=true jenkins.war`
 
-To get a more debug output about plugin COM API communication a new log recorder with following logger instances could be created under `Manage Jenkins -> System Log -> New Log Recorder`. Set a preferable Name, add Loggers `de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient`, `de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComDispatch` and set the Log level at least to `FINE`.  
+To get a more debug output about plugin COM API communication a new log recorder with following logger instances could be created under `Manage Jenkins -> System Log -> New Log Recorder`. Set a preferable Name, add Loggers `de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient`, `de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComDispatch` and set the Log level at least to `FINE`.
+  
 ![Create new COM API log recorder](docs/images/create_new_debug_log_recorder.png "Create new COM API log recorder")
 
 ## Issues
