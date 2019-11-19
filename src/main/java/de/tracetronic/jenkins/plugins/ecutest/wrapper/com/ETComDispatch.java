@@ -5,6 +5,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
+import com.google.common.base.Joiner;
 import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
 import com.jacob.com.JacobException;
@@ -17,6 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
 
 /**
  * Custom dispatch to perform requests on application specific COM API.
@@ -28,6 +30,7 @@ import java.util.concurrent.TimeoutException;
 public class ETComDispatch extends Dispatch implements AutoCloseable {
 
     private static final Object[] NO_PARAMS = new Object[0];
+    private static final Logger LOGGER = Logger.getLogger(ETComDispatch.class.getName());
 
     private final boolean useTimeout;
 
@@ -163,7 +166,10 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      */
     private Variant callDispatch(final String method, final Object... params) throws ETComException {
         try {
-            return Dispatch.call(this, method, params);
+            String parameters = Joiner.on(',').join(params);
+            Variant result = Dispatch.call(this, method, params);
+            LOGGER.fine(String.format("Dispatch.call: %s (%s) --> %s", method, parameters, result));
+            return result;
         } catch (final JacobException e) {
             throw new ETComException(e.getMessage(), e);
         } catch (final Throwable t) {
@@ -173,7 +179,9 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
 
     @Override
     public boolean isAttached() {
-        return super.isAttached();
+        final boolean isAttached = super.isAttached();
+        LOGGER.finer("Dispatch.isAttached() --> " + isAttached);
+        return isAttached;
     }
 
     /**
@@ -183,6 +191,7 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      */
     private void releaseDispatch() throws ETComException {
         try {
+            LOGGER.finer("Dispatch.safeRelease()");
             safeRelease();
         } catch (final JacobException e) {
             throw new ETComException(e.getMessage(), e);
