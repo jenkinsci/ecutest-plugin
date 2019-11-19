@@ -27,6 +27,7 @@ It supports standardized access to a broad range of test tools and provides auto
 - [Extensions](#extensions)
     - [Job DSL](#job-dsl)
     - [Pipeline](#pipeline)
+- [Debugging](#debugging)        
 - [Issues](#issues)
 - [Known limitations](#known-limitations)
 - [FAQ](#faq)
