@@ -40,7 +40,7 @@ public class ETClient extends AbstractToolClient {
 
     private final String workspaceDir;
     private final String settingsDir;
-    private final boolean debug;
+    private final boolean debugMode;
     private String version;
     private String lastTbc;
     private String lastTcf;
@@ -53,14 +53,14 @@ public class ETClient extends AbstractToolClient {
      * @param workspaceDir the ECU-TEST workspace directory
      * @param settingsDir  the ECU-TEST settings directory
      * @param timeout      the timeout to start ECU-TEST
-     * @param debug        the debug mode
+     * @param debugMode    specifies whether to enable debug mode
      */
     public ETClient(final String toolName, final String installPath, final String workspaceDir,
-                    final String settingsDir, final int timeout, final boolean debug) {
+                    final String settingsDir, final int timeout, final boolean debugMode) {
         super(toolName, installPath, timeout);
         this.workspaceDir = StringUtils.trimToEmpty(workspaceDir);
         this.settingsDir = StringUtils.trimToEmpty(settingsDir);
-        this.debug = debug;
+        this.debugMode = debugMode;
         version = "";
         lastTbc = "";
         lastTcf = "";
@@ -76,7 +76,7 @@ public class ETClient extends AbstractToolClient {
         super(toolName, timeout);
         workspaceDir = "";
         settingsDir = "";
-        debug = false;
+        debugMode = false;
         version = "";
         lastTbc = "";
         lastTcf = "";
@@ -143,8 +143,8 @@ public class ETClient extends AbstractToolClient {
     /**
      * @return the debug mode
      */
-    public boolean isDebug() {
-        return debug;
+    public boolean isDebugMode() {
+        return debugMode;
     }
 
     /**
@@ -291,7 +291,7 @@ public class ETClient extends AbstractToolClient {
             args.add("-s", getSettingsDir());
         }
 
-        if (isDebug()) {
+        if (isDebugMode()) {
             args.add("-d");
         }
 

@@ -37,7 +37,7 @@ public class ETClientTest {
         assertEquals("", client.getSettingsDir());
         assertNotNull(client.getTimeout());
         assertEquals("Check timeout", 30, client.getTimeout());
-        assertFalse("Check debug mode", client.isDebug());
+        assertFalse("Check debug mode", client.isDebugMode());
         assertEquals("", client.getVersion());
     }
 
@@ -50,7 +50,7 @@ public class ETClientTest {
         assertEquals("", client.getWorkspaceDir());
         assertNotNull(client.getTimeout());
         assertEquals("Check timeout", 30, client.getTimeout());
-        assertFalse("Check debug mode", client.isDebug());
+        assertFalse("Check debug mode", client.isDebugMode());
         assertEquals("", client.getVersion());
     }
 

@@ -23,7 +23,7 @@ public class ToolEnvInvisibleAction extends InvisibleAction {
     private final String toolWorkspace;
     private final String toolSettings;
     private final int timeout;
-    private final boolean debug;
+    private final boolean debugMode;
     private final String lastTbc;
     private final String lastTcf;
 
@@ -43,7 +43,7 @@ public class ToolEnvInvisibleAction extends InvisibleAction {
         toolWorkspace = toolClient.getWorkspaceDir();
         toolSettings = toolClient.getSettingsDir();
         timeout = toolClient.getTimeout();
-        debug = toolClient.isDebug();
+        debugMode = toolClient.isDebugMode();
         lastTbc = toolClient.getLastTbc();
         lastTcf = toolClient.getLastTcf();
     }
@@ -76,8 +76,8 @@ public class ToolEnvInvisibleAction extends InvisibleAction {
         return timeout;
     }
 
-    public boolean isDebug() {
-        return debug;
+    public boolean isDebugMode() {
+        return debugMode;
     }
 
     public String getLastTbc() {
