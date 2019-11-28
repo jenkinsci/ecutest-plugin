@@ -111,6 +111,17 @@ public class ETInstance implements Serializable {
     }
 
     /**
+     * Starts ECU-TEST with given settings as named arguments map.
+     *
+     * @param settings the settings map
+     */
+    @Whitelisted
+    public void start(final Map<String, Object> settings) {
+        invokeMethod("startET", settings);
+    }
+
+
+    /**
      * Stops ECU-TEST with default settings.
      */
     @Whitelisted
@@ -130,6 +141,16 @@ public class ETInstance implements Serializable {
         stepVariables.put(KEY_INSTALLATION, installation);
         stepVariables.put(KEY_TIMEOUT, String.valueOf(timeout));
         script.invokeMethod("stopET", stepVariables);
+    }
+
+    /**
+     * Stops ECU-TEST with given settings as named arguments map.
+     *
+     * @param settings the settings map
+     */
+    @Whitelisted
+    public void stop(final Map<String, Object> settings) {
+        invokeMethod("stopET", settings);
     }
 
     /**
@@ -162,6 +183,16 @@ public class ETInstance implements Serializable {
     }
 
     /**
+     * Stops ECU-TEST with given settings as named arguments map.
+     *
+     * @param settings the settings map
+     */
+    @Whitelisted
+    public void startTS(final Map<String, Object> settings) {
+        invokeMethod("startTS", settings);
+    }
+
+    /**
      * Stops Tool-Server with default settings.
      */
     @Whitelisted
@@ -181,6 +212,16 @@ public class ETInstance implements Serializable {
         stepVariables.put(KEY_INSTALLATION, installation);
         stepVariables.put(KEY_TIMEOUT, String.valueOf(timeout));
         script.invokeMethod("stopTS", stepVariables);
+    }
+
+    /**
+     * Stops Tool-Server with given settings as named arguments map.
+     *
+     * @param settings the settings map
+     */
+    @Whitelisted
+    public void stopTS(final Map<String, Object> settings) {
+        invokeMethod("stopTS", settings);
     }
 
     /**
@@ -210,6 +251,16 @@ public class ETInstance implements Serializable {
         stepVariables.put("allowMissing", allowMissing);
         stepVariables.put("runOnFailed", runOnFailed);
         script.invokeMethod("publishUNIT", stepVariables);
+    }
+
+    /**
+     * Publishes UNIT reports with given settings as named arguments map.
+     *
+     * @param settings the settings map
+     */
+    @Whitelisted
+    public void publishUNIT(final Map<String, Object> settings) {
+        invokeMethod("publishUNIT", settings);
     }
 
     /**
@@ -253,6 +304,16 @@ public class ETInstance implements Serializable {
     }
 
     /**
+     * Publishes generator reports with given settings as named arguments map.
+     *
+     * @param settings the settings map
+     */
+    @Whitelisted
+    public void publishGenerators(final Map<String, Object> settings) {
+        invokeMethod("publishGenerators", settings);
+    }
+
+    /**
      * Publishes reports to a test management system with default settings.
      *
      * @param credentialsId the credentials id
@@ -287,6 +348,16 @@ public class ETInstance implements Serializable {
         stepVariables.put("archiving", archiving);
         stepVariables.put("keepAll", keepAll);
         script.invokeMethod("publishTMS", stepVariables);
+    }
+
+    /**
+     * Publishes reports to a test management system with given settings as named arguments map.
+     *
+     * @param settings the settings map
+     */
+    @Whitelisted
+    public void publishTMS(final Map<String, Object> settings) {
+        invokeMethod("publishTMS", settings);
     }
 
     /**
@@ -327,6 +398,16 @@ public class ETInstance implements Serializable {
     }
 
     /**
+     * Runs the trace analyses and publishes the generated reports with given settings as named arguments map.
+     *
+     * @param settings the settings map
+     */
+    @Whitelisted
+    public void publishTraceAnalysis(final Map<String, Object> settings) {
+        invokeMethod("publishTraceAnalysis", settings);
+    }
+
+    /**
      * Checks whether the currently selected configurations are started.
      *
      * @return {@code true} if configurations are started, {@code false} otherwise
@@ -336,5 +417,21 @@ public class ETInstance implements Serializable {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
         stepVariables.put(KEY_TOOL_NAME, installation.getName());
         return (boolean) script.invokeMethod("isConfigStarted", stepVariables);
+    }
+
+    /**
+     * Invokes a pipeline step by name with given settings as named arguments map.
+     * Settings which are not defined for the pipeline step will be ignored.
+     * Missing optional settings are set to their respective default value.
+     *
+     * @param name     the method name
+     * @param settings the settings map
+     */
+    private void invokeMethod(final String name, final Map<String, Object> settings) {
+        final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
+        stepVariables.put(KEY_TOOL_NAME, installation.getName());
+        stepVariables.put(KEY_INSTALLATION, installation);
+        stepVariables.putAll(settings);
+        script.invokeMethod(name, stepVariables);
     }
 }
