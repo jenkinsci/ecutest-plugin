@@ -21,6 +21,9 @@ ETInstance.stopTS() : void
             <pre>
 ETInstance.stopTS(int timeout) : void
             </pre>
+            <pre>
+ETInstance.stopTS(Map&lt;String, Object&gt; settings) : void
+            </pre>
         </dd>
     </dl>
     <dl>Examples:
@@ -35,6 +38,10 @@ stopTS installation: instance.installation
             <pre>
 def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
 instance.stopTS()
+            </pre>
+            <pre>
+def instance = ET.newInstallation toolName: 'ECU-TEST', installPath: C:\\Program Files\\ECU-TEST 8.0'
+instance.stopTS timeout: '60'
             </pre>
         </dd>
     </dl>

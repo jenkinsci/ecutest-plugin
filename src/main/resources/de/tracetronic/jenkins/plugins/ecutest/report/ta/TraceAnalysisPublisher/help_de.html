@@ -20,6 +20,9 @@ publishTraceAnalysis(ETInstallation installation, boolean mergeReports, boolean 
             <pre>
 ETInstance.publishTraceAnalysis(boolean mergeReports, boolean createReportDir, int timeout) : void
             </pre>
+            <pre>
+ETInstance.publishTraceAnalysis(Map&lt;String, Object&gt; settings) : void
+            </pre>
         </dd>
     </dl>
     <dl>Beispiele:
@@ -34,6 +37,10 @@ publishTraceAnalysis installation: instance.installation, mergeReports: true, cr
             <pre>
 def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
 instance.publishTraceAnalysis()
+            </pre>
+            <pre>
+def instance = ET.newInstallation toolName: 'ECU-TEST', installPath: C:\\Program Files\\ECU-TEST 8.0'
+instance.publishTraceAnalysis mergeReports: true
             </pre>
         </dd>
     </dl>

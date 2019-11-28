@@ -19,6 +19,9 @@ publishATX(ATXInstallation installation, boolean allowMissing, boolean runOnFail
             <pre>
 ATXServer.publish(boolean allowMissing, boolean runOnFailed, boolean archiving, boolean keepAll) : void
             </pre>
+            <pre>
+ATXServer.publish(Map&lt;String, Object&gt; settings) : void
+            </pre>
         </dd>
     </dl>
     <dl>Beispiele:
@@ -33,6 +36,10 @@ publishATX atxInstallation: server.installation
             <pre>
 def server = ATX.newServer('TEST-GUIDE', 'ECU-TEST')
 server.publish()
+            </pre>
+            <pre>
+def server = ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST'
+server.publish allowMissing: true, runOnFailed: true
             </pre>
         </dd>
     </dl>

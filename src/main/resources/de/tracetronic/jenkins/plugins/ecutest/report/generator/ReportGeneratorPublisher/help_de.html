@@ -22,6 +22,9 @@ publishGenerators(ETInstallation installation, List&lt;ReportGeneratorConfig&gt;
 ETInstance.publishGenerators(List&lt;ReportGeneratorConfig&gt; generators, List&lt;ReportGeneratorConfig&gt; customGenerators,
                              boolean allowMissing, boolean runOnFailed, boolean archiving, boolean keepAll) : void
             </pre>
+            <pre>
+ETInstance.publishGenerators(Map&lt;String, Object&gt; settings) : void
+            </pre>
         </dd>
     </dl>
     <dl>Beispiele:
@@ -36,6 +39,10 @@ publishGenerators installation: instance.installation, generators: [[name: 'JSON
             <pre>
 def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
 instance.publishGenerators([[name: 'JSON']], [name: 'Custom-JSON')])
+            </pre>
+            <pre>
+def instance = ET.newInstallation toolName: 'ECU-TEST', installPath: C:\\Program Files\\ECU-TEST 8.0'
+instance.publishGenerators generators: [[name: 'JSON']], customGenerators: [[name: 'Custom-JSON']]
             </pre>
         </dd>
     </dl>

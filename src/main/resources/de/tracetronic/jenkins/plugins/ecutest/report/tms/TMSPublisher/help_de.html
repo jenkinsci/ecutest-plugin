@@ -20,6 +20,9 @@ publishTMS(ETInstallation installation, String credentialsId, int timeout,
             <pre>
 ETInstance.publishTMS(String credentialsId, int timeout) : void
             </pre>
+            <pre>
+ETInstance.publishTMS(Map&lt;String, Object&gt; settings) : void
+            </pre>
         </dd>
     </dl>
     <dl>Beispiele:
@@ -34,6 +37,10 @@ publishTMS installation: instance.installation, credentialsId: 'id', timeout: 12
             <pre>
 def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
 instance.publishTMS('id')
+            </pre>
+            <pre>
+def instance = ET.newInstallation toolName: 'ECU-TEST', installPath: C:\\Program Files\\ECU-TEST 8.0'
+instance.publishTMS credentialsId: 'id'
             </pre>
         </dd>
     </dl>
