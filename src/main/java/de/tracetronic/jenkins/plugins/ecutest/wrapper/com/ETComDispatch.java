@@ -5,11 +5,11 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
-import com.google.common.base.Joiner;
 import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
 import com.jacob.com.JacobException;
 import com.jacob.com.Variant;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -166,7 +166,7 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      */
     private Variant callDispatch(final String method, final Object... params) throws ETComException {
         try {
-            String parameters = Joiner.on(',').join(params);
+            String parameters = StringUtils.join(params, ',');
             Variant result = Dispatch.call(this, method, params);
             String dispatchName = this.getClass().getSimpleName();
             LOGGER.fine(String.format("%s.call(): %s (%s) --> %s", dispatchName, method, parameters, result));
