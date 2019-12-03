@@ -16,6 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 
+import java.util.Objects;
+
 /**
  * Integration tests for {@link ATXPipeline}.
  *
@@ -65,6 +67,7 @@ public class ATXPipelineIT extends IntegrationTestBase {
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
-        jenkins.assertBuildStatus(expectSuccess ? Result.SUCCESS : Result.FAILURE, job.scheduleBuild2(0).get());
+        jenkins.assertBuildStatus(expectSuccess ? Result.SUCCESS : Result.FAILURE,
+            Objects.requireNonNull(job.scheduleBuild2(0)).get());
     }
 }
