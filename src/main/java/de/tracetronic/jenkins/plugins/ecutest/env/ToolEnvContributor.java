@@ -61,7 +61,7 @@ public class ToolEnvContributor extends EnvironmentContributor {
     /**
      * Build environment variable part enabling the debug mode of the tool.
      */
-    public static final String TOOL_DEBUG = "TOOL_DEBUG_";
+    public static final String TOOL_DEBUG_MODE = "TOOL_DEBUG_MODE_";
 
     /**
      * Build environment variable part for the last loaded TBC file path.
@@ -86,7 +86,7 @@ public class ToolEnvContributor extends EnvironmentContributor {
             envs.put(PREFIX + TOOL_WORKSPACE + id, action.getToolWorkspace());
             envs.put(PREFIX + TOOL_SETTINGS + id, action.getToolSettings());
             envs.put(PREFIX + TOOL_TIMEOUT + id, String.valueOf(action.getTimeout()));
-            envs.put(PREFIX + TOOL_DEBUG + id, action.isDebug() ? "true" : "false");
+            envs.put(PREFIX + TOOL_DEBUG_MODE + id, action.isDebugMode() ? "true" : "false");
             envs.put(PREFIX + TOOL_LAST_TBC + id, action.getLastTbc());
             envs.put(PREFIX + TOOL_LAST_TCF + id, action.getLastTcf());
         }

@@ -60,8 +60,8 @@ public class ToolEnvContributorIT extends IntegrationTestBase {
             envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_SETTINGS + toolId));
         assertEquals("TT_TOOL_TIMEOUT_0 should match env action", String.valueOf(toolEnvAction.getTimeout()),
             envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_TIMEOUT + toolId));
-        assertEquals("TT_TOOL_DEBUG_0 should match env action", toolEnvAction.isDebug() ? "true" : "false",
-            envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_DEBUG + toolId));
+        assertEquals("TT_TOOL_DEBUG_MODE_0 should match env action", toolEnvAction.isDebugMode() ? "true" : "false",
+            envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_DEBUG_MODE + toolId));
         assertEquals("TT_TOOL_LAST_TBC_0 should match env action", String.valueOf(toolEnvAction.getLastTbc()),
             envVars.get(ToolEnvContributor.PREFIX + ToolEnvContributor.TOOL_LAST_TBC + toolId));
         assertEquals("TT_TOOL_LAST_TCF_0 should match env action", String.valueOf(toolEnvAction.getLastTcf()),

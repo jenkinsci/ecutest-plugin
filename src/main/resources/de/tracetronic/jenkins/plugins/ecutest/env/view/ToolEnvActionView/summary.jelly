@@ -54,8 +54,8 @@
                             <td>${action.getLastTcf()}</td>
                         </tr>
                         <tr class="child-${toolId}">
-                            <td class="tooltip" tooltip="${%debug}">TT_TOOL_DEBUG_${toolId}</td>
-                            <td>${action.isDebug()}</td>
+                            <td class="tooltip" tooltip="${%debugMode}">TT_TOOL_DEBUG_MODE_${toolId}</td>
+                            <td>${action.isDebugMode()}</td>
                         </tr>
                         <tr class="child-${toolId}">
                             <td class="tooltip" tooltip="${%timeout}">TT_TOOL_TIMEOUT_${toolId}</td>

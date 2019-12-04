@@ -91,12 +91,12 @@ public class ETInstance implements Serializable {
      * @param workspaceDir   the workspace directory
      * @param settingsDir    the settings directory
      * @param timeout        the timeout
-     * @param debug          specifies whether to enable debug mode
+     * @param debugMode      specifies whether to enable debug mode
      * @param keepInstance   specifies whether to re-use the previous instance
      * @param updateUserLibs specifies whether to update all user libraries
      */
     @Whitelisted
-    public void start(final String workspaceDir, final String settingsDir, final int timeout, final boolean debug,
+    public void start(final String workspaceDir, final String settingsDir, final int timeout, final boolean debugMode,
                       final boolean keepInstance, final boolean updateUserLibs) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
         stepVariables.put(KEY_TOOL_NAME, installation.getName());
@@ -104,7 +104,7 @@ public class ETInstance implements Serializable {
         stepVariables.put(KEY_TIMEOUT, String.valueOf(timeout));
         stepVariables.put("workspaceDir", workspaceDir);
         stepVariables.put("settingsDir", settingsDir);
-        stepVariables.put("debug", debug);
+        stepVariables.put("debugMode", debugMode);
         stepVariables.put("keepInstance", keepInstance);
         stepVariables.put("updateUserLibs", updateUserLibs);
         script.invokeMethod("startET", stepVariables);
