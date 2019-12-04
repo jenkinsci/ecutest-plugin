@@ -9,6 +9,7 @@ import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
 import com.jacob.com.JacobException;
 import com.jacob.com.Variant;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -17,6 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
 
 /**
  * Custom dispatch to perform requests on application specific COM API.
@@ -28,6 +30,7 @@ import java.util.concurrent.TimeoutException;
 public class ETComDispatch extends Dispatch implements AutoCloseable {
 
     private static final Object[] NO_PARAMS = new Object[0];
+    private static final Logger LOGGER = Logger.getLogger(ETComDispatch.class.getName());
 
     private final boolean useTimeout;
 
@@ -163,7 +166,11 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      */
     private Variant callDispatch(final String method, final Object... params) throws ETComException {
         try {
-            return Dispatch.call(this, method, params);
+            String parameters = StringUtils.join(params, ',');
+            Variant result = Dispatch.call(this, method, params);
+            String dispatchName = this.getClass().getSimpleName();
+            LOGGER.fine(String.format("%s.call(): %s (%s) --> %s", dispatchName, method, parameters, result));
+            return result;
         } catch (final JacobException e) {
             throw new ETComException(e.getMessage(), e);
         } catch (final Throwable t) {
@@ -173,7 +180,10 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
 
     @Override
     public boolean isAttached() {
-        return super.isAttached();
+        final boolean isAttached = super.isAttached();
+        String dispatchName = this.getClass().getSimpleName();
+        LOGGER.finer(String.format("%s.isAttached() --> %s", dispatchName, isAttached));
+        return isAttached;
     }
 
     /**
@@ -183,6 +193,8 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      */
     private void releaseDispatch() throws ETComException {
         try {
+            String dispatchName = this.getClass().getSimpleName();
+            LOGGER.finer(String.format("%s.safeRelease()", dispatchName));
             safeRelease();
         } catch (final JacobException e) {
             throw new ETComException(e.getMessage(), e);
