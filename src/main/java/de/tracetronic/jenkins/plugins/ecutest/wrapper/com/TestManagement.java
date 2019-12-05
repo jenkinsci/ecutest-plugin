@@ -30,6 +30,11 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     }
 
     @Override
+    public boolean isAvailable() throws ETComException {
+        return performRequest("IsTmsAvailable").getBoolean();
+    }
+
+    @Override
     public boolean login(final String user, final String password) throws ETComException {
         return performRequest("Login", new Variant(user), new Variant(password)).getBoolean();
     }

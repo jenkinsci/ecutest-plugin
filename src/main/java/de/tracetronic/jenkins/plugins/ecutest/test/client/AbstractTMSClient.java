@@ -116,7 +116,7 @@ public abstract class AbstractTMSClient {
                     logger.logError(String.format(
                         "The configured ECU-TEST version %s does not support this test management method. "
                             + "Please use at least ECU-TEST %s!", comVersion, minVersion.toMicroString()));
-                } else if (comClient.getTestManagement() != null) {
+                } else if (comClient.getTestManagement().isAvailable()) {
                     isAvailable = true;
                 }
             } catch (final ETComException e) {
