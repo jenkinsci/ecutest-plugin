@@ -33,18 +33,24 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
 
     private final String progId;
     private final int timeout;
+    /**
+     * @since 2.13.0
+     */
+    private final boolean registerComServer;
 
     /**
      * Instantiates a new {@link ETToolProperty}.
      *
-     * @param progId  the programmatic identifier
-     * @param timeout the timeout
+     * @param progId            the programmatic identifier
+     * @param timeout           the timeout
+     * @param registerComServer specifies whether to register the COM server before each start of ECU-TEST
      */
     @DataBoundConstructor
-    public ETToolProperty(final String progId, final int timeout) {
+    public ETToolProperty(final String progId, final int timeout, final boolean registerComServer) {
         super();
         this.progId = StringUtils.defaultIfBlank(progId, ETComProperty.DEFAULT_PROG_ID);
         this.timeout = timeout;
+        this.registerComServer = registerComServer;
     }
 
     /**
@@ -63,6 +69,13 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
      */
     public int getTimeout() {
         return timeout;
+    }
+
+    /**
+     * @return the whether to register the COM server before each start of ECU-TEST
+     */
+    public boolean isRegisterComServer() {
+        return registerComServer;
     }
 
     @Override

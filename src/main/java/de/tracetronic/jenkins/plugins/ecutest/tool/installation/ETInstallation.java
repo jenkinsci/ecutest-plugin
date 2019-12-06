@@ -11,7 +11,13 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopTSBuilder;
-import hudson.*;
+import hudson.CopyOnWrite;
+import hudson.EnvVars;
+import hudson.Extension;
+import hudson.Functions;
+import hudson.Launcher;
+import hudson.Util;
+import hudson.XmlFile;
 import hudson.model.Node;
 import hudson.model.TaskListener;
 import hudson.tools.ToolDescriptor;
@@ -48,6 +54,11 @@ public class ETInstallation extends AbstractToolInstallation {
      * Executable file name of ECU-TEST.
      */
     private static final String EXECUTABLE = "ECU-TEST.exe";
+
+    /**
+     * Executable file name of ECU-TEST COM server.
+     */
+    private static final String COM_EXECUTABLE = "ECU-TEST_COM.exe";
 
     /**
      * Executable file name of Tool-Server.
@@ -92,6 +103,58 @@ public class ETInstallation extends AbstractToolInstallation {
     @Override
     protected File getExeFile(final File home) {
         return DescriptorImpl.getExeFile(home);
+    }
+
+    /**
+     * Gets the Tool-Server executable file relative to given home directory.
+     *
+     * @param home the home directory of the tool
+     * @return the Tool-Server executable file
+     */
+    protected File getComExeFile(final File home) {
+        return DescriptorImpl.getComExeFile(home);
+    }
+
+    /**
+     * Gets the executable path of the tool on the given target system.
+     *
+     * @param launcher the launcher
+     * @return the executable
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
+     */
+    public String getComExecutable(final Launcher launcher) throws IOException, InterruptedException {
+        return launcher.getChannel().call(new GetComExecutableCallable());
+    }
+
+    /**
+     * {@link MasterToSlaveCallable} providing remote access to return the tool executable path.
+     */
+    private final class GetComExecutableCallable extends MasterToSlaveCallable<String, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public String call() {
+            final File exe = getComExeFile();
+            return exe != null && exe.exists() ? exe.getPath() : null;
+        }
+    }
+
+    /**
+     * Gets the expanded executable file path.
+     *
+     * @return the executable file path or {@code null} if home directory is not set
+     */
+    @CheckForNull
+    private File getComExeFile() {
+        if (getHome() != null) {
+            final String home = Util.replaceMacro(getHome(), EnvVars.masterEnvVars);
+            if (home != null) {
+                return getComExeFile(new File(home));
+            }
+        }
+        return null;
     }
 
     /**
@@ -186,6 +249,16 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
+     * Returns whether to register the COM server before each start of ECU-TEST.
+     *
+     * @return {@code true} if option enabled,  {@code false } otherwise
+     */
+    public boolean isRegisterComServer() {
+        final ETToolProperty toolProperty = getProperties().get(ETToolProperty.class);
+        return toolProperty != null && toolProperty.isRegisterComServer();
+    }
+
+    /**
      * Gets all ECU-TEST installations.
      *
      * @return all available installations, never {@code null}
@@ -247,6 +320,20 @@ public class ETInstallation extends AbstractToolInstallation {
         private static File getExeFile(final File home) {
             if (Functions.isWindows() && home != null) {
                 return new File(home, EXECUTABLE);
+            }
+            return null;
+        }
+
+        /**
+         * Gets the ECU-TEST COM server executable file.
+         *
+         * @param home the home directory of ECU-TEST
+         * @return the executable file or {@code null} if Unix-based system
+         */
+        @CheckForNull
+        private static File getComExeFile(final File home) {
+            if (Functions.isWindows() && home != null) {
+                return new File(home, COM_EXECUTABLE);
             }
             return null;
         }

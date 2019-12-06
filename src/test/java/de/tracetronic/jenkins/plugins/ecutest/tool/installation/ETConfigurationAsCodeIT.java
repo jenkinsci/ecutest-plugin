@@ -59,10 +59,10 @@ public class ETConfigurationAsCodeIT {
         assertThat(installation.getProperties().get(0), is(instanceOf(ETToolProperty.class)));
         assertThat(((ETToolProperty) installation.getProperties().get(0)).getProgId(), is("ECU-TEST.Application.7.2"));
         assertThat(((ETToolProperty) installation.getProperties().get(0)).getTimeout(), is(60));
+        assertThat(((ETToolProperty) installation.getProperties().get(0)).isRegisterComServer(), is(true));
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testExportConfiguration() throws Exception {
         final ETInstallation.DescriptorImpl descriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
@@ -70,7 +70,8 @@ public class ETConfigurationAsCodeIT {
 
         final ConfiguratorRegistry registry = ConfiguratorRegistry.get();
         final ConfigurationContext context = new ConfigurationContext(registry);
-        final Configurator configurator = context.lookupOrFail(ETInstallation.DescriptorImpl.class);
+        final Configurator<ETInstallation.DescriptorImpl> configurator =
+            context.lookupOrFail(ETInstallation.DescriptorImpl.class);
         final CNode node = configurator.describe(descriptor, context);
 
         final String exported = Util.toYamlString(node);

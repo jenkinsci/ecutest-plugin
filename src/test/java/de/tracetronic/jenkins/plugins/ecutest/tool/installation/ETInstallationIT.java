@@ -17,6 +17,7 @@ import org.jvnet.hudson.test.recipes.LocalData;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Integration tests for {@link ETInstallation}.
@@ -36,6 +37,7 @@ public class ETInstallationIT extends IntegrationTestBase {
         assertEquals("ECU-TEST", inst.getName());
         assertEquals("C:\\ECU-TEST", inst.getHome());
         assertEquals("ECU-TEST.Application", inst.getProgId());
+        assertFalse(inst.isRegisterComServer());
     }
 
     @Test
@@ -49,6 +51,7 @@ public class ETInstallationIT extends IntegrationTestBase {
         assertEquals("ECU-TEST", inst.getName());
         assertEquals("C:\\ECU-TEST", inst.getHome());
         assertEquals("ECU-TEST6.Application", inst.getProgId());
+        assertFalse(inst.isRegisterComServer());
     }
 
     @Test
@@ -84,7 +87,7 @@ public class ETInstallationIT extends IntegrationTestBase {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", Collections
-            .singletonList(new ETToolProperty("ECU-TEST6.Application", 120))));
+            .singletonList(new ETToolProperty("ECU-TEST6.Application", 120, true))));
 
         final ToolLocationNodeProperty property = new ToolLocationNodeProperty(
             new ToolLocationNodeProperty.ToolLocation(etDescriptor, "ECU-TEST", "C:\\ECU-TEST"));
@@ -103,5 +106,6 @@ public class ETInstallationIT extends IntegrationTestBase {
         final ToolLocationNodeProperty.ToolLocation location = prop.getLocations().get(0);
         assertEquals(etDescriptor, location.getType());
         assertEquals("ECU-TEST", location.getName());
+        assertEquals("C:\\ECU-TEST", location.getHome());
     }
 }

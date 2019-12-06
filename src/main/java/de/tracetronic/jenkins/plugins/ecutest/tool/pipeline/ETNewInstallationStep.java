@@ -47,7 +47,7 @@ public class ETNewInstallationStep extends Step {
                                  final ETToolProperty property) {
         this.toolName = toolName;
         this.installPath = installPath;
-        this.property = property != null ? property : new ETToolProperty(null, 0);
+        this.property = property != null ? property : new ETToolProperty(null, 0, false);
     }
 
     /**
