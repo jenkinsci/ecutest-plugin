@@ -9,6 +9,7 @@ import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
+import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETComRegisterClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
@@ -57,7 +58,14 @@ public class JUnitReportGenerator {
         if (isETRunning) {
             isGenerated = generateReports(reportFiles, launcher, listener);
         } else {
+            // Register ECU-TEST COM server
             final String toolName = run.getEnvironment(listener).expand(installation.getName());
+            if (installation.isRegisterComServer()) {
+                final String installPath = installation.getComExecutable(launcher);
+                ETComRegisterClient comClient = new ETComRegisterClient(toolName, installPath);
+                comClient.start(false, workspace, launcher, listener);
+            }
+
             final String installPath = installation.getExecutable(launcher);
             final String workspaceDir = getWorkspaceDir(run);
             final String settingsDir = getSettingsDir(run);

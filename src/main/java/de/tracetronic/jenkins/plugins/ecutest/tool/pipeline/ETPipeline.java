@@ -96,19 +96,20 @@ public class ETPipeline implements Serializable {
     /**
      * Creates a new {@link ATXServer} instance with server specific settings.
      *
-     * @param toolName    the tool name
-     * @param installPath the installation path
-     * @param progId      the COM programmatic identifier
-     * @param timeout     the COM timeout
+     * @param toolName          the tool name
+     * @param installPath       the installation path
+     * @param progId            the COM programmatic identifier
+     * @param timeout           the COM timeout
+     * @param registerComServer specifies whether to register the COM server before each start of ECU-TEST
      * @return the ECU-TEST installation server
      */
     @Whitelisted
     public ETInstance newInstallation(final String toolName, final String installPath,
-                                      final String progId, final int timeout) {
+                                      final String progId, final int timeout, final boolean registerComServer) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
         stepVariables.put(KEY_TOOL_NAME, toolName);
         stepVariables.put(KEY_INSTALL_PATH, installPath);
-        ETToolProperty property = new ETToolProperty(progId, timeout);
+        ETToolProperty property = new ETToolProperty(progId, timeout, registerComServer);
         stepVariables.put(KEY_PROPERTY, property);
 
         final ETInstance installation = (ETInstance) script.invokeMethod("newETInstallation", stepVariables);
@@ -133,14 +134,16 @@ public class ETPipeline implements Serializable {
         if (installArgs.containsKey(KEY_PROPERTY) && installArgs.get(KEY_PROPERTY) instanceof ETToolProperty) {
             ETToolProperty property = (ETToolProperty) installArgs.get(KEY_PROPERTY);
             return newInstallation((String) installArgs.get(KEY_TOOL_NAME), (String) installArgs.get(KEY_INSTALL_PATH),
-                property.getProgId(), property.getTimeout());
+                property.getProgId(), property.getTimeout(), property.isRegisterComServer());
         }
 
-        requiredKeys.addAll(Arrays.asList("progId", "timeout"));
+        requiredKeys.addAll(Arrays.asList("progId", "timeout", "registerComServer"));
         if (installArgs.keySet().containsAll(requiredKeys)) {
             return newInstallation(installArgs.get(KEY_TOOL_NAME).toString(),
                 installArgs.get(KEY_INSTALL_PATH).toString(),
-                installArgs.get("progId").toString(), (int) installArgs.get("timeout"));
+                installArgs.get("progId").toString(),
+                (int) installArgs.get("timeout"),
+                (boolean) installArgs.get("registerComServer"));
         } else {
             return newInstallation(installArgs.get(KEY_TOOL_NAME).toString(),
                 installArgs.get(KEY_INSTALL_PATH).toString());

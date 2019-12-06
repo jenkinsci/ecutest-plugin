@@ -12,4 +12,7 @@
     <f:entry title="${%timeout.title}" description="${%timeout.description}" field="timeout">
         <f:number default="${descriptor.defaultTimeout}" clazz="number"/>
     </f:entry>
+    <f:entry title="${%registerComServer.title}" description="${%registerComServer.description}" field="registerComServer">
+        <f:checkbox/>
+    </f:entry>
 </j:jelly>
