@@ -10,6 +10,7 @@ import de.tracetronic.jenkins.plugins.ecutest.env.ToolEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.log.ETLogPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
+import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETComRegisterClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.PathUtil;
@@ -193,8 +194,15 @@ public class StartETBuilder extends AbstractToolBuilder {
                 setInstallation(configureToolInstallation(workspace.toComputer(), listener, envVars));
             }
 
-            // Start selected ECU-TEST
+            // Register ECU-TEST COM server
             final String toolName = envVars.expand(getToolName());
+            if (getInstallation().isRegisterComServer()) {
+                final String installPath = getInstallation().getComExecutable(launcher);
+                ETComRegisterClient comClient = new ETComRegisterClient(toolName, installPath);
+                comClient.start(false, workspace, launcher, listener);
+            }
+
+            // Start selected ECU-TEST
             final String installPath = getInstallation().getExecutable(launcher);
             final ETClient etClient = new ETClient(toolName, installPath, expWorkspaceDir, expSettingsDir,
                 expTimeout, isDebugMode());

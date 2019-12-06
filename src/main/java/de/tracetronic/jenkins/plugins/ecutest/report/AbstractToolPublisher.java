@@ -8,6 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
+import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETComRegisterClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import hudson.EnvVars;
 import hudson.FilePath;
@@ -86,6 +87,7 @@ public abstract class AbstractToolPublisher extends AbstractReportPublisher {
 
     /**
      * Configures an ECU-TEST client with given workspace settings.
+     * Re-registers the according ECU-TEST COM server if option is enabled.
      *
      * @param run       the run
      * @param workspace the workspace
@@ -103,10 +105,18 @@ public abstract class AbstractToolPublisher extends AbstractReportPublisher {
             installation = configureToolInstallation(workspace.toComputer(), listener,
                 run.getEnvironment(listener));
         }
+
+        // Register ECU-TEST COM server
+        final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
+        if (installation.isRegisterComServer()) {
+            final String installPath = getInstallation().getComExecutable(launcher);
+            ETComRegisterClient comClient = new ETComRegisterClient(expandedToolName, installPath);
+            comClient.start(false, workspace, launcher, listener);
+        }
+
         final String installPath = installation.getExecutable(launcher);
         final String workspaceDir = getWorkspaceDir(run, workspace);
         final String settingsDir = getSettingsDir(run, workspace);
-        final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
         return new ETClient(expandedToolName, installPath, workspaceDir,
             settingsDir, StartETBuilder.DEFAULT_TIMEOUT, false);
     }

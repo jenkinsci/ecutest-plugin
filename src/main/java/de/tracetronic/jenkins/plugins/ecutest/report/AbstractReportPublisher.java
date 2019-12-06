@@ -13,6 +13,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.AbstractToolBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
+import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETComRegisterClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
@@ -371,10 +372,18 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         throws IOException, InterruptedException, ETPluginException {
         final ETInstallation installation = configureToolInstallation(toolName, workspace.toComputer(), listener,
             run.getEnvironment(listener));
+        final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
+
+        // Register ECU-TEST COM server
+        if (installation.isRegisterComServer()) {
+            final String installPath = installation.getComExecutable(launcher);
+            ETComRegisterClient comClient = new ETComRegisterClient(expandedToolName, installPath);
+            comClient.start(false, workspace, launcher, listener);
+        }
+
         final String installPath = installation.getExecutable(launcher);
         final String workspaceDir = getWorkspaceDir(run, workspace);
         final String settingsDir = getSettingsDir(run, workspace);
-        final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
         return new ETClient(expandedToolName, installPath, workspaceDir,
             settingsDir, StartETBuilder.DEFAULT_TIMEOUT, false);
     }
