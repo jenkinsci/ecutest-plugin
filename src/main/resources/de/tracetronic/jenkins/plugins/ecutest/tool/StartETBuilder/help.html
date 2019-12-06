@@ -23,6 +23,9 @@ ETInstance.start() : void
 ETInstance.start(String workspaceDir, String settingsDir, int timeout,
          boolean debugMode, boolean keepInstance, boolean updateUserLibs) : void
             </pre>
+            <pre>
+ETInstance.start(Map&lt;String, Object&gt; settings) : void
+            </pre>
         </dd>
     </dl>
     <dl>Examples:
@@ -37,6 +40,10 @@ startET installation: instance.installation, workspaceDir: 'C:\\Data'
             <pre>
 def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
 instance.start()
+            </pre>
+            <pre>
+def instance = ET.newInstallation toolName: 'ECU-TEST', installPath: C:\\Program Files\\ECU-TEST 8.0'
+instance.start workspaceDir: 'C:\\Data', settingsDir: 'C:\\Data', timeout: 120, debugMode: true, keepInstance: false, updateUserLibs: true
             </pre>
         </dd>
     </dl>

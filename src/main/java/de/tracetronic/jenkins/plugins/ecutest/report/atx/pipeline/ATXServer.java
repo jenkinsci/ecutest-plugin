@@ -86,6 +86,20 @@ public class ATXServer implements Serializable {
     }
 
     /**
+     * Publishes ATX reports with given archiving settings as named arguments map.
+     *
+     * @param settings the settings map
+     */
+    @Whitelisted
+    public void publish(final Map<String, Object> settings) {
+        final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
+        stepVariables.put("atxName", installation.getName());
+        stepVariables.put("atxInstallation", installation);
+        stepVariables.putAll(settings);
+        script.invokeMethod("publishATX", stepVariables);
+    }
+
+    /**
      * Gets a single ATX setting by name.
      *
      * @param settingName the setting name
@@ -132,7 +146,7 @@ public class ATXServer implements Serializable {
     }
 
     /**
-     * Override multiple ATX settings via map.
+     * Override multiple ATX settings via named arguments map.
      *
      * @param settings the settings map
      */

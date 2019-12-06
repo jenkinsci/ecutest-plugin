@@ -82,6 +82,14 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     }
 
     /**
+     * @param timeout the timeout
+     */
+    @DataBoundSetter
+    public void setTimeout(final int timeout) {
+        this.timeout = String.valueOf(timeout);
+    }
+
+    /**
      * Gets the default timeout.
      *
      * @return the default timeout
