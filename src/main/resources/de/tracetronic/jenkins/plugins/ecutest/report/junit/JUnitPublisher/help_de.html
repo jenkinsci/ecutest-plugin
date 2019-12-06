@@ -14,10 +14,10 @@
 publishUNIT(String toolName, double unstableThreshold, double failedThreshold) : void
             </pre>
             <pre>
-publishUNIT(ETInstallation installation, double unstableThreshold, double failedThreshold, boolean archiving, boolean keepAll) : void
+publishUNIT(ETInstallation installation, double unstableThreshold, double failedThreshold, boolean allowMissing, boolean runOnFailed) : void
             </pre>
             <pre>
-ETInstance.publishUNIT(double unstableThreshold, double failedThreshold, boolean archiving, boolean keepAll) : void
+ETInstance.publishUNIT(double unstableThreshold, double failedThreshold, boolean allowMissing, boolean runOnFailed) : void
             </pre>
             <pre>
 ETInstance.publishUNIT(Map&lt;String, Object&gt; settings) : void
@@ -39,7 +39,7 @@ instance.publishUNIT()
             </pre>
             <pre>
 def instance = ET.newInstallation toolName: 'ECU-TEST', installPath: C:\\Program Files\\ECU-TEST 8.0'
-instance.publishUNIT unstableThreshold: 10, failedThreshold: 20
+instance.publishUNIT unstableThreshold: 10, failedThreshold: 20, allowMissing: true, runOnFailed: true
             </pre>
         </dd>
     </dl>

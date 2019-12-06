@@ -42,7 +42,7 @@ instance.publishGenerators([[name: 'JSON']], [name: 'Custom-JSON')])
             </pre>
             <pre>
 def instance = ET.newInstallation toolName: 'ECU-TEST', installPath: C:\\Program Files\\ECU-TEST 8.0'
-instance.publishGenerators generators: [[name: 'JSON']], customGenerators: [[name: 'Custom-JSON']]
+instance.publishGenerators generators: [[name: 'JSON']], customGenerators: [[name: 'Custom-JSON']], allowMissing: true, runOnFailed: true, archiving: true, keepAll: true
             </pre>
         </dd>
     </dl>

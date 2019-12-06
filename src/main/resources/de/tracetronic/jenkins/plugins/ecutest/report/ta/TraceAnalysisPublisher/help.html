@@ -39,7 +39,7 @@ instance.publishTraceAnalysis()
             </pre>
             <pre>
 def instance = ET.newInstallation toolName: 'ECU-TEST', installPath: C:\\Program Files\\ECU-TEST 8.0'
-instance.publishTraceAnalysis mergeReports: true
+instance.publishTraceAnalysis mergeReports: true, createReportDir: false, timeout: 120, allowMissing: true, runOnFailed: true, archiving: true, keepAll: true
             </pre>
         </dd>
     </dl>
