@@ -15,6 +15,14 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 public interface ComTestManagement {
 
     /**
+     * Checks if the test management service can be started.
+     *
+     * @return {@code true} if the service could be started, {@code false} otherwise
+     * @throws ETComException in case of a COM exception
+     */
+    boolean isAvailable() throws ETComException;
+
+    /**
      * Performs a login to the preconfigured test management service.
      *
      * @param user     the user name
