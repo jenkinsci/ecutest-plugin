@@ -34,7 +34,7 @@ public class ETInstallationTest {
     }
 
     @Test
-    public void testInstallationWithCustomProgId() {
+    public void testInstallationWithCustomSettings() {
         final ETInstallation inst = new ETInstallation("ECU-TEST", "C:\\ECU-TEST",
             Collections.singletonList(new ETToolProperty("ECU-TEST6.Application", 120, true)));
         assertNotNull(inst);
@@ -42,7 +42,6 @@ public class ETInstallationTest {
         assertEquals("C:\\ECU-TEST", inst.getHome());
         assertEquals(1, inst.getProperties().size());
         assertEquals("ECU-TEST6.Application", inst.getProgId());
-        assertTrue(inst.isRegisterComServer());
         assertEquals(120, inst.getTimeout());
         assertTrue(inst.isRegisterComServer());
     }
