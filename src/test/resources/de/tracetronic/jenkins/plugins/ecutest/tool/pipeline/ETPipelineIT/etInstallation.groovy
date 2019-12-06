@@ -11,4 +11,5 @@ def assertInstance(instance) {
     assert instance.installation.home == 'C:\\ECU-TEST'
     assert instance.installation.progId == 'ECU-TEST.Application.8.0'
     assert instance.installation.timeout == 120
+    assert instance.installation.registerComServer == false
 }

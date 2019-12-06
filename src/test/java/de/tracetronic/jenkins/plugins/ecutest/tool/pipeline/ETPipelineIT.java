@@ -35,12 +35,13 @@ public class ETPipelineIT extends IntegrationTestBase {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
         etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", Collections
-            .singletonList(new ETToolProperty("ECU-TEST.Application.8.0", 120))));
+            .singletonList(new ETToolProperty("ECU-TEST.Application.8.0", 120, false))));
 
         final ScriptApproval scriptApproval = ScriptApproval.get();
         List<String> approvedSignatures = Arrays.asList(
             "method de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation getProgId",
-            "method de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation getTimeout");
+            "method de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation getTimeout",
+            "method de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation isRegisterComServer");
         for (String signature : approvedSignatures) {
             scriptApproval.approveSignature(signature);
         }
