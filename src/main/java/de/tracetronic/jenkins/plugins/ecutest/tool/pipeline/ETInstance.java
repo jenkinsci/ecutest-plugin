@@ -183,7 +183,7 @@ public class ETInstance implements Serializable {
     }
 
     /**
-     * Stops ECU-TEST with given settings as named arguments map.
+     * Starts Tool-Server with given settings as named arguments map.
      *
      * @param settings the settings map
      */
