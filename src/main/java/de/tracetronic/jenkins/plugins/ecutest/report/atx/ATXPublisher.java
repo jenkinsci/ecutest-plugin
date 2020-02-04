@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -58,6 +58,10 @@ public class ATXPublisher extends AbstractReportPublisher {
      * @since 2.11
      */
     private boolean failOnOffline;
+    /**
+     * @since 2.14
+     */
+    private boolean usePersistedSettings;
 
     /**
      * Instantiates a new {@link ATXPublisher}.
@@ -108,6 +112,21 @@ public class ATXPublisher extends AbstractReportPublisher {
     @DataBoundSetter
     public void setFailOnOffline(final boolean failOnOffline) {
         this.failOnOffline = failOnOffline;
+    }
+
+    /**
+     * @return specifies whether to use report generator settings from persisted configurations file (XML)
+     */
+    public boolean isUsePersistedSettings() {
+        return usePersistedSettings;
+    }
+
+    /**
+     * @param usePersistedSettings whether to use report generator settings from persisted configurations file (XML)
+     */
+    @DataBoundSetter
+    public void setUsePersistedSettings(final boolean usePersistedSettings) {
+        this.usePersistedSettings = usePersistedSettings;
     }
 
     @Override
@@ -177,7 +196,7 @@ public class ATXPublisher extends AbstractReportPublisher {
         if (isUploadEnabled && isServerReachable) {
             logger.logInfo("- Generating and uploading ATX reports...");
             final ATXReportUploader uploader = new ATXReportUploader(installation);
-            return uploader.upload(reportDirs, isAllowMissing(), run, launcher, listener);
+            return uploader.upload(reportDirs, isAllowMissing(), isUsePersistedSettings(), run, launcher, listener);
         } else if (isUploadEnabled && failOnOffline) {
             logger.logError("-> TEST-GUIDE server is not reachable, setting build status to FAILURE!");
             return false;
@@ -269,7 +288,7 @@ public class ATXPublisher extends AbstractReportPublisher {
          * @param envVars  the environment variables
          * @param listener the listener
          */
-        TestConnectionCallable(final ATXConfig config, final EnvVars envVars,  final TaskListener listener) {
+        TestConnectionCallable(final ATXConfig config, final EnvVars envVars, final TaskListener listener) {
             this.config = config;
             this.envVars = envVars;
             this.listener = listener;

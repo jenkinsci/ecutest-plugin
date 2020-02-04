@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -39,11 +39,19 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Class providing the generation and upload of {@link ATXReport}s.
@@ -70,16 +78,18 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     /**
      * Generates and uploads {@link ATXReport}s.
      *
-     * @param reportDirs   the report directories
-     * @param allowMissing specifies whether missing reports are allowed
-     * @param run          the run
-     * @param launcher     the launcher
-     * @param listener     the listener
+     * @param reportDirs           the report directories
+     * @param allowMissing         specifies whether missing reports are allowed
+     * @param usePersistedSettings whether to use report generator settings from persisted configurations file
+     * @param run                  the run
+     * @param launcher             the launcher
+     * @param listener             the listener
      * @return {@code true} if upload succeeded, {@code false} otherwise
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
      */
-    public boolean upload(final List<FilePath> reportDirs, final boolean allowMissing, final Run<?, ?> run,
+    public boolean upload(final List<FilePath> reportDirs, final boolean allowMissing,
+                          final boolean usePersistedSettings, final Run<?, ?> run,
                           final Launcher launcher, final TaskListener listener)
         throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
@@ -111,7 +121,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
 
                 // Upload ATX reports
                 UploadInfoHolder uploadInfo = launcher.getChannel().call(
-                    new UploadReportCallable(config, uploadFiles, envVars, listener));
+                    new UploadReportCallable(config, uploadFiles, usePersistedSettings, envVars, listener));
 
                 if (uploadInfo.isUploaded()) {
                     // Prepare ATX report links
@@ -352,17 +362,21 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          */
         private static final String SUCCESS_FILE_NAME = "success.json";
 
+        private boolean usePersistedSettings;
+
         /**
          * Instantiates a new {@link UploadReportCallable}.
          *
-         * @param config      the ATX configuration
-         * @param reportFiles the list of TRF files
-         * @param envVars     the environment variables
-         * @param listener    the listener
+         * @param config               the ATX configuration
+         * @param reportFiles          the list of TRF files
+         * @param usePersistedSettings specifies whether to use read settings from persisted configurations file
+         * @param envVars              the environment variables
+         * @param listener             the listener
          */
-        UploadReportCallable(final ATXConfig config, final List<FilePath> reportFiles, final EnvVars envVars,
-                             final TaskListener listener) {
+        UploadReportCallable(final ATXConfig config, final List<FilePath> reportFiles,
+                             final boolean usePersistedSettings, final EnvVars envVars, final TaskListener listener) {
             super(config, reportFiles, envVars, listener);
+            this.usePersistedSettings = usePersistedSettings;
         }
 
         @Override
@@ -381,12 +395,19 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                         logger.logInfo(String.format("-> Generating and uploading ATX report: %s",
                             uploadFile.getRemote()));
                         final FilePath outDir = uploadFile.getParent().child(ATX_TEMPLATE_NAME);
-                        testEnv.generateTestReportDocumentFromDB(uploadFile.getRemote(),
-                            outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
+                        if (usePersistedSettings) {
+                            final FilePath reportDir = uploadFile.getParent();
+                            final FilePath configPath = reportDir.child(ATX_TEMPLATE_NAME + ".xml");
+                            testEnv.generateTestReportDocumentFromDB(uploadFile.getRemote(),
+                                reportDir.getRemote(), configPath.getRemote(), true);
+                        } else {
+                            testEnv.generateTestReportDocumentFromDB(uploadFile.getRemote(),
+                                outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
+                        }
                         comClient.waitForIdle(0);
 
                         final FilePath errorFile = outDir.child(ERROR_FILE_NAME);
-                        if(checkErrorLog(errorFile, logger)) {
+                        if (checkErrorLog(errorFile, logger)) {
                             final FilePath successFile = outDir.child(SUCCESS_FILE_NAME);
                             final boolean uploadAsync = configMap.get("uploadAsync").equals("True");
                             uploadInfo.setTestInfo(checkSuccessLog(successFile, uploadFile, uploadAsync, logger));
