@@ -92,7 +92,7 @@
 
         <!-- Static code analysis -->
         <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
-        <maven-pmd-plugin.version>3.12.0</maven-pmd-plugin.version>
+        <maven-pmd-plugin.version>3.13.0</maven-pmd-plugin.version>
 
         <!-- Test scope -->
         <configuration-as-code.version>1.35</configuration-as-code.version>
