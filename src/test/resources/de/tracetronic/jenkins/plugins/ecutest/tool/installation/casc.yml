@@ -9,5 +9,5 @@ tool:
         properties:
           - ecuTestProperty:
               progId: "ECU-TEST.Application.7.2"
-              timeout: 60
               registerComServer: true
+              timeout: 60

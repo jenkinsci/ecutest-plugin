@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -76,6 +76,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
     public void testConfigRoundTripStep() throws Exception {
         final ATXPublisher before = new ATXPublisher("TEST-GUIDE");
         before.setFailOnOffline(false);
+        before.setUsePersistedSettings(false);
         before.setRunOnFailed(false);
         before.setAllowMissing(false);
         before.setRunOnFailed(false);
@@ -88,7 +89,8 @@ public class ATXPublisherIT extends IntegrationTestBase {
         assertThat(delegate, instanceOf(ATXPublisher.class));
 
         final ATXPublisher after = jenkins.configRoundtrip(before);
-        jenkins.assertEqualBeans(before, after, "failOnOffline,allowMissing,runOnFailed,archiving,keepAll");
+        jenkins.assertEqualBeans(before, after, "failOnOffline,usePersistedSettings," +
+            "allowMissing,runOnFailed,archiving,keepAll");
     }
 
     @Test
@@ -96,6 +98,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
         publisher.setFailOnOffline(true);
+        publisher.setUsePersistedSettings(true);
         publisher.setAllowMissing(true);
         publisher.setRunOnFailed(true);
         publisher.setArchiving(false);
@@ -107,6 +110,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
         jenkins.assertXPath(page, "//select[@name='atxName']");
         jenkins.assertXPath(page, "//option[@value='TEST-GUIDE']");
         jenkins.assertXPath(page, "//input[@name='_.failOnOffline' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.usePersistedSettings' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.allowMissing' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runOnFailed' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.archiving']");

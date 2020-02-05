@@ -1,5 +1,11 @@
+/*
+ * Copyright (c) 2015-2020 TraceTronic GmbH
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 node('windows') {
-    step([$class: 'ATXPublisher', atxName: 'TEST-GUIDE', failOnOffline: true,
+    step([$class: 'ATXPublisher', atxName: 'TEST-GUIDE',
+            failOnOffline: true, usePersistedSettings: true,
             allowMissing: true, runOnFailed: true,
             archiving: false, keepAll: false])
 }
