@@ -208,8 +208,8 @@ public class ATXPublisher extends AbstractReportPublisher {
             final FilePath archiveTarget = getArchiveTarget(run);
 
             final ATXReportGenerator generator = new ATXReportGenerator(installation);
-            return generator.generate(archiveTarget, reportDirs, isAllowMissing(), isArchiving(), isKeepAll(), run,
-                launcher, listener);
+            return generator.generate(archiveTarget, reportDirs, isAllowMissing(), isUsePersistedSettings(),
+                isArchiving(), isKeepAll(), run, launcher, listener);
         }
     }
 

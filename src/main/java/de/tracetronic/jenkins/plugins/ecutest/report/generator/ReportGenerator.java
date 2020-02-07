@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -134,6 +134,9 @@ public class ReportGenerator {
             if (config.isUsePersistedSettings()) {
                 final FilePath reportDir = dbFile.getParent();
                 final FilePath configPath = reportDir.child(templateName + ".xml");
+                final TTConsoleLogger logger = new TTConsoleLogger(listener);
+                logger.logInfo(String.format("- Using persisted settings from configuration: %s",
+                    configPath.getRemote()));
                 return testEnv.generateTestReportDocument(
                     dbFile.getRemote(), reportDir.getRemote(), configPath.getRemote(), true);
             } else {

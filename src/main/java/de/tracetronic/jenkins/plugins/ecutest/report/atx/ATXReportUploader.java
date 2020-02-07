@@ -387,21 +387,23 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
-                final List<FilePath> uploadFiles = getReportFiles();
-                if (uploadFiles.isEmpty()) {
+                final List<FilePath> reportFiles = getReportFiles();
+                if (reportFiles.isEmpty()) {
                     logger.logInfo("-> No report files found to upload!");
                 } else {
-                    for (final FilePath uploadFile : uploadFiles) {
+                    for (final FilePath reportFile : reportFiles) {
                         logger.logInfo(String.format("-> Generating and uploading ATX report: %s",
-                            uploadFile.getRemote()));
-                        final FilePath outDir = uploadFile.getParent().child(ATX_TEMPLATE_NAME);
+                            reportFile.getRemote()));
+                        final FilePath outDir = reportFile.getParent().child(ATX_TEMPLATE_NAME);
                         if (usePersistedSettings) {
-                            final FilePath reportDir = uploadFile.getParent();
+                            final FilePath reportDir = reportFile.getParent();
                             final FilePath configPath = reportDir.child(ATX_TEMPLATE_NAME + ".xml");
-                            testEnv.generateTestReportDocumentFromDB(uploadFile.getRemote(),
+                            logger.logInfo(String.format("- Using persisted settings from configuration: %s",
+                                configPath.getRemote()));
+                            testEnv.generateTestReportDocument(reportFile.getRemote(),
                                 reportDir.getRemote(), configPath.getRemote(), true);
                         } else {
-                            testEnv.generateTestReportDocumentFromDB(uploadFile.getRemote(),
+                            testEnv.generateTestReportDocumentFromDB(reportFile.getRemote(),
                                 outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
                         }
                         comClient.waitForIdle(0);
@@ -410,7 +412,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                         if (checkErrorLog(errorFile, logger)) {
                             final FilePath successFile = outDir.child(SUCCESS_FILE_NAME);
                             final boolean uploadAsync = configMap.get("uploadAsync").equals("True");
-                            uploadInfo.setTestInfo(checkSuccessLog(successFile, uploadFile, uploadAsync, logger));
+                            uploadInfo.setTestInfo(checkSuccessLog(successFile, reportFile, uploadAsync, logger));
                             uploadInfo.setUploaded(true);
                         }
                     }
