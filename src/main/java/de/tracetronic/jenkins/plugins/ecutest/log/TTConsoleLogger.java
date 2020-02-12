@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -87,7 +87,7 @@ public class TTConsoleLogger {
         logError(String
             .format("Caught ComException: %s%n"
                     + "For further information see FAQ: "
-                    + "https://wiki.jenkins-ci.org/x/joLtB#TraceTronicECU-TESTPlugin-FAQ",
+                    + "https://github.com/jenkinsci/ecutest-plugin#faq",
                 exception.getMessage()));
         logStackTrace(exception);
     }
