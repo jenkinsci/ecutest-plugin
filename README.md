@@ -590,9 +590,9 @@ tool:
 unclassified:
   testGuide:
     installations:
-    name: "TEST-GUIDE"
-    toolName: "ECU-TEST"
-    - config:
+    - name: "TEST-GUIDE"
+      toolName: "ECU-TEST"
+      config:
         settings:
           - atxBooleanSetting:
               group: UPLOAD
