@@ -27,6 +27,7 @@ It supports standardized access to a broad range of test tools and provides auto
 - [Extensions](#extensions)
     - [Job DSL](#job-dsl)
     - [Pipeline](#pipeline)
+    - [Configuration as Code](#configuration-as-code)
 - [Debugging](#debugging)
 - [Issues](#issues)
 - [Known limitations](#known-limitations)
@@ -557,6 +558,262 @@ node('windows') {
 ```
 </details>
 
+### Configuration as Code
+
+The [Jenkins Configuration as Code Plugin](https://plugins.jenkins.io/configuration-as-code) (a.k.a. JCasC) allows to configure Jenkins based on human-readable declarative configuration files. This plugin supports the external configuration of ECU-TEST tool installations and of TEST-GUIDE server instances in the Jenkins global configuration.
+
+Existing configurations of both types can be exported to according YAML file using the [JCasC export view](https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/docs/features/configExport.md).
+
+<details>
+    <summary>ECU-TEST installation</summary>
+
+```yml
+tool:
+  ecu-test:
+    installations:
+    - name: "ECU-TEST 8.0"
+      home: "C:\\Program Files\\ECU-TEST 8.0"
+    - name: "ECU-TEST 8.1"
+      home: "C:\\Program Files\\ECU-TEST 8.1"
+      properties:
+      - ecuTestProperty:
+          progId: "ECU-TEST.Application.8.1"
+          registerComServer: true
+          timeout: 60
+```
+</details>
+
+<details>
+    <summary>TEST-GUIDE server</summary>
+
+```yml
+unclassified:
+  testGuide:
+    installations:
+    - name: "TEST-GUIDE"
+      toolName: "ECU-TEST"
+      config:
+        settings:
+          - atxBooleanSetting:
+              group: UPLOAD
+              name: "uploadToServer"
+              value: true
+          - atxTextSetting:
+              group: UPLOAD
+              name: "serverURL"
+              value: "127.0.0.1"
+          - atxTextSetting:
+              group: UPLOAD
+              name: "serverLabel"
+          - atxBooleanSetting:
+              group: UPLOAD
+              name: "useHttpsConnection"
+              value: false
+          - atxBooleanSetting:
+              group: UPLOAD
+              name: "ignoreSSL"
+              value: false
+          - atxTextSetting:
+              group: UPLOAD
+              name: "serverPort"
+              value: "8085"
+          - atxTextSetting:
+              group: UPLOAD
+              name: "serverContextPath"
+          - atxTextSetting:
+              group: UPLOAD
+              name: "uploadAuthenticationKey"
+          - atxBooleanSetting:
+              group: UPLOAD
+              name: "uploadAsync"
+              value: true
+          - atxTextSetting:
+              group: UPLOAD
+              name: "httpProxy"
+          - atxTextSetting:
+              group: UPLOAD
+              name: "httpsProxy"
+          - atxTextSetting:
+              group: UPLOAD
+              name: "projectId"
+              value: "1"
+          - atxBooleanSetting:
+              group: UPLOAD
+              name: "compressUpload"
+              value: false
+          - atxBooleanSetting:
+              group: UPLOAD
+              name: "cleanAfterSuccessUpload"
+              value: true
+          - atxBooleanSetting:
+              group: UPLOAD
+              name: "uploadOnlyProjectReport"
+              value: false
+          - atxBooleanSetting:
+              group: ARCHIVE
+              name: "enableArchive"
+              value: true
+          - atxBooleanSetting:
+              group: ARCHIVE
+              name: "archiveTrf"
+              value: true
+          - atxBooleanSetting:
+              group: ARCHIVE
+              name: "archivePkg"
+              value: false
+          - atxBooleanSetting:
+              group: ARCHIVE
+              name: "archiveTcf"
+              value: false
+          - atxBooleanSetting:
+              group: ARCHIVE
+              name: "archiveTbc"
+              value: false
+          - atxBooleanSetting:
+              group: ARCHIVE
+              name: "archiveMapping"
+              value: false
+          - atxBooleanSetting:
+              group: ARCHIVE
+              name: "archiveRecordings"
+              value: false
+          - atxBooleanSetting:
+              group: ARCHIVE
+              name: "archiveRecordingMetadata"
+              value: true
+          - atxBooleanSetting:
+              group: ARCHIVE
+              name: "archivePlots"
+              value: true
+          - atxTextSetting:
+              group: ARCHIVE
+              name: "archiveMiscFiles"
+          - atxTextSetting:
+              group: ARCHIVE
+              name: "archiveMiscFilePrefix"
+          - atxBooleanSetting:
+              group: ARCHIVE
+              name: "archiveMiscFilesOnlyInTestReportDir"
+              value: true
+          - atxTextSetting:
+              group: ARCHIVE
+              name: "archiveFilesPerPackage"
+          - atxTextSetting:
+              group: ARCHIVE
+              name: "archiveBy"
+              value: "NONE;SUCCESS;INCONCLUSIVE;FAILED;ERROR"
+          - atxBooleanSetting:
+              group: ARCHIVE
+              name: "archiveDescriptionImages"
+              value: true
+          - atxTextSetting:
+              group: ATTRIBUTE
+              name: "coveredAttributes"
+              value: "Testlevel;Designer;Execution Priority;Estimated Duration [min];"
+          - atxTextSetting:
+              group: ATTRIBUTE
+              name: "attributeDelimiter"
+          - atxBooleanSetting:
+              group: ATTRIBUTE
+              name: "mapIsTestCaseAsAttribute"
+              value: true
+          - atxBooleanSetting:
+              group: ATTRIBUTE
+              name: "mapTestCaseVersionAsAttribute"
+              value: true
+          - atxBooleanSetting:
+              group: ATTRIBUTE
+              name: "mapRootPrjAttrToPkgAttr"
+              value: true
+          - atxTextSetting:
+              group: ATTRIBUTE
+              name: "excludePrjAttrPrefixFor"
+          - atxBooleanSetting:
+              group: ATTRIBUTE
+              name: "includePkgSVNRevision"
+              value: true
+          - atxBooleanSetting:
+              group: ATTRIBUTE
+              name: "mapSwkIdsAsAttribute"
+              value: true
+          - atxBooleanSetting:
+              group: TBC_CONSTANTS
+              name: "mapTbcToolAsConstant"
+              value: true
+          - atxBooleanSetting:
+              group: TCF_CONSTANTS
+              name: "mapTcfTesterAsConstant"
+              value: false
+          - atxBooleanSetting:
+              group: TCF_CONSTANTS
+              name: "mapTCFPropertyAsConstant"
+              value: true
+          - atxBooleanSetting:
+              group: TCF_CONSTANTS
+              name: "mapUserDefinedReportDataAsConstant"
+              value: true
+          - atxTextSetting:
+              group: TCF_CONSTANTS
+              name: "setConstants"
+          - atxTextSetting:
+              group: TCF_CONSTANTS
+              name: "setAttributes"
+          - atxBooleanSetting:
+              group: SPECIAL
+              name: "autoATXGeneratorUpdate"
+              value: true
+          - atxBooleanSetting:
+              group: SPECIAL
+              name: "includeToolIdentifier"
+              value: false
+          - atxBooleanSetting:
+              group: SPECIAL
+              name: "includePkgTestSteps"
+              value: true
+          - atxBooleanSetting:
+              group: SPECIAL
+              name: "onlyIncludePkgTestCases"
+              value: false
+          - atxBooleanSetting:
+              group: SPECIAL
+              name: "overrideParamSetNameMapping"
+              value: false
+          - atxBooleanSetting:
+              group: SPECIAL
+              name: "mapProjectElementNameAsTestCaseName"
+              value: false
+          - atxTextSetting:
+              group: SPECIAL
+              name: "mapSubPackageAsTestCaseLevel"
+              value: "0"
+          - atxTextSetting:
+              group: SPECIAL
+              name: "captureSubPackageOnVerdict"
+          - atxBooleanSetting:
+              group: SPECIAL
+              name: "mapSeparateProjectExecutionAsSingleTestplan"
+              value: false
+          - atxTextSetting:
+              group: SPECIAL
+              name: "mapAttributeAsConstant"
+          - atxBooleanSetting:
+              group: SPECIAL
+              name: "mapTestReportPathAsConstant"
+              value: false
+          - atxBooleanSetting:
+              group: SPECIAL
+              name: "includeResourceAdapterInfo"
+              value: true
+        customSettings:
+          - atxCustomBooleanSetting:
+              name: "customOption"
+              checked: true
+          - atxCustomTextSetting:
+              name: "customLabel"
+              value: "test"
+```
+</details>
+
 ## Debugging
 
 To change the job console log level to debug, the system property `ecutest.debugLog` should be set to `true`. This could be done either at startup
@@ -568,7 +825,7 @@ or at runtime in the console under `Jenkins -> Manage Jenkins -> Script Console`
 `System.setProperty("ecutest.debugLog", "true")`
 
 To get a more debug output about plugin COM API communication a new log recorder with following logger instances could be created under `Manage Jenkins -> System Log -> New Log Recorder`. Set a preferable name, add loggers `de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient`, `de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComDispatch` and set the log level to at least `FINE`.
-  
+
 ![Create new COM API log recorder](docs/images/create_new_debug_log_recorder.png "Create new COM API log recorder")
 
 ## Issues
