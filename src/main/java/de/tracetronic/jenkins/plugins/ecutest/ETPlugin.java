@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -52,7 +52,7 @@ public class ETPlugin {
     /**
      * Defines the TEST-GUIDE version that the provided ATX configuration is based on.
      */
-    public static final ToolVersion ATX_CONFIG_VERSION = new ToolVersion(1, 72, 0);
+    public static final ToolVersion ATX_CONFIG_VERSION = new ToolVersion(1, 76, 0);
 
     /**
      * Retains backward compatibility for renamed classes.

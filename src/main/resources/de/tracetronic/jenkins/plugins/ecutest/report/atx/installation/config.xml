@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2015-2020 TraceTronic GmbH
+
+  SPDX-License-Identifier: BSD-3-Clause
+  -->
 <REPORT-CONFIG
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <TYPE xsi:type="string">
@@ -509,6 +514,26 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
+        <SETTING name="archiveDescriptionImages" default="True"
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">True wenn Bilder aus HTML img Tags in der
+                            Package-Beschreibung erfasst und archiviert werden sollen, sonst
+                            False.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">True if images from HTML img tags in the
+                            package description should be detected and archived, otherwise
+                            False.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
         <!-- Attributeinstellungen -->
         <SETTING name="coveredAttributes"
                  default="Testlevel;Designer;Execution Priority;Estimated Duration [min];"
@@ -609,6 +634,26 @@
                         <DVALUE xsi:type="string">True if the root project attributes (see
                             coveredAttributes) should be inherited to all package attributes
                             with the prefix 'Project_', otherwise False.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="excludePrjAttrPrefixFor" default=""
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Angabe der Projekt-Attribute durch ';'
+                            getrennt, welche nicht das Präfix 'Project_' beim ATX-Attribut
+                            erhalten sollen.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Specifies the project attributes separated
+                            by ';' which should not have the prefix 'Project_' in the ATX
+                            attribute.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
