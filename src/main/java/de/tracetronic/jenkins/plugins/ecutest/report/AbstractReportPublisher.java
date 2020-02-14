@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -42,7 +42,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -593,7 +592,6 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
             reportFiles.addAll(Arrays.asList(
                 reportDir.list(includes, excludes)));
         }
-        Collections.reverse(reportFiles);
         return reportFiles;
     }
 

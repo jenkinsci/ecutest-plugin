@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -201,10 +201,10 @@ public class ReportGeneratorPublisher extends AbstractToolPublisher {
                     final GeneratorReport report = new GeneratorReport(randomId(), templateName,
                         templateName, getDirectorySize(archiveTargetDir));
                     reports.add(report);
-                    for (final FilePath testReportDir : archiveTargetDir.listDirectories()) {
+                    for (final FilePath reportDir : reportDirs) {
                         final GeneratorReport subReport = new GeneratorReport(randomId(),
-                            testReportDir.getBaseName(), String.format("%s/%s", templateName,
-                            testReportDir.getBaseName()), getDirectorySize(testReportDir));
+                            reportDir.getBaseName(), String.format("%s/%s", templateName,
+                            reportDir.getBaseName()), getDirectorySize(reportDir));
                         report.addSubReport(subReport);
                     }
                 }
