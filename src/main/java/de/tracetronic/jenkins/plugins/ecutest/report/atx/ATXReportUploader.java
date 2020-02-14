@@ -106,12 +106,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             return false;
         }
 
-        config.getSettingByName("cleanAfterSuccessUpload").ifPresent(setting -> {
-            if ((boolean) setting.getValue()) {
-                logger.logWarn("-> In order to generate ATX report links with unique ATX identifiers " +
-                    "disable the upload setting 'Clean After Success Upload' in the TEST-GUIDE configuration.");
-            }
-        });
+        checkForWarning(config, logger);
 
         for (final FilePath reportDir : reportDirs) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(reportDir);
@@ -127,7 +122,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                     // Prepare ATX report links
                     final String title = reportFile.getParent().getName();
                     if (uploadInfo.getTestInfo() == null) {
-                        uploadInfo.setTestInfo(launcher.getChannel().call(new ParseTRFCallable(reportFile.getRemote())));
+                        uploadInfo.setTestInfo(launcher.getChannel().call(
+                            new ParseTRFCallable(reportFile.getRemote())));
                     }
                     traverseReports(atxReports, reportDir, title, baseUrl, uploadInfo.getTestInfo(), projectId);
                 }
@@ -146,6 +142,21 @@ public class ATXReportUploader extends AbstractATXReportHandler {
 
         addBuildAction(run, atxReports);
         return true;
+    }
+
+    /**
+     * Checks whether to log warning when settings <i>cleanAfterSuccessUpload</i> is enabled.
+     *
+     * @param config the ATX configuration
+     * @param logger the logger
+     */
+    private void checkForWarning(final ATXConfig config, final TTConsoleLogger logger) {
+        config.getSettingByName("cleanAfterSuccessUpload").ifPresent(setting -> {
+            if ((boolean) setting.getValue()) {
+                logger.logWarn("-> In order to generate ATX report links with unique ATX identifiers " +
+                    "disable the upload setting 'Clean After Success Upload' in the TEST-GUIDE configuration.");
+            }
+        });
     }
 
     /**
@@ -684,7 +695,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          *
          * @param uploaded the uploaded
          */
-        public UploadInfoHolder(final boolean uploaded) {
+        UploadInfoHolder(final boolean uploaded) {
             this.uploaded = uploaded;
         }
 
