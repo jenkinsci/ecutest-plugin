@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -39,6 +39,7 @@ public class ATXPublisherTest {
         final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
         publisher.setAtxInstallation(new ATXInstallation("TEST-GUIDE", "ECU-TEST", new ATXConfig()));
         publisher.setFailOnOffline(true);
+        publisher.setUsePersistedSettings(true);
         publisher.setAllowMissing(true);
         publisher.setRunOnFailed(true);
         publisher.setArchiving(false);
@@ -57,6 +58,7 @@ public class ATXPublisherTest {
         assertNotNull(publisher.getAtxName());
         assertEquals(isDefault, publisher.getAtxInstallation() == null);
         assertEquals(!isDefault, publisher.isFailOnOffline());
+        assertEquals(!isDefault, publisher.isUsePersistedSettings());
         assertEquals(!isDefault, publisher.isAllowMissing());
         assertEquals(!isDefault, publisher.isRunOnFailed());
         assertEquals(isDefault, publisher.isArchiving());

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -47,14 +47,15 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
     /**
      * Generates {@link ATXReport}s without uploading them.
      *
-     * @param archiveTarget the archive target directory
-     * @param reportDirs    the report directories
-     * @param allowMissing  specifies whether missing reports are allowed
-     * @param isArchiving   specifies whether archiving artifacts is enabled
-     * @param keepAll       specifies whether to keep all artifacts
-     * @param run           the run
-     * @param launcher      the launcher
-     * @param listener      the listener
+     * @param archiveTarget        the archive target directory
+     * @param reportDirs           the report directories
+     * @param allowMissing         specifies whether missing reports are allowed
+     * @param isArchiving          specifies whether archiving artifacts is enabled
+     * @param keepAll              specifies whether to keep all artifacts
+     * @param usePersistedSettings specifies whether to use read settings from persisted configurations file
+     * @param run                  the run
+     * @param launcher             the launcher
+     * @param listener             the listener
      * @return {@code true} if upload succeeded, {@code false} otherwise
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
@@ -62,7 +63,8 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
     @SuppressWarnings({"checkstyle:cyclomaticcomplexity", "checkstyle:npathcomplexity"})
     public boolean generate(final FilePath archiveTarget, final List<FilePath> reportDirs,
                             final boolean allowMissing, final boolean isArchiving, final boolean keepAll,
-                            final Run<?, ?> run, final Launcher launcher, final TaskListener listener)
+                            final boolean usePersistedSettings, final Run<?, ?> run, final Launcher launcher,
+                            final TaskListener listener)
         throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<FilePath> reportFiles = new ArrayList<>();
@@ -86,8 +88,8 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
 
         // Generate ATX reports
         final boolean isGenerated = launcher.getChannel().call(
-            new GenerateReportCallable(getInstallation().getConfig(), reportFiles, run.getEnvironment(listener),
-                listener));
+            new GenerateReportCallable(getInstallation().getConfig(), reportFiles, usePersistedSettings,
+                run.getEnvironment(listener), listener));
 
         if (isArchiving) {
             // Removing old artifacts at project level
@@ -202,17 +204,21 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
 
         private static final long serialVersionUID = 1L;
 
+        private boolean usePersistedSettings;
+
         /**
          * Instantiates a new {@link GenerateReportCallable}.
          *
-         * @param config      the ATX configuration
-         * @param reportFiles the list of TRF files
-         * @param envVars     the environment variables
-         * @param listener    the listener
+         * @param config               the ATX configuration
+         * @param reportFiles          the list of TRF files
+         * @param usePersistedSettings specifies whether to use read settings from persisted configurations file
+         * @param envVars              the environment variables
+         * @param listener             the listener
          */
-        GenerateReportCallable(final ATXConfig config, final List<FilePath> reportFiles, final EnvVars envVars,
-                               final TaskListener listener) {
+        GenerateReportCallable(final ATXConfig config, final List<FilePath> reportFiles,
+                               final boolean usePersistedSettings, final EnvVars envVars, final TaskListener listener) {
             super(config, reportFiles, envVars, listener);
+            this.usePersistedSettings = usePersistedSettings;
         }
 
         @Override
@@ -230,8 +236,17 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
                     for (final FilePath reportFile : reportFiles) {
                         logger.logInfo(String.format("-> Generating ATX report: %s", reportFile.getRemote()));
                         final FilePath outDir = reportFile.getParent().child(ATX_TEMPLATE_NAME);
-                        testEnv.generateTestReportDocumentFromDB(reportFile.getRemote(),
-                            outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
+                        if (usePersistedSettings) {
+                            final FilePath reportDir = reportFile.getParent();
+                            final FilePath configPath = reportDir.child(ATX_TEMPLATE_NAME + ".xml");
+                            logger.logInfo(String.format("- Using persisted settings from configuration: %s",
+                                configPath.getRemote()));
+                            testEnv.generateTestReportDocument(reportFile.getRemote(),
+                                reportDir.getRemote(), configPath.getRemote(), true);
+                        } else {
+                            testEnv.generateTestReportDocumentFromDB(reportFile.getRemote(),
+                                outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
+                        }
                         comClient.waitForIdle(0);
                     }
                 }

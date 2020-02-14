@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -106,7 +106,7 @@ public class ATXServer implements Serializable {
      * @return the setting
      */
     @Whitelisted
-    public ATXSetting getSetting(String settingName) {
+    public ATXSetting<?> getSetting(String settingName) {
         return installation.getConfig().getSettingByName(settingName).orElse(null);
     }
 
@@ -130,6 +130,7 @@ public class ATXServer implements Serializable {
      * @param settingName  the setting name
      * @param settingValue the setting value as {@code String} or {@code Boolean}
      */
+    @SuppressWarnings("rawtypes")
     @Whitelisted
     public void overrideSetting(String settingName, Object settingValue) {
         final Optional<ATXSetting> setting = installation.getConfig().getSettingByName(settingName);
