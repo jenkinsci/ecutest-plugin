@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<!--
+  Copyright (c) 2015-2020 TraceTronic GmbH
+
+  SPDX-License-Identifier: BSD-3-Clause
+  -->
+<ruleset name="pmd-ecutest"
          xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
-         name=""
-         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
     <description>pmd-ecutest</description>
 
     <rule ref="category/java/bestpractices.xml/AvoidUsingHardCodedIP"/>
