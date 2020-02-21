@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Copyright (c) 2015-2020 TraceTronic GmbH
-
-  SPDX-License-Identifier: BSD-3-Clause
-  -->
 <!DOCTYPE module PUBLIC
     "-//Checkstyle//DTD Checkstyle Configuration 1.2//EN"
     "http://checkstyle.org/dtds/configuration_1_3.dtd">
-<!--
-    Checkstyle-Configuration: cs-ecutest
--->
 <module name="Checker">
     <property name="severity" value="warning"/>
     <module name="TreeWalker">
