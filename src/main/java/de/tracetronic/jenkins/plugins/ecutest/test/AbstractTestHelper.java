@@ -51,6 +51,7 @@ public abstract class AbstractTestHelper extends Builder {
      * Checks already opened ECU-TEST instances.
      *
      * @param launcher the launcher
+     * @param listener the listener
      * @param kill     specifies whether to task-kill the running processes
      * @return {@code true} if processes found, {@code false} otherwise
      * @throws IOException          signals that an I/O exception has occurred

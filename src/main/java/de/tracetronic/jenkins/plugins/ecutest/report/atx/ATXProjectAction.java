@@ -30,6 +30,7 @@ public class ATXProjectAction<T extends AbstractTestReport> extends AbstractATXA
 
     /**
      * Returns the {@link ATXBuildAction} in the last build that have artifact documents.
+     *
      * <p>
      * Resolves the owner by {@link StaplerRequest#findAncestorObject(Class)}.
      *

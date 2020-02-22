@@ -56,6 +56,11 @@ public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implem
         this.jobExecMode = jobExecMode;
     }
 
+    /**
+     * Instantiates a new {@link ProjectConfig} with default values.
+     *
+     * @return the default {@link ProjectConfig}
+     */
     public static ProjectConfig newInstance() {
         return new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
     }

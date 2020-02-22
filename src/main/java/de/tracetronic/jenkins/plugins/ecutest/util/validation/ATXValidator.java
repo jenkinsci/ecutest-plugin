@@ -371,6 +371,7 @@ public class ATXValidator extends AbstractValidator {
      * Checks the server connection by requesting the TEST-GUIDE API version endpoint.
      *
      * @param baseUrl   the base server URL
+     * @param proxyUrl  the proxy URL
      * @param ignoreSSL specifies whether to ignore SSL issues
      * @return the form validation
      */

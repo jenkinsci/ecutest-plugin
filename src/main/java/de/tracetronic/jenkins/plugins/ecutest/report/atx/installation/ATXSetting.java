@@ -93,6 +93,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
     /**
      * Used for backward compatibility using deprecated configuration map.
      *
+     * @return the value to use after deserialization
      * @since 2.7.0
      */
     protected Object readResolve() {
@@ -137,6 +138,8 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
 
     /**
      * The system locale description, defaults to English.
+     *
+     * @return the description
      */
     public String getDescription() {
         final String locale = LocaleProvider.getLocale().getLanguage();

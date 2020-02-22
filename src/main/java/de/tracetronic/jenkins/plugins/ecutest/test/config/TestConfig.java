@@ -111,6 +111,11 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
         return validConstants;
     }
 
+    /**
+     * Instantiates a new {@link TestConfig} with default values.
+     *
+     * @return the default {@link TestConfig}
+     */
     public static TestConfig newInstance() {
         return new TestConfig(null, null, false, false, false, null);
     }

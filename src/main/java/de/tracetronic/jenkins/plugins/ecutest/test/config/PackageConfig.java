@@ -76,6 +76,11 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
         return validParameters;
     }
 
+    /**
+     * Instantiates a new {@link PackageConfig} with default values.
+     *
+     * @return the default {@link PackageConfig}
+     */
     public static PackageConfig newInstance() {
         return new PackageConfig(true, true, null);
     }

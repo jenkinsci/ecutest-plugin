@@ -124,6 +124,7 @@ public class CacheClient {
      * Checks already opened ECU-TEST instances.
      *
      * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true} if processes found, {@code false} otherwise
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion

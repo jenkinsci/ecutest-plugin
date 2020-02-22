@@ -325,6 +325,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * Checks whether an ECU-TEST instance is still running.
      *
      * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true} if ECU-TEST is running, {@code false} otherwise
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException the interrupted exception

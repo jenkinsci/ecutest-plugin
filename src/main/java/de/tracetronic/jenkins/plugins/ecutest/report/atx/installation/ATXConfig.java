@@ -83,6 +83,7 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
     /**
      * Used for backward compatibility using deprecated configuration map.
      *
+     * @return the settings to use after deserialization
      * @since 2.7.0
      */
     protected Object readResolve() {

@@ -90,6 +90,11 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
         return DEFAULT_TIMEOUT;
     }
 
+    /**
+     * Instantiates a new {@link ExecutionConfig} with default values.
+     *
+     * @return the default {@link ExecutionConfig}
+     */
     public static ExecutionConfig newInstance() {
         return new ExecutionConfig(null, true, true);
     }
