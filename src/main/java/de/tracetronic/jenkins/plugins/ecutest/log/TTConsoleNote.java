@@ -55,7 +55,7 @@ public class TTConsoleNote extends ConsoleNote<Object> {
             if (plainText.contains("result: " + result)) {
                 final int startPos = plainText.indexOf(result);
                 final int endPos = startPos + result.length();
-                String color;
+                final String color;
                 switch (result) {
                     case "NONE":
                         color = "#63666A";

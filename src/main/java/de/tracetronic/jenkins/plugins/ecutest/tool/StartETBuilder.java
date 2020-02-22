@@ -164,7 +164,7 @@ public class StartETBuilder extends AbstractToolBuilder {
             final String toolName = envVars.expand(getToolName());
             if (getInstallation().isRegisterComServer()) {
                 final String installPath = getInstallation().getComExecutable(launcher);
-                ETComRegisterClient comClient = new ETComRegisterClient(toolName, installPath);
+                final ETComRegisterClient comClient = new ETComRegisterClient(toolName, installPath);
                 comClient.start(false, workspace, launcher, listener);
             }
 

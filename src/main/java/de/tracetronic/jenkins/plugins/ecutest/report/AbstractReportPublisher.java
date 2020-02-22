@@ -358,7 +358,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         // Register ECU-TEST COM server
         if (installation.isRegisterComServer()) {
             final String installPath = installation.getComExecutable(launcher);
-            ETComRegisterClient comClient = new ETComRegisterClient(expandedToolName, installPath);
+            final ETComRegisterClient comClient = new ETComRegisterClient(expandedToolName, installPath);
             comClient.start(false, workspace, launcher, listener);
         }
 
@@ -395,7 +395,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
             throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }
         // Set the COM settings for the current ECU-TEST instance
-        VirtualChannel channel = computer.getChannel();
+        final VirtualChannel channel = computer.getChannel();
         if (channel != null) {
             channel.call(new AbstractToolBuilder.SetComPropertyCallable(
                 installation.getProgId(), installation.getTimeout()));
@@ -434,7 +434,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * @return the workspace directory
      */
     protected String getWorkspaceDir(final Run<?, ?> run, final FilePath workspace) {
-        String workspaceDir;
+        final String workspaceDir;
         final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
         if (toolEnvAction != null) {
             workspaceDir = toolEnvAction.getToolWorkspace();
@@ -454,7 +454,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * @return the settings directory
      */
     protected String getSettingsDir(final Run<?, ?> run, final FilePath workspace) {
-        String settingsDir;
+        final String settingsDir;
         final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
         if (toolEnvAction != null) {
             settingsDir = toolEnvAction.getToolSettings();

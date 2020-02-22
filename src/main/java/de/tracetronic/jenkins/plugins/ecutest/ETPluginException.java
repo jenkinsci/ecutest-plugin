@@ -51,7 +51,7 @@ public class ETPluginException extends Exception {
      */
     public ETPluginException(final String message, final TaskListener listener) {
         super(message);
-        TTConsoleLogger logger = new TTConsoleLogger(listener);
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logError(message);
     }
 

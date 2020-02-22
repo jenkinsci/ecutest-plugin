@@ -33,7 +33,7 @@ public class TestConfiguration extends ETComDispatch implements ComTestConfigura
     @SuppressWarnings("checkstyle:BooleanExpressionComplexity")
     @Override
     public void setGlobalConstant(final String name, final String value) throws ETComException {
-        Object objValue;
+        final Object objValue;
         if (StringUtils.isNotEmpty(value)
             && (StringUtils.isNumeric(value) ||
             startsAndEndsWith(value, "[", "]") ||

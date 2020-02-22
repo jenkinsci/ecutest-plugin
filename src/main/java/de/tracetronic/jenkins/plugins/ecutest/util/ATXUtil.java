@@ -162,8 +162,8 @@ public final class ATXUtil {
     public static String getProjectId(final ATXConfig config, final EnvVars envVars) {
         String projectId = null;
         if (config != null && envVars != null) {
-            List<ATXSetting> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
-            Object projectIdSetting = config.getSettingValueByName("projectId", uploadSettings);
+            final List<ATXSetting> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
+            final Object projectIdSetting = config.getSettingValueByName("projectId", uploadSettings);
             if (projectIdSetting != null) {
                 projectId = envVars.expand((String) projectIdSetting);
             }

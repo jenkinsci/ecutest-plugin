@@ -60,7 +60,7 @@ public class JUnitReportGenerator {
             final String toolName = run.getEnvironment(listener).expand(installation.getName());
             if (installation.isRegisterComServer()) {
                 final String installPath = installation.getComExecutable(launcher);
-                ETComRegisterClient comClient = new ETComRegisterClient(toolName, installPath);
+                final ETComRegisterClient comClient = new ETComRegisterClient(toolName, installPath);
                 comClient.start(false, workspace, launcher, listener);
             }
 

@@ -20,7 +20,7 @@ public class ReportGeneratorValidator extends AbstractValidator {
      * @return the form validation
      */
     public FormValidation validateGeneratorName(final String name) {
-        FormValidation returnValue;
+        final FormValidation returnValue;
         if (StringUtils.isBlank(name)) {
             returnValue = FormValidation.validateRequired(name);
         } else {
@@ -36,7 +36,7 @@ public class ReportGeneratorValidator extends AbstractValidator {
      * @return the form validation
      */
     public FormValidation validateSettingName(final String name) {
-        FormValidation returnValue;
+        final FormValidation returnValue;
         if (StringUtils.isBlank(name)) {
             returnValue = FormValidation.validateRequired(name);
         } else {

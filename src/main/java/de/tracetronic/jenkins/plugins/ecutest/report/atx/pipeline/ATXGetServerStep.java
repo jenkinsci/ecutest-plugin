@@ -71,9 +71,9 @@ public class ATXGetServerStep extends Step {
 
         @Override
         protected ATXServer run() throws Exception {
-            ATXInstallation installation = ATXInstallation.get(step.atxName);
+            final ATXInstallation installation = ATXInstallation.get(step.atxName);
             if (installation == null) {
-                TaskListener listener = getContext().get(TaskListener.class);
+                final TaskListener listener = getContext().get(TaskListener.class);
                 final String message = String.format("TEST-GUIDE installation with name '%s' is not configured!",
                     step.atxName);
                 throw new ETPluginException(message, listener);

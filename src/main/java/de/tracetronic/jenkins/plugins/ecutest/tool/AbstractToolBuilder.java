@@ -164,7 +164,7 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
             throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }
         // Set the COM settings for the current ECU-TEST instance
-        VirtualChannel channel = computer.getChannel();
+        final VirtualChannel channel = computer.getChannel();
         if (channel != null) {
             channel.call(new SetComPropertyCallable(installation.getProgId(), installation.getTimeout()));
         }

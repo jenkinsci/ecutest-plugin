@@ -68,9 +68,9 @@ public class ETGetInstallationStep extends Step {
 
         @Override
         protected ETInstance run() throws Exception {
-            ETInstallation installation = ETInstallation.get(step.toolName);
+            final ETInstallation installation = ETInstallation.get(step.toolName);
             if (installation == null) {
-                TaskListener listener = getContext().get(TaskListener.class);
+                final TaskListener listener = getContext().get(TaskListener.class);
                 final String message = String.format("ECU-TEST installation with name '%s' is not configured!",
                     step.toolName);
                 throw new ETPluginException(message, listener);

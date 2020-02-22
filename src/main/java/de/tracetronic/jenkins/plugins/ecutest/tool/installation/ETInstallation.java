@@ -220,7 +220,7 @@ public class ETInstallation extends AbstractToolInstallation {
      * @return the progId, default progId if tool property does not exist
      */
     public String getProgId() {
-        String progId;
+        final String progId;
         final ETToolProperty toolProperty = getProperties().get(ETToolProperty.class);
         if (toolProperty != null) {
             progId = toolProperty.getProgId();
@@ -236,7 +236,7 @@ public class ETInstallation extends AbstractToolInstallation {
      * @return the COM timeout, default timeout if tool property does not exist
      */
     public int getTimeout() {
-        int timeout;
+        final int timeout;
         final ETToolProperty toolProperty = getProperties().get(ETToolProperty.class);
         if (toolProperty != null) {
             timeout = toolProperty.getTimeout();

@@ -58,7 +58,7 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
 
     /**
      * Returns whether to apply COM timeout.
-     * 
+     *
      * @return {@code true} if positive timeout is set, {@code false} otherwise
      */
     public boolean useTimeout() {
@@ -166,9 +166,9 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      */
     private Variant callDispatch(final String method, final Object... params) throws ETComException {
         try {
-            String parameters = StringUtils.join(params, ',');
-            Variant result = Dispatch.call(this, method, params);
-            String dispatchName = this.getClass().getSimpleName();
+            final String parameters = StringUtils.join(params, ',');
+            final Variant result = Dispatch.call(this, method, params);
+            final String dispatchName = this.getClass().getSimpleName();
             LOGGER.fine(String.format("%s.call(): %s (%s) --> %s", dispatchName, method, parameters, result));
             return result;
         } catch (final JacobException e) {
@@ -181,7 +181,7 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     @Override
     public boolean isAttached() {
         final boolean isAttached = super.isAttached();
-        String dispatchName = this.getClass().getSimpleName();
+        final String dispatchName = this.getClass().getSimpleName();
         LOGGER.finer(String.format("%s.isAttached() --> %s", dispatchName, isAttached));
         return isAttached;
     }
@@ -193,7 +193,7 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      */
     private void releaseDispatch() throws ETComException {
         try {
-            String dispatchName = this.getClass().getSimpleName();
+            final String dispatchName = this.getClass().getSimpleName();
             LOGGER.finer(String.format("%s.safeRelease()", dispatchName));
             safeRelease();
         } catch (final JacobException e) {

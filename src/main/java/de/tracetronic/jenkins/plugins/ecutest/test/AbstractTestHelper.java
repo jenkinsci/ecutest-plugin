@@ -225,7 +225,7 @@ public abstract class AbstractTestHelper extends Builder {
 
         @Override
         public String call() throws IOException {
-            String settingValue;
+            final String settingValue;
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 settingValue = comClient.getSetting(settingName);

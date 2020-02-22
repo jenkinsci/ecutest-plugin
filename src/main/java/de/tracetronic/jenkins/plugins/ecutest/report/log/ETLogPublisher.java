@@ -209,7 +209,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
         final int warningLogCount = logParser.parseLogCount(Severity.WARNING);
         final int errorLogCount = logParser.parseLogCount(Severity.ERROR);
 
-        String logTitle;
+        final String logTitle;
         final String relLogFile = archiveTargetDir.toURI().relativize(logFile.toURI()).getPath();
         if (isTestSpecific() && !logFile.getParent().getParent().getName().equals(archiveTargetDir.getName())) {
             logTitle = logFile.getParent().getName().replaceFirst("^Report\\s", "") + "/" + logFile.getName();
@@ -334,7 +334,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
     private List<FilePath> getCompleteLogFiles(final Run<?, ?> run, final FilePath workspace, final Launcher launcher)
         throws IOException, InterruptedException {
         final List<FilePath> logFiles = new ArrayList<>();
-        FilePath workspacePath;
+        final FilePath workspacePath;
         final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
         if (isDownstream()) {
             workspacePath = workspace.child(getWorkspace());

@@ -356,7 +356,7 @@ public class ATXValidator extends AbstractValidator {
      * @return the form validation
      */
     public FormValidation testConnection(final String baseUrl, final String proxyUrl, final boolean ignoreSSL) {
-        FormValidation returnValue;
+        final FormValidation returnValue;
         if (StringUtils.isBlank(baseUrl)) {
             returnValue = FormValidation.error(Messages.ATXInstallation_InvalidServerUrl(null));
         } else if (baseUrl.contains(PARAMETER)) {
@@ -385,7 +385,7 @@ public class ATXValidator extends AbstractValidator {
             final URL url = new URL(appVersionUrl);
 
             // Handle proxy setting
-            Proxy proxy = configureProxy(proxyUrl);
+            final Proxy proxy = configureProxy(proxyUrl);
 
             // Handle SSL connection
             if (appVersionUrl.startsWith("https://")) {
@@ -441,8 +441,8 @@ public class ATXValidator extends AbstractValidator {
         }
 
         final URL url = new URL(proxyUrl);
-        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(url.getHost(), url.getPort()));
-        String userInfo = url.getUserInfo();
+        final Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(url.getHost(), url.getPort()));
+        final String userInfo = url.getUserInfo();
         if (StringUtils.isNotBlank(userInfo)) {
             final String userName;
             final String password;
@@ -455,7 +455,7 @@ public class ATXValidator extends AbstractValidator {
                 password = URLDecoder.decode(userInfo.substring(delimiter), StandardCharsets.UTF_8.name());
             }
 
-            Authenticator authenticator = new Authenticator() {
+            final Authenticator authenticator = new Authenticator() {
                 public PasswordAuthentication getPasswordAuthentication() {
                     return (new PasswordAuthentication(userName, password.toCharArray()));
                 }

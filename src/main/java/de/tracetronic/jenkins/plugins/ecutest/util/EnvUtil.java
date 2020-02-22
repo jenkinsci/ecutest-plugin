@@ -30,7 +30,7 @@ public final class EnvUtil {
      */
     public static String expandEnvVar(final String envVar, final EnvVars buildEnvVars,
                                       final String defaultValue) {
-        String expandedEnvVar;
+        final String expandedEnvVar;
         if (StringUtils.isBlank(envVar)) {
             expandedEnvVar = defaultValue;
         } else {

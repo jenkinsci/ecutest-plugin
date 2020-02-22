@@ -70,7 +70,7 @@ public class ETConfigStartedStep extends Step {
 
         @Override
         protected Boolean run() throws Exception {
-            ETClient client = new ETClient(step.toolName, ETComProperty.DEFAULT_TIMEOUT);
+            final ETClient client = new ETClient(step.toolName, ETComProperty.DEFAULT_TIMEOUT);
             return client.checkConfigStatus(Objects.requireNonNull(getContext().get(Launcher.class)),
                 getContext().get(TaskListener.class));
         }

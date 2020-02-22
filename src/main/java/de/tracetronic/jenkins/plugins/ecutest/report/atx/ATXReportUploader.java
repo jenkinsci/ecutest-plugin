@@ -113,7 +113,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                     reportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES));
 
                 // Upload ATX reports
-                UploadInfoHolder uploadInfo = launcher.getChannel().call(
+                final UploadInfoHolder uploadInfo = launcher.getChannel().call(
                     new UploadReportCallable(config, uploadFiles, usePersistedSettings, envVars, listener));
 
                 if (uploadInfo.isUploaded()) {
@@ -173,7 +173,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                                  final String title, final String baseUrl, final TestInfoHolder testInfo,
                                  final String projectId) throws IOException, InterruptedException {
         // Prepare ATX report information
-        String reportUrl;
+        final String reportUrl;
         String trendReportUrl = null;
         final TestType testType = testInfo.getTestType();
         if (testType == TestType.PACKAGE) {
@@ -217,7 +217,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         for (final FilePath subDir : testReportDir.listDirectories()) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(subDir);
             if (reportFile != null && reportFile.exists()) {
-                String testName;
+                final String testName;
                 // Ensure compatibility with ECU-TEST 6.x using report.trf as report name
                 if ("report.trf".equals(reportFile.getName())) {
                     testName = reportFile.getParent().getName().replaceFirst("^Report\\s", "");
@@ -390,7 +390,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
 
         @Override
         public UploadInfoHolder call() throws IOException {
-            UploadInfoHolder uploadInfo = new UploadInfoHolder(false);
+            final UploadInfoHolder uploadInfo = new UploadInfoHolder(false);
             final TTConsoleLogger logger = new TTConsoleLogger(getListener());
             final Map<String, String> configMap = getConfigMap(true);
             final String progId = ETComProperty.getInstance().getProgId();
@@ -573,7 +573,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          */
         private URL resolveRedirect(final String redirect)
             throws MalformedURLException, NoSuchAlgorithmException, KeyManagementException, IOException {
-            HttpURLConnection connection;
+            final HttpURLConnection connection;
             final URL url = new URL(redirect);
 
             // Handle SSL connection

@@ -221,7 +221,7 @@ public class TraceAnalysisPublisher extends AbstractToolPublisher {
             } else if (isArchiving()) {
                 for (final FilePath reportFile : reportFiles) {
                     logger.logInfo(String.format("- Archiving analysis report: %s", reportFile));
-                    FilePath targetDir;
+                    final FilePath targetDir;
                     if (isCreateReportDir()) {
                         targetDir = archiveTargetDir.getParent().child(reportFile.getParent().getName());
                     } else {

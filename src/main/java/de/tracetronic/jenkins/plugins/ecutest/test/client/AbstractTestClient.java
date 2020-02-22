@@ -195,7 +195,7 @@ public abstract class AbstractTestClient implements TestClient {
          * @return the configuration name
          */
         private String getConfigName(final String configFile) {
-            String configName;
+            final String configName;
             if (StringUtils.isBlank(configFile)) {
                 configName = "None";
             } else {

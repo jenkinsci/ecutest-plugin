@@ -72,7 +72,7 @@ public class ToolValidator extends AbstractValidator {
      * @return the form validation
      */
     public FormValidation validateTcpPort(final String tcpPort) {
-        FormValidation returnValue;
+        final FormValidation returnValue;
         if (StringUtils.isBlank(tcpPort)) {
             returnValue = FormValidation.warning(Messages
                 .StartTSBuilder_NoTcpPort(StartTSBuilder.DEFAULT_TCP_PORT));

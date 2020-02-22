@@ -126,7 +126,7 @@ public class ATXPipeline implements Serializable {
     public ATXServer newServer(final String atxName, final String toolName, final String fullServerUrl,
                                final boolean uploadToServer, final String authKey, final String projectId)
         throws MalformedURLException {
-        Map<String, Object> additionalSettings = Maps.newLinkedHashMap();
+        final Map<String, Object> additionalSettings = Maps.newLinkedHashMap();
         additionalSettings.put("uploadToServer", uploadToServer);
         additionalSettings.put("uploadAuthenticationKey", authKey);
         additionalSettings.put("projectId", projectId);
@@ -191,7 +191,7 @@ public class ATXPipeline implements Serializable {
         final String host = url.getHost();
         final String path = url.getPath().replaceFirst("/", "");
 
-        ATXConfig config = new ATXConfig();
+        final ATXConfig config = new ATXConfig();
         config.getSettingByName("serverURL").ifPresent(setting -> setting.setValue(host));
         config.getSettingByName("serverPort").ifPresent(setting -> setting.setValue(port));
         config.getSettingByName("serverContextPath").ifPresent(setting -> setting.setValue(path));
@@ -222,7 +222,7 @@ public class ATXPipeline implements Serializable {
         stepVariables.put(KEY_ATX_NAME, atxName);
         stepVariables.put(KEY_TOOL_NAME, toolName);
 
-        ATXConfig config = new ATXConfig();
+        final ATXConfig config = new ATXConfig();
         serverArgs.forEach((settingName, settingValue) -> {
             config.getSettingByName(settingName).ifPresent(setting -> setting.setValue(settingValue));
         });

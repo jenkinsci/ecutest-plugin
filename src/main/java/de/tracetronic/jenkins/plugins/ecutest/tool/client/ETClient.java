@@ -334,7 +334,7 @@ public class ETClient extends AbstractToolClient {
      */
     private void querySettings(final Launcher launcher, final TTConsoleLogger logger) {
         if (Boolean.getBoolean("ecutest.debugLog")) {
-            List<String> settings = Arrays.asList(
+            final List<String> settings = Arrays.asList(
                 "workspacePath",
                 "settingsPath",
                 "configPath",
@@ -378,7 +378,7 @@ public class ETClient extends AbstractToolClient {
             comToolVersion.compareWithoutMicroTo(new ToolVersion(7, 1, 0)) >= 0) {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             try {
-                List<String> loadedPatches = launcher.getChannel().call(new GetLoadedPatchesCallable(listener));
+                final List<String> loadedPatches = launcher.getChannel().call(new GetLoadedPatchesCallable(listener));
                 logger.logDebug("Loaded patches: " + loadedPatches);
             } catch (IOException | InterruptedException e) {
                 logger.logDebug("Loaded patches: not available");
@@ -527,7 +527,7 @@ public class ETClient extends AbstractToolClient {
         @Override
         public List<String> call() throws IOException {
             final List<String> procs = ProcessUtil.checkETProcesses(kill);
-            TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logDebug("Found open processes: " + procs);
             return procs;
         }
@@ -557,7 +557,7 @@ public class ETClient extends AbstractToolClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
-                String comVersion = comClient.getVersion();
+                final String comVersion = comClient.getVersion();
                 toolVersion = ToolVersion.parse(comVersion);
             } catch (final ETComException e) {
                 logger.logComException(e);
@@ -717,7 +717,7 @@ public class ETClient extends AbstractToolClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
-                String comVersion = comClient.getVersion();
+                final String comVersion = comClient.getVersion();
                 final ToolVersion toolVersion = ToolVersion.parse(comVersion);
                 if (toolVersion.compareWithoutMicroTo(new ToolVersion(8, 0, 0)) >= 0) {
                     return comClient.isStarted();
@@ -752,7 +752,7 @@ public class ETClient extends AbstractToolClient {
 
         @Override
         public List<String> call() throws IOException {
-            List<String> loadedPatches = new ArrayList<>();
+            final List<String> loadedPatches = new ArrayList<>();
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {

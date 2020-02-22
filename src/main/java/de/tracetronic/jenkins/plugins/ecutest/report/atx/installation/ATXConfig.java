@@ -90,20 +90,20 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
             settings = new ArrayList<>();
 
             for (final Entry<String, List<ATXSetting>> config : configMap.entrySet()) {
-                String groupName = config.getKey();
-                ATXSetting.SettingsGroup settingsGroup = getSettingsGroup(groupName);
+                final String groupName = config.getKey();
+                final ATXSetting.SettingsGroup settingsGroup = getSettingsGroup(groupName);
 
                 for (final ATXSetting setting : config.getValue()) {
-                    String settingName = setting.getName();
-                    String descGerman = setting.getDescGerman();
-                    String descEnglish = setting.getDescEnglish();
+                    final String settingName = setting.getName();
+                    final String descGerman = setting.getDescGerman();
+                    final String descEnglish = setting.getDescEnglish();
                     if (setting.isCheckbox()) {
-                        ATXBooleanSetting newSetting = new ATXBooleanSetting(settingName, settingsGroup,
+                        final ATXBooleanSetting newSetting = new ATXBooleanSetting(settingName, settingsGroup,
                             descGerman, descEnglish, (boolean) setting.getDefaultValue());
                         newSetting.setValue(((ATXBooleanSetting) setting).getValue());
                         settings.add(newSetting);
                     } else {
-                        ATXTextSetting newSetting = new ATXTextSetting(settingName, settingsGroup,
+                        final ATXTextSetting newSetting = new ATXTextSetting(settingName, settingsGroup,
                             descGerman, descEnglish, (String) setting.getDefaultValue());
                         newSetting.setValue(((ATXTextSetting) setting).getValue());
                         settings.add(newSetting);
@@ -199,7 +199,7 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
      * @return the settings by group name
      */
     public List<ATXSetting> getSettingsByGroupName(final String groupName) {
-        SettingsGroup group = getSettingsGroup(groupName);
+        final SettingsGroup group = getSettingsGroup(groupName);
         return getSettingsByGroup(group);
     }
 

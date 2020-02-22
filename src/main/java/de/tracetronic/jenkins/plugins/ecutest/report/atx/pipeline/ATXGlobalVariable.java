@@ -28,7 +28,7 @@ public class ATXGlobalVariable extends GlobalVariable {
     @Override
     public Object getValue(@Nonnull final CpsScript cpsScript) throws Exception {
         final Binding binding = cpsScript.getBinding();
-        Object atx;
+        final Object atx;
         if (binding.hasVariable(getName())) {
             atx = binding.getVariable(getName());
         } else {

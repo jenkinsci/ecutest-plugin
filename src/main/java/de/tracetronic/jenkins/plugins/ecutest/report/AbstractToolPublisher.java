@@ -102,7 +102,7 @@ public abstract class AbstractToolPublisher extends AbstractReportPublisher {
         final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
         if (installation.isRegisterComServer()) {
             final String installPath = getInstallation().getComExecutable(launcher);
-            ETComRegisterClient comClient = new ETComRegisterClient(expandedToolName, installPath);
+            final ETComRegisterClient comClient = new ETComRegisterClient(expandedToolName, installPath);
             comClient.start(false, workspace, launcher, listener);
         }
 

@@ -161,16 +161,16 @@ public class CacheClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient client = new ETComClient(progId)) {
-                Caches caches = (Caches) client.getCaches();
-                Cache cache = caches.getCacheByType(type);
-                String cacheType = type.name();
+                final Caches caches = (Caches) client.getCaches();
+                final Cache cache = caches.getCacheByType(type);
+                final String cacheType = type.name();
                 if (clear) {
                     logger.logInfo(String.format("- Removing all %s cache files...", cacheType));
                     cache.clear(true);
                 }
                 logger.logInfo(String.format("- Inserting %s to %s cache...", filePath, cacheType));
                 cache.insert(filePath, dbChannel);
-                List<String> files = cache.getFiles();
+                final List<String> files = cache.getFiles();
                 logger.logInfo(String.format("-> Available %s cache files: %s", cacheType, files.toString()));
             } catch (final ETComException e) {
                 logger.logComException(e);

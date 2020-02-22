@@ -297,13 +297,14 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                 // Synchronize settings
                 if (currentConfig != null) {
                     for (final ATXSetting newSetting : newConfig.getSettings()) {
-                        Optional<ATXSetting> currentSetting = currentConfig.getSettingByName(newSetting.getName());
+                        final Optional<ATXSetting> currentSetting =
+                                currentConfig.getSettingByName(newSetting.getName());
                         if (currentSetting.isPresent()) {
                             if (currentSetting.get() instanceof ATXTextSetting) {
-                                ATXTextSetting textSetting = (ATXTextSetting) currentSetting.get();
+                                final ATXTextSetting textSetting = (ATXTextSetting) currentSetting.get();
                                 newSetting.setValue(textSetting.getValue());
                             } else if (currentSetting.get() instanceof ATXBooleanSetting) {
-                                ATXBooleanSetting booleanSetting = (ATXBooleanSetting) currentSetting.get();
+                                final ATXBooleanSetting booleanSetting = (ATXBooleanSetting) currentSetting.get();
                                 newSetting.setValue(booleanSetting.getValue());
                             }
                         }
