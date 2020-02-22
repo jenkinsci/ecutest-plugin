@@ -43,16 +43,10 @@ public abstract class AbstractATXAction extends AbstractReportAction {
         return "icon-ecutest-test-guide";
     }
 
-    /**
-     * @return the report icon class name
-     */
     public String getReportIconClassName() {
         return "icon-ecutest-atx-report";
     }
 
-    /**
-     * @return the trend icon class name
-     */
     public String getTrendIconClassName() {
         return "icon-ecutest-atx-trend";
     }

@@ -57,17 +57,11 @@ public abstract class AbstractToolPublisher extends AbstractReportPublisher {
         this.toolName = StringUtils.trimToEmpty(toolName);
     }
 
-    /**
-     * @return the {@link ETInstallation} name
-     */
     @Nonnull
     public String getToolName() {
         return toolName;
     }
 
-    /**
-     * @return the ECU-TEST installation
-     */
     public ETInstallation getInstallation() {
         return installation;
     }

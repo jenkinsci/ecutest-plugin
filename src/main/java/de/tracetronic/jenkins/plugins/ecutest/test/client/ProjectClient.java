@@ -49,9 +49,6 @@ public class ProjectClient extends AbstractTestClient {
         this.projectConfig = projectConfig;
     }
 
-    /**
-     * @return the project configuration
-     */
     public ProjectConfig getProjectConfig() {
         return projectConfig;
     }

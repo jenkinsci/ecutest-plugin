@@ -38,9 +38,6 @@ public class ReportGenerator {
         this.config = config;
     }
 
-    /**
-     * @return the configuration
-     */
     public ReportGeneratorConfig getConfig() {
         return config;
     }

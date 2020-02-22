@@ -26,8 +26,8 @@ public abstract class ExportConfig extends TMSConfig {
     /**
      * Instantiates a new {@link ExportConfig}.
      *
-     * @param filePath      the file path
-     * @param exportPath    the export path
+     * @param filePath      the file path to export
+     * @param exportPath    the export target path
      * @param createNewPath specifies whether missing export path will be created
      * @param credentialsId the credentials id
      * @param timeout       the timeout
@@ -40,23 +40,14 @@ public abstract class ExportConfig extends TMSConfig {
         this.createNewPath = createNewPath;
     }
 
-    /**
-     * @return the file path to export
-     */
     public String getFilePath() {
         return filePath;
     }
 
-    /**
-     * @return the export target path
-     */
     public String getExportPath() {
         return exportPath;
     }
 
-    /**
-     * @return specifies whether missing export path will be created
-     */
     public boolean isCreateNewPath() {
         return createNewPath;
     }

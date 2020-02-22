@@ -46,15 +46,12 @@ public class ImportProjectClient extends AbstractTMSClient {
     /**
      * Instantiates a new {@link ImportProjectClient}.
      *
-     * @param importConfig the import configuration
+     * @param importConfig the import project configuration
      */
     public ImportProjectClient(final TMSConfig importConfig) {
         this.importConfig = importConfig;
     }
 
-    /**
-     * @return the import project configuration
-     */
     public TMSConfig getImportConfig() {
         return importConfig;
     }

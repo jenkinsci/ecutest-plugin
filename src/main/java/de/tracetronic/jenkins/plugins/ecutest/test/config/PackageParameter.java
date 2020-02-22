@@ -44,16 +44,10 @@ public class PackageParameter extends AbstractDescribableImpl<PackageParameter> 
         this.value = StringUtils.trimToEmpty(value);
     }
 
-    /**
-     * @return the parameter name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * @return the parameter value
-     */
     public String getValue() {
         return value;
     }

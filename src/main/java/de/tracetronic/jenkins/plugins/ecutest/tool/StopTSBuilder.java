@@ -41,9 +41,6 @@ public class StopTSBuilder extends AbstractToolBuilder {
         super(toolName);
     }
 
-    /**
-     * @return the default timeout
-     */
     @Override
     public int getDefaultTimeout() {
         return DEFAULT_TIMEOUT;

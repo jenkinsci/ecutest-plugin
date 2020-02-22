@@ -83,15 +83,14 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
         return validConfigs;
     }
 
-    /**
-     * @return the list of configured test importers
-     */
     @Nonnull
     public List<TMSConfig> getImportConfigs() {
         return Collections.unmodifiableList(importConfigs);
     }
 
     /**
+     * Sets the import configurations.
+     *
      * @param importConfigs the list of configured test importers
      */
     @DataBoundSetter

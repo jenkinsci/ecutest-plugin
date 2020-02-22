@@ -45,9 +45,6 @@ public abstract class AbstractATXReportHandler {
         this.installation = installation;
     }
 
-    /**
-     * @return the installation
-     */
     protected ATXInstallation getInstallation() {
         return installation;
     }
@@ -82,16 +79,10 @@ public abstract class AbstractATXReportHandler {
             this.listener = listener;
         }
 
-        /**
-         * @return the reportFiles
-         */
         public List<FilePath> getReportFiles() {
             return reportFiles;
         }
 
-        /**
-         * @return the listener
-         */
         public TaskListener getListener() {
             return listener;
         }

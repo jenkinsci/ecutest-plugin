@@ -481,7 +481,9 @@ public class ETComClient implements ComApplication, AutoCloseable {
         private Throwable throwable;
 
         /**
-         * @return the throwable from failing thread
+         * Returns the throwable from failing thread.
+         *
+         * @return the {@link Throwable} instance
          */
         public Throwable getThrowable() {
             return throwable;

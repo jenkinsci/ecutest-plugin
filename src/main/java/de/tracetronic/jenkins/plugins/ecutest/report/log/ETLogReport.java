@@ -42,9 +42,6 @@ public class ETLogReport extends AbstractArchiveFileReport {
         this.errorLogCount = errorLogCount;
     }
 
-    /**
-     * @return the annotated logs
-     */
     public List<ETLogAnnotation> getLogs() {
         return logs;
     }

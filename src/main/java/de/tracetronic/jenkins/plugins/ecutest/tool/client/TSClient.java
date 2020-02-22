@@ -74,16 +74,10 @@ public class TSClient extends AbstractToolClient {
         return launcher.getChannel().call(new CheckProcessCallable(kill));
     }
 
-    /**
-     * @return the ToolLibs.ini path
-     */
     public String getToolLibsIniPath() {
         return toolLibsIniPath;
     }
 
-    /**
-     * @return the TCP port
-     */
     public int getTcpPort() {
         return tcpPort;
     }

@@ -231,9 +231,6 @@ public class TestValidator extends AbstractValidator {
             parser.filterExpression();
         }
 
-        /**
-         * @return {@code true} if expression is valid, {@code false} otherwise.
-         */
         public boolean isValid() {
             return isValid;
         }

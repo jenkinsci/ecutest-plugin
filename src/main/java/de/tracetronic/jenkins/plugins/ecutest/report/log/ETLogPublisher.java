@@ -52,9 +52,17 @@ public class ETLogPublisher extends AbstractReportPublisher {
      */
     protected static final String URL_NAME = "ecutest-logs";
 
+    /**
+     * Specifies hether to mark the build as unstable if warnings found.
+     */
     private boolean unstableOnWarning;
+    /**
+     * Specifies whether to mark the build as failed if errors found.
+     */
     private boolean failedOnError;
     /**
+     * Specifies whether to parse the test-specific log files.
+     *
      * @since 1.10
      */
     private boolean testSpecific;
@@ -67,46 +75,28 @@ public class ETLogPublisher extends AbstractReportPublisher {
         super();
     }
 
-    /**
-     * @return whether to mark the build as unstable if warnings found
-     */
     public boolean isUnstableOnWarning() {
         return unstableOnWarning;
     }
 
-    /**
-     * @param unstableOnWarning specifies whether to mark the build as unstable if warnings found
-     */
     @DataBoundSetter
     public void setUnstableOnWarning(final boolean unstableOnWarning) {
         this.unstableOnWarning = unstableOnWarning;
     }
 
-    /**
-     * @return whether to mark the build as failed if errors found
-     */
     public boolean isFailedOnError() {
         return failedOnError;
     }
 
-    /**
-     * @param failedOnError specifies whether to mark the build as failed if errors found
-     */
     @DataBoundSetter
     public void setFailedOnError(final boolean failedOnError) {
         this.failedOnError = failedOnError;
     }
 
-    /**
-     * @return whether to parse the test-specific log files
-     */
     public boolean isTestSpecific() {
         return testSpecific;
     }
 
-    /**
-     * @param testSpecific specifies whether to parse the test-specific log files
-     */
     @DataBoundSetter
     public void setTestSpecific(final boolean testSpecific) {
         this.testSpecific = testSpecific;

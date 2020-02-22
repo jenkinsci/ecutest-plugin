@@ -46,25 +46,16 @@ public class ATXNewServerStep extends Step {
         this.config = config != null ? config : new ATXConfig();
     }
 
-    /**
-     * @return the ATX name
-     */
     @Nonnull
     public String getAtxName() {
         return atxName;
     }
 
-    /**
-     * @return the tool name
-     */
     @Nonnull
     public String getToolName() {
         return toolName;
     }
 
-    /**
-     * @return the ATX configuration
-     */
     public ATXConfig getConfig() {
         return config;
     }

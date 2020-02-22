@@ -55,9 +55,6 @@ public class ATXReport extends AbstractTestReport {
         this.hasTrendReport = hasTrendReport;
     }
 
-    /**
-     * @return the report URL
-     */
     public String getReportUrl() {
         return reportUrl;
     }

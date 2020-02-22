@@ -52,9 +52,6 @@ public class PackageClient extends AbstractTestClient {
         this.packageConfig = packageConfig;
     }
 
-    /**
-     * @return the package configuration
-     */
     public PackageConfig getPackageConfig() {
         return packageConfig;
     }
@@ -384,16 +381,10 @@ public class PackageClient extends AbstractTestClient {
             this.testDescription = testDescription;
         }
 
-        /**
-         * @return the test name
-         */
         public String getTestName() {
             return testName;
         }
 
-        /**
-         * @return the test description
-         */
         public String getTestDescription() {
             return testDescription;
         }

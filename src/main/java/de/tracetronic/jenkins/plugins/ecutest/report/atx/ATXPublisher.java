@@ -53,10 +53,13 @@ public class ATXPublisher extends AbstractReportPublisher {
     private String atxName;
     private ATXInstallation atxInstallation;
     /**
+     * Specifies whether to fail the build if upload is enabled and the server is offline.
      * @since 2.11
      */
     private boolean failOnOffline;
     /**
+     * Specifies whether to use report generator settings from persisted configurations file (XML).
+     *
      * @since 2.14
      */
     private boolean usePersistedSettings;
@@ -72,17 +75,11 @@ public class ATXPublisher extends AbstractReportPublisher {
         this.atxName = StringUtils.trimToEmpty(atxName);
     }
 
-    /**
-     * @return the {@link ATXInstallation} name
-     */
     @Nonnull
     public String getAtxName() {
         return atxName;
     }
 
-    /**
-     * @return the ATX installation
-     */
     public ATXInstallation getAtxInstallation() {
         return atxInstallation;
     }
@@ -97,31 +94,19 @@ public class ATXPublisher extends AbstractReportPublisher {
         this.atxInstallation = atxInstallation;
     }
 
-    /**
-     * @return whether to fail the build if upload is enabled and the server is offline
-     */
     public boolean isFailOnOffline() {
         return failOnOffline;
     }
 
-    /**
-     * @param failOnOffline whether to fail the build if upload is enabled and the server is offline
-     */
     @DataBoundSetter
     public void setFailOnOffline(final boolean failOnOffline) {
         this.failOnOffline = failOnOffline;
     }
 
-    /**
-     * @return specifies whether to use report generator settings from persisted configurations file (XML)
-     */
     public boolean isUsePersistedSettings() {
         return usePersistedSettings;
     }
 
-    /**
-     * @param usePersistedSettings whether to use report generator settings from persisted configurations file (XML)
-     */
     @DataBoundSetter
     public void setUsePersistedSettings(final boolean usePersistedSettings) {
         this.usePersistedSettings = usePersistedSettings;

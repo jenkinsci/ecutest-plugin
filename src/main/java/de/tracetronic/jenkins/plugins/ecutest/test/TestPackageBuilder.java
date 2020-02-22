@@ -44,17 +44,11 @@ public class TestPackageBuilder extends AbstractTestBuilder {
         super(testFile);
     }
 
-    /**
-     * @return the package configuration
-     */
     @Nonnull
     public PackageConfig getPackageConfig() {
         return packageConfig;
     }
 
-    /**
-     * @param packageConfig the package configuration
-     */
     @DataBoundSetter
     public void setPackageConfig(@CheckForNull final PackageConfig packageConfig) {
         this.packageConfig = packageConfig == null ? PackageConfig.newInstance() : packageConfig;

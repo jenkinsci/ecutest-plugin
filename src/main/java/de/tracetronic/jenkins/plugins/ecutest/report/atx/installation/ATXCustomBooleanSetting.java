@@ -33,9 +33,6 @@ public class ATXCustomBooleanSetting extends ATXCustomSetting {
         this.checked = checked;
     }
 
-    /**
-     * @return {@code true} if the checkbox is checked, {@code false} otherwise
-     */
     public boolean isChecked() {
         return checked;
     }

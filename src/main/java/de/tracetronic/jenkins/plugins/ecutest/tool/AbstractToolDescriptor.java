@@ -56,9 +56,6 @@ public abstract class AbstractToolDescriptor extends BuildStepDescriptor<Builder
         return true;
     }
 
-    /**
-     * @return the default timeout
-     */
     public abstract int getDefaultTimeout();
 
     /**

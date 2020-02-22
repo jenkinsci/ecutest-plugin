@@ -35,16 +35,10 @@ public abstract class AbstractTestReport extends AbstractRequestHandler implemen
         subReports = new ArrayList<>();
     }
 
-    /**
-     * @return the report identifier used in URL
-     */
     public String getId() {
         return id;
     }
 
-    /**
-     * @return the report title
-     */
     public String getTitle() {
         return title;
     }
@@ -81,9 +75,6 @@ public abstract class AbstractTestReport extends AbstractRequestHandler implemen
         return getTitle();
     }
 
-    /**
-     * @return the URL for the report path
-     */
     public String getUrl() {
         return Util.rawEncode(getId());
     }

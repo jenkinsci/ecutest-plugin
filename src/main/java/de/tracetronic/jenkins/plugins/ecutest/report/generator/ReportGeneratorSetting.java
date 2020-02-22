@@ -42,16 +42,10 @@ public class ReportGeneratorSetting extends AbstractDescribableImpl<ReportGenera
         this.value = StringUtils.trimToEmpty(value);
     }
 
-    /**
-     * @return the setting name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * @return the setting value
-     */
     public String getValue() {
         return value;
     }

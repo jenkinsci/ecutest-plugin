@@ -51,7 +51,13 @@ public class TraceAnalysisPublisher extends AbstractToolPublisher {
      */
     protected static final String URL_NAME = "trace-analysis";
 
+    /**
+     * Specifies whether to merge analysis job reports.
+     */
     private boolean mergeReports = true;
+    /**
+     * Specifies whether to create a new report directory.
+     */
     private boolean createReportDir = false;
     private String timeout = String.valueOf(getDefaultTimeout());
 
@@ -80,62 +86,36 @@ public class TraceAnalysisPublisher extends AbstractToolPublisher {
         }
     }
 
-    /**
-     * @return the default timeout
-     */
     public static int getDefaultTimeout() {
         return DEFAULT_TIMEOUT;
     }
 
-    /**
-     * @return whether to merge analysis job reports, defaults to {@code true}
-     */
     public boolean isMergeReports() {
         return mergeReports;
     }
 
-    /**
-     * @param mergeReports specifies whether to merge reports of
-     *                     analysis job executions into a main report.
-     */
     @DataBoundSetter
     public void setMergeReports(final boolean mergeReports) {
         this.mergeReports = mergeReports;
     }
 
-    /**
-     * @return whether to create a new report directory, defaults to {@code false}
-     */
     public boolean isCreateReportDir() {
         return createReportDir;
     }
 
-    /**
-     * @param createReportDir specifies whether a new report directory is created
-     *                        or whether the report should be stored next to the job
-     */
     @DataBoundSetter
     public void setCreateReportDir(final boolean createReportDir) {
         this.createReportDir = createReportDir;
     }
 
-    /**
-     * @return the timeout as integer
-     */
     public int getParsedTimeout() {
         return parse(getTimeout());
     }
 
-    /**
-     * @return the timeout as string
-     */
     public String getTimeout() {
         return timeout;
     }
 
-    /**
-     * @param timeout the timeout running each trace analysis
-     */
     @DataBoundSetter
     public void setTimeout(@CheckForNull final String timeout) {
         this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(getDefaultTimeout()));
@@ -368,9 +348,6 @@ public class TraceAnalysisPublisher extends AbstractToolPublisher {
          */
         private final TestValidator testValidator = new TestValidator();
 
-        /**
-         * @return the default timeout
-         */
         public static int getDefaultTimeout() {
             return DEFAULT_TIMEOUT;
         }

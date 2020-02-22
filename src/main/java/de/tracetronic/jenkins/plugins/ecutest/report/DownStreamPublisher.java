@@ -48,25 +48,16 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
         this.workspace = StringUtils.trimToEmpty(workspace);
     }
 
-    /**
-     * @return the downstream workspace
-     */
     @Nonnull
     public String getWorkspace() {
         return workspace;
     }
 
-    /**
-     * @return the configured publishers
-     */
     @Nonnull
     public List<AbstractReportPublisher> getPublishers() {
         return publishers;
     }
 
-    /**
-     * @param publishers the report generators
-     */
     @DataBoundSetter
     public void setPublishers(final List<AbstractReportPublisher> publishers) {
         this.publishers = publishers == null ? new ArrayList<>() : publishers;

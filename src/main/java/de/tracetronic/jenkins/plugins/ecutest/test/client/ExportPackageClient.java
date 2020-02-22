@@ -45,9 +45,6 @@ public class ExportPackageClient extends AbstractTMSClient {
         this.exportConfig = exportConfig;
     }
 
-    /**
-     * @return the export package configuration
-     */
     public TMSConfig getExportConfig() {
         return exportConfig;
     }

@@ -39,16 +39,10 @@ public abstract class AbstractTestHelper extends Builder {
      */
     private static final String DEFAULT_CONFIG_DIR = "Configurations";
 
-    /**
-     * @return the default packages directory
-     */
     public String getDefaultPackagesDir() {
         return DEFAULT_PACKAGES_DIR;
     }
 
-    /**
-     * @return the default configurations directory
-     */
     public String getDefaultConfigDir() {
         return DEFAULT_CONFIG_DIR;
     }

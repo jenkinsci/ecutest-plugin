@@ -47,9 +47,6 @@ public class ETInstance implements Serializable {
         this.installation = installation;
     }
 
-    /**
-     * @return the ECU-TEST installation
-     */
     @Whitelisted
     public ETInstallation getInstallation() {
         return installation;

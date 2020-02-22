@@ -60,7 +60,7 @@ public class TMSPublisher extends AbstractToolPublisher {
      * Instantiates a new {@link TMSPublisher}.
      *
      * @param toolName      the tool name identifying the {@link ETInstallation} to be used
-     * @param credentialsId the credentials id
+     * @param credentialsId the credentials id used for authentication
      */
     @DataBoundConstructor
     public TMSPublisher(@Nonnull final String toolName, @Nonnull final String credentialsId) {
@@ -68,32 +68,20 @@ public class TMSPublisher extends AbstractToolPublisher {
         this.credentialsId = StringUtils.trimToEmpty(credentialsId);
     }
 
-    /**
-     * @return the default timeout
-     */
     public static int getDefaultTimeout() {
         return DEFAULT_TIMEOUT;
     }
 
-    /**
-     * @return the credentials id used for authentication
-     */
     @Nonnull
     public String getCredentialsId() {
         return credentialsId;
     }
 
-    /**
-     * @return the export timeout
-     */
     @Nonnull
     public String getTimeout() {
         return timeout;
     }
 
-    /**
-     * @param timeout the timeout
-     */
     @DataBoundSetter
     public void setTimeout(@CheckForNull final String timeout) {
         this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(getDefaultTimeout()));
@@ -180,9 +168,6 @@ public class TMSPublisher extends AbstractToolPublisher {
             super();
         }
 
-        /**
-         * @return the default timeout
-         */
         public static int getDefaultTimeout() {
             return DEFAULT_TIMEOUT;
         }

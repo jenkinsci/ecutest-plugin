@@ -76,30 +76,18 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
         return validParameters;
     }
 
-    /**
-     * @return the instance of a {@link PackageConfig}.
-     */
     public static PackageConfig newInstance() {
         return new PackageConfig(true, true, null);
     }
 
-    /**
-     * @return {@code true} if run test case, {@code false} otherwise
-     */
     public boolean isRunTest() {
         return runTest;
     }
 
-    /**
-     * @return {@code true} if run trace analysis, {@code false} otherwise
-     */
     public boolean isRunTraceAnalysis() {
         return runTraceAnalysis;
     }
 
-    /**
-     * @return the parameters
-     */
     public List<PackageParameter> getParameters() {
         return parameters;
     }

@@ -27,7 +27,7 @@ public abstract class AbstractTestScanner {
     /**
      * Instantiates a {@link AbstractTestScanner}.
      *
-     * @param inputDir  the input directory
+     * @param inputDir  the input directory to scan
      * @param recursive specifies whether to scan recursively
      * @param launcher  the launcher
      */
@@ -38,16 +38,10 @@ public abstract class AbstractTestScanner {
         this.launcher = launcher;
     }
 
-    /**
-     * @return the input directory to scan
-     */
     public String getInputDir() {
         return inputDir;
     }
 
-    /**
-     * @return {@code true} if recursive scan is enabled, {@code false} otherwise.
-     */
     public boolean isRecursive() {
         return recursive;
     }

@@ -45,48 +45,33 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
     /**
      * Instantiates a new {@link AbstractTestBuilder}.
      *
-     * @param testFile the test file
+     * @param testFile the test file path
      */
     public AbstractTestBuilder(final String testFile) {
         super();
         this.testFile = StringUtils.trimToEmpty(testFile);
     }
 
-    /**
-     * @return the test file path
-     */
     @Nonnull
     public String getTestFile() {
         return testFile;
     }
 
-    /**
-     * @return the test configuration
-     */
     @Nonnull
     public TestConfig getTestConfig() {
         return testConfig;
     }
 
-    /**
-     * @param testConfig the test configuration
-     */
     @DataBoundSetter
     public void setTestConfig(@CheckForNull final TestConfig testConfig) {
         this.testConfig = testConfig == null ? TestConfig.newInstance() : testConfig;
     }
 
-    /**
-     * @return the execution configuration
-     */
     @Nonnull
     public ExecutionConfig getExecutionConfig() {
         return executionConfig;
     }
 
-    /**
-     * @param executionConfig the execution configuration
-     */
     @DataBoundSetter
     public void setExecutionConfig(@CheckForNull final ExecutionConfig executionConfig) {
         this.executionConfig = executionConfig == null ? ExecutionConfig.newInstance() : executionConfig;

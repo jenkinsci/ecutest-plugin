@@ -34,6 +34,8 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
     protected T value;
 
     /**
+     * Deprecated property storing the current value.
+     *
      * @see #readResolve()
      * @since 2.7.0
      * @deprecated due to CasC compatibility
@@ -112,44 +114,29 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
         return clone;
     }
 
-    /**
-     * @return the name of the setting
-     */
     @Whitelisted
     public String getName() {
         return name;
     }
 
-    /**
-     * @return the title name
-     */
     public String getTitle() {
         return toSpaceCase(name);
     }
 
-    /**
-     * @return the name of the settings group
-     */
     public SettingsGroup getGroup() {
         return group;
     }
 
-    /**
-     * @return the German description
-     */
     public String getDescGerman() {
         return descGerman;
     }
 
-    /**
-     * @return the English description
-     */
     public String getDescEnglish() {
         return descEnglish;
     }
 
     /**
-     * @return the system locale description, defaults to English
+     * The system locale description, defaults to English.
      */
     public String getDescription() {
         final String locale = LocaleProvider.getLocale().getLanguage();
@@ -162,16 +149,10 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
         return description;
     }
 
-    /**
-     * @return the default value
-     */
     public T getDefaultValue() {
         return defaultValue;
     }
 
-    /**
-     * @return the current value
-     */
     @Whitelisted
     public T getValue() {
         return value;
@@ -257,10 +238,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
             this.configName = configName;
         }
 
-        /**
-         * @return the config name
-         */
-        public String getConfigName() {
+         public String getConfigName() {
             return configName;
         }
 

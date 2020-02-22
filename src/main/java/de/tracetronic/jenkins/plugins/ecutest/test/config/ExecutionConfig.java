@@ -37,6 +37,8 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     private final String timeout;
     private final boolean stopOnError;
     /**
+     * Specifies whether to check the test file.
+     *
      * @since 1.4
      */
     private final boolean checkTestFile;
@@ -84,45 +86,26 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
         }
     }
 
-    /**
-     * @return the default timeout
-     */
     public static int getDefaultTimeout() {
         return DEFAULT_TIMEOUT;
     }
 
-    /**
-     * @return the instance of a {@link ExecutionConfig}.
-     */
     public static ExecutionConfig newInstance() {
         return new ExecutionConfig(null, true, true);
     }
 
-    /**
-     * @return the timeout as integer
-     */
     public int getParsedTimeout() {
         return parse(getTimeout());
     }
 
-    /**
-     * @return the timeout as string
-     */
     public String getTimeout() {
         return timeout;
     }
 
-    /**
-     * @return {@code true} to stop ECU-TEST and Tool-Server instances
-     * if an error occurred, {@code false} otherwise
-     */
     public boolean isStopOnError() {
         return stopOnError;
     }
 
-    /**
-     * @return specifies whether to check the test file
-     */
     public boolean isCheckTestFile() {
         return checkTestFile;
     }
@@ -159,9 +142,6 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
 
         private final TestValidator testValidator = new TestValidator();
 
-        /**
-         * @return the default timeout
-         */
         public static int getDefaultTimeout() {
             return DEFAULT_TIMEOUT;
         }

@@ -44,11 +44,16 @@ public class StartTSBuilder extends AbstractToolBuilder {
      */
     public static final int DEFAULT_TCP_PORT = 5017;
 
+    /**
+     * The path to ToolLibs.ini file.
+     */
     @CheckForNull
     private String toolLibsIni;
     @Nonnull
     private String tcpPort = String.valueOf(DEFAULT_TCP_PORT);
     /**
+     * Specifies whether to re-use the previous instance.
+     *
      * @since 1.18
      */
     private boolean keepInstance;
@@ -63,63 +68,39 @@ public class StartTSBuilder extends AbstractToolBuilder {
         super(toolName);
     }
 
-    /**
-     * @return the default timeout
-     */
     @Override
     public int getDefaultTimeout() {
         return DEFAULT_TIMEOUT;
     }
 
-    /**
-     * @return the default TCP port
-     */
     public int getDefaultTcpPort() {
         return DEFAULT_TCP_PORT;
     }
 
-    /**
-     * @return the ToolLibs.ini path
-     */
     @Nonnull
     public String getToolLibsIni() {
         return StringUtils.trimToEmpty(toolLibsIni);
     }
 
-    /**
-     * @param toolLibsIni the ToolLibs.ini path
-     */
     @DataBoundSetter
     public void setToolLibsIni(@CheckForNull final String toolLibsIni) {
         this.toolLibsIni = Util.fixNull(toolLibsIni);
     }
 
-    /**
-     * @return the TCP port
-     */
     @Nonnull
     public String getTcpPort() {
         return tcpPort;
     }
 
-    /**
-     * @param tcpPort the TCP port
-     */
     @DataBoundSetter
     public void setTcpPort(@CheckForNull final String tcpPort) {
         this.tcpPort = StringUtils.defaultIfBlank(tcpPort, String.valueOf(getDefaultTcpPort()));
     }
 
-    /**
-     * @return specifies whether to re-use the previous instance
-     */
     public boolean isKeepInstance() {
         return keepInstance;
     }
 
-    /**
-     * @param keepInstance the specifies whether to re-use the previous instance
-     */
     @DataBoundSetter
     public void setKeepInstance(final boolean keepInstance) {
         this.keepInstance = keepInstance;
@@ -176,9 +157,6 @@ public class StartTSBuilder extends AbstractToolBuilder {
             return DEFAULT_TIMEOUT;
         }
 
-        /**
-         * @return the default TCP port
-         */
         public int getDefaultTcpPort() {
             return DEFAULT_TCP_PORT;
         }

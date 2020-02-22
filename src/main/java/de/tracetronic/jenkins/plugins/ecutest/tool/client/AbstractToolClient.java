@@ -49,23 +49,14 @@ public abstract class AbstractToolClient implements ToolClient {
         installPath = "";
     }
 
-    /**
-     * @return the tool name
-     */
     public String getToolName() {
         return toolName;
     }
 
-    /**
-     * @return the installation path
-     */
     public String getInstallPath() {
         return installPath;
     }
 
-    /**
-     * @return the timeout
-     */
     public int getTimeout() {
         return timeout;
     }

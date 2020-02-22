@@ -40,15 +40,12 @@ public class ImportPackageClient extends AbstractTMSClient {
     /**
      * Instantiates a new {@link ImportPackageClient}.
      *
-     * @param importConfig the import configuration
+     * @param importConfig the import package configuration
      */
     public ImportPackageClient(final TMSConfig importConfig) {
         this.importConfig = importConfig;
     }
 
-    /**
-     * @return the import package configuration
-     */
     public TMSConfig getImportConfig() {
         return importConfig;
     }

@@ -32,14 +32,20 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
     private final String tbcFile;
     private final String tcfFile;
     /**
+     * Specifies whether to reload the configuration.
+     *
      * @since 1.4
      */
     private final boolean forceReload;
     /**
+     * Specifies whether to load the configuration only.
+     *
      * @since 1.6
      */
     private final boolean loadOnly;
     /**
+     * Specifies whether to keep the previously loaded configuration.
+     *
      * @since 1.17
      */
     private final boolean keepConfig;
@@ -105,51 +111,30 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
         return validConstants;
     }
 
-    /**
-     * @return the instance of a {@link TestConfig}.
-     */
     public static TestConfig newInstance() {
         return new TestConfig(null, null, false, false, false, null);
     }
 
-    /**
-     * @return the TBC file path
-     */
     public String getTbcFile() {
         return tbcFile;
     }
 
-    /**
-     * @return the TCF file path
-     */
     public String getTcfFile() {
         return tcfFile;
     }
 
-    /**
-     * @return specifies whether to reload the configuration
-     */
     public boolean isForceReload() {
         return forceReload;
     }
 
-    /**
-     * @return specifies whether to load the configuration only
-     */
     public boolean isLoadOnly() {
         return loadOnly;
     }
 
-    /**
-     * @return specifies whether to keep the previously loaded configuration
-     */
     public boolean isKeepConfig() {
         return keepConfig;
     }
 
-    /**
-     * @return the global constants
-     */
     public List<GlobalConstant> getConstants() {
         return constants;
     }

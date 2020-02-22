@@ -55,34 +55,22 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
         this.toolName = StringUtils.trimToEmpty(toolName);
     }
 
-    /**
-     * @return the tool name
-     */
     @Nonnull
     public String getToolName() {
         return toolName;
     }
 
-    /**
-     * @return the timeout
-     */
     @Nonnull
     public String getTimeout() {
         return timeout;
     }
 
-    /**
-     * @param timeout the timeout
-     */
     @DataBoundSetter
     public void setTimeout(@CheckForNull final String timeout) {
         this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(getDefaultTimeout()));
     }
 
-    /**
-     * @param timeout the timeout
-     */
-    @DataBoundSetter
+     @DataBoundSetter
     public void setTimeout(final int timeout) {
         this.timeout = String.valueOf(timeout);
     }
@@ -94,9 +82,6 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
      */
     public abstract int getDefaultTimeout();
 
-    /**
-     * @return the ECU-TEST installation
-     */
     public ETInstallation getInstallation() {
         return installation;
     }

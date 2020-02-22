@@ -48,25 +48,16 @@ public class ETNewInstallationStep extends Step {
         this.property = property != null ? property : new ETToolProperty(null, 0, false);
     }
 
-    /**
-     * @return the tool name
-     */
     @Nonnull
     public String getToolName() {
         return toolName;
     }
 
-    /**
-     * @return the installation path
-     */
     @Nonnull
     public String getInstallPath() {
         return installPath;
     }
 
-    /**
-     * @return the tool property
-     */
     public ETToolProperty getProperty() {
         return property;
     }

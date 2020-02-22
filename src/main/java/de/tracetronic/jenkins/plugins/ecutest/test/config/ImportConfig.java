@@ -25,8 +25,8 @@ public abstract class ImportConfig extends TMSConfig {
     /**
      * Instantiates a new {@link ImportConfig}.
      *
-     * @param tmsPath       the file path
-     * @param importPath    the export path
+     * @param tmsPath       the path in the test management system
+     * @param importPath    the import target path
      * @param credentialsId the credentials id
      * @param timeout       the timeout
      */
@@ -37,16 +37,10 @@ public abstract class ImportConfig extends TMSConfig {
         this.importPath = StringUtils.trimToEmpty(importPath);
     }
 
-    /**
-     * @return the path in the test management system
-     */
     public String getTmsPath() {
         return tmsPath;
     }
 
-    /**
-     * @return the import target path
-     */
     public String getImportPath() {
         return importPath;
     }

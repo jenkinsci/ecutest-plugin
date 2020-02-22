@@ -110,31 +110,19 @@ public class JUnitPublisher extends AbstractToolPublisher implements MatrixAggre
         }
     }
 
-    /**
-     * @return the unstable threshold
-     */
     public double getUnstableThreshold() {
         return unstableThreshold;
     }
 
-    /**
-     * @param unstableThreshold the unstable threshold
-     */
     @DataBoundSetter
     public void setUnstableThreshold(final double unstableThreshold) {
         this.unstableThreshold = convertToPercentage(unstableThreshold);
     }
 
-    /**
-     * @return the failed threshold
-     */
     public double getFailedThreshold() {
         return failedThreshold;
     }
 
-    /**
-     * @param failedThreshold the failed threshold
-     */
     @DataBoundSetter
     public void setFailedThreshold(final double failedThreshold) {
         this.failedThreshold = convertToPercentage(failedThreshold);

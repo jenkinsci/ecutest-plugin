@@ -44,16 +44,10 @@ public abstract class AbstractArchiveFileReport extends AbstractTestReport {
         this.fileSize = fileSize;
     }
 
-    /**
-     * @return the file name
-     */
     public String getFileName() {
         return fileName;
     }
 
-    /**
-     * @return the file size
-     */
     public long getFileSize() {
         return fileSize;
     }

@@ -32,6 +32,8 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
     private final String progId;
     private final int timeout;
     /**
+     * Specifies whether to register the COM server before each start of ECU-TEST.
+     *
      * @since 2.13.0
      */
     private final boolean registerComServer;
@@ -39,8 +41,8 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
     /**
      * Instantiates a new {@link ETToolProperty}.
      *
-     * @param progId            the programmatic identifier
-     * @param timeout           the timeout
+     * @param progId            the ECU-TEST COM specific programmatic identifier
+     * @param timeout           the current maximum COM response timeout
      * @param registerComServer specifies whether to register the COM server before each start of ECU-TEST
      */
     @DataBoundConstructor
@@ -51,27 +53,14 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
         this.registerComServer = registerComServer;
     }
 
-    /**
-     * Gets the ECU-TEST COM specific programmatic identifier.
-     *
-     * @return the progId
-     */
     public String getProgId() {
         return progId;
     }
 
-    /**
-     * Gets the current maximum COM response timeout.
-     *
-     * @return the timeout
-     */
     public int getTimeout() {
         return timeout;
     }
 
-    /**
-     * @return the whether to register the COM server before each start of ECU-TEST
-     */
     public boolean isRegisterComServer() {
         return registerComServer;
     }
@@ -96,16 +85,10 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
             load();
         }
 
-        /**
-         * @return the default COM specific programmatic identifier
-         */
         public static String getDefaultProgId() {
             return ETComProperty.DEFAULT_PROG_ID;
         }
 
-        /**
-         * @return the default COM response timeout
-         */
         public static int getDefaultTimeout() {
             return ETComProperty.DEFAULT_TIMEOUT;
         }

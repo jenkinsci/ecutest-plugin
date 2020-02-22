@@ -83,15 +83,14 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
         return validConfigs;
     }
 
-    /**
-     * @return the list of configured test exporters
-     */
     @Nonnull
     public List<TMSConfig> getExportConfigs() {
         return Collections.unmodifiableList(exportConfigs);
     }
 
     /**
+     * Sets the export configurations.
+     * 
      * @param exportConfigs the list of configured test exporters
      */
     @DataBoundSetter

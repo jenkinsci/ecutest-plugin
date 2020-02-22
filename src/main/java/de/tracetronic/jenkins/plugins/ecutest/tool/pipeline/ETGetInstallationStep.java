@@ -37,9 +37,6 @@ public class ETGetInstallationStep extends Step {
         this.toolName = toolName;
     }
 
-    /**
-     * @return the tool name
-     */
     public String getToolName() {
         return toolName;
     }

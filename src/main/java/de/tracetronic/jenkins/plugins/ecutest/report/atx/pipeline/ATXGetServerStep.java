@@ -39,9 +39,6 @@ public class ATXGetServerStep extends Step {
         this.atxName = atxName;
     }
 
-    /**
-     * @return the ATX name
-     */
     @Nonnull
     public String getAtxName() {
         return atxName;

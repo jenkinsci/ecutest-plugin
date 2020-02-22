@@ -101,9 +101,6 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         return null;
     }
 
-    /**
-     * @return the name of the installation
-     */
     @Whitelisted
     public String getName() {
         return name;
@@ -119,9 +116,6 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         return toolName;
     }
 
-    /**
-     * @return the configuration
-     */
     public ATXConfig getConfig() {
         return config;
     }
@@ -214,9 +208,6 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
             }
         }
 
-        /**
-         * @return the list of ATX installations
-         */
         public ATXInstallation[] getInstallations() {
             return installations.clone();
         }
@@ -240,9 +231,6 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
             this.installations = inst.toArray(new ATXInstallation[0]);
         }
 
-        /**
-         * @return the default ATX configuration
-         */
         public ATXConfig getDefaultConfig() {
             return defaultConfig;
         }

@@ -43,9 +43,6 @@ public abstract class AbstractTraceAnalysisAction extends AbstractReportAction {
         return "icon-ecutest-trace-check";
     }
 
-    /**
-     * @return the report icon class name
-     */
     public String getReportIconClassName() {
         return "icon-ecutest-trace-report";
     }

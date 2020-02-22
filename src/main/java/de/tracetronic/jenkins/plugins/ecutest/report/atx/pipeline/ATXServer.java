@@ -36,9 +36,6 @@ public class ATXServer implements Serializable {
         this.installation = installation;
     }
 
-    /**
-     * @return the ATX installation
-     */
     @Whitelisted
     public ATXInstallation getInstallation() {
         return installation;

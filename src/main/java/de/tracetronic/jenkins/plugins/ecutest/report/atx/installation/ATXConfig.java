@@ -139,30 +139,18 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
         return clone;
     }
 
-    /**
-     * @return the settings
-     */
     public List<ATXSetting> getSettings() {
         return settings;
     }
 
-    /**
-     * @param settings the custom settings to set
-     */
     public void setSettings(final List<ATXSetting> settings) {
         this.settings = settings;
     }
 
-    /**
-     * @return the custom settings
-     */
     public List<ATXCustomSetting> getCustomSettings() {
         return customSettings;
     }
 
-    /**
-     * @param customSettings the custom settings to set
-     */
     public void setCustomSettings(final List<ATXCustomSetting> customSettings) {
         this.customSettings = customSettings;
     }

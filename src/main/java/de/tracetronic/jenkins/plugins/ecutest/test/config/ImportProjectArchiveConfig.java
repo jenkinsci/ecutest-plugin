@@ -31,9 +31,9 @@ public class ImportProjectArchiveConfig extends ImportConfig {
      * Instantiates a new {@link ImportProjectArchiveConfig}.
      *
      * @param tmsPath          the project path
-     * @param importPath       the import path
+     * @param importPath       the import configuration path
      * @param importConfigPath the import config path
-     * @param replaceFiles     the replace files
+     * @param replaceFiles     specifies whether existing files should be overwritten
      */
     @DataBoundConstructor
     public ImportProjectArchiveConfig(final String tmsPath, final String importPath,
@@ -43,16 +43,10 @@ public class ImportProjectArchiveConfig extends ImportConfig {
         this.replaceFiles = replaceFiles;
     }
 
-    /**
-     * @return the import configuration path
-     */
     public String getImportConfigPath() {
         return importConfigPath;
     }
 
-    /**
-     * @return {@code true} when existing files should be overwritten, {@code false} otherwise
-     */
     public boolean isReplaceFiles() {
         return replaceFiles;
     }

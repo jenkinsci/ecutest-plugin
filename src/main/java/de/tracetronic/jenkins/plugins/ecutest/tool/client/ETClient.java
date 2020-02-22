@@ -124,44 +124,26 @@ public class ETClient extends AbstractToolClient {
         return launcher.getChannel().call(new VersionCallable(listener));
     }
 
-    /**
-     * @return the workspace directory
-     */
     public String getWorkspaceDir() {
         return workspaceDir;
     }
 
-    /**
-     * @return the settings directory
-     */
     public String getSettingsDir() {
         return settingsDir;
     }
 
-    /**
-     * @return the debug mode
-     */
     public boolean isDebugMode() {
         return debugMode;
     }
 
-    /**
-     * @return the version
-     */
     public String getVersion() {
         return version;
     }
 
-    /**
-     * @return the last loaded TBC file path
-     */
     public String getLastTbc() {
         return lastTbc;
     }
 
-    /**
-     * @return the last loaded TCF file path
-     */
     public String getLastTcf() {
         return lastTcf;
     }

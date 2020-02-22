@@ -44,17 +44,11 @@ public class TestProjectBuilder extends AbstractTestBuilder {
         super(testFile);
     }
 
-    /**
-     * @return the project configuration
-     */
     @Nonnull
     public ProjectConfig getProjectConfig() {
         return projectConfig;
     }
 
-    /**
-     * @param projectConfig the project configuration
-     */
     @DataBoundSetter
     public void setProjectConfig(@CheckForNull final ProjectConfig projectConfig) {
         this.projectConfig = projectConfig == null ? ProjectConfig.newInstance() : projectConfig;

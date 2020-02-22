@@ -137,9 +137,6 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         return allowMissing;
     }
 
-    /**
-     * @param allowMissing specifies whether missing reports are allowed
-     */
     @DataBoundSetter
     public void setAllowMissing(final boolean allowMissing) {
         this.allowMissing = allowMissing;
@@ -154,9 +151,6 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         return runOnFailed;
     }
 
-    /**
-     * @param runOnFailed specifies whether this publisher even runs on a failed build
-     */
     @DataBoundSetter
     public void setRunOnFailed(final boolean runOnFailed) {
         this.runOnFailed = runOnFailed;
@@ -181,9 +175,6 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         return archiving;
     }
 
-    /**
-     * @param archiving specifies whether archiving artifacts is enabled
-     */
     @DataBoundSetter
     public void setArchiving(final boolean archiving) {
         this.archiving = archiving;
@@ -208,10 +199,6 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         return keepAll;
     }
 
-    /**
-     * @param keepAll specifies whether artifacts are archived for all successful builds,
-     *                otherwise only the most recent
-     */
     @DataBoundSetter
     public void setKeepAll(final boolean keepAll) {
         this.keepAll = keepAll;
@@ -235,9 +222,6 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         this.downstream = downstream;
     }
 
-    /**
-     * @return the downstream workspace
-     */
     public String getWorkspace() {
         return workspace;
     }

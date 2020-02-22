@@ -57,6 +57,8 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     }
 
     /**
+     * Returns whether to apply COM timeout.
+     * 
      * @return {@code true} if positive timeout is set, {@code false} otherwise
      */
     public boolean useTimeout() {

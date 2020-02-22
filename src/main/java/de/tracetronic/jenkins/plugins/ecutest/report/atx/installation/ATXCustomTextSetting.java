@@ -36,9 +36,6 @@ public class ATXCustomTextSetting extends ATXCustomSetting {
         this.value = value;
     }
 
-    /**
-     * @return the value of the setting
-     */
     public String getValue() {
         return value;
     }

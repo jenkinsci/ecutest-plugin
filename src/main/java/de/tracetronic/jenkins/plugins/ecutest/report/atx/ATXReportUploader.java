@@ -698,9 +698,6 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             this.uploaded = uploaded;
         }
 
-        /**
-         * @return whether the report upload was successful
-         */
         public boolean isUploaded() {
             return uploaded;
         }
@@ -714,9 +711,6 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             this.uploaded = uploaded;
         }
 
-        /**
-         * @return the test info
-         */
         public TestInfoHolder getTestInfo() {
             return testInfo;
         }
@@ -761,37 +755,22 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             setLink(null);
         }
 
-        /**
-         * @return the test name
-         */
         public String getTestName() {
             return testName;
         }
 
-        /**
-         * @return the test type
-         */
         public TestType getTestType() {
             return testType;
         }
 
-        /**
-         * @return the from date
-         */
         public long getFrom() {
             return from;
         }
 
-        /**
-         * @return the to date
-         */
         public long getTo() {
             return to;
         }
 
-        /**
-         * @return the redirect link
-         */
         public String getLink() {
             return link;
         }

@@ -44,15 +44,12 @@ public class ExportProjectClient extends AbstractTMSClient {
     /**
      * Instantiates a new {@link ExportProjectClient}.
      *
-     * @param exportConfig the export configuration
+     * @param exportConfig the export project configuration
      */
     public ExportProjectClient(final TMSConfig exportConfig) {
         this.exportConfig = exportConfig;
     }
 
-    /**
-     * @return the export project configuration
-     */
     public TMSConfig getExportConfig() {
         return exportConfig;
     }

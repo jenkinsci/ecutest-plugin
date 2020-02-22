@@ -31,9 +31,6 @@ public abstract class AttributeConfig extends TMSConfig {
         this.filePath = StringUtils.trimToEmpty(filePath);
     }
 
-    /**
-     * @return the test file path whose attributes to import or export
-     */
     public String getFilePath() {
         return filePath;
     }
