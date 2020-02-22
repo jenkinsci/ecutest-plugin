@@ -14,8 +14,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for {@link ExportPackageAttributeConfig}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ExportPackageAttributeConfigTest {
 

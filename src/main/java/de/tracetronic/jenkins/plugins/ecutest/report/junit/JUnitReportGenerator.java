@@ -27,8 +27,6 @@ import java.util.List;
 
 /**
  * Class providing the generation of JUnit reports with ECU-TEST.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class JUnitReportGenerator {
 

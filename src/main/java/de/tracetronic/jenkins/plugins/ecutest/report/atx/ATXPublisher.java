@@ -41,8 +41,6 @@ import java.util.Optional;
 
 /**
  * Publisher providing the generation and upload of {@link ATXReport}s to TEST-GUIDE.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXPublisher extends AbstractReportPublisher {
 

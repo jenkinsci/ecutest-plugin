@@ -14,8 +14,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Class holding the information of a boolean ATX setting.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXBooleanSetting extends ATXSetting<Boolean> {
 

@@ -24,8 +24,6 @@ import java.util.List;
 
 /**
  * Class providing the execution of trace analyses.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TraceAnalysisRunner {
 

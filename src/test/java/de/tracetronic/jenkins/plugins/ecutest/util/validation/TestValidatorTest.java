@@ -13,8 +13,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link TestValidator}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestValidatorTest {
 

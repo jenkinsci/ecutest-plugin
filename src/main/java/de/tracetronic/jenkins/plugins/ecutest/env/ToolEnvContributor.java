@@ -17,8 +17,6 @@ import java.util.List;
 
 /**
  * Contributor which adds various tool related variables into the build environment variables.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 @Extension
 public class ToolEnvContributor extends EnvironmentContributor {

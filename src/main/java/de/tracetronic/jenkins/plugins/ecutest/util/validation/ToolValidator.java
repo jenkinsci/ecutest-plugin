@@ -14,8 +14,6 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Validator to check tool related form fields.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ToolValidator extends AbstractValidator {
 

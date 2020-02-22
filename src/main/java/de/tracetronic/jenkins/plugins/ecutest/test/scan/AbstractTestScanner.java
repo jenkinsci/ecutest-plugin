@@ -17,8 +17,6 @@ import java.util.List;
 
 /**
  * Common base class for the {@link TestPackageScanner} and {@link TestProjectScanner}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTestScanner {
 

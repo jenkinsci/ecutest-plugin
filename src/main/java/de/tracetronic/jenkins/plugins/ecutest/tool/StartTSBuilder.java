@@ -31,8 +31,6 @@ import java.util.List;
 
 /**
  * Builder providing the start up of the Tool-Server.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class StartTSBuilder extends AbstractToolBuilder {
 

@@ -9,8 +9,6 @@ import hudson.EnvVars;
 
 /**
  * Interface describing a factory to expand specific test configurations.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public interface ExpandableConfig {
 

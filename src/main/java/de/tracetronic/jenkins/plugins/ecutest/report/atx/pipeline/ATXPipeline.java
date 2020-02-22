@@ -22,8 +22,6 @@ import java.util.Map;
 
 /**
  * Class providing pipeline methods in order to get or create {@link ATXServer} instances.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXPipeline implements Serializable {
 

@@ -30,8 +30,6 @@ import java.util.List;
 
 /**
  * Client to execute ECU-TEST projects via COM interface.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ProjectClient extends AbstractTestClient {
 

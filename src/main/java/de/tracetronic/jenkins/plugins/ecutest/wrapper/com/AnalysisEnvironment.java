@@ -15,8 +15,6 @@ import java.util.List;
 /**
  * COM object representing the currently started analysis environment.
  * This environment supports operations to run analysis jobs.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class AnalysisEnvironment extends ETComDispatch implements ComAnalysisEnvironment {
 

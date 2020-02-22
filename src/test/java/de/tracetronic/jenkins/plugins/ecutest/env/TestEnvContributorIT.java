@@ -24,8 +24,6 @@ import static org.junit.Assert.assertNull;
 
 /**
  * Integration tests for {@link TestEnvContributor}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestEnvContributorIT extends IntegrationTestBase {
 

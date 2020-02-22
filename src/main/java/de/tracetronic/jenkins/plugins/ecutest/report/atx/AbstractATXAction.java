@@ -11,8 +11,6 @@ import hudson.model.Run;
 
 /**
  * Common base class for {@link ATXBuildAction} and {@link ATXProjectAction}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractATXAction extends AbstractReportAction {
 

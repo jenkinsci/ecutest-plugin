@@ -33,8 +33,6 @@ import java.util.List;
 
 /**
  * Client to start and stop ECU-TEST by either COM or XML-RPC communication.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETClient extends AbstractToolClient {
 

@@ -27,8 +27,6 @@ import java.util.logging.Logger;
 
 /**
  * Common base class providing shared methods to handle {@link StaplerRequest}s.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractRequestHandler {
 

@@ -32,8 +32,6 @@ import java.io.IOException;
 
 /**
  * Common base class for all test related task builders implemented in this plugin.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTestBuilder extends AbstractTestHelper implements SimpleBuildStep {
 

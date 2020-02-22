@@ -14,8 +14,6 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Common base class providing report-related DSL extensions.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractReportPublisherDslExtension extends AbstractDslExtension {
 

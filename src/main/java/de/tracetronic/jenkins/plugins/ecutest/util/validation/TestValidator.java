@@ -21,8 +21,6 @@ import java.util.regex.Pattern;
 
 /**
  * Validator to check test related form fields.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestValidator extends AbstractValidator {
 

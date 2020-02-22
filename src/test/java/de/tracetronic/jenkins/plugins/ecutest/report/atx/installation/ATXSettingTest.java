@@ -20,8 +20,6 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link ATXSetting}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXSettingTest {
 

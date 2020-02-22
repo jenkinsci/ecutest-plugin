@@ -30,8 +30,6 @@ import java.util.List;
 
 /**
  * Publisher providing links to saved {@link GeneratorReport}s.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorPublisher extends AbstractToolPublisher {
 

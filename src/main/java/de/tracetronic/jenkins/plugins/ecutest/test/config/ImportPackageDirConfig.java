@@ -14,8 +14,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Class holding the configuration for importing a project directory from test management system.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ImportPackageDirConfig extends ImportPackageConfig {
 

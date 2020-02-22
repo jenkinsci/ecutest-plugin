@@ -21,8 +21,6 @@ import java.io.Serializable;
 
 /**
  * Class holding the report generator settings.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorSetting extends AbstractDescribableImpl<ReportGeneratorSetting> implements
     ExpandableConfig, Serializable {

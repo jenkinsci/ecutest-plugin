@@ -42,8 +42,6 @@ import java.util.regex.Pattern;
 
 /**
  * Validator to check ATX related form fields.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXValidator extends AbstractValidator {
 

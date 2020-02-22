@@ -26,8 +26,6 @@ import java.util.List;
 
 /**
  * Client to generate ECU-TEST caches via COM interface.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class CacheClient {
 

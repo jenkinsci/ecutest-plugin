@@ -16,8 +16,6 @@ import org.kohsuke.stapler.QueryParameter;
 
 /**
  * Common base descriptor class for all test related task build descriptors implemented in this plugin.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractToolDescriptor extends BuildStepDescriptor<Builder> {
 

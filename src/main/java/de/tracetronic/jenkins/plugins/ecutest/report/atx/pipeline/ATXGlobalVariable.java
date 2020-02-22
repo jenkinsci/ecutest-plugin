@@ -14,8 +14,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Binds "ATX" keyword as global variable to pipeline executions.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 @Extension
 public class ATXGlobalVariable extends GlobalVariable {

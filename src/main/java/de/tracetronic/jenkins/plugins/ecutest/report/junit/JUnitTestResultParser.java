@@ -21,8 +21,6 @@ import java.util.List;
 
 /**
  * Class providing a {@link TestResult} by parsing the JUnit report.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class JUnitTestResultParser extends TestResultParser implements Serializable {
 

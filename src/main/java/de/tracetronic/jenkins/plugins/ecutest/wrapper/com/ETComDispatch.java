@@ -24,8 +24,6 @@ import java.util.logging.Logger;
  * Custom dispatch to perform requests on application specific COM API.
  * <p>
  * All threads from COM will be automatically released after performing the requests.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETComDispatch extends Dispatch implements AutoCloseable {
 

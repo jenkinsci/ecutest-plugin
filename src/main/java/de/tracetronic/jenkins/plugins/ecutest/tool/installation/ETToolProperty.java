@@ -24,8 +24,6 @@ import java.util.regex.Pattern;
 
 /**
  * Contributes additional settings for the {@link ETInstallation}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETToolProperty extends ToolProperty<ETInstallation> implements Serializable {
 

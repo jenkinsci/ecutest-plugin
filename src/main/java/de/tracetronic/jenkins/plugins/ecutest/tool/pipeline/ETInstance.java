@@ -24,8 +24,6 @@ import java.util.Map;
 
 /**
  * Class holding ECU-TEST installation specific settings in order to start and stop instances.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETInstance implements Serializable {
 

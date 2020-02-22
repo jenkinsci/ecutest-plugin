@@ -44,8 +44,6 @@ import java.util.List;
 
 /**
  * Publisher providing the export of reports to a test management system.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TMSPublisher extends AbstractToolPublisher {
 

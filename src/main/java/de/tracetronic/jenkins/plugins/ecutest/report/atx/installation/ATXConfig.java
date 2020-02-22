@@ -34,8 +34,6 @@ import java.util.stream.Collectors;
 
 /**
  * Class holding the ATX configuration grouped by setting sections.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Cloneable, Serializable {
 

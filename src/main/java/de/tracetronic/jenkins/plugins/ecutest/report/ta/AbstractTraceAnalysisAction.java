@@ -11,8 +11,6 @@ import hudson.model.Run;
 
 /**
  * Common base class for {@link TraceAnalysisBuildAction} and {@link TraceAnalysisProjectAction}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTraceAnalysisAction extends AbstractReportAction {
 

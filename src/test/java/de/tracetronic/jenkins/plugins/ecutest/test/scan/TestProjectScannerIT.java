@@ -20,8 +20,6 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Integration tests for {@link TestProjectScanner}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestProjectScannerIT extends IntegrationTestBase {
 

@@ -36,8 +36,6 @@ import java.util.List;
 
 /**
  * Builder providing the start up of ECU-TEST.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class StartETBuilder extends AbstractToolBuilder {
 

@@ -29,8 +29,6 @@ import java.util.List;
 
 /**
  * Class holding the downstream configuration.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
 

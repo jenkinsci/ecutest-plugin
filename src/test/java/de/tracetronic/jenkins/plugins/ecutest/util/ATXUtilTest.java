@@ -26,8 +26,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for {@link ATXUtil}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXUtilTest {
 

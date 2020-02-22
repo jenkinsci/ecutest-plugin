@@ -19,8 +19,7 @@ import java.util.logging.Logger;
  * Class holding the information of a single ATX setting.
  *
  * @param <T> the type of the setting
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
- */
+*/
 public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?>> implements Cloneable, Serializable {
 
     private static final long serialVersionUID = 1L;

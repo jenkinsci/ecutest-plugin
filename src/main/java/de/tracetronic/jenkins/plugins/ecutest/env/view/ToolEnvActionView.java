@@ -27,8 +27,6 @@ import java.util.logging.Logger;
 
 /**
  * Show the tool related environment variables as an build action.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ToolEnvActionView extends InvisibleAction {
 

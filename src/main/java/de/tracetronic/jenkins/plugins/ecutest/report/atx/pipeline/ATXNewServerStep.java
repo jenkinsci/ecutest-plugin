@@ -22,8 +22,6 @@ import java.util.Set;
 
 /**
  * Advanced pipeline step that returns a new {@link ATXServer} instance.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXNewServerStep extends Step {
 

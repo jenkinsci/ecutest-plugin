@@ -18,8 +18,6 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Integration tests for {@link ToolEnvActionView}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ToolEnvActionViewIT extends IntegrationTestBase {
 

@@ -10,8 +10,6 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Utility class providing environment variable operations.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public final class EnvUtil {
 

@@ -23,8 +23,6 @@ import java.util.regex.Pattern;
 
 /**
  * Class providing a parser for the ECU-TEST log files.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETLogParser {
 

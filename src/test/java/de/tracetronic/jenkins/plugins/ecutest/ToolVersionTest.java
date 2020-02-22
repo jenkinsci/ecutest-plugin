@@ -15,8 +15,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for {@link ToolVersion}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ToolVersionTest {
 

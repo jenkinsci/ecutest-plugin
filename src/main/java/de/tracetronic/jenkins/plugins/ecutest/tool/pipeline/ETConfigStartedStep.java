@@ -23,8 +23,6 @@ import java.util.Set;
 
 /**
  * Advanced pipeline step that checks whether the currently selected configurations are started.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETConfigStartedStep extends Step {
 

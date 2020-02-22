@@ -14,8 +14,6 @@ import javaposse.jobdsl.dsl.Context;
 
 /**
  * Common base class providing tool-related DSL extensions.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractToolBuilderDslExtension extends AbstractDslExtension {
 

@@ -19,8 +19,6 @@ import javaposse.jobdsl.plugin.DslExtensionMethod;
 
 /**
  * Class providing tool related DSL extensions.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 @Extension(optional = true)
 public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {

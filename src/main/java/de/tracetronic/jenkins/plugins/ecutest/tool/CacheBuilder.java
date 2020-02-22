@@ -34,8 +34,6 @@ import java.util.List;
 
 /**
  * Builder providing generation of ECU-TEST file caches.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class CacheBuilder extends Builder implements SimpleBuildStep {
 

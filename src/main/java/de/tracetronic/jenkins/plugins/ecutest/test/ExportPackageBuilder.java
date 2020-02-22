@@ -22,8 +22,6 @@ import java.util.List;
 
 /**
  * Builder providing the export of one or multiple ECU-TEST packages.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ExportPackageBuilder extends AbstractExportBuilder {
 

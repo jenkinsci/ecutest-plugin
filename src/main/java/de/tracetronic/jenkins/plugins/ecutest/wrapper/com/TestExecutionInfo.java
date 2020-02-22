@@ -10,8 +10,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestExecutionIn
 
 /**
  * COM object providing operations to obtain informations of the currently running test.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestExecutionInfo extends ETComDispatch implements ComTestExecutionInfo {
 

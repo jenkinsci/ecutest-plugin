@@ -46,8 +46,6 @@ import java.util.List;
 
 /**
  * Common base class for all report publishers.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractReportPublisher extends Recorder implements SimpleBuildStep {
 

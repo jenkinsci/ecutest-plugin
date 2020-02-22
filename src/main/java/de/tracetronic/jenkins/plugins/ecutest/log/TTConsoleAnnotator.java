@@ -15,8 +15,6 @@ import java.nio.charset.Charset;
 /**
  * Console annotator which annotates TT messages using {@link TTConsoleNote}.
  * Annotated message has to start with <i>[TT]</i> prefix.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TTConsoleAnnotator extends LineTransformationOutputStream {
 

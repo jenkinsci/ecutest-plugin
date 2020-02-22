@@ -21,8 +21,6 @@ import java.util.List;
 
 /**
  * Represents a base tool installation specified by name and home directory.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractToolInstallation extends ToolInstallation implements
     EnvironmentSpecific<AbstractToolInstallation>, NodeSpecific<AbstractToolInstallation> {

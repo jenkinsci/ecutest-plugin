@@ -25,8 +25,6 @@ import java.util.List;
 
 /**
  * Class holding the report generator configuration.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGeneratorConfig> implements ExpandableConfig,
     Serializable {

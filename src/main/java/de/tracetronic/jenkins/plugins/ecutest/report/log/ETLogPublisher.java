@@ -34,8 +34,6 @@ import java.util.List;
 
 /**
  * Publisher parsing the ECU-TEST log files and providing links to saved {@link ETLogReport}s.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETLogPublisher extends AbstractReportPublisher {
 

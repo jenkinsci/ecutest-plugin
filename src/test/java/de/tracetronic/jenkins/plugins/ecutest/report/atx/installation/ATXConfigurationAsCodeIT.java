@@ -25,8 +25,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * {@link ConfigurationAsCode} compatibility tests for {@link ATXInstallation}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXConfigurationAsCodeIT {
 

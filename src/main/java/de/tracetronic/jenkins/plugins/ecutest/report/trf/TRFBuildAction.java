@@ -16,8 +16,6 @@ import java.util.List;
 
 /**
  * Action to show a link to {@link TRFReport}s at the build page.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TRFBuildAction extends AbstractTRFAction implements SimpleBuildStep.LastBuildAction {
 

@@ -24,8 +24,6 @@ import java.util.Objects;
 
 /**
  * Class holding the project configuration.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implements Serializable,
     ExpandableConfig {

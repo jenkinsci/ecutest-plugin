@@ -25,8 +25,6 @@ import java.util.logging.Logger;
 
 /**
  * Utility class providing library operations, especially for JACOB COM Bridge.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public final class DllUtil {
 

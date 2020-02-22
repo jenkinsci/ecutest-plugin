@@ -18,8 +18,6 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link ReportGeneratorConfig}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorConfigTest {
 

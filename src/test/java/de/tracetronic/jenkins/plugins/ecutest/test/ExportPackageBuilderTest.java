@@ -22,8 +22,6 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link ExportPackageBuilder}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ExportPackageBuilderTest {
 

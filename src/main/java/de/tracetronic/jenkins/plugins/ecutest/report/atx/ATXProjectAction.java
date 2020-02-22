@@ -16,8 +16,7 @@ import javax.annotation.CheckForNull;
  * Action to show a link to {@link ATXReport}s in side menu of projects.
  *
  * @param <T> the report type, either {@link ATXReport} or {@link ATXZipReport}
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
- */
+*/
 public class ATXProjectAction<T extends AbstractTestReport> extends AbstractATXAction {
 
     /**

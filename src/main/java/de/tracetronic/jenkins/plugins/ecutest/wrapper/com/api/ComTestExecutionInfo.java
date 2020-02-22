@@ -10,8 +10,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 
 /**
  * Represents the ECU-TEST specific COMTestExecutionInfo API.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public interface ComTestExecutionInfo {
 

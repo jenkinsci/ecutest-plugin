@@ -13,8 +13,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Integration tests for {@link ETToolProperty}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETToolPropertyIT extends IntegrationTestBase {
 

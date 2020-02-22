@@ -17,8 +17,6 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Unit tests for {@link ETClient}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETClientTest {
 

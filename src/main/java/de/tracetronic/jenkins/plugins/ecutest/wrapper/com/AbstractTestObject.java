@@ -16,8 +16,6 @@ import java.util.Locale;
 
 /**
  * Common base class for {@link Package} and {@link Project} giving access to their properties.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTestObject extends ETComDispatch {
 

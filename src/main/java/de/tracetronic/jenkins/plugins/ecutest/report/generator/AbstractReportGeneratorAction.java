@@ -11,8 +11,6 @@ import hudson.model.Run;
 
 /**
  * Common base class for {@link ReportGeneratorBuildAction} and {@link ReportGeneratorProjectAction}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractReportGeneratorAction extends AbstractReportAction {
 

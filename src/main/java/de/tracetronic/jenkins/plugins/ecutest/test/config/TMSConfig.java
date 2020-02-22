@@ -31,8 +31,6 @@ import java.util.List;
 
 /**
  * Base configuration class for connecting to test management systems.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class TMSConfig implements Describable<TMSConfig>, Serializable, ExpandableConfig {
 

@@ -11,8 +11,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComCaches;
 
 /**
  * COM object giving access to the properties of a constant.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class Caches extends ETComDispatch implements ComCaches {
 

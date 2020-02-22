@@ -46,8 +46,6 @@ import java.util.logging.Logger;
 
 /**
  * Class holding all the ATX settings.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> implements Serializable {
 

@@ -23,8 +23,6 @@ import java.io.IOException;
 
 /**
  * Abstract client providing common used functions to interact with a test management system.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTMSClient {
 

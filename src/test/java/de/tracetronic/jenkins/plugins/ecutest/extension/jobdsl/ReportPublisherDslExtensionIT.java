@@ -36,8 +36,6 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Integration tests for {@link ReportPublisherDslExtension}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportPublisherDslExtensionIT extends AbstractDslExtensionIT {
 

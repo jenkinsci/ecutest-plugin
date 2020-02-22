@@ -10,8 +10,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComProject;
 
 /**
  * COM object giving access to the properties of an opened project.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class Project extends AbstractTestObject implements ComProject {
 

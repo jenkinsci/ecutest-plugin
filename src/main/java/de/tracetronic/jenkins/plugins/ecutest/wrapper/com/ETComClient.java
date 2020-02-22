@@ -34,8 +34,6 @@ import java.util.logging.Logger;
  * <p>
  * All threads from COM will be automatically released after closing the client or at the latest when finalizing
  * occurred.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETComClient implements ComApplication, AutoCloseable {
 

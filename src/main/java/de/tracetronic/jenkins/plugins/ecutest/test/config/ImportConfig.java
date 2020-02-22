@@ -14,8 +14,6 @@ import java.util.Objects;
 
 /**
  * Common base class for {@link ImportPackageConfig} and {@link ImportProjectConfig}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class ImportConfig extends TMSConfig {
 

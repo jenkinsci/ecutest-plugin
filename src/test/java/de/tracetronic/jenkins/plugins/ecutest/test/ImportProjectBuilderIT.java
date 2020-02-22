@@ -36,8 +36,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link ImportProjectBuilder}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ImportProjectBuilderIT extends IntegrationTestBase {
 

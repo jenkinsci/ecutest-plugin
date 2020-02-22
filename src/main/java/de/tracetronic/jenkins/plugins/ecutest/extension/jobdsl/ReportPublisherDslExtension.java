@@ -30,8 +30,6 @@ import java.util.List;
 
 /**
  * Class providing report related DSL extensions.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 @Extension(optional = true)
 public class ReportPublisherDslExtension extends AbstractReportPublisherDslExtension {

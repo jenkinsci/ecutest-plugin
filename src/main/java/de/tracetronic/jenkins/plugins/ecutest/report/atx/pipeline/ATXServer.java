@@ -18,8 +18,6 @@ import java.util.Optional;
 
 /**
  * Class holding ATX server specific settings in order to publish ATX reports.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXServer implements Serializable {
 

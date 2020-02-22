@@ -9,8 +9,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 
 /**
  * Represents the ECU-TEST specific COMConstant API.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public interface ComConstant {
 

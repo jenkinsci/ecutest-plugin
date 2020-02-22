@@ -13,8 +13,6 @@ import javax.annotation.CheckForNull;
 
 /**
  * Action to show a link to {@link GeneratorReport}s in side menu of projects.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorProjectAction extends AbstractReportGeneratorAction {
 

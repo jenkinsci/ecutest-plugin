@@ -18,8 +18,7 @@ import java.util.List;
  * Action to show a link to {@link ATXReport}s or {@link ATXZipReport}s at the build page.
  *
  * @param <T> the report type, either {@link ATXReport} or {@link ATXZipReport}
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
- */
+*/
 public class ATXBuildAction<T extends AbstractTestReport> extends AbstractATXAction implements
     SimpleBuildStep.LastBuildAction {
 

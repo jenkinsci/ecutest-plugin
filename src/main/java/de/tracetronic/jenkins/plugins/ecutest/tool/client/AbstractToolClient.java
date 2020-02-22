@@ -17,8 +17,6 @@ import java.io.IOException;
 
 /**
  * Common base class for {@link ETClient} and {@link TSClient}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractToolClient implements ToolClient {
 

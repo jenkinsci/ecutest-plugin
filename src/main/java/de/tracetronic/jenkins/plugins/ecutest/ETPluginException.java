@@ -10,8 +10,6 @@ import hudson.model.TaskListener;
 
 /**
  * Exception thrown if an error occurs while performing plugin-specific operations.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETPluginException extends Exception {
 

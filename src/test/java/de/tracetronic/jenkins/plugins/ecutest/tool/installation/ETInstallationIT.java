@@ -21,8 +21,6 @@ import static org.junit.Assert.assertFalse;
 
 /**
  * Integration tests for {@link ETInstallation}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETInstallationIT extends IntegrationTestBase {
 

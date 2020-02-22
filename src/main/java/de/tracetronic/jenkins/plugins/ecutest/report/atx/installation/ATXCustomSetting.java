@@ -21,8 +21,6 @@ import java.util.logging.Logger;
 
 /**
  * Common base class for {@link ATXCustomBooleanSetting} and {@link ATXCustomTextSetting}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class ATXCustomSetting extends AbstractDescribableImpl<ATXCustomSetting>
     implements Cloneable, Serializable {

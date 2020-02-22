@@ -12,8 +12,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComConstants;
 
 /**
  * COM object giving access to all global constants of the currently loaded test configuration.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class Constants extends AbstractTestObject implements ComConstants {
 

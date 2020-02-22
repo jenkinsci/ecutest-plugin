@@ -14,8 +14,6 @@ import org.apache.commons.lang.StringUtils;
 /**
  * COM object representing the currently loaded test configuration file and
  * provides methods for accessing the contained settings.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestConfiguration extends ETComDispatch implements ComTestConfiguration {
 

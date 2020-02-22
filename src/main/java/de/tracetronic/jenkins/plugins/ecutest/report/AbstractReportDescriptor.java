@@ -13,8 +13,6 @@ import hudson.tools.ToolInstallation;
 
 /**
  * Common base descriptor class for all report related publisher descriptors implemented in this plugin.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractReportDescriptor extends BuildStepDescriptor<Publisher> {
 

@@ -25,8 +25,6 @@ import java.util.Objects;
 
 /**
  * Class holding the configuration for generating an ECU-TEST cache type.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class CacheConfig extends AbstractDescribableImpl<CacheConfig> implements ExpandableConfig, Serializable {
 

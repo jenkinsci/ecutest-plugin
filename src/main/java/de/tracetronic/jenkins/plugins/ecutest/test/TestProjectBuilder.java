@@ -28,8 +28,6 @@ import java.io.IOException;
 
 /**
  * Builder providing the execution of an ECU-TEST project.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestProjectBuilder extends AbstractTestBuilder {
 

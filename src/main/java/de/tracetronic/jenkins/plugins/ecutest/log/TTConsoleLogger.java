@@ -15,8 +15,6 @@ import java.nio.charset.Charset;
 /**
  * A helper class that offers various types of logging.
  * Provides plain logging into console log and annotated logging with {@link TTConsoleAnnotator}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TTConsoleLogger {
 

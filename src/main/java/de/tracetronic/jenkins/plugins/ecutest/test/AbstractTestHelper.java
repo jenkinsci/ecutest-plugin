@@ -26,8 +26,6 @@ import java.util.List;
 
 /**
  * Helper class providing common used functionalities for all test related task builders.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTestHelper extends Builder {
 

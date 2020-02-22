@@ -18,8 +18,6 @@ import java.util.Map.Entry;
 /**
  * COM object representing the currently started test environment.
  * This environment supports operations to run packages and projects.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestEnvironment extends ETComDispatch implements ComTestEnvironment {
 

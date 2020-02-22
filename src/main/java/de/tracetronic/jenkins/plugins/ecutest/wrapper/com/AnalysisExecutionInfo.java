@@ -10,8 +10,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComAnalysisExecuti
 
 /**
  * COM object providing operations to obtain informations of the currently analysis job.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class AnalysisExecutionInfo extends ETComDispatch implements ComAnalysisExecutionInfo {
 

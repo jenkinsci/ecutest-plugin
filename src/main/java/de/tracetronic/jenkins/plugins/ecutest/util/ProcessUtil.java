@@ -21,8 +21,6 @@ import java.util.List;
 
 /**
  * Utility class providing process and system operations.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public final class ProcessUtil {
 

@@ -10,8 +10,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComPackage;
 
 /**
  * COM object giving access to the properties of an opened package.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class Package extends AbstractTestObject implements ComPackage {
 

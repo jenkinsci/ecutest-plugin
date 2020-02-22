@@ -11,8 +11,6 @@ import org.kohsuke.stapler.StaplerRequest;
 /**
  * Holds a link to the zipped ATX report if ATX upload is disabled.
  * The build that holds the report artifact is resolved by {@link StaplerRequest#findAncestorObject(Class)} at runtime.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXZipReport extends AbstractArchiveFileReport {
 

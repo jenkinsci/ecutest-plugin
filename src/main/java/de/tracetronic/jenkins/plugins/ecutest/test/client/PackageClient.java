@@ -33,8 +33,6 @@ import java.util.Map;
 
 /**
  * Client to execute ECU-TEST packages via COM interface.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class PackageClient extends AbstractTestClient {
 

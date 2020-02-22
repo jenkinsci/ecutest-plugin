@@ -26,8 +26,6 @@ import java.util.List;
 
 /**
  * Publisher providing links to saved {@link TRFReport}s.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TRFPublisher extends AbstractReportPublisher {
 

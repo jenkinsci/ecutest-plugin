@@ -22,8 +22,6 @@ import java.util.Objects;
 
 /**
  * Class holding a global constant.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class GlobalConstant extends AbstractDescribableImpl<GlobalConstant> implements Serializable,
     ExpandableConfig {

@@ -23,8 +23,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link JUnitTestResultParser}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETLogParserTest {
 

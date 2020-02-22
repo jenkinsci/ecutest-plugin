@@ -18,8 +18,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Common base descriptor class for all test related task build descriptors implemented in this plugin.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTestDescriptor extends BuildStepDescriptor<Builder> {
 

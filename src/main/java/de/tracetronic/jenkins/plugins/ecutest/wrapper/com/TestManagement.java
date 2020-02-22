@@ -11,8 +11,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestManagement;
 
 /**
  * COM object providing operations to offer access to the test management interface.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestManagement extends ETComDispatch implements ComTestManagement {
 

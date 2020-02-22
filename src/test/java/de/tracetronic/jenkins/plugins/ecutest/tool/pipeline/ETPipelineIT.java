@@ -22,8 +22,6 @@ import java.util.List;
 
 /**
  * Integration tests for {@link ETPipeline}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETPipelineIT extends IntegrationTestBase {
 

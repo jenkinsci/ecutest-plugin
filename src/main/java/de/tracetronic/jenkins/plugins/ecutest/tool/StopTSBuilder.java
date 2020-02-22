@@ -23,8 +23,6 @@ import java.io.IOException;
 
 /**
  * Builder providing the tear down of the Tool-Server.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class StopTSBuilder extends AbstractToolBuilder {
 

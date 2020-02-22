@@ -34,8 +34,6 @@ import static org.mockito.Mockito.when;
 
 /**
  * Integration tests for {@link StartTSBuilder}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class StartTSBuilderIT extends IntegrationTestBase {
 

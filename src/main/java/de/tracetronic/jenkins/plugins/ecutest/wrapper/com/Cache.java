@@ -16,8 +16,6 @@ import java.util.List;
 
 /**
  * COM object giving access to a specific file cache.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class Cache extends ETComDispatch implements ComCache {
 

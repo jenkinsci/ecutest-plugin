@@ -14,8 +14,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for {@link PackageParameter}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class PackageParameterTest {
 

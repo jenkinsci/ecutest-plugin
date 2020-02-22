@@ -20,8 +20,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link ETComProperty}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETComPropertyTest {
 

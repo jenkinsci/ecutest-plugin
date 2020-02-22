@@ -26,8 +26,6 @@ import java.util.Map;
 
 /**
  * Common base class for {@link ATXReportGenerator} and {@link ATXReportUploader}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractATXReportHandler {
 

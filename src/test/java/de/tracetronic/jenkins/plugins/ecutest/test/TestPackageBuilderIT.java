@@ -30,8 +30,6 @@ import static org.mockito.Mockito.when;
 
 /**
  * Integration tests for {@link TestPackageBuilder}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestPackageBuilderIT extends IntegrationTestBase {
 

@@ -28,8 +28,6 @@ import java.io.IOException;
 
 /**
  * Client to import ECU-TEST projects via COM interface.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ImportProjectClient extends AbstractTMSClient {
 

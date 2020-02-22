@@ -14,8 +14,6 @@ import java.util.Objects;
 
 /**
  * Common base class for {@link ExportPackageConfig} and {@link ExportProjectConfig}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class ExportConfig extends TMSConfig {
 

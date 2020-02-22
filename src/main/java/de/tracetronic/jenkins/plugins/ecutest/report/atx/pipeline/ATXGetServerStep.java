@@ -22,8 +22,6 @@ import java.util.Set;
 
 /**
  * Advanced pipeline step that returns a pre-configured {@link ATXServer} instance by name.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXGetServerStep extends Step {
 

@@ -15,8 +15,6 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Unit tests for {@link ATXPublisher}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXPublisherTest {
 

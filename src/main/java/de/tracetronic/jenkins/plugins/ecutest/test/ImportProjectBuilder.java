@@ -23,8 +23,6 @@ import java.util.List;
 
 /**
  * Builder providing the import of one or multiple ECU-TEST projects.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ImportProjectBuilder extends AbstractImportBuilder {
 

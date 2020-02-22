@@ -15,8 +15,6 @@ import java.util.List;
 
 /**
  * Common base class for several test reports created by {@link AbstractReportPublisher}s.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTestReport extends AbstractRequestHandler implements ModelObject {
 

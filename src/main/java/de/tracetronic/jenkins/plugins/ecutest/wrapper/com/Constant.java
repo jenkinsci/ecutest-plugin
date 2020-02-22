@@ -10,8 +10,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComConstant;
 
 /**
  * COM object giving access to the properties of a constant.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class Constant extends AbstractTestObject implements ComConstant {
 

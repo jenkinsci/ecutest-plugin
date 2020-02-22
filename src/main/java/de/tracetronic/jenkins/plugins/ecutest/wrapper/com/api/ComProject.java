@@ -12,8 +12,6 @@ import java.util.List;
 
 /**
  * Represents the ECU-TEST specific COMProject API.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public interface ComProject {
 

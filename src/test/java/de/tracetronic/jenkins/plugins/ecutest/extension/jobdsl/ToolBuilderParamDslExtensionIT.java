@@ -9,8 +9,6 @@ import org.junit.Test;
 
 /**
  * Integration tests for parameterized {@link ToolBuilderDslExtension}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ToolBuilderParamDslExtensionIT extends ToolBuilderDslExtensionIT {
 

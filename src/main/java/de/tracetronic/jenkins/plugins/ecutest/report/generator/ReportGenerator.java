@@ -23,8 +23,6 @@ import java.util.Map;
 
 /**
  * Class providing the report generation with a specific generator.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGenerator {
 

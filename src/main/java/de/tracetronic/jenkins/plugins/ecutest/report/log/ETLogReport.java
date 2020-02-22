@@ -16,8 +16,6 @@ import java.util.List;
 /**
  * Holds a link to the ECU-TEST log report. The build that holds the artifact is resolved by
  * {@link StaplerRequest#findAncestorObject(Class)} at runtime.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETLogReport extends AbstractArchiveFileReport {
 

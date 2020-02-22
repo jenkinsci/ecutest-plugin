@@ -31,8 +31,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link TRFPublisher}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TRFPublisherIT extends IntegrationTestBase {
 

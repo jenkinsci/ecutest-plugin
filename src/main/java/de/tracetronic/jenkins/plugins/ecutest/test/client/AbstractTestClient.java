@@ -28,8 +28,6 @@ import java.util.Map.Entry;
 
 /**
  * Common base class for {@link PackageClient} and {@link ProjectClient}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTestClient implements TestClient {
 

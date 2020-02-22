@@ -22,8 +22,6 @@ import java.util.Objects;
 
 /**
  * Class holding a package parameter.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class PackageParameter extends AbstractDescribableImpl<PackageParameter> implements Serializable,
     ExpandableConfig {

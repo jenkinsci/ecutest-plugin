@@ -24,8 +24,6 @@ import java.io.IOException;
 
 /**
  * Common base class all report publishers which are using ECU-TEST as tool.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractToolPublisher extends AbstractReportPublisher {
 

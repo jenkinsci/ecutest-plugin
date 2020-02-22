@@ -43,8 +43,6 @@ import java.util.logging.Logger;
 
 /**
  * Represents a ECU-TEST installation specified by name and home directory.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETInstallation extends AbstractToolInstallation {
 

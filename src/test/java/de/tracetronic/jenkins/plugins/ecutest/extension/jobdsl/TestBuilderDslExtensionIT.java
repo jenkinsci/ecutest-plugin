@@ -49,8 +49,6 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Integration tests for {@link TestBuilderDslExtension}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestBuilderDslExtensionIT extends AbstractDslExtensionIT {
 

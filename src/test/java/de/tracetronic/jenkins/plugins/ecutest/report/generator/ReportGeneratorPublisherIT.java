@@ -41,8 +41,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link ReportGeneratorPublisher}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorPublisherIT extends IntegrationTestBase {
 

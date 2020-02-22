@@ -22,7 +22,6 @@ import java.io.IOException;
  * This task should be configured with actions how to restart the slave.
  * </p>
  *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  * @since 1.8
  */
 @Extension

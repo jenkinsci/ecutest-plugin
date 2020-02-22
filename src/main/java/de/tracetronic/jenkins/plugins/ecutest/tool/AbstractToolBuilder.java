@@ -36,8 +36,6 @@ import java.util.List;
 
 /**
  * Common base class for all tool related task builders implemented in this plugin.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractToolBuilder extends Builder implements SimpleBuildStep {
 

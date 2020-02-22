@@ -36,8 +36,6 @@ import java.util.List;
 
 /**
  * Builder providing the execution of ECU-TEST packages and projects inside of a test folder.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestFolderBuilder extends AbstractTestBuilder {
 

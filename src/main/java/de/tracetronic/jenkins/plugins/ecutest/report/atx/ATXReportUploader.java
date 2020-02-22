@@ -55,8 +55,6 @@ import java.util.Map;
 
 /**
  * Class providing the generation and upload of {@link ATXReport}s.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXReportUploader extends AbstractATXReportHandler {
 

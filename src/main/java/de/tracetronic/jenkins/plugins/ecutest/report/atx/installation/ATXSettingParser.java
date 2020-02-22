@@ -25,8 +25,6 @@ import java.util.logging.Logger;
 
 /**
  * Parser for the ATX template configuration to gather all available ATX settings.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 @SuppressWarnings("rawtypes")
 public final class ATXSettingParser {

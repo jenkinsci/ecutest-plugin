@@ -13,8 +13,6 @@ import java.io.IOException;
 
 /**
  * Client interface defining tool start up and tear down controls.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public interface ToolClient {
 

@@ -21,8 +21,6 @@ import java.util.Objects;
 
 /**
  * Class holding the package configuration.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implements Serializable,
     ExpandableConfig {

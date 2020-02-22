@@ -42,8 +42,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link TMSPublisher}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TMSPublisherIT extends IntegrationTestBase {
 

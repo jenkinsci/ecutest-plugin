@@ -39,8 +39,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link TraceAnalysisPublisher}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TraceAnalysisPublisherIT extends IntegrationTestBase {
 

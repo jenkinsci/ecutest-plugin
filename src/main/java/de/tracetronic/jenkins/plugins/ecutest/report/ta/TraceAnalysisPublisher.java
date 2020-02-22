@@ -38,8 +38,6 @@ import java.util.Map.Entry;
 
 /**
  * Class holding the trace analysis configuration.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TraceAnalysisPublisher extends AbstractToolPublisher {
 

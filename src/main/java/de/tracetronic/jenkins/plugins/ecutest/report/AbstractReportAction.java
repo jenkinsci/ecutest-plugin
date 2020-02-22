@@ -20,8 +20,6 @@ import java.io.File;
 
 /**
  * Common base class for {@link AbstractATXAction} and {@link AbstractTRFAction}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractReportAction extends AbstractRequestHandler implements Action, IconSpec {
 

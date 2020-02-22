@@ -18,8 +18,6 @@ import java.util.Map.Entry;
 
 /**
  * Utility class providing ATX related functions.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public final class ATXUtil {
 

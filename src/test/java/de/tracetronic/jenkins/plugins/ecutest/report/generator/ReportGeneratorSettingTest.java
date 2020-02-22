@@ -13,8 +13,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for {@link ReportGeneratorSetting}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorSettingTest {
 

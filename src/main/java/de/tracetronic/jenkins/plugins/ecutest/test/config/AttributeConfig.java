@@ -12,8 +12,6 @@ import java.util.Objects;
 
 /**
  * Common base class for {@link ExportAttributeConfig} and {@link ImportAttributeConfig}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AttributeConfig extends TMSConfig {
 

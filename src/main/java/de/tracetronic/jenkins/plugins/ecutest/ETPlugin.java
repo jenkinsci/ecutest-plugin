@@ -29,8 +29,6 @@ import java.util.regex.Pattern;
 
 /**
  * Main entry point to this plugin for the {@link Jenkins} instance.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETPlugin {
 

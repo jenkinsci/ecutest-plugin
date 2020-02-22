@@ -39,8 +39,6 @@ import java.util.List;
 /**
  * Publisher providing the generation of JUnit reports and adds a {@link TestResultAction} by invoking the
  * {@link JUnitTestResultParser}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class JUnitPublisher extends AbstractToolPublisher implements MatrixAggregatable {
 

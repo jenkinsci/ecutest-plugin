@@ -11,8 +11,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestBenchConfig
 /**
  * COM object representing the currently loaded test bench configuration file and
  * provides methods for accessing the contained settings.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestBenchConfiguration extends ETComDispatch implements ComTestBenchConfiguration {
 

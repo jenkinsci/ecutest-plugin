@@ -41,8 +41,6 @@ import java.util.List;
 
 /**
  * Common base class for all export related task builders implemented in this plugin.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class AbstractExportBuilder extends AbstractTestHelper implements SimpleBuildStep {
 

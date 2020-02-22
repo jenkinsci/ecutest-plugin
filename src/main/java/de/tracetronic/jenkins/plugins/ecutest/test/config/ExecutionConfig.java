@@ -23,8 +23,6 @@ import java.util.Objects;
 
 /**
  * Class holding the test execution settings.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     implements Serializable, ExpandableConfig {

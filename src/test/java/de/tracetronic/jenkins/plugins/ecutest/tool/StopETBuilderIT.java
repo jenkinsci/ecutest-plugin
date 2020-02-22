@@ -35,8 +35,6 @@ import static org.mockito.Mockito.when;
 
 /**
  * Integration tests for {@link StopETBuilder}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class StopETBuilderIT extends IntegrationTestBase {
 

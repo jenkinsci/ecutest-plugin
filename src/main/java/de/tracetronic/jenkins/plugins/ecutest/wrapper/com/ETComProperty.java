@@ -11,8 +11,6 @@ import java.io.Serializable;
 
 /**
  * Serializable singleton class holding the current COM properties.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public final class ETComProperty implements Serializable {
 

@@ -20,8 +20,6 @@ import java.util.Arrays;
  * <li>warning starting with <i>WARN:</i> prefix</li>
  * <li>info starting with <i>INFO:</i> prefix</li>
  * </ul>
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TTConsoleNote extends ConsoleNote<Object> {
 

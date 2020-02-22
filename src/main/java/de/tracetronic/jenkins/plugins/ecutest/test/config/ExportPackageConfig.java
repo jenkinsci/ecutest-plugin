@@ -17,8 +17,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Class holding the configuration for exporting a package to test management system.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ExportPackageConfig extends ExportConfig {
 

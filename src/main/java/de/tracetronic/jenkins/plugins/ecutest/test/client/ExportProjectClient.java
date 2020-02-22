@@ -26,8 +26,6 @@ import java.io.IOException;
 
 /**
  * Client to export ECU-TEST projects via COM interface.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ExportProjectClient extends AbstractTMSClient {
 

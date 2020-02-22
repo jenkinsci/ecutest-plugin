@@ -31,8 +31,6 @@ import java.util.List;
 
 /**
  * Class providing the upload of {@link TRFReport}s to a test management system.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TMSReportUploader extends AbstractTMSClient {
 

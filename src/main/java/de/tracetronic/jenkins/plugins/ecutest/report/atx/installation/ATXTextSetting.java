@@ -14,8 +14,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Class holding the information of a text-based ATX setting.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXTextSetting extends ATXSetting<String> {
 

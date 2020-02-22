@@ -21,8 +21,6 @@ import java.util.List;
 
 /**
  * Client to start and stop the Tool-Server via command line execution.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TSClient extends AbstractToolClient {
 

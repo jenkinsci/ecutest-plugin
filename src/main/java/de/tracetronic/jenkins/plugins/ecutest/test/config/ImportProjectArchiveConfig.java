@@ -19,8 +19,6 @@ import java.util.Objects;
 
 /**
  * Class holding the configuration for importing a project from an archive.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ImportProjectArchiveConfig extends ImportConfig {
 

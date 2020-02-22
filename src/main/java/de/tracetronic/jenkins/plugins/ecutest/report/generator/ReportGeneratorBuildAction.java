@@ -16,8 +16,6 @@ import java.util.List;
 
 /**
  * Action to show a link to {@link GeneratorReport}s at the build page.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorBuildAction extends AbstractReportGeneratorAction implements
     SimpleBuildStep.LastBuildAction {

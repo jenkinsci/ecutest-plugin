@@ -17,8 +17,6 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Client to register the ECU-TEST COM server via command line execution.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETComRegisterClient extends AbstractToolClient {
 
