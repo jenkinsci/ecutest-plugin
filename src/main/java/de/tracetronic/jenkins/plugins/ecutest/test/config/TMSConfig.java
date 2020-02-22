@@ -34,12 +34,12 @@ import java.util.List;
  */
 public abstract class TMSConfig implements Describable<TMSConfig>, Serializable, ExpandableConfig {
 
-    private static final long serialVersionUID = 1L;
-
     /**
      * Defines the default timeout for connection to test management system.
      */
     protected static final int DEFAULT_TIMEOUT = 60;
+
+    private static final long serialVersionUID = 1L;
 
     private final String credentialsId;
     private final String timeout;

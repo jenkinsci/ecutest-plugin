@@ -27,12 +27,12 @@ import java.util.Objects;
 public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     implements Serializable, ExpandableConfig {
 
-    private static final long serialVersionUID = 1L;
-
     /**
      * Defines the default timeout running a test.
      */
     protected static final int DEFAULT_TIMEOUT = 3600;
+
+    private static final long serialVersionUID = 1L;
 
     private final String timeout;
     private final boolean stopOnError;
@@ -47,8 +47,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
      * Instantiates a new {@link ExecutionConfig}.
      *
      * @param timeout       the timeout to run the test
-     * @param stopOnError   specifies whether to stop ECU-TEST and
-     *                      Tool-Server instances if an error occurred
+     * @param stopOnError   specifies whether to stop ECU-TEST and Tool-Server instances if an error occurred
      * @param checkTestFile specifies whether to check the test file
      */
     @DataBoundConstructor
@@ -63,8 +62,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
      * Instantiates a new {@link ExecutionConfig}.
      *
      * @param timeout       the timeout to run the test
-     * @param stopOnError   specifies whether to stop ECU-TEST and
-     *                      Tool-Server instances if an error occurred
+     * @param stopOnError   specifies whether to stop ECU-TEST and Tool-Server instances if an error occurred
      * @param checkTestFile specifies whether to check the test file
      */
     public ExecutionConfig(final int timeout, final boolean stopOnError, final boolean checkTestFile) {
@@ -75,8 +73,8 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
      * Parses a string-based parameter to integer.
      *
      * @param param the parameter string
-     * @return the parsed integer value represented by the String parameter,
-     * defaults to {@link #DEFAULT_TIMEOUT} if null or invalid value
+     * @return the parsed integer value represented by the String parameter, defaults to {@link #DEFAULT_TIMEOUT} if
+     * null or invalid value
      */
     public static int parse(final String param) {
         try {
@@ -118,7 +116,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     @Override
     public ExecutionConfig expand(final EnvVars envVars) {
         final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars,
-            String.valueOf(DEFAULT_TIMEOUT));
+                String.valueOf(DEFAULT_TIMEOUT));
         return new ExecutionConfig(expTimeout, isStopOnError(), isCheckTestFile());
     }
 
@@ -128,7 +126,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
         if (other instanceof ExecutionConfig) {
             final ExecutionConfig that = (ExecutionConfig) other;
             result = Objects.equals(timeout, that.timeout)
-                && stopOnError == that.stopOnError && checkTestFile == that.checkTestFile;
+                    && stopOnError == that.stopOnError && checkTestFile == that.checkTestFile;
         }
         return result;
     }

@@ -47,6 +47,22 @@ public class ETLogReport extends AbstractArchiveFileReport {
     }
 
     /**
+     * Gets the logs by severity.
+     *
+     * @param severity the severity
+     * @return the list of logs matched the severity
+     */
+    private List<ETLogAnnotation> getLogs(final Severity severity) {
+        final List<ETLogAnnotation> logs = new ArrayList<>();
+        for (final ETLogAnnotation log : getLogs()) {
+            if (log.getSeverity().equals(severity)) {
+                logs.add(log);
+            }
+        }
+        return logs;
+    }
+
+    /**
      * Gets the warning logs.
      *
      * @return the warning logs
@@ -62,22 +78,6 @@ public class ETLogReport extends AbstractArchiveFileReport {
      */
     public List<ETLogAnnotation> getErrorLogs() {
         return getLogs(Severity.ERROR);
-    }
-
-    /**
-     * Gets the logs by severity.
-     *
-     * @param severity the severity
-     * @return the list of logs matched the severity
-     */
-    private List<ETLogAnnotation> getLogs(final Severity severity) {
-        final List<ETLogAnnotation> logs = new ArrayList<>();
-        for (final ETLogAnnotation log : getLogs()) {
-            if (log.getSeverity().equals(severity)) {
-                logs.add(log);
-            }
-        }
-        return logs;
     }
 
     /**

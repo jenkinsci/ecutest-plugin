@@ -94,13 +94,29 @@ public class ETInstallation extends AbstractToolInstallation {
 
     @Override
     public ETInstallation forNode(@Nonnull final Node node, final TaskListener log)
-        throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         return new ETInstallation(this, translateFor(node, log), getProperties().toList());
     }
 
     @Override
     protected File getExeFile(final File home) {
         return DescriptorImpl.getExeFile(home);
+    }
+
+    /**
+     * Gets the expanded executable file path.
+     *
+     * @return the executable file path or {@code null} if home directory is not set
+     */
+    @CheckForNull
+    private File getComExeFile() {
+        if (getHome() != null) {
+            final String home = Util.replaceMacro(getHome(), EnvVars.masterEnvVars);
+            if (home != null) {
+                return getComExeFile(new File(home));
+            }
+        }
+        return null;
     }
 
     /**
@@ -126,36 +142,6 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
-     * {@link MasterToSlaveCallable} providing remote access to return the tool executable path.
-     */
-    private final class GetComExecutableCallable extends MasterToSlaveCallable<String, IOException> {
-
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public String call() {
-            final File exe = getComExeFile();
-            return exe != null && exe.exists() ? exe.getPath() : null;
-        }
-    }
-
-    /**
-     * Gets the expanded executable file path.
-     *
-     * @return the executable file path or {@code null} if home directory is not set
-     */
-    @CheckForNull
-    private File getComExeFile() {
-        if (getHome() != null) {
-            final String home = Util.replaceMacro(getHome(), EnvVars.masterEnvVars);
-            if (home != null) {
-                return getComExeFile(new File(home));
-            }
-        }
-        return null;
-    }
-
-    /**
      * Gets the Tool-Server executable file relative to given home directory.
      *
      * @param home   the home directory of the tool
@@ -164,37 +150,6 @@ public class ETInstallation extends AbstractToolInstallation {
      */
     protected File getTSExeFile(final File home, final String subDir) {
         return DescriptorImpl.getTSExeFile(home, subDir);
-    }
-
-    /**
-     * Gets the executable path of the Tool-Server on the given target system.
-     * According to ECU-TEST 6.5 and above the Tool-Server executable is directly
-     * located in ECU-TEST installation path, otherwise in sub directory 'ToolServer'.
-     *
-     * @param launcher the launcher
-     * @return the Tool-Server executable path
-     * @throws IOException          signals that an I/O exception has occurred
-     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
-     */
-    public String getTSExecutable(final Launcher launcher) throws IOException, InterruptedException {
-        return launcher.getChannel().call(new GetTSExecutableCallable());
-    }
-
-    /**
-     * {@link MasterToSlaveCallable} providing remote access to return the Tool-Server executable path.
-     */
-    private final class GetTSExecutableCallable extends MasterToSlaveCallable<String, IOException> {
-
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public String call() {
-            File exe = getTSExeFile("");
-            if (exe == null || !exe.exists()) {
-                exe = getTSExeFile("ToolServer");
-            }
-            return exe != null && exe.exists() ? exe.getPath() : null;
-        }
     }
 
     /**
@@ -212,6 +167,20 @@ public class ETInstallation extends AbstractToolInstallation {
             }
         }
         return null;
+    }
+
+    /**
+     * Gets the executable path of the Tool-Server on the given target system. According to ECU-TEST 6.5 and above the
+     * Tool-Server executable is directly located in ECU-TEST installation path, otherwise in sub directory
+     * 'ToolServer'.
+     *
+     * @param launcher the launcher
+     * @return the Tool-Server executable path
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
+     */
+    public String getTSExecutable(final Launcher launcher) throws IOException, InterruptedException {
+        return launcher.getChannel().call(new GetTSExecutableCallable());
     }
 
     /**
@@ -285,6 +254,37 @@ public class ETInstallation extends AbstractToolInstallation {
             }
         }
         return null;
+    }
+
+    /**
+     * {@link MasterToSlaveCallable} providing remote access to return the tool executable path.
+     */
+    private final class GetComExecutableCallable extends MasterToSlaveCallable<String, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public String call() {
+            final File exe = getComExeFile();
+            return exe != null && exe.exists() ? exe.getPath() : null;
+        }
+    }
+
+    /**
+     * {@link MasterToSlaveCallable} providing remote access to return the Tool-Server executable path.
+     */
+    private final class GetTSExecutableCallable extends MasterToSlaveCallable<String, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public String call() {
+            File exe = getTSExeFile("");
+            if (exe == null || !exe.exists()) {
+                exe = getTSExeFile("ToolServer");
+            }
+            return exe != null && exe.exists() ? exe.getPath() : null;
+        }
     }
 
     /**
@@ -366,8 +366,8 @@ public class ETInstallation extends AbstractToolInstallation {
         }
 
         /**
-         * Moves the configured installations from old descriptor implementations to this descriptor
-         * in order to retain backward compatibility. Old configuration files will be removed automatically.
+         * Moves the configured installations from old descriptor implementations to this descriptor in order to retain
+         * backward compatibility. Old configuration files will be removed automatically.
          *
          * @param oldClass the old descriptor class name
          * @since 1.12
@@ -380,7 +380,7 @@ public class ETInstallation extends AbstractToolInstallation {
             stream.addCompatibilityAlias(oldClass.getName(), getClass());
 
             final XmlFile file = new XmlFile(stream,
-                new File(Jenkins.getInstance().getRootDir(), oldClass.getEnclosingClass().getName() + ".xml"));
+                    new File(Jenkins.getInstance().getRootDir(), oldClass.getEnclosingClass().getName() + ".xml"));
             if (file.exists()) {
                 try {
                     file.unmarshal(this);

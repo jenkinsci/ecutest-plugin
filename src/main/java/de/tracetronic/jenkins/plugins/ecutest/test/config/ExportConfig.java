@@ -64,10 +64,10 @@ public abstract class ExportConfig extends TMSConfig {
             result = Objects.equals(filePath, thatFilePath)
                 && Objects.equals(exportPath, thatExportPath)
                 && createNewPath == that.isCreateNewPath()
-                && (getCredentialsId() == null ? that.getCredentialsId() == null :
-                getCredentialsId().equals(that.getCredentialsId()))
-                && (getTimeout() == null ? that.getTimeout() == null :
-                getTimeout().equals(that.getTimeout()));
+                && (getCredentialsId() == null ? that.getCredentialsId() == null
+                    : getCredentialsId().equals(that.getCredentialsId()))
+                && (getTimeout() == null ? that.getTimeout() == null
+                    : getTimeout().equals(that.getTimeout()));
         }
         return result;
     }

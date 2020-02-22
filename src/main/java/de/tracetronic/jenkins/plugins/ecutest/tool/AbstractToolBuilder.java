@@ -140,6 +140,28 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     }
 
     /**
+     * Gets the tool installation by descriptor and tool name.
+     *
+     * @param envVars the environment variables
+     * @return the tool installation
+     */
+    @CheckForNull
+    public ETInstallation getToolInstallation(final EnvVars envVars) {
+        final String expToolName = envVars.expand(getToolName());
+        return getDescriptor().getToolDescriptor().getInstallation(expToolName);
+    }
+
+    @Override
+    public BuildStepMonitor getRequiredMonitorService() {
+        return BuildStepMonitor.NONE;
+    }
+
+    @Override
+    public AbstractToolDescriptor getDescriptor() {
+        return (AbstractToolDescriptor) super.getDescriptor();
+    }
+
+    /**
      * Configures the tool installation for functioning in the node and the environment.
      *
      * @param computer the node
@@ -200,27 +222,5 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
             ETComProperty.getInstance().setTimeout(timeout);
             return null;
         }
-    }
-
-    /**
-     * Gets the tool installation by descriptor and tool name.
-     *
-     * @param envVars the environment variables
-     * @return the tool installation
-     */
-    @CheckForNull
-    public ETInstallation getToolInstallation(final EnvVars envVars) {
-        final String expToolName = envVars.expand(getToolName());
-        return getDescriptor().getToolDescriptor().getInstallation(expToolName);
-    }
-
-    @Override
-    public BuildStepMonitor getRequiredMonitorService() {
-        return BuildStepMonitor.NONE;
-    }
-
-    @Override
-    public AbstractToolDescriptor getDescriptor() {
-        return (AbstractToolDescriptor) super.getDescriptor();
     }
 }

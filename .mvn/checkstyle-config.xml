@@ -17,6 +17,7 @@
     <module name="SuppressionFilter">
         <property name="file" value=".mvn/checkstyle-exclude.xml"/>
     </module>
+    <module name="SuppressWarningsFilter"/>
     <module name="Translation">
         <property name="requiredTranslations" value="de"/>
     </module>
@@ -28,6 +29,7 @@
         <module name="AnnotationUseStyle"/>
         <module name="MissingDeprecated"/>
         <module name="MissingOverride"/>
+        <module name="SuppressWarningsHolder"/>
 
         <!-- https://checkstyle.sourceforge.io/config_blocks.html -->
         <module name="AvoidNestedBlocks"/>

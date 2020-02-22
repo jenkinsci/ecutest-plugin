@@ -61,6 +61,17 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     }
 
     /**
+     * {@link DslExtensionMethod} for publishing ATX reports with default settings.
+     *
+     * @param atxName the tool name identifying the {@link ATXInstallation} to be used
+     * @return the instance of a {@link ATXPublisher}
+     */
+    @DslExtensionMethod(context = PublisherContext.class)
+    public Object publishATX(final CharSequence atxName) {
+        return publishATX(atxName, null);
+    }
+
+    /**
      * Checks whether the ATX installation identified by given name exists.
      *
      * @param atxName   the ATX tool name
@@ -70,17 +81,6 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         if (StringUtils.containsNone(atxName, "$")) {
             Preconditions.checkNotNull(publisher.getInstallation(), NO_INSTALL_MSG, atxName);
         }
-    }
-
-    /**
-     * {@link DslExtensionMethod} for publishing ATX reports with default settings.
-     *
-     * @param atxName the tool name identifying the {@link ATXInstallation} to be used
-     * @return the instance of a {@link ATXPublisher}
-     */
-    @DslExtensionMethod(context = PublisherContext.class)
-    public Object publishATX(final CharSequence atxName) {
-        return publishATX(atxName, null);
     }
 
     /**

@@ -31,18 +31,18 @@ public class TestConfiguration extends ETComDispatch implements ComTestConfigura
         super(dispatch, useTimeout);
     }
 
-    @SuppressWarnings("checkstyle:BooleanExpressionComplexity")
     @Override
+    @SuppressWarnings("checkstyle:booleanexpressioncomplexity")
     public void setGlobalConstant(final String name, final String value) throws ETComException {
         final Object objValue;
         if (StringUtils.isNotEmpty(value)
-            && (StringUtils.isNumeric(value) ||
-            startsAndEndsWith(value, "[", "]") ||
-            startsAndEndsWith(value, "{", "}") ||
-            startsAndEndsWith(value, "(", ")") ||
-            startsAndEndsWith(value, "'", "'") ||
-            startsAndEndsWith(value, "\"", "\"") ||
-            "True".equals(value) || "False".equals(value))) {
+            && (StringUtils.isNumeric(value)
+            || startsAndEndsWith(value, "[", "]")
+            || startsAndEndsWith(value, "{", "}")
+            || startsAndEndsWith(value, "(", ")")
+            || startsAndEndsWith(value, "'", "'")
+            || startsAndEndsWith(value, "\"", "\"")
+            || "True".equals(value) || "False".equals(value))) {
             // Assume Python integer, list, dictionary, tuple, string or boolean literal
             objValue = value;
         } else {

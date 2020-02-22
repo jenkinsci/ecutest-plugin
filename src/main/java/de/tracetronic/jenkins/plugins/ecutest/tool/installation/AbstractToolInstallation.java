@@ -64,20 +64,6 @@ public abstract class AbstractToolInstallation extends ToolInstallation implemen
     }
 
     /**
-     * {@link MasterToSlaveCallable} providing remote access to return the tool executable path.
-     */
-    private final class GetExecutableCallable extends MasterToSlaveCallable<String, IOException> {
-
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public String call() {
-            final File exe = getExeFile();
-            return exe != null && exe.exists() ? exe.getPath() : null;
-        }
-    }
-
-    /**
      * Gets the expanded executable file path.
      *
      * @return the executable file path or {@code null} if home directory is not set
@@ -101,4 +87,17 @@ public abstract class AbstractToolInstallation extends ToolInstallation implemen
      */
     protected abstract File getExeFile(File home);
 
+    /**
+     * {@link MasterToSlaveCallable} providing remote access to return the tool executable path.
+     */
+    private final class GetExecutableCallable extends MasterToSlaveCallable<String, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public String call() {
+            final File exe = getExeFile();
+            return exe != null && exe.exists() ? exe.getPath() : null;
+        }
+    }
 }

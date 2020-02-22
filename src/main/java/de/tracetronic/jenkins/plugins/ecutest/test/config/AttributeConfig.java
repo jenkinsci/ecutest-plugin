@@ -43,10 +43,10 @@ public abstract class AttributeConfig extends TMSConfig {
             final String filePath = getFilePath();
             final String thatFilePath = that.getFilePath();
             result = Objects.equals(filePath, thatFilePath)
-                && (getCredentialsId() == null ? that.getCredentialsId() == null :
-                getCredentialsId().equals(that.getCredentialsId()))
-                && (getTimeout() == null ? that.getTimeout() == null :
-                getTimeout().equals(that.getTimeout()));
+                && (getCredentialsId() == null ? that.getCredentialsId() == null
+                    : getCredentialsId().equals(that.getCredentialsId()))
+                && (getTimeout() == null ? that.getTimeout() == null
+                    : getTimeout().equals(that.getTimeout()));
         }
         return result;
     }

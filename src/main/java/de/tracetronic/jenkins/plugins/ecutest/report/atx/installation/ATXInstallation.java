@@ -350,8 +350,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          * @return the custom settings list
          */
         public List<ATXCustomSetting> getCustomSettings(final ATXInstallation installation) {
-            return installation == null ?
-                    new ArrayList<>() : installation.getConfig().getCustomSettings();
+            return installation == null ? new ArrayList<>() : installation.getConfig().getCustomSettings();
         }
 
         /**

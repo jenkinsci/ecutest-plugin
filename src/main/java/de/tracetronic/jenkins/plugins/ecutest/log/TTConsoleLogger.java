@@ -50,6 +50,22 @@ public class TTConsoleLogger {
     }
 
     /**
+     * Logs annotated message.
+     *
+     * @param prefix  the prefix
+     * @param message message to be annotated
+     */
+    public void logAnnot(final String prefix, final String message) {
+        final String log = prefix + message + "\n";
+        final byte[] msg = log.getBytes(Charset.defaultCharset());
+        try {
+            annotator.eol(msg, msg.length);
+        } catch (final IOException e) {
+            listener.getLogger().println("Problem with writing into console log: " + e.getMessage());
+        }
+    }
+
+    /**
      * Logs info message.
      *
      * @param message the message to log
@@ -120,22 +136,6 @@ public class TTConsoleLogger {
      */
     public void logStackTrace(final Exception exception) {
         logDebug(ExceptionUtils.getFullStackTrace(exception));
-    }
-
-    /**
-     * Logs annotated message.
-     *
-     * @param prefix  the prefix
-     * @param message message to be annotated
-     */
-    public void logAnnot(final String prefix, final String message) {
-        final String log = prefix + message + "\n";
-        final byte[] msg = log.getBytes(Charset.defaultCharset());
-        try {
-            annotator.eol(msg, msg.length);
-        } catch (final IOException e) {
-            listener.getLogger().println("Problem with writing into console log: " + e.getMessage());
-        }
     }
 
     /**

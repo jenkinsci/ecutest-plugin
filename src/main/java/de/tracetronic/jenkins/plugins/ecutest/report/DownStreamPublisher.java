@@ -66,7 +66,7 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
     @Override
     public void perform(@Nonnull final Run<?, ?> run, @Nonnull final FilePath workspace,
                         @Nonnull final Launcher launcher, @Nonnull final TaskListener listener)
-        throws InterruptedException, IOException {
+            throws InterruptedException, IOException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Publishing downstream reports...");
         for (final AbstractReportPublisher publisher : getPublishers()) {
@@ -105,8 +105,8 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
             final DescriptorExtensionList<Publisher, Descriptor<Publisher>> publishers = AbstractReportPublisher.all();
             if (publishers != null) {
                 for (final Descriptor<Publisher> publisher : publishers) {
-                    if (publisher instanceof AbstractReportDescriptor &&
-                        !(publisher instanceof DownStreamPublisher.DescriptorImpl)) {
+                    if (publisher instanceof AbstractReportDescriptor
+                            && !(publisher instanceof DownStreamPublisher.DescriptorImpl)) {
                         list.add(publisher);
                     }
                 }
