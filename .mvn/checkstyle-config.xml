@@ -4,77 +4,192 @@
     "http://checkstyle.org/dtds/configuration_1_3.dtd">
 <module name="Checker">
     <property name="severity" value="warning"/>
+    <module name="FileTabCharacter">
+        <property name="eachLine" value="true"/>
+    </module>
+    <module name="NewlineAtEndOfFile"/>
+    <!-- https://checkstyle.sourceforge.io/config_sizes.html -->
+    <module name="LineLength">
+        <property name="max" value="120" />
+        <property name="tabWidth" value="4" />
+    </module>
+    <module name="OrderedProperties"/>
+    <module name="SuppressionFilter">
+        <property name="file" value=".mvn/checkstyle-exclude.xml"/>
+    </module>
+    <module name="Translation">
+        <property name="requiredTranslations" value="de"/>
+    </module>
     <module name="TreeWalker">
         <property name="tabWidth" value="4"/>
-        <module name="SuppressWarningsHolder"/>
-        <module name="JavadocType"/>
-        <module name="JavadocMethod"/>
-        <module name="MissingJavadocMethod">
-            <property name="allowMissingPropertyJavadoc" value="true"/>
+
+        <!-- https://checkstyle.sourceforge.io/config_annotation.html -->
+        <module name="AnnotationLocation"/>
+        <module name="AnnotationUseStyle"/>
+        <module name="MissingDeprecated"/>
+        <module name="MissingOverride"/>
+
+        <!-- https://checkstyle.sourceforge.io/config_blocks.html -->
+        <module name="AvoidNestedBlocks"/>
+        <module name="EmptyBlock"/>
+        <module name="EmptyCatchBlock"/>
+        <module name="LeftCurly"/>
+        <module name="NeedBraces"/>
+        <module name="RightCurly"/>
+
+        <!-- https://checkstyle.sourceforge.io/config_design.html -->
+        <module name="FinalClass"/>
+        <module name="HideUtilityClassConstructor"/>
+        <module name="InnerTypeLast"/>
+        <module name="InterfaceIsType"/>
+        <module name="MutableException"/>
+        <module name="ThrowsCount"/>
+        <module name="VisibilityModifier">
+            <property name="protectedAllowed" value="true"/>
         </module>
-        <module name="JavadocStyle"/>
-        <module name="JavadocVariable">
-            <property name="scope" value="protected"/>
+
+        <!-- https://checkstyle.sourceforge.io/config_coding.html -->
+        <module name="CovariantEquals"/>
+        <module name="DeclarationOrder"/>
+        <module name="DefaultComesLast"/>
+        <module name="EmptyStatement"/>
+        <module name="EqualsAvoidNull"/>
+        <module name="EqualsHashCode"/>
+        <module name="FinalLocalVariable"/>
+        <module name="HiddenField">
+            <property name="ignoreConstructorParameter" value="true"/>
+            <property name="ignoreSetter" value="true"/>
         </module>
-        <module name="ConstantName"/>
-        <module name="LocalFinalVariableName"/>
-        <module name="LocalVariableName"/>
-        <module name="MemberName"/>
-        <module name="MethodName"/>
-        <module name="PackageName"/>
-        <module name="ParameterName"/>
-        <module name="StaticVariableName"/>
-        <module name="TypeName"/>
+        <module name="IllegalCatch"/>
+        <module name="IllegalInstantiation"/>
+        <module name="IllegalThrows"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="ModifiedControlVariable"/>
+        <module name="MultipleStringLiterals">
+            <property name="allowedDuplicates" value="5" />
+        </module>
+        <module name="MultipleVariableDeclarations"/>
+        <module name="NoArrayTrailingComma"/>
+        <module name="NoClone"/>
+        <module name="NoEnumTrailingComma"/>
+        <module name="NoFinalizer"/>
+        <module name="OneStatementPerLine"/>
+        <module name="OverloadMethodsDeclarationOrder"/>
+        <module name="PackageDeclaration"/>
+        <module name="ParameterAssignment"/>
+        <module name="RequireThis"/>
+        <module name="ReturnCount"/>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="StringLiteralEquality"/>
+        <module name="SuperClone"/>
+        <module name="SuperFinalize"/>
+        <module name="UnnecessaryParentheses"/>
+        <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
+        <module name="UnnecessarySemicolonInEnumeration"/>
+        <module name="UnnecessarySemicolonInTryWithResources"/>
+
+        <!-- https://checkstyle.sourceforge.io/config_imports.html -->
         <module name="AvoidStarImport"/>
+        <module name="AvoidStaticImport"/>
         <module name="IllegalImport"/>
+        <module name="ImportOrder">
+            <property name="groups" value="*,javax,java"/>
+            <property name="ordered" value="true"/>
+            <property name="separated" value="true"/>
+            <property name="option" value="bottom"/>
+            <property name="sortStaticImportsAlphabetically" value="true"/>
+        </module>
+        <module name="SuppressionXpathSingleFilter">
+            <property name="checks" value="ImportOrder"/>
+            <property name="message" value="^'java\..*'.*"/>
+        </module>
         <module name="RedundantImport"/>
         <module name="UnusedImports">
             <property name="processJavadoc" value="true"/>
         </module>
+
+        <!-- https://checkstyle.sourceforge.io/config_javadoc.html -->
+        <module name="AtclauseOrder"/>
+        <module name="InvalidJavadocPosition"/>
+        <module name="JavadocBlockTagLocation"/>
+        <module name="JavadocContentLocation"/>
+        <module name="JavadocMethod"/>
+        <module name="JavadocParagraph"/>
+        <module name="JavadocStyle"/>
+        <module name="JavadocType"/>
+        <module name="JavadocVariable">
+            <property name="scope" value="protected"/>
+        </module>
+        <module name="MissingJavadocMethod">
+            <property name="allowMissingPropertyJavadoc" value="true"/>
+        </module>
+        <module name="MissingJavadocType"/>
+        <module name="NonEmptyAtclauseDescription"/>
+        <module name="SummaryJavadoc"/>
+
+        <!-- https://checkstyle.sourceforge.io/config_metrics.html -->
+        <module name="BooleanExpressionComplexity"/>
+        <module name="CyclomaticComplexity"/>
+        <module name="NPathComplexity"/>
+
+        <!-- https://checkstyle.sourceforge.io/config_misc.html -->
+        <module name="ArrayTypeStyle"/>
+        <module name="CommentsIndentation"/>
+        <module name="FinalParameters"/>
+        <module name="Indentation"/>
+        <module name="OuterTypeFilename"/>
+        <module name="TrailingComment"/>
+        <module name="UncommentedMain"/>
+        <module name="UpperEll"/>
+
+        <!-- https://checkstyle.sourceforge.io/config_modifier.html -->
         <module name="ModifierOrder"/>
         <module name="RedundantModifier"/>
-        <module name="AvoidNestedBlocks"/>
-        <module name="EmptyBlock"/>
-        <module name="NeedBraces"/>
-        <module name="EqualsHashCode"/>
-        <module name="EmptyStatement"/>
-        <module name="SimplifyBooleanExpression"/>
-        <module name="SimplifyBooleanReturn"/>
-        <module name="IllegalInstantiation"/>
-        <module name="StringLiteralEquality"/>
-        <module name="ModifiedControlVariable"/>
-        <module name="ArrayTrailingComma"/>
-        <module name="PackageDeclaration"/>
-        <module name="EqualsAvoidNull"/>
-        <module name="SuperClone"/>
-        <module name="SuperFinalize"/>
-        <module name="MultipleStringLiterals">
-            <property name="allowedDuplicates" value="5"/>
+
+        <!-- https://checkstyle.sourceforge.io/config_naming.html -->
+        <module name="CatchParameterName"/>
+        <module name="ClassTypeParameterName"/>
+        <module name="ConstantName"/>
+        <module name="InterfaceTypeParameterName"/>
+        <module name="LambdaParameterName"/>
+        <module name="LocalFinalVariableName"/>
+        <module name="LocalVariableName"/>
+        <module name="MemberName"/>
+        <module name="MethodName"/>
+        <module name="MethodTypeParameterName"/>
+        <module name="PackageName"/>
+        <module name="ParameterName"/>
+        <module name="StaticVariableName"/>
+        <module name="TypeName"/>
+
+        <!-- https://checkstyle.sourceforge.io/config_regexp.html
+        <module name="Regexp"/>
+        <module name="RegexpMultiline"/>
+        <module name="RegexpOnFilename"/>
+        <module name="RegexpSingleline"/>
+        <module name="RegexpSinglelineJava"/> -->
+
+        <!-- https://checkstyle.sourceforge.io/config_whitespace.html -->
+        <module name="EmptyForInitializerPad"/>
+        <module name="EmptyForIteratorPad"/>
+        <module name="EmptyLineSeparator">
+            <property name="tokens"
+                      value="IMPORT, STATIC_IMPORT, CLASS_DEF, INTERFACE_DEF, ENUM_DEF,
+                    STATIC_INIT, INSTANCE_INIT, METHOD_DEF, CTOR_DEF"/>
         </module>
-        <module name="MultipleVariableDeclarations"/>
-        <module name="MissingOverride"/>
-        <module name="MissingDeprecated">
-            <property name="violateExecutionOnNonTightHtml" value="false"/>
-        </module>
-        <module name="CyclomaticComplexity"/>
-        <module name="BooleanExpressionComplexity"/>
-        <module name="NPathComplexity"/>
-        <module name="FinalClass"/>
-        <module name="HideUtilityClassConstructor"/>
-        <module name="InterfaceIsType"/>
-        <module name="VisibilityModifier">
-            <property name="protectedAllowed" value="true"/>
-        </module>
-        <module name="MutableException"/>
-        <module name="ArrayTypeStyle"/>
-        <module name="UpperEll"/>
+        <module name="GenericWhitespace"/>
+        <module name="MethodParamPad"/>
+        <module name="NoLineWrap"/>
+        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
+        <module name="OperatorWrap"/>
+        <module name="ParenPad"/>
+        <module name="SeparatorWrap"/>
+        <module name="SingleSpaceSeparator"/>
+        <module name="TypecastParenPad"/>
+        <module name="WhitespaceAfter"/>
+        <module name="WhitespaceAround"/>
     </module>
-    <module name="LineLength">
-        <property name="max" value="120"/>
-    </module>
-    <module name="Translation"/>
-    <module name="SuppressWarningsFilter"/>
-    <module name="SuppressionFilter">
-        <property name="file" value="${config_loc}/checkstyle-exclude.xml"/>
-    </module>
+    <module name="UniqueProperties"/>
 </module>

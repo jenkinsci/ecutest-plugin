@@ -3,8 +3,7 @@
     "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
     "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 <suppressions>
-    <suppress files="Messages.java" checks="[a-zA-Z0-9]*"/>
-    <suppress files="InjectedTest.java" checks="[a-zA-Z0-9]*"/>
-    <suppress files="[/\\]src[/\\]test[/\\]java[/\\]" checks="[a-zA-Z0-9]*"/>
-    <suppress files="[/\\]target[/\\]generated-sources[/\\]" checks="[a-zA-Z0-9]*"/>
+    <suppress files="Messages.java" checks=".*"/>
+    <suppress files="InjectedTest.java" checks=".*"/>
+    <suppress files="[/\\]src[/\\]test[/\\]" checks=".*"/>
 </suppressions>
