@@ -109,18 +109,18 @@ public class ETPlugin {
     @Initializer(after = InitMilestone.JOB_LOADED)
     public void registerIcons() {
         for (final String name : new String[]{
-                "atx-report",
-                "atx-trend",
-                "ecu-test",
-                "ecu-test-pkg",
-                "ecu-test-prj",
-                "report-generator",
-                "test-guide",
-                "test-param",
-                "tool-param",
-                "trf-report",
-                "trace-check",
-                "trace-report"
+            "atx-report",
+            "atx-trend",
+            "ecu-test",
+            "ecu-test-pkg",
+            "ecu-test-prj",
+            "report-generator",
+            "test-guide",
+            "test-param",
+            "tool-param",
+            "trf-report",
+            "trace-check",
+            "trace-report"
         }) {
             // Register small (16x16) icons
             IconSet.icons.addIcon(new Icon(
