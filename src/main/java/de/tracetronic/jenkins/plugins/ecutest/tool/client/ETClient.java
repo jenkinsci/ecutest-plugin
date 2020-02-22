@@ -354,16 +354,14 @@ public class ETClient extends AbstractToolClient {
                     "errorLogFile",
                     "language");
             logger.logDebug("Workspace settings:");
-            settings.forEach(setting ->
-                    {
-                        try {
-                            logger.logDebug(String.format("- %s: %s", setting,
-                                    launcher.getChannel().call(new AbstractTestHelper.GetSettingCallable(setting))));
-                        } catch (IOException | InterruptedException e) {
-                            logger.logDebug(String.format("- %s: not available", setting));
-                        }
-                    }
-            );
+            settings.forEach(setting -> {
+                try {
+                    logger.logDebug(String.format("- %s: %s", setting,
+                            launcher.getChannel().call(new AbstractTestHelper.GetSettingCallable(setting))));
+                } catch (IOException | InterruptedException e) {
+                    logger.logDebug(String.format("- %s: not available", setting));
+                }
+            });
         }
     }
 

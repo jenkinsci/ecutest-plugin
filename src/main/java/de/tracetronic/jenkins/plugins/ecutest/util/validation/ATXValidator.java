@@ -93,7 +93,7 @@ public class ATXValidator extends AbstractValidator {
             @Override
             public void checkServerTrusted(final X509Certificate[] certs, final String authType) {
             }
-        },};
+        } };
 
         // Install the all-trusting trust manager
         final SSLContext sslContext = SSLContext.getInstance("SSL");
@@ -458,7 +458,7 @@ public class ATXValidator extends AbstractValidator {
 
             final Authenticator authenticator = new Authenticator() {
                 public PasswordAuthentication getPasswordAuthentication() {
-                    return (new PasswordAuthentication(userName, password.toCharArray()));
+                    return new PasswordAuthentication(userName, password.toCharArray());
                 }
             };
             Authenticator.setDefault(authenticator);

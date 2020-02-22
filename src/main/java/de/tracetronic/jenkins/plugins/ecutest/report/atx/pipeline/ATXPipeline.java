@@ -216,7 +216,7 @@ public class ATXPipeline implements Serializable {
      * @param serverArgs the server arguments
      * @return the ATX server
      */
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings("unchecked")
     private ATXServer newServer(final String atxName, final String toolName, final Map<String, Object> serverArgs) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
         stepVariables.put(KEY_ATX_NAME, atxName);

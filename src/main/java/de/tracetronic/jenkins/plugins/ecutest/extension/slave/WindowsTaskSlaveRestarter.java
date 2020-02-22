@@ -41,6 +41,7 @@ public class WindowsTaskSlaveRestarter extends SlaveRestarter {
             final int ret = queryTask();
             return ret == 0;
         } catch (InterruptedException | IOException ignored) {
+            // noop
         }
         return false;
     }

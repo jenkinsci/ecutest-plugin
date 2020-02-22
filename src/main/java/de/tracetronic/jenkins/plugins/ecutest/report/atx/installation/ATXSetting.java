@@ -26,12 +26,12 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
 
     private static final Logger LOGGER = Logger.getLogger(ATXSetting.class.getName());
 
-    private final String name;
-    private final SettingsGroup group;
     /**
      * The current value of the setting as generic type.
      */
     protected T value;
+    private final String name;
+    private final SettingsGroup group;
 
     /**
      * Deprecated property storing the current value.

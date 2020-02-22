@@ -120,7 +120,7 @@ public class ETPlugin {
             "tool-param",
             "trf-report",
             "trace-check",
-            "trace-report",
+            "trace-report"
         }) {
             // Register small (16x16) icons
             IconSet.icons.addIcon(new Icon(

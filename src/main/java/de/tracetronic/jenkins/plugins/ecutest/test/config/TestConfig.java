@@ -177,7 +177,7 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
     /**
      * DescriptorImpl for {@link TestConfig}.
      *
-     * @param <T>
+     * @param <T> the generic type
      */
     @Extension
     public static class DescriptorImpl<T> extends Descriptor<TestConfig> {

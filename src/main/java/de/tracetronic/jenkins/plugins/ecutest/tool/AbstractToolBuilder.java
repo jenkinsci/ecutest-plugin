@@ -70,7 +70,7 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
         this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(getDefaultTimeout()));
     }
 
-     @DataBoundSetter
+    @DataBoundSetter
     public void setTimeout(final int timeout) {
         this.timeout = String.valueOf(timeout);
     }

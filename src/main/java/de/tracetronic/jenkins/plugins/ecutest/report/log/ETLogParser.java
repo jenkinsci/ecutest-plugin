@@ -14,7 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -50,8 +50,8 @@ public class ETLogParser {
      */
     public List<ETLogAnnotation> parse() {
         final List<ETLogAnnotation> logReports = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(logFile.read(),
-            Charset.forName("UTF-8")))) {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(logFile.read(), StandardCharsets.UTF_8))) {
             String line;
             int warnLogCount = 0;
             int errorLogCount = 0;
@@ -87,8 +87,8 @@ public class ETLogParser {
      */
     public int parseLogCount(final Severity severity) {
         int logCount = 0;
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(logFile.read(),
-            Charset.forName("UTF-8")))) {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(logFile.read(), StandardCharsets.UTF_8))) {
             String line;
             try (LineNumberReader lineReader = new LineNumberReader(reader)) {
                 while ((line = lineReader.readLine()) != null) {

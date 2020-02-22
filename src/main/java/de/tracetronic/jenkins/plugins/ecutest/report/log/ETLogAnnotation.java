@@ -46,7 +46,7 @@ public class ETLogAnnotation implements Serializable {
         return timestamp;
     }
 
-     public String getContext() {
+    public String getContext() {
         return context;
     }
 
