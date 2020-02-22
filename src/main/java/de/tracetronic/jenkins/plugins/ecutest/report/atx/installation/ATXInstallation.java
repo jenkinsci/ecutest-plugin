@@ -79,8 +79,8 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         if (instance == null) {
             return new ATXInstallation[0];
         }
-        final ATXInstallation.DescriptorImpl atxDescriptor = instance
-            .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
+        final ATXInstallation.DescriptorImpl atxDescriptor =
+                instance.getDescriptorByType(ATXInstallation.DescriptorImpl.class);
         return atxDescriptor.getInstallations();
     }
 
@@ -121,8 +121,8 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
     }
 
     /**
-     * Listen to {@link Saveable} actions of this descriptor in order to update
-     * the default ATX setting values when invoked by CasC configuration reloads.
+     * Listen to {@link Saveable} actions of this descriptor in order to update the default ATX setting values when
+     * invoked by CasC configuration reloads.
      */
     @Extension
     public static class SaveableListenerImpl extends SaveableListener {
@@ -182,8 +182,8 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         }
 
         /**
-         * Moves the configured installations from old descriptor implementations to this descriptor
-         * in order to retain backward compatibility. Old configuration files will be removed automatically.
+         * Moves the configured installations from old descriptor implementations to this descriptor in order to retain
+         * backward compatibility. Old configuration files will be removed automatically.
          *
          * @param oldClass the old descriptor class name
          * @since 2.7
@@ -196,7 +196,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
             stream.addCompatibilityAlias(oldClass.getName(), getClass());
 
             final XmlFile file = new XmlFile(stream,
-                new File(Jenkins.getInstance().getRootDir(), oldClass.getEnclosingClass().getName() + ".xml"));
+                    new File(Jenkins.getInstance().getRootDir(), oldClass.getEnclosingClass().getName() + ".xml"));
             if (file.exists()) {
                 try {
                     file.unmarshal(this);
@@ -257,11 +257,11 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
 
                     // Update custom settings
                     List<ATXCustomSetting> customSettings = req.bindJSONToList(ATXCustomSetting.class,
-                        instJson.get("customSettings"));
+                            instJson.get("customSettings"));
 
                     // Remove duplicates of default configuration
                     customSettings.removeIf(atxCustomSetting ->
-                        getDefaultConfig().getSettingByName(atxCustomSetting.getName()).isPresent());
+                            getDefaultConfig().getSettingByName(atxCustomSetting.getName()).isPresent());
 
                     // Make unique list
                     customSettings = new ArrayList<>(new LinkedHashSet<>(customSettings));
@@ -281,12 +281,12 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         }
 
         /**
-         * Synchronizes current ATX configuration with default configuration
-         * by overriding their current values and saving them as new ATX installation.
+         * Synchronizes current ATX configuration with default configuration by overriding their current values and
+         * saving them as new ATX installation.
          *
          * <p>
-         * This method will be automatically called by {@link ETPlugin#syncATXConfiguration()} to
-         * avoid circular dependencies while loading other plugins. Explicit call to {@link #save()} is required.
+         * This method will be automatically called by {@link ETPlugin#syncATXConfiguration()} to avoid circular
+         * dependencies while loading other plugins. Explicit call to {@link #save()} is required.
          */
         @SuppressWarnings("unchecked")
         public void syncWithDefaultConfig() {
@@ -316,7 +316,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
 
                 // Fill installations
                 final ATXInstallation inst = new ATXInstallation(installation.getName(),
-                    installation.getToolName(), newConfig);
+                        installation.getToolName(), newConfig);
                 list.add(inst);
             }
             setInstallations(list.toArray(new ATXInstallation[0]));
@@ -351,7 +351,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          */
         public List<ATXCustomSetting> getCustomSettings(final ATXInstallation installation) {
             return installation == null ?
-                new ArrayList<>() : installation.getConfig().getCustomSettings();
+                    new ArrayList<>() : installation.getConfig().getCustomSettings();
         }
 
         /**
@@ -361,8 +361,8 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          */
         public List<Descriptor<? extends ATXCustomSetting>> getApplicableCustomSettings() {
             final List<Descriptor<? extends ATXCustomSetting>> list = new ArrayList<>();
-            final DescriptorExtensionList<ATXCustomSetting, Descriptor<ATXCustomSetting>> settings = ATXCustomSetting
-                .all();
+            final DescriptorExtensionList<ATXCustomSetting, Descriptor<ATXCustomSetting>> settings =
+                    ATXCustomSetting.all();
             if (settings != null) {
                 list.addAll(settings);
             }
@@ -429,7 +429,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
             Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
             final String proxyUrl = useHttpsConnection ? httpsProxy : httpProxy;
             return atxValidator.testConnection(serverURL, serverPort, serverContextPath, useHttpsConnection,
-                proxyUrl, ignoreSSL);
+                    proxyUrl, ignoreSSL);
         }
     }
 }

@@ -119,8 +119,7 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
 
     @Override
     public final int hashCode() {
-        return new HashCodeBuilder(17, 31).append(runTest).append(runTraceAnalysis).append(parameters)
-            .toHashCode();
+        return new HashCodeBuilder(17, 31).append(runTest).append(runTraceAnalysis).append(parameters).toHashCode();
     }
 
     /**

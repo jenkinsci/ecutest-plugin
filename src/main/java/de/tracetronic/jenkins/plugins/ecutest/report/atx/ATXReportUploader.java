@@ -283,8 +283,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         final String from = String.valueOf(testInfo.getFrom());
         final String to = String.valueOf(testInfo.getTo());
         final String atxTestName = ATXUtil.getValidATXName(testName);
-        String pkgReportUrl = String
-            .format("%s/reports?dateFrom=%s&dateTo=%s&testcase=%s", baseUrl, from, to, atxTestName);
+        String pkgReportUrl = String.format("%s/reports?dateFrom=%s&dateTo=%s&testcase=%s",
+                baseUrl, from, to, atxTestName);
         if (projectId != null) {
             pkgReportUrl = String.format("%s&projectId=%s", pkgReportUrl, projectId);
         }

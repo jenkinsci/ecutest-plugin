@@ -137,8 +137,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
             archiveTargetDir.getName()));
         if (zipFiles.length == 1) {
             final FilePath zipFile = zipFiles[0];
-            final String relFilePath = archiveTargetDir.getParent().toURI().relativize(zipFile.toURI())
-                .getPath();
+            final String relFilePath = archiveTargetDir.getParent().toURI().relativize(zipFile.toURI()).getPath();
             final ATXZipReport atxReport = new ATXZipReport(AbstractReportPublisher.randomId(),
                 zipFile.getBaseName(), relFilePath, zipFile.length());
             atxReports.add(atxReport);

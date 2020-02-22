@@ -136,8 +136,7 @@ public class TestEnvironment extends ETComDispatch implements ComTestEnvironment
                                                     final Map<String, String> parameters) throws ETComException {
         final Object[][] settings = getArrayFromMap(parameters, false);
         return performDirectRequest("GenerateTestReportDocumentFromDB", new Variant(dbFile),
-            new Variant(reportDir), new Variant(reportFormat), new Variant(waitUntilFinished), settings)
-            .getBoolean();
+            new Variant(reportDir), new Variant(reportFormat), new Variant(waitUntilFinished), settings).getBoolean();
     }
 
     @Override

@@ -266,8 +266,7 @@ public class ETInstallation extends AbstractToolInstallation {
         if (instance == null) {
             return new ETInstallation[0];
         }
-        final DescriptorImpl etDescriptor = instance
-            .getDescriptorByType(DescriptorImpl.class);
+        final DescriptorImpl etDescriptor = instance.getDescriptorByType(DescriptorImpl.class);
         return etDescriptor.getInstallations();
     }
 

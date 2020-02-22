@@ -317,8 +317,7 @@ public class ETPlugin {
 
         @Override
         public int hashCode() {
-            return new HashCodeBuilder(17, 31).append(major).append(minor).append(micro).append(qualifier)
-                .toHashCode();
+            return new HashCodeBuilder(17, 31).append(major).append(minor).append(micro).append(qualifier).toHashCode();
         }
     }
 }

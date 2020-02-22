@@ -383,7 +383,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
         public List<String> invoke(final File baseDir, final VirtualChannel channel) {
             final List<String> files = new ArrayList<>();
             for (final String includedFile : Util.createFileSet(baseDir, includes, excludes)
-                .getDirectoryScanner().getIncludedFiles()) {
+                    .getDirectoryScanner().getIncludedFiles()) {
                 final File file = new File(baseDir, includedFile);
                 files.add(file.getPath());
             }

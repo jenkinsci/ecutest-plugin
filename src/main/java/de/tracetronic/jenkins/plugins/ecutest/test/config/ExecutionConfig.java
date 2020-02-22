@@ -135,8 +135,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
 
     @Override
     public final int hashCode() {
-        return new HashCodeBuilder(17, 31).append(timeout).append(stopOnError).append(checkTestFile)
-            .toHashCode();
+        return new HashCodeBuilder(17, 31).append(timeout).append(stopOnError).append(checkTestFile).toHashCode();
     }
 
     /**

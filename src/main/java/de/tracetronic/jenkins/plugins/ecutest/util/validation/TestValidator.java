@@ -156,8 +156,8 @@ public class TestValidator extends AbstractValidator {
             if (filterExpression.contains(PARAMETER)) {
                 returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
             } else {
-                final String trimmedExpression = StringUtils.trimToEmpty(filterExpression).replaceAll("^\\(\\s*", "(")
-                    .replaceAll("\\s*\\)", ")");
+                final String trimmedExpression = StringUtils.trimToEmpty(filterExpression)
+                        .replaceAll("^\\(\\s*", "(").replaceAll("\\s*\\)", ")");
                 final FilterExpressionValidator validator = new FilterExpressionValidator(trimmedExpression);
                 validator.validate();
                 if (!validator.isValid()) {

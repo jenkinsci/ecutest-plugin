@@ -60,7 +60,7 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
         throws ETComException {
         if (timeout == 0) {
             return performDirectRequest("ImportPackage", new Variant(tmProjectPath), new Variant(importPath))
-                .getBoolean();
+                    .getBoolean();
         } else {
             return performDirectRequest("ImportPackage", new Variant(tmProjectPath), new Variant(importPath),
                 new Variant(timeout)).getBoolean();

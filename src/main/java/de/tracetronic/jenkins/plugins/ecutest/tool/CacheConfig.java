@@ -90,8 +90,7 @@ public class CacheConfig extends AbstractDescribableImpl<CacheConfig> implements
 
     @Override
     public final int hashCode() {
-        return new HashCodeBuilder(17, 31).append(type).append(filePath)
-            .append(dbChannel).append(clear).toHashCode();
+        return new HashCodeBuilder(17, 31).append(type).append(filePath).append(dbChannel).append(clear).toHashCode();
     }
 
     /**

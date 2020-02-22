@@ -80,7 +80,7 @@ public class ImportProjectArchiveConfig extends ImportConfig {
     @Override
     public final int hashCode() {
         return new HashCodeBuilder(17, 31).append(super.hashCode())
-            .append(importConfigPath).append(replaceFiles).toHashCode();
+                .append(importConfigPath).append(replaceFiles).toHashCode();
     }
 
     /**
