@@ -82,7 +82,7 @@ public final class ProcessUtil {
                         }
                     }
                 }
-            } catch (final WinpException e) {
+            } catch (final WinpException ignored) {
                 // Skip system pseudo-processes with insufficient security privileges
             }
         }

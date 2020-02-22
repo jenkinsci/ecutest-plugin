@@ -210,8 +210,8 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     public void close() {
         try {
             releaseDispatch();
-        } catch (final ETComException e) {
-            // noop
+        } catch (final ETComException ignored) {
+            // no-op
         } finally {
             if (!useTimeout) {
                 ComThread.Release();
@@ -224,7 +224,7 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     protected void finalize() {
         if (useTimeout) {
             return;
-            // noop to prevent JVM crash
+            // no-op to prevent JVM crash
         }
     }
 

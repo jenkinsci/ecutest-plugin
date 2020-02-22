@@ -81,11 +81,11 @@ public class ETPlugin {
     public static String getIconFileName(final String iconClassName, final String iconStyle) {
         final String iconClass = iconClassName + " " + iconStyle;
         try {
-            // FIXME: workaround signature changes in different versions of {@link IconSet} by reflection
+            // Workaround signature changes in different versions of {@link IconSet} by reflection
             final Method getIconByClassSpec = IconSet.class.getMethod("getIconByClassSpec", Object.class);
             return ((Icon) getIconByClassSpec.invoke(IconSet.icons, iconClass)).getUrl();
-        } catch (final NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            // ignore
+        } catch (final NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
+            // no-op
         }
         return IconSet.icons.getIconByClassSpec(iconClass).getUrl();
     }
@@ -96,7 +96,7 @@ public class ETPlugin {
     @Initializer(after = InitMilestone.PLUGINS_STARTED)
     public void syncATXConfiguration() {
         final ATXInstallation.DescriptorImpl descriptor = Jenkins.getInstance()
-            .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
+                .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
         if (descriptor != null) {
             descriptor.syncWithDefaultConfig();
             descriptor.save();
@@ -109,53 +109,53 @@ public class ETPlugin {
     @Initializer(after = InitMilestone.JOB_LOADED)
     public void registerIcons() {
         for (final String name : new String[]{
-            "atx-report",
-            "atx-trend",
-            "ecu-test",
-            "ecu-test-pkg",
-            "ecu-test-prj",
-            "report-generator",
-            "test-guide",
-            "test-param",
-            "tool-param",
-            "trf-report",
-            "trace-check",
-            "trace-report"
+                "atx-report",
+                "atx-trend",
+                "ecu-test",
+                "ecu-test-pkg",
+                "ecu-test-prj",
+                "report-generator",
+                "test-guide",
+                "test-param",
+                "tool-param",
+                "trf-report",
+                "trace-check",
+                "trace-report"
         }) {
             // Register small (16x16) icons
             IconSet.icons.addIcon(new Icon(
-                String.format("icon-ecutest-%s icon-sm", name),
-                String.format("ecutest/icons/16x16/%s.png", name),
-                Icon.ICON_SMALL_STYLE, IconType.PLUGIN)
+                    String.format("icon-ecutest-%s icon-sm", name),
+                    String.format("ecutest/icons/16x16/%s.png", name),
+                    Icon.ICON_SMALL_STYLE, IconType.PLUGIN)
             );
 
             // Register medium (24x24) icons
             IconSet.icons.addIcon(new Icon(
-                String.format("icon-ecutest-%s icon-md", name),
-                String.format("ecutest/icons/24x24/%s.png", name),
-                Icon.ICON_MEDIUM_STYLE, IconType.PLUGIN)
+                    String.format("icon-ecutest-%s icon-md", name),
+                    String.format("ecutest/icons/24x24/%s.png", name),
+                    Icon.ICON_MEDIUM_STYLE, IconType.PLUGIN)
             );
 
             // Register large (32x32) icons
             IconSet.icons.addIcon(new Icon(
-                String.format("icon-ecutest-%s icon-lg", name),
-                String.format("ecutest/icons/32x32/%s.png", name),
-                Icon.ICON_LARGE_STYLE, IconType.PLUGIN)
+                    String.format("icon-ecutest-%s icon-lg", name),
+                    String.format("ecutest/icons/32x32/%s.png", name),
+                    Icon.ICON_LARGE_STYLE, IconType.PLUGIN)
             );
 
             // Register x-large (48x48) icons
             IconSet.icons.addIcon(new Icon(
-                String.format("icon-ecutest-%s icon-xlg", name),
-                String.format("ecutest/icons/48x48/%s.png", name),
-                Icon.ICON_XLARGE_STYLE, IconType.PLUGIN)
+                    String.format("icon-ecutest-%s icon-xlg", name),
+                    String.format("ecutest/icons/48x48/%s.png", name),
+                    Icon.ICON_XLARGE_STYLE, IconType.PLUGIN)
             );
         }
     }
 
     /**
-     * Helper class to easily compare tool versions defined by major, minor, micro and qualifier version.
-     * Mainly used to enable or disable plugin features by comparing {@link ETPlugin#ET_MIN_VERSION}
-     * with the configured ECU-TEST version.
+     * Helper class to easily compare tool versions defined by major, minor, micro and qualifier version. Mainly used to
+     * enable or disable plugin features by comparing {@link ETPlugin#ET_MIN_VERSION} with the configured ECU-TEST
+     * version.
      */
     public static final class ToolVersion implements Comparable<ToolVersion>, Serializable {
 
@@ -210,7 +210,7 @@ public class ETPlugin {
             final Matcher matcher = pattern.matcher(version);
             if (!matcher.find() || matcher.groupCount() != 4) {
                 throw new IllegalArgumentException(
-                    "Version must be in form <major>.<minor>.<micro>.<qualifier>");
+                        "Version must be in form <major>.<minor>.<micro>.<qualifier>");
             }
 
             final int major = Integer.parseInt(matcher.group(1));

@@ -217,8 +217,8 @@ public class ETComClient implements ComApplication, AutoCloseable {
         } else {
             try {
                 releaseDispatch();
-            } catch (final ETComException e) {
-                // noop
+            } catch (final ETComException ignored) {
+                // no-op
             } finally {
                 ComThread.Release();
             }
@@ -232,11 +232,13 @@ public class ETComClient implements ComApplication, AutoCloseable {
         if (!useTimeout) {
             try {
                 releaseDispatch();
+            } catch (Exception ignored) {
+                // no-op
             } finally {
                 ComThread.Release();
                 super.finalize();
             }
-        } // else noop to prevent JVM crash
+        } // else no-op to prevent JVM crash
     }
 
     /**
