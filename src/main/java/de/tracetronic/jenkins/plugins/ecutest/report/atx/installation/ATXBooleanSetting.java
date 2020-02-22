@@ -40,7 +40,7 @@ public class ATXBooleanSetting extends ATXSetting<Boolean> {
      * @param descEnglish  the English description
      * @param defaultValue the default value
      */
-    public ATXBooleanSetting(final String name, SettingsGroup group,
+    public ATXBooleanSetting(final String name, final SettingsGroup group,
                              final String descGerman, final String descEnglish,
                              final boolean defaultValue) {
         super(name, group, descGerman, descEnglish, defaultValue);

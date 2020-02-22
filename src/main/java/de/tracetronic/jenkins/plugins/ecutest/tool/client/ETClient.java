@@ -324,7 +324,8 @@ public class ETClient extends AbstractToolClient {
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
-    public boolean updateUserLibs(Launcher launcher, TaskListener listener) throws IOException, InterruptedException {
+    public boolean updateUserLibs(final Launcher launcher, final TaskListener listener) throws IOException,
+            InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Updating user libraries...");
         return launcher.getChannel().call(new UpdateUserLibsCallable(listener));
@@ -339,7 +340,7 @@ public class ETClient extends AbstractToolClient {
      * @throws IOException          the io exception
      * @throws InterruptedException the interrupted exception
      */
-    public boolean checkConfigStatus(final Launcher launcher, TaskListener listener)
+    public boolean checkConfigStatus(final Launcher launcher, final TaskListener listener)
         throws IOException, InterruptedException {
         return launcher.getChannel().call(new CheckConfigStatusCallable(listener));
     }

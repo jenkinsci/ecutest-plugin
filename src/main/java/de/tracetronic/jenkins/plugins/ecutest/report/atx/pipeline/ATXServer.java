@@ -104,7 +104,7 @@ public class ATXServer implements Serializable {
      * @return the setting
      */
     @Whitelisted
-    public ATXSetting<?> getSetting(String settingName) {
+    public ATXSetting<?> getSetting(final String settingName) {
         return installation.getConfig().getSettingByName(settingName).orElse(null);
     }
 
@@ -130,7 +130,7 @@ public class ATXServer implements Serializable {
      */
     @SuppressWarnings("rawtypes")
     @Whitelisted
-    public void overrideSetting(String settingName, Object settingValue) {
+    public void overrideSetting(final String settingName, final Object settingValue) {
         final Optional<ATXSetting> setting = installation.getConfig().getSettingByName(settingName);
         if (setting.isPresent()) {
             if (settingValue instanceof String || settingValue instanceof Boolean) {

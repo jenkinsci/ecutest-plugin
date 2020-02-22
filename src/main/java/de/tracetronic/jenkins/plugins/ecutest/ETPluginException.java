@@ -49,7 +49,7 @@ public class ETPluginException extends Exception {
      * @param message  the message to attach to the {@link Exception}
      * @param listener the listener
      */
-    public ETPluginException(final String message, TaskListener listener) {
+    public ETPluginException(final String message, final TaskListener listener) {
         super(message);
         TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logError(message);

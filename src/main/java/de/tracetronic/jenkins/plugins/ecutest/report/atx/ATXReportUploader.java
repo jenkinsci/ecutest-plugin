@@ -446,7 +446,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          * @throws UnsupportedEncodingException in case of an unsupported encoding
          */
         private TestInfoHolder checkSuccessLog(final FilePath successFile, final FilePath uploadFile,
-                                               boolean uploadAsync, final TTConsoleLogger logger) throws IOException {
+                                               final boolean uploadAsync, final TTConsoleLogger logger)
+                throws IOException {
             TestInfoHolder testInfo = null;
             try {
                 if (successFile.exists()) {

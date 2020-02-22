@@ -435,7 +435,7 @@ public class ATXValidator extends AbstractValidator {
      * @param proxyUrl the proxy URL
      * @return the proxy instance or direct connection if proxy URL is empty
      */
-    private Proxy configureProxy(String proxyUrl) throws MalformedURLException, UnsupportedEncodingException {
+    private Proxy configureProxy(final String proxyUrl) throws MalformedURLException, UnsupportedEncodingException {
         if (StringUtils.isBlank(proxyUrl)) {
             return Proxy.NO_PROXY;
         }
@@ -474,7 +474,7 @@ public class ATXValidator extends AbstractValidator {
      * @param returnValue the current form validation
      * @return the form validation
      */
-    private FormValidation parseServerInfo(String content, String baseUrl, FormValidation returnValue) {
+    private FormValidation parseServerInfo(final String content, final String baseUrl, FormValidation returnValue) {
         final JSONObject jsonObject = (JSONObject) new JsonSlurper().parseText(content);
         if (jsonObject != null) {
             final JSONObject info = jsonObject.optJSONObject("info");

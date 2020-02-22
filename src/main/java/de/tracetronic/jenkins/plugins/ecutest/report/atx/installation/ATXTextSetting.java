@@ -40,7 +40,7 @@ public class ATXTextSetting extends ATXSetting<String> {
      * @param descEnglish  the English description
      * @param defaultValue the default value
      */
-    public ATXTextSetting(final String name, SettingsGroup group,
+    public ATXTextSetting(final String name, final SettingsGroup group,
                           final String descGerman, final String descEnglish,
                           final String defaultValue) {
         super(name, group, descGerman, descEnglish, defaultValue);

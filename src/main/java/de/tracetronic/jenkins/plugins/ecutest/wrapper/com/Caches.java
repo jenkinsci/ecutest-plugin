@@ -60,7 +60,7 @@ public class Caches extends ETComDispatch implements ComCaches {
      * @return the cache by type
      * @throws ETComException in case of a COM exception or unsuppored cache type
      */
-    public Cache getCacheByType(CacheType type) throws ETComException {
+    public Cache getCacheByType(final CacheType type) throws ETComException {
         switch (type) {
             case A2L:
                 return (Cache) getA2lCache();

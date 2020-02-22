@@ -134,7 +134,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
     public static class SaveableListenerImpl extends SaveableListener {
 
         @Override
-        public final void onChange(Saveable o, XmlFile file) {
+        public final void onChange(final Saveable o, final XmlFile file) {
             if (o instanceof DescriptorImpl) {
                 ((DescriptorImpl) o).syncWithDefaultConfig();
             }

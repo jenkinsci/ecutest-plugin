@@ -58,7 +58,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
      * @param group the settings group
      * @param value the current value
      */
-    public ATXSetting(final String name, SettingsGroup group, final T value) {
+    public ATXSetting(final String name, final SettingsGroup group, final T value) {
         super();
         this.name = name;
         this.group = group;
@@ -74,7 +74,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
      * @param descEnglish  the English description
      * @param defaultValue the default value
      */
-    public ATXSetting(final String name, SettingsGroup group,
+    public ATXSetting(final String name, final SettingsGroup group,
                       final String descGerman, final String descEnglish,
                       final T defaultValue) {
         super();
@@ -253,7 +253,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
          *
          * @param configName the config name
          */
-        SettingsGroup(String configName) {
+        SettingsGroup(final String configName) {
             this.configName = configName;
         }
 
@@ -271,7 +271,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
          * @return the settings group
          * @throws IllegalArgumentException in case of unknown settings group for given config name
          */
-        public static SettingsGroup fromString(String configName) throws IllegalArgumentException {
+        public static SettingsGroup fromString(final String configName) throws IllegalArgumentException {
             return Arrays.stream(SettingsGroup.values())
                 .filter(v -> v.configName.equals(configName))
                 .findFirst()

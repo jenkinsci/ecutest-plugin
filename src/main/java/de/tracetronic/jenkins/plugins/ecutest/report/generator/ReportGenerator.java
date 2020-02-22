@@ -127,7 +127,7 @@ public class ReportGenerator {
          *
          * @return the configuration map
          */
-        private boolean generateReport(TestEnvironment testEnv, FilePath dbFile, String templateName)
+        private boolean generateReport(final TestEnvironment testEnv, final FilePath dbFile, final String templateName)
             throws ETComException {
             if (config.isUsePersistedSettings()) {
                 final FilePath reportDir = dbFile.getParent();
