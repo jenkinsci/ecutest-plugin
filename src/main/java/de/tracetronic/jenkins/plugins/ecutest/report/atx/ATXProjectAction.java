@@ -46,8 +46,8 @@ public class ATXProjectAction<T extends AbstractTestReport> extends AbstractATXA
 
     /**
      * Returns {@link ATXReport} specified by the URL.
-     * <p>
-     * Delegates to the last {@link ATXBuildAction}.
+     *
+     * <p>Delegates to the last {@link ATXBuildAction}.
      *
      * @param token the URL token
      * @param req   the {@link StaplerRequest} used for access this action

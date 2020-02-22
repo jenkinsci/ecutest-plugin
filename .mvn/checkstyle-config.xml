@@ -110,7 +110,9 @@
         <module name="JavadocBlockTagLocation"/>
         <module name="JavadocContentLocation"/>
         <module name="JavadocMethod"/>
-        <module name="JavadocParagraph"/>
+        <module name="JavadocParagraph">
+            <property name="allowNewlineParagraph" value="false"/>
+        </module>
         <module name="JavadocStyle"/>
         <module name="JavadocType"/>
         <module name="JavadocVariable">

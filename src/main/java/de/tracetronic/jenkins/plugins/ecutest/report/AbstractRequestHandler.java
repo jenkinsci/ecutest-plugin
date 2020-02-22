@@ -55,8 +55,8 @@ public abstract class AbstractRequestHandler {
 
     /**
      * Gets the build that have report artifacts this action handles.
-     * <p>
-     * If called in a project context, returns the last build that contains report artifacts.
+     *
+     * <p>If called in a project context, returns the last build that contains report artifacts.
      *
      * @param req the {@link StaplerRequest} used for access this action
      * @return the build with report artifacts to handle or {@code null} if no proper build exists

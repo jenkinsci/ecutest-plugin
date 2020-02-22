@@ -241,7 +241,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
             this.configName = configName;
         }
 
-         public String getConfigName() {
+        public String getConfigName() {
             return configName;
         }
 

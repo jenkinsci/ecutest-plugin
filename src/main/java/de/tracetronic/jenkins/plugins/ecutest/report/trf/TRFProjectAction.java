@@ -27,8 +27,8 @@ public class TRFProjectAction extends AbstractTRFAction {
 
     /**
      * Returns the {@link TRFBuildAction} in the last build that have artifact documents.
-     * <p>
-     * Resolves the owner by {@link StaplerRequest#findAncestorObject(Class)}.
+     *
+     * <p>Resolves the owner by {@link StaplerRequest#findAncestorObject(Class)}.
      *
      * @param req the {@link StaplerRequest} used for access this action
      * @return the last {@link TRFBuildAction} or {@code null} if no proper build exists
@@ -41,8 +41,8 @@ public class TRFProjectAction extends AbstractTRFAction {
 
     /**
      * Returns {@link TRFReport} specified by the URL.
-     * <p>
-     * Delegates to the last {@link TRFBuildAction}.
+     *
+     * <p>Delegates to the last {@link TRFBuildAction}.
      *
      * @param token the URL token
      * @param req   the {@link StaplerRequest} used for access this action

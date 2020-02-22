@@ -283,6 +283,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         /**
          * Synchronizes current ATX configuration with default configuration
          * by overriding their current values and saving them as new ATX installation.
+         *
          * <p>
          * This method will be automatically called by {@link ETPlugin#syncATXConfiguration()} to
          * avoid circular dependencies while loading other plugins. Explicit call to {@link #save()} is required.

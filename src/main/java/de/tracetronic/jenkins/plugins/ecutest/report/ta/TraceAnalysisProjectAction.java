@@ -27,8 +27,8 @@ public class TraceAnalysisProjectAction extends AbstractTraceAnalysisAction {
 
     /**
      * Returns the {@link TraceAnalysisBuildAction} in the last build that have artifact documents.
-     * <p>
-     * Resolves the owner by {@link StaplerRequest#findAncestorObject(Class)}.
+     *
+     * <p>Resolves the owner by {@link StaplerRequest#findAncestorObject(Class)}.
      *
      * @param req the {@link StaplerRequest} used for access this action
      * @return the last {@link TraceAnalysisBuildAction} or {@code null} if no proper build exists
@@ -41,8 +41,8 @@ public class TraceAnalysisProjectAction extends AbstractTraceAnalysisAction {
 
     /**
      * Returns {@link TraceAnalysisReport} specified by the URL.
-     * <p>
-     * Delegates to the last {@link TraceAnalysisBuildAction}.
+     *
+     * <p>Delegates to the last {@link TraceAnalysisBuildAction}.
      *
      * @param token the URL token
      * @param req   the {@link StaplerRequest} used for access this action

@@ -100,8 +100,8 @@ public final class ProcessUtil {
 
     /**
      * Checks the operating system of a launcher.
-     * <p>
-     * Most of the builders and publishers implemented by this plugin require to run on Windows.
+     *
+     * <p>Most of the builders and publishers implemented by this plugin require to run on Windows.
      *
      * @param launcher the launcher
      * @throws ETPluginException if Unix-based launcher
@@ -115,10 +115,10 @@ public final class ProcessUtil {
 
     /**
      * From https://stackoverflow.com/a/35418180
-     * <p>
-     * Reads the .exe file to find headers that tell us if the file is 32 or 64 bit.
-     * <p>
-     * Note: Assumes byte pattern 0x50, 0x45, 0x00, 0x00 just before the byte that tells us the architecture.
+     *
+     * <p>Reads the .exe file to find headers that tell us if the file is 32 or 64 bit.
+     *
+     * <p>Note: Assumes byte pattern 0x50, 0x45, 0x00, 0x00 just before the byte that tells us the architecture.
      *
      * @param filePath fully qualified .exe file path.
      * @return {@code true} if the file is a 64-bit executable, {@code false} otherwise.

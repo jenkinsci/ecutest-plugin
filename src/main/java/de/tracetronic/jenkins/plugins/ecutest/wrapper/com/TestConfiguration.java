@@ -19,6 +19,7 @@ public class TestConfiguration extends ETComDispatch implements ComTestConfigura
 
     /**
      * Instantiates a new {@link TestConfiguration}.
+     *
      * <p>
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
