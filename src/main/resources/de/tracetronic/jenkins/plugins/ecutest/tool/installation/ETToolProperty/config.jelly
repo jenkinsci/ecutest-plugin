@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
+  Copyright (c) 2015-2020 TraceTronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
@@ -12,7 +12,8 @@
     <f:entry title="${%timeout.title}" description="${%timeout.description}" field="timeout">
         <f:number default="${descriptor.defaultTimeout}" clazz="number"/>
     </f:entry>
-    <f:entry title="${%registerComServer.title}" description="${%registerComServer.description}" field="registerComServer">
+    <f:entry title="${%registerComServer.title}" description="${%registerComServer.description}"
+             field="registerComServer">
         <f:checkbox/>
     </f:entry>
 </j:jelly>
