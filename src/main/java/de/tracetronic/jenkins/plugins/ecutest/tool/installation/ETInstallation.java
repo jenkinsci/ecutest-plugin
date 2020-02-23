@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -11,6 +11,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopTSBuilder;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.CopyOnWrite;
 import hudson.EnvVars;
 import hudson.Extension;
@@ -104,69 +105,15 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
-     * Gets the expanded executable file path.
-     *
-     * @return the executable file path or {@code null} if home directory is not set
-     */
-    @CheckForNull
-    private File getComExeFile() {
-        if (getHome() != null) {
-            final String home = Util.replaceMacro(getHome(), EnvVars.masterEnvVars);
-            if (home != null) {
-                return getComExeFile(new File(home));
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Gets the Tool-Server executable file relative to given home directory.
-     *
-     * @param home the home directory of the tool
-     * @return the Tool-Server executable file
-     */
-    protected File getComExeFile(final File home) {
-        return DescriptorImpl.getComExeFile(home);
-    }
-
-    /**
-     * Gets the executable path of the tool on the given target system.
+     * Gets the ECU-TEST COM server executable path on the given target system.
      *
      * @param launcher the launcher
-     * @return the executable
+     * @return the ECU-TEST COM server executable
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public String getComExecutable(final Launcher launcher) throws IOException, InterruptedException {
-        return launcher.getChannel().call(new GetComExecutableCallable());
-    }
-
-    /**
-     * Gets the Tool-Server executable file relative to given home directory.
-     *
-     * @param home   the home directory of the tool
-     * @param subDir the sub directory relative to home directory
-     * @return the Tool-Server executable file
-     */
-    protected File getTSExeFile(final File home, final String subDir) {
-        return DescriptorImpl.getTSExeFile(home, subDir);
-    }
-
-    /**
-     * Gets the expanded Tool-Server executable file path.
-     *
-     * @param subDir the sub directory relative to home directory
-     * @return the Tool-Server executable file path or {@code null} if home directory is not set
-     */
-    @CheckForNull
-    private File getTSExeFile(final String subDir) {
-        if (getHome() != null) {
-            final String home = Util.replaceMacro(getHome(), EnvVars.masterEnvVars);
-            if (home != null) {
-                return getTSExeFile(new File(home), subDir);
-            }
-        }
-        return null;
+        return launcher.getChannel().call(new GetComExecutableCallable(getHome()));
     }
 
     /**
@@ -180,7 +127,7 @@ public class ETInstallation extends AbstractToolInstallation {
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public String getTSExecutable(final Launcher launcher) throws IOException, InterruptedException {
-        return launcher.getChannel().call(new GetTSExecutableCallable());
+        return launcher.getChannel().call(new GetTSExecutableCallable(getHome()));
     }
 
     /**
@@ -257,25 +204,64 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
-     * {@link MasterToSlaveCallable} providing remote access to return the tool executable path.
+     * {@link MasterToSlaveCallable} providing remote access to return the ECU-TEST COM server executable path.
      */
-    private final class GetComExecutableCallable extends MasterToSlaveCallable<String, IOException> {
+    private static final class GetComExecutableCallable extends MasterToSlaveCallable<String, IOException> {
 
         private static final long serialVersionUID = 1L;
 
+        private final String home;
+
+        /**
+         * Instantiates a new {@link GetComExecutableCallable}.
+         *
+         * @param home the home directory of ECU-TEST
+         */
+        GetComExecutableCallable(final String home) {
+            this.home = home;
+        }
+
         @Override
         public String call() {
-            final File exe = getComExeFile();
+            final File exe = getComExeFile(home);
             return exe != null && exe.exists() ? exe.getPath() : null;
+        }
+
+        /**
+         * Gets the expanded ECU-TEST COM server executable file path.
+         *
+         * @param home the home directory of ECU-TEST
+         * @return the executable file or {@code null} if home directory is not set
+         */
+        @CheckForNull
+        private File getComExeFile(final String home) {
+            if (home != null) {
+                final String expHome = Util.replaceMacro(home, EnvVars.masterEnvVars);
+                if (expHome != null) {
+                    return DescriptorImpl.getComExeFile(new File(expHome));
+                }
+            }
+            return null;
         }
     }
 
     /**
      * {@link MasterToSlaveCallable} providing remote access to return the Tool-Server executable path.
      */
-    private final class GetTSExecutableCallable extends MasterToSlaveCallable<String, IOException> {
+    private static final class GetTSExecutableCallable extends MasterToSlaveCallable<String, IOException> {
 
         private static final long serialVersionUID = 1L;
+
+        private final String home;
+
+        /**
+         * Instantiates a new {@link GetTSExecutableCallable}.
+         *
+         * @param home the home directory of ECU-TEST
+         */
+        GetTSExecutableCallable(final String home) {
+            this.home = home;
+        }
 
         @Override
         public String call() {
@@ -284,6 +270,23 @@ public class ETInstallation extends AbstractToolInstallation {
                 exe = getTSExeFile("ToolServer");
             }
             return exe != null && exe.exists() ? exe.getPath() : null;
+        }
+
+        /**
+         * Gets the expanded Tool-Server executable file path.
+         *
+         * @param subDir the sub directory relative to home directory
+         * @return the Tool-Server executable file or {@code null} if home directory is not set
+         */
+        @CheckForNull
+        private File getTSExeFile(final String subDir) {
+            if (home != null) {
+                final String expHome = Util.replaceMacro(home, EnvVars.masterEnvVars);
+                if (expHome != null) {
+                    return DescriptorImpl.getTSExeFile(new File(expHome), subDir);
+                }
+            }
+            return null;
         }
     }
 
@@ -297,6 +300,7 @@ public class ETInstallation extends AbstractToolInstallation {
         private static final Logger LOGGER = Logger.getLogger(DescriptorImpl.class.getName());
 
         @CopyOnWrite
+        @SuppressFBWarnings("VO_VOLATILE_REFERENCE_TO_ARRAY")
         private volatile ETInstallation[] installations = new ETInstallation[0];
 
         /**

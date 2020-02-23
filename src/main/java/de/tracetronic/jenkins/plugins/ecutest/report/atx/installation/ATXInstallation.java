@@ -9,6 +9,7 @@ import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.CopyOnWrite;
 import hudson.DescriptorExtensionList;
 import hudson.Extension;
@@ -152,6 +153,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         private final transient ATXConfig defaultConfig = new ATXConfig();
 
         @CopyOnWrite
+        @SuppressFBWarnings("VO_VOLATILE_REFERENCE_TO_ARRAY")
         private volatile ATXInstallation[] installations = new ATXInstallation[0];
 
         /**
@@ -329,7 +331,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                     if (currentSetting instanceof String) {
                         ((ATXTextSetting) setting).setValue((String) currentSetting);
                     } else if (currentSetting instanceof Boolean) {
-                        ((ATXBooleanSetting) setting).setValue((boolean) currentSetting);
+                        ((ATXBooleanSetting) setting).setValue((Boolean) currentSetting);
                     }
                 }
             }

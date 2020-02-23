@@ -96,7 +96,8 @@ public final class ATXUtil {
         if (config != null && envVars != null) {
             final List<ATXSetting<?>> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
             final Object useHttpsConnection = config.getSettingValueBySettings("useHttpsConnection", uploadSettings);
-            final String serverUrl = envVars.expand((String) config.getSettingValueBySettings("serverURL", uploadSettings));
+            final String serverUrl = envVars.expand((String) config.getSettingValueBySettings("serverURL",
+                    uploadSettings));
             final String serverPort = envVars.expand((String) config.getSettingValueBySettings("serverPort",
                     uploadSettings));
             final String contextPath = envVars.expand((String) config.getSettingValueBySettings("serverContextPath",

@@ -457,12 +457,7 @@ public class ATXValidator extends AbstractValidator {
                 password = URLDecoder.decode(userInfo.substring(delimiter), StandardCharsets.UTF_8.name());
             }
 
-            final Authenticator authenticator = new Authenticator() {
-                public PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(userName, password.toCharArray());
-                }
-            };
-            Authenticator.setDefault(authenticator);
+            Authenticator.setDefault(new ProxyAuthenticator(userName, password));
         }
         return proxy;
     }
@@ -498,5 +493,29 @@ public class ATXValidator extends AbstractValidator {
             returnValue = FormValidation.error(Messages.ATXInstallation_InvalidServer(baseUrl));
         }
         return returnValue;
+    }
+
+    /**
+     * Authenticator class for authentication with proxied network connections using user name and password.
+     */
+    private static final class ProxyAuthenticator extends Authenticator {
+
+        private final String userName;
+        private final String password;
+
+        /**
+         * Instantiates a {@link ProxyAuthenticator}.
+         *
+         * @param userName the proxy user name
+         * @param password the proxy password
+         */
+        private ProxyAuthenticator(final String userName, final String password) {
+            this.userName = userName;
+            this.password = password;
+        }
+
+        public PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(userName, password.toCharArray());
+        }
     }
 }

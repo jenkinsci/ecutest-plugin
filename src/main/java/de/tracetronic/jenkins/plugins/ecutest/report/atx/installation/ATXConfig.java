@@ -200,10 +200,10 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
      * @param name     the setting name
      * @return the setting value or {@code null} if not found
      */
-    @CheckForNull
-    public Object getSettingValueByName(final String name) {
+    public Object getSettingValueByName(final String name) throws IllegalArgumentException {
         return settings.stream().filter(setting ->
-                setting.getName().equals(name)).findFirst().map(ATXSetting::getValue).orElse(null);
+                setting.getName().equals(name)).findFirst().map(ATXSetting::getValue)
+                .orElseThrow(() -> new IllegalArgumentException("No setting found with name: " + name));
     }
 
     /**
@@ -243,7 +243,7 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
             if (setting instanceof ATXTextSetting) {
                 ((ATXTextSetting) setting).setValue((String) value);
             } else if (setting instanceof ATXBooleanSetting) {
-                ((ATXBooleanSetting) setting).setValue((boolean) value);
+                ((ATXBooleanSetting) setting).setValue((Boolean) value);
             } else {
                 throw new IllegalArgumentException("Only String and Boolean value types are supported!");
             }

@@ -14,6 +14,7 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopTSBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 import org.jenkinsci.plugins.workflow.cps.CpsScript;
 
@@ -36,6 +37,7 @@ public class ETInstance implements Serializable {
     @Nonnull
     private final ETInstallation installation;
 
+    @SuppressFBWarnings("SE_TRANSIENT_FIELD_NOT_RESTORED")
     private transient CpsScript script;
 
     /**

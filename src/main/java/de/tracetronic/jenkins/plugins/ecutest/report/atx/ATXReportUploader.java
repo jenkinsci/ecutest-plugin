@@ -17,6 +17,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -41,9 +42,9 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -596,6 +597,10 @@ public class ATXReportUploader extends AbstractATXReportHandler {
 
         private static final long serialVersionUID = 1L;
 
+        private static final String QUERY_INFO = "SELECT execution_time, duration from info";
+        private static final String QUERY_PRJ = "SELECT name FROM prj";
+        private static final String QUERY_PKG = "SELECT name FROM pkg";
+
         private final String trfFile;
 
         /**
@@ -610,7 +615,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         @Override
         public TestInfoHolder call() throws IOException {
             try (SQLite sql = new SQLite(trfFile)) {
-                ResultSet rs = sql.query("SELECT execution_time, duration from info");
+                ResultSet rs = sql.query(QUERY_INFO);
                 final String execTime = rs.getString("execution_time");
                 final SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 final Date date = fmt.parse(execTime);
@@ -618,10 +623,10 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 final long from = date.getTime();
                 final long to = from + (long) duration;
 
-                rs = sql.query("SELECT name FROM prj");
+                rs = sql.query(QUERY_PRJ);
                 final String prjName = rs.getString("name");
                 if ("$$$_PACKAGE_$$$".equals(prjName)) {
-                    rs = sql.query("SELECT name FROM pkg");
+                    rs = sql.query(QUERY_PKG);
                     final String pkgName = rs.getString("name");
                     return new TestInfoHolder(pkgName, TestType.PACKAGE, from, to);
                 } else {
@@ -638,7 +643,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         private static class SQLite implements AutoCloseable {
 
             private final Connection connection;
-            private final Statement statement;
+            private PreparedStatement statement;
 
             /**
              * Instantiates a new {@link SQLite}.
@@ -650,7 +655,6 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             SQLite(final String sqlFile) throws ClassNotFoundException, SQLException {
                 Class.forName("org.sqlite.JDBC");
                 connection = DriverManager.getConnection("jdbc:sqlite:" + sqlFile);
-                statement = connection.createStatement();
             }
 
             /**
@@ -660,8 +664,11 @@ public class ATXReportUploader extends AbstractATXReportHandler {
              * @return the result set
              * @throws SQLException in case of a SQL exception
              */
+            @SuppressFBWarnings(value = "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+                                justification = "Constant query statements used only")
             public ResultSet query(final String sql) throws SQLException {
-                return statement.executeQuery(sql);
+                statement = connection.prepareStatement(sql);
+                return statement.executeQuery();
             }
 
             @Override

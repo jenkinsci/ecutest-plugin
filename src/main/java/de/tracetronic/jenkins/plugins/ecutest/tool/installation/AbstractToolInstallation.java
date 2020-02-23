@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.installation;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.EnvVars;
 import hudson.Launcher;
 import hudson.Util;
@@ -90,6 +91,7 @@ public abstract class AbstractToolInstallation extends ToolInstallation implemen
     /**
      * {@link MasterToSlaveCallable} providing remote access to return the tool executable path.
      */
+    @SuppressFBWarnings("SE_INNER_CLASS")
     private final class GetExecutableCallable extends MasterToSlaveCallable<String, IOException> {
 
         private static final long serialVersionUID = 1L;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -216,9 +216,9 @@ public class CacheClient {
                     logger.logError(String.format(
                         "The configured ECU-TEST version %s does not support the cache module. "
                             + "Please use at least ECU-TEST %s!", comVersion, minVersion.toMicroString()));
-                } else if (comClient.getCaches() != null) {
-                    isAvailable = true;
                 }
+                comClient.getCaches();
+                isAvailable = true;
             } catch (final ETComException e) {
                 logger.logError(String.format("The cache module is not available in running ECU-TEST instance! "
                     + "Please use at least ECU-TEST %s!", minVersion.toMicroString()));

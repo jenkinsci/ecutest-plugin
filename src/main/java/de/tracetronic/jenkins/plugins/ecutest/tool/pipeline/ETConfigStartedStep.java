@@ -8,6 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.tool.pipeline;
 import com.google.common.collect.ImmutableSet;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.TaskListener;
@@ -55,6 +56,7 @@ public class ETConfigStartedStep extends Step {
 
         private static final long serialVersionUID = 1L;
 
+        @SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED", justification = "Only used when starting.")
         private final transient ETConfigStartedStep step;
 
         /**
