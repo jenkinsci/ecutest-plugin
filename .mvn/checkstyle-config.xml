@@ -68,7 +68,6 @@
         </module>
         <module name="MultipleVariableDeclarations"/>
         <module name="NoArrayTrailingComma"/>
-        <module name="NoClone"/>
         <module name="NoEnumTrailingComma"/>
         <module name="NoFinalizer"/>
         <module name="OneStatementPerLine"/>

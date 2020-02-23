@@ -133,8 +133,8 @@ public class ETComClient implements ComApplication, AutoCloseable {
     private void initSTA(final String progId) throws ETComException {
         try {
             ComThread.InitSTA();
-            final ActiveXComponent component = new ActiveXComponent(StringUtils.isEmpty(progId) ?
-                ETComProperty.DEFAULT_PROG_ID : progId);
+            final ActiveXComponent component = new ActiveXComponent(StringUtils.isEmpty(progId)
+                ? ETComProperty.DEFAULT_PROG_ID : progId);
             dispatch = new ETComDispatch(component.getObject(), false);
         } catch (final JacobException e) {
             throw new ETComException(e.getMessage(), e);
