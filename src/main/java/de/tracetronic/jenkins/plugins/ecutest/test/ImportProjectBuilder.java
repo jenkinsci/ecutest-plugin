@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -61,9 +61,9 @@ public class ImportProjectBuilder extends AbstractImportBuilder {
             final DescriptorExtensionList<TMSConfig, Descriptor<TMSConfig>> configs = ImportConfig.all();
             if (configs != null) {
                 for (final Descriptor<TMSConfig> config : configs) {
-                    if (config.isSubTypeOf(ImportProjectConfig.class) ||
-                        config.isSubTypeOf(ImportProjectAttributeConfig.class) ||
-                        config.isSubTypeOf(ImportProjectArchiveConfig.class)) {
+                    if (config.isSubTypeOf(ImportProjectConfig.class)
+                            || config.isSubTypeOf(ImportProjectAttributeConfig.class)
+                            || config.isSubTypeOf(ImportProjectArchiveConfig.class)) {
                         list.add(config);
                     }
                 }

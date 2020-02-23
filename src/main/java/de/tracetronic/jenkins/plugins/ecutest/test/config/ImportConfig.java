@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -56,12 +56,12 @@ public abstract class ImportConfig extends TMSConfig {
             final String thatFilePath = that.getTmsPath();
             final String thatImportPath = that.getImportPath();
             result = that.canEqual(this)
-                && Objects.equals(tmsPath, thatFilePath)
-                && Objects.equals(importPath, thatImportPath)
-                && (getCredentialsId() == null ? that.getCredentialsId() == null :
-                getCredentialsId().equals(that.getCredentialsId()))
-                && (getTimeout() == null ? that.getTimeout() == null :
-                getTimeout().equals(that.getTimeout()));
+                    && Objects.equals(tmsPath, thatFilePath)
+                    && Objects.equals(importPath, thatImportPath)
+                    && (getCredentialsId() == null ? that.getCredentialsId() == null
+                    : getCredentialsId().equals(that.getCredentialsId()))
+                    && (getTimeout() == null ? that.getTimeout() == null
+                    : getTimeout().equals(that.getTimeout()));
         }
         return result;
     }

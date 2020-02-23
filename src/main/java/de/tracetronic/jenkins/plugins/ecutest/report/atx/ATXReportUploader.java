@@ -89,7 +89,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     public boolean upload(final List<FilePath> reportDirs, final boolean allowMissing,
                           final boolean usePersistedSettings, final Run<?, ?> run,
                           final Launcher launcher, final TaskListener listener)
-        throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<ATXReport> atxReports = new ArrayList<>();
 
@@ -151,8 +151,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     private void checkForWarning(final ATXConfig config, final TTConsoleLogger logger) {
         config.getSettingByName("cleanAfterSuccessUpload").ifPresent(setting -> {
             if ((boolean) setting.getValue()) {
-                logger.logWarn("-> In order to generate ATX report links with unique ATX identifiers " +
-                    "disable the upload setting 'Clean After Success Upload' in the TEST-GUIDE configuration.");
+                logger.logWarn("-> In order to generate ATX report links with unique ATX identifiers "
+                        + "disable the upload setting 'Clean After Success Upload' in the TEST-GUIDE configuration.");
             }
         });
     }
@@ -473,8 +473,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                         }
                     }
                 }
-            } catch (final JSONException | InterruptedException | UnsupportedEncodingException |
-                KeyManagementException | NoSuchAlgorithmException | MalformedURLException e) {
+            } catch (final JSONException | InterruptedException | UnsupportedEncodingException
+                    | KeyManagementException | NoSuchAlgorithmException | MalformedURLException e) {
                 logger.logError("-> Could not parse ATX JSON response: " + e.getMessage());
             }
             return testInfo;

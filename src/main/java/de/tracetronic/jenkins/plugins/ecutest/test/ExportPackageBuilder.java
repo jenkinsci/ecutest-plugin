@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -60,8 +60,8 @@ public class ExportPackageBuilder extends AbstractExportBuilder {
             final DescriptorExtensionList<TMSConfig, Descriptor<TMSConfig>> configs = ExportConfig.all();
             if (configs != null) {
                 for (final Descriptor<TMSConfig> config : configs) {
-                    if (config.isSubTypeOf(ExportPackageConfig.class) ||
-                        config.isSubTypeOf(ExportPackageAttributeConfig.class)) {
+                    if (config.isSubTypeOf(ExportPackageConfig.class)
+                            || config.isSubTypeOf(ExportPackageAttributeConfig.class)) {
                         list.add(config);
                     }
                 }

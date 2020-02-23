@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -198,8 +198,8 @@ public class ETClient extends AbstractToolClient {
 
         // Check ECU-TEST version
         final ToolVersion comToolVersion = ToolVersion.parse(comVersion);
-        if (comToolVersion.compareWithoutMicroTo(ETPlugin.ET_MAX_VERSION) > 0 ||
-                comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
+        if (comToolVersion.compareWithoutMicroTo(ETPlugin.ET_MAX_VERSION) > 0
+                || comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
             logger.logWarn(String.format(
                     "The configured ECU-TEST version %s might be incompatible with this plugin. "
                             + "Currently supported versions: %s up to %s", comVersion,
@@ -374,8 +374,8 @@ public class ETClient extends AbstractToolClient {
      */
     private void queryLoadedPatches(final Launcher launcher, final TaskListener listener,
                                     final ToolVersion comToolVersion) {
-        if (Boolean.getBoolean("ecutest.debugLog") &&
-                comToolVersion.compareWithoutMicroTo(new ToolVersion(7, 1, 0)) >= 0) {
+        if (Boolean.getBoolean("ecutest.debugLog")
+                && comToolVersion.compareWithoutMicroTo(new ToolVersion(7, 1, 0)) >= 0) {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             try {
                 final List<String> loadedPatches = launcher.getChannel().call(new GetLoadedPatchesCallable(listener));
@@ -726,8 +726,8 @@ public class ETClient extends AbstractToolClient {
                 if (toolVersion.compareWithoutMicroTo(new ToolVersion(8, 0, 0)) >= 0) {
                     return comClient.isStarted();
                 } else {
-                    logger.logWarn("-> Checking configuration status is not supported. " +
-                            "Please use at least ECU-TEST 8.0!");
+                    logger.logWarn("-> Checking configuration status is not supported. "
+                            + "Please use at least ECU-TEST 8.0!");
                 }
             } catch (final ETComException e) {
                 logger.logComException(e);
