@@ -358,9 +358,19 @@
                     <configLocation>${basedir}/.mvn/checkstyle-config.xml</configLocation>
                     <suppressionsLocation>${basedir}/.mvn/checkstyle-exclude.xml</suppressionsLocation>
                     <consoleOutput>true</consoleOutput>
-                    <logViolationsToConsole>true</logViolationsToConsole>
-                    <failOnViolation>true</failOnViolation>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>checkstyle</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <logViolationsToConsole>true</logViolationsToConsole>
+                            <failOnViolation>true</failOnViolation>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
@@ -395,6 +405,20 @@
                         <excludeRoot>target/generated-sources/localizer</excludeRoot>
                     </excludeRoots>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>pmd</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>pmd-cpd</id>
+                        <goals>
+                            <goal>cpd-check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.antlr</groupId>
