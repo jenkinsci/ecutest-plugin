@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -38,6 +38,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -413,7 +414,7 @@ public class ATXValidator extends AbstractValidator {
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(
                     connection.getInputStream(), StandardCharsets.UTF_8))) {
                     final String content = in.readLine();
-                    returnValue = parseServerInfo(content, baseUrl, returnValue);
+                    returnValue = Optional.ofNullable(parseServerInfo(content, baseUrl)).orElse(returnValue);
                 }
             }
         } catch (final MalformedURLException e) {
@@ -472,10 +473,10 @@ public class ATXValidator extends AbstractValidator {
      *
      * @param content     the JSON content
      * @param baseUrl     the base server URL
-     * @param returnValue the current form validation
      * @return the form validation
      */
-    private FormValidation parseServerInfo(final String content, final String baseUrl, FormValidation returnValue) {
+    private FormValidation parseServerInfo(final String content, final String baseUrl) {
+        FormValidation returnValue = null;
         final JSONObject jsonObject = (JSONObject) new JsonSlurper().parseText(content);
         if (jsonObject != null) {
             final JSONObject info = jsonObject.optJSONObject("info");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -122,7 +122,7 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final Future<Variant> future = executor.submit(new DispatchCallable(method, params));
         try {
-            return future.get((long) timeout, TimeUnit.SECONDS);
+            return future.get(timeout, TimeUnit.SECONDS);
         } catch (final TimeoutException e) {
             future.cancel(true);
             throw new ETComTimeoutException(String.format("Request timeout of %d seconds exceeded!", timeout), e);
@@ -173,10 +173,8 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
             final String dispatchName = this.getClass().getSimpleName();
             LOGGER.fine(String.format("%s.call(): %s (%s) --> %s", dispatchName, method, parameters, result));
             return result;
-        } catch (final JacobException e) {
+        } catch (final JacobException | IllegalArgumentException | IllegalStateException e) {
             throw new ETComException(e.getMessage(), e);
-        } catch (final Throwable t) {
-            throw new ETComException(t);
         }
     }
 
@@ -219,12 +217,11 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
         }
     }
 
-    @SuppressWarnings("checkstyle:superfinalize")
+    @SuppressWarnings("checkstyle:nofinalizer")
     @Override
     protected void finalize() {
-        if (useTimeout) {
-            return;
-            // no-op to prevent JVM crash
+        if (!useTimeout) {
+            super.finalize();
         }
     }
 

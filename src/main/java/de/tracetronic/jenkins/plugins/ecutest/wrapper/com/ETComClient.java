@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -225,15 +225,13 @@ public class ETComClient implements ComApplication, AutoCloseable {
         }
     }
 
-    @SuppressWarnings("checkstyle:superfinalize")
+    @SuppressWarnings("checkstyle:nofinalizer")
     @Override
     protected void finalize() throws Throwable {
         LOGGER.fine("Finalizing COM connection...");
         if (!useTimeout) {
             try {
                 releaseDispatch();
-            } catch (Exception ignored) {
-                // no-op
             } finally {
                 ComThread.Release();
                 super.finalize();

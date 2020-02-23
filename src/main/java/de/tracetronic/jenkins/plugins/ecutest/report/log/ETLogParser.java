@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -58,7 +58,7 @@ public class ETLogParser {
             final int maxLogCount = AbstractETLogAction.getMaxLogSize();
             try (LineNumberReader lineReader = new LineNumberReader(reader)) {
                 while ((line = lineReader.readLine()) != null
-                    && (warnLogCount < maxLogCount || errorLogCount < maxLogCount)) {
+                        && (warnLogCount < maxLogCount || errorLogCount < maxLogCount)) {
                     ETLogAnnotation logAnnotation = null;
                     if (warnLogCount < maxLogCount && isWarningLog(line)) {
                         logAnnotation = parseLine(line, lineReader, Severity.WARNING);
@@ -93,7 +93,7 @@ public class ETLogParser {
             try (LineNumberReader lineReader = new LineNumberReader(reader)) {
                 while ((line = lineReader.readLine()) != null) {
                     if (severity == Severity.WARNING && isWarningLog(line)
-                        || severity == Severity.ERROR && isErrorLog(line)) {
+                            || severity == Severity.ERROR && isErrorLog(line)) {
                         logCount++;
                     }
                 }
@@ -108,19 +108,21 @@ public class ETLogParser {
     /**
      * Parses a single log message.
      *
-     * @param line       the current line
-     * @param lineReader the line number reader
-     * @param severity   the severity to annotate the message.
+     * @param currentLine the current line
+     * @param lineReader  the line number reader
+     * @param severity    the severity to annotate the message.
      * @return the annotated message, can be {@code null}
      * @throws IOException signals that an I/O exception has occurred
      */
     @CheckForNull
-    private ETLogAnnotation parseLine(String line, final LineNumberReader lineReader, final Severity severity)
-        throws IOException {
+    private ETLogAnnotation parseLine(final String currentLine, final LineNumberReader lineReader,
+                                      final Severity severity)
+            throws IOException {
         ETLogAnnotation logAnnotation = null;
-        if (line != null) {
-            final String[] lineSplit = line.split("\\s+");
+        if (currentLine != null) {
+            final String[] lineSplit = currentLine.split("\\s+");
             if (lineSplit.length == 5) {
+                String line;
                 final int lineNumber = lineReader.getLineNumber();
                 final StringBuilder msg = new StringBuilder();
                 while ((line = lineReader.readLine()) != null) {
