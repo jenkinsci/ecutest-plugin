@@ -125,14 +125,12 @@ public class ATXServer implements Serializable {
      * @param settingName  the setting name
      * @param settingValue the setting value as {@code String} or {@code Boolean}
      */
-    @SuppressWarnings("rawtypes")
     @Whitelisted
     public void overrideSetting(final String settingName, final Object settingValue) {
-        final Optional<ATXSetting> setting = installation.getConfig().getSettingByName(settingName);
+        final Optional<ATXSetting<?>> setting = installation.getConfig().getSettingByName(settingName);
         if (setting.isPresent()) {
             if (settingValue instanceof String || settingValue instanceof Boolean) {
                 script.println(String.format("[TT] INFO: Overriding ATX setting %s=%s", settingName, settingValue));
-                setting.get().setValue(settingValue);
             } else {
                 script.println("[TT] WARN: Ignore overriding ATX setting due to invalid value!");
             }

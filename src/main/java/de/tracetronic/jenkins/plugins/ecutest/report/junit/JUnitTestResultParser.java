@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -78,8 +78,7 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
         }
 
         @Override
-        public TestResult invoke(final File file, final VirtualChannel channel)
-            throws IOException, InterruptedException {
+        public TestResult invoke(final File file, final VirtualChannel channel) throws IOException {
             testResult.parse(file, null);
             return testResult;
         }

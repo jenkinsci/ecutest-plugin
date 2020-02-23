@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -40,6 +40,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
      * @since 2.7.0
      * @deprecated due to CasC compatibility
      */
+    @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
     private transient T currentValue;
 

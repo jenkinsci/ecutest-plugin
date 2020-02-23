@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -171,8 +171,7 @@ public final class DllUtil {
         }
 
         @Override
-        public Boolean invoke(final File libFile, final VirtualChannel channel) throws IOException,
-            InterruptedException {
+        public Boolean invoke(final File libFile, final VirtualChannel channel) {
             if (libFile.exists() && libFile.isFile()) {
                 final String libProperty = System.getProperty(LibraryLoader.JACOB_DLL_PATH);
                 if (!StringUtils.isBlank(libProperty)) {

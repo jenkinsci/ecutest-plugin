@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -101,13 +101,7 @@ public class JUnitPublisher extends AbstractToolPublisher implements MatrixAggre
      * @return the percentage value
      */
     private static double convertToPercentage(final double value) {
-        if (value < 0.0) {
-            return 0.0;
-        } else if (value > 100.0) {
-            return 100.0;
-        } else {
-            return value;
-        }
+        return value < 0.0 ? 0.0 : Math.min(value, 100.0);
     }
 
     public double getUnstableThreshold() {

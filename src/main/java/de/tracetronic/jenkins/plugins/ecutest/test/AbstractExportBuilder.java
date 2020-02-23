@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -90,7 +90,7 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
 
     /**
      * Sets the export configurations.
-     * 
+     *
      * @param exportConfigs the list of configured test exporters
      */
     @DataBoundSetter
@@ -189,7 +189,6 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
             super(clazz);
         }
 
-        @SuppressWarnings("rawtypes")
         @Override
         public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
             return true;

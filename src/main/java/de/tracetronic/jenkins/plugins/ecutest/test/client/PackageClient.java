@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -177,7 +177,7 @@ public class PackageClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to run a package via COM.
      */
-    private static final class RunPackageCallable extends MasterToSlaveCallable<TestInfoHolder, InterruptedException> {
+    private static final class RunPackageCallable extends MasterToSlaveCallable<TestInfoHolder, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -203,7 +203,7 @@ public class PackageClient extends AbstractTestClient {
         }
 
         @Override
-        public TestInfoHolder call() throws InterruptedException {
+        public TestInfoHolder call() throws IOException {
             final boolean runTest = packageConfig.isRunTest();
             final boolean runTraceAnalysis = packageConfig.isRunTraceAnalysis();
             final int timeout = executionConfig.getParsedTimeout();

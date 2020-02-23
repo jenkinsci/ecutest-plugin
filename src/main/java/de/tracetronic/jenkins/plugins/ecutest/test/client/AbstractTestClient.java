@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -226,9 +226,8 @@ public abstract class AbstractTestClient implements TestClient {
          * Converts the global constant list to a map.
          *
          * @return the global constant map
-         * @throws ETComException in case of a COM exception
          */
-        private Map<String, String> getGlobalConstantMap() throws ETComException {
+        private Map<String, String> getGlobalConstantMap() {
             final Map<String, String> constantMap = new LinkedHashMap<>();
             for (final GlobalConstant constant : testConfig.getConstants()) {
                 constantMap.put(constant.getName(), constant.getValue());

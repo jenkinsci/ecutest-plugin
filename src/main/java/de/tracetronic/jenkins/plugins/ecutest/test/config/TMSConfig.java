@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -24,7 +24,6 @@ import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.QueryParameter;
 
 import javax.annotation.CheckForNull;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -86,12 +85,9 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
      *
      * @param project the project
      * @return the credentials
-     * @throws IOException          signals that an I/O exception has occurred
-     * @throws InterruptedException the interrupted exception
      */
     @CheckForNull
-    public StandardUsernamePasswordCredentials getCredentials(final Item project) throws IOException,
-        InterruptedException {
+    public StandardUsernamePasswordCredentials getCredentials(final Item project) {
         final List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider
             .lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
                 Collections.emptyList());

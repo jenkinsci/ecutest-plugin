@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -42,7 +42,7 @@ public class ETGetInstallationStep extends Step {
     }
 
     @Override
-    public StepExecution start(final StepContext context) throws Exception {
+    public StepExecution start(final StepContext context) {
         return new Execution(this, context);
     }
 

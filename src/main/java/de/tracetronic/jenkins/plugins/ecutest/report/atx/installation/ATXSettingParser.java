@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -53,17 +53,17 @@ public final class ATXSettingParser {
      * @param doc the XML document representation
      * @return the map of settings
      */
-    public static List<ATXSetting> parseSettings(final Document doc) {
-        final List<ATXSetting> settings = new ArrayList<>();
+    public static List<ATXSetting<?>> parseSettings(final Document doc) {
+        final List<ATXSetting<?>> settings = new ArrayList<>();
 
-        final List<ATXSetting> uploadSettings = parseSetting(doc, SettingsGroup.UPLOAD, UPLOAD_EXPRESSION);
-        final List<ATXSetting> archiveSettings = parseSetting(doc, SettingsGroup.ARCHIVE, ARCHIVE_EXPRESSION);
-        final List<ATXSetting> attributeSettings = parseSetting(doc, SettingsGroup.ATTRIBUTE, ATTRIBUTE_EXPRESSION);
-        final List<ATXSetting> tbcConstantSettings = parseSetting(doc,
+        final List<ATXSetting<?>> uploadSettings = parseSetting(doc, SettingsGroup.UPLOAD, UPLOAD_EXPRESSION);
+        final List<ATXSetting<?>> archiveSettings = parseSetting(doc, SettingsGroup.ARCHIVE, ARCHIVE_EXPRESSION);
+        final List<ATXSetting<?>> attributeSettings = parseSetting(doc, SettingsGroup.ATTRIBUTE, ATTRIBUTE_EXPRESSION);
+        final List<ATXSetting<?>> tbcConstantSettings = parseSetting(doc,
             SettingsGroup.TBC_CONSTANTS, TBC_CONSTANT_EXPRESSION);
-        final List<ATXSetting> tcfConstantSettings = parseSetting(doc,
+        final List<ATXSetting<?>> tcfConstantSettings = parseSetting(doc,
             SettingsGroup.TCF_CONSTANTS, TCF_CONSTANT_EXPRESSION);
-        final List<ATXSetting> specialSettings = parseSetting(doc, SettingsGroup.SPECIAL, SPECIAL_EXPRESSION);
+        final List<ATXSetting<?>> specialSettings = parseSetting(doc, SettingsGroup.SPECIAL, SPECIAL_EXPRESSION);
 
         settings.addAll(uploadSettings);
         settings.addAll(archiveSettings);
@@ -83,10 +83,10 @@ public final class ATXSettingParser {
      * @param expression the XPath expression for a separated setting
      * @return the parsed setting represented by a list of settings
      */
-    public static List<ATXSetting> parseSetting(final Document doc,
+    public static List<ATXSetting<?>> parseSetting(final Document doc,
                                                 final SettingsGroup group,
                                                 final String expression) {
-        final List<ATXSetting> settings = new ArrayList<>();
+        final List<ATXSetting<?>> settings = new ArrayList<>();
         try {
             final XPath xpath = XPathFactory.newInstance().newXPath();
             final XPathExpression xPathExpression = xpath.compile(expression);

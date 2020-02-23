@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -77,12 +77,9 @@ public class TMSReportUploader extends AbstractTMSClient {
      * @param credentialsId the credentials id
      * @param project       the project
      * @return the credentials
-     * @throws IOException          signals that an I/O exception has occurred
-     * @throws InterruptedException the interrupted exception
      */
     @CheckForNull
-    private StandardUsernamePasswordCredentials getCredentials(final String credentialsId, final Item project)
-        throws IOException, InterruptedException {
+    private StandardUsernamePasswordCredentials getCredentials(final String credentialsId, final Item project) {
         final List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider
             .lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
                 Collections.emptyList());

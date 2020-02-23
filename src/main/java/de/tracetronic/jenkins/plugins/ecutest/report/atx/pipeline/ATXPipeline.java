@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -70,7 +70,7 @@ public class ATXPipeline implements Serializable {
         final List<String> keysAsList = Collections.singletonList(KEY_ATX_NAME);
         if (!keysAsList.containsAll(serverArgs.keySet())) {
             throw new IllegalArgumentException("The server method requires the following arguments at least: "
-                + keysAsList);
+                    + keysAsList);
         }
 
         final ATXServer server = (ATXServer) script.invokeMethod("getATXServer", serverArgs);
@@ -125,7 +125,7 @@ public class ATXPipeline implements Serializable {
     @Whitelisted
     public ATXServer newServer(final String atxName, final String toolName, final String fullServerUrl,
                                final boolean uploadToServer, final String authKey, final String projectId)
-        throws MalformedURLException {
+            throws MalformedURLException {
         final Map<String, Object> additionalSettings = Maps.newLinkedHashMap();
         additionalSettings.put("uploadToServer", uploadToServer);
         additionalSettings.put("uploadAuthenticationKey", authKey);
@@ -146,12 +146,12 @@ public class ATXPipeline implements Serializable {
         final List<String> requiredKeys = new ArrayList<>(Arrays.asList(KEY_ATX_NAME, KEY_TOOL_NAME));
         if (!serverArgs.keySet().containsAll(requiredKeys)) {
             throw new IllegalArgumentException("The newServer method requires the following arguments at least: "
-                + requiredKeys);
+                    + requiredKeys);
         }
 
         if (serverArgs.containsKey(KEY_CONFIG) && serverArgs.get(KEY_CONFIG) instanceof ATXConfig) {
             return newServer(serverArgs.get(KEY_ATX_NAME).toString(), serverArgs.get(KEY_TOOL_NAME).toString(),
-                (ATXConfig) serverArgs.get(KEY_CONFIG));
+                    (ATXConfig) serverArgs.get(KEY_CONFIG));
         }
 
         requiredKeys.add(KEY_SERVER_URL);
@@ -160,10 +160,10 @@ public class ATXPipeline implements Serializable {
 
         if (serverArgs.keySet().containsAll(requiredKeys)) {
             return newServer(serverArgs.get(KEY_ATX_NAME).toString(), serverArgs.get(KEY_TOOL_NAME).toString(),
-                serverArgs.get(KEY_SERVER_URL).toString(), additionalArgs);
+                    serverArgs.get(KEY_SERVER_URL).toString(), additionalArgs);
         } else {
             return newServer(serverArgs.get(KEY_ATX_NAME).toString(), serverArgs.get(KEY_TOOL_NAME).toString(),
-                additionalArgs);
+                    additionalArgs);
         }
     }
 
@@ -177,7 +177,6 @@ public class ATXPipeline implements Serializable {
      * @return the ATX server
      * @throws MalformedURLException the malformed URL exception
      */
-    @SuppressWarnings({"rawtypes", "unchecked"})
     private ATXServer newServer(final String atxName, final String toolName, final String fullServerUrl,
                                 final Map<String, Object> additionalSettings) throws MalformedURLException {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
@@ -192,14 +191,12 @@ public class ATXPipeline implements Serializable {
         final String path = url.getPath().replaceFirst("/", "");
 
         final ATXConfig config = new ATXConfig();
-        config.getSettingByName("serverURL").ifPresent(setting -> setting.setValue(host));
-        config.getSettingByName("serverPort").ifPresent(setting -> setting.setValue(port));
-        config.getSettingByName("serverContextPath").ifPresent(setting -> setting.setValue(path));
-        config.getSettingByName("useHttpsConnection").ifPresent(setting -> setting.setValue(useHttpsConnection));
+        config.setSettingValueByName("serverURL", host);
+        config.setSettingValueByName("serverPort", port);
+        config.setSettingValueByName("serverContextPath", path);
+        config.setSettingValueByName("useHttpsConnection", useHttpsConnection);
 
-        additionalSettings.forEach((settingName, settingValue) -> {
-            config.getSettingByName(settingName).ifPresent(setting -> setting.setValue(settingValue));
-        });
+        additionalSettings.forEach(config::setSettingValueByName);
         stepVariables.put(KEY_CONFIG, config);
 
         final ATXServer server = (ATXServer) script.invokeMethod("newATXServer", stepVariables);
@@ -216,16 +213,13 @@ public class ATXPipeline implements Serializable {
      * @param serverArgs the server arguments
      * @return the ATX server
      */
-    @SuppressWarnings("unchecked")
     private ATXServer newServer(final String atxName, final String toolName, final Map<String, Object> serverArgs) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
         stepVariables.put(KEY_ATX_NAME, atxName);
         stepVariables.put(KEY_TOOL_NAME, toolName);
 
         final ATXConfig config = new ATXConfig();
-        serverArgs.forEach((settingName, settingValue) -> {
-            config.getSettingByName(settingName).ifPresent(setting -> setting.setValue(settingValue));
-        });
+        serverArgs.forEach(config::setSettingValueByName);
         stepVariables.put(KEY_CONFIG, config);
 
         final ATXServer server = (ATXServer) script.invokeMethod("newATXServer", stepVariables);

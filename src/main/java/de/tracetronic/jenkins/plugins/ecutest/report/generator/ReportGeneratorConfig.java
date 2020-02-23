@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -38,7 +38,7 @@ public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGenerat
      *
      * @since 2.9
      */
-    private boolean usePersistedSettings;
+    private final boolean usePersistedSettings;
 
     /**
      * Instantiates a new {@link ReportGeneratorConfig}.

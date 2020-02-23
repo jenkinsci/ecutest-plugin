@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -56,12 +56,13 @@ public class ATXNewServerStep extends Step {
         return toolName;
     }
 
+    @CheckForNull
     public ATXConfig getConfig() {
         return config;
     }
 
     @Override
-    public StepExecution start(final StepContext context) throws Exception {
+    public StepExecution start(final StepContext context) {
         return new Execution(this, context);
     }
 
@@ -86,7 +87,7 @@ public class ATXNewServerStep extends Step {
         }
 
         @Override
-        protected ATXServer run() throws Exception {
+        protected ATXServer run() {
             final ATXInstallation installation = new ATXInstallation(step.atxName, step.toolName, step.config);
             return new ATXServer(installation);
         }

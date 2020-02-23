@@ -50,7 +50,7 @@ public class ATXPublisher extends AbstractReportPublisher {
     protected static final String URL_NAME = "atx-reports";
 
     @Nonnull
-    private String atxName;
+    private final String atxName;
     private ATXInstallation atxInstallation;
     /**
      * Specifies whether to fail the build if upload is enabled and the server is offline.
@@ -204,7 +204,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean isUploadEnabled(final ATXInstallation installation) {
         final ATXConfig config = installation.getConfig();
-        final Optional<ATXSetting> uploadSetting = config.getSettingByName("uploadToServer");
+        final Optional<ATXSetting<?>> uploadSetting = config.getSettingByName("uploadToServer");
         return uploadSetting.isPresent() && ((ATXBooleanSetting) uploadSetting.get()).getValue();
     }
 
@@ -299,7 +299,6 @@ public class ATXPublisher extends AbstractReportPublisher {
     /**
      * DescriptorImpl for {@link ATXPublisher}.
      */
-    @SuppressWarnings("rawtypes")
     @Symbol("publishATX")
     @Extension(ordinal = 10007)
     public static class DescriptorImpl extends AbstractReportDescriptor {

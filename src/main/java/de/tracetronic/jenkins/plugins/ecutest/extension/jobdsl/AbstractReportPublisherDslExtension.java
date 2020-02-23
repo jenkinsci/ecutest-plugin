@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -38,7 +38,7 @@ public abstract class AbstractReportPublisherDslExtension extends AbstractDslExt
     /**
      * {@link Context} class providing common report related methods for the nested DSL context.
      */
-    public abstract class AbstractReportContext implements Context {
+    public abstract static class AbstractReportContext implements Context {
 
         /**
          * The allow missing reports setting.

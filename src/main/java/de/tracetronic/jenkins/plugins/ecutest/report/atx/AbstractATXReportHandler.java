@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -96,7 +96,7 @@ public abstract class AbstractATXReportHandler {
          */
         protected Map<String, String> getConfigMap(final boolean uploadToServer) {
             final Map<String, String> configMap = new LinkedHashMap<>();
-            for (final ATXSetting setting : config.getSettings()) {
+            for (final ATXSetting<?> setting : config.getSettings()) {
                 if (setting instanceof ATXBooleanSetting) {
                     if ("uploadToServer".equals(setting.getName())) {
                         configMap.put(setting.getName(), ATXSetting.toString(uploadToServer));

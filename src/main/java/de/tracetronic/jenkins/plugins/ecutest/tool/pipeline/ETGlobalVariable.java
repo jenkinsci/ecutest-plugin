@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -26,7 +26,7 @@ public class ETGlobalVariable extends GlobalVariable {
 
     @Nonnull
     @Override
-    public Object getValue(@Nonnull final CpsScript cpsScript) throws Exception {
+    public Object getValue(@Nonnull final CpsScript cpsScript) {
         final Binding binding = cpsScript.getBinding();
         final Object atx;
         if (binding.hasVariable(getName())) {

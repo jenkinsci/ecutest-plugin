@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -12,7 +12,6 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -72,9 +71,8 @@ public class ToolEnvContributor extends EnvironmentContributor {
     public static final String TOOL_LAST_TCF = "TOOL_LAST_TCF_";
 
     @Override
-    @SuppressWarnings("rawtypes")
     public void buildEnvironmentFor(@Nonnull final Run r, @Nonnull final EnvVars envs,
-                                    @Nonnull final TaskListener listener) throws IOException, InterruptedException {
+                                    @Nonnull final TaskListener listener) {
         final List<ToolEnvInvisibleAction> envActions = r.getActions(ToolEnvInvisibleAction.class);
         for (final ToolEnvInvisibleAction action : envActions) {
             final String id = String.valueOf(action.getToolId());

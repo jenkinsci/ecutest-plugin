@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -180,6 +180,7 @@ public class TraceAnalysisPublisher extends AbstractToolPublisher {
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
      */
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private List<TraceAnalysisReport> performAnalysis(final Map<FilePath, List<FilePath>> analysisFiles,
                                                       final Run<?, ?> run, final Launcher launcher,
                                                       final TaskListener listener)
@@ -206,6 +207,12 @@ public class TraceAnalysisPublisher extends AbstractToolPublisher {
             if (isMergeReports()) {
                 // Merge reports
                 final FilePath mainReport = getFirstReportFile(reportDir);
+                if (mainReport == null) {
+                    logger.logError("-> No main report found, setting build status to FAILURE!");
+                    run.setResult(Result.FAILURE);
+                    continue;
+                }
+
                 final boolean isMerged = runner.mergeReports(mainReport, reportFiles, launcher, listener);
 
                 if (!isMerged) {

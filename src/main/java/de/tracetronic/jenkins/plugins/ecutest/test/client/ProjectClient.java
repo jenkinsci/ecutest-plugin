@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -180,7 +180,7 @@ public class ProjectClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to run a project via COM.
      */
-    private static final class RunProjectCallable extends MasterToSlaveCallable<TestInfoHolder, InterruptedException> {
+    private static final class RunProjectCallable extends MasterToSlaveCallable<TestInfoHolder, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -206,7 +206,7 @@ public class ProjectClient extends AbstractTestClient {
         }
 
         @Override
-        public TestInfoHolder call() throws InterruptedException {
+        public TestInfoHolder call() throws IOException {
             final int jobExecutionMode = projectConfig.getJobExecMode().getValue();
             final int timeout = executionConfig.getParsedTimeout();
             TestInfoHolder testInfo = null;

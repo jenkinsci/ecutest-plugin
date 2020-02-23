@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -112,7 +112,7 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
         }
 
         @Override
-        public boolean configure(final StaplerRequest req, final JSONObject json) throws FormException {
+        public boolean configure(final StaplerRequest req, final JSONObject json) {
             save();
             return true;
         }

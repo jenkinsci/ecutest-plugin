@@ -149,12 +149,10 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      * @param logger the logger
      */
     private void checkForWarning(final ATXConfig config, final TTConsoleLogger logger) {
-        config.getSettingByName("cleanAfterSuccessUpload").ifPresent(setting -> {
-            if ((boolean) setting.getValue()) {
-                logger.logWarn("-> In order to generate ATX report links with unique ATX identifiers "
-                        + "disable the upload setting 'Clean After Success Upload' in the TEST-GUIDE configuration.");
-            }
-        });
+        if ((boolean) config.getSettingValueByName("cleanAfterSuccessUpload")) {
+            logger.logWarn("-> In order to generate ATX report links with unique ATX identifiers "
+                    + "disable the upload setting 'Clean After Success Upload' in the TEST-GUIDE configuration.");
+        }
     }
 
     /**
@@ -371,7 +369,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          */
         private static final String SUCCESS_FILE_NAME = "success.json";
 
-        private boolean usePersistedSettings;
+        private final boolean usePersistedSettings;
 
         /**
          * Instantiates a new {@link UploadReportCallable}.

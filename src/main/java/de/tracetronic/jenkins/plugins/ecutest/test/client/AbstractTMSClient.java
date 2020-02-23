@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -46,13 +46,12 @@ public abstract class AbstractTMSClient {
      *
      * @param launcher the launcher
      * @param listener the listener
-     * @return {@code true}, if logout succeeded, {@code false} otherwise
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
      */
-    public boolean logout(final Launcher launcher, final TaskListener listener)
+    public void logout(final Launcher launcher, final TaskListener listener)
         throws IOException, InterruptedException {
-        return launcher.getChannel().call(new LogoutTMSCallable(listener));
+        launcher.getChannel().call(new LogoutTMSCallable(listener));
     }
 
     /**

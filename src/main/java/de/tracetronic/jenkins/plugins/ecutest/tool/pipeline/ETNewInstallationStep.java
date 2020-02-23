@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -58,12 +58,13 @@ public class ETNewInstallationStep extends Step {
         return installPath;
     }
 
+    @CheckForNull
     public ETToolProperty getProperty() {
         return property;
     }
 
     @Override
-    public StepExecution start(final StepContext context) throws Exception {
+    public StepExecution start(final StepContext context) {
         return new Execution(this, context);
     }
 
@@ -88,7 +89,7 @@ public class ETNewInstallationStep extends Step {
         }
 
         @Override
-        protected ETInstance run() throws Exception {
+        protected ETInstance run() {
             final ETInstallation installation = new ETInstallation(step.toolName, step.installPath,
                 Collections.singletonList(step.property));
             return new ETInstance(installation);

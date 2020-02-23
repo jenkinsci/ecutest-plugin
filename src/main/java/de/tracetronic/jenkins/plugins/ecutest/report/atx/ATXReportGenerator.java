@@ -201,7 +201,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
 
         private static final long serialVersionUID = 1L;
 
-        private boolean usePersistedSettings;
+        private final boolean usePersistedSettings;
 
         /**
          * Instantiates a new {@link GenerateReportCallable}.

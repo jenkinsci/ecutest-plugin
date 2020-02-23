@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -93,19 +93,19 @@ public class ATXConfigTest {
     @Test
     public void testGetSettingValueByName() {
         final ATXConfig config = new ATXConfig();
-        assertThat(config.getSettingValueByName("serverPort",
+        assertThat(config.getSettingValueBySettings("serverPort",
             config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD)), is("8085"));
     }
 
     @Test
     public void testGetInvalidSettingValueByName() {
         final ATXConfig config = new ATXConfig(null, null);
-        assertThat(config.getSettingValueByName("invalid", config.getSettingsByGroup(null)), nullValue());
+        assertThat(config.getSettingValueBySettings("invalid", config.getSettingsByGroup(null)), nullValue());
     }
 
     @Test
     public void testGetEmptySettingValueByName() {
         final ATXConfig config = new ATXConfig(null, null);
-        assertThat(config.getSettingValueByName("empty", new ArrayList<>()), nullValue());
+        assertThat(config.getSettingValueBySettings("empty", new ArrayList<>()), nullValue());
     }
 }

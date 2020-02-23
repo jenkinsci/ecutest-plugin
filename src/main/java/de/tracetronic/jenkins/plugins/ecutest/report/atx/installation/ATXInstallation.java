@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -188,7 +188,6 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          * @param oldClass the old descriptor class name
          * @since 2.7
          */
-        @SuppressWarnings("rawtypes")
         private void migrateFromOldConfigFile(final Class<ATXPublisher.DescriptorImpl> oldClass) {
             LOGGER.log(Level.FINE, "Migrating ATX installations from: " + oldClass.getName());
 
@@ -253,7 +252,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                     final String name = instJson.getString("name");
                     final String toolName = instJson.getString("toolName");
                     final ATXConfig defaultConfig = getDefaultConfig().clone();
-                    final List<ATXSetting> settings = defaultConfig.getSettings();
+                    final List<ATXSetting<?>> settings = defaultConfig.getSettings();
 
                     // Update custom settings
                     List<ATXCustomSetting> customSettings = req.bindJSONToList(ATXCustomSetting.class,
@@ -288,7 +287,6 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          * This method will be automatically called by {@link ETPlugin#syncATXConfiguration()} to avoid circular
          * dependencies while loading other plugins. Explicit call to {@link #save()} is required.
          */
-        @SuppressWarnings("unchecked")
         public void syncWithDefaultConfig() {
             final List<ATXInstallation> list = new ArrayList<>();
             for (final ATXInstallation installation : installations.clone()) {
@@ -297,18 +295,11 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
 
                 // Synchronize settings
                 if (currentConfig != null) {
-                    for (final ATXSetting newSetting : newConfig.getSettings()) {
-                        final Optional<ATXSetting> currentSetting =
+                    for (final ATXSetting<?> newSetting : newConfig.getSettings()) {
+                        final Optional<ATXSetting<?>> currentSetting =
                                 currentConfig.getSettingByName(newSetting.getName());
-                        if (currentSetting.isPresent()) {
-                            if (currentSetting.get() instanceof ATXTextSetting) {
-                                final ATXTextSetting textSetting = (ATXTextSetting) currentSetting.get();
-                                newSetting.setValue(textSetting.getValue());
-                            } else if (currentSetting.get() instanceof ATXBooleanSetting) {
-                                final ATXBooleanSetting booleanSetting = (ATXBooleanSetting) currentSetting.get();
-                                newSetting.setValue(booleanSetting.getValue());
-                            }
-                        }
+                        currentSetting.ifPresent(atxSetting ->
+                            currentConfig.setSettingValueByName(atxSetting.getName(), atxSetting.getValue()));
                     }
                     final List<ATXCustomSetting> customSettings = currentConfig.getCustomSettings();
                     newConfig.setCustomSettings(customSettings == null ? new ArrayList<>() : customSettings);
@@ -329,14 +320,16 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          * @param settings     the default ATX settings
          * @return the updated ATX settings
          */
-        @SuppressWarnings("unchecked")
-        private List<ATXSetting> updateCurrentValues(final JSONObject installation, final List<ATXSetting> settings) {
-            for (final ATXSetting setting : settings) {
+        private List<ATXSetting<?>> updateCurrentValues(final JSONObject installation,
+                                                      final List<ATXSetting<?>> settings) {
+            for (final ATXSetting<?> setting : settings) {
                 final JSONObject settingsGroup = installation.optJSONObject(setting.getGroup().getConfigName());
                 if (settingsGroup != null) {
                     final Object currentSetting = settingsGroup.opt(setting.getName());
-                    if (currentSetting != null) {
-                        setting.setValue(currentSetting);
+                    if (currentSetting instanceof String) {
+                        ((ATXTextSetting) setting).setValue((String) currentSetting);
+                    } else if (currentSetting instanceof Boolean) {
+                        ((ATXBooleanSetting) setting).setValue((boolean) currentSetting);
                     }
                 }
             }

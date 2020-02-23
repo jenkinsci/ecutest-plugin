@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -47,6 +47,7 @@ public class ETInstance implements Serializable {
         this.installation = installation;
     }
 
+    @Nonnull
     @Whitelisted
     public ETInstallation getInstallation() {
         return installation;
