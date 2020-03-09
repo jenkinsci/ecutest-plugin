@@ -133,6 +133,7 @@ public class ATXServer implements Serializable {
         if (setting.isPresent()) {
             if (settingValue instanceof String || settingValue instanceof Boolean) {
                 script.println(String.format("[TT] INFO: Overriding ATX setting %s=%s", settingName, settingValue));
+                installation.getConfig().setSettingValueByName(settingName, settingValue);
             } else {
                 script.println("[TT] WARN: Ignore overriding ATX setting due to invalid value!");
             }
