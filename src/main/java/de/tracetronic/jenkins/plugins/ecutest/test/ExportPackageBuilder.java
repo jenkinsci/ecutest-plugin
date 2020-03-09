@@ -58,12 +58,10 @@ public class ExportPackageBuilder extends AbstractExportBuilder {
         public List<Descriptor<? extends TMSConfig>> getApplicableExporters() {
             final List<Descriptor<? extends TMSConfig>> list = new ArrayList<>();
             final DescriptorExtensionList<TMSConfig, Descriptor<TMSConfig>> configs = ExportConfig.all();
-            if (configs != null) {
-                for (final Descriptor<TMSConfig> config : configs) {
-                    if (config.isSubTypeOf(ExportPackageConfig.class)
-                            || config.isSubTypeOf(ExportPackageAttributeConfig.class)) {
-                        list.add(config);
-                    }
+            for (final Descriptor<TMSConfig> config : configs) {
+                if (config.isSubTypeOf(ExportPackageConfig.class)
+                        || config.isSubTypeOf(ExportPackageAttributeConfig.class)) {
+                    list.add(config);
                 }
             }
             return list;

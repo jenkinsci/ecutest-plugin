@@ -58,12 +58,10 @@ public class ImportPackageBuilder extends AbstractImportBuilder {
         public List<Descriptor<? extends TMSConfig>> getApplicableImporters() {
             final List<Descriptor<? extends TMSConfig>> list = new ArrayList<>();
             final DescriptorExtensionList<TMSConfig, Descriptor<TMSConfig>> configs = ImportConfig.all();
-            if (configs != null) {
-                for (final Descriptor<TMSConfig> config : configs) {
-                    if (config.isSubTypeOf(ImportPackageConfig.class)
-                            || config.isSubTypeOf(ImportPackageAttributeConfig.class)) {
-                        list.add(config);
-                    }
+            for (final Descriptor<TMSConfig> config : configs) {
+                if (config.isSubTypeOf(ImportPackageConfig.class)
+                        || config.isSubTypeOf(ImportPackageAttributeConfig.class)) {
+                    list.add(config);
                 }
             }
             return list;
