@@ -195,14 +195,24 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
     }
 
     /**
+     * Gets all ATX settings which belongs to a named settings group.
+     *
+     * @param groupName the group name
+     * @return the settings by group name
+     */
+    public List<ATXSetting<?>> getSettingsByGroupName(final String groupName) {
+        final SettingsGroup group = getSettingsGroup(groupName);
+        return getSettingsByGroup(group);
+    }
+
+    /**
      * Gets the ATX setting value by given setting name from all ATX settings.
      *
      * @param name     the setting name
      * @return the setting value or {@code null} if not found
      */
     public Object getSettingValueByName(final String name) throws IllegalArgumentException {
-        return settings.stream().filter(setting ->
-                setting.getName().equals(name)).findFirst().map(ATXSetting::getValue)
+        return getSettingByName(name).map(ATXSetting::getValue)
                 .orElseThrow(() -> new IllegalArgumentException("No setting found with name: " + name));
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -25,21 +25,21 @@ public class ATXSettingTest {
 
     @Test
     public void testName() {
-        final ATXSetting setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
+        final ATXBooleanSetting setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
             "descGerman", "descEnglish", false);
         assertThat(setting.getName(), is("settingName"));
     }
 
     @Test
     public void testTitle() {
-        final ATXSetting setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
+        final ATXBooleanSetting setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
             "descGerman", "descEnglish", false);
         assertThat(setting.getTitle(), is("Setting Name"));
     }
 
     @Test
     public void testGermanDescription() {
-        final ATXSetting setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
+        final ATXBooleanSetting setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
             "descGerman", "descEnglish", false);
         final LocaleProvider restoreProvider = LocaleProvider.getProvider();
         try {
@@ -60,7 +60,7 @@ public class ATXSettingTest {
 
     @Test
     public void testEnglishDescription() {
-        final ATXSetting setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
+        final ATXBooleanSetting setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
             "descGerman", "descEnglish", false);
         final LocaleProvider restoreProvider = LocaleProvider.getProvider();
         try {
@@ -81,21 +81,21 @@ public class ATXSettingTest {
 
     @Test
     public void testCheckboxType() {
-        final ATXSetting setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
+        final ATXBooleanSetting setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
             "descGerman", "descEnglish", false);
         assertTrue(setting.isCheckbox());
     }
 
     @Test
     public void testTextboxType() {
-        final ATXSetting setting = new ATXTextSetting("settingName", SettingsGroup.SPECIAL,
+        final ATXTextSetting setting = new ATXTextSetting("settingName", SettingsGroup.SPECIAL,
             "descGerman", "descEnglish", "defaultValue");
         assertFalse(setting.isCheckbox());
     }
 
     @Test
     public void testCurrentValueForTextBox() {
-        final ATXSetting<String> setting = new ATXTextSetting("settingName", SettingsGroup.SPECIAL,
+        final ATXTextSetting setting = new ATXTextSetting("settingName", SettingsGroup.SPECIAL,
             "descGerman", "descEnglish", "defaultValue");
         setting.setValue("value");
         assertThat(setting.getValue(), is("value"));
@@ -103,7 +103,7 @@ public class ATXSettingTest {
 
     @Test
     public void testCurrentValueForBoolean() {
-        final ATXSetting<Boolean> setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
+        final ATXBooleanSetting setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
             "descGerman", "descEnglish", false);
         setting.setValue(true);
         assertTrue(setting.getValue());
@@ -111,14 +111,14 @@ public class ATXSettingTest {
 
     @Test
     public void testDefaultValueForText() {
-        final ATXSetting<String> setting = new ATXTextSetting("settingName", SettingsGroup.SPECIAL,
+        final ATXTextSetting setting = new ATXTextSetting("settingName", SettingsGroup.SPECIAL,
             "descGerman", "descEnglish", "defaultValue");
         assertThat(setting.getDefaultValue(), is("defaultValue"));
     }
 
     @Test
     public void testDefaultValueForBoolean() {
-        final ATXSetting<Boolean> setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
+        final ATXBooleanSetting setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
             "descGerman", "descEnglish", true);
         assertTrue(setting.getDefaultValue());
     }
@@ -131,15 +131,15 @@ public class ATXSettingTest {
 
     @Test
     public void testClone() {
-        final ATXSetting setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
+        final ATXBooleanSetting setting = new ATXBooleanSetting("settingName", SettingsGroup.SPECIAL,
             "descGerman", "descEnglish", true);
-        final ATXSetting clone = setting.clone();
+        final ATXSetting<Boolean> clone = setting.clone();
         assertThat(clone, not(sameInstance(setting)));
     }
 
     @Test
     public void testManipulatedClone() {
-        final ATXSetting<String> setting = new ATXTextSetting("settingName", SettingsGroup.SPECIAL,
+        final ATXTextSetting setting = new ATXTextSetting("settingName", SettingsGroup.SPECIAL,
             "descGerman", "descEnglish", "defaultValue");
         final ATXSetting<String> clone = setting.clone();
         clone.setValue("newCloneValue");
