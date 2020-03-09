@@ -301,7 +301,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                         final Optional<ATXSetting<?>> currentSetting =
                                 currentConfig.getSettingByName(newSetting.getName());
                         currentSetting.ifPresent(atxSetting ->
-                            currentConfig.setSettingValueByName(atxSetting.getName(), atxSetting.getValue()));
+                                newConfig.setSettingValueByName(atxSetting.getName(), atxSetting.getValue()));
                     }
                     final List<ATXCustomSetting> customSettings = currentConfig.getCustomSettings();
                     newConfig.setCustomSettings(customSettings == null ? new ArrayList<>() : customSettings);
@@ -323,7 +323,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          * @return the updated ATX settings
          */
         private List<ATXSetting<?>> updateCurrentValues(final JSONObject installation,
-                                                      final List<ATXSetting<?>> settings) {
+                                                        final List<ATXSetting<?>> settings) {
             for (final ATXSetting<?> setting : settings) {
                 final JSONObject settingsGroup = installation.optJSONObject(setting.getGroup().getConfigName());
                 if (settingsGroup != null) {
