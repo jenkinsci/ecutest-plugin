@@ -11,7 +11,6 @@ import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.CopyOnWrite;
-import hudson.DescriptorExtensionList;
 import hudson.Extension;
 import hudson.XmlFile;
 import hudson.model.AbstractDescribableImpl;
@@ -354,13 +353,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          * @return the applicable custom settings
          */
         public List<Descriptor<? extends ATXCustomSetting>> getApplicableCustomSettings() {
-            final List<Descriptor<? extends ATXCustomSetting>> list = new ArrayList<>();
-            final DescriptorExtensionList<ATXCustomSetting, Descriptor<ATXCustomSetting>> settings =
-                    ATXCustomSetting.all();
-            if (settings != null) {
-                list.addAll(settings);
-            }
-            return list;
+            return new ArrayList<>(ATXCustomSetting.all());
         }
 
         /**
