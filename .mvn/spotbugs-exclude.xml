@@ -31,4 +31,8 @@
         <!-- Ignore NP checks for all Launcher.getChannel() calls -->
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
+        <!-- Ignore false positive NP checks in try-with-resources: https://github.com/spotbugs/spotbugs/issues/259 -->
+    <Match>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    </Match>
 </FindBugsFilter>
