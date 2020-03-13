@@ -75,6 +75,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
         final ATXPublisher before = new ATXPublisher("TEST-GUIDE");
         before.setFailOnOffline(false);
         before.setUsePersistedSettings(false);
+        before.setInjectBuildVars(false);
         before.setRunOnFailed(false);
         before.setAllowMissing(false);
         before.setRunOnFailed(false);
@@ -97,6 +98,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
         final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
         publisher.setFailOnOffline(true);
         publisher.setUsePersistedSettings(true);
+        publisher.setInjectBuildVars(true);
         publisher.setAllowMissing(true);
         publisher.setRunOnFailed(true);
         publisher.setArchiving(false);
@@ -109,6 +111,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
         jenkins.assertXPath(page, "//option[@value='TEST-GUIDE']");
         jenkins.assertXPath(page, "//input[@name='_.failOnOffline' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.usePersistedSettings' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.injectBuildVars' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.allowMissing' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.runOnFailed' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.archiving']");

@@ -20,6 +20,7 @@ import hudson.remoting.Callable;
 import jenkins.security.MasterToSlaveCallable;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,10 +92,11 @@ public abstract class AbstractATXReportHandler {
          * Converts the ATX configuration to a map containing all setting names and their current value.
          * Parameterized values are expanded by given environment variables.
          *
-         * @param uploadToServer specifies whether ATX upload is enabled or not
+         * @param uploadToServer  specifies whether ATX upload is enabled or not
+         * @param injectBuildVars specifies whether to inject common build variables as ATX constants
          * @return the configuration map
          */
-        protected Map<String, String> getConfigMap(final boolean uploadToServer) {
+        protected Map<String, String> getConfigMap(final boolean uploadToServer, final boolean injectBuildVars) {
             final Map<String, String> configMap = new LinkedHashMap<>();
             for (final ATXSetting<?> setting : config.getSettings()) {
                 if (setting instanceof ATXBooleanSetting) {
@@ -116,7 +118,25 @@ public abstract class AbstractATXReportHandler {
                     configMap.put(setting.getName(), envVars.expand(((ATXCustomTextSetting) setting).getValue()));
                 }
             }
+            if (injectBuildVars) {
+                final List<String> constants = Arrays.asList(
+                        configMap.get("setConstants"),
+                        formatConstant("BUILD_NUMBER"),
+                        formatConstant("BUILD_URL"),
+                        formatConstant("JOB_NAME"));
+                configMap.replace("setConstants", String.join(";", constants));
+            }
             return configMap;
+        }
+
+        /**
+         * Formats the ATX constant to be added as key-value pair (TT_JENKINS_&lt;VAR&gt;=&lt;VAR&gt;).
+         *
+         * @param variableName the variable name
+         * @return the formatted ATX constant
+         */
+        private String formatConstant(final String variableName) {
+            return String.format("%s=%s", "TT_JENKINS_" + variableName, envVars.get(variableName));
         }
     }
 }

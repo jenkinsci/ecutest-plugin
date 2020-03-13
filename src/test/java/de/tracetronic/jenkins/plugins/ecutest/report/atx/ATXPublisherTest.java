@@ -38,6 +38,7 @@ public class ATXPublisherTest {
         publisher.setAtxInstallation(new ATXInstallation("TEST-GUIDE", "ECU-TEST", new ATXConfig()));
         publisher.setFailOnOffline(true);
         publisher.setUsePersistedSettings(true);
+        publisher.setInjectBuildVars(true);
         publisher.setAllowMissing(true);
         publisher.setRunOnFailed(true);
         publisher.setArchiving(false);
@@ -57,6 +58,7 @@ public class ATXPublisherTest {
         assertEquals(isDefault, publisher.getAtxInstallation() == null);
         assertEquals(!isDefault, publisher.isFailOnOffline());
         assertEquals(!isDefault, publisher.isUsePersistedSettings());
+        assertEquals(!isDefault, publisher.isInjectBuildVars());
         assertEquals(!isDefault, publisher.isAllowMissing());
         assertEquals(!isDefault, publisher.isRunOnFailed());
         assertEquals(isDefault, publisher.isArchiving());

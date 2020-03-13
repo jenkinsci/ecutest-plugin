@@ -5,7 +5,7 @@
  */
 node('windows') {
     publishATX atxName: 'TEST-GUIDE',
-        failOnOffline: true, usePersistedSettings: true,
+        failOnOffline: true, usePersistedSettings: true, injectBuildVars: true,
         allowMissing: true, runOnFailed: true,
         archiving: false, keepAll: false
 }
