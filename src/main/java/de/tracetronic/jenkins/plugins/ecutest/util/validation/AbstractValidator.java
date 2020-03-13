@@ -12,8 +12,6 @@ import org.kohsuke.stapler.QueryParameter;
 
 /**
  * Common base class for the {@link TestValidator} and {@link ToolValidator}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractValidator {
 

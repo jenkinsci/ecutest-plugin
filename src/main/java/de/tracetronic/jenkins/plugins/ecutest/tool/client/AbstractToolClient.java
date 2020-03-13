@@ -17,8 +17,6 @@ import java.io.IOException;
 
 /**
  * Common base class for {@link ETClient} and {@link TSClient}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractToolClient implements ToolClient {
 
@@ -51,23 +49,14 @@ public abstract class AbstractToolClient implements ToolClient {
         installPath = "";
     }
 
-    /**
-     * @return the tool name
-     */
     public String getToolName() {
         return toolName;
     }
 
-    /**
-     * @return the installation path
-     */
     public String getInstallPath() {
         return installPath;
     }
 
-    /**
-     * @return the timeout
-     */
     public int getTimeout() {
         return timeout;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -18,16 +18,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for {@link ATXUtil}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXUtilTest {
 
@@ -116,7 +114,7 @@ public class ATXUtilTest {
 
     @Test
     public void testBaseUrlBySpecificConfig() {
-        final List<ATXSetting> uploadSettings = new ArrayList<>();
+        final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
         final ATXTextSetting serverUrl = new ATXTextSetting("serverURL", SettingsGroup.UPLOAD, "", "", "localhost");
         final ATXTextSetting serverPort = new ATXTextSetting("serverPort", SettingsGroup.UPLOAD, "", "", "8086");
         final ATXTextSetting serverContextPath = new ATXTextSetting("serverContextPath", SettingsGroup.UPLOAD, "", "", "context");
@@ -133,7 +131,7 @@ public class ATXUtilTest {
 
     @Test
     public void testBaseUrlByExpandedConfig() {
-        final List<ATXSetting> uploadSettings = new ArrayList<>();
+        final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
         final ATXTextSetting serverUrl = new ATXTextSetting("serverURL", SettingsGroup.UPLOAD, "", "", "${SERVER_URL}");
         final ATXTextSetting serverPort = new ATXTextSetting("serverPort", SettingsGroup.UPLOAD, "", "", "${SERVER_PORT}");
         final ATXTextSetting serverContextPath = new ATXTextSetting("serverContextPath", SettingsGroup.UPLOAD, "", "", "${SERVER_CONTEXT}");
@@ -168,12 +166,12 @@ public class ATXUtilTest {
     @Test
     public void testProxyUrlByDefaultConfig() {
         final ATXConfig atxConfig = new ATXConfig();
-        assertThat(ATXUtil.getProxyUrl(atxConfig, new EnvVars()), isEmptyString());
+        assertThat(ATXUtil.getProxyUrl(atxConfig, new EnvVars()), emptyString());
     }
 
     @Test
     public void testHttpProxyUrlBySpecificConfig() {
-        final List<ATXSetting> uploadSettings = new ArrayList<>();
+        final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
         final ATXTextSetting httpProxy = new ATXTextSetting("httpProxy", SettingsGroup.UPLOAD, "", "", "http://user:pass@127.0.0.1:8080");
         final ATXTextSetting httpsProxy = new ATXTextSetting("httpsProxy", SettingsGroup.UPLOAD, "", "", "http://user:pass@127.0.0.1:8081");
         final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.UPLOAD, "", "", false);
@@ -188,7 +186,7 @@ public class ATXUtilTest {
 
     @Test
     public void testHttpsProxyUrlBySpecificConfig() {
-        final List<ATXSetting> uploadSettings = new ArrayList<>();
+        final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
         final ATXTextSetting httpProxy = new ATXTextSetting("httpProxy", SettingsGroup.UPLOAD, "", "", "http://user:pass@127.0.0.1:8080");
         final ATXTextSetting httpsProxy = new ATXTextSetting("httpsProxy", SettingsGroup.UPLOAD, "", "", "http://user:pass@127.0.0.1:8081");
         final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.UPLOAD, "", "", true);
@@ -203,7 +201,7 @@ public class ATXUtilTest {
 
     @Test
     public void testHttpProxyUrlByExpandedConfig() {
-        final List<ATXSetting> uploadSettings = new ArrayList<>();
+        final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
         final ATXTextSetting httpProxy = new ATXTextSetting("httpProxy", SettingsGroup.UPLOAD, "", "", "${PROXY_URL}");
         final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.UPLOAD, "", "", false);
         uploadSettings.add(httpProxy);
@@ -226,7 +224,7 @@ public class ATXUtilTest {
 
     @Test
     public void testHttpsProxyUrlByExpandedConfig() {
-        final List<ATXSetting> uploadSettings = new ArrayList<>();
+        final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
         final ATXTextSetting httpsProxy = new ATXTextSetting("httpsProxy", SettingsGroup.UPLOAD, "", "", "${PROXY_URL}");
         final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.UPLOAD, "", "", true);
         uploadSettings.add(httpsProxy);
@@ -249,7 +247,7 @@ public class ATXUtilTest {
 
     @Test
     public void testProjectId() {
-        final List<ATXSetting> uploadSettings = new ArrayList<>();
+        final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
         final ATXTextSetting projectId = new ATXTextSetting("projectId", SettingsGroup.UPLOAD, "", "", "2");
         uploadSettings.add(projectId);
 
@@ -260,7 +258,7 @@ public class ATXUtilTest {
 
     @Test
     public void testProjectIdByExpandedConfig() {
-        final List<ATXSetting> uploadSettings = new ArrayList<>();
+        final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
         final ATXTextSetting projectId = new ATXTextSetting("projectId", SettingsGroup.UPLOAD, "", "", "${PROJECT_ID}");
         uploadSettings.add(projectId);
 
@@ -281,7 +279,7 @@ public class ATXUtilTest {
 
     @Test
     public void testUnavailableProjectId() {
-        final List<ATXSetting> uploadSettings = new ArrayList<>();
+        final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
 
         final ATXConfig atxConfig = new ATXConfig(uploadSettings, null);
 
@@ -290,7 +288,7 @@ public class ATXUtilTest {
 
     @Test
     public void testSingleTestplanMap() {
-        final List<ATXSetting> specialSettings = new ArrayList<>();
+        final List<ATXSetting<?>> specialSettings = new ArrayList<>();
         final ATXBooleanSetting singleTestplanMap = new ATXBooleanSetting(
             "mapSeparateProjectExecutionAsSingleTestplan", SettingsGroup.SPECIAL, "", "", false);
         specialSettings.add(singleTestplanMap);

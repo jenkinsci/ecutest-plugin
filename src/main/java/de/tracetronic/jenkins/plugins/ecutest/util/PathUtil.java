@@ -14,8 +14,6 @@ import java.util.logging.Logger;
 
 /**
  * Utility class providing file path operations.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public final class PathUtil {
 

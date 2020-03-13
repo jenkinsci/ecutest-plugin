@@ -17,6 +17,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -41,9 +42,9 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,8 +56,6 @@ import java.util.Map;
 
 /**
  * Class providing the generation and upload of {@link ATXReport}s.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXReportUploader extends AbstractATXReportHandler {
 
@@ -91,7 +90,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     public boolean upload(final List<FilePath> reportDirs, final boolean allowMissing,
                           final boolean usePersistedSettings, final Run<?, ?> run,
                           final Launcher launcher, final TaskListener listener)
-        throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<ATXReport> atxReports = new ArrayList<>();
 
@@ -115,7 +114,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                     reportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES));
 
                 // Upload ATX reports
-                UploadInfoHolder uploadInfo = launcher.getChannel().call(
+                final UploadInfoHolder uploadInfo = launcher.getChannel().call(
                     new UploadReportCallable(config, uploadFiles, usePersistedSettings, envVars, listener));
 
                 if (uploadInfo.isUploaded()) {
@@ -151,12 +150,10 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      * @param logger the logger
      */
     private void checkForWarning(final ATXConfig config, final TTConsoleLogger logger) {
-        config.getSettingByName("cleanAfterSuccessUpload").ifPresent(setting -> {
-            if ((boolean) setting.getValue()) {
-                logger.logWarn("-> In order to generate ATX report links with unique ATX identifiers " +
-                    "disable the upload setting 'Clean After Success Upload' in the TEST-GUIDE configuration.");
-            }
-        });
+        if ((boolean) config.getSettingValueByName("cleanAfterSuccessUpload")) {
+            logger.logWarn("-> In order to generate ATX report links with unique ATX identifiers "
+                    + "disable the upload setting 'Clean After Success Upload' in the TEST-GUIDE configuration.");
+        }
     }
 
     /**
@@ -175,7 +172,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                                  final String title, final String baseUrl, final TestInfoHolder testInfo,
                                  final String projectId) throws IOException, InterruptedException {
         // Prepare ATX report information
-        String reportUrl;
+        final String reportUrl;
         String trendReportUrl = null;
         final TestType testType = testInfo.getTestType();
         if (testType == TestType.PACKAGE) {
@@ -219,7 +216,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         for (final FilePath subDir : testReportDir.listDirectories()) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(subDir);
             if (reportFile != null && reportFile.exists()) {
-                String testName;
+                final String testName;
                 // Ensure compatibility with ECU-TEST 6.x using report.trf as report name
                 if ("report.trf".equals(reportFile.getName())) {
                     testName = reportFile.getParent().getName().replaceFirst("^Report\\s", "");
@@ -285,8 +282,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         final String from = String.valueOf(testInfo.getFrom());
         final String to = String.valueOf(testInfo.getTo());
         final String atxTestName = ATXUtil.getValidATXName(testName);
-        String pkgReportUrl = String
-            .format("%s/reports?dateFrom=%s&dateTo=%s&testcase=%s", baseUrl, from, to, atxTestName);
+        String pkgReportUrl = String.format("%s/reports?dateFrom=%s&dateTo=%s&testcase=%s",
+                baseUrl, from, to, atxTestName);
         if (projectId != null) {
             pkgReportUrl = String.format("%s&projectId=%s", pkgReportUrl, projectId);
         }
@@ -373,7 +370,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          */
         private static final String SUCCESS_FILE_NAME = "success.json";
 
-        private boolean usePersistedSettings;
+        private final boolean usePersistedSettings;
 
         /**
          * Instantiates a new {@link UploadReportCallable}.
@@ -392,7 +389,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
 
         @Override
         public UploadInfoHolder call() throws IOException {
-            UploadInfoHolder uploadInfo = new UploadInfoHolder(false);
+            final UploadInfoHolder uploadInfo = new UploadInfoHolder(false);
             final TTConsoleLogger logger = new TTConsoleLogger(getListener());
             final Map<String, String> configMap = getConfigMap(true);
             final String progId = ETComProperty.getInstance().getProgId();
@@ -448,7 +445,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          * @throws UnsupportedEncodingException in case of an unsupported encoding
          */
         private TestInfoHolder checkSuccessLog(final FilePath successFile, final FilePath uploadFile,
-                                               boolean uploadAsync, final TTConsoleLogger logger) throws IOException {
+                                               final boolean uploadAsync, final TTConsoleLogger logger)
+                throws IOException {
             TestInfoHolder testInfo = null;
             try {
                 if (successFile.exists()) {
@@ -474,8 +472,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                         }
                     }
                 }
-            } catch (final JSONException | InterruptedException | UnsupportedEncodingException |
-                KeyManagementException | NoSuchAlgorithmException | MalformedURLException e) {
+            } catch (final JSONException | InterruptedException | UnsupportedEncodingException
+                    | KeyManagementException | NoSuchAlgorithmException | MalformedURLException e) {
                 logger.logError("-> Could not parse ATX JSON response: " + e.getMessage());
             }
             return testInfo;
@@ -574,7 +572,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          */
         private URL resolveRedirect(final String redirect)
             throws MalformedURLException, NoSuchAlgorithmException, KeyManagementException, IOException {
-            HttpURLConnection connection;
+            final HttpURLConnection connection;
             final URL url = new URL(redirect);
 
             // Handle SSL connection
@@ -599,6 +597,10 @@ public class ATXReportUploader extends AbstractATXReportHandler {
 
         private static final long serialVersionUID = 1L;
 
+        private static final String QUERY_INFO = "SELECT execution_time, duration from info";
+        private static final String QUERY_PRJ = "SELECT name FROM prj";
+        private static final String QUERY_PKG = "SELECT name FROM pkg";
+
         private final String trfFile;
 
         /**
@@ -613,7 +615,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         @Override
         public TestInfoHolder call() throws IOException {
             try (SQLite sql = new SQLite(trfFile)) {
-                ResultSet rs = sql.query("SELECT execution_time, duration from info");
+                ResultSet rs = sql.query(QUERY_INFO);
                 final String execTime = rs.getString("execution_time");
                 final SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 final Date date = fmt.parse(execTime);
@@ -621,10 +623,10 @@ public class ATXReportUploader extends AbstractATXReportHandler {
                 final long from = date.getTime();
                 final long to = from + (long) duration;
 
-                rs = sql.query("SELECT name FROM prj");
+                rs = sql.query(QUERY_PRJ);
                 final String prjName = rs.getString("name");
                 if ("$$$_PACKAGE_$$$".equals(prjName)) {
-                    rs = sql.query("SELECT name FROM pkg");
+                    rs = sql.query(QUERY_PKG);
                     final String pkgName = rs.getString("name");
                     return new TestInfoHolder(pkgName, TestType.PACKAGE, from, to);
                 } else {
@@ -641,7 +643,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         private static class SQLite implements AutoCloseable {
 
             private final Connection connection;
-            private final Statement statement;
+            private PreparedStatement statement;
 
             /**
              * Instantiates a new {@link SQLite}.
@@ -653,7 +655,6 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             SQLite(final String sqlFile) throws ClassNotFoundException, SQLException {
                 Class.forName("org.sqlite.JDBC");
                 connection = DriverManager.getConnection("jdbc:sqlite:" + sqlFile);
-                statement = connection.createStatement();
             }
 
             /**
@@ -663,8 +664,11 @@ public class ATXReportUploader extends AbstractATXReportHandler {
              * @return the result set
              * @throws SQLException in case of a SQL exception
              */
+            @SuppressFBWarnings(value = "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+                                justification = "Constant query statements used only")
             public ResultSet query(final String sql) throws SQLException {
-                return statement.executeQuery(sql);
+                statement = connection.prepareStatement(sql);
+                return statement.executeQuery();
             }
 
             @Override
@@ -699,9 +703,6 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             this.uploaded = uploaded;
         }
 
-        /**
-         * @return whether the report upload was successful
-         */
         public boolean isUploaded() {
             return uploaded;
         }
@@ -715,9 +716,6 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             this.uploaded = uploaded;
         }
 
-        /**
-         * @return the test info
-         */
         public TestInfoHolder getTestInfo() {
             return testInfo;
         }
@@ -762,37 +760,22 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             setLink(null);
         }
 
-        /**
-         * @return the test name
-         */
         public String getTestName() {
             return testName;
         }
 
-        /**
-         * @return the test type
-         */
         public TestType getTestType() {
             return testType;
         }
 
-        /**
-         * @return the from date
-         */
         public long getFrom() {
             return from;
         }
 
-        /**
-         * @return the to date
-         */
         public long getTo() {
             return to;
         }
 
-        /**
-         * @return the redirect link
-         */
         public String getLink() {
             return link;
         }

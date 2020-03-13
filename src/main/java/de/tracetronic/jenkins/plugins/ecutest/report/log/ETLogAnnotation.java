@@ -9,8 +9,6 @@ import java.io.Serializable;
 
 /**
  * Annotates each parsed line in a ECU-TEST log file.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETLogAnnotation implements Serializable {
 
@@ -40,37 +38,22 @@ public class ETLogAnnotation implements Serializable {
         this.message = message;
     }
 
-    /**
-     * @return the lineNumber
-     */
     public int getLineNumber() {
         return lineNumber;
     }
 
-    /**
-     * @return the timestamp
-     */
     public String getTimestamp() {
         return timestamp;
     }
 
-    /**
-     * @return the context
-     */
     public String getContext() {
         return context;
     }
 
-    /**
-     * @return the severity
-     */
     public Severity getSeverity() {
         return severity;
     }
 
-    /**
-     * @return the message
-     */
     public String getMessage() {
         return message;
     }

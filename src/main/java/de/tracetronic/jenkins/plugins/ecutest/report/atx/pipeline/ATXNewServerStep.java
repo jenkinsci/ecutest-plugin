@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -7,6 +7,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline;
 
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
@@ -22,8 +23,6 @@ import java.util.Set;
 
 /**
  * Advanced pipeline step that returns a new {@link ATXServer} instance.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXNewServerStep extends Step {
 
@@ -48,31 +47,23 @@ public class ATXNewServerStep extends Step {
         this.config = config != null ? config : new ATXConfig();
     }
 
-    /**
-     * @return the ATX name
-     */
     @Nonnull
     public String getAtxName() {
         return atxName;
     }
 
-    /**
-     * @return the tool name
-     */
     @Nonnull
     public String getToolName() {
         return toolName;
     }
 
-    /**
-     * @return the ATX configuration
-     */
+    @CheckForNull
     public ATXConfig getConfig() {
         return config;
     }
 
     @Override
-    public StepExecution start(final StepContext context) throws Exception {
+    public StepExecution start(final StepContext context) {
         return new Execution(this, context);
     }
 
@@ -83,6 +74,7 @@ public class ATXNewServerStep extends Step {
 
         private static final long serialVersionUID = 1L;
 
+        @SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED", justification = "Only used when starting.")
         private final transient ATXNewServerStep step;
 
         /**
@@ -97,7 +89,7 @@ public class ATXNewServerStep extends Step {
         }
 
         @Override
-        protected ATXServer run() throws Exception {
+        protected ATXServer run() {
             final ATXInstallation installation = new ATXInstallation(step.atxName, step.toolName, step.config);
             return new ATXServer(installation);
         }

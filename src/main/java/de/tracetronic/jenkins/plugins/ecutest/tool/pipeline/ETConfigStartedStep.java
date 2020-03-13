@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -8,6 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.tool.pipeline;
 import com.google.common.collect.ImmutableSet;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.TaskListener;
@@ -23,8 +24,6 @@ import java.util.Set;
 
 /**
  * Advanced pipeline step that checks whether the currently selected configurations are started.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETConfigStartedStep extends Step {
 
@@ -41,15 +40,12 @@ public class ETConfigStartedStep extends Step {
         this.toolName = toolName;
     }
 
-    /**
-     * @return the tool name
-     */
     public String getToolName() {
         return toolName;
     }
 
     @Override
-    public StepExecution start(final StepContext context) throws Exception {
+    public StepExecution start(final StepContext context) {
         return new Execution(this, context);
     }
 
@@ -60,6 +56,7 @@ public class ETConfigStartedStep extends Step {
 
         private static final long serialVersionUID = 1L;
 
+        @SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED", justification = "Only used when starting.")
         private final transient ETConfigStartedStep step;
 
         /**
@@ -75,7 +72,7 @@ public class ETConfigStartedStep extends Step {
 
         @Override
         protected Boolean run() throws Exception {
-            ETClient client = new ETClient(step.toolName, ETComProperty.DEFAULT_TIMEOUT);
+            final ETClient client = new ETClient(step.toolName, ETComProperty.DEFAULT_TIMEOUT);
             return client.checkConfigStatus(Objects.requireNonNull(getContext().get(Launcher.class)),
                 getContext().get(TaskListener.class));
         }

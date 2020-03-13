@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -38,8 +38,6 @@ import java.util.Map.Entry;
 
 /**
  * Class holding the trace analysis configuration.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TraceAnalysisPublisher extends AbstractToolPublisher {
 
@@ -53,7 +51,13 @@ public class TraceAnalysisPublisher extends AbstractToolPublisher {
      */
     protected static final String URL_NAME = "trace-analysis";
 
+    /**
+     * Specifies whether to merge analysis job reports.
+     */
     private boolean mergeReports = true;
+    /**
+     * Specifies whether to create a new report directory.
+     */
     private boolean createReportDir = false;
     private String timeout = String.valueOf(getDefaultTimeout());
 
@@ -82,62 +86,36 @@ public class TraceAnalysisPublisher extends AbstractToolPublisher {
         }
     }
 
-    /**
-     * @return the default timeout
-     */
     public static int getDefaultTimeout() {
         return DEFAULT_TIMEOUT;
     }
 
-    /**
-     * @return whether to merge analysis job reports, defaults to {@code true}
-     */
     public boolean isMergeReports() {
         return mergeReports;
     }
 
-    /**
-     * @param mergeReports specifies whether to merge reports of
-     *                     analysis job executions into a main report.
-     */
     @DataBoundSetter
     public void setMergeReports(final boolean mergeReports) {
         this.mergeReports = mergeReports;
     }
 
-    /**
-     * @return whether to create a new report directory, defaults to {@code false}
-     */
     public boolean isCreateReportDir() {
         return createReportDir;
     }
 
-    /**
-     * @param createReportDir specifies whether a new report directory is created
-     *                        or whether the report should be stored next to the job
-     */
     @DataBoundSetter
     public void setCreateReportDir(final boolean createReportDir) {
         this.createReportDir = createReportDir;
     }
 
-    /**
-     * @return the timeout as integer
-     */
     public int getParsedTimeout() {
         return parse(getTimeout());
     }
 
-    /**
-     * @return the timeout as string
-     */
     public String getTimeout() {
         return timeout;
     }
 
-    /**
-     * @param timeout the timeout running each trace analysis
-     */
     @DataBoundSetter
     public void setTimeout(@CheckForNull final String timeout) {
         this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(getDefaultTimeout()));
@@ -202,6 +180,7 @@ public class TraceAnalysisPublisher extends AbstractToolPublisher {
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
      */
+    @SuppressWarnings("checkstyle:cyclomaticcomplexity")
     private List<TraceAnalysisReport> performAnalysis(final Map<FilePath, List<FilePath>> analysisFiles,
                                                       final Run<?, ?> run, final Launcher launcher,
                                                       final TaskListener listener)
@@ -228,6 +207,12 @@ public class TraceAnalysisPublisher extends AbstractToolPublisher {
             if (isMergeReports()) {
                 // Merge reports
                 final FilePath mainReport = getFirstReportFile(reportDir);
+                if (mainReport == null) {
+                    logger.logError("-> No main report found, setting build status to FAILURE!");
+                    run.setResult(Result.FAILURE);
+                    continue;
+                }
+
                 final boolean isMerged = runner.mergeReports(mainReport, reportFiles, launcher, listener);
 
                 if (!isMerged) {
@@ -243,7 +228,7 @@ public class TraceAnalysisPublisher extends AbstractToolPublisher {
             } else if (isArchiving()) {
                 for (final FilePath reportFile : reportFiles) {
                     logger.logInfo(String.format("- Archiving analysis report: %s", reportFile));
-                    FilePath targetDir;
+                    final FilePath targetDir;
                     if (isCreateReportDir()) {
                         targetDir = archiveTargetDir.getParent().child(reportFile.getParent().getName());
                     } else {
@@ -370,9 +355,6 @@ public class TraceAnalysisPublisher extends AbstractToolPublisher {
          */
         private final TestValidator testValidator = new TestValidator();
 
-        /**
-         * @return the default timeout
-         */
         public static int getDefaultTimeout() {
             return DEFAULT_TIMEOUT;
         }

@@ -11,8 +11,6 @@ import org.kohsuke.stapler.StaplerRequest;
 /**
  * Holds a link to the TRF report. The build that holds the artifact is resolved by
  * {@link StaplerRequest#findAncestorObject(Class)} at runtime.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TRFReport extends AbstractArchiveFileReport {
 

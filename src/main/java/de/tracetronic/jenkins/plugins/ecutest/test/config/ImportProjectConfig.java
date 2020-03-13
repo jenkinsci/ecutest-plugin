@@ -18,14 +18,14 @@ import javax.annotation.Nonnull;
 
 /**
  * Class holding the configuration for importing a project from test management system.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ImportProjectConfig extends ImportConfig {
 
     private static final long serialVersionUID = 1L;
 
     /**
+     * Specifies whether to import missing packages.
+     *
      * @since 1.17
      */
     private final boolean importMissingPackages;
@@ -46,9 +46,6 @@ public class ImportProjectConfig extends ImportConfig {
         this.importMissingPackages = importMissingPackages;
     }
 
-    /**
-     * @return specifies whether to import missing packages
-     */
     public boolean isImportMissingPackages() {
         return importMissingPackages;
     }
@@ -89,9 +86,6 @@ public class ImportProjectConfig extends ImportConfig {
     @Extension(ordinal = 3)
     public static class DescriptorImpl extends ImportConfig.DescriptorImpl {
 
-        /**
-         * @return the default timeout
-         */
         public static int getDefaultTimeout() {
             return DEFAULT_TIMEOUT;
         }

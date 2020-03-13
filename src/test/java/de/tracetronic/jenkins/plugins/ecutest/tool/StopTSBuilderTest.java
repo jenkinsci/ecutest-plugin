@@ -14,8 +14,6 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link StopTSBuilder}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class StopTSBuilderTest {
 

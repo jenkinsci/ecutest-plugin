@@ -13,8 +13,6 @@ import javax.annotation.CheckForNull;
 
 /**
  * Action to show a link to {@link ETLogReport}s in side menu of projects.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETLogProjectAction extends AbstractETLogAction {
 
@@ -29,8 +27,8 @@ public class ETLogProjectAction extends AbstractETLogAction {
 
     /**
      * Returns the {@link ETLogBuildAction} in the last build that have artifact documents.
-     * <p>
-     * Resolves the owner by {@link StaplerRequest#findAncestorObject(Class)}.
+     *
+     * <p>Resolves the owner by {@link StaplerRequest#findAncestorObject(Class)}.
      *
      * @param req the {@link StaplerRequest} used for access this action
      * @return the last {@link ETLogBuildAction} or {@code null} if no proper build exists
@@ -43,8 +41,8 @@ public class ETLogProjectAction extends AbstractETLogAction {
 
     /**
      * Returns {@link ETLogReport} specified by the URL.
-     * <p>
-     * Delegates to the last {@link ETLogBuildAction}.
+     *
+     * <p>Delegates to the last {@link ETLogBuildAction}.
      *
      * @param token the URL token
      * @param req   the {@link StaplerRequest} used for access this action

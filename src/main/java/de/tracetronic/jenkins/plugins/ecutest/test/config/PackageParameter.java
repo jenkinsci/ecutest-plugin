@@ -22,8 +22,6 @@ import java.util.Objects;
 
 /**
  * Class holding a package parameter.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class PackageParameter extends AbstractDescribableImpl<PackageParameter> implements Serializable,
     ExpandableConfig {
@@ -46,16 +44,10 @@ public class PackageParameter extends AbstractDescribableImpl<PackageParameter> 
         this.value = StringUtils.trimToEmpty(value);
     }
 
-    /**
-     * @return the parameter name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * @return the parameter value
-     */
     public String getValue() {
         return value;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -14,7 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,8 +23,6 @@ import java.util.regex.Pattern;
 
 /**
  * Class providing a parser for the ECU-TEST log files.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETLogParser {
 
@@ -52,15 +50,15 @@ public class ETLogParser {
      */
     public List<ETLogAnnotation> parse() {
         final List<ETLogAnnotation> logReports = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(logFile.read(),
-            Charset.forName("UTF-8")))) {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(logFile.read(), StandardCharsets.UTF_8))) {
             String line;
             int warnLogCount = 0;
             int errorLogCount = 0;
             final int maxLogCount = AbstractETLogAction.getMaxLogSize();
             try (LineNumberReader lineReader = new LineNumberReader(reader)) {
                 while ((line = lineReader.readLine()) != null
-                    && (warnLogCount < maxLogCount || errorLogCount < maxLogCount)) {
+                        && (warnLogCount < maxLogCount || errorLogCount < maxLogCount)) {
                     ETLogAnnotation logAnnotation = null;
                     if (warnLogCount < maxLogCount && isWarningLog(line)) {
                         logAnnotation = parseLine(line, lineReader, Severity.WARNING);
@@ -89,13 +87,13 @@ public class ETLogParser {
      */
     public int parseLogCount(final Severity severity) {
         int logCount = 0;
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(logFile.read(),
-            Charset.forName("UTF-8")))) {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(logFile.read(), StandardCharsets.UTF_8))) {
             String line;
             try (LineNumberReader lineReader = new LineNumberReader(reader)) {
                 while ((line = lineReader.readLine()) != null) {
                     if (severity == Severity.WARNING && isWarningLog(line)
-                        || severity == Severity.ERROR && isErrorLog(line)) {
+                            || severity == Severity.ERROR && isErrorLog(line)) {
                         logCount++;
                     }
                 }
@@ -110,19 +108,21 @@ public class ETLogParser {
     /**
      * Parses a single log message.
      *
-     * @param line       the current line
-     * @param lineReader the line number reader
-     * @param severity   the severity to annotate the message.
+     * @param currentLine the current line
+     * @param lineReader  the line number reader
+     * @param severity    the severity to annotate the message.
      * @return the annotated message, can be {@code null}
      * @throws IOException signals that an I/O exception has occurred
      */
     @CheckForNull
-    private ETLogAnnotation parseLine(String line, final LineNumberReader lineReader, final Severity severity)
-        throws IOException {
+    private ETLogAnnotation parseLine(final String currentLine, final LineNumberReader lineReader,
+                                      final Severity severity)
+            throws IOException {
         ETLogAnnotation logAnnotation = null;
-        if (line != null) {
-            final String[] lineSplit = line.split("\\s+");
+        if (currentLine != null) {
+            final String[] lineSplit = currentLine.split("\\s+");
             if (lineSplit.length == 5) {
+                String line;
                 final int lineNumber = lineReader.getLineNumber();
                 final StringBuilder msg = new StringBuilder();
                 while ((line = lineReader.readLine()) != null) {

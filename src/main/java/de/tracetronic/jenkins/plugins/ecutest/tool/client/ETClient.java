@@ -1,18 +1,18 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 
 import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.AbstractTestHelper;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
+import de.tracetronic.jenkins.plugins.ecutest.util.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
@@ -33,8 +33,6 @@ import java.util.List;
 
 /**
  * Client to start and stop ECU-TEST by either COM or XML-RPC communication.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETClient extends AbstractToolClient {
 
@@ -93,7 +91,7 @@ public class ETClient extends AbstractToolClient {
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public static List<String> checkProcesses(final Launcher launcher, final TaskListener listener, final boolean kill)
-        throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         return launcher.getChannel().call(new CheckProcessCallable(kill, listener));
     }
 
@@ -108,7 +106,7 @@ public class ETClient extends AbstractToolClient {
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public static boolean stopProcesses(final Launcher launcher, final TaskListener listener, final boolean kill)
-        throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         return launcher.getChannel().call(new StopCallable(StartETBuilder.DEFAULT_TIMEOUT, kill, listener));
     }
 
@@ -122,48 +120,30 @@ public class ETClient extends AbstractToolClient {
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public static ToolVersion getComVersion(final Launcher launcher, final TaskListener listener)
-        throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         return launcher.getChannel().call(new VersionCallable(listener));
     }
 
-    /**
-     * @return the workspace directory
-     */
     public String getWorkspaceDir() {
         return workspaceDir;
     }
 
-    /**
-     * @return the settings directory
-     */
     public String getSettingsDir() {
         return settingsDir;
     }
 
-    /**
-     * @return the debug mode
-     */
     public boolean isDebugMode() {
         return debugMode;
     }
 
-    /**
-     * @return the version
-     */
     public String getVersion() {
         return version;
     }
 
-    /**
-     * @return the last loaded TBC file path
-     */
     public String getLastTbc() {
         return lastTbc;
     }
 
-    /**
-     * @return the last loaded TCF file path
-     */
     public String getLastTcf() {
         return lastTcf;
     }
@@ -192,7 +172,7 @@ public class ETClient extends AbstractToolClient {
             final boolean is64BitJVM = ProcessUtil.is64BitJVM(workspace.toComputer());
             if (!checkProcessArchitecture(getInstallPath(), is64BitJVM, launcher)) {
                 logger.logError("The configured ECU-TEST executable is not compatible with running Java VM! "
-                    + "Please install a 64-bit JRE which supports 64-bit ECU-TEST installation!");
+                        + "Please install a 64-bit JRE which supports 64-bit ECU-TEST installation!");
                 return false;
             }
             // Launch process
@@ -218,16 +198,16 @@ public class ETClient extends AbstractToolClient {
 
         // Check ECU-TEST version
         final ToolVersion comToolVersion = ToolVersion.parse(comVersion);
-        if (comToolVersion.compareWithoutMicroTo(ETPlugin.ET_MAX_VERSION) > 0 ||
-            comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
+        if (comToolVersion.compareWithoutMicroTo(ETPlugin.ET_MAX_VERSION) > 0
+                || comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
             logger.logWarn(String.format(
-                "The configured ECU-TEST version %s might be incompatible with this plugin. "
-                    + "Currently supported versions: %s up to %s", comVersion,
-                ETPlugin.ET_MIN_VERSION.toMinorString(), ETPlugin.ET_MAX_VERSION.toMinorString()));
+                    "The configured ECU-TEST version %s might be incompatible with this plugin. "
+                            + "Currently supported versions: %s up to %s", comVersion,
+                    ETPlugin.ET_MIN_VERSION.toMinorString(), ETPlugin.ET_MAX_VERSION.toMinorString()));
         } else if (comToolVersion.compareTo(new ToolVersion(6, 3, 0)) < 0) {
             logger.logError(String.format(
-                "The configured ECU-TEST version %s is not compatible with this plugin. "
-                    + "Please use at least ECU-TEST %s!", comVersion, ETPlugin.ET_MIN_VERSION.toMicroString()));
+                    "The configured ECU-TEST version %s is not compatible with this plugin. "
+                            + "Please use at least ECU-TEST %s!", comVersion, ETPlugin.ET_MIN_VERSION.toMicroString()));
             stop(checkProcesses, workspace, launcher, listener);
             return false;
         }
@@ -275,7 +255,7 @@ public class ETClient extends AbstractToolClient {
     public boolean restart(final boolean checkProcesses, final FilePath workspace, final Launcher launcher,
                            final TaskListener listener) throws IOException, InterruptedException {
         return stop(checkProcesses, workspace, launcher, listener)
-            && start(checkProcesses, workspace, launcher, listener);
+                && start(checkProcesses, workspace, launcher, listener);
     }
 
     @Override
@@ -302,8 +282,8 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
-     * Checks the process architecture compatibility between ECU-TEST and underlying JVM that runs the slave.
-     * A 64-bit JVM supports both 32-bit and 64-bit ECU-TEST, while 32-bit JVM is only compatible with 32-bit ECU-TEST.
+     * Checks the process architecture compatibility between ECU-TEST and underlying JVM that runs the slave. A 64-bit
+     * JVM supports both 32-bit and 64-bit ECU-TEST, while 32-bit JVM is only compatible with 32-bit ECU-TEST.
      *
      * @param processPath the full process path
      * @param is64BitJVM  specifies whether the JVM supports 64-bit architecture
@@ -326,7 +306,8 @@ public class ETClient extends AbstractToolClient {
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
-    public boolean updateUserLibs(Launcher launcher, TaskListener listener) throws IOException, InterruptedException {
+    public boolean updateUserLibs(final Launcher launcher, final TaskListener listener) throws IOException,
+            InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo("Updating user libraries...");
         return launcher.getChannel().call(new UpdateUserLibsCallable(listener));
@@ -341,8 +322,8 @@ public class ETClient extends AbstractToolClient {
      * @throws IOException          the io exception
      * @throws InterruptedException the interrupted exception
      */
-    public boolean checkConfigStatus(final Launcher launcher, TaskListener listener)
-        throws IOException, InterruptedException {
+    public boolean checkConfigStatus(final Launcher launcher, final TaskListener listener)
+            throws IOException, InterruptedException {
         return launcher.getChannel().call(new CheckConfigStatusCallable(listener));
     }
 
@@ -350,54 +331,54 @@ public class ETClient extends AbstractToolClient {
      * Queries all available workspace settings and logs them as debug messages.
      *
      * @param launcher the launcher
+     * @param logger   the logger
      */
     private void querySettings(final Launcher launcher, final TTConsoleLogger logger) {
         if (Boolean.getBoolean("ecutest.debugLog")) {
-            List<String> settings = Arrays.asList(
-                "workspacePath",
-                "settingsPath",
-                "configPath",
-                "packagePath",
-                "reportPath",
-                "templatePath",
-                "generatorPath",
-                "parameterPath",
-                "traceStepPath",
-                "userPyModulesPath",
-                "utilityPath",
-                "offlineModelPath",
-                "offlineSgbdPath",
-                "offlineFiuPath",
-                "logFile",
-                "errorLogFile",
-                "language");
+            final List<String> settings = Arrays.asList(
+                    "workspacePath",
+                    "settingsPath",
+                    "configPath",
+                    "packagePath",
+                    "reportPath",
+                    "templatePath",
+                    "generatorPath",
+                    "parameterPath",
+                    "traceStepPath",
+                    "userPyModulesPath",
+                    "utilityPath",
+                    "offlineModelPath",
+                    "offlineSgbdPath",
+                    "offlineFiuPath",
+                    "logFile",
+                    "errorLogFile",
+                    "language");
             logger.logDebug("Workspace settings:");
-            settings.forEach(setting ->
-                {
-                    try {
-                        logger.logDebug(String.format("- %s: %s", setting,
+            settings.forEach(setting -> {
+                try {
+                    logger.logDebug(String.format("- %s: %s", setting,
                             launcher.getChannel().call(new AbstractTestHelper.GetSettingCallable(setting))));
-                    } catch (IOException | InterruptedException e) {
-                        logger.logDebug(String.format("- %s: not available", setting));
-                    }
+                } catch (IOException | InterruptedException e) {
+                    logger.logDebug(String.format("- %s: not available", setting));
                 }
-            );
+            });
         }
     }
 
     /**
      * Queries the loaded patches and and logs them as debug messages.
      *
-     * @param launcher the launcher
-     * @param listener the listener
+     * @param launcher       the launcher
+     * @param listener       the listener
+     * @param comToolVersion the COM version
      */
     private void queryLoadedPatches(final Launcher launcher, final TaskListener listener,
                                     final ToolVersion comToolVersion) {
-        if (Boolean.getBoolean("ecutest.debugLog") &&
-            comToolVersion.compareWithoutMicroTo(new ToolVersion(7, 1, 0)) >= 0) {
+        if (Boolean.getBoolean("ecutest.debugLog")
+                && comToolVersion.compareWithoutMicroTo(new ToolVersion(7, 1, 0)) >= 0) {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             try {
-                List<String> loadedPatches = launcher.getChannel().call(new GetLoadedPatchesCallable(listener));
+                final List<String> loadedPatches = launcher.getChannel().call(new GetLoadedPatchesCallable(listener));
                 logger.logDebug("Loaded patches: " + loadedPatches);
             } catch (IOException | InterruptedException e) {
                 logger.logDebug("Loaded patches: not available");
@@ -494,6 +475,8 @@ public class ETClient extends AbstractToolClient {
         /**
          * Tries to soft exit ECU-TEST with given timeout.
          *
+         * @param progId the COM programmatic identifier
+         * @param logger the logger
          * @return {@code true} if terminated successfully, {@code false} otherwise
          */
         private boolean quit(final String progId, final TTConsoleLogger logger) {
@@ -509,6 +492,8 @@ public class ETClient extends AbstractToolClient {
         /**
          * Tries to hard exit ECU-TEST with given timeout.
          *
+         * @param progId the COM programmatic identifier
+         * @param logger the logger
          * @return {@code true} if terminated successfully, {@code false} otherwise
          */
         private boolean exit(final String progId, final TTConsoleLogger logger) {
@@ -546,7 +531,7 @@ public class ETClient extends AbstractToolClient {
         @Override
         public List<String> call() throws IOException {
             final List<String> procs = ProcessUtil.checkETProcesses(kill);
-            TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logDebug("Found open processes: " + procs);
             return procs;
         }
@@ -576,7 +561,7 @@ public class ETClient extends AbstractToolClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
-                String comVersion = comClient.getVersion();
+                final String comVersion = comClient.getVersion();
                 toolVersion = ToolVersion.parse(comVersion);
             } catch (final ETComException e) {
                 logger.logComException(e);
@@ -610,7 +595,7 @@ public class ETClient extends AbstractToolClient {
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
                  TestBenchConfiguration tbc = (TestBenchConfiguration)
-                     comClient.getCurrentTestBenchConfiguration()) {
+                         comClient.getCurrentTestBenchConfiguration()) {
                 tbcFilePath = StringUtils.trimToEmpty(tbc.getFileName());
                 logger.logDebug("Last loaded TBC: " + tbcFilePath);
             } catch (final ETComException e) {
@@ -736,13 +721,13 @@ public class ETClient extends AbstractToolClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
-                String comVersion = comClient.getVersion();
+                final String comVersion = comClient.getVersion();
                 final ToolVersion toolVersion = ToolVersion.parse(comVersion);
                 if (toolVersion.compareWithoutMicroTo(new ToolVersion(8, 0, 0)) >= 0) {
                     return comClient.isStarted();
                 } else {
-                    logger.logWarn("-> Checking configuration status is not supported. " +
-                        "Please use at least ECU-TEST 8.0!");
+                    logger.logWarn("-> Checking configuration status is not supported. "
+                            + "Please use at least ECU-TEST 8.0!");
                 }
             } catch (final ETComException e) {
                 logger.logComException(e);
@@ -771,7 +756,7 @@ public class ETClient extends AbstractToolClient {
 
         @Override
         public List<String> call() throws IOException {
-            List<String> loadedPatches = new ArrayList<>();
+            final List<String> loadedPatches = new ArrayList<>();
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {

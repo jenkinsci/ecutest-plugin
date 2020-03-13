@@ -1,18 +1,18 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectArchiveConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectAttributeConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
+import de.tracetronic.jenkins.plugins.ecutest.util.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
@@ -28,8 +28,6 @@ import java.io.IOException;
 
 /**
  * Client to import ECU-TEST projects via COM interface.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ImportProjectClient extends AbstractTMSClient {
 
@@ -48,15 +46,12 @@ public class ImportProjectClient extends AbstractTMSClient {
     /**
      * Instantiates a new {@link ImportProjectClient}.
      *
-     * @param importConfig the import configuration
+     * @param importConfig the import project configuration
      */
     public ImportProjectClient(final TMSConfig importConfig) {
         this.importConfig = importConfig;
     }
 
-    /**
-     * @return the import project configuration
-     */
     public TMSConfig getImportConfig() {
         return importConfig;
     }

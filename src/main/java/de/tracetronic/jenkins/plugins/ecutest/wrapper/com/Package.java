@@ -10,13 +10,12 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComPackage;
 
 /**
  * COM object giving access to the properties of an opened package.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class Package extends AbstractTestObject implements ComPackage {
 
     /**
      * Instantiates a new {@link Package}.
+     *
      * <p>
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.

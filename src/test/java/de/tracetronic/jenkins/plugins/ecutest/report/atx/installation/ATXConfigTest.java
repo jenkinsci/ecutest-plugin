@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -22,8 +23,6 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link ATXConfig}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXConfigTest {
 
@@ -77,7 +76,9 @@ public class ATXConfigTest {
     @Test
     public void testGetSettingByName() {
         final ATXConfig config = new ATXConfig();
-        assertNotNull(config.getSettingByName("serverPort"));
+        Optional<ATXSetting<?>> setting = config.getSettingByName("serverPort");
+        assertThat(setting.isPresent(), is(true));
+        assertThat(setting.get().value, is("8085"));
     }
 
     @Test
@@ -93,21 +94,28 @@ public class ATXConfigTest {
     }
 
     @Test
-    public void testGetSettingValueByName() {
+    public void testGetSettingValueByGroup() {
         final ATXConfig config = new ATXConfig();
-        assertThat(config.getSettingValueByName("serverPort",
+        assertThat(config.getSettingValueBySettings("serverPort",
             config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD)), is("8085"));
     }
 
     @Test
-    public void testGetInvalidSettingValueByName() {
+    public void testGetInvalidSettingValueByGroup() {
         final ATXConfig config = new ATXConfig(null, null);
-        assertThat(config.getSettingValueByName("invalid", config.getSettingsByGroup(null)), nullValue());
+        assertThat(config.getSettingValueBySettings("invalid", config.getSettingsByGroup(null)), nullValue());
     }
 
     @Test
-    public void testGetEmptySettingValueByName() {
+    public void testGetEmptySettingValueByGroup() {
         final ATXConfig config = new ATXConfig(null, null);
-        assertThat(config.getSettingValueByName("empty", new ArrayList<>()), nullValue());
+        assertThat(config.getSettingValueBySettings("empty", new ArrayList<>()), nullValue());
+    }
+
+    @Test
+    public void testSetSettingValueByName() {
+        final ATXConfig config = new ATXConfig(null, null);
+        config.setSettingValueByName("uploadToServer", true);
+        assertThat(config.getSettingValueByName("uploadToServer"), is(true));
     }
 }

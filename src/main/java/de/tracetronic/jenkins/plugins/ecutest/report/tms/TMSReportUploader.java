@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -8,10 +8,10 @@ package de.tracetronic.jenkins.plugins.ecutest.report.tms;
 import com.cloudbees.plugins.credentials.CredentialsMatchers;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFReport;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTMSClient;
+import de.tracetronic.jenkins.plugins.ecutest.util.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
@@ -31,8 +31,6 @@ import java.util.List;
 
 /**
  * Class providing the upload of {@link TRFReport}s to a test management system.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TMSReportUploader extends AbstractTMSClient {
 
@@ -79,12 +77,9 @@ public class TMSReportUploader extends AbstractTMSClient {
      * @param credentialsId the credentials id
      * @param project       the project
      * @return the credentials
-     * @throws IOException          signals that an I/O exception has occurred
-     * @throws InterruptedException the interrupted exception
      */
     @CheckForNull
-    private StandardUsernamePasswordCredentials getCredentials(final String credentialsId, final Item project)
-        throws IOException, InterruptedException {
+    private StandardUsernamePasswordCredentials getCredentials(final String credentialsId, final Item project) {
         final List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider
             .lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
                 Collections.emptyList());

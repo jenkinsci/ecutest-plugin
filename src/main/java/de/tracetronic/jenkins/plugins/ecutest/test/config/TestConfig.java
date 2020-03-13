@@ -24,8 +24,6 @@ import java.util.Objects;
 
 /**
  * Class holding the test configurations (e.g. TBC, TCF).
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestConfig extends AbstractDescribableImpl<TestConfig> implements Serializable, ExpandableConfig {
 
@@ -34,14 +32,20 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
     private final String tbcFile;
     private final String tcfFile;
     /**
+     * Specifies whether to reload the configuration.
+     *
      * @since 1.4
      */
     private final boolean forceReload;
     /**
+     * Specifies whether to load the configuration only.
+     *
      * @since 1.6
      */
     private final boolean loadOnly;
     /**
+     * Specifies whether to keep the previously loaded configuration.
+     *
      * @since 1.17
      */
     private final boolean keepConfig;
@@ -108,50 +112,34 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
     }
 
     /**
-     * @return the instance of a {@link TestConfig}.
+     * Instantiates a new {@link TestConfig} with default values.
+     *
+     * @return the default {@link TestConfig}
      */
     public static TestConfig newInstance() {
         return new TestConfig(null, null, false, false, false, null);
     }
 
-    /**
-     * @return the TBC file path
-     */
     public String getTbcFile() {
         return tbcFile;
     }
 
-    /**
-     * @return the TCF file path
-     */
     public String getTcfFile() {
         return tcfFile;
     }
 
-    /**
-     * @return specifies whether to reload the configuration
-     */
     public boolean isForceReload() {
         return forceReload;
     }
 
-    /**
-     * @return specifies whether to load the configuration only
-     */
     public boolean isLoadOnly() {
         return loadOnly;
     }
 
-    /**
-     * @return specifies whether to keep the previously loaded configuration
-     */
     public boolean isKeepConfig() {
         return keepConfig;
     }
 
-    /**
-     * @return the global constants
-     */
     public List<GlobalConstant> getConstants() {
         return constants;
     }
@@ -189,7 +177,7 @@ public class TestConfig extends AbstractDescribableImpl<TestConfig> implements S
     /**
      * DescriptorImpl for {@link TestConfig}.
      *
-     * @param <T>
+     * @param <T> the generic type
      */
     @Extension
     public static class DescriptorImpl<T> extends Descriptor<TestConfig> {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -17,7 +17,6 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 import javax.annotation.CheckForNull;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
@@ -27,8 +26,6 @@ import java.util.logging.Logger;
 
 /**
  * Common base class providing shared methods to handle {@link StaplerRequest}s.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractRequestHandler {
 
@@ -46,19 +43,13 @@ public abstract class AbstractRequestHandler {
         if (build != null) {
             return build;
         }
-
-        final Job<?, ?> project = getAnchestorProject(req);
-        if (project != null) {
-            return project;
-        }
-
-        return null;
+        return getAnchestorProject(req);
     }
 
     /**
      * Gets the build that have report artifacts this action handles.
-     * <p>
-     * If called in a project context, returns the last build that contains report artifacts.
+     *
+     * <p>If called in a project context, returns the last build that contains report artifacts.
      *
      * @param req the {@link StaplerRequest} used for access this action
      * @return the build with report artifacts to handle or {@code null} if no proper build exists
@@ -113,10 +104,8 @@ public abstract class AbstractRequestHandler {
      * @param req the {@link StaplerRequest} used for access this report
      * @param rsp the {@link StaplerResponse} used for serving the file
      * @throws IOException      signals that an I/O exception has occurred
-     * @throws ServletException if serving the file failed
      */
-    public void doZipDownload(final StaplerRequest req, final StaplerResponse rsp)
-        throws IOException, ServletException {
+    public void doZipDownload(final StaplerRequest req, final StaplerResponse rsp) throws IOException {
         final Run<?, ?> build = getBuild(req);
         final AbstractReportAction action = getBuildAction(req);
         if (build == null || action == null) {

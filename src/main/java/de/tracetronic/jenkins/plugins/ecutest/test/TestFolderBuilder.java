@@ -36,8 +36,6 @@ import java.util.List;
 
 /**
  * Builder providing the execution of ECU-TEST packages and projects inside of a test folder.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestFolderBuilder extends AbstractTestBuilder {
 
@@ -65,64 +63,40 @@ public class TestFolderBuilder extends AbstractTestBuilder {
         super(testFile);
     }
 
-    /**
-     * @return the scanMode
-     */
     @Nonnull
     public ScanMode getScanMode() {
         return scanMode;
     }
 
-    /**
-     * @param scanMode the scan mode
-     */
     @DataBoundSetter
     public void setScanMode(@Nonnull final ScanMode scanMode) {
         this.scanMode = scanMode;
     }
 
-    /**
-     * @return the recursiveScan
-     */
     public boolean isRecursiveScan() {
         return recursiveScan;
     }
 
-    /**
-     * @param recursiveScan the recursive scan mode
-     */
     @DataBoundSetter
     public void setRecursiveScan(final boolean recursiveScan) {
         this.recursiveScan = recursiveScan;
     }
 
-    /**
-     * @return the package configuration
-     */
     @Nonnull
     public PackageConfig getPackageConfig() {
         return packageConfig;
     }
 
-    /**
-     * @param packageConfig the package configuration
-     */
     @DataBoundSetter
     public void setPackageConfig(@CheckForNull final PackageConfig packageConfig) {
         this.packageConfig = packageConfig == null ? PackageConfig.newInstance() : packageConfig;
     }
 
-    /**
-     * @return the project configuration
-     */
     @Nonnull
     public ProjectConfig getProjectConfig() {
         return projectConfig;
     }
 
-    /**
-     * @param projectConfig the project configuration
-     */
     @DataBoundSetter
     public void setProjectConfig(@CheckForNull final ProjectConfig projectConfig) {
         this.projectConfig = projectConfig == null ? ProjectConfig.newInstance() : projectConfig;
@@ -292,9 +266,6 @@ public class TestFolderBuilder extends AbstractTestBuilder {
             load();
         }
 
-        /**
-         * @return the default scan mode
-         */
         public ScanMode getDefaultScanMode() {
             return ScanMode.PACKAGES_AND_PROJECTS;
         }

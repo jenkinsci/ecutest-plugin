@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -8,6 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.tool.pipeline;
 import com.google.common.collect.ImmutableSet;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.model.TaskListener;
 import org.jenkinsci.plugins.workflow.steps.Step;
@@ -21,8 +22,6 @@ import java.util.Set;
 
 /**
  * Advanced pipeline step that returns a pre-configured {@link ETInstance} instance by name.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETGetInstallationStep extends Step {
 
@@ -39,15 +38,12 @@ public class ETGetInstallationStep extends Step {
         this.toolName = toolName;
     }
 
-    /**
-     * @return the tool name
-     */
     public String getToolName() {
         return toolName;
     }
 
     @Override
-    public StepExecution start(final StepContext context) throws Exception {
+    public StepExecution start(final StepContext context) {
         return new Execution(this, context);
     }
 
@@ -58,6 +54,7 @@ public class ETGetInstallationStep extends Step {
 
         private static final long serialVersionUID = 1L;
 
+        @SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED", justification = "Only used when starting.")
         private final transient ETGetInstallationStep step;
 
         /**
@@ -73,9 +70,9 @@ public class ETGetInstallationStep extends Step {
 
         @Override
         protected ETInstance run() throws Exception {
-            ETInstallation installation = ETInstallation.get(step.toolName);
+            final ETInstallation installation = ETInstallation.get(step.toolName);
             if (installation == null) {
-                TaskListener listener = getContext().get(TaskListener.class);
+                final TaskListener listener = getContext().get(TaskListener.class);
                 final String message = String.format("ECU-TEST installation with name '%s' is not configured!",
                     step.toolName);
                 throw new ETPluginException(message, listener);

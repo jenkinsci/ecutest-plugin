@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -22,8 +22,6 @@ import java.util.List;
 
 /**
  * Builder providing the export of one or multiple ECU-TEST projects.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ExportProjectBuilder extends AbstractExportBuilder {
 
@@ -60,12 +58,10 @@ public class ExportProjectBuilder extends AbstractExportBuilder {
         public List<Descriptor<? extends TMSConfig>> getApplicableExporters() {
             final List<Descriptor<? extends TMSConfig>> list = new ArrayList<>();
             final DescriptorExtensionList<TMSConfig, Descriptor<TMSConfig>> configs = ExportConfig.all();
-            if (configs != null) {
-                for (final Descriptor<TMSConfig> config : configs) {
-                    if (config.isSubTypeOf(ExportProjectConfig.class) ||
-                        config.isSubTypeOf(ExportProjectAttributeConfig.class)) {
-                        list.add(config);
-                    }
+            for (final Descriptor<TMSConfig> config : configs) {
+                if (config.isSubTypeOf(ExportProjectConfig.class)
+                        || config.isSubTypeOf(ExportProjectAttributeConfig.class)) {
+                    list.add(config);
                 }
             }
             return list;

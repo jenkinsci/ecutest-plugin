@@ -16,8 +16,6 @@ import java.util.List;
 
 /**
  * COM object giving access to a specific file cache.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class Cache extends ETComDispatch implements ComCache {
 
@@ -25,6 +23,7 @@ public class Cache extends ETComDispatch implements ComCache {
 
     /**
      * Instantiates a new {@link Cache}.
+     *
      * <p>
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.

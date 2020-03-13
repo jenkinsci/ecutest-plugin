@@ -21,8 +21,6 @@ import java.util.Map;
 
 /**
  * Class providing pipeline methods in order to get or create {@link ETInstallation} instances.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETPipeline implements Serializable {
 
@@ -109,7 +107,7 @@ public class ETPipeline implements Serializable {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();
         stepVariables.put(KEY_TOOL_NAME, toolName);
         stepVariables.put(KEY_INSTALL_PATH, installPath);
-        ETToolProperty property = new ETToolProperty(progId, timeout, registerComServer);
+        final ETToolProperty property = new ETToolProperty(progId, timeout, registerComServer);
         stepVariables.put(KEY_PROPERTY, property);
 
         final ETInstance installation = (ETInstance) script.invokeMethod("newETInstallation", stepVariables);
@@ -132,7 +130,7 @@ public class ETPipeline implements Serializable {
         }
 
         if (installArgs.containsKey(KEY_PROPERTY) && installArgs.get(KEY_PROPERTY) instanceof ETToolProperty) {
-            ETToolProperty property = (ETToolProperty) installArgs.get(KEY_PROPERTY);
+            final ETToolProperty property = (ETToolProperty) installArgs.get(KEY_PROPERTY);
             return newInstallation((String) installArgs.get(KEY_TOOL_NAME), (String) installArgs.get(KEY_INSTALL_PATH),
                 property.getProgId(), property.getTimeout(), property.isRegisterComServer());
         }

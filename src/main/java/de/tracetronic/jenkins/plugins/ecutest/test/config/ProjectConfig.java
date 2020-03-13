@@ -24,8 +24,6 @@ import java.util.Objects;
 
 /**
  * Class holding the project configuration.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implements Serializable,
     ExpandableConfig {
@@ -59,29 +57,22 @@ public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implem
     }
 
     /**
-     * @return the instance of a {@link ProjectConfig}.
+     * Instantiates a new {@link ProjectConfig} with default values.
+     *
+     * @return the default {@link ProjectConfig}
      */
     public static ProjectConfig newInstance() {
         return new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
     }
 
-    /**
-     * @return the execInCurrentPkgDir
-     */
     public boolean isExecInCurrentPkgDir() {
         return execInCurrentPkgDir;
     }
 
-    /**
-     * @return the filterExpression
-     */
     public String getFilterExpression() {
         return filterExpression;
     }
 
-    /**
-     * @return the jobExecutionMode
-     */
     public JobExecutionMode getJobExecMode() {
         return jobExecMode;
     }
@@ -175,9 +166,6 @@ public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implem
             return execMode;
         }
 
-        /**
-         * @return the value
-         */
         public int getValue() {
             return value;
         }
@@ -197,9 +185,6 @@ public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implem
             return "Project Configuration";
         }
 
-        /**
-         * @return the default scan mode
-         */
         public JobExecutionMode getDefaultJobExecMode() {
             return JobExecutionMode.SEQUENTIAL_EXECUTION;
         }

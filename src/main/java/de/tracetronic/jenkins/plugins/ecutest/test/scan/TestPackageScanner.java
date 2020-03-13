@@ -9,8 +9,6 @@ import hudson.Launcher;
 
 /**
  * Directory scanner searching for ECU-TEST packages.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestPackageScanner extends AbstractTestScanner {
 

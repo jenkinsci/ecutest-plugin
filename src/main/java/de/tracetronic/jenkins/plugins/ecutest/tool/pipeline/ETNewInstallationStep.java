@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -7,6 +7,7 @@ package de.tracetronic.jenkins.plugins.ecutest.tool.pipeline;
 
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETToolProperty;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
@@ -22,8 +23,6 @@ import java.util.Set;
 
 /**
  * Advanced pipeline step that returns a new {@link ETInstance} instance.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETNewInstallationStep extends Step {
 
@@ -50,31 +49,23 @@ public class ETNewInstallationStep extends Step {
         this.property = property != null ? property : new ETToolProperty(null, 0, false);
     }
 
-    /**
-     * @return the tool name
-     */
     @Nonnull
     public String getToolName() {
         return toolName;
     }
 
-    /**
-     * @return the installation path
-     */
     @Nonnull
     public String getInstallPath() {
         return installPath;
     }
 
-    /**
-     * @return the tool property
-     */
+    @CheckForNull
     public ETToolProperty getProperty() {
         return property;
     }
 
     @Override
-    public StepExecution start(final StepContext context) throws Exception {
+    public StepExecution start(final StepContext context) {
         return new Execution(this, context);
     }
 
@@ -85,6 +76,7 @@ public class ETNewInstallationStep extends Step {
 
         private static final long serialVersionUID = 1L;
 
+        @SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED", justification = "Only used when starting.")
         private final transient ETNewInstallationStep step;
 
         /**
@@ -99,7 +91,7 @@ public class ETNewInstallationStep extends Step {
         }
 
         @Override
-        protected ETInstance run() throws Exception {
+        protected ETInstance run() {
             final ETInstallation installation = new ETInstallation(step.toolName, step.installPath,
                 Collections.singletonList(step.property));
             return new ETInstance(installation);

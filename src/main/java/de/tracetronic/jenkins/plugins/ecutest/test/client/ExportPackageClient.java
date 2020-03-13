@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageAttributeConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExportPackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TMSConfig;
+import de.tracetronic.jenkins.plugins.ecutest.util.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
@@ -26,8 +26,6 @@ import java.io.IOException;
 
 /**
  * Client to export ECU-TEST packages via COM interface.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ExportPackageClient extends AbstractTMSClient {
 
@@ -47,9 +45,6 @@ public class ExportPackageClient extends AbstractTMSClient {
         this.exportConfig = exportConfig;
     }
 
-    /**
-     * @return the export package configuration
-     */
     public TMSConfig getExportConfig() {
         return exportConfig;
     }

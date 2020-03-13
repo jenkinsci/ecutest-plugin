@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -18,8 +18,6 @@ import java.util.Map.Entry;
 
 /**
  * Utility class providing ATX related functions.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public final class ATXUtil {
 
@@ -96,12 +94,13 @@ public final class ATXUtil {
     public static String getBaseUrl(final ATXConfig config, final EnvVars envVars) {
         String fullServerUrl = null;
         if (config != null && envVars != null) {
-            final List<ATXSetting> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
-            final Object useHttpsConnection = config.getSettingValueByName("useHttpsConnection", uploadSettings);
-            final String serverUrl = envVars.expand((String) config.getSettingValueByName("serverURL", uploadSettings));
-            final String serverPort = envVars.expand((String) config
-                .getSettingValueByName("serverPort", uploadSettings));
-            final String contextPath = envVars.expand((String) config.getSettingValueByName("serverContextPath",
+            final List<ATXSetting<?>> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
+            final Object useHttpsConnection = config.getSettingValueBySettings("useHttpsConnection", uploadSettings);
+            final String serverUrl = envVars.expand((String) config.getSettingValueBySettings("serverURL",
+                    uploadSettings));
+            final String serverPort = envVars.expand((String) config.getSettingValueBySettings("serverPort",
+                    uploadSettings));
+            final String contextPath = envVars.expand((String) config.getSettingValueBySettings("serverContextPath",
                 uploadSettings));
             if (serverUrl != null && serverPort != null && contextPath != null && useHttpsConnection != null) {
                 fullServerUrl = getBaseUrl(serverUrl, serverPort, contextPath, (boolean) useHttpsConnection);
@@ -142,12 +141,12 @@ public final class ATXUtil {
     public static String getProxyUrl(final ATXConfig config, final EnvVars envVars) {
         String proxyUrl = null;
         if (config != null && envVars != null) {
-            final List<ATXSetting> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
-            final Object useHttpsConnection = config.getSettingValueByName("useHttpsConnection", uploadSettings);
+            final List<ATXSetting<?>> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
+            final Object useHttpsConnection = config.getSettingValueBySettings("useHttpsConnection", uploadSettings);
             if (useHttpsConnection != null && (boolean) useHttpsConnection) {
-                proxyUrl = envVars.expand((String) config.getSettingValueByName("httpsProxy", uploadSettings));
+                proxyUrl = envVars.expand((String) config.getSettingValueBySettings("httpsProxy", uploadSettings));
             } else {
-                proxyUrl = envVars.expand((String) config.getSettingValueByName("httpProxy", uploadSettings));
+                proxyUrl = envVars.expand((String) config.getSettingValueBySettings("httpProxy", uploadSettings));
             }
         }
         return proxyUrl;
@@ -160,12 +159,11 @@ public final class ATXUtil {
      * @param envVars the environment variables
      * @return the project id, {@code null} if setting is not available
      */
-    @SuppressWarnings("rawtypes")
     public static String getProjectId(final ATXConfig config, final EnvVars envVars) {
         String projectId = null;
         if (config != null && envVars != null) {
-            List<ATXSetting> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
-            Object projectIdSetting = config.getSettingValueByName("projectId", uploadSettings);
+            final List<ATXSetting<?>> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
+            final Object projectIdSetting = config.getSettingValueBySettings("projectId", uploadSettings);
             if (projectIdSetting != null) {
                 projectId = envVars.expand((String) projectIdSetting);
             }
@@ -179,12 +177,11 @@ public final class ATXUtil {
      * @param config the ATX configuration
      * @return the value of this setting as boolean, {@code true} by default if setting not exists
      */
-    @SuppressWarnings("rawtypes")
     public static boolean isSingleTestplanMap(final ATXConfig config) {
         boolean isMapEnabled = true;
         if (config != null) {
-            final List<ATXSetting> specialSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.SPECIAL);
-            final Object settingValue = config.getSettingValueByName("mapSeparateProjectExecutionAsSingleTestplan",
+            final List<ATXSetting<?>> specialSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.SPECIAL);
+            final Object settingValue = config.getSettingValueBySettings("mapSeparateProjectExecutionAsSingleTestplan",
                 specialSettings);
             if (settingValue != null) {
                 isMapEnabled = (boolean) settingValue;

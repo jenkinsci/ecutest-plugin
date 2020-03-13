@@ -11,8 +11,6 @@ import hudson.model.Run;
 
 /**
  * Common base class for {@link ATXBuildAction} and {@link ATXProjectAction}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractATXAction extends AbstractReportAction {
 
@@ -45,16 +43,10 @@ public abstract class AbstractATXAction extends AbstractReportAction {
         return "icon-ecutest-test-guide";
     }
 
-    /**
-     * @return the report icon class name
-     */
     public String getReportIconClassName() {
         return "icon-ecutest-atx-report";
     }
 
-    /**
-     * @return the trend icon class name
-     */
     public String getTrendIconClassName() {
         return "icon-ecutest-atx-trend";
     }

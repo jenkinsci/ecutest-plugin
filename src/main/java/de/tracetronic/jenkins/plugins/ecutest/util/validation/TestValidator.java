@@ -21,8 +21,6 @@ import java.util.regex.Pattern;
 
 /**
  * Validator to check test related form fields.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestValidator extends AbstractValidator {
 
@@ -158,8 +156,8 @@ public class TestValidator extends AbstractValidator {
             if (filterExpression.contains(PARAMETER)) {
                 returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
             } else {
-                final String trimmedExpression = StringUtils.trimToEmpty(filterExpression).replaceAll("^\\(\\s*", "(")
-                    .replaceAll("\\s*\\)", ")");
+                final String trimmedExpression = StringUtils.trimToEmpty(filterExpression)
+                        .replaceAll("^\\(\\s*", "(").replaceAll("\\s*\\)", ")");
                 final FilterExpressionValidator validator = new FilterExpressionValidator(trimmedExpression);
                 validator.validate();
                 if (!validator.isValid()) {
@@ -233,9 +231,6 @@ public class TestValidator extends AbstractValidator {
             parser.filterExpression();
         }
 
-        /**
-         * @return {@code true} if expression is valid, {@code false} otherwise.
-         */
         public boolean isValid() {
             return isValid;
         }

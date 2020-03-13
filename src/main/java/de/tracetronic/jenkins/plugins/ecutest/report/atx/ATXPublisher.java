@@ -41,8 +41,6 @@ import java.util.Optional;
 
 /**
  * Publisher providing the generation and upload of {@link ATXReport}s to TEST-GUIDE.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXPublisher extends AbstractReportPublisher {
 
@@ -52,13 +50,16 @@ public class ATXPublisher extends AbstractReportPublisher {
     protected static final String URL_NAME = "atx-reports";
 
     @Nonnull
-    private String atxName;
+    private final String atxName;
     private ATXInstallation atxInstallation;
     /**
+     * Specifies whether to fail the build if upload is enabled and the server is offline.
      * @since 2.11
      */
     private boolean failOnOffline;
     /**
+     * Specifies whether to use report generator settings from persisted configurations file (XML).
+     *
      * @since 2.14
      */
     private boolean usePersistedSettings;
@@ -74,17 +75,11 @@ public class ATXPublisher extends AbstractReportPublisher {
         this.atxName = StringUtils.trimToEmpty(atxName);
     }
 
-    /**
-     * @return the {@link ATXInstallation} name
-     */
     @Nonnull
     public String getAtxName() {
         return atxName;
     }
 
-    /**
-     * @return the ATX installation
-     */
     public ATXInstallation getAtxInstallation() {
         return atxInstallation;
     }
@@ -99,31 +94,19 @@ public class ATXPublisher extends AbstractReportPublisher {
         this.atxInstallation = atxInstallation;
     }
 
-    /**
-     * @return whether to fail the build if upload is enabled and the server is offline
-     */
     public boolean isFailOnOffline() {
         return failOnOffline;
     }
 
-    /**
-     * @param failOnOffline whether to fail the build if upload is enabled and the server is offline
-     */
     @DataBoundSetter
     public void setFailOnOffline(final boolean failOnOffline) {
         this.failOnOffline = failOnOffline;
     }
 
-    /**
-     * @return specifies whether to use report generator settings from persisted configurations file (XML)
-     */
     public boolean isUsePersistedSettings() {
         return usePersistedSettings;
     }
 
-    /**
-     * @param usePersistedSettings whether to use report generator settings from persisted configurations file (XML)
-     */
     @DataBoundSetter
     public void setUsePersistedSettings(final boolean usePersistedSettings) {
         this.usePersistedSettings = usePersistedSettings;
@@ -221,7 +204,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean isUploadEnabled(final ATXInstallation installation) {
         final ATXConfig config = installation.getConfig();
-        final Optional<ATXSetting> uploadSetting = config.getSettingByName("uploadToServer");
+        final Optional<ATXSetting<?>> uploadSetting = config.getSettingByName("uploadToServer");
         return uploadSetting.isPresent() && ((ATXBooleanSetting) uploadSetting.get()).getValue();
     }
 
@@ -296,14 +279,14 @@ public class ATXPublisher extends AbstractReportPublisher {
 
         @Override
         public Boolean call() throws IOException {
-            Object ignoreSSL = config.getSettingValueByGroup("ignoreSSL", ATXSetting.SettingsGroup.UPLOAD);
+            final Object ignoreSSL = config.getSettingValueByGroup("ignoreSSL", ATXSetting.SettingsGroup.UPLOAD);
             if (ignoreSSL != null) {
                 final String baseUrl = ATXUtil.getBaseUrl(config, envVars);
                 final String proxyUrl = ATXUtil.getProxyUrl(config, envVars);
                 final ATXValidator validator = new ATXValidator();
                 final FormValidation validation = validator.testConnection(baseUrl, proxyUrl, (boolean) ignoreSSL);
                 if (validation.kind.equals(FormValidation.Kind.WARNING)) {
-                    TTConsoleLogger logger = new TTConsoleLogger(listener);
+                    final TTConsoleLogger logger = new TTConsoleLogger(listener);
                     logger.logWarn(validation.getMessage());
                     return true;
                 }
@@ -316,7 +299,6 @@ public class ATXPublisher extends AbstractReportPublisher {
     /**
      * DescriptorImpl for {@link ATXPublisher}.
      */
-    @SuppressWarnings("rawtypes")
     @Symbol("publishATX")
     @Extension(ordinal = 10007)
     public static class DescriptorImpl extends AbstractReportDescriptor {

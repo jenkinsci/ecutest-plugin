@@ -21,8 +21,6 @@ import java.util.logging.Logger;
 /**
  * Holds a link to ATX report. The build that holds the report artifact is resolved by
  * {@link StaplerRequest#findAncestorObject(Class)} at runtime.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXReport extends AbstractTestReport {
 
@@ -57,9 +55,6 @@ public class ATXReport extends AbstractTestReport {
         this.hasTrendReport = hasTrendReport;
     }
 
-    /**
-     * @return the report URL
-     */
     public String getReportUrl() {
         return reportUrl;
     }

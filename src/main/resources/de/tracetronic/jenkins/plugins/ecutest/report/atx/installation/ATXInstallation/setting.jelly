@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
+  Copyright (c) 2015-2020 TraceTronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
@@ -16,7 +16,8 @@
                 <j:otherwise>
                     <f:textbox name="${setting.getName()}" value="${setting.getValue()}"
                                default="${setting.getDefaultValue()}"
-                               checkUrl="'descriptorByName/ATXInstallation/checkSetting?name='+this.name+'&amp;value='+this.value"/>
+                               checkUrl="'descriptorByName/ATXInstallation/checkSetting?name='
+                                          +this.name+'&amp;value='+this.value"/>
                 </j:otherwise>
             </j:choose>
         </f:entry>

@@ -13,8 +13,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link ReportGeneratorValidator}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorValidatorTest {
 

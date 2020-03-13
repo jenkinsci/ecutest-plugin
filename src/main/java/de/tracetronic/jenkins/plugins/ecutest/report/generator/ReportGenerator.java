@@ -23,8 +23,6 @@ import java.util.Map;
 
 /**
  * Class providing the report generation with a specific generator.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGenerator {
 
@@ -40,9 +38,6 @@ public class ReportGenerator {
         this.config = config;
     }
 
-    /**
-     * @return the configuration
-     */
     public ReportGeneratorConfig getConfig() {
         return config;
     }
@@ -127,23 +122,26 @@ public class ReportGenerator {
         /**
          * Generates a test report from either predefined template or persisted settings file.
          *
+         * @param testEnv      the COM test environment
+         * @param dbFile       the path to report file
+         * @param templateName the template name
          * @return the configuration map
          */
-        private boolean generateReport(TestEnvironment testEnv, FilePath dbFile, String templateName)
-            throws ETComException {
+        private boolean generateReport(final TestEnvironment testEnv, final FilePath dbFile, final String templateName)
+                throws ETComException {
             if (config.isUsePersistedSettings()) {
                 final FilePath reportDir = dbFile.getParent();
                 final FilePath configPath = reportDir.child(templateName + ".xml");
                 final TTConsoleLogger logger = new TTConsoleLogger(listener);
                 logger.logInfo(String.format("- Using persisted settings from configuration: %s",
-                    configPath.getRemote()));
+                        configPath.getRemote()));
                 return testEnv.generateTestReportDocument(
-                    dbFile.getRemote(), reportDir.getRemote(), configPath.getRemote(), true);
+                        dbFile.getRemote(), reportDir.getRemote(), configPath.getRemote(), true);
             } else {
                 final FilePath outDir = dbFile.getParent().child(templateName);
                 final Map<String, String> configMap = getConfigMap();
                 return testEnv.generateTestReportDocumentFromDB(
-                    dbFile.getRemote(), outDir.getRemote(), templateName, true, configMap);
+                        dbFile.getRemote(), outDir.getRemote(), templateName, true, configMap);
             }
         }
     }

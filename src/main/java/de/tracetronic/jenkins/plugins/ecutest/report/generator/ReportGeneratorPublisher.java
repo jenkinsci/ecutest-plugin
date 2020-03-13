@@ -30,8 +30,6 @@ import java.util.List;
 
 /**
  * Publisher providing links to saved {@link GeneratorReport}s.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorPublisher extends AbstractToolPublisher {
 
@@ -71,34 +69,22 @@ public class ReportGeneratorPublisher extends AbstractToolPublisher {
         return validGenerators;
     }
 
-    /**
-     * @return the reportGenerators
-     */
     @Nonnull
     public List<ReportGeneratorConfig> getGenerators() {
         return generators;
     }
 
-    /**
-     * @param generators the report generators
-     */
     @DataBoundSetter
     public void setGenerators(final List<ReportGeneratorConfig> generators) {
         this.generators = generators == null ? new ArrayList<>()
             : removeEmptyGenerators(generators);
     }
 
-    /**
-     * @return the customGenerators
-     */
     @Nonnull
     public List<ReportGeneratorConfig> getCustomGenerators() {
         return customGenerators;
     }
 
-    /**
-     * @param customGenerators the custom report generators
-     */
     @DataBoundSetter
     public void setCustomGenerators(final List<ReportGeneratorConfig> customGenerators) {
         this.customGenerators = customGenerators == null ? new ArrayList<>()

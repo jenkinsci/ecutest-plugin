@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -33,8 +33,6 @@ import java.util.Map;
 
 /**
  * Client to execute ECU-TEST packages via COM interface.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class PackageClient extends AbstractTestClient {
 
@@ -54,9 +52,6 @@ public class PackageClient extends AbstractTestClient {
         this.packageConfig = packageConfig;
     }
 
-    /**
-     * @return the package configuration
-     */
     public PackageConfig getPackageConfig() {
         return packageConfig;
     }
@@ -182,7 +177,7 @@ public class PackageClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to run a package via COM.
      */
-    private static final class RunPackageCallable extends MasterToSlaveCallable<TestInfoHolder, InterruptedException> {
+    private static final class RunPackageCallable extends MasterToSlaveCallable<TestInfoHolder, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -208,7 +203,7 @@ public class PackageClient extends AbstractTestClient {
         }
 
         @Override
-        public TestInfoHolder call() throws InterruptedException {
+        public TestInfoHolder call() throws IOException {
             final boolean runTest = packageConfig.isRunTest();
             final boolean runTraceAnalysis = packageConfig.isRunTraceAnalysis();
             final int timeout = executionConfig.getParsedTimeout();
@@ -386,16 +381,10 @@ public class PackageClient extends AbstractTestClient {
             this.testDescription = testDescription;
         }
 
-        /**
-         * @return the test name
-         */
         public String getTestName() {
             return testName;
         }
 
-        /**
-         * @return the test description
-         */
         public String getTestDescription() {
             return testDescription;
         }

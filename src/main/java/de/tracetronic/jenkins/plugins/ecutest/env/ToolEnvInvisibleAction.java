@@ -11,8 +11,6 @@ import hudson.model.InvisibleAction;
 /**
  * Helper invisible action which is used for exchanging information between {@link ETClient}s
  * and other objects like {@link ToolEnvContributor}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ToolEnvInvisibleAction extends InvisibleAction {
 

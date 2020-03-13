@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -16,8 +16,6 @@ import java.util.List;
 
 /**
  * Action to show a link to {@link GeneratorReport}s at the build page.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorBuildAction extends AbstractReportGeneratorAction implements
     SimpleBuildStep.LastBuildAction {
@@ -46,20 +44,18 @@ public class ReportGeneratorBuildAction extends AbstractReportGeneratorAction im
      * Adds a generator report.
      *
      * @param report the generator report to add
-     * @return {@code true} if successful, {@code false} otherwise
      */
-    public boolean add(final GeneratorReport report) {
-        return getGeneratorReports().add(report);
+    public void add(final GeneratorReport report) {
+        generatorReports.add(report);
     }
 
     /**
      * Adds a bundle of generator reports.
      *
      * @param reports the collection of generator reports
-     * @return {@code true} if successful, {@code false} otherwise
      */
-    public boolean addAll(final Collection<GeneratorReport> reports) {
-        return getGeneratorReports().addAll(reports);
+    public void addAll(final Collection<GeneratorReport> reports) {
+        this.generatorReports.addAll(reports);
     }
 
     /**

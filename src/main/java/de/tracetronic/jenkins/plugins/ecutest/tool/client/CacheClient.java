@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
+import de.tracetronic.jenkins.plugins.ecutest.util.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Cache;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Caches;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Caches.CacheType;
@@ -26,8 +26,6 @@ import java.util.List;
 
 /**
  * Client to generate ECU-TEST caches via COM interface.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class CacheClient {
 
@@ -126,6 +124,7 @@ public class CacheClient {
      * Checks already opened ECU-TEST instances.
      *
      * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true} if processes found, {@code false} otherwise
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
@@ -163,16 +162,16 @@ public class CacheClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient client = new ETComClient(progId)) {
-                Caches caches = (Caches) client.getCaches();
-                Cache cache = caches.getCacheByType(type);
-                String cacheType = type.name();
+                final Caches caches = (Caches) client.getCaches();
+                final Cache cache = caches.getCacheByType(type);
+                final String cacheType = type.name();
                 if (clear) {
                     logger.logInfo(String.format("- Removing all %s cache files...", cacheType));
                     cache.clear(true);
                 }
                 logger.logInfo(String.format("- Inserting %s to %s cache...", filePath, cacheType));
                 cache.insert(filePath, dbChannel);
-                List<String> files = cache.getFiles();
+                final List<String> files = cache.getFiles();
                 logger.logInfo(String.format("-> Available %s cache files: %s", cacheType, files.toString()));
             } catch (final ETComException e) {
                 logger.logComException(e);
@@ -217,9 +216,9 @@ public class CacheClient {
                     logger.logError(String.format(
                         "The configured ECU-TEST version %s does not support the cache module. "
                             + "Please use at least ECU-TEST %s!", comVersion, minVersion.toMicroString()));
-                } else if (comClient.getCaches() != null) {
-                    isAvailable = true;
                 }
+                comClient.getCaches();
+                isAvailable = true;
             } catch (final ETComException e) {
                 logger.logError(String.format("The cache module is not available in running ECU-TEST instance! "
                     + "Please use at least ECU-TEST %s!", minVersion.toMicroString()));

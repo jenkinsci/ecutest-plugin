@@ -16,8 +16,7 @@ import javax.annotation.CheckForNull;
  * Action to show a link to {@link ATXReport}s in side menu of projects.
  *
  * @param <T> the report type, either {@link ATXReport} or {@link ATXZipReport}
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
- */
+*/
 public class ATXProjectAction<T extends AbstractTestReport> extends AbstractATXAction {
 
     /**
@@ -31,6 +30,7 @@ public class ATXProjectAction<T extends AbstractTestReport> extends AbstractATXA
 
     /**
      * Returns the {@link ATXBuildAction} in the last build that have artifact documents.
+     *
      * <p>
      * Resolves the owner by {@link StaplerRequest#findAncestorObject(Class)}.
      *
@@ -46,8 +46,8 @@ public class ATXProjectAction<T extends AbstractTestReport> extends AbstractATXA
 
     /**
      * Returns {@link ATXReport} specified by the URL.
-     * <p>
-     * Delegates to the last {@link ATXBuildAction}.
+     *
+     * <p>Delegates to the last {@link ATXBuildAction}.
      *
      * @param token the URL token
      * @param req   the {@link StaplerRequest} used for access this action

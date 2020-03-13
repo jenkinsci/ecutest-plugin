@@ -20,8 +20,6 @@ import java.util.Objects;
 
 /**
  * Integration tests for {@link ATXPipeline}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXPipelineIT extends IntegrationTestBase {
 

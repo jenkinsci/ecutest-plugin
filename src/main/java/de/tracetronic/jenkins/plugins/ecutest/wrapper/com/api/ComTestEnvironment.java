@@ -11,8 +11,6 @@ import java.util.Map;
 
 /**
  * Represents the ECU-TEST specific COMTestEnvironment API.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public interface ComTestEnvironment {
 

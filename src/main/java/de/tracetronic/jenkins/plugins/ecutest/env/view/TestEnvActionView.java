@@ -28,8 +28,6 @@ import java.util.logging.Logger;
 
 /**
  * Shows the test related environment variables as an build action.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestEnvActionView extends InvisibleAction {
 

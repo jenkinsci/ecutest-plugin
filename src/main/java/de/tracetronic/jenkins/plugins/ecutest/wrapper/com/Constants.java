@@ -12,13 +12,12 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComConstants;
 
 /**
  * COM object giving access to all global constants of the currently loaded test configuration.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class Constants extends AbstractTestObject implements ComConstants {
 
     /**
      * Instantiates a new {@link Constants}.
+     *
      * <p>
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.

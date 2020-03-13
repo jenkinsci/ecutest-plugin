@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -28,8 +28,6 @@ import java.util.Map.Entry;
 
 /**
  * Common base class for {@link PackageClient} and {@link ProjectClient}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTestClient implements TestClient {
 
@@ -45,7 +43,7 @@ public abstract class AbstractTestClient implements TestClient {
     /**
      * Instantiates a new {@link AbstractTestClient}.
      *
-     * @param testFile        the test file
+     * @param testFile        the test file path
      * @param testConfig      the test configuration
      * @param executionConfig the execution configuration
      */
@@ -61,93 +59,59 @@ public abstract class AbstractTestClient implements TestClient {
         isAborted = false;
     }
 
-    /**
-     * @return the test file path
-     */
     public String getTestFile() {
         return testFile;
     }
 
-    /**
-     * @return the test configuration
-     */
     public TestConfig getTestConfig() {
         return testConfig;
     }
 
-    /**
-     * @return the execution configuration
-     */
     public ExecutionConfig getExecutionConfig() {
         return executionConfig;
     }
 
-    /**
-     * @return the test name
-     */
     public String getTestName() {
         return testName;
     }
 
-    /**
-     * @param testName the test name to set
-     */
     public void setTestName(final String testName) {
         this.testName = testName;
     }
 
-    /**
-     * @return the test description
-     */
     public String getTestDescription() {
         return testDescription;
     }
 
-    /**
-     * @param testDescription the test description to set
-     */
     public void setTestDescription(final String testDescription) {
         this.testDescription = testDescription;
     }
 
-    /**
-     * @return the test report directory
-     */
     public String getTestReportDir() {
         return testReportDir;
     }
 
-    /**
-     * @param testReportDir the test report directory to set
-     */
     public void setTestReportDir(final String testReportDir) {
         this.testReportDir = testReportDir;
     }
 
-    /**
-     * @return the test result
-     */
     public String getTestResult() {
         return testResult;
     }
 
-    /**
-     * @param testResult the test result to set
-     */
     public void setTestResult(final String testResult) {
         this.testResult = testResult;
     }
 
     /**
-     * @return specifies whether the test execution is aborted
+     * Specifies whether the test execution is aborted.
+     *
+     * @return {@code true} if is aborted, {@code false} otherwise
      */
     public boolean isAborted() {
         return isAborted;
     }
 
-    /**
-     * @param isAborted the test abort status
-     */
     public void setAborted(final boolean isAborted) {
         this.isAborted = isAborted;
     }
@@ -231,7 +195,7 @@ public abstract class AbstractTestClient implements TestClient {
          * @return the configuration name
          */
         private String getConfigName(final String configFile) {
-            String configName;
+            final String configName;
             if (StringUtils.isBlank(configFile)) {
                 configName = "None";
             } else {
@@ -262,9 +226,8 @@ public abstract class AbstractTestClient implements TestClient {
          * Converts the global constant list to a map.
          *
          * @return the global constant map
-         * @throws ETComException in case of a COM exception
          */
-        private Map<String, String> getGlobalConstantMap() throws ETComException {
+        private Map<String, String> getGlobalConstantMap() {
             final Map<String, String> constantMap = new LinkedHashMap<>();
             for (final GlobalConstant constant : testConfig.getConstants()) {
                 constantMap.put(constant.getName(), constant.getValue());
@@ -297,23 +260,14 @@ public abstract class AbstractTestClient implements TestClient {
             this.isAborted = isAborted;
         }
 
-        /**
-         * @return the test result
-         */
         public String getTestResult() {
             return testResult;
         }
 
-        /**
-         * @return the test report directory
-         */
         public String getTestReportDir() {
             return testReportDir;
         }
 
-        /**
-         * @return specifies whether test execution is aborted
-         */
         public boolean isAborted() {
             return isAborted;
         }
@@ -346,30 +300,18 @@ public abstract class AbstractTestClient implements TestClient {
             this.lineNumber = lineNumber;
         }
 
-        /**
-         * @return the file path
-         */
         public String getFilePath() {
             return filePath;
         }
 
-        /**
-         * @return the seriousness
-         */
         public Seriousness getSeriousness() {
             return seriousness;
         }
 
-        /**
-         * @return the error message
-         */
         public String getErrorMessage() {
             return errorMessage;
         }
 
-        /**
-         * @return the line number
-         */
         public String getLineNumber() {
             return lineNumber;
         }

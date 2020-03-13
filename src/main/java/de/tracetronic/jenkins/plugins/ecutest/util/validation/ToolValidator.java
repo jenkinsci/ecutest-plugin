@@ -14,8 +14,6 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Validator to check tool related form fields.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ToolValidator extends AbstractValidator {
 
@@ -74,10 +72,9 @@ public class ToolValidator extends AbstractValidator {
      * @return the form validation
      */
     public FormValidation validateTcpPort(final String tcpPort) {
-        FormValidation returnValue;
+        final FormValidation returnValue;
         if (StringUtils.isBlank(tcpPort)) {
-            returnValue = FormValidation.warning(Messages
-                .StartTSBuilder_NoTcpPort(StartTSBuilder.DEFAULT_TCP_PORT));
+            returnValue = FormValidation.warning(Messages.StartTSBuilder_NoTcpPort(StartTSBuilder.DEFAULT_TCP_PORT));
         } else if (tcpPort.contains(PARAMETER)) {
             returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
         } else {

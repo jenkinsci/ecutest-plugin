@@ -17,8 +17,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Class holding the configuration for importing a package from test management system.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ImportPackageConfig extends ImportConfig {
 

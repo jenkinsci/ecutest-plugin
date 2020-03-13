@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -30,8 +30,6 @@ import java.util.List;
 
 /**
  * Class providing report related DSL extensions.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 @Extension(optional = true)
 public class ReportPublisherDslExtension extends AbstractReportPublisherDslExtension {
@@ -63,6 +61,17 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     }
 
     /**
+     * {@link DslExtensionMethod} for publishing ATX reports with default settings.
+     *
+     * @param atxName the tool name identifying the {@link ATXInstallation} to be used
+     * @return the instance of a {@link ATXPublisher}
+     */
+    @DslExtensionMethod(context = PublisherContext.class)
+    public Object publishATX(final CharSequence atxName) {
+        return publishATX(atxName, null);
+    }
+
+    /**
      * Checks whether the ATX installation identified by given name exists.
      *
      * @param atxName   the ATX tool name
@@ -72,17 +81,6 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         if (StringUtils.containsNone(atxName, "$")) {
             Preconditions.checkNotNull(publisher.getInstallation(), NO_INSTALL_MSG, atxName);
         }
-    }
-
-    /**
-     * {@link DslExtensionMethod} for publishing ATX reports with default settings.
-     *
-     * @param atxName the tool name identifying the {@link ATXInstallation} to be used
-     * @return the instance of a {@link ATXPublisher}
-     */
-    @DslExtensionMethod(context = PublisherContext.class)
-    public Object publishATX(final CharSequence atxName) {
-        return publishATX(atxName, null);
     }
 
     /**
@@ -257,7 +255,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     /**
      * {@link Context} class providing ATX publisher methods for the nested DSL context.
      */
-    public class PublishATXContext extends AbstractReportContext {
+    public static class PublishATXContext extends AbstractReportContext {
     }
 
     /**
@@ -294,13 +292,13 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     /**
      * {@link Context} class providing TRF publisher methods for the nested DSL context.
      */
-    public class PublishTRFContext extends AbstractReportContext {
+    public static class PublishTRFContext extends AbstractReportContext {
     }
 
     /**
      * {@link Context} class providing ECU-TEST log publisher methods for the nested DSL context.
      */
-    public class PublishETLogContext extends AbstractReportContext {
+    public static class PublishETLogContext extends AbstractReportContext {
 
         private boolean unstableOnWarning;
         private boolean failedOnError;
@@ -337,7 +335,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     /**
      * {@link Context} class providing report generator publisher methods for the nested DSL context.
      */
-    public class PublishGeneratorsContext extends AbstractReportContext {
+    public static class PublishGeneratorsContext extends AbstractReportContext {
 
         private List<ReportGeneratorConfig> generators;
         private List<ReportGeneratorConfig> customGenerators;
@@ -367,7 +365,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
         /**
          * {@link Context} class providing the report generator configuration methods for the nested DSL context.
          */
-        public class ReportGeneratorContext implements Context {
+        public static class ReportGeneratorContext implements Context {
 
             private static final String OPT_GENERATOR_NAME = "generator name";
             /**
@@ -530,7 +528,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     /**
      * {@link Context} class providing TMS publisher methods for the nested DSL context.
      */
-    public class PublishTMSContext extends AbstractReportContext {
+    public static class PublishTMSContext extends AbstractReportContext {
 
         /**
          * Validator to check report project import related DSL options.

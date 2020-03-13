@@ -10,13 +10,12 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestExecutionIn
 
 /**
  * COM object providing operations to obtain informations of the currently running test.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestExecutionInfo extends ETComDispatch implements ComTestExecutionInfo {
 
     /**
      * Instantiates a new {@link TestExecutionInfo}.
+     *
      * <p>
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.

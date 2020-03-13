@@ -22,8 +22,6 @@ import java.util.Objects;
 
 /**
  * Class holding a global constant.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class GlobalConstant extends AbstractDescribableImpl<GlobalConstant> implements Serializable,
     ExpandableConfig {
@@ -46,16 +44,10 @@ public class GlobalConstant extends AbstractDescribableImpl<GlobalConstant> impl
         this.value = StringUtils.trimToEmpty(value);
     }
 
-    /**
-     * @return the global constant name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * @return the global constant value
-     */
     public String getValue() {
         return value;
     }

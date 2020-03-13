@@ -46,8 +46,6 @@ import java.util.List;
 
 /**
  * Common base class for all report publishers.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractReportPublisher extends Recorder implements SimpleBuildStep {
 
@@ -139,9 +137,6 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         return allowMissing;
     }
 
-    /**
-     * @param allowMissing specifies whether missing reports are allowed
-     */
     @DataBoundSetter
     public void setAllowMissing(final boolean allowMissing) {
         this.allowMissing = allowMissing;
@@ -156,9 +151,6 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         return runOnFailed;
     }
 
-    /**
-     * @param runOnFailed specifies whether this publisher even runs on a failed build
-     */
     @DataBoundSetter
     public void setRunOnFailed(final boolean runOnFailed) {
         this.runOnFailed = runOnFailed;
@@ -183,9 +175,6 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         return archiving;
     }
 
-    /**
-     * @param archiving specifies whether archiving artifacts is enabled
-     */
     @DataBoundSetter
     public void setArchiving(final boolean archiving) {
         this.archiving = archiving;
@@ -210,10 +199,6 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         return keepAll;
     }
 
-    /**
-     * @param keepAll specifies whether artifacts are archived for all successful builds,
-     *                otherwise only the most recent
-     */
     @DataBoundSetter
     public void setKeepAll(final boolean keepAll) {
         this.keepAll = keepAll;
@@ -237,9 +222,6 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         this.downstream = downstream;
     }
 
-    /**
-     * @return the downstream workspace
-     */
     public String getWorkspace() {
         return workspace;
     }
@@ -343,6 +325,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * Checks whether an ECU-TEST instance is still running.
      *
      * @param launcher the launcher
+     * @param listener the listener
      * @return {@code true} if ECU-TEST is running, {@code false} otherwise
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException the interrupted exception
@@ -376,7 +359,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         // Register ECU-TEST COM server
         if (installation.isRegisterComServer()) {
             final String installPath = installation.getComExecutable(launcher);
-            ETComRegisterClient comClient = new ETComRegisterClient(expandedToolName, installPath);
+            final ETComRegisterClient comClient = new ETComRegisterClient(expandedToolName, installPath);
             comClient.start(false, workspace, launcher, listener);
         }
 
@@ -413,7 +396,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
             throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }
         // Set the COM settings for the current ECU-TEST instance
-        VirtualChannel channel = computer.getChannel();
+        final VirtualChannel channel = computer.getChannel();
         if (channel != null) {
             channel.call(new AbstractToolBuilder.SetComPropertyCallable(
                 installation.getProgId(), installation.getTimeout()));
@@ -452,7 +435,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * @return the workspace directory
      */
     protected String getWorkspaceDir(final Run<?, ?> run, final FilePath workspace) {
-        String workspaceDir;
+        final String workspaceDir;
         final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
         if (toolEnvAction != null) {
             workspaceDir = toolEnvAction.getToolWorkspace();
@@ -472,7 +455,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      * @return the settings directory
      */
     protected String getSettingsDir(final Run<?, ?> run, final FilePath workspace) {
-        String settingsDir;
+        final String settingsDir;
         final ToolEnvInvisibleAction toolEnvAction = run.getAction(ToolEnvInvisibleAction.class);
         if (toolEnvAction != null) {
             settingsDir = toolEnvAction.getToolSettings();

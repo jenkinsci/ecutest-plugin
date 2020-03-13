@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -24,24 +24,21 @@ import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.QueryParameter;
 
 import javax.annotation.CheckForNull;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * Base configuration class for connecting to test management systems.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class TMSConfig implements Describable<TMSConfig>, Serializable, ExpandableConfig {
-
-    private static final long serialVersionUID = 1L;
 
     /**
      * Defines the default timeout for connection to test management system.
      */
     protected static final int DEFAULT_TIMEOUT = 60;
+
+    private static final long serialVersionUID = 1L;
 
     private final String credentialsId;
     private final String timeout;
@@ -58,9 +55,6 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
         this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(DEFAULT_TIMEOUT));
     }
 
-    /**
-     * @return the default timeout
-     */
     public static int getDefaultTimeout() {
         return DEFAULT_TIMEOUT;
     }
@@ -74,23 +68,14 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
         return Jenkins.getInstance().getDescriptorList(TMSConfig.class);
     }
 
-    /**
-     * @return the credentials id
-     */
     public String getCredentialsId() {
         return credentialsId;
     }
 
-    /**
-     * @return the timeout as integer
-     */
     public int getParsedTimeout() {
         return ExecutionConfig.parse(getTimeout());
     }
 
-    /**
-     * @return the timeout as string
-     */
     public String getTimeout() {
         return timeout;
     }
@@ -100,12 +85,9 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
      *
      * @param project the project
      * @return the credentials
-     * @throws IOException          signals that an I/O exception has occurred
-     * @throws InterruptedException the interrupted exception
      */
     @CheckForNull
-    public StandardUsernamePasswordCredentials getCredentials(final Item project) throws IOException,
-        InterruptedException {
+    public StandardUsernamePasswordCredentials getCredentials(final Item project) {
         final List<StandardUsernamePasswordCredentials> credentials = CredentialsProvider
             .lookupCredentials(StandardUsernamePasswordCredentials.class, project, ACL.SYSTEM,
                 Collections.emptyList());
@@ -127,9 +109,6 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
          */
         protected final TMSValidator tmsValidator = new TMSValidator();
 
-        /**
-         * @return the default timeout
-         */
         public static int getDefaultTimeout() {
             return DEFAULT_TIMEOUT;
         }

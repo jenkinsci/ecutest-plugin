@@ -20,8 +20,6 @@ import java.util.Arrays;
  * <li>warning starting with <i>WARN:</i> prefix</li>
  * <li>info starting with <i>INFO:</i> prefix</li>
  * </ul>
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TTConsoleNote extends ConsoleNote<Object> {
 
@@ -57,7 +55,7 @@ public class TTConsoleNote extends ConsoleNote<Object> {
             if (plainText.contains("result: " + result)) {
                 final int startPos = plainText.indexOf(result);
                 final int endPos = startPos + result.length();
-                String color;
+                final String color;
                 switch (result) {
                     case "NONE":
                         color = "#63666A";

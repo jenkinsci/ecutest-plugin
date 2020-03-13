@@ -8,6 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline;
 import com.google.common.collect.Maps;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 import org.jenkinsci.plugins.workflow.cps.CpsScript;
 
@@ -18,8 +19,6 @@ import java.util.Optional;
 
 /**
  * Class holding ATX server specific settings in order to publish ATX reports.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXServer implements Serializable {
 
@@ -27,6 +26,7 @@ public class ATXServer implements Serializable {
 
     private final ATXInstallation installation;
 
+    @SuppressFBWarnings("SE_TRANSIENT_FIELD_NOT_RESTORED")
     private transient CpsScript script;
 
     /**
@@ -38,9 +38,6 @@ public class ATXServer implements Serializable {
         this.installation = installation;
     }
 
-    /**
-     * @return the ATX installation
-     */
     @Whitelisted
     public ATXInstallation getInstallation() {
         return installation;
@@ -106,7 +103,7 @@ public class ATXServer implements Serializable {
      * @return the setting
      */
     @Whitelisted
-    public ATXSetting<?> getSetting(String settingName) {
+    public ATXSetting<?> getSetting(final String settingName) {
         return installation.getConfig().getSettingByName(settingName).orElse(null);
     }
 
@@ -117,7 +114,7 @@ public class ATXServer implements Serializable {
      */
     @Whitelisted
     public Map<String, Object> getSettings() {
-        Map<String, Object> settings = new LinkedHashMap<>();
+        final Map<String, Object> settings = new LinkedHashMap<>();
         installation.getConfig().getSettings().forEach(setting -> {
             settings.put(setting.getName(), setting.getValue());
         });
@@ -130,14 +127,13 @@ public class ATXServer implements Serializable {
      * @param settingName  the setting name
      * @param settingValue the setting value as {@code String} or {@code Boolean}
      */
-    @SuppressWarnings("rawtypes")
     @Whitelisted
-    public void overrideSetting(String settingName, Object settingValue) {
-        final Optional<ATXSetting> setting = installation.getConfig().getSettingByName(settingName);
+    public void overrideSetting(final String settingName, final Object settingValue) {
+        final Optional<ATXSetting<?>> setting = installation.getConfig().getSettingByName(settingName);
         if (setting.isPresent()) {
             if (settingValue instanceof String || settingValue instanceof Boolean) {
                 script.println(String.format("[TT] INFO: Overriding ATX setting %s=%s", settingName, settingValue));
-                setting.get().setValue(settingValue);
+                installation.getConfig().setSettingValueByName(settingName, settingValue);
             } else {
                 script.println("[TT] WARN: Ignore overriding ATX setting due to invalid value!");
             }

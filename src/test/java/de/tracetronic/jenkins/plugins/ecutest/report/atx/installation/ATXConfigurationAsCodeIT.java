@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -25,8 +25,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * {@link ConfigurationAsCode} compatibility tests for {@link ATXInstallation}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXConfigurationAsCodeIT {
 
@@ -64,14 +62,13 @@ public class ATXConfigurationAsCodeIT {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testExportConfiguration() throws Exception {
         final ATXInstallation.DescriptorImpl descriptor = jenkins.jenkins
             .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
 
         final ConfiguratorRegistry registry = ConfiguratorRegistry.get();
         final ConfigurationContext context = new ConfigurationContext(registry);
-        final Configurator configurator = context.lookupOrFail(ATXInstallation.DescriptorImpl.class);
+        final Configurator<Object> configurator = context.lookupOrFail(ATXInstallation.DescriptorImpl.class);
         final CNode node = configurator.describe(descriptor, context);
 
         final String exported = Util.toYamlString(node);

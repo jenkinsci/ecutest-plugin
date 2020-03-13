@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -9,8 +9,8 @@ import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.CopyOnWrite;
-import hudson.DescriptorExtensionList;
 import hudson.Extension;
 import hudson.XmlFile;
 import hudson.model.AbstractDescribableImpl;
@@ -46,8 +46,6 @@ import java.util.logging.Logger;
 
 /**
  * Class holding all the ATX settings.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> implements Serializable {
 
@@ -81,8 +79,8 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         if (instance == null) {
             return new ATXInstallation[0];
         }
-        final ATXInstallation.DescriptorImpl atxDescriptor = instance
-            .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
+        final ATXInstallation.DescriptorImpl atxDescriptor =
+                instance.getDescriptorByType(ATXInstallation.DescriptorImpl.class);
         return atxDescriptor.getInstallations();
     }
 
@@ -103,9 +101,6 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         return null;
     }
 
-    /**
-     * @return the name of the installation
-     */
     @Whitelisted
     public String getName() {
         return name;
@@ -121,22 +116,19 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         return toolName;
     }
 
-    /**
-     * @return the configuration
-     */
     public ATXConfig getConfig() {
         return config;
     }
 
     /**
-     * Listen to {@link Saveable} actions of this descriptor in order to update
-     * the default ATX setting values when invoked by CasC configuration reloads.
+     * Listen to {@link Saveable} actions of this descriptor in order to update the default ATX setting values when
+     * invoked by CasC configuration reloads.
      */
     @Extension
     public static class SaveableListenerImpl extends SaveableListener {
 
         @Override
-        public final void onChange(Saveable o, XmlFile file) {
+        public final void onChange(final Saveable o, final XmlFile file) {
             if (o instanceof DescriptorImpl) {
                 ((DescriptorImpl) o).syncWithDefaultConfig();
             }
@@ -160,6 +152,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         private final transient ATXConfig defaultConfig = new ATXConfig();
 
         @CopyOnWrite
+        @SuppressFBWarnings("VO_VOLATILE_REFERENCE_TO_ARRAY")
         private volatile ATXInstallation[] installations = new ATXInstallation[0];
 
         /**
@@ -190,13 +183,12 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         }
 
         /**
-         * Moves the configured installations from old descriptor implementations to this descriptor
-         * in order to retain backward compatibility. Old configuration files will be removed automatically.
+         * Moves the configured installations from old descriptor implementations to this descriptor in order to retain
+         * backward compatibility. Old configuration files will be removed automatically.
          *
          * @param oldClass the old descriptor class name
          * @since 2.7
          */
-        @SuppressWarnings("rawtypes")
         private void migrateFromOldConfigFile(final Class<ATXPublisher.DescriptorImpl> oldClass) {
             LOGGER.log(Level.FINE, "Migrating ATX installations from: " + oldClass.getName());
 
@@ -204,7 +196,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
             stream.addCompatibilityAlias(oldClass.getName(), getClass());
 
             final XmlFile file = new XmlFile(stream,
-                new File(Jenkins.getInstance().getRootDir(), oldClass.getEnclosingClass().getName() + ".xml"));
+                    new File(Jenkins.getInstance().getRootDir(), oldClass.getEnclosingClass().getName() + ".xml"));
             if (file.exists()) {
                 try {
                     file.unmarshal(this);
@@ -216,9 +208,6 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
             }
         }
 
-        /**
-         * @return the list of ATX installations
-         */
         public ATXInstallation[] getInstallations() {
             return installations.clone();
         }
@@ -242,9 +231,6 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
             this.installations = inst.toArray(new ATXInstallation[0]);
         }
 
-        /**
-         * @return the default ATX configuration
-         */
         public ATXConfig getDefaultConfig() {
             return defaultConfig;
         }
@@ -267,15 +253,15 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                     final String name = instJson.getString("name");
                     final String toolName = instJson.getString("toolName");
                     final ATXConfig defaultConfig = getDefaultConfig().clone();
-                    final List<ATXSetting> settings = defaultConfig.getSettings();
+                    final List<ATXSetting<?>> settings = defaultConfig.getSettings();
 
                     // Update custom settings
                     List<ATXCustomSetting> customSettings = req.bindJSONToList(ATXCustomSetting.class,
-                        instJson.get("customSettings"));
+                            instJson.get("customSettings"));
 
                     // Remove duplicates of default configuration
                     customSettings.removeIf(atxCustomSetting ->
-                        getDefaultConfig().getSettingByName(atxCustomSetting.getName()).isPresent());
+                            getDefaultConfig().getSettingByName(atxCustomSetting.getName()).isPresent());
 
                     // Make unique list
                     customSettings = new ArrayList<>(new LinkedHashSet<>(customSettings));
@@ -295,13 +281,13 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         }
 
         /**
-         * Synchronizes current ATX configuration with default configuration
-         * by overriding their current values and saving them as new ATX installation.
+         * Synchronizes current ATX configuration with default configuration by overriding their current values and
+         * saving them as new ATX installation.
+         *
          * <p>
-         * This method will be automatically called by {@link ETPlugin#syncATXConfiguration()} to
-         * avoid circular dependencies while loading other plugins. Explicit call to {@link #save()} is required.
+         * This method will be automatically called by {@link ETPlugin#syncATXConfiguration()} to avoid circular
+         * dependencies while loading other plugins. Explicit call to {@link #save()} is required.
          */
-        @SuppressWarnings("unchecked")
         public void syncWithDefaultConfig() {
             final List<ATXInstallation> list = new ArrayList<>();
             for (final ATXInstallation installation : installations.clone()) {
@@ -310,17 +296,11 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
 
                 // Synchronize settings
                 if (currentConfig != null) {
-                    for (final ATXSetting newSetting : newConfig.getSettings()) {
-                        Optional<ATXSetting> currentSetting = currentConfig.getSettingByName(newSetting.getName());
-                        if (currentSetting.isPresent()) {
-                            if (currentSetting.get() instanceof ATXTextSetting) {
-                                ATXTextSetting textSetting = (ATXTextSetting) currentSetting.get();
-                                newSetting.setValue(textSetting.getValue());
-                            } else if (currentSetting.get() instanceof ATXBooleanSetting) {
-                                ATXBooleanSetting booleanSetting = (ATXBooleanSetting) currentSetting.get();
-                                newSetting.setValue(booleanSetting.getValue());
-                            }
-                        }
+                    for (final ATXSetting<?> newSetting : newConfig.getSettings()) {
+                        final Optional<ATXSetting<?>> currentSetting =
+                                currentConfig.getSettingByName(newSetting.getName());
+                        currentSetting.ifPresent(atxSetting ->
+                                newConfig.setSettingValueByName(atxSetting.getName(), atxSetting.getValue()));
                     }
                     final List<ATXCustomSetting> customSettings = currentConfig.getCustomSettings();
                     newConfig.setCustomSettings(customSettings == null ? new ArrayList<>() : customSettings);
@@ -328,7 +308,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
 
                 // Fill installations
                 final ATXInstallation inst = new ATXInstallation(installation.getName(),
-                    installation.getToolName(), newConfig);
+                        installation.getToolName(), newConfig);
                 list.add(inst);
             }
             setInstallations(list.toArray(new ATXInstallation[0]));
@@ -341,14 +321,16 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          * @param settings     the default ATX settings
          * @return the updated ATX settings
          */
-        @SuppressWarnings("unchecked")
-        private List<ATXSetting> updateCurrentValues(final JSONObject installation, final List<ATXSetting> settings) {
-            for (final ATXSetting setting : settings) {
+        private List<ATXSetting<?>> updateCurrentValues(final JSONObject installation,
+                                                        final List<ATXSetting<?>> settings) {
+            for (final ATXSetting<?> setting : settings) {
                 final JSONObject settingsGroup = installation.optJSONObject(setting.getGroup().getConfigName());
                 if (settingsGroup != null) {
                     final Object currentSetting = settingsGroup.opt(setting.getName());
-                    if (currentSetting != null) {
-                        setting.setValue(currentSetting);
+                    if (currentSetting instanceof String) {
+                        ((ATXTextSetting) setting).setValue((String) currentSetting);
+                    } else if (currentSetting instanceof Boolean) {
+                        ((ATXBooleanSetting) setting).setValue((Boolean) currentSetting);
                     }
                 }
             }
@@ -362,8 +344,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          * @return the custom settings list
          */
         public List<ATXCustomSetting> getCustomSettings(final ATXInstallation installation) {
-            return installation == null ?
-                new ArrayList<>() : installation.getConfig().getCustomSettings();
+            return installation == null ? new ArrayList<>() : installation.getConfig().getCustomSettings();
         }
 
         /**
@@ -372,13 +353,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          * @return the applicable custom settings
          */
         public List<Descriptor<? extends ATXCustomSetting>> getApplicableCustomSettings() {
-            final List<Descriptor<? extends ATXCustomSetting>> list = new ArrayList<>();
-            final DescriptorExtensionList<ATXCustomSetting, Descriptor<ATXCustomSetting>> settings = ATXCustomSetting
-                .all();
-            if (settings != null) {
-                list.addAll(settings);
-            }
-            return list;
+            return new ArrayList<>(ATXCustomSetting.all());
         }
 
         /**
@@ -441,7 +416,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
             Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
             final String proxyUrl = useHttpsConnection ? httpsProxy : httpProxy;
             return atxValidator.testConnection(serverURL, serverPort, serverContextPath, useHttpsConnection,
-                proxyUrl, ignoreSSL);
+                    proxyUrl, ignoreSSL);
         }
     }
 }

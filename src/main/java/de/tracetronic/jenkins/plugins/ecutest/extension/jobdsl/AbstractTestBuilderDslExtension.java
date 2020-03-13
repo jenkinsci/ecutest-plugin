@@ -21,8 +21,6 @@ import java.util.List;
 
 /**
  * Common base class providing test-related DSL extensions.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtension {
 

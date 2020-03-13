@@ -96,6 +96,10 @@ unclassified:
                 group: ARCHIVE
                 name: "archiveBy"
                 value: "NONE;SUCCESS;INCONCLUSIVE;FAILED;ERROR"
+            - atxBooleanSetting:
+                group: ARCHIVE
+                name: "archiveDescriptionImages"
+                value: true
             - atxTextSetting:
                 group: ATTRIBUTE
                 name: "coveredAttributes"
@@ -115,6 +119,9 @@ unclassified:
                 group: ATTRIBUTE
                 name: "mapRootPrjAttrToPkgAttr"
                 value: true
+            - atxTextSetting:
+                group: ATTRIBUTE
+                name: "excludePrjAttrPrefixFor"
             - atxBooleanSetting:
                 group: ATTRIBUTE
                 name: "includePkgSVNRevision"

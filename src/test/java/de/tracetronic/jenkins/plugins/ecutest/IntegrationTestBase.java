@@ -19,8 +19,6 @@ import static org.junit.Assume.assumeFalse;
 
 /**
  * Base class for all Jenkins related integration tests.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class IntegrationTestBase {
 

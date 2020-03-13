@@ -14,8 +14,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Class holding the information of a text-based ATX setting.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXTextSetting extends ATXSetting<String> {
 
@@ -42,7 +40,7 @@ public class ATXTextSetting extends ATXSetting<String> {
      * @param descEnglish  the English description
      * @param defaultValue the default value
      */
-    public ATXTextSetting(final String name, SettingsGroup group,
+    public ATXTextSetting(final String name, final SettingsGroup group,
                           final String descGerman, final String descEnglish,
                           final String defaultValue) {
         super(name, group, descGerman, descEnglish, defaultValue);

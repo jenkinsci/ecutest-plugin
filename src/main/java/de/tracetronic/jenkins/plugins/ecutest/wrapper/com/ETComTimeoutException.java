@@ -7,8 +7,6 @@ package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
 /**
  * Exception thrown if the maximum timeout was exceeded while communicating with a COM instance.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETComTimeoutException extends ETComException {
 

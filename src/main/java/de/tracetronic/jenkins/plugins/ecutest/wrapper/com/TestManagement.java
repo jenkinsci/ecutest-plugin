@@ -11,13 +11,12 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestManagement;
 
 /**
  * COM object providing operations to offer access to the test management interface.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestManagement extends ETComDispatch implements ComTestManagement {
 
     /**
      * Instantiates a new {@link TestManagement}.
+     *
      * <p>
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
@@ -61,7 +60,7 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
         throws ETComException {
         if (timeout == 0) {
             return performDirectRequest("ImportPackage", new Variant(tmProjectPath), new Variant(importPath))
-                .getBoolean();
+                    .getBoolean();
         } else {
             return performDirectRequest("ImportPackage", new Variant(tmProjectPath), new Variant(importPath),
                 new Variant(timeout)).getBoolean();

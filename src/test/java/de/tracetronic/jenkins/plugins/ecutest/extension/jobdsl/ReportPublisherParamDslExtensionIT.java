@@ -9,8 +9,6 @@ import org.junit.Test;
 
 /**
  * Integration tests for {@link ReportPublisherDslExtension}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportPublisherParamDslExtensionIT extends ReportPublisherDslExtensionIT {
 

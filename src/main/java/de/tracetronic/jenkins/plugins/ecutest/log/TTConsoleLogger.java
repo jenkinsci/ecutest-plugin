@@ -15,8 +15,6 @@ import java.nio.charset.Charset;
 /**
  * A helper class that offers various types of logging.
  * Provides plain logging into console log and annotated logging with {@link TTConsoleAnnotator}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TTConsoleLogger {
 
@@ -49,6 +47,22 @@ public class TTConsoleLogger {
      */
     public void logAnnot(final String message) {
         logAnnot("", message);
+    }
+
+    /**
+     * Logs annotated message.
+     *
+     * @param prefix  the prefix
+     * @param message message to be annotated
+     */
+    public void logAnnot(final String prefix, final String message) {
+        final String log = prefix + message + "\n";
+        final byte[] msg = log.getBytes(Charset.defaultCharset());
+        try {
+            annotator.eol(msg, msg.length);
+        } catch (final IOException e) {
+            listener.getLogger().println("Problem with writing into console log: " + e.getMessage());
+        }
     }
 
     /**
@@ -122,22 +136,6 @@ public class TTConsoleLogger {
      */
     public void logStackTrace(final Exception exception) {
         logDebug(ExceptionUtils.getFullStackTrace(exception));
-    }
-
-    /**
-     * Logs annotated message.
-     *
-     * @param prefix  the prefix
-     * @param message message to be annotated
-     */
-    public void logAnnot(final String prefix, final String message) {
-        final String log = prefix + message + "\n";
-        final byte[] msg = log.getBytes(Charset.defaultCharset());
-        try {
-            annotator.eol(msg, msg.length);
-        } catch (final IOException e) {
-            listener.getLogger().println("Problem with writing into console log: " + e.getMessage());
-        }
     }
 
     /**

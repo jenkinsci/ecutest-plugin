@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -42,8 +42,6 @@ import java.util.List;
 
 /**
  * Common base class for all import related task builders implemented in this plugin.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class AbstractImportBuilder extends AbstractTestHelper implements SimpleBuildStep {
 
@@ -85,15 +83,14 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
         return validConfigs;
     }
 
-    /**
-     * @return the list of configured test importers
-     */
     @Nonnull
     public List<TMSConfig> getImportConfigs() {
         return Collections.unmodifiableList(importConfigs);
     }
 
     /**
+     * Sets the import configurations.
+     *
      * @param importConfigs the list of configured test importers
      */
     @DataBoundSetter
@@ -197,7 +194,6 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
             super(clazz);
         }
 
-        @SuppressWarnings("rawtypes")
         @Override
         public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
             return true;

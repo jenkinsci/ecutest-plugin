@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -36,13 +36,11 @@ import java.util.List;
 
 /**
  * Common base class for all tool related task builders implemented in this plugin.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractToolBuilder extends Builder implements SimpleBuildStep {
 
     @Nonnull
-    private String toolName;
+    private final String toolName;
     @Nonnull
     private String timeout = String.valueOf(getDefaultTimeout());
     private ETInstallation installation;
@@ -57,33 +55,21 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
         this.toolName = StringUtils.trimToEmpty(toolName);
     }
 
-    /**
-     * @return the tool name
-     */
     @Nonnull
     public String getToolName() {
         return toolName;
     }
 
-    /**
-     * @return the timeout
-     */
     @Nonnull
     public String getTimeout() {
         return timeout;
     }
 
-    /**
-     * @param timeout the timeout
-     */
     @DataBoundSetter
     public void setTimeout(@CheckForNull final String timeout) {
         this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(getDefaultTimeout()));
     }
 
-    /**
-     * @param timeout the timeout
-     */
     @DataBoundSetter
     public void setTimeout(final int timeout) {
         this.timeout = String.valueOf(timeout);
@@ -96,9 +82,6 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
      */
     public abstract int getDefaultTimeout();
 
-    /**
-     * @return the ECU-TEST installation
-     */
     public ETInstallation getInstallation() {
         return installation;
     }
@@ -157,6 +140,28 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     }
 
     /**
+     * Gets the tool installation by descriptor and tool name.
+     *
+     * @param envVars the environment variables
+     * @return the tool installation
+     */
+    @CheckForNull
+    public ETInstallation getToolInstallation(final EnvVars envVars) {
+        final String expToolName = envVars.expand(getToolName());
+        return getDescriptor().getToolDescriptor().getInstallation(expToolName);
+    }
+
+    @Override
+    public BuildStepMonitor getRequiredMonitorService() {
+        return BuildStepMonitor.NONE;
+    }
+
+    @Override
+    public AbstractToolDescriptor getDescriptor() {
+        return (AbstractToolDescriptor) super.getDescriptor();
+    }
+
+    /**
      * Configures the tool installation for functioning in the node and the environment.
      *
      * @param computer the node
@@ -181,7 +186,7 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
             throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
         }
         // Set the COM settings for the current ECU-TEST instance
-        VirtualChannel channel = computer.getChannel();
+        final VirtualChannel channel = computer.getChannel();
         if (channel != null) {
             channel.call(new SetComPropertyCallable(installation.getProgId(), installation.getTimeout()));
         }
@@ -217,27 +222,5 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
             ETComProperty.getInstance().setTimeout(timeout);
             return null;
         }
-    }
-
-    /**
-     * Gets the tool installation by descriptor and tool name.
-     *
-     * @param envVars the environment variables
-     * @return the tool installation
-     */
-    @CheckForNull
-    public ETInstallation getToolInstallation(final EnvVars envVars) {
-        final String expToolName = envVars.expand(getToolName());
-        return getDescriptor().getToolDescriptor().getInstallation(expToolName);
-    }
-
-    @Override
-    public BuildStepMonitor getRequiredMonitorService() {
-        return BuildStepMonitor.NONE;
-    }
-
-    @Override
-    public AbstractToolDescriptor getDescriptor() {
-        return (AbstractToolDescriptor) super.getDescriptor();
     }
 }

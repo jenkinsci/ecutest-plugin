@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -8,6 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline;
 import com.google.common.collect.ImmutableSet;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.model.TaskListener;
 import org.jenkinsci.plugins.workflow.steps.Step;
@@ -22,8 +23,6 @@ import java.util.Set;
 
 /**
  * Advanced pipeline step that returns a pre-configured {@link ATXServer} instance by name.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXGetServerStep extends Step {
 
@@ -41,16 +40,13 @@ public class ATXGetServerStep extends Step {
         this.atxName = atxName;
     }
 
-    /**
-     * @return the ATX name
-     */
     @Nonnull
     public String getAtxName() {
         return atxName;
     }
 
     @Override
-    public StepExecution start(final StepContext context) throws Exception {
+    public StepExecution start(final StepContext context) {
         return new Execution(this, context);
     }
 
@@ -61,6 +57,7 @@ public class ATXGetServerStep extends Step {
 
         private static final long serialVersionUID = 1L;
 
+        @SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED", justification = "Only used when starting.")
         private final transient ATXGetServerStep step;
 
         /**
@@ -76,9 +73,9 @@ public class ATXGetServerStep extends Step {
 
         @Override
         protected ATXServer run() throws Exception {
-            ATXInstallation installation = ATXInstallation.get(step.atxName);
+            final ATXInstallation installation = ATXInstallation.get(step.atxName);
             if (installation == null) {
-                TaskListener listener = getContext().get(TaskListener.class);
+                final TaskListener listener = getContext().get(TaskListener.class);
                 final String message = String.format("TEST-GUIDE installation with name '%s' is not configured!",
                     step.atxName);
                 throw new ETPluginException(message, listener);

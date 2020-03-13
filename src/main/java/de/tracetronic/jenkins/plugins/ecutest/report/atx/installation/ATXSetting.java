@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -19,26 +19,28 @@ import java.util.logging.Logger;
  * Class holding the information of a single ATX setting.
  *
  * @param <T> the type of the setting
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
- */
+*/
 public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?>> implements Cloneable, Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private static final Logger LOGGER = Logger.getLogger(ATXSetting.class.getName());
 
-    private final String name;
-    private final SettingsGroup group;
     /**
      * The current value of the setting as generic type.
      */
     protected T value;
+    private final String name;
+    private final SettingsGroup group;
 
     /**
+     * Deprecated property storing the current value.
+     *
      * @see #readResolve()
      * @since 2.7.0
      * @deprecated due to CasC compatibility
      */
+    @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
     private transient T currentValue;
 
@@ -59,7 +61,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
      * @param group the settings group
      * @param value the current value
      */
-    public ATXSetting(final String name, SettingsGroup group, final T value) {
+    public ATXSetting(final String name, final SettingsGroup group, final T value) {
         super();
         this.name = name;
         this.group = group;
@@ -75,7 +77,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
      * @param descEnglish  the English description
      * @param defaultValue the default value
      */
-    public ATXSetting(final String name, SettingsGroup group,
+    public ATXSetting(final String name, final SettingsGroup group,
                       final String descGerman, final String descEnglish,
                       final T defaultValue) {
         super();
@@ -92,6 +94,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
     /**
      * Used for backward compatibility using deprecated configuration map.
      *
+     * @return the value to use after deserialization
      * @since 2.7.0
      */
     protected Object readResolve() {
@@ -113,44 +116,31 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
         return clone;
     }
 
-    /**
-     * @return the name of the setting
-     */
     @Whitelisted
     public String getName() {
         return name;
     }
 
-    /**
-     * @return the title name
-     */
     public String getTitle() {
         return toSpaceCase(name);
     }
 
-    /**
-     * @return the name of the settings group
-     */
     public SettingsGroup getGroup() {
         return group;
     }
 
-    /**
-     * @return the German description
-     */
     public String getDescGerman() {
         return descGerman;
     }
 
-    /**
-     * @return the English description
-     */
     public String getDescEnglish() {
         return descEnglish;
     }
 
     /**
-     * @return the system locale description, defaults to English
+     * The system locale description, defaults to English.
+     *
+     * @return the description
      */
     public String getDescription() {
         final String locale = LocaleProvider.getLocale().getLanguage();
@@ -163,16 +153,10 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
         return description;
     }
 
-    /**
-     * @return the default value
-     */
     public T getDefaultValue() {
         return defaultValue;
     }
 
-    /**
-     * @return the current value
-     */
     @Whitelisted
     public T getValue() {
         return value;
@@ -254,13 +238,10 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
          *
          * @param configName the config name
          */
-        SettingsGroup(String configName) {
+        SettingsGroup(final String configName) {
             this.configName = configName;
         }
 
-        /**
-         * @return the config name
-         */
         public String getConfigName() {
             return configName;
         }
@@ -272,7 +253,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
          * @return the settings group
          * @throws IllegalArgumentException in case of unknown settings group for given config name
          */
-        public static SettingsGroup fromString(String configName) throws IllegalArgumentException {
+        public static SettingsGroup fromString(final String configName) throws IllegalArgumentException {
             return Arrays.stream(SettingsGroup.values())
                 .filter(v -> v.configName.equals(configName))
                 .findFirst()

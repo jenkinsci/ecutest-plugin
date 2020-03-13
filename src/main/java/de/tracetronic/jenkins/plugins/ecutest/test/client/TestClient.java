@@ -13,8 +13,6 @@ import java.io.IOException;
 
 /**
  * Client interface defining test execution controls.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public interface TestClient {
 

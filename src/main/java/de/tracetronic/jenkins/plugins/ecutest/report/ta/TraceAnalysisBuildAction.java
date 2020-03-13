@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -16,8 +16,6 @@ import java.util.List;
 
 /**
  * Action to show a link to {@link TraceAnalysisReport}s at the build page.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TraceAnalysisBuildAction extends AbstractTraceAnalysisAction implements SimpleBuildStep.LastBuildAction {
 
@@ -45,20 +43,18 @@ public class TraceAnalysisBuildAction extends AbstractTraceAnalysisAction implem
      * Adds a trace analysis report.
      *
      * @param report the trace analysis report to add
-     * @return {@code true} if successful, {@code false} otherwise
      */
-    public boolean add(final TraceAnalysisReport report) {
-        return getTraceAnalysisReports().add(report);
+    public void add(final TraceAnalysisReport report) {
+        taReports.add(report);
     }
 
     /**
      * Adds a bundle of trace analysis reports.
      *
      * @param reports the collection of trace analysis reports
-     * @return {@code true} if successful, {@code false} otherwise
      */
-    public boolean addAll(final Collection<TraceAnalysisReport> reports) {
-        return getTraceAnalysisReports().addAll(reports);
+    public void addAll(final Collection<TraceAnalysisReport> reports) {
+        this.taReports.addAll(reports);
     }
 
     /**

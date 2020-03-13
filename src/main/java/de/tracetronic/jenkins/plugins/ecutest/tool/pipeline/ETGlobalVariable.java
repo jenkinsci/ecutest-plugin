@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -14,8 +14,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Binds "ET" keyword as global variable to pipeline executions.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 @Extension
 public class ETGlobalVariable extends GlobalVariable {
@@ -28,9 +26,9 @@ public class ETGlobalVariable extends GlobalVariable {
 
     @Nonnull
     @Override
-    public Object getValue(@Nonnull final CpsScript cpsScript) throws Exception {
+    public Object getValue(@Nonnull final CpsScript cpsScript) {
         final Binding binding = cpsScript.getBinding();
-        Object atx;
+        final Object atx;
         if (binding.hasVariable(getName())) {
             atx = binding.getVariable(getName());
         } else {

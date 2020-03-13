@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -25,27 +25,28 @@ import java.util.List;
 
 /**
  * Class holding the report generator configuration.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGeneratorConfig> implements ExpandableConfig,
-    Serializable {
+        Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private final String name;
     private final List<ReportGeneratorSetting> settings;
     /**
+     * Specifies whether to use report generator settings from persisted configurations files (XML).
+     *
      * @since 2.9
      */
-    private boolean usePersistedSettings;
+    private final boolean usePersistedSettings;
 
     /**
      * Instantiates a new {@link ReportGeneratorConfig}.
      *
      * @param name                 the name
      * @param settings             the settings
-     * @param usePersistedSettings the use persisted settings
+     * @param usePersistedSettings specifies whether to use report generator settings
+     *                             from persisted configurations files (XML)
      */
     @DataBoundConstructor
     public ReportGeneratorConfig(final String name, final List<ReportGeneratorSetting> settings,
@@ -80,17 +81,10 @@ public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGenerat
         return name;
     }
 
-    /**
-     * @return the settings
-     */
     public List<ReportGeneratorSetting> getSettings() {
         return settings;
     }
 
-
-    /**
-     * @return specifies whether to use report generator settings from persisted configurations files (XML)
-     */
     public boolean isUsePersistedSettings() {
         return usePersistedSettings;
     }
@@ -115,7 +109,7 @@ public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGenerat
          * Defines the standard report generators shipped with ECU-TEST installation.
          */
         private static final List<String> REPORT_GENERATORS = Arrays.asList(
-            "ATX", "EXCEL", "HTML", "JSON", "OMR", "TestSpec", "TRF-SPLIT", "TXT", "UNIT");
+                "ATX", "EXCEL", "HTML", "JSON", "OMR", "TestSpec", "TRF-SPLIT", "TXT", "UNIT");
 
         private final ReportGeneratorValidator reportValidator = new ReportGeneratorValidator();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -16,8 +16,6 @@ import java.util.List;
 
 /**
  * Action to show a link to {@link TRFReport}s at the build page.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TRFBuildAction extends AbstractTRFAction implements SimpleBuildStep.LastBuildAction {
 
@@ -45,20 +43,18 @@ public class TRFBuildAction extends AbstractTRFAction implements SimpleBuildStep
      * Adds a TRF report.
      *
      * @param report the TRF report to add
-     * @return {@code true} if successful, {@code false} otherwise
      */
-    public boolean add(final TRFReport report) {
-        return getTRFReports().add(report);
+    public void add(final TRFReport report) {
+        this.trfReports.add(report);
     }
 
     /**
      * Adds a bundle of TRF reports.
      *
      * @param reports the collection of TRF reports
-     * @return {@code true} if successful, {@code false} otherwise
      */
-    public boolean addAll(final Collection<TRFReport> reports) {
-        return getTRFReports().addAll(reports);
+    public void addAll(final Collection<TRFReport> reports) {
+        this.trfReports.addAll(reports);
     }
 
     /**

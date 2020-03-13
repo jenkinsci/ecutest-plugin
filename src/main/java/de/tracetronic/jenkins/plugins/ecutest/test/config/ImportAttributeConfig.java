@@ -10,8 +10,6 @@ import org.kohsuke.stapler.QueryParameter;
 
 /**
  * Common base class for {@link ImportPackageAttributeConfig} and {@link ImportProjectAttributeConfig}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class ImportAttributeConfig extends AttributeConfig {
 

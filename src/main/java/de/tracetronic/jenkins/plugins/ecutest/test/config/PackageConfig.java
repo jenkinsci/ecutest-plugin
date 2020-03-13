@@ -21,8 +21,6 @@ import java.util.Objects;
 
 /**
  * Class holding the package configuration.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implements Serializable,
     ExpandableConfig {
@@ -79,29 +77,22 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
     }
 
     /**
-     * @return the instance of a {@link PackageConfig}.
+     * Instantiates a new {@link PackageConfig} with default values.
+     *
+     * @return the default {@link PackageConfig}
      */
     public static PackageConfig newInstance() {
         return new PackageConfig(true, true, null);
     }
 
-    /**
-     * @return {@code true} if run test case, {@code false} otherwise
-     */
     public boolean isRunTest() {
         return runTest;
     }
 
-    /**
-     * @return {@code true} if run trace analysis, {@code false} otherwise
-     */
     public boolean isRunTraceAnalysis() {
         return runTraceAnalysis;
     }
 
-    /**
-     * @return the parameters
-     */
     public List<PackageParameter> getParameters() {
         return parameters;
     }
@@ -128,8 +119,7 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
 
     @Override
     public final int hashCode() {
-        return new HashCodeBuilder(17, 31).append(runTest).append(runTraceAnalysis).append(parameters)
-            .toHashCode();
+        return new HashCodeBuilder(17, 31).append(runTest).append(runTraceAnalysis).append(parameters).toHashCode();
     }
 
     /**

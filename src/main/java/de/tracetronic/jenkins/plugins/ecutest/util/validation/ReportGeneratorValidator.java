@@ -10,8 +10,6 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Validator to check report generator related form fields.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorValidator extends AbstractValidator {
 
@@ -22,7 +20,7 @@ public class ReportGeneratorValidator extends AbstractValidator {
      * @return the form validation
      */
     public FormValidation validateGeneratorName(final String name) {
-        FormValidation returnValue;
+        final FormValidation returnValue;
         if (StringUtils.isBlank(name)) {
             returnValue = FormValidation.validateRequired(name);
         } else {
@@ -38,7 +36,7 @@ public class ReportGeneratorValidator extends AbstractValidator {
      * @return the form validation
      */
     public FormValidation validateSettingName(final String name) {
-        FormValidation returnValue;
+        final FormValidation returnValue;
         if (StringUtils.isBlank(name)) {
             returnValue = FormValidation.validateRequired(name);
         } else {

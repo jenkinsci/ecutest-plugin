@@ -13,8 +13,6 @@ import javax.annotation.CheckForNull;
 
 /**
  * Action to show a link to {@link GeneratorReport}s in side menu of projects.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportGeneratorProjectAction extends AbstractReportGeneratorAction {
 
@@ -29,8 +27,8 @@ public class ReportGeneratorProjectAction extends AbstractReportGeneratorAction 
 
     /**
      * Returns the {@link ReportGeneratorBuildAction} in the last build that have artifact documents.
-     * <p>
-     * Resolves the owner by {@link StaplerRequest#findAncestorObject(Class)}.
+     *
+     * <p>Resolves the owner by {@link StaplerRequest#findAncestorObject(Class)}.
      *
      * @param req the {@link StaplerRequest} used for access this action
      * @return the last {@link ReportGeneratorBuildAction} or {@code null} if no proper build exists
@@ -43,8 +41,8 @@ public class ReportGeneratorProjectAction extends AbstractReportGeneratorAction 
 
     /**
      * Returns {@link GeneratorReport} specified by the URL.
-     * <p>
-     * Delegates to the last {@link ReportGeneratorBuildAction}.
+     *
+     * <p>Delegates to the last {@link ReportGeneratorBuildAction}.
      *
      * @param token the URL token
      * @param req   the {@link StaplerRequest} used for access this action

@@ -12,8 +12,6 @@ import java.util.Objects;
 
 /**
  * Common base class for {@link ExportAttributeConfig} and {@link ImportAttributeConfig}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AttributeConfig extends TMSConfig {
 
@@ -33,9 +31,6 @@ public abstract class AttributeConfig extends TMSConfig {
         this.filePath = StringUtils.trimToEmpty(filePath);
     }
 
-    /**
-     * @return the test file path whose attributes to import or export
-     */
     public String getFilePath() {
         return filePath;
     }
@@ -48,10 +43,10 @@ public abstract class AttributeConfig extends TMSConfig {
             final String filePath = getFilePath();
             final String thatFilePath = that.getFilePath();
             result = Objects.equals(filePath, thatFilePath)
-                && (getCredentialsId() == null ? that.getCredentialsId() == null :
-                getCredentialsId().equals(that.getCredentialsId()))
-                && (getTimeout() == null ? that.getTimeout() == null :
-                getTimeout().equals(that.getTimeout()));
+                && (getCredentialsId() == null ? that.getCredentialsId() == null
+                    : getCredentialsId().equals(that.getCredentialsId()))
+                && (getTimeout() == null ? that.getTimeout() == null
+                    : getTimeout().equals(that.getTimeout()));
         }
         return result;
     }

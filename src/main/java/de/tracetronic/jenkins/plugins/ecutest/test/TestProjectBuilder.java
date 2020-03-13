@@ -28,8 +28,6 @@ import java.io.IOException;
 
 /**
  * Builder providing the execution of an ECU-TEST project.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestProjectBuilder extends AbstractTestBuilder {
 
@@ -46,17 +44,11 @@ public class TestProjectBuilder extends AbstractTestBuilder {
         super(testFile);
     }
 
-    /**
-     * @return the project configuration
-     */
     @Nonnull
     public ProjectConfig getProjectConfig() {
         return projectConfig;
     }
 
-    /**
-     * @param projectConfig the project configuration
-     */
     @DataBoundSetter
     public void setProjectConfig(@CheckForNull final ProjectConfig projectConfig) {
         this.projectConfig = projectConfig == null ? ProjectConfig.newInstance() : projectConfig;

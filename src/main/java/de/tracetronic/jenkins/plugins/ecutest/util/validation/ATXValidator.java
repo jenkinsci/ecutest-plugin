@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -10,6 +10,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.Messages;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
+import de.tracetronic.jenkins.plugins.ecutest.util.ToolVersion;
 import hudson.Util;
 import hudson.util.FormValidation;
 import net.sf.json.JSONObject;
@@ -38,12 +39,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
  * Validator to check ATX related form fields.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXValidator extends AbstractValidator {
 
@@ -95,7 +95,7 @@ public class ATXValidator extends AbstractValidator {
             @Override
             public void checkServerTrusted(final X509Certificate[] certs, final String authType) {
             }
-        },};
+        } };
 
         // Install the all-trusting trust manager
         final SSLContext sslContext = SSLContext.getInstance("SSL");
@@ -358,7 +358,7 @@ public class ATXValidator extends AbstractValidator {
      * @return the form validation
      */
     public FormValidation testConnection(final String baseUrl, final String proxyUrl, final boolean ignoreSSL) {
-        FormValidation returnValue;
+        final FormValidation returnValue;
         if (StringUtils.isBlank(baseUrl)) {
             returnValue = FormValidation.error(Messages.ATXInstallation_InvalidServerUrl(null));
         } else if (baseUrl.contains(PARAMETER)) {
@@ -373,6 +373,7 @@ public class ATXValidator extends AbstractValidator {
      * Checks the server connection by requesting the TEST-GUIDE API version endpoint.
      *
      * @param baseUrl   the base server URL
+     * @param proxyUrl  the proxy URL
      * @param ignoreSSL specifies whether to ignore SSL issues
      * @return the form validation
      */
@@ -387,7 +388,7 @@ public class ATXValidator extends AbstractValidator {
             final URL url = new URL(appVersionUrl);
 
             // Handle proxy setting
-            Proxy proxy = configureProxy(proxyUrl);
+            final Proxy proxy = configureProxy(proxyUrl);
 
             // Handle SSL connection
             if (appVersionUrl.startsWith("https://")) {
@@ -414,7 +415,7 @@ public class ATXValidator extends AbstractValidator {
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(
                     connection.getInputStream(), StandardCharsets.UTF_8))) {
                     final String content = in.readLine();
-                    returnValue = parseServerInfo(content, baseUrl, returnValue);
+                    returnValue = Optional.ofNullable(parseServerInfo(content, baseUrl)).orElse(returnValue);
                 }
             }
         } catch (final MalformedURLException e) {
@@ -437,14 +438,14 @@ public class ATXValidator extends AbstractValidator {
      * @param proxyUrl the proxy URL
      * @return the proxy instance or direct connection if proxy URL is empty
      */
-    private Proxy configureProxy(String proxyUrl) throws MalformedURLException, UnsupportedEncodingException {
+    private Proxy configureProxy(final String proxyUrl) throws MalformedURLException, UnsupportedEncodingException {
         if (StringUtils.isBlank(proxyUrl)) {
             return Proxy.NO_PROXY;
         }
 
         final URL url = new URL(proxyUrl);
-        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(url.getHost(), url.getPort()));
-        String userInfo = url.getUserInfo();
+        final Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(url.getHost(), url.getPort()));
+        final String userInfo = url.getUserInfo();
         if (StringUtils.isNotBlank(userInfo)) {
             final String userName;
             final String password;
@@ -457,12 +458,7 @@ public class ATXValidator extends AbstractValidator {
                 password = URLDecoder.decode(userInfo.substring(delimiter), StandardCharsets.UTF_8.name());
             }
 
-            Authenticator authenticator = new Authenticator() {
-                public PasswordAuthentication getPasswordAuthentication() {
-                    return (new PasswordAuthentication(userName, password.toCharArray()));
-                }
-            };
-            Authenticator.setDefault(authenticator);
+            Authenticator.setDefault(new ProxyAuthenticator(userName, password));
         }
         return proxy;
     }
@@ -473,10 +469,10 @@ public class ATXValidator extends AbstractValidator {
      *
      * @param content     the JSON content
      * @param baseUrl     the base server URL
-     * @param returnValue the current form validation
      * @return the form validation
      */
-    private FormValidation parseServerInfo(String content, String baseUrl, FormValidation returnValue) {
+    private FormValidation parseServerInfo(final String content, final String baseUrl) {
+        FormValidation returnValue = null;
         final JSONObject jsonObject = (JSONObject) new JsonSlurper().parseText(content);
         if (jsonObject != null) {
             final JSONObject info = jsonObject.optJSONObject("info");
@@ -486,7 +482,7 @@ public class ATXValidator extends AbstractValidator {
                     returnValue = FormValidation.warning(Messages.ATXInstallation_InvalidServer(baseUrl));
                 } else {
                     final String version = info.getString("version");
-                    final ETPlugin.ToolVersion atxVersion = ETPlugin.ToolVersion.parse(version);
+                    final ToolVersion atxVersion = ToolVersion.parse(version);
                     if (atxVersion.compareWithoutQualifierTo(ETPlugin.ATX_MIN_VERSION) < 0) {
                         returnValue = FormValidation.warning(
                             Messages.ATXInstallation_IncompatibleVersion(version,
@@ -498,5 +494,29 @@ public class ATXValidator extends AbstractValidator {
             returnValue = FormValidation.error(Messages.ATXInstallation_InvalidServer(baseUrl));
         }
         return returnValue;
+    }
+
+    /**
+     * Authenticator class for authentication with proxied network connections using user name and password.
+     */
+    private static final class ProxyAuthenticator extends Authenticator {
+
+        private final String userName;
+        private final String password;
+
+        /**
+         * Instantiates a {@link ProxyAuthenticator}.
+         *
+         * @param userName the proxy user name
+         * @param password the proxy password
+         */
+        private ProxyAuthenticator(final String userName, final String password) {
+            this.userName = userName;
+            this.password = password;
+        }
+
+        public PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(userName, password.toCharArray());
+        }
     }
 }

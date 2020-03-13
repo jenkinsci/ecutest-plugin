@@ -27,8 +27,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link ToolBuilderDslExtension}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ToolBuilderDslExtensionIT extends AbstractDslExtensionIT {
 

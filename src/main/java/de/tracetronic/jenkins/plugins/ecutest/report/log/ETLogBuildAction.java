@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -16,8 +16,6 @@ import java.util.List;
 
 /**
  * Action to show a link to {@link ETLogReport}s at the build page.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETLogBuildAction extends AbstractETLogAction implements SimpleBuildStep.LastBuildAction {
 
@@ -45,20 +43,18 @@ public class ETLogBuildAction extends AbstractETLogAction implements SimpleBuild
      * Adds a ECU-TEST log report.
      *
      * @param report the ECU-TEST log report to add
-     * @return {@code true} if successful, {@code false} otherwise
      */
-    public boolean add(final ETLogReport report) {
-        return getLogReports().add(report);
+    public void add(final ETLogReport report) {
+        this.logReports.add(report);
     }
 
     /**
      * Adds a bundle of ECU-TEST log reports.
      *
      * @param reports the collection of ECU-TEST log reports
-     * @return {@code true} if successful, {@code false} otherwise
      */
-    public boolean addAll(final Collection<ETLogReport> reports) {
-        return getLogReports().addAll(reports);
+    public void addAll(final Collection<ETLogReport> reports) {
+        this.logReports.addAll(reports);
     }
 
     /**

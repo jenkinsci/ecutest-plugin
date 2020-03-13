@@ -26,8 +26,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link CacheBuilder}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class CacheBuilderIT extends IntegrationTestBase {
 

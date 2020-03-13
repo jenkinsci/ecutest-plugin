@@ -14,13 +14,12 @@ import org.apache.commons.lang.StringUtils;
 /**
  * COM object representing the currently loaded test configuration file and
  * provides methods for accessing the contained settings.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestConfiguration extends ETComDispatch implements ComTestConfiguration {
 
     /**
      * Instantiates a new {@link TestConfiguration}.
+     *
      * <p>
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
@@ -32,18 +31,18 @@ public class TestConfiguration extends ETComDispatch implements ComTestConfigura
         super(dispatch, useTimeout);
     }
 
-    @SuppressWarnings("checkstyle:BooleanExpressionComplexity")
     @Override
+    @SuppressWarnings("checkstyle:booleanexpressioncomplexity")
     public void setGlobalConstant(final String name, final String value) throws ETComException {
-        Object objValue;
+        final Object objValue;
         if (StringUtils.isNotEmpty(value)
-            && (StringUtils.isNumeric(value) ||
-            startsAndEndsWith(value, "[", "]") ||
-            startsAndEndsWith(value, "{", "}") ||
-            startsAndEndsWith(value, "(", ")") ||
-            startsAndEndsWith(value, "'", "'") ||
-            startsAndEndsWith(value, "\"", "\"") ||
-            "True".equals(value) || "False".equals(value))) {
+            && (StringUtils.isNumeric(value)
+            || startsAndEndsWith(value, "[", "]")
+            || startsAndEndsWith(value, "{", "}")
+            || startsAndEndsWith(value, "(", ")")
+            || startsAndEndsWith(value, "'", "'")
+            || startsAndEndsWith(value, "\"", "\"")
+            || "True".equals(value) || "False".equals(value))) {
             // Assume Python integer, list, dictionary, tuple, string or boolean literal
             objValue = value;
         } else {

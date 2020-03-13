@@ -19,8 +19,6 @@ import java.util.Objects;
 
 /**
  * Class holding the configuration for importing a project from an archive.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ImportProjectArchiveConfig extends ImportConfig {
 
@@ -33,9 +31,9 @@ public class ImportProjectArchiveConfig extends ImportConfig {
      * Instantiates a new {@link ImportProjectArchiveConfig}.
      *
      * @param tmsPath          the project path
-     * @param importPath       the import path
+     * @param importPath       the import configuration path
      * @param importConfigPath the import config path
-     * @param replaceFiles     the replace files
+     * @param replaceFiles     specifies whether existing files should be overwritten
      */
     @DataBoundConstructor
     public ImportProjectArchiveConfig(final String tmsPath, final String importPath,
@@ -45,16 +43,10 @@ public class ImportProjectArchiveConfig extends ImportConfig {
         this.replaceFiles = replaceFiles;
     }
 
-    /**
-     * @return the import configuration path
-     */
     public String getImportConfigPath() {
         return importConfigPath;
     }
 
-    /**
-     * @return {@code true} when existing files should be overwritten, {@code false} otherwise
-     */
     public boolean isReplaceFiles() {
         return replaceFiles;
     }
@@ -88,7 +80,7 @@ public class ImportProjectArchiveConfig extends ImportConfig {
     @Override
     public final int hashCode() {
         return new HashCodeBuilder(17, 31).append(super.hashCode())
-            .append(importConfigPath).append(replaceFiles).toHashCode();
+                .append(importConfigPath).append(replaceFiles).toHashCode();
     }
 
     /**

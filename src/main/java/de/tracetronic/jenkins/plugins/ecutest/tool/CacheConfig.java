@@ -25,8 +25,6 @@ import java.util.Objects;
 
 /**
  * Class holding the configuration for generating an ECU-TEST cache type.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class CacheConfig extends AbstractDescribableImpl<CacheConfig> implements ExpandableConfig, Serializable {
 
@@ -92,8 +90,7 @@ public class CacheConfig extends AbstractDescribableImpl<CacheConfig> implements
 
     @Override
     public final int hashCode() {
-        return new HashCodeBuilder(17, 31).append(type).append(filePath)
-            .append(dbChannel).append(clear).toHashCode();
+        return new HashCodeBuilder(17, 31).append(type).append(filePath).append(dbChannel).append(clear).toHashCode();
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -22,8 +22,6 @@ import java.util.List;
 
 /**
  * Builder providing the import of one or multiple ECU-TEST packages.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ImportPackageBuilder extends AbstractImportBuilder {
 
@@ -60,12 +58,10 @@ public class ImportPackageBuilder extends AbstractImportBuilder {
         public List<Descriptor<? extends TMSConfig>> getApplicableImporters() {
             final List<Descriptor<? extends TMSConfig>> list = new ArrayList<>();
             final DescriptorExtensionList<TMSConfig, Descriptor<TMSConfig>> configs = ImportConfig.all();
-            if (configs != null) {
-                for (final Descriptor<TMSConfig> config : configs) {
-                    if (config.isSubTypeOf(ImportPackageConfig.class) ||
-                        config.isSubTypeOf(ImportPackageAttributeConfig.class)) {
-                        list.add(config);
-                    }
+            for (final Descriptor<TMSConfig> config : configs) {
+                if (config.isSubTypeOf(ImportPackageConfig.class)
+                        || config.isSubTypeOf(ImportPackageAttributeConfig.class)) {
+                    list.add(config);
                 }
             }
             return list;

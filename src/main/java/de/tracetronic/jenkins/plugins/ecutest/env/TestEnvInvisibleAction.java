@@ -12,8 +12,6 @@ import hudson.model.InvisibleAction;
 /**
  * Helper invisible action which is used for exchanging information between {@link AbstractTestClient}s
  * and other objects like {@link TestEnvContributor}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestEnvInvisibleAction extends InvisibleAction {
 

@@ -23,8 +23,6 @@ import java.io.IOException;
 
 /**
  * Builder providing the tear down of ECU-TEST.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class StopETBuilder extends AbstractToolBuilder {
 
@@ -43,9 +41,6 @@ public class StopETBuilder extends AbstractToolBuilder {
         super(toolName);
     }
 
-    /**
-     * @return the default timeout
-     */
     @Override
     public int getDefaultTimeout() {
         return DEFAULT_TIMEOUT;

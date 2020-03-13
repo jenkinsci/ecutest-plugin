@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -22,10 +22,9 @@ import java.util.logging.Logger;
 
 /**
  * Custom dispatch to perform requests on application specific COM API.
+ *
  * <p>
  * All threads from COM will be automatically released after performing the requests.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETComDispatch extends Dispatch implements AutoCloseable {
 
@@ -46,6 +45,7 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
 
     /**
      * Instantiates a new {@link ETComDispatch}.
+     *
      * <p>
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
@@ -59,6 +59,8 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     }
 
     /**
+     * Returns whether to apply COM timeout.
+     *
      * @return {@code true} if positive timeout is set, {@code false} otherwise
      */
     public boolean useTimeout() {
@@ -120,7 +122,7 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final Future<Variant> future = executor.submit(new DispatchCallable(method, params));
         try {
-            return future.get((long) timeout, TimeUnit.SECONDS);
+            return future.get(timeout, TimeUnit.SECONDS);
         } catch (final TimeoutException e) {
             future.cancel(true);
             throw new ETComTimeoutException(String.format("Request timeout of %d seconds exceeded!", timeout), e);
@@ -166,22 +168,20 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      */
     private Variant callDispatch(final String method, final Object... params) throws ETComException {
         try {
-            String parameters = StringUtils.join(params, ',');
-            Variant result = Dispatch.call(this, method, params);
-            String dispatchName = this.getClass().getSimpleName();
+            final String parameters = StringUtils.join(params, ',');
+            final Variant result = Dispatch.call(this, method, params);
+            final String dispatchName = this.getClass().getSimpleName();
             LOGGER.fine(String.format("%s.call(): %s (%s) --> %s", dispatchName, method, parameters, result));
             return result;
-        } catch (final JacobException e) {
+        } catch (final JacobException | IllegalArgumentException | IllegalStateException e) {
             throw new ETComException(e.getMessage(), e);
-        } catch (final Throwable t) {
-            throw new ETComException(t);
         }
     }
 
     @Override
     public boolean isAttached() {
         final boolean isAttached = super.isAttached();
-        String dispatchName = this.getClass().getSimpleName();
+        final String dispatchName = this.getClass().getSimpleName();
         LOGGER.finer(String.format("%s.isAttached() --> %s", dispatchName, isAttached));
         return isAttached;
     }
@@ -193,7 +193,7 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
      */
     private void releaseDispatch() throws ETComException {
         try {
-            String dispatchName = this.getClass().getSimpleName();
+            final String dispatchName = this.getClass().getSimpleName();
             LOGGER.finer(String.format("%s.safeRelease()", dispatchName));
             safeRelease();
         } catch (final JacobException e) {
@@ -208,8 +208,8 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     public void close() {
         try {
             releaseDispatch();
-        } catch (final ETComException e) {
-            // noop
+        } catch (final ETComException ignored) {
+            // no-op
         } finally {
             if (!useTimeout) {
                 ComThread.Release();
@@ -217,12 +217,11 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
         }
     }
 
-    @SuppressWarnings("checkstyle:superfinalize")
+    @SuppressWarnings("checkstyle:nofinalizer")
     @Override
     protected void finalize() {
-        if (useTimeout) {
-            return;
-            // noop to prevent JVM crash
+        if (!useTimeout) {
+            super.finalize();
         }
     }
 

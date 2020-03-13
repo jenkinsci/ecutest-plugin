@@ -17,8 +17,6 @@ import java.util.Objects;
 
 /**
  * Class holding the information of an additional text ATX setting.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ATXCustomTextSetting extends ATXCustomSetting {
 
@@ -38,9 +36,6 @@ public class ATXCustomTextSetting extends ATXCustomSetting {
         this.value = value;
     }
 
-    /**
-     * @return the value of the setting
-     */
     public String getValue() {
         return value;
     }

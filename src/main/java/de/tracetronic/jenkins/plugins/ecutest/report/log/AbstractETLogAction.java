@@ -11,8 +11,6 @@ import hudson.model.Run;
 
 /**
  * Common base class for {@link ETLogBuildAction} and {@link ETLogProjectAction}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractETLogAction extends AbstractReportAction {
 

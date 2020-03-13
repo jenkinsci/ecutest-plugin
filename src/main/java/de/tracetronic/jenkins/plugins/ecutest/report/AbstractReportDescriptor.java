@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -13,8 +13,6 @@ import hudson.tools.ToolInstallation;
 
 /**
  * Common base descriptor class for all report related publisher descriptors implemented in this plugin.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractReportDescriptor extends BuildStepDescriptor<Publisher> {
 
@@ -36,7 +34,6 @@ public abstract class AbstractReportDescriptor extends BuildStepDescriptor<Publi
         return ToolInstallation.all().get(ETInstallation.DescriptorImpl.class);
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
         return true;

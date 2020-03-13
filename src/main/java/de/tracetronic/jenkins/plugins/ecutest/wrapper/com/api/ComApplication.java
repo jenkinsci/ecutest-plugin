@@ -11,8 +11,6 @@ import java.util.List;
 
 /**
  * Represents the ECU-TEST specific COMApplication API.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public interface ComApplication {
 

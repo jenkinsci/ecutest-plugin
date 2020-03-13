@@ -24,8 +24,6 @@ import java.io.IOException;
 
 /**
  * Common base class all report publishers which are using ECU-TEST as tool.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractToolPublisher extends AbstractReportPublisher {
 
@@ -59,17 +57,11 @@ public abstract class AbstractToolPublisher extends AbstractReportPublisher {
         this.toolName = StringUtils.trimToEmpty(toolName);
     }
 
-    /**
-     * @return the {@link ETInstallation} name
-     */
     @Nonnull
     public String getToolName() {
         return toolName;
     }
 
-    /**
-     * @return the ECU-TEST installation
-     */
     public ETInstallation getInstallation() {
         return installation;
     }
@@ -110,7 +102,7 @@ public abstract class AbstractToolPublisher extends AbstractReportPublisher {
         final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
         if (installation.isRegisterComServer()) {
             final String installPath = getInstallation().getComExecutable(launcher);
-            ETComRegisterClient comClient = new ETComRegisterClient(expandedToolName, installPath);
+            final ETComRegisterClient comClient = new ETComRegisterClient(expandedToolName, installPath);
             comClient.start(false, workspace, launcher, listener);
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -18,8 +18,7 @@ import java.util.List;
  * Action to show a link to {@link ATXReport}s or {@link ATXZipReport}s at the build page.
  *
  * @param <T> the report type, either {@link ATXReport} or {@link ATXZipReport}
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
- */
+*/
 public class ATXBuildAction<T extends AbstractTestReport> extends AbstractATXAction implements
     SimpleBuildStep.LastBuildAction {
 
@@ -47,20 +46,18 @@ public class ATXBuildAction<T extends AbstractTestReport> extends AbstractATXAct
      * Adds a ATX report.
      *
      * @param report the ATX report to add
-     * @return {@code true} if successful, {@code false} otherwise
      */
-    public boolean add(final T report) {
-        return getATXReports().add(report);
+    public void add(final T report) {
+        this.atxReports.add(report);
     }
 
     /**
      * Adds a bundle of ATX reports.
      *
      * @param reports the collection of ATX reports
-     * @return {@code true} if successful, {@code false} otherwise
      */
-    public boolean addAll(final Collection<T> reports) {
-        return getATXReports().addAll(reports);
+    public void addAll(final Collection<T> reports) {
+        this.atxReports.addAll(reports);
     }
 
     /**
@@ -120,6 +117,7 @@ public class ATXBuildAction<T extends AbstractTestReport> extends AbstractATXAct
         return Messages.ATXBuildAction_DisplayName();
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public Collection<? extends Action> getProjectActions() {
         return Collections.singleton(new ATXProjectAction(isProjectLevel()));

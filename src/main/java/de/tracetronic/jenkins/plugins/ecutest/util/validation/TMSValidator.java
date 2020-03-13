@@ -11,8 +11,6 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Validator to check project exporter related form fields.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TMSValidator extends AbstractValidator {
 

@@ -32,8 +32,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link ReportPublisherDslExtension} with parameterized tool selection.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ReportPublisherParamInstallDslExtensionIT extends AbstractDslExtensionIT {
 

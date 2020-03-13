@@ -11,8 +11,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComCaches;
 
 /**
  * COM object giving access to the properties of a constant.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class Caches extends ETComDispatch implements ComCaches {
 
@@ -44,6 +42,7 @@ public class Caches extends ETComDispatch implements ComCaches {
 
     /**
      * Instantiates a new {@link Caches}.
+     *
      * <p>
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
@@ -62,7 +61,7 @@ public class Caches extends ETComDispatch implements ComCaches {
      * @return the cache by type
      * @throws ETComException in case of a COM exception or unsuppored cache type
      */
-    public Cache getCacheByType(CacheType type) throws ETComException {
+    public Cache getCacheByType(final CacheType type) throws ETComException {
         switch (type) {
             case A2L:
                 return (Cache) getA2lCache();

@@ -10,13 +10,12 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComAnalysisExecuti
 
 /**
  * COM object providing operations to obtain informations of the currently analysis job.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class AnalysisExecutionInfo extends ETComDispatch implements ComAnalysisExecutionInfo {
 
     /**
      * Instantiates a new {@link AnalysisExecutionInfo}.
+     *
      * <p>
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.

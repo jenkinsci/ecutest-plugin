@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -13,13 +13,10 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.List;
 
 /**
  * Contributor which adds various test related variables into the build environment variables.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 @Extension
 public class TestEnvContributor extends EnvironmentContributor {
@@ -75,10 +72,8 @@ public class TestEnvContributor extends EnvironmentContributor {
     public static final String TEST_TIMEOUT = "TEST_TIMEOUT_";
 
     @Override
-    @SuppressWarnings("rawtypes")
     public void buildEnvironmentFor(@Nonnull final Run r, @Nonnull final EnvVars envs,
-                                    @Nonnull final TaskListener listener) throws IOException, InterruptedException {
-
+                                    @Nonnull final TaskListener listener) {
         final List<TestEnvInvisibleAction> envActions = r.getActions(TestEnvInvisibleAction.class);
         for (final TestEnvInvisibleAction action : envActions) {
             final String id = String.valueOf(action.getTestId());

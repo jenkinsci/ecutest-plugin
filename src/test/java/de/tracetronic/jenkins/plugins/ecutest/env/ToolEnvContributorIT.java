@@ -17,8 +17,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Integration tests for {@link ToolEnvContributor}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ToolEnvContributorIT extends IntegrationTestBase {
 

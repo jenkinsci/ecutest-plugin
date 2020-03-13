@@ -18,13 +18,12 @@ import java.util.Map.Entry;
 /**
  * COM object representing the currently started test environment.
  * This environment supports operations to run packages and projects.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TestEnvironment extends ETComDispatch implements ComTestEnvironment {
 
     /**
      * Instantiates a new {@link TestEnvironment}.
+     *
      * <p>
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.
@@ -137,8 +136,7 @@ public class TestEnvironment extends ETComDispatch implements ComTestEnvironment
                                                     final Map<String, String> parameters) throws ETComException {
         final Object[][] settings = getArrayFromMap(parameters, false);
         return performDirectRequest("GenerateTestReportDocumentFromDB", new Variant(dbFile),
-            new Variant(reportDir), new Variant(reportFormat), new Variant(waitUntilFinished), settings)
-            .getBoolean();
+            new Variant(reportDir), new Variant(reportFormat), new Variant(waitUntilFinished), settings).getBoolean();
     }
 
     @Override

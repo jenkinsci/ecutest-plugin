@@ -16,13 +16,12 @@ import java.util.Locale;
 
 /**
  * Common base class for {@link Package} and {@link Project} giving access to their properties.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTestObject extends ETComDispatch {
 
     /**
      * Instantiates a new {@link AbstractTestObject}.
+     *
      * <p>
      * This constructor is used instead of a case operation to turn a Dispatch object into a wider object - it must
      * exist in every wrapper class whose instances may be returned from method calls wrapped in VT_DISPATCH Variants.

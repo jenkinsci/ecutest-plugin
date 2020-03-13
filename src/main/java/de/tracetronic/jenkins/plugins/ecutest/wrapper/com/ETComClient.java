@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -11,7 +11,7 @@ import com.jacob.com.Dispatch;
 import com.jacob.com.JacobException;
 import com.jacob.com.SafeArray;
 import com.jacob.com.Variant;
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
+import de.tracetronic.jenkins.plugins.ecutest.util.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComAnalysisEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComApplication;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComCaches;
@@ -31,11 +31,10 @@ import java.util.logging.Logger;
 
 /**
  * COM client to initialize a COM connection and to perform requests on application specific COM API.
+ *
  * <p>
  * All threads from COM will be automatically released after closing the client or at the latest when finalizing
  * occurred.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETComClient implements ComApplication, AutoCloseable {
 
@@ -134,8 +133,8 @@ public class ETComClient implements ComApplication, AutoCloseable {
     private void initSTA(final String progId) throws ETComException {
         try {
             ComThread.InitSTA();
-            final ActiveXComponent component = new ActiveXComponent(StringUtils.isEmpty(progId) ?
-                ETComProperty.DEFAULT_PROG_ID : progId);
+            final ActiveXComponent component = new ActiveXComponent(StringUtils.isEmpty(progId)
+                ? ETComProperty.DEFAULT_PROG_ID : progId);
             dispatch = new ETComDispatch(component.getObject(), false);
         } catch (final JacobException e) {
             throw new ETComException(e.getMessage(), e);
@@ -218,15 +217,15 @@ public class ETComClient implements ComApplication, AutoCloseable {
         } else {
             try {
                 releaseDispatch();
-            } catch (final ETComException e) {
-                // noop
+            } catch (final ETComException ignored) {
+                // no-op
             } finally {
                 ComThread.Release();
             }
         }
     }
 
-    @SuppressWarnings("checkstyle:superfinalize")
+    @SuppressWarnings("checkstyle:nofinalizer")
     @Override
     protected void finalize() throws Throwable {
         LOGGER.fine("Finalizing COM connection...");
@@ -237,7 +236,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
                 ComThread.Release();
                 super.finalize();
             }
-        } // else noop to prevent JVM crash
+        } // else no-op to prevent JVM crash
     }
 
     /**
@@ -320,7 +319,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     @Override
     public boolean quit(final int timeout) throws ETComException {
-        if (ETPlugin.ToolVersion.parse(getVersion()).compareWithoutMicroTo(new ETPlugin.ToolVersion(8, 0, 0)) >= 0) {
+        if (ToolVersion.parse(getVersion()).compareWithoutMicroTo(new ToolVersion(8, 0, 0)) >= 0) {
             return dispatch.performRequest("Quit", new Variant(timeout)).getBoolean();
         } else {
             return quit();
@@ -341,7 +340,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     @Override
     public boolean exit(final int timeout) throws ETComException {
-        if (ETPlugin.ToolVersion.parse(getVersion()).compareWithoutMicroTo(new ETPlugin.ToolVersion(8, 0, 0)) >= 0) {
+        if (ToolVersion.parse(getVersion()).compareWithoutMicroTo(new ToolVersion(8, 0, 0)) >= 0) {
             return dispatch.performRequest("Exit", new Variant(timeout)).getBoolean();
         } else {
             return exit();
@@ -483,7 +482,9 @@ public class ETComClient implements ComApplication, AutoCloseable {
         private Throwable throwable;
 
         /**
-         * @return the throwable from failing thread
+         * Returns the throwable from failing thread.
+         *
+         * @return the {@link Throwable} instance
          */
         public Throwable getThrowable() {
             return throwable;

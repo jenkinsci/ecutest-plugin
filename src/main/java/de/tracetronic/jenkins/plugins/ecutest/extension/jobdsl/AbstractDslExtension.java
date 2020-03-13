@@ -9,8 +9,6 @@ import javaposse.jobdsl.plugin.ContextExtensionPoint;
 
 /**
  * Common base class providing plugin specific DSL extensions.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractDslExtension extends ContextExtensionPoint {
 

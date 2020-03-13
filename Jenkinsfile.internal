@@ -1,91 +1,77 @@
 #!groovy
 
-/* Required Jenkins plugins:
-- https://wiki.jenkins-ci.org/display/JENKINS/Timestamper
-- https://wiki.jenkins-ci.org/display/JENKINS/Static+Code+Analysis+Plug-ins
-- https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin
-- https://wiki.jenkins-ci.org/display/JENKINS/FindBugs+Plugin
-- https://wiki.jenkins-ci.org/display/JENKINS/PMD+Plugin
-- https://wiki.jenkins-ci.org/display/JENKINS/DRY+Plugin
-- https://wiki.jenkins-ci.org/display/JENKINS/Task+Scanner+Plugin
-- https://wiki.jenkins-ci.org/display/JENKINS/Javadoc+Plugin
-- https://wiki.jenkins-ci.org/display/JENKINS/JaCoCo+Plugin
+/*
+=============
+Prerequisites
+=============
+* Maven tool installation configured as M3
+* JDK tool installation configured as JDK8
+* Global environment variable EMAIL_RECIPIENTS set
+* Jenkins plugins installed:
+- https://plugins.jenkins.io/jacoco
+- https://plugins.jenkins.io/javadoc
+- https://plugins.jenkins.io/timestamper
+- https://plugins.jenkins.io/warnings-ng
 */
 
-// Only keep the 10 most recent builds
-properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', numToKeepStr: '10']]])
-
-// Pipeline steps
-timestamps {
-    node {
-        stage('Checkout') {
-            checkout scm
-        }
-
+pipeline {
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timestamps()
+    }
+    agent any
+    tools {
+        maven 'M3'
+    }
+    stages {
         stage('Build') {
-            mvn 'clean package -B -V -U -e -DskipTests'
+            steps {
+                mvn 'package -DskipUTs'
+                archiveArtifacts artifacts: 'target/*.hpi', fingerprint: true
+            }
         }
-
         stage('Static Code Analysis') {
-            mvn 'checkstyle:check pmd:check pmd:cpd-check spotbugs:check -B -e'
-            step([$class: 'CheckStylePublisher', pattern: 'target/checkstyle-result.xml'])
-            step([$class: 'FindBugsPublisher', pattern: 'target/spotbugsXml.xml'])
-            step([$class: 'PmdPublisher', pattern: 'target/pmd.xml'])
-            step([$class: 'DryPublisher', pattern: 'target/cpd.xml'])
-            step([$class: 'TasksPublisher', high: 'FIXME', low: '', normal: 'TODO', pattern: 'src/**/*.java'])
+            steps {
+                mvn 'checkstyle:check pmd:check pmd:cpd-check spotbugs:check'
+                recordIssues(tools: [
+                    checkStyle(pattern: 'target/checkstyle-result.xml'),
+                    pmdParser(pattern: 'target/pmd.xml'),
+                    cpd(pattern: 'target/cpd.xml'),
+                    spotBugs(pattern: 'target/spotbugsXml.xml', useRankAsPriority: true),
+                    taskScanner(includePattern: 'src/**/*.java', normalTags: 'TODO', highTags: 'FIXME')])
+            }
         }
-
-        stage('Documentation') {
-            mvn 'javadoc:javadoc -B -e'
-            step([$class: 'JavadocArchiver', javadocDir: 'target/site/apidocs', keepAll: false])
-        }
-
         stage('Unit Tests') {
-            mvn 'test-compile jacoco:prepare-agent surefire:test -B -e'
-            step([$class: 'JUnitResultArchiver', testResults: 'target/surefire-reports/TEST-*.xml'])
+            steps {
+                mvn 'jacoco:prepare-agent surefire:test -Dsurefire.useFile=false'
+                junit 'target/surefire-reports/TEST-*.xml'
+                jacoco exclusionPattern: '**/Messages.class', execPattern: 'target/jacoco.exec'
+            }
         }
-
-        stage('Code Coverage') {
-            step([$class: 'JacocoPublisher', execPattern: 'target/jacoco.exec', exclusionPattern: '**/Messages.class'])
+        stage('Docs') {
+            steps {
+                mvn 'javadoc:javadoc'
+                step([$class: 'JavadocArchiver', javadocDir: 'target/site/apidocs', keepAll: false])
+            }
         }
-
-        stage('Archive Artifacts') {
-            step([$class: 'ArtifactArchiver', artifacts: 'target/*.hpi,target/*.jpi', fingerprint: true])
+    }
+    post {
+        unsuccessful {
+            mail to: "${env.EMAIL_RECIPIENTS}",
+                subject: "${JOB_NAME} - Build #${BUILD_NUMBER} - ${currentBuild.currentResult}",
+                body: "Check console output at ${BUILD_URL} to view the results."
         }
     }
 }
 
-// Run Maven from tool "mvn"
-void mvn(def args) {
-    // Get JDK tool installation
-    def jdkHome = tool name: 'JDK8', type: 'hudson.model.JDK'
-
-    // Get Maven tool installation
-    def mvnHome = tool name: 'M3', type: 'hudson.tasks.Maven$MavenInstallation'
-
-    // Set JAVA_HOME, MAVEN_HOME and special PATH variables
-    List javaEnv = [
-        "PATH+JDK=${jdkHome}/bin",
-        "PATH+MVN=${mvnHome}/bin",
-        "JAVA_HOME=${jdkHome}",
-        "MAVEN_HOME=${mvnHome}",
-        // Additional variables needed by tests on machines
-        // that don't have global git user.name and user.email configured.
-        'GIT_COMMITTER_EMAIL=me@hatescake.com',
-        'GIT_COMMITTER_NAME=Hates',
-        'GIT_AUTHOR_NAME=Cake',
-        'GIT_AUTHOR_EMAIL=hates@cake.com',
-        'LOGNAME=hatescake'
-    ]
-
-    // Call Maven within Java environment
-    withEnv(javaEnv) {
-        timeout(time: 60, unit: 'MINUTES') {
-            if (isUnix()) {
-                sh "${mvnHome}/bin/mvn ${args}"
-            } else {
-                bat "${mvnHome}\\bin\\mvn ${args}"
-            }
+def mvn(def args) {
+    def mvnHome = tool 'M3'
+    def javaHome = tool 'JDK8'
+    withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin:${env.JAVA_HOME}/bin"]) {
+        if (isUnix()) {
+            sh "${mvnHome}/bin/mvn ${args} -B -V -U -e"
+        } else {
+            bat "${mvnHome}\\bin\\mvn ${args} -B -V -U -e"
         }
     }
 }

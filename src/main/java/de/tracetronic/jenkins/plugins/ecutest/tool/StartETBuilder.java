@@ -36,8 +36,6 @@ import java.util.List;
 
 /**
  * Builder providing the start up of ECU-TEST.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class StartETBuilder extends AbstractToolBuilder {
 
@@ -48,17 +46,18 @@ public class StartETBuilder extends AbstractToolBuilder {
 
     @CheckForNull
     private String workspaceDir;
-    /**
-     * @since 1.5
-     */
     @CheckForNull
     private String settingsDir;
     private boolean debugMode;
     /**
+     * Specifies whether to re-use the previous instance.
+     *
      * @since 1.18
      */
     private boolean keepInstance;
     /**
+     * Specifies whether to update all user libraries.
+     *
      * @since 2.6
      */
     private boolean updateUserLibs;
@@ -73,86 +72,53 @@ public class StartETBuilder extends AbstractToolBuilder {
         super(toolName);
     }
 
-    /**
-     * @return the default timeout
-     */
     @Override
     public int getDefaultTimeout() {
         return DEFAULT_TIMEOUT;
     }
 
-    /**
-     * @return the workspace directory
-     */
     @Nonnull
     public String getWorkspaceDir() {
         return StringUtils.trimToEmpty(workspaceDir);
     }
 
-    /**
-     * @param workspaceDir the workspace directory
-     */
     @DataBoundSetter
     public void setWorkspaceDir(@CheckForNull final String workspaceDir) {
         this.workspaceDir = Util.fixNull(workspaceDir);
     }
 
-    /**
-     * @return the settings directory
-     */
     @Nonnull
     public String getSettingsDir() {
         return StringUtils.trimToEmpty(settingsDir);
     }
 
-    /**
-     * @param settingsDir the settings directory
-     */
     @DataBoundSetter
     public void setSettingsDir(@CheckForNull final String settingsDir) {
         this.settingsDir = Util.fixNull(settingsDir);
     }
 
-    /**
-     * @return specifies whether to enable debug mode
-     */
     public boolean isDebugMode() {
         return debugMode;
     }
 
-    /**
-     * @param debugMode specifies whether to enable debug mode
-     */
     @DataBoundSetter
     public void setDebugMode(final boolean debugMode) {
         this.debugMode = debugMode;
     }
 
-    /**
-     * @return specifies whether to re-use the previous instance
-     */
     public boolean isKeepInstance() {
         return keepInstance;
     }
 
-    /**
-     * @param keepInstance specifies whether to re-use the previous instance
-     */
     @DataBoundSetter
     public void setKeepInstance(final boolean keepInstance) {
         this.keepInstance = keepInstance;
     }
 
-    /**
-     * @return specifies whether to update all user libraries
-     */
     public boolean isUpdateUserLibs() {
         return updateUserLibs;
     }
 
-    /**
-     * @param updateUserLibs specifies whether to update all user libraries
-     */
     @DataBoundSetter
     public void setUpdateUserLibs(final boolean updateUserLibs) {
         this.updateUserLibs = updateUserLibs;
@@ -198,7 +164,7 @@ public class StartETBuilder extends AbstractToolBuilder {
             final String toolName = envVars.expand(getToolName());
             if (getInstallation().isRegisterComServer()) {
                 final String installPath = getInstallation().getComExecutable(launcher);
-                ETComRegisterClient comClient = new ETComRegisterClient(toolName, installPath);
+                final ETComRegisterClient comClient = new ETComRegisterClient(toolName, installPath);
                 comClient.start(false, workspace, launcher, listener);
             }
 

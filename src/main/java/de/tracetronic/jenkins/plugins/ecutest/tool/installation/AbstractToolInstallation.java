@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.installation;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.EnvVars;
 import hudson.Launcher;
 import hudson.Util;
@@ -21,8 +22,6 @@ import java.util.List;
 
 /**
  * Represents a base tool installation specified by name and home directory.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractToolInstallation extends ToolInstallation implements
     EnvironmentSpecific<AbstractToolInstallation>, NodeSpecific<AbstractToolInstallation> {
@@ -66,20 +65,6 @@ public abstract class AbstractToolInstallation extends ToolInstallation implemen
     }
 
     /**
-     * {@link MasterToSlaveCallable} providing remote access to return the tool executable path.
-     */
-    private final class GetExecutableCallable extends MasterToSlaveCallable<String, IOException> {
-
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public String call() {
-            final File exe = getExeFile();
-            return exe != null && exe.exists() ? exe.getPath() : null;
-        }
-    }
-
-    /**
      * Gets the expanded executable file path.
      *
      * @return the executable file path or {@code null} if home directory is not set
@@ -103,4 +88,18 @@ public abstract class AbstractToolInstallation extends ToolInstallation implemen
      */
     protected abstract File getExeFile(File home);
 
+    /**
+     * {@link MasterToSlaveCallable} providing remote access to return the tool executable path.
+     */
+    @SuppressFBWarnings("SE_INNER_CLASS")
+    private final class GetExecutableCallable extends MasterToSlaveCallable<String, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public String call() {
+            final File exe = getExeFile();
+            return exe != null && exe.exists() ? exe.getPath() : null;
+        }
+    }
 }

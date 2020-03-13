@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -39,8 +39,6 @@ import java.util.List;
 /**
  * Publisher providing the generation of JUnit reports and adds a {@link TestResultAction} by invoking the
  * {@link JUnitTestResultParser}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class JUnitPublisher extends AbstractToolPublisher implements MatrixAggregatable {
 
@@ -103,40 +101,22 @@ public class JUnitPublisher extends AbstractToolPublisher implements MatrixAggre
      * @return the percentage value
      */
     private static double convertToPercentage(final double value) {
-        if (value < 0.0) {
-            return 0.0;
-        } else if (value > 100.0) {
-            return 100.0;
-        } else {
-            return value;
-        }
+        return value < 0.0 ? 0.0 : Math.min(value, 100.0);
     }
 
-    /**
-     * @return the unstable threshold
-     */
     public double getUnstableThreshold() {
         return unstableThreshold;
     }
 
-    /**
-     * @param unstableThreshold the unstable threshold
-     */
     @DataBoundSetter
     public void setUnstableThreshold(final double unstableThreshold) {
         this.unstableThreshold = convertToPercentage(unstableThreshold);
     }
 
-    /**
-     * @return the failed threshold
-     */
     public double getFailedThreshold() {
         return failedThreshold;
     }
 
-    /**
-     * @param failedThreshold the failed threshold
-     */
     @DataBoundSetter
     public void setFailedThreshold(final double failedThreshold) {
         this.failedThreshold = convertToPercentage(failedThreshold);

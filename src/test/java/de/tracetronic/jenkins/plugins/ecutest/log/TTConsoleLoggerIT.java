@@ -23,8 +23,6 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Integration tests for {@link TTConsoleLogger}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class TTConsoleLoggerIT extends IntegrationTestBase {
 

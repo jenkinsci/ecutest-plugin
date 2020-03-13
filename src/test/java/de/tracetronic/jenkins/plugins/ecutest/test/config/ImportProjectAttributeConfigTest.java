@@ -14,8 +14,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for {@link ImportProjectAttributeConfig}.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ImportProjectAttributeConfigTest {
 

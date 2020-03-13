@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
+import de.tracetronic.jenkins.plugins.ecutest.util.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
@@ -23,8 +23,6 @@ import java.io.IOException;
 
 /**
  * Abstract client providing common used functions to interact with a test management system.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTMSClient {
 
@@ -48,13 +46,12 @@ public abstract class AbstractTMSClient {
      *
      * @param launcher the launcher
      * @param listener the listener
-     * @return {@code true}, if logout succeeded, {@code false} otherwise
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
      */
-    public boolean logout(final Launcher launcher, final TaskListener listener)
+    public void logout(final Launcher launcher, final TaskListener listener)
         throws IOException, InterruptedException {
-        return launcher.getChannel().call(new LogoutTMSCallable(listener));
+        launcher.getChannel().call(new LogoutTMSCallable(listener));
     }
 
     /**

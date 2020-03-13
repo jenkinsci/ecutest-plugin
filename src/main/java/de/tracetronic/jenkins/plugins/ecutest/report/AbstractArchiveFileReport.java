@@ -21,8 +21,6 @@ import java.util.logging.Logger;
 /**
  * Common base class for {@link TRFReport} and {@link ETLogReport} holding the archive file information.
  * The build that holds the artifact is resolved by {@link StaplerRequest#findAncestorObject(Class)} at runtime.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractArchiveFileReport extends AbstractTestReport {
 
@@ -46,16 +44,10 @@ public abstract class AbstractArchiveFileReport extends AbstractTestReport {
         this.fileSize = fileSize;
     }
 
-    /**
-     * @return the file name
-     */
     public String getFileName() {
         return fileName;
     }
 
-    /**
-     * @return the file size
-     */
     public long getFileSize() {
         return fileSize;
     }

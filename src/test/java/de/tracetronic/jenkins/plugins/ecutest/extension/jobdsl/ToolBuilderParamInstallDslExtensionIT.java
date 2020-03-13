@@ -27,8 +27,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests for {@link ToolBuilderDslExtension} with parameterized tool selection.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ToolBuilderParamInstallDslExtensionIT extends AbstractDslExtensionIT {
 

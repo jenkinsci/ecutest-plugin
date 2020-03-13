@@ -27,8 +27,6 @@ import java.util.List;
 
 /**
  * Class providing the generation of JUnit reports with ECU-TEST.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class JUnitReportGenerator {
 
@@ -62,7 +60,7 @@ public class JUnitReportGenerator {
             final String toolName = run.getEnvironment(listener).expand(installation.getName());
             if (installation.isRegisterComServer()) {
                 final String installPath = installation.getComExecutable(launcher);
-                ETComRegisterClient comClient = new ETComRegisterClient(toolName, installPath);
+                final ETComRegisterClient comClient = new ETComRegisterClient(toolName, installPath);
                 comClient.start(false, workspace, launcher, listener);
             }
 

@@ -26,8 +26,6 @@ import java.util.List;
 
 /**
  * Helper class providing common used functionalities for all test related task builders.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public abstract class AbstractTestHelper extends Builder {
 
@@ -41,16 +39,10 @@ public abstract class AbstractTestHelper extends Builder {
      */
     private static final String DEFAULT_CONFIG_DIR = "Configurations";
 
-    /**
-     * @return the default packages directory
-     */
     public String getDefaultPackagesDir() {
         return DEFAULT_PACKAGES_DIR;
     }
 
-    /**
-     * @return the default configurations directory
-     */
     public String getDefaultConfigDir() {
         return DEFAULT_CONFIG_DIR;
     }
@@ -59,6 +51,7 @@ public abstract class AbstractTestHelper extends Builder {
      * Checks already opened ECU-TEST instances.
      *
      * @param launcher the launcher
+     * @param listener the listener
      * @param kill     specifies whether to task-kill the running processes
      * @return {@code true} if processes found, {@code false} otherwise
      * @throws IOException          signals that an I/O exception has occurred
@@ -233,7 +226,7 @@ public abstract class AbstractTestHelper extends Builder {
 
         @Override
         public String call() throws IOException {
-            String settingValue;
+            final String settingValue;
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 settingValue = comClient.getSetting(settingName);

@@ -16,8 +16,6 @@ import java.util.List;
 /**
  * Holds a link to the ECU-TEST log report. The build that holds the artifact is resolved by
  * {@link StaplerRequest#findAncestorObject(Class)} at runtime.
- *
- * @author Christian Pönisch <christian.poenisch@tracetronic.de>
  */
 public class ETLogReport extends AbstractArchiveFileReport {
 
@@ -44,10 +42,23 @@ public class ETLogReport extends AbstractArchiveFileReport {
         this.errorLogCount = errorLogCount;
     }
 
-    /**
-     * @return the annotated logs
-     */
     public List<ETLogAnnotation> getLogs() {
+        return logs;
+    }
+
+    /**
+     * Gets the logs by severity.
+     *
+     * @param severity the severity
+     * @return the list of logs matched the severity
+     */
+    private List<ETLogAnnotation> getLogs(final Severity severity) {
+        final List<ETLogAnnotation> logs = new ArrayList<>();
+        for (final ETLogAnnotation log : getLogs()) {
+            if (log.getSeverity().equals(severity)) {
+                logs.add(log);
+            }
+        }
         return logs;
     }
 
@@ -67,22 +78,6 @@ public class ETLogReport extends AbstractArchiveFileReport {
      */
     public List<ETLogAnnotation> getErrorLogs() {
         return getLogs(Severity.ERROR);
-    }
-
-    /**
-     * Gets the logs by severity.
-     *
-     * @param severity the severity
-     * @return the list of logs matched the severity
-     */
-    private List<ETLogAnnotation> getLogs(final Severity severity) {
-        final List<ETLogAnnotation> logs = new ArrayList<>();
-        for (final ETLogAnnotation log : getLogs()) {
-            if (log.getSeverity().equals(severity)) {
-                logs.add(log);
-            }
-        }
-        return logs;
     }
 
     /**
