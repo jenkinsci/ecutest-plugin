@@ -36,6 +36,13 @@ public class ToolVersionTest {
     }
 
     @Test
+    public void testParseHighToolVersion() {
+        final ToolVersion expectedToolVersion = new ToolVersion(1000, 2000, 3000, "4000");
+        final ToolVersion parsedToolVersion = ToolVersion.parse("1000.2000.3000.4000");
+        assertEquals("Check parsed high version", expectedToolVersion, parsedToolVersion);
+    }
+
+    @Test
     public void testParseValidHashtagToolVersion() {
         final ToolVersion expectedToolVersion = new ToolVersion(1, 2, 3, "4");
         final ToolVersion parsedToolVersion = ToolVersion.parse("1.2.3#4");
