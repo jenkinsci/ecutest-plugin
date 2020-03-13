@@ -54,6 +54,7 @@ public class ATXPublisher extends AbstractReportPublisher {
     private ATXInstallation atxInstallation;
     /**
      * Specifies whether to fail the build if upload is enabled and the server is offline.
+     *
      * @since 2.11
      */
     private boolean failOnOffline;
@@ -63,6 +64,12 @@ public class ATXPublisher extends AbstractReportPublisher {
      * @since 2.14
      */
     private boolean usePersistedSettings;
+    /**
+     * Specifies whether to inject common build variables as ATX constants.
+     *
+     * @since 2.15
+     */
+    private boolean injectBuildVars;
 
     /**
      * Instantiates a new {@link ATXPublisher}.
@@ -112,6 +119,15 @@ public class ATXPublisher extends AbstractReportPublisher {
         this.usePersistedSettings = usePersistedSettings;
     }
 
+    public boolean isInjectBuildVars() {
+        return injectBuildVars;
+    }
+
+    @DataBoundSetter
+    public void setInjectBuildVars(final boolean injectBuildVars) {
+        this.injectBuildVars = injectBuildVars;
+    }
+
     @Override
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
                               final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
@@ -157,8 +173,8 @@ public class ATXPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Publishes the ATX reports by first generating them and depending
-     * on whether ATX upload is enabled also starting the upload.
+     * Publishes the ATX reports by first generating them and depending on whether ATX upload is enabled also starting
+     * the upload.
      *
      * @param installation the installation
      * @param run          the run
@@ -171,7 +187,7 @@ public class ATXPublisher extends AbstractReportPublisher {
      */
     private boolean publishReports(final ATXInstallation installation, final Run<?, ?> run, final FilePath workspace,
                                    final Launcher launcher, final TaskListener listener)
-        throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = getLogger();
         final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
         final boolean isUploadEnabled = isUploadEnabled(installation);
@@ -179,7 +195,8 @@ public class ATXPublisher extends AbstractReportPublisher {
         if (isUploadEnabled && isServerReachable) {
             logger.logInfo("- Generating and uploading ATX reports...");
             final ATXReportUploader uploader = new ATXReportUploader(installation);
-            return uploader.upload(reportDirs, isAllowMissing(), isUsePersistedSettings(), run, launcher, listener);
+            return uploader.upload(reportDirs, isUsePersistedSettings(), isInjectBuildVars(), isAllowMissing(),
+                    run, launcher, listener);
         } else if (isUploadEnabled && failOnOffline) {
             logger.logError("-> TEST-GUIDE server is not reachable, setting build status to FAILURE!");
             return false;
@@ -191,8 +208,8 @@ public class ATXPublisher extends AbstractReportPublisher {
             final FilePath archiveTarget = getArchiveTarget(run);
 
             final ATXReportGenerator generator = new ATXReportGenerator(installation);
-            return generator.generate(archiveTarget, reportDirs, isAllowMissing(), isUsePersistedSettings(),
-                isArchiving(), isKeepAll(), run, launcher, listener);
+            return generator.generate(archiveTarget, reportDirs, isUsePersistedSettings(), isInjectBuildVars(),
+                    isAllowMissing(), isArchiving(), isKeepAll(), run, launcher, listener);
         }
     }
 

@@ -47,10 +47,11 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      *
      * @param archiveTarget        the archive target directory
      * @param reportDirs           the report directories
+     * @param usePersistedSettings specifies whether to use read settings from persisted configurations file
+     * @param injectBuildVars      specifies whether to inject common build variables as ATX constants
      * @param allowMissing         specifies whether missing reports are allowed
      * @param isArchiving          specifies whether archiving artifacts is enabled
      * @param keepAll              specifies whether to keep all artifacts
-     * @param usePersistedSettings specifies whether to use read settings from persisted configurations file
      * @param run                  the run
      * @param launcher             the launcher
      * @param listener             the listener
@@ -60,17 +61,17 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
      */
     @SuppressWarnings({"checkstyle:cyclomaticcomplexity", "checkstyle:npathcomplexity"})
     public boolean generate(final FilePath archiveTarget, final List<FilePath> reportDirs,
+                            final boolean usePersistedSettings, final boolean injectBuildVars,
                             final boolean allowMissing, final boolean isArchiving, final boolean keepAll,
-                            final boolean usePersistedSettings, final Run<?, ?> run, final Launcher launcher,
-                            final TaskListener listener)
-        throws IOException, InterruptedException {
+                            final Run<?, ?> run, final Launcher launcher, final TaskListener listener)
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<FilePath> reportFiles = new ArrayList<>();
         for (final FilePath reportDir : reportDirs) {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(reportDir);
             if (reportFile != null && reportFile.exists()) {
                 reportFiles.addAll(Arrays.asList(
-                    reportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
+                        reportDir.list(TRFPublisher.TRF_INCLUDES, TRFPublisher.TRF_EXCLUDES)));
             } else {
                 if (!allowMissing) {
                     logger.logError(String.format("Specified TRF file '%s' does not exist.", reportFile));
@@ -86,8 +87,8 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
 
         // Generate ATX reports
         final boolean isGenerated = launcher.getChannel().call(
-            new GenerateReportCallable(getInstallation().getConfig(), reportFiles, usePersistedSettings,
-                run.getEnvironment(listener), listener));
+                new GenerateReportCallable(getInstallation().getConfig(), reportFiles,
+                        usePersistedSettings, injectBuildVars, run.getEnvironment(listener), listener));
 
         if (isArchiving) {
             // Removing old artifacts at project level
@@ -202,6 +203,7 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
         private static final long serialVersionUID = 1L;
 
         private final boolean usePersistedSettings;
+        private final boolean injectBuildVars;
 
         /**
          * Instantiates a new {@link GenerateReportCallable}.
@@ -209,20 +211,23 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
          * @param config               the ATX configuration
          * @param reportFiles          the list of TRF files
          * @param usePersistedSettings specifies whether to use read settings from persisted configurations file
+         * @param injectBuildVars      specifies whether to inject common build variables as ATX constants
          * @param envVars              the environment variables
          * @param listener             the listener
          */
         GenerateReportCallable(final ATXConfig config, final List<FilePath> reportFiles,
-                               final boolean usePersistedSettings, final EnvVars envVars, final TaskListener listener) {
+                               final boolean usePersistedSettings, final boolean injectBuildVars,
+                               final EnvVars envVars, final TaskListener listener) {
             super(config, reportFiles, envVars, listener);
             this.usePersistedSettings = usePersistedSettings;
+            this.injectBuildVars = injectBuildVars;
         }
 
         @Override
         public Boolean call() {
             boolean isGenerated = true;
             final TTConsoleLogger logger = new TTConsoleLogger(getListener());
-            final Map<String, String> configMap = getConfigMap(false);
+            final Map<String, String> configMap = getConfigMap(false, injectBuildVars);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
@@ -237,12 +242,12 @@ public class ATXReportGenerator extends AbstractATXReportHandler {
                             final FilePath reportDir = reportFile.getParent();
                             final FilePath configPath = reportDir.child(ATX_TEMPLATE_NAME + ".xml");
                             logger.logInfo(String.format("- Using persisted settings from configuration: %s",
-                                configPath.getRemote()));
+                                    configPath.getRemote()));
                             testEnv.generateTestReportDocument(reportFile.getRemote(),
-                                reportDir.getRemote(), configPath.getRemote(), true);
+                                    reportDir.getRemote(), configPath.getRemote(), true);
                         } else {
                             testEnv.generateTestReportDocumentFromDB(reportFile.getRemote(),
-                                outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
+                                    outDir.getRemote(), ATX_TEMPLATE_NAME, true, configMap);
                         }
                         comClient.waitForIdle(0);
                     }

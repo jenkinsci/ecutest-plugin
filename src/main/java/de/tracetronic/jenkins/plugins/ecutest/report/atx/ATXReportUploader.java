@@ -78,8 +78,10 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      * Generates and uploads {@link ATXReport}s.
      *
      * @param reportDirs           the report directories
+     * @param usePersistedSettings specifies whether to use report generator settings from persisted configurations
+     *                             file
+     * @param injectBuildVars      specifies whether to inject common build variables as ATX constants
      * @param allowMissing         specifies whether missing reports are allowed
-     * @param usePersistedSettings whether to use report generator settings from persisted configurations file
      * @param run                  the run
      * @param launcher             the launcher
      * @param listener             the listener
@@ -87,9 +89,9 @@ public class ATXReportUploader extends AbstractATXReportHandler {
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
      */
-    public boolean upload(final List<FilePath> reportDirs, final boolean allowMissing,
-                          final boolean usePersistedSettings, final Run<?, ?> run,
-                          final Launcher launcher, final TaskListener listener)
+    public boolean upload(final List<FilePath> reportDirs, final boolean usePersistedSettings,
+                          final boolean injectBuildVars, final boolean allowMissing,
+                          final Run<?, ?> run, final Launcher launcher, final TaskListener listener)
             throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<ATXReport> atxReports = new ArrayList<>();
@@ -115,7 +117,8 @@ public class ATXReportUploader extends AbstractATXReportHandler {
 
                 // Upload ATX reports
                 final UploadInfoHolder uploadInfo = launcher.getChannel().call(
-                    new UploadReportCallable(config, uploadFiles, usePersistedSettings, envVars, listener));
+                    new UploadReportCallable(config, uploadFiles, usePersistedSettings, injectBuildVars,
+                            envVars, listener));
 
                 if (uploadInfo.isUploaded()) {
                     // Prepare ATX report links
@@ -371,6 +374,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         private static final String SUCCESS_FILE_NAME = "success.json";
 
         private final boolean usePersistedSettings;
+        private final boolean injectBuildVars;
 
         /**
          * Instantiates a new {@link UploadReportCallable}.
@@ -378,20 +382,23 @@ public class ATXReportUploader extends AbstractATXReportHandler {
          * @param config               the ATX configuration
          * @param reportFiles          the list of TRF files
          * @param usePersistedSettings specifies whether to use read settings from persisted configurations file
+         * @param injectBuildVars      specifies whether to inject common build variables as ATX constants
          * @param envVars              the environment variables
          * @param listener             the listener
          */
         UploadReportCallable(final ATXConfig config, final List<FilePath> reportFiles,
-                             final boolean usePersistedSettings, final EnvVars envVars, final TaskListener listener) {
+                             final boolean usePersistedSettings, final boolean injectBuildVars,
+                             final EnvVars envVars, final TaskListener listener) {
             super(config, reportFiles, envVars, listener);
             this.usePersistedSettings = usePersistedSettings;
+            this.injectBuildVars = injectBuildVars;
         }
 
         @Override
         public UploadInfoHolder call() throws IOException {
             final UploadInfoHolder uploadInfo = new UploadInfoHolder(false);
             final TTConsoleLogger logger = new TTConsoleLogger(getListener());
-            final Map<String, String> configMap = getConfigMap(true);
+            final Map<String, String> configMap = getConfigMap(true, injectBuildVars);
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
