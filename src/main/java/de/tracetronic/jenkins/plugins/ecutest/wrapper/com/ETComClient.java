@@ -11,7 +11,7 @@ import com.jacob.com.Dispatch;
 import com.jacob.com.JacobException;
 import com.jacob.com.SafeArray;
 import com.jacob.com.Variant;
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
+import de.tracetronic.jenkins.plugins.ecutest.util.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComAnalysisEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComApplication;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComCaches;
@@ -319,7 +319,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     @Override
     public boolean quit(final int timeout) throws ETComException {
-        if (ETPlugin.ToolVersion.parse(getVersion()).compareWithoutMicroTo(new ETPlugin.ToolVersion(8, 0, 0)) >= 0) {
+        if (ToolVersion.parse(getVersion()).compareWithoutMicroTo(new ToolVersion(8, 0, 0)) >= 0) {
             return dispatch.performRequest("Quit", new Variant(timeout)).getBoolean();
         } else {
             return quit();
@@ -340,7 +340,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     @Override
     public boolean exit(final int timeout) throws ETComException {
-        if (ETPlugin.ToolVersion.parse(getVersion()).compareWithoutMicroTo(new ETPlugin.ToolVersion(8, 0, 0)) >= 0) {
+        if (ToolVersion.parse(getVersion()).compareWithoutMicroTo(new ToolVersion(8, 0, 0)) >= 0) {
             return dispatch.performRequest("Exit", new Variant(timeout)).getBoolean();
         } else {
             return exit();

@@ -10,6 +10,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.Messages;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
+import de.tracetronic.jenkins.plugins.ecutest.util.ToolVersion;
 import hudson.Util;
 import hudson.util.FormValidation;
 import net.sf.json.JSONObject;
@@ -481,7 +482,7 @@ public class ATXValidator extends AbstractValidator {
                     returnValue = FormValidation.warning(Messages.ATXInstallation_InvalidServer(baseUrl));
                 } else {
                     final String version = info.getString("version");
-                    final ETPlugin.ToolVersion atxVersion = ETPlugin.ToolVersion.parse(version);
+                    final ToolVersion atxVersion = ToolVersion.parse(version);
                     if (atxVersion.compareWithoutQualifierTo(ETPlugin.ATX_MIN_VERSION) < 0) {
                         returnValue = FormValidation.warning(
                             Messages.ATXInstallation_IncompatibleVersion(version,

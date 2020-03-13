@@ -1,11 +1,10 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-package de.tracetronic.jenkins.plugins.ecutest;
+package de.tracetronic.jenkins.plugins.ecutest.util;
 
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 

@@ -5,10 +5,10 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.client;
 
-import de.tracetronic.jenkins.plugins.ecutest.ETPlugin.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
+import de.tracetronic.jenkins.plugins.ecutest.util.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Cache;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Caches;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Caches.CacheType;
