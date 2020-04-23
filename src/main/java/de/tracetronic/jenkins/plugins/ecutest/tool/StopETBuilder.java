@@ -55,8 +55,13 @@ public class StopETBuilder extends AbstractToolBuilder {
             setInstallation(configureToolInstallation(workspace.toComputer(), listener, envVars));
         }
 
-        // Stop selected ECU-TEST
+        // Check consistency
         final String toolName = envVars.expand(getInstallation().getName());
+        if (!toolName.equals(envVars.expand(getToolName()))) {
+            setInstallation(configureToolInstallation(workspace.toComputer(), listener, envVars));
+        }
+
+        // Stop selected ECU-TEST
         final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), envVars,
             String.valueOf(DEFAULT_TIMEOUT)));
         final ETClient etClient = new ETClient(toolName, expTimeout);
