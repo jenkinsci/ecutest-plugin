@@ -144,7 +144,7 @@ public class JUnitPublisher extends AbstractToolPublisher implements MatrixAggre
         }
 
         // Generate JUnit reports
-        if (getInstallation() == null) {
+        if (!isInstallationVerified(run.getEnvironment(listener))) {
             setInstallation(configureToolInstallation(workspace.toComputer(), listener, run.getEnvironment(listener)));
         }
         final JUnitReportGenerator generator = new JUnitReportGenerator();

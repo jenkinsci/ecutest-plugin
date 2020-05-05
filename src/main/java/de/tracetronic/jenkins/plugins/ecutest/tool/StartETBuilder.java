@@ -155,18 +155,13 @@ public class StartETBuilder extends AbstractToolBuilder {
                 ETLogPublisher.RunListenerImpl.onStarted(expSettingsPath, listener);
             }
 
-            // Get selected ECU-TEST installation
-            if (getInstallation() == null) {
-                setInstallation(configureToolInstallation(workspace.toComputer(), listener, envVars));
-            }
-
-            // Check consistency
-            final String toolName = envVars.expand(getToolName());
-            if (!toolName.equals(getInstallation().getName())) {
+            // verify selected ECU-Test installation
+            if (!isInstallationVerified(envVars)) {
                 setInstallation(configureToolInstallation(workspace.toComputer(), listener, envVars));
             }
 
             // Register ECU-TEST COM server
+            final String toolName = getInstallation().getName();
             if (getInstallation().isRegisterComServer()) {
                 final String installPath = getInstallation().getComExecutable(launcher);
                 final ETComRegisterClient comClient = new ETComRegisterClient(toolName, installPath);

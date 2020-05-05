@@ -28,6 +28,7 @@ import java.util.HashMap;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -122,16 +123,39 @@ public class StartETBuilderIT extends IntegrationTestBase {
         project.getBuildersList().add(builder);
 
         final EnvVars envVars = new EnvVars(
-            Collections.unmodifiableMap(new HashMap<String, String>() {
+                Collections.unmodifiableMap(new HashMap<String, String>() {
 
-                private static final long serialVersionUID = 1L;
+                    private static final long serialVersionUID = 1L;
 
-                {
-                    put("ECUTEST", "ECU-TEST");
-                }
-            }));
+                    {
+                        put("ECUTEST", "ECU-TEST");
+                    }
+                }));
 
         assertEquals("Tool name should be resolved", "ECU-TEST", builder.getToolInstallation(envVars).getName());
+    }
+
+    @Test
+    public void testParameterizedToolInstallation() throws Exception {
+        final FreeStyleProject project = jenkins.createFreeStyleProject();
+        final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
+                .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+
+        final ETInstallation installation = new ETInstallation("ECUT-TEST2", "C:\\ECU-TEST2",
+                JenkinsRule.NO_PROPERTIES);
+        final StartETBuilder builder = new StartETBuilder("${ECUTEST}");
+        builder.setInstallation(installation);
+        project.getBuildersList().add(builder);
+
+        final EnvVars envVars = new EnvVars(
+                Collections.unmodifiableMap(new HashMap<String, String>() {
+                    private static final long serialVersionUID = 1L;
+                    {
+                        put("ECUTEST", "ECU-TEST");
+                    }
+                }));
+
+        assertFalse("Tool installation verification should be false", builder.isInstallationVerified(envVars));
     }
 
     @Test
