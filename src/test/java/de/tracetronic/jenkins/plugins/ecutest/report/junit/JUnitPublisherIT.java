@@ -165,17 +165,17 @@ public class JUnitPublisherIT extends IntegrationTestBase {
     public void testParameterizedToolInstallation() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final ETInstallation installation = new ETInstallation("ECUT-TEST2", "C:\\ECU-TEST2",
-                JenkinsRule.NO_PROPERTIES);
+            JenkinsRule.NO_PROPERTIES);
         final JUnitPublisher publisher = new JUnitPublisher("${ECUTEST}");
         project.getPublishersList().add(publisher);
 
         final EnvVars envVars = new EnvVars(
-                Collections.unmodifiableMap(new HashMap<String, String>() {
-                    private static final long serialVersionUID = 1L;
-                    {
-                        put("ECUTEST", "ECU-TEST");
-                    }
-                }));
+            Collections.unmodifiableMap(new HashMap<String, String>() {
+                private static final long serialVersionUID = 1L;
+                {
+                    put("ECUTEST", "ECU-TEST");
+                }
+            }));
 
         assertFalse("Tool installation verification should be false", publisher.isInstallationVerified(envVars));
 

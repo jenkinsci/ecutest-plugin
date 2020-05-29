@@ -144,15 +144,10 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
      *
      * @param envVars the environment variables of the run
      */
-
     protected boolean isInstallationVerified(final EnvVars envVars) {
-        // Get selected ECU-TEST installation
         if (getInstallation() == null) {
             return false;
-        }
-
-        // Check consistency
-        if (!getInstallation().getName().equals(envVars.expand(getToolName()))) {
+        } else if (!getInstallation().getName().equals(envVars.expand(getToolName()))) {
             return false;
         }
 

@@ -135,19 +135,10 @@ public abstract class AbstractToolPublisher extends AbstractReportPublisher {
      *
      * @param envVars the environment variables of the run
      */
-
     public boolean isInstallationVerified(final EnvVars envVars) {
-        // Get selected ECU-TEST installation
         if (getInstallation() == null) {
             return false;
-        }
-
-        // Check consistency
-        if (!getInstallation().getName().equals(envVars.expand(getToolName()))) {
-            return false;
-        }
-
-        if (!getInstallation().getName().equals(getToolName())) {
+        }else if (!getInstallation().getName().equals(envVars.expand(getToolName()))) {
             return false;
         }
 

@@ -123,22 +123,22 @@ public class StopETBuilderIT extends IntegrationTestBase {
     public void testParameterizedToolInstallation() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
-                .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
 
         final ETInstallation installation = new ETInstallation("ECUT-TEST2", "C:\\ECU-TEST2",
-                JenkinsRule.NO_PROPERTIES);
+            JenkinsRule.NO_PROPERTIES);
         final StopETBuilder builder = new StopETBuilder("${ECUTEST}");
         builder.setInstallation(installation);
         project.getBuildersList().add(builder);
 
 
         final EnvVars envVars = new EnvVars(
-                Collections.unmodifiableMap(new HashMap<String, String>() {
-                    private static final long serialVersionUID = 1L;
-                    {
-                        put("ECUTEST", "ECU-TEST");
-                    }
-                }));
+            Collections.unmodifiableMap(new HashMap<String, String>() {
+                private static final long serialVersionUID = 1L;
+                {
+                    put("ECUTEST", "ECU-TEST");
+                }
+            }));
 
         assertFalse("Tool installation verification should be false", builder.isInstallationVerified(envVars));
     }
