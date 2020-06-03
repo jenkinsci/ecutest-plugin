@@ -138,7 +138,7 @@ public abstract class AbstractToolPublisher extends AbstractReportPublisher {
     public boolean isInstallationVerified(final EnvVars envVars) {
         if (getInstallation() == null) {
             return false;
-        }else if (!getInstallation().getName().equals(envVars.expand(getToolName()))) {
+        } else if (!getInstallation().getName().equals(envVars.expand(getToolName()))) {
             return false;
         }
 

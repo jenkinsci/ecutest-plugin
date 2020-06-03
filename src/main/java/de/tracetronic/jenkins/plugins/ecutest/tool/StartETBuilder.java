@@ -155,7 +155,7 @@ public class StartETBuilder extends AbstractToolBuilder {
                 ETLogPublisher.RunListenerImpl.onStarted(expSettingsPath, listener);
             }
 
-            // verify selected ECU-Test installation
+            // Verify selected ECU-TEST installation
             if (!isInstallationVerified(envVars)) {
                 setInstallation(configureToolInstallation(workspace.toComputer(), listener, envVars));
             }
