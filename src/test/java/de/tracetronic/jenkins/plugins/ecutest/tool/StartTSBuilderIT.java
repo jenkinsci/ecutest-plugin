@@ -28,6 +28,7 @@ import java.util.HashMap;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -112,7 +113,14 @@ public class StartTSBuilderIT extends IntegrationTestBase {
     @Test
     public void testParameterizedToolName() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
+
+        final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
+                .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+
+        final ETInstallation installation = new ETInstallation("ECUT-TEST2", "C:\\ECU-TEST2",
+                JenkinsRule.NO_PROPERTIES);
         final StartTSBuilder builder = new StartTSBuilder("${ECUTEST}");
+        builder.setInstallation(installation);
         project.getBuildersList().add(builder);
 
         final EnvVars envVars = new EnvVars(
@@ -125,7 +133,7 @@ public class StartTSBuilderIT extends IntegrationTestBase {
                 }
             }));
 
-        assertEquals("Tool name should be resolved", "ECU-TEST", builder.getToolInstallation(envVars).getName());
+        assertFalse("Tool installation verification should be false", builder.isInstallationVerified(envVars));
     }
 
     @Test

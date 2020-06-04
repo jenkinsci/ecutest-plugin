@@ -93,7 +93,7 @@ public abstract class AbstractToolPublisher extends AbstractReportPublisher {
     protected ETClient getToolClient(final Run<?, ?> run, final FilePath workspace,
                                      final Launcher launcher, final TaskListener listener)
         throws IOException, InterruptedException, ETPluginException {
-        if (installation == null) {
+        if (!isInstallationVerified(run.getEnvironment(listener))) {
             installation = configureToolInstallation(workspace.toComputer(), listener,
                 run.getEnvironment(listener));
         }
@@ -128,5 +128,20 @@ public abstract class AbstractToolPublisher extends AbstractReportPublisher {
                                                        final TaskListener listener, final EnvVars envVars)
         throws IOException, InterruptedException, ETPluginException {
         return configureToolInstallation(toolName, computer, listener, envVars);
+    }
+
+    /**
+     * Verify the installation object and updates properties if needed.
+     *
+     * @param envVars the environment variables of the run
+     */
+    public boolean isInstallationVerified(final EnvVars envVars) {
+        if (getInstallation() == null) {
+            return false;
+        } else if (!getInstallation().getName().equals(envVars.expand(getToolName()))) {
+            return false;
+        }
+
+        return true;
     }
 }

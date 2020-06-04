@@ -35,7 +35,9 @@ import java.util.HashMap;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Integration tests for {@link JUnitPublisher}.
@@ -157,6 +159,28 @@ public class JUnitPublisherIT extends IntegrationTestBase {
 
         assertEquals("Tool name should be resolved", "ECU-TEST",
             publisher.getToolInstallation(publisher.getToolName(), envVars).getName());
+    }
+
+    @Test
+    public void testParameterizedToolInstallation() throws Exception {
+        final FreeStyleProject project = jenkins.createFreeStyleProject();
+        final ETInstallation installation = new ETInstallation("ECUT-TEST2", "C:\\ECU-TEST2",
+            JenkinsRule.NO_PROPERTIES);
+        final JUnitPublisher publisher = new JUnitPublisher("${ECUTEST}");
+        project.getPublishersList().add(publisher);
+
+        final EnvVars envVars = new EnvVars(
+            Collections.unmodifiableMap(new HashMap<String, String>() {
+                private static final long serialVersionUID = 1L;
+                {
+                    put("ECUTEST", "ECU-TEST");
+                }
+            }));
+
+        assertFalse("Tool installation verification should be false", publisher.isInstallationVerified(envVars));
+
+        publisher.setInstallation(installation);
+        assertTrue("Tool installation verification should be true", publisher.isInstallationVerified(envVars));
     }
 
     @Test

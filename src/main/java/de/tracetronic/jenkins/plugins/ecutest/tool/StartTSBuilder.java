@@ -132,7 +132,7 @@ public class StartTSBuilder extends AbstractToolBuilder {
             }
 
             // Get selected ECU-TEST installation
-            if (getInstallation() == null) {
+            if (!isInstallationVerified(envVars)) {
                 setInstallation(configureToolInstallation(workspace.toComputer(), listener, envVars));
             }
 
