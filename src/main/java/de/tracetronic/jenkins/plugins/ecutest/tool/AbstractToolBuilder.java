@@ -143,6 +143,7 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
      * Verify the installation object and updates properties if needed.
      *
      * @param envVars the environment variables of the run
+     * @return {@code true} if installation for given tool name exists, {@code false} otherwise
      */
     protected boolean isInstallationVerified(final EnvVars envVars) {
         if (getInstallation() == null) {

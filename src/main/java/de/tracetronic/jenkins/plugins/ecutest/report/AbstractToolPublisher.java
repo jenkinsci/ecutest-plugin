@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -134,6 +134,7 @@ public abstract class AbstractToolPublisher extends AbstractReportPublisher {
      * Verify the installation object and updates properties if needed.
      *
      * @param envVars the environment variables of the run
+     * @return {@code true} if installation for given tool name exists, {@code false} otherwise
      */
     public boolean isInstallationVerified(final EnvVars envVars) {
         if (getInstallation() == null) {
