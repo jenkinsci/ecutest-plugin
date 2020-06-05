@@ -135,6 +135,33 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
+        <SETTING name="maxUploadTries" default="42"
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Anzahl der Uploadversuche, wenn TEST-GUIDE
+                            z.B. gerade hochfährt oder sich im Wartungsmodus befindet.
+                            TEST-GUIDE sendet dabei einen Zeitpunkt (z.B. in 5min), ab dem
+                            ein Client sich wieder melden darf. Bei 42 Versuchen mit einer
+                            Wartezeit von 5min bedeutet dies, 3,5h lang den Upload zu
+                            versuchen. Ein Wert kleiner oder gleich 0 resultiert in unendlich
+                            vielen Uploadversuchen!
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Number of upload tries, e.g. if TEST-GUIDE
+                            is still starting up or is in maintenance mode. TEST-GUIDE sends
+                            a point in time (e.g. in 5min) after that a client should retry.
+                            With 42 tries and a waiting time of 5min, this means that the
+                            upload is tried for 3.5h. A value of less than or equal to 0
+                            results in an infinite number of upload tries.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
         <SETTING name="httpProxy" default=""
                  xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
@@ -398,6 +425,26 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
+        <SETTING name="archiveImages" default="True"
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">True, wenn die erstellten Bilder aus den
+                            Bild-Lesen Testschritten für die Anzeige in TEST-GUIDE erfasst
+                            werden sollen, sonst False
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">True, if the created images from the
+                            image-read test steps should be captured for viewing in
+                            TEST-GUIDE, otherwise False
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
         <SETTING name="archiveMiscFiles" default=""
                  xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
@@ -541,14 +588,13 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Angabe der Package-Attribute durch ';'
-                            getrennt, welche als ATX-Attribut für die Suche erfasst werden
-                            sollen.
+                        <DVALUE xsi:type="string">Die Package/Projekt-Attribute, welche als
+                            ATX-Attribut für die Suche erfasst werden sollen. Getrennt durch ';'.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Specifying the package attributes by ';',
-                            which are mapped to ATX attributes.
+                        <DVALUE xsi:type="string">The package/project attributes
+                            which are mapped to ATX attributes. Separated by ';'.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -560,21 +606,20 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Angabe der Package-Attribut samt
-                            Trennzeichen
-                            z.B. ReqId=_;Ref=- um Attributwerte getrennt für die
-                            Suche zu
-                            erfassen z.B. von folgenden Attributangaben
+                        <DVALUE xsi:type="string">Die Trennzeichen je
+                            Package/Projekt-Attribut, getrennt durch ';'
+                            z.B. ReqId=_;Ref=- .
+                            Ermöglicht das Erfassen von Listen in Attributwerten, z.B.
                             ReqID=RQ1_RQ2_RQ3 bzw.
                             Ref=A-B-C
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Specify the package attribute including
-                            separator
-                            e.g. ReqId=_;Ref=- to separate attribute values for the
-                            search for e.g. of the following attributes
-                            ReqID=RQ1_RQ2_RQ3 or
+                        <DVALUE xsi:type="string">The separators per package/project
+                            attribute, separated by ';'
+                            e.g. ReqId=_;Ref=- . Allows to capture
+                            lists in attribute values,
+                            e.g. ReqID=RQ1_RQ2_RQ3 or
                             Ref=A-B-C
                         </DVALUE>
                     </ELEMENT>
@@ -825,6 +870,25 @@
                             have to be extra specified in the'coveredAttributes' parameter.
                             If there are overlaps for existing attributes, the existing
                             attribute is copied.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <!-- Review Einstellungen -->
+        <SETTING name="reviewUseAbortCodeAsCustomEvaluation"
+                 default="False" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">True, wenn ein Review 'Abort-Code' als
+                            'Custom-Evaluation' erfasst werden soll, sonst False.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">True, if a review 'Abort-Code' should be
+                            saved as 'Custom-Evaluation', otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>

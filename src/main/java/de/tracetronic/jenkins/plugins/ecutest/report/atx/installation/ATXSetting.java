@@ -227,6 +227,10 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
          */
         TCF_CONSTANTS("tcfConstantConfig"),
         /**
+         * Review settings group.
+         */
+        REVIEW("reviewConfig"),
+        /**
          * Special settings group.
          */
         SPECIAL("specialConfig");

@@ -60,6 +60,10 @@
                             <j:set var="settings" value="${config.getSettingsByGroupName('tcfConstantConfig')}"/>
                             <st:include class="${descriptor.clazz}" page="setting.jelly"/>
                         </f:section>
+                        <f:section title="${%atx.reviewConfig.title}" name="reviewConfig">
+                            <j:set var="settings" value="${config.getSettingsByGroupName('reviewConfig')}"/>
+                            <st:include class="${descriptor.clazz}" page="setting.jelly"/>
+                        </f:section>
                         <f:section title="${%atx.specialConfig.title}" name="specialConfig">
                             <j:set var="settings" value="${config.getSettingsByGroupName('specialConfig')}"/>
                             <st:include class="${descriptor.clazz}" page="setting.jelly"/>

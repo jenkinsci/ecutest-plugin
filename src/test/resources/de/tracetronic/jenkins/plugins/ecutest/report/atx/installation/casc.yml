@@ -39,6 +39,10 @@ unclassified:
                 value: true
             - atxTextSetting:
                 group: UPLOAD
+                name: "maxUploadTries"
+                value: "42"
+            - atxTextSetting:
+                group: UPLOAD
                 name: "projectId"
                 value: "1"
             - atxBooleanSetting:
@@ -84,6 +88,10 @@ unclassified:
             - atxBooleanSetting:
                 group: ARCHIVE
                 name: "archivePlots"
+                value: true
+            - atxBooleanSetting:
+                group: ARCHIVE
+                name: "archiveImages"
                 value: true
             - atxTextSetting:
                 group: ARCHIVE
@@ -148,6 +156,10 @@ unclassified:
             - atxTextSetting:
                 group: TCF_CONSTANTS
                 name: "setAttributes"
+            - atxBooleanSetting:
+                group: REVIEW
+                name: "reviewUseAbortCodeAsCustomEvaluation"
+                value: false
             - atxBooleanSetting:
                 group: SPECIAL
                 name: "autoATXGeneratorUpdate"

@@ -43,6 +43,10 @@ installations:
         value: true
     - atxTextSetting:
         group: UPLOAD
+        name: "maxUploadTries"
+        value: "42"
+    - atxTextSetting:
+        group: UPLOAD
         name: "httpProxy"
     - atxTextSetting:
         group: UPLOAD
@@ -98,6 +102,10 @@ installations:
     - atxBooleanSetting:
         group: ARCHIVE
         name: "archivePlots"
+        value: true
+    - atxBooleanSetting:
+        group: ARCHIVE
+        name: "archiveImages"
         value: true
     - atxTextSetting:
         group: ARCHIVE
@@ -172,6 +180,10 @@ installations:
     - atxTextSetting:
         group: TCF_CONSTANTS
         name: "setAttributes"
+    - atxBooleanSetting:
+        group: REVIEW
+        name: "reviewUseAbortCodeAsCustomEvaluation"
+        value: false
     - atxBooleanSetting:
         group: SPECIAL
         name: "autoATXGeneratorUpdate"

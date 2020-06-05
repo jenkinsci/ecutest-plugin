@@ -39,6 +39,7 @@ public final class ATXSettingParser {
         + "[.=' TBC-Globale Konstanteneinstellungen ']]";
     private static final String TCF_CONSTANT_EXPRESSION = PRECEDING_COMMENT
         + "[.=' TCF-Globale Konstanteneinstellungen ']]";
+    private static final String REVIEW_EXPRESSION = PRECEDING_COMMENT + "[.=' Review Einstellungen ']]";
     private static final String SPECIAL_EXPRESSION = PRECEDING_COMMENT + "[.=' Spezielle Einstellungen ']]";
 
     /**
@@ -63,6 +64,7 @@ public final class ATXSettingParser {
             SettingsGroup.TBC_CONSTANTS, TBC_CONSTANT_EXPRESSION);
         final List<ATXSetting<?>> tcfConstantSettings = parseSetting(doc,
             SettingsGroup.TCF_CONSTANTS, TCF_CONSTANT_EXPRESSION);
+        final List<ATXSetting<?>> reviewSettings = parseSetting(doc, SettingsGroup.REVIEW, REVIEW_EXPRESSION);
         final List<ATXSetting<?>> specialSettings = parseSetting(doc, SettingsGroup.SPECIAL, SPECIAL_EXPRESSION);
 
         settings.addAll(uploadSettings);
@@ -70,6 +72,7 @@ public final class ATXSettingParser {
         settings.addAll(attributeSettings);
         settings.addAll(tbcConstantSettings);
         settings.addAll(tcfConstantSettings);
+        settings.addAll(reviewSettings);
         settings.addAll(specialSettings);
 
         return settings;
