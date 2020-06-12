@@ -164,7 +164,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
                 if (failFast) {
                     return false;
                 } else {
-                    logger.logWarn("Package execution will continue.");
+                    logger.logWarn("Package execution will be continued due to disabled fail fast mode.");
                 }
             }
         }
@@ -189,7 +189,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
                 if (failFast) {
                     return false;
                 } else {
-                    logger.logWarn("Project execution will continue.");
+                    logger.logWarn("Project execution will be continued due to disabled fail fast mode.");
                 }
             }
         }
