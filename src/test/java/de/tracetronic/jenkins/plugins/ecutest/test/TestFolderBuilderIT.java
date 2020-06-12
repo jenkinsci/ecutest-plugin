@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -56,6 +56,7 @@ public class TestFolderBuilderIT extends IntegrationTestBase {
         final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final TestFolderBuilder before = new TestFolderBuilder("tests");
         before.setRecursiveScan(true);
+        before.setFailFast(false);
         before.setTestConfig(testConfig);
         before.setPackageConfig(packageConfig);
         before.setProjectConfig(projectConfig);
@@ -68,7 +69,7 @@ public class TestFolderBuilderIT extends IntegrationTestBase {
 
         final TestFolderBuilder after = (TestFolderBuilder) delegate;
         jenkins.assertEqualBeans(before, after,
-            "testFile,scanMode,recursiveScan,testConfig,packageConfig,projectConfig,executionConfig");
+            "testFile,scanMode,recursiveScan,failFast,testConfig,packageConfig,projectConfig,executionConfig");
     }
 
     @Test
@@ -80,6 +81,7 @@ public class TestFolderBuilderIT extends IntegrationTestBase {
         final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final TestFolderBuilder builder = new TestFolderBuilder("tests");
         builder.setRecursiveScan(true);
+        builder.setFailFast(false);
         builder.setTestConfig(testConfig);
         builder.setPackageConfig(packageConfig);
         builder.setProjectConfig(projectConfig);
@@ -91,6 +93,7 @@ public class TestFolderBuilderIT extends IntegrationTestBase {
         WebAssert.assertInputPresent(page, "_.testFile");
         WebAssert.assertInputContainsValue(page, "_.testFile", "tests");
         jenkins.assertXPath(page, "//input[@name='_.recursiveScan' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.failFast' and not(@checked)]");
         WebAssert.assertInputPresent(page, "_.tbcFile");
         WebAssert.assertInputContainsValue(page, "_.tbcFile", "test.tbc");
         WebAssert.assertInputPresent(page, "_.tcfFile");
