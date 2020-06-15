@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -47,6 +47,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     @Nonnull
     private ScanMode scanMode = DEFAULT_SCANMODE;
     private boolean recursiveScan;
+    private boolean failFast = true;
     // Test settings
     @Nonnull
     private PackageConfig packageConfig = PackageConfig.newInstance();
@@ -80,6 +81,15 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     @DataBoundSetter
     public void setRecursiveScan(final boolean recursiveScan) {
         this.recursiveScan = recursiveScan;
+    }
+
+    public boolean isFailFast() {
+        return failFast;
+    }
+
+    @DataBoundSetter
+    public void setFailFast(final boolean failFast) {
+        this.failFast = failFast;
     }
 
     @Nonnull
@@ -151,7 +161,11 @@ public class TestFolderBuilder extends AbstractTestBuilder {
                 }
             } else {
                 logger.logError("Executing package failed!");
-                return false;
+                if (failFast) {
+                    return false;
+                } else {
+                    logger.logWarn("Package execution will be continued due to disabled fail fast mode.");
+                }
             }
         }
 
@@ -172,7 +186,11 @@ public class TestFolderBuilder extends AbstractTestBuilder {
                 }
             } else {
                 logger.logError("Executing project failed!");
-                return false;
+                if (failFast) {
+                    return false;
+                } else {
+                    logger.logWarn("Project execution will be continued due to disabled fail fast mode.");
+                }
             }
         }
 
