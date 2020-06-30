@@ -73,7 +73,7 @@ All future changes will be automatically logged by ![Release Drafter Icon](https
 - :heavy_plus_sign: Added COM timeout to detect non-responding ECU-TEST instance or tool connections
 - :x: Fixed sporadic errors when setting global constants
 - :information_source: Bumped Jenkins baseline to LTS 2.60.1
-- :information_source: Requires Java 8 on master and slaves
+- :information_source: Requires Java 8 on master and agents
 - :information_source: Ensured compatibility up to ECU-TEST 7.0.0
 - :information_source: Updated available ATX settings to TEST-GUIDE 1.49.0
 

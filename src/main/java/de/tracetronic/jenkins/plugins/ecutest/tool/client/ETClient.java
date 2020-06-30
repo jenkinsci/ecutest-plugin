@@ -282,7 +282,7 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
-     * Checks the process architecture compatibility between ECU-TEST and underlying JVM that runs the slave. A 64-bit
+     * Checks the process architecture compatibility between ECU-TEST and underlying JVM that runs the agent. A 64-bit
      * JVM supports both 32-bit and 64-bit ECU-TEST, while 32-bit JVM is only compatible with 32-bit ECU-TEST.
      *
      * @param processPath the full process path

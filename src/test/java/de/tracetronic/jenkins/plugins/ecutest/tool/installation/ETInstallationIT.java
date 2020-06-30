@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -89,16 +89,16 @@ public class ETInstallationIT extends IntegrationTestBase {
 
         final ToolLocationNodeProperty property = new ToolLocationNodeProperty(
             new ToolLocationNodeProperty.ToolLocation(etDescriptor, "ECU-TEST", "C:\\ECU-TEST"));
-        final DumbSlave slave = jenkins.createSlave("slave", new EnvVars());
-        slave.getNodeProperties().add(property);
+        final DumbSlave agent = jenkins.createSlave("agent", new EnvVars());
+        agent.getNodeProperties().add(property);
 
-        final HtmlPage page = getWebClient().getPage(slave, "configure");
+        final HtmlPage page = getWebClient().getPage(agent, "configure");
         final HtmlForm form = page.getFormByName("config");
         jenkins.submit(form);
 
-        assertEquals(1, slave.getNodeProperties().toList().size());
+        assertEquals(1, agent.getNodeProperties().toList().size());
 
-        final ToolLocationNodeProperty prop = slave.getNodeProperties().get(ToolLocationNodeProperty.class);
+        final ToolLocationNodeProperty prop = agent.getNodeProperties().get(ToolLocationNodeProperty.class);
         assertEquals(1, prop.getLocations().size());
 
         final ToolLocationNodeProperty.ToolLocation location = prop.getLocations().get(0);

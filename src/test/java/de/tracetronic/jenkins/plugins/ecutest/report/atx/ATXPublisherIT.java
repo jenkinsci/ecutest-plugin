@@ -154,10 +154,10 @@ public class ATXPublisherIT extends IntegrationTestBase {
 
     @Test
     public void testFailOnOffline() throws Exception {
-        final DumbSlave slave = assumeWindowsSlave();
+        final DumbSlave agent = assumeWindowsSlave();
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        project.setAssignedNode(slave);
+        project.setAssignedNode(agent);
         final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
         publisher.setFailOnOffline(true);
         project.getPublishersList().add(publisher);
@@ -180,10 +180,10 @@ public class ATXPublisherIT extends IntegrationTestBase {
 
     @Test
     public void testRunOnFailed() throws Exception {
-        final DumbSlave slave = assumeWindowsSlave();
+        final DumbSlave agent = assumeWindowsSlave();
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        project.setAssignedNode(slave);
+        project.setAssignedNode(agent);
         project.getBuildersList().add(new TestBuilder() {
 
             @Override
