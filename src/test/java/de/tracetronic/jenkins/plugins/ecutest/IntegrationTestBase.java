@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -33,17 +33,17 @@ public class IntegrationTestBase {
     }
 
     /**
-     * Creates a dumb slave and assumes that it runs on a Windows machine.
+     * Creates a dumb agent and assumes that it runs on a Windows machine.
      *
-     * @return the dumb slave
+     * @return the dumb agent
      * @throws Exception signals that an exception has occurred
      */
     protected DumbSlave assumeWindowsSlave() throws Exception {
         // Windows only
-        final DumbSlave slave = jenkins.createOnlineSlave(Label.get("windows"));
-        final SlaveComputer computer = slave.getComputer();
+        final DumbSlave agent = jenkins.createOnlineSlave(Label.get("windows"));
+        final SlaveComputer computer = agent.getComputer();
         assumeFalse("Test is Windows only!", computer.isUnix());
-        return slave;
+        return agent;
     }
 
     /**

@@ -62,7 +62,7 @@ Advanced workflows integrated for:
 
 ECU-TEST installations are administrated in the Jenkins system configuration or starting with Jenkins 2.0 in the global tool configuration at section "ECU-TEST".
 An installation entry is specified by an arbitrary name and the path to the installation directory.
-The execution on a Jenkins slave requires the adaption of the ECU-TEST installation directory on the slave configuration page.
+The execution on a Jenkins agent requires the adaption of the ECU-TEST installation directory on the agent configuration page.
 
 ![ECU-TEST](docs/images/ecutest.png "ECU-TEST")
 
@@ -834,10 +834,10 @@ To report a bug or request an enhancement to this plugin please raise a new [Git
 
 ## Known limitations
 
-When using the plugin in a slave-based setup (especially running the slave at command line via JNLP) you also need to restart the slave when restarting the master.
+When using the plugin in a agent-based setup (especially running the agent at command line via JNLP) you also need to restart the agent when restarting the master.
 This is due to already loaded libraries, for more information see this [blog post](http://jenkins-ci.org/content/your-java-web-start-slaves-will-be-always-clean) and related issue [JENKINS-31961](https://issues.jenkins-ci.org/browse/JENKINS-31961).
 
-Release 1.8 implemented an extension point that will workaround this issue. In order to work a new task has to be created in the Windows Task Scheduler named [RESTART_JENKINS_SLAVE](docs/RESTART_JENKINS_SLAVE.xml) and configured with actions how to restart the slave.
+Release 1.8 implemented an extension point that will workaround this issue. In order to work a new task has to be created in the Windows Task Scheduler named [RESTART_JENKINS_AGENT](docs/RESTART_JENKINS_AGENT.xml) and configured with actions how to restart the agent.
 
 ## FAQ
 
@@ -855,17 +855,17 @@ If the problem still exists search the following list of issues for possible sol
 <details>
     <summary>The ECU-TEST GUI is not visible or there are problems with external tool connections.</summary>
 
-> When running the Jenkins slave (or master) as a Windows service that executes ECU-TEST then by default this service runs in scope of the SYSTEM user in a background Windows session.
+> When running the Jenkins agent (or master) as a Windows service that executes ECU-TEST then by default this service runs in scope of the SYSTEM user in a background Windows session.
 Therefore all processes started in this session are not visible to the normal user session and there could be problems due to insufficient user rights.
 
-> In summary it is _**NOT**_ recommended to install the slave as a service but to run the slave from command line or to launch via Java Web Start.
+> In summary it is _**NOT**_ recommended to install the agent as a service but to run the agent from command line or to launch via Java Web Start.
 
 > In order to be able to use this prefered approach follow these instructions:
 >  - Open "Global Security Configuration" in Jenkins and set the "TCP port for JNLP agents" either to "random" or to "fixed" unused port number greater than 1024.
->  - Create a new slave or configure an existing one and set the launch method to "Launch agent via Java Web Start".
->  - Start the slave by either using the "Launch" button or execute the displayed Java command in a command prompt.
+>  - Create a new agent or configure an existing one and set the launch method to "Launch agent via Java Web Start".
+>  - Start the agent by either using the "Launch" button or execute the displayed Java command in a command prompt.
 
-> Now the ECU-TEST GUI should appear in the same session as the Jenkins slave is running when starting a new build.
+> Now the ECU-TEST GUI should appear in the same session as the Jenkins agent is running when starting a new build.
 Additionally, other problems with external tools connected to ECU-TEST or the Tool-Server should be limited.
 </details>
 
@@ -874,7 +874,7 @@ Additionally, other problems with external tools connected to ECU-TEST or the To
 <details>
     <summary>[TT] ERROR: Caught ComException: Can't co-create object / Can't get object clsid from progid</summary>
 
-> 1. **Re-register the ECU-TEST COM server** with the user that runs your Jenkins slave or master.<br/>
+> 1. **Re-register the ECU-TEST COM server** with the user that runs your Jenkins agent or master.<br/>
   Since ECU-TEST 6.6 it is possible to register the COM server for each user separately.<br/>
   This is useful if administrative rights are not available.
 >  - With administrator privileges
@@ -914,7 +914,7 @@ Additionally, other problems with external tools connected to ECU-TEST or the To
 <details>
     <summary>[TT] ERROR: ECU-TEST executable could not be found!</summary>
 
-> Please check the installation paths for the configured ECU-TEST installation, both on master in the global tool configuration and in the slave configuration.
+> Please check the installation paths for the configured ECU-TEST installation, both on master in the global tool configuration and in the agent configuration.
 </details>
 
 <details>
@@ -923,7 +923,7 @@ Additionally, other problems with external tools connected to ECU-TEST or the To
 > At first, check the installation paths for the configured ECU-TEST installation in the global tool configuration.
 
 > Otherwise there could be a limitation when using a 64-bit ECU-TEST installation running on a machine with 32-bit Java installed only.
-To solve this architecture incompatibility install a [64-bit Java Runtime Environment](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) and ensure to run your master or slave on this version.
+To solve this architecture incompatibility install a [64-bit Java Runtime Environment](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) and ensure to run your master or agent on this version.
 </details>
 
 <details>
@@ -936,13 +936,13 @@ Please download the modified Swarm client from [here](https://github.com/jenkins
 <details>
     <summary>java.lang.UnsatisfiedLinkError: Native Library jacob-1.18-x64/86.dll already loaded in another classloader</summary>
 
-> This is a [known limitation](#known-limitations) when running the ECU-TEST slave in a user session while the master restarts and reconnects to the slave. Ensure that the slave agent is always restarted when the master restarts.
+> This is a [known limitation](#known-limitations) when running the ECU-TEST agent in a user session while the master restarts and reconnects to the agent. Ensure that the agent agent is always restarted when the master restarts.
 
-> This can be achieved by creating an appropriate Windows task named _RESTART_JENKINS_SLAVE_.
+> This can be achieved by creating an appropriate Windows task named _RESTART_JENKINS_AGENT_.
 
-> Starting with release 2.6 the default Windows task name can be overridden by system property _ecutest.taskName_ on each slave individually.
+> Starting with release 2.6 the default Windows task name can be overridden by system property _ecutest.taskName_ on each agent individually.
 
-> An example configuration export is attached [here](docs/RESTART_JENKINS_SLAVE.xml) and can be easily imported and modified in the Windows Task Scheduler.
+> An example configuration export is attached [here](docs/RESTART_JENKINS_AGENT.xml) and can be easily imported and modified in the Windows Task Scheduler.
 </details>
 
 ## Compatibility

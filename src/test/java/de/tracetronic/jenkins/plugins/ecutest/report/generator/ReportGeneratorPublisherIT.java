@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -116,10 +116,10 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
 
     @Test
     public void testAllowMissing() throws Exception {
-        final DumbSlave slave = assumeWindowsSlave();
+        final DumbSlave agent = assumeWindowsSlave();
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        project.setAssignedNode(slave);
+        project.setAssignedNode(agent);
         final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
         publisher.setAllowMissing(false);
         project.getPublishersList().add(publisher);
@@ -129,10 +129,10 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
 
     @Test
     public void testRunOnFailed() throws Exception {
-        final DumbSlave slave = assumeWindowsSlave();
+        final DumbSlave agent = assumeWindowsSlave();
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        project.setAssignedNode(slave);
+        project.setAssignedNode(agent);
         project.getBuildersList().add(new TestBuilder() {
 
             @Override
