@@ -22,7 +22,7 @@ import java.io.IOException;
  * This task should be configured with actions how to restart the agent.
  * </p>
  *
- * @since 1.8
+ * @since 2.17
  */
 @Extension
 public class WindowsTaskAgentRestarter extends SlaveRestarter {

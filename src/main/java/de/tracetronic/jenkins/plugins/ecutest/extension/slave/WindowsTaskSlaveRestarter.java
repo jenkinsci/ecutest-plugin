@@ -19,7 +19,7 @@ package de.tracetronic.jenkins.plugins.ecutest.extension.slave;
  *
  * @since 1.8
  */
-@Deprecated
+@Deprecated in favor of WindowsTaskAgentRestarter
 public class WindowsTaskSlaveRestarter extends WindowsTaskAgentRestarter {
 
     private static final long serialVersionUID = 1L;
