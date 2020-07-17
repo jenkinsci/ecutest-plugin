@@ -36,6 +36,27 @@ public class ToolVersionTest {
     }
 
     @Test
+    public void testParseValidToolVersionWithoutMicro() {
+        final ToolVersion expectedToolVersion = new ToolVersion(2020, 3, "100255+67b65c");
+        final ToolVersion parsedToolVersion = ToolVersion.parse("2020.3.100255+67b65c");
+        assertEquals("Check parsed version", expectedToolVersion, parsedToolVersion);
+    }
+
+    @Test
+    public void testParseValidToolVersionWithoutQualifier() {
+        final ToolVersion expectedToolVersion = new ToolVersion(8, 1, 0);
+        final ToolVersion parsedToolVersion = ToolVersion.parse("8.1.0");
+        assertEquals("Check parsed version", expectedToolVersion, parsedToolVersion);
+    }
+
+    @Test
+    public void testParseValidToolVersionWithoutBoth() {
+        final ToolVersion expectedToolVersion = new ToolVersion(8, 1, 0, "");
+        final ToolVersion parsedToolVersion = ToolVersion.parse("8.1");
+        assertEquals("Check parsed version", expectedToolVersion, parsedToolVersion);
+    }
+
+    @Test
     public void testParseHighToolVersion() {
         final ToolVersion expectedToolVersion = new ToolVersion(1000, 2000, 3000, "4000");
         final ToolVersion parsedToolVersion = ToolVersion.parse("1000.2000.3000.4000");

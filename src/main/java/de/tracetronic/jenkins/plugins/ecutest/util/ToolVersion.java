@@ -30,6 +30,17 @@ public final class ToolVersion implements Comparable<ToolVersion>, Serializable 
      *
      * @param major the major version
      * @param minor the minor version
+     * @param qualifier the qualifier version
+     */
+    public ToolVersion(final int major, final int minor, final String qualifier) {
+        this(major, minor, 0, qualifier);
+    }
+
+    /**
+     * Instantiates a new {@link ToolVersion}.
+     *
+     * @param major the major version
+     * @param minor the minor version
      * @param micro the micro version
      */
     public ToolVersion(final int major, final int minor, final int micro) {
@@ -65,17 +76,23 @@ public final class ToolVersion implements Comparable<ToolVersion>, Serializable 
      * @throws IllegalArgumentException if the format of the version string is invalid
      */
     public static ToolVersion parse(final String version) throws IllegalArgumentException {
-        final Pattern pattern = Pattern.compile("^(\\d+)\\.(\\d+)\\.(\\d+)(?:[.#](.*))?$");
+        final Pattern pattern = Pattern.compile("^(\\d+)\\.(\\d+)(?:\\.(\\d+))?(?:[.#](.*))?$");
         final Matcher matcher = pattern.matcher(version);
         if (!matcher.find() || matcher.groupCount() != 4) {
             throw new IllegalArgumentException(
-                    "Version must be in form <major>.<minor>.<micro>.<qualifier>");
+                    "Version must be in form <major>.<minor>[.<micro>][.<qualifier>]");
         }
 
         final int major = Integer.parseInt(matcher.group(1));
         final int minor = Integer.parseInt(matcher.group(2));
-        final int micro = Integer.parseInt(matcher.group(3));
-        final String qualifier = matcher.group(4);
+        int micro = 0;
+        if (matcher.group(3) != null) {
+            micro = Integer.parseInt(matcher.group(3));
+        }
+        String qualifier = "";
+        if (matcher.group(4) != null) {
+            qualifier = matcher.group(4);
+        }
 
         return new ToolVersion(major, minor, micro, qualifier);
     }
