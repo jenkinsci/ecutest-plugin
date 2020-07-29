@@ -169,8 +169,8 @@ public class ETComClient implements ComApplication, AutoCloseable {
                 Thread.sleep(100L);
             }
             throw new ETComTimeoutException(String.format(
-                "Maximum timeout of %d seconds exceeded: COM server not available! This can also be caused by an " +
-                    "invalid license.", timeout));
+                "Maximum timeout of %d seconds exceeded: COM server not available! This can also be caused by an "
+                    + "invalid license.", timeout));
         } catch (final InterruptedException e) {
             throw new ETComException(e.getMessage(), e);
         }
@@ -206,8 +206,8 @@ public class ETComClient implements ComApplication, AutoCloseable {
             }
         }
         throw new ETComTimeoutException(
-            String.format("Maximum timeout of %d seconds exceeded: COM server not available! This can also be caused " +
-                "by an invalid license.", timeout));
+            String.format("Maximum timeout of %d seconds exceeded: COM server not available! This can also be caused "
+                + "by an invalid license.", timeout));
     }
 
     @Override
