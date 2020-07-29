@@ -99,7 +99,8 @@ public abstract class AbstractToolClient implements ToolClient {
                 }
             }
             if (!isStarted) {
-                logger.logError(String.format("-> Timeout of %d seconds reached!", getTimeout()));
+                logger.logError(String.format("-> Timeout of %d seconds reached! This can also be caused by an "
+                    + "invalid  license.", getTimeout()));
             }
         } catch (final IOException e) {
             logger.logError("-> Command line execution failed: " + e.getMessage());
