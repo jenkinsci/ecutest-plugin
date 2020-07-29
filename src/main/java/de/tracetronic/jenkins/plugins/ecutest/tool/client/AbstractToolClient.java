@@ -11,6 +11,7 @@ import hudson.Launcher;
 import hudson.Proc;
 import hudson.model.TaskListener;
 import hudson.util.ArgumentListBuilder;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
@@ -87,6 +88,13 @@ public abstract class AbstractToolClient implements ToolClient {
         try {
             // Launch tool process
             final Proc process = launcher.launch().cmds(args).quiet(true).start();
+            final int exitCode = process.join();
+
+            if (exitCode == 99) {
+                // Exit code for invalid license
+                logger.logError(String.format("-> No valid license for 'ECU-TEST' found."));
+                return isStarted;
+            }
 
             // Wait for process start up
             final long endTimeMillis = System.currentTimeMillis() + (long) getTimeout() * 1000L;
