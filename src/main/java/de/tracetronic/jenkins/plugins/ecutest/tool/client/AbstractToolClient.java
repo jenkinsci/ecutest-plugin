@@ -87,13 +87,6 @@ public abstract class AbstractToolClient implements ToolClient {
         try {
             // Launch tool process
             final Proc process = launcher.launch().cmds(args).quiet(true).start();
-            final int exitCode = process.join();
-
-            if (exitCode == 99) {
-                // Exit code for invalid license
-                logger.logError(String.format("-> No valid license for 'ECU-TEST' found."));
-                return isStarted;
-            }
 
             // Wait for process start up
             final long endTimeMillis = System.currentTimeMillis() + (long) getTimeout() * 1000L;
@@ -106,7 +99,8 @@ public abstract class AbstractToolClient implements ToolClient {
                 }
             }
             if (!isStarted) {
-                logger.logError(String.format("-> Timeout of %d seconds reached!", getTimeout()));
+                logger.logError(String.format("-> Timeout of %d seconds reached! This can also be caused by an " +
+                    "invalid  license.", getTimeout()));
             }
         } catch (final IOException e) {
             logger.logError("-> Command line execution failed: " + e.getMessage());
