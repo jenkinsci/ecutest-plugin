@@ -19,7 +19,7 @@
     </PROJECT-TEMPLATE>
     <SETTINGS>
         <!-- Uploadeinstellungen -->
-        <SETTING name="uploadToServer" default="False" xsi:type="reportConfigItem">
+        <SETTING name="uploadToServer" default="False" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -32,8 +32,8 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="serverURL" default="127.0.0.1" xsi:type="reportConfigItem"/>
-        <SETTING name="serverLabel" default="" xsi:type="reportConfigItem">
+        <SETTING name="serverURL" default="127.0.0.1" canBeOverwrittenByServer="false" xsi:type="reportConfigItem"/>
+        <SETTING name="serverLabel" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -50,8 +50,9 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="useHttpsConnection" default="False" xsi:type="reportConfigItem"/>
-        <SETTING name="ignoreSSL" default="False" xsi:type="reportConfigItem">
+        <SETTING name="useHttpsConnection" default="False" canBeOverwrittenByServer="false"
+                 xsi:type="reportConfigItem"/>
+        <SETTING name="ignoreSSL" default="False" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -64,8 +65,8 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="serverPort" default="8085" xsi:type="reportConfigItem"/>
-        <SETTING name="serverContextPath" default="" xsi:type="reportConfigItem">
+        <SETTING name="serverPort" default="8085" canBeOverwrittenByServer="false" xsi:type="reportConfigItem"/>
+        <SETTING name="serverContextPath" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -102,7 +103,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="uploadAuthenticationKey" default="" xsi:type="reportConfigItem">
+        <SETTING name="uploadAuthenticationKey" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -168,7 +169,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="httpProxy" default="" xsi:type="reportConfigItem">
+        <SETTING name="httpProxy" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -185,7 +186,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="httpsProxy" default="" xsi:type="reportConfigItem">
+        <SETTING name="httpsProxy" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -202,7 +203,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="projectId" default="1" xsi:type="reportConfigItem">
+        <SETTING name="projectId" default="1" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
