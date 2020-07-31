@@ -93,6 +93,26 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
+        <SETTING name="useSettingsFromServer" default="False" canBeOverwrittenByServer="false"
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">True, wenn die Einstellungen für die
+                            ATX-Generierung vom TEST-GUIDE Server abgefragt werden sollen.
+                            Die Einstellungen hier (außer die Verbindungseinstellungen) werden überschrieben.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">True, if the settings for the
+                            ATX generation shall be retrieved from the TEST-GUIDE server.
+                            The settings here will be overridden (except for the connection settings).
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
         <SETTING name="uploadAuthenticationKey" default=""
                  xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
