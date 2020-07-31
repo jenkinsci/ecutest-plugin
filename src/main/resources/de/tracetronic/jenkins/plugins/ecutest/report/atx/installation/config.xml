@@ -4,8 +4,7 @@
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
-<REPORT-CONFIG
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<REPORT-CONFIG xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <TYPE xsi:type="string">
         PYTHON
     </TYPE>
@@ -19,27 +18,9 @@
         ReportProject
     </PROJECT-TEMPLATE>
     <SETTINGS>
-        <!-- Uploadeinstellungen -->
-        <SETTING name="uploadToServer" default="False"
-                 xsi:type="reportConfigItem">
-            <DESCRIPTION xsi:type="I18NItem">
-                <MULTILANGDATA>
-                    <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Automatischen Upload zum Server
-                            aktivieren?
-                        </DVALUE>
-                    </ELEMENT>
-                    <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Enable auto upload to the server?</DVALUE>
-                    </ELEMENT>
-                </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
-            </DESCRIPTION>
-        </SETTING>
-        <SETTING name="serverURL" default="127.0.0.1"
-                 xsi:type="reportConfigItem"/>
-        <SETTING name="serverLabel" default=""
-                 xsi:type="reportConfigItem">
+        <!-- Verbindungseinstellungen -->
+        <SETTING name="serverURL" default="127.0.0.1" canBeOverwrittenByServer="false" xsi:type="reportConfigItem"/>
+        <SETTING name="serverLabel" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -48,7 +29,7 @@
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Optional name for the server-instance,
+                        <DVALUE xsi:type="string">Optional name for the server instance,
                             which is used for log messages.
                         </DVALUE>
                     </ELEMENT>
@@ -56,15 +37,13 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="useHttpsConnection" default="False"
+        <SETTING name="useHttpsConnection" default="False" canBeOverwrittenByServer="false"
                  xsi:type="reportConfigItem"/>
-        <SETTING name="ignoreSSL" default="False"
-                 xsi:type="reportConfigItem">
+        <SETTING name="ignoreSSL" default="False" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Verifizierung von SSL-Zertifikaten deaktivieren?
-                        </DVALUE>
+                        <DVALUE xsi:type="string">Verifizierung von SSL-Zertifikaten deaktivieren?</DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Disable the SSL certificate verification?</DVALUE>
@@ -73,10 +52,8 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="serverPort" default="8085"
-                 xsi:type="reportConfigItem"/>
-        <SETTING name="serverContextPath" default=""
-                 xsi:type="reportConfigItem">
+        <SETTING name="serverPort" default="8085" canBeOverwrittenByServer="false" xsi:type="reportConfigItem"/>
+        <SETTING name="serverContextPath" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -93,8 +70,60 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="uploadAuthenticationKey" default=""
-                 xsi:type="reportConfigItem">
+        <SETTING name="httpProxy" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Angabe eines optionalen HTTP Proxies für
+                            den Upload. Beispiel: http://user:pass@10.10.10.2:8080
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Specification of an optional HTTP proxy
+                            for the upload. Example: http://user:pass@10.10.10.2:8080
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="httpsProxy" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Angabe eines optionalen HTTPS Proxies für
+                            den Upload. Beispiel: http://user:pass@10.10.10.2:8080
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Specification of an optional HTTPS proxy
+                            for the upload. Example: http://user:pass@10.10.10.2:8080
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="projectId" default="1" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Eindeutige Projekt-Id in TEST-GUIDE. Muss
+                            angegeben werden, wenn mehr als ein Projekt in einer TEST-GUIDE
+                            Instanz verwaltet wird.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Unique project id in TEST-GUIDE. Have to
+                            specified, if more than one project is managed in one TEST-GUIDE
+                            instance.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="uploadAuthenticationKey" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -113,8 +142,41 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="uploadAsync" default="True"
+        <SETTING name="useSettingsFromServer" default="False" canBeOverwrittenByServer="false"
                  xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">True, wenn die Einstellungen für die
+                            ATX-Generierung vom TEST-GUIDE Server abgefragt werden sollen.
+                            Die Einstellungen hier (außer die Verbindungseinstellungen) werden überschrieben.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">True, if the settings for the
+                            ATX generation shall be retrieved from the TEST-GUIDE server.
+                            The settings here will be overridden (except for the connection settings).
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <!-- Uploadeinstellungen -->
+        <SETTING name="uploadToServer" default="False" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Automatischen Upload zum Server aktivieren?</DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Enable auto upload to the server?</DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="uploadAsync" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -135,8 +197,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="maxUploadTries" default="42"
-                 xsi:type="reportConfigItem">
+        <SETTING name="maxUploadTries" default="42" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -162,64 +223,8 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="httpProxy" default=""
-                 xsi:type="reportConfigItem">
-            <DESCRIPTION xsi:type="I18NItem">
-                <MULTILANGDATA>
-                    <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Angabe eines optionalen HTTP Proxies für
-                            den Upload. Beispiel: http://user:pass@10.10.10.2:8080
-                        </DVALUE>
-                    </ELEMENT>
-                    <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Specification of an optional HTTP proxy
-                            for the upload. Example: http://user:pass@10.10.10.2:8080
-                        </DVALUE>
-                    </ELEMENT>
-                </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
-            </DESCRIPTION>
-        </SETTING>
-        <SETTING name="httpsProxy" default=""
-                 xsi:type="reportConfigItem">
-            <DESCRIPTION xsi:type="I18NItem">
-                <MULTILANGDATA>
-                    <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Angabe eines optionalen HTTPS Proxies für
-                            den Upload. Beispiel: http://user:pass@10.10.10.2:8080
-                        </DVALUE>
-                    </ELEMENT>
-                    <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Specification of an optional HTTPS proxy
-                            for the upload. Example: http://user:pass@10.10.10.2:8080
-                        </DVALUE>
-                    </ELEMENT>
-                </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
-            </DESCRIPTION>
-        </SETTING>
-        <SETTING name="projectId" default="1"
-                 xsi:type="reportConfigItem">
-            <DESCRIPTION xsi:type="I18NItem">
-                <MULTILANGDATA>
-                    <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Eindeutige Projekt-Id in TEST-GUIDE. Muss
-                            angegeben werden, wenn mehr als ein Projekt in einer TEST-GUIDE
-                            Instanz verwaltet wird.
-                        </DVALUE>
-                    </ELEMENT>
-                    <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Unique project id in TEST-GUIDE. Have to
-                            specified, if more than one project is managed in one TEST-GUIDE
-                            instance.
-                        </DVALUE>
-                    </ELEMENT>
-                </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
-            </DESCRIPTION>
-        </SETTING>
-        <SETTING name="compressUpload" default="False"
-                 xsi:type="reportConfigItem">
+
+        <SETTING name="compressUpload" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -245,8 +250,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="cleanAfterSuccessUpload" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="cleanAfterSuccessUpload" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -263,8 +267,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="uploadOnlyProjectReport" default="False"
-                 xsi:type="reportConfigItem">
+        <SETTING name="uploadOnlyProjectReport" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -280,8 +283,7 @@
             </DESCRIPTION>
         </SETTING>
         <!-- Archiveinstellungen -->
-        <SETTING name="enableArchive" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="enableArchive" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -294,8 +296,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archiveTrf" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="archiveTrf" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -308,8 +309,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archivePkg" default="False"
-                 xsi:type="reportConfigItem">
+        <SETTING name="archivePkg" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -322,8 +322,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archiveTcf" default="False"
-                 xsi:type="reportConfigItem">
+        <SETTING name="archiveTcf" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -336,8 +335,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archiveTbc" default="False"
-                 xsi:type="reportConfigItem">
+        <SETTING name="archiveTbc" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -350,8 +348,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archiveMapping" default="False"
-                 xsi:type="reportConfigItem">
+        <SETTING name="archiveMapping" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -368,8 +365,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archiveRecordings" default="False"
-                 xsi:type="reportConfigItem">
+        <SETTING name="archiveRecordings" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -386,8 +382,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archiveRecordingMetadata" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="archiveRecordingMetadata" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -406,8 +401,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archivePlots" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="archivePlots" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -425,8 +419,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archiveImages" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="archiveImages" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -445,8 +438,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archiveMiscFiles" default=""
-                 xsi:type="reportConfigItem">
+        <SETTING name="archiveMiscFiles" default="" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -459,30 +451,23 @@
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Specify the search expression for
                             additional files to be archived. Expressions are seperated
-                            by ';'
-                            (semicolon). Search base directory is the report
-                            directory.
-                            Examples: myFile*.asc;asc/**/myDirFile.*
+                            by ';' (semicolon). Search base directory is the report
+                            directory. Examples: myFile*.asc;asc/**/myDirFile.*
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archiveMiscFilePrefix" default=""
-                 xsi:type="reportConfigItem">
+        <SETTING name="archiveMiscFilePrefix" default="" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Präfix für den Dateinamen, welcher für
-                            die
-                            Option 'archiveMiscFiles' angegeben werden kann z.B.
-                            MyPrefix_ ->
-                            MyPrefix_2019-04-24_161212.zip. Damit kann beim
-                            Upload in
-                            TEST-GUIDE geprüft werden, ob die erforderliche
-                            Zip-Datei mit
-                            erfasst wurde.
+                            die Option 'archiveMiscFiles' angegeben werden kann z.B.
+                            MyPrefix_ -> MyPrefix_2019-04-24_161212.zip.
+                            Damit kann beim Upload in TEST-GUIDE geprüft werden,
+                            ob die erforderliche Zip-Datei mit erfasst wurde.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
@@ -496,15 +481,13 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archiveMiscFilesOnlyInTestReportDir"
-                 default="True" xsi:type="reportConfigItem">
+        <SETTING name="archiveMiscFilesOnlyInTestReportDir" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">True, wenn nur dann die 'misc files'
                             archiviert werden sollen, wenn sich der ausgewählt Testreport in
-                            einem
-                            ECU-TEST Testreport-Verzeichnis befindet, sonst False.
+                            einem ECU-TEST Testreport-Verzeichnis befindet, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
@@ -517,16 +500,14 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archiveFilesPerPackage" default=""
-                 xsi:type="reportConfigItem">
+        <SETTING name="archiveFilesPerPackage" default="" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Angabe der Suchausdrücke für zusätzliche
                             Dateien, welche pro Package-Report-Unterordner archiviert werden
                             sollen. Die Ausdrücke werden mit ';' (Semikolon) getrennt.
-                            Die
-                            Suche erfolgt ausgehend vom Report-Verzeichnis. Beispiele:
+                            Die Suche erfolgt ausgehend vom Report-Verzeichnis. Beispiele:
                             package1*.asc;zip/**/special.*
                         </DVALUE>
                     </ELEMENT>
@@ -542,9 +523,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archiveBy"
-                 default="NONE;SUCCESS;INCONCLUSIVE;FAILED;ERROR"
-                 xsi:type="reportConfigItem">
+        <SETTING name="archiveBy" default="NONE;SUCCESS;INCONCLUSIVE;FAILED;ERROR" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -561,20 +540,17 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archiveDescriptionImages" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="archiveDescriptionImages" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">True wenn Bilder aus HTML img Tags in der
-                            Package-Beschreibung erfasst und archiviert werden sollen, sonst
-                            False.
+                            Package-Beschreibung erfasst und archiviert werden sollen, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True if images from HTML img tags in the
-                            package description should be detected and archived, otherwise
-                            False.
+                            package description should be detected and archived, otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -583,8 +559,7 @@
         </SETTING>
         <!-- Attributeinstellungen -->
         <SETTING name="coveredAttributes"
-                 default="Testlevel;Designer;Execution Priority;Estimated Duration [min];"
-                 xsi:type="reportConfigItem">
+                 default="Testlevel;Designer;Execution Priority;Estimated Duration [min];" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -601,8 +576,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="attributeDelimiter" default=""
-                 xsi:type="reportConfigItem">
+        <SETTING name="attributeDelimiter" default="" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -627,8 +601,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="mapIsTestCaseAsAttribute" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="mapIsTestCaseAsAttribute" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -645,28 +618,24 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="mapTestCaseVersionAsAttribute" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="mapTestCaseVersionAsAttribute" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">True, wenn die Packageeigenschaft
-                            'Version' als ATX-Attribut 'TestCaseVersion' erfasst werden soll,
-                            sonst False.
+                            'Version' als ATX-Attribut 'TestCaseVersion' erfasst werden soll, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True if the package property 'version'
-                            should be
-                            mapped as attribute 'TestCaseVersion', otherwise False.
+                            should be mapped as attribute 'TestCaseVersion', otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="mapRootPrjAttrToPkgAttr" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="mapRootPrjAttrToPkgAttr" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -685,8 +654,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="excludePrjAttrPrefixFor" default=""
-                 xsi:type="reportConfigItem">
+        <SETTING name="excludePrjAttrPrefixFor" default="" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -697,16 +665,14 @@
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Specifies the project attributes separated
-                            by ';' which should not have the prefix 'Project_' in the ATX
-                            attribute.
+                            by ';' which should not have the prefix 'Project_' in the ATX attribute.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="includePkgSVNRevision" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="includePkgSVNRevision" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -716,17 +682,14 @@
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True if the SVN revision should be
-                            recorded
-                            as attribute "Revision" and "RevisionUrl", otherwise
-                            False.
+                            recorded as attribute "Revision" and "RevisionUrl", otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="mapSwkIdsAsAttribute" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="mapSwkIdsAsAttribute" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -744,8 +707,7 @@
             </DESCRIPTION>
         </SETTING>
         <!-- TBC-Globale Konstanteneinstellungen -->
-        <SETTING name="mapTbcToolAsConstant" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="mapTbcToolAsConstant" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -766,8 +728,7 @@
             </DESCRIPTION>
         </SETTING>
         <!-- TCF-Globale Konstanteneinstellungen -->
-        <SETTING name="mapTcfTesterAsConstant" default="False"
-                 xsi:type="reportConfigItem">
+        <SETTING name="mapTcfTesterAsConstant" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -785,8 +746,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="mapTCFPropertyAsConstant" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="mapTCFPropertyAsConstant" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -797,52 +757,44 @@
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True, if the TCF info, for example the
-                            used A2L file is mapped as ATX constant TCF_A2L_DME, otherwise
-                            False.
+                            used A2L file is mapped as ATX constant TCF_A2L_DME, otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="mapUserDefinedReportDataAsConstant"
-                 default="True" xsi:type="reportConfigItem">
+        <SETTING name="mapUserDefinedReportDataAsConstant" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">True, wenn die TCF Informationen der
                             benutzerdefinierten Report Informationen als ATX-Konstante mit
-                            Präfix TCF_ abgebildet werden soll, sonst
-                            False.
+                            Präfix TCF_ abgebildet werden soll, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True, if the TCF info of the user-defined
-                            report data is mapped as ATX constant with TCF_ prefix ,
-                            otherwise
-                            False.
+                            report data is mapped as ATX constant with TCF_ prefix, otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="setConstants" default=""
-                 xsi:type="reportConfigItem">
+        <SETTING name="setConstants" default="" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Angabe zu setzender Konstanten für jeden
                             Testfall durch ';' getrennt. Beispiel: myConstant=NightlyTest;
                             Buildnumber=42. Bei Überschneidungen zu Bestandskonstanten
-                            wird
-                            die Bestandskonstante übernommen.
+                            wird die Bestandskonstante übernommen.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Specifying special constants for each
-                            testcase
-                            by ';'. Example: myConstant=NightlyTest; Buildnumber=42.
+                            testcase by ';'. Example: myConstant=NightlyTest; Buildnumber=42.
                             If there are overlaps for existing constants, the existing
                             constant is copied.
                         </DVALUE>
@@ -851,8 +803,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="setAttributes" default=""
-                 xsi:type="reportConfigItem">
+        <SETTING name="setAttributes" default="" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -877,8 +828,7 @@
             </DESCRIPTION>
         </SETTING>
         <!-- Review Einstellungen -->
-        <SETTING name="reviewUseAbortCodeAsCustomEvaluation"
-                 default="False" xsi:type="reportConfigItem">
+        <SETTING name="reviewUseAbortCodeAsCustomEvaluation" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -896,8 +846,7 @@
             </DESCRIPTION>
         </SETTING>
         <!-- Spezielle Einstellungen -->
-        <SETTING name="autoATXGeneratorUpdate" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="autoATXGeneratorUpdate" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -914,8 +863,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="includeToolIdentifier" default="False"
-                 xsi:type="reportConfigItem">
+        <SETTING name="includeToolIdentifier" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -934,8 +882,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="includePkgTestSteps" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="includePkgTestSteps" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -952,8 +899,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="onlyIncludePkgTestCases" default="False"
-                 xsi:type="reportConfigItem">
+        <SETTING name="onlyIncludePkgTestCases" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -971,8 +917,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="overrideParamSetNameMapping" default="False"
-                 xsi:type="reportConfigItem">
+        <SETTING name="overrideParamSetNameMapping" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -989,8 +934,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="mapProjectElementNameAsTestCaseName"
-                 default="False" xsi:type="reportConfigItem">
+        <SETTING name="mapProjectElementNameAsTestCaseName" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -1011,37 +955,30 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="mapSubPackageAsTestCaseLevel" default="0"
-                 xsi:type="reportConfigItem">
+        <SETTING name="mapSubPackageAsTestCaseLevel" default="0" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Legt die Tiefe fest, bis in welche die
-                            SubPackages als Testfälle
-                            erfasst werden sollen. Bei 0
-                            (Standardwert) werden keine SubPackages
-                            erfasst.
+                            SubPackages als Testfälle erfasst werden sollen.
+                            Bei 0 (Standardwert) werden keine SubPackages erfasst.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Depth to which sub packages will be
-                            recorded
-                            as testcases. For 0 (default value) no sub packages are
-                            recorded.
+                            recorded as testcases. For 0 (default value) no sub packages are recorded.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="captureSubPackageOnVerdict" default=""
-                 xsi:type="reportConfigItem">
+        <SETTING name="captureSubPackageOnVerdict" default="" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Legt fest bei welchen Ergebnissen der
-                            SubPackages deren TestSteps mit erfasst werden sollen. Beispiel:
-                            FAILED; ERROR
+                            SubPackages deren TestSteps mit erfasst werden sollen. Beispiel: FAILED; ERROR
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
@@ -1053,8 +990,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="mapSeparateProjectExecutionAsSingleTestplan"
-                 default="False" xsi:type="reportConfigItem">
+        <SETTING name="mapSeparateProjectExecutionAsSingleTestplan" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -1065,17 +1001,14 @@
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True, if you want to map separate project
-                            execution reports as own testplan,
-                            otherwise
-                            False.
+                            execution reports as own testplan, otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="mapAttributeAsConstant" default=""
-                 xsi:type="reportConfigItem">
+        <SETTING name="mapAttributeAsConstant" default="" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -1093,8 +1026,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="mapTestReportPathAsConstant" default="False"
-                 xsi:type="reportConfigItem">
+        <SETTING name="mapTestReportPathAsConstant" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -1105,29 +1037,24 @@
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True, if the TRF report path should be
-                            mapped as ATX constant TRF_Link, otherwise
-                            False.
+                            mapped as ATX constant TRF_Link, otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="includeResourceAdapterInfo" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="includeResourceAdapterInfo" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">True, wenn die ResourceAdapter
-                            Informationen als
-                            ATX-Konstanten erfasst werden sollen, sonst
-                            False.
+                            Informationen als ATX-Konstanten erfasst werden sollen, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True, if the ResourceAdapter info should
-                            be
-                            recorded as ATX constant, otherwise False.
+                            be recorded as ATX constant, otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>

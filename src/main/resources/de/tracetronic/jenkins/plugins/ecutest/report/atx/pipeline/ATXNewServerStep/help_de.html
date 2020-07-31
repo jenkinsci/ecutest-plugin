@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
+  Copyright (c) 2015-2020 TraceTronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
@@ -56,16 +56,19 @@ server.overrideSetting('enableArchive', false)
 ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST',
     config: atxConfig(
         settings: [
-            atxBooleanSetting(group: 'UPLOAD', name: 'uploadToServer', value: false),
-            atxTextSetting(group: 'UPLOAD', name: 'serverURL', value: '127.0.0.1'),
-            atxTextSetting(group: 'UPLOAD', name: 'serverLabel', value: ''),
-            atxBooleanSetting(group: 'UPLOAD', name: 'useHttpsConnection', value: false),
-            atxBooleanSetting(group: 'UPLOAD', name: 'ignoreSSL', value: false),
-            atxTextSetting(group: 'UPLOAD', name: 'serverPort', value: '8085'),
-            atxTextSetting(group: 'UPLOAD', name: 'serverContextPath', value: ''),
-            atxTextSetting(group: 'UPLOAD', name: 'uploadAuthenticationKey', value: ''),
+            atxTextSetting(group: 'CONNECTION', name: 'serverURL', value: '127.0.0.1'),
+            atxTextSetting(group: 'CONNECTION', name: 'serverLabel', value: ''),
+            atxBooleanSetting(group: 'CONNECTION', name: 'useHttpsConnection', value: false),
+            atxBooleanSetting(group: 'CONNECTION', name: 'ignoreSSL', value: false),
+            atxTextSetting(group: 'CONNECTION', name: 'serverPort', value: '8085'),
+            atxTextSetting(group: 'CONNECTION', name: 'serverContextPath', value: ''),
+            atxTextSetting(group: 'CONNECTION', name: 'httpProxy', value: ''),
+            atxTextSetting(group: 'CONNECTION', name: 'httpsProxy', value: ''),
+            atxTextSetting(group: 'CONNECTION', name: 'projectId', value: '1'),
+            atxTextSetting(group: 'CONNECTION', name: 'uploadAuthenticationKey', value: ''),
+            atxBooleanSetting(group: 'CONNECTION', name: 'useSettingsFromServer', value: false),
             atxBooleanSetting(group: 'UPLOAD', name: 'uploadAsync', value: true),
-            atxTextSetting(group: 'UPLOAD', name: 'projectId', value: '1'),
+            atxBooleanSetting(group: 'UPLOAD', name: 'uploadToServer', value: false),
             atxBooleanSetting(group: 'UPLOAD', name: 'compressUpload', value: false),
             atxBooleanSetting(group: 'UPLOAD', name: 'cleanAfterSuccessUpload', value: true),
             atxBooleanSetting(group: 'UPLOAD', name: 'uploadOnlyProjectReport', value: false),

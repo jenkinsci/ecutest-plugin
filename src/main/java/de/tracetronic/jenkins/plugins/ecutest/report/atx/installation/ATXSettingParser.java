@@ -26,12 +26,12 @@ import java.util.logging.Logger;
 /**
  * Parser for the ATX template configuration to gather all available ATX settings.
  */
-@SuppressWarnings("rawtypes")
 public final class ATXSettingParser {
 
     private static final Logger LOGGER = Logger.getLogger(ATXSetting.class.getName());
 
     private static final String PRECEDING_COMMENT = "//SETTINGS//*[preceding-sibling::comment()[1]";
+    private static final String CONNECTION_EXPRESSION = PRECEDING_COMMENT + "[.=' Verbindungseinstellungen ']]";
     private static final String UPLOAD_EXPRESSION = PRECEDING_COMMENT + "[.=' Uploadeinstellungen ']]";
     private static final String ARCHIVE_EXPRESSION = PRECEDING_COMMENT + "[.=' Archiveinstellungen ']]";
     private static final String ATTRIBUTE_EXPRESSION = PRECEDING_COMMENT + "[.=' Attributeinstellungen ']]";
@@ -57,6 +57,8 @@ public final class ATXSettingParser {
     public static List<ATXSetting<?>> parseSettings(final Document doc) {
         final List<ATXSetting<?>> settings = new ArrayList<>();
 
+        final List<ATXSetting<?>> connectionSettings = parseSetting(
+                doc, SettingsGroup.CONNECTION, CONNECTION_EXPRESSION);
         final List<ATXSetting<?>> uploadSettings = parseSetting(doc, SettingsGroup.UPLOAD, UPLOAD_EXPRESSION);
         final List<ATXSetting<?>> archiveSettings = parseSetting(doc, SettingsGroup.ARCHIVE, ARCHIVE_EXPRESSION);
         final List<ATXSetting<?>> attributeSettings = parseSetting(doc, SettingsGroup.ATTRIBUTE, ATTRIBUTE_EXPRESSION);
@@ -67,6 +69,7 @@ public final class ATXSettingParser {
         final List<ATXSetting<?>> reviewSettings = parseSetting(doc, SettingsGroup.REVIEW, REVIEW_EXPRESSION);
         final List<ATXSetting<?>> specialSettings = parseSetting(doc, SettingsGroup.SPECIAL, SPECIAL_EXPRESSION);
 
+        settings.addAll(connectionSettings);
         settings.addAll(uploadSettings);
         settings.addAll(archiveSettings);
         settings.addAll(attributeSettings);

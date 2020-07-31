@@ -594,49 +594,57 @@ unclassified:
       toolName: "ECU-TEST"
       config:
         settings:
+          - atxTextSetting:
+              group: CONNECTION
+              name: "serverURL"
+              value: "127.0.0.1"
+          - atxTextSetting:
+              group: CONNECTION
+              name: "serverLabel"
+          - atxBooleanSetting:
+              group: CONNECTION
+              name: "useHttpsConnection"
+              value: false
+          - atxBooleanSetting:
+              group: CONNECTION
+              name: "ignoreSSL"
+              value: false
+          - atxTextSetting:
+              group: CONNECTION
+              name: "serverPort"
+              value: "8085"
+          - atxTextSetting:
+              group: CONNECTION
+              name: "serverContextPath"
+          - atxTextSetting:
+              group: CONNECTION
+              name: "httpProxy"
+          - atxTextSetting:
+              group: CONNECTION
+              name: "httpsProxy"
+          - atxTextSetting:
+              group: CONNECTION
+              name: "projectId"
+              value: "1"
+          - atxTextSetting:
+              group: CONNECTION
+              name: "uploadAuthenticationKey"
+          - atxBooleanSetting:
+              group: CONNECTION
+              name: "useSettingsFromServer"
+              value: false
           - atxBooleanSetting:
               group: UPLOAD
               name: "uploadToServer"
               value: true
-          - atxTextSetting:
-              group: UPLOAD
-              name: "serverURL"
-              value: "127.0.0.1"
-          - atxTextSetting:
-              group: UPLOAD
-              name: "serverLabel"
-          - atxBooleanSetting:
-              group: UPLOAD
-              name: "useHttpsConnection"
-              value: false
-          - atxBooleanSetting:
-              group: UPLOAD
-              name: "ignoreSSL"
-              value: false
-          - atxTextSetting:
-              group: UPLOAD
-              name: "serverPort"
-              value: "8085"
-          - atxTextSetting:
-              group: UPLOAD
-              name: "serverContextPath"
-          - atxTextSetting:
-              group: UPLOAD
-              name: "uploadAuthenticationKey"
           - atxBooleanSetting:
               group: UPLOAD
               name: "uploadAsync"
               value: true
           - atxTextSetting:
               group: UPLOAD
-              name: "httpProxy"
-          - atxTextSetting:
-              group: UPLOAD
-              name: "httpsProxy"
-          - atxTextSetting:
-              group: UPLOAD
-              name: "projectId"
-              value: "1"
+              name: "maxUploadTries"
+              value: "42"
           - atxBooleanSetting:
               group: UPLOAD
               name: "compressUpload"
@@ -949,7 +957,7 @@ Please download the modified Swarm client from [here](https://github.com/jenkins
 
 - Jenkins LTS 2.60.3 or higher
 - Java SE Runtime Environment 8 or higher
-- <details> 
+- <details>
     <summary><a href="https://www.tracetronic.com/products/ecu-test">ECU-TEST</a> 7.0.0 or higher </summary>
 
     | Version |   latest - 2.16   |        2.15       |    2.14 - 2.13    |    2.12 - 2.8     |     2.7 - 2.5     |     2.4 - 2.2     |     2.1 - 2.0     |
@@ -961,11 +969,11 @@ Please download the modified Swarm client from [here](https://github.com/jenkins
     |  7.2.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |
     |  7.1.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |
     |  7.0.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|
-    
+
   </details>
-- <details> 
+- <details>
     <summary>optional: <a href="https://www.tracetronic.com/products/test-guide">TEST-GUIDE</a> 1.65.0 or higher</summary>
-    
+
     | Version |   latest - 2.16   |		2.15 - 2.14   |    2.13 - 2.12    |        2.11       |    2.10 - 2.8     |     2.7 - 2.6     |     2.5 - 2.3     |        2.2        |      2.1 - 2.0    |
     |:-------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|
     | 1.80.0  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |

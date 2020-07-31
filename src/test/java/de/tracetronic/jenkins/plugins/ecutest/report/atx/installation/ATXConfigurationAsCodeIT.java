@@ -51,7 +51,7 @@ public class ATXConfigurationAsCodeIT {
         assertThat(config.getCustomSettings(), not(empty()));
 
         assertThat(config.getSettingValueByGroup("uploadToServer", ATXSetting.SettingsGroup.UPLOAD), is(true));
-        assertThat(config.getSettingValueByGroup("serverURL", ATXSetting.SettingsGroup.UPLOAD), is("127.0.0.1"));
+        assertThat(config.getSettingValueByGroup("serverURL", ATXSetting.SettingsGroup.CONNECTION), is("127.0.0.1"));
 
         assertThat(config.getCustomSettings().get(0), is(instanceOf(ATXCustomBooleanSetting.class)));
         assertThat(config.getCustomSettings().get(0).getName(), is("customOption"));

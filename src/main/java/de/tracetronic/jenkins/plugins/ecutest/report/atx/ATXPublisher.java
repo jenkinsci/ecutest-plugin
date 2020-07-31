@@ -296,7 +296,7 @@ public class ATXPublisher extends AbstractReportPublisher {
 
         @Override
         public Boolean call() throws IOException {
-            final Object ignoreSSL = config.getSettingValueByGroup("ignoreSSL", ATXSetting.SettingsGroup.UPLOAD);
+            final Object ignoreSSL = config.getSettingValueByGroup("ignoreSSL", ATXSetting.SettingsGroup.CONNECTION);
             if (ignoreSSL != null) {
                 final String baseUrl = ATXUtil.getBaseUrl(config, envVars);
                 final String proxyUrl = ATXUtil.getProxyUrl(config, envVars);

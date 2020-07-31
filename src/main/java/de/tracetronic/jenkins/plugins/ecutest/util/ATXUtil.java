@@ -94,7 +94,7 @@ public final class ATXUtil {
     public static String getBaseUrl(final ATXConfig config, final EnvVars envVars) {
         String fullServerUrl = null;
         if (config != null && envVars != null) {
-            final List<ATXSetting<?>> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
+            final List<ATXSetting<?>> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.CONNECTION);
             final Object useHttpsConnection = config.getSettingValueBySettings("useHttpsConnection", uploadSettings);
             final String serverUrl = envVars.expand((String) config.getSettingValueBySettings("serverURL",
                     uploadSettings));
@@ -141,7 +141,7 @@ public final class ATXUtil {
     public static String getProxyUrl(final ATXConfig config, final EnvVars envVars) {
         String proxyUrl = null;
         if (config != null && envVars != null) {
-            final List<ATXSetting<?>> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
+            final List<ATXSetting<?>> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.CONNECTION);
             final Object useHttpsConnection = config.getSettingValueBySettings("useHttpsConnection", uploadSettings);
             if (useHttpsConnection != null && (boolean) useHttpsConnection) {
                 proxyUrl = envVars.expand((String) config.getSettingValueBySettings("httpsProxy", uploadSettings));
@@ -162,7 +162,7 @@ public final class ATXUtil {
     public static String getProjectId(final ATXConfig config, final EnvVars envVars) {
         String projectId = null;
         if (config != null && envVars != null) {
-            final List<ATXSetting<?>> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD);
+            final List<ATXSetting<?>> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.CONNECTION);
             final Object projectIdSetting = config.getSettingValueBySettings("projectId", uploadSettings);
             if (projectIdSetting != null) {
                 projectId = envVars.expand((String) projectIdSetting);

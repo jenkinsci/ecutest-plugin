@@ -30,8 +30,8 @@
                             <j:set var="config" value="${currentConfig}"/>
                         </j:otherwise>
                     </j:choose>
-                    <f:section title="${%atx.uploadConfig.title}" name="uploadConfig">
-                        <j:set var="settings" value="${config.getSettingsByGroupName('uploadConfig')}"/>
+                    <f:section title="${%atx.connectionConfig.title}" name="connectionConfig">
+                        <j:set var="settings" value="${config.getSettingsByGroupName('connectionConfig')}"/>
                         <st:include class="${descriptor.clazz}" page="setting.jelly"/>
                         <f:entry title="">
                             <div align="right">
@@ -44,6 +44,10 @@
                         </f:entry>
                     </f:section>
                     <f:advanced>
+                        <f:section title="${%atx.uploadConfig.title}" name="uploadConfig">
+                            <j:set var="settings" value="${config.getSettingsByGroupName('uploadConfig')}"/>
+                            <st:include class="${descriptor.clazz}" page="setting.jelly"/>
+                        </f:section>
                         <f:section title="${%atx.archiveConfig.title}" name="archiveConfig">
                             <j:set var="settings" value="${config.getSettingsByGroupName('archiveConfig')}"/>
                             <st:include class="${descriptor.clazz}" page="setting.jelly"/>

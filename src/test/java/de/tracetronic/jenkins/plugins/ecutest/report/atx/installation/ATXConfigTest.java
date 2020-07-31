@@ -97,7 +97,7 @@ public class ATXConfigTest {
     public void testGetSettingValueByGroup() {
         final ATXConfig config = new ATXConfig();
         assertThat(config.getSettingValueBySettings("serverPort",
-            config.getSettingsByGroup(ATXSetting.SettingsGroup.UPLOAD)), is("8085"));
+            config.getSettingsByGroup(ATXSetting.SettingsGroup.CONNECTION)), is("8085"));
     }
 
     @Test
