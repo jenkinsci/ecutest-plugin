@@ -40,7 +40,6 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
      * @since 2.7.0
      * @deprecated due to CasC compatibility
      */
-    @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
     private transient T currentValue;
 
@@ -206,6 +205,10 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
      * The enum Settings group.
      */
     public enum SettingsGroup {
+        /**
+         * Connection settings group.
+         */
+        CONNECTION("connectionConfig"),
         /**
          * Upload settings group.
          */

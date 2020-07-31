@@ -115,10 +115,12 @@ public class ATXUtilTest {
     @Test
     public void testBaseUrlBySpecificConfig() {
         final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
-        final ATXTextSetting serverUrl = new ATXTextSetting("serverURL", SettingsGroup.UPLOAD, "", "", "localhost");
-        final ATXTextSetting serverPort = new ATXTextSetting("serverPort", SettingsGroup.UPLOAD, "", "", "8086");
-        final ATXTextSetting serverContextPath = new ATXTextSetting("serverContextPath", SettingsGroup.UPLOAD, "", "", "context");
-        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.UPLOAD, "", "", true);
+        final ATXTextSetting serverUrl = new ATXTextSetting("serverURL", SettingsGroup.CONNECTION, "", "", "localhost");
+        final ATXTextSetting serverPort = new ATXTextSetting("serverPort", SettingsGroup.CONNECTION, "", "", "8086");
+        final ATXTextSetting serverContextPath = new ATXTextSetting("serverContextPath", SettingsGroup.CONNECTION, "", "",
+                "context");
+        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.CONNECTION, "",
+                "", true);
         uploadSettings.add(serverUrl);
         uploadSettings.add(serverPort);
         uploadSettings.add(serverContextPath);
@@ -132,10 +134,12 @@ public class ATXUtilTest {
     @Test
     public void testBaseUrlByExpandedConfig() {
         final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
-        final ATXTextSetting serverUrl = new ATXTextSetting("serverURL", SettingsGroup.UPLOAD, "", "", "${SERVER_URL}");
-        final ATXTextSetting serverPort = new ATXTextSetting("serverPort", SettingsGroup.UPLOAD, "", "", "${SERVER_PORT}");
-        final ATXTextSetting serverContextPath = new ATXTextSetting("serverContextPath", SettingsGroup.UPLOAD, "", "", "${SERVER_CONTEXT}");
-        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.UPLOAD, "", "", true);
+        final ATXTextSetting serverUrl = new ATXTextSetting("serverURL", SettingsGroup.CONNECTION, "", "", "${SERVER_URL}");
+        final ATXTextSetting serverPort = new ATXTextSetting("serverPort", SettingsGroup.CONNECTION, "", "", "${SERVER_PORT}");
+        final ATXTextSetting serverContextPath = new ATXTextSetting("serverContextPath", SettingsGroup.CONNECTION, "", "", "$" +
+                "{SERVER_CONTEXT}");
+        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.CONNECTION, "",
+                "", true);
         uploadSettings.add(serverUrl);
         uploadSettings.add(serverPort);
         uploadSettings.add(serverContextPath);
@@ -172,9 +176,12 @@ public class ATXUtilTest {
     @Test
     public void testHttpProxyUrlBySpecificConfig() {
         final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
-        final ATXTextSetting httpProxy = new ATXTextSetting("httpProxy", SettingsGroup.UPLOAD, "", "", "http://user:pass@127.0.0.1:8080");
-        final ATXTextSetting httpsProxy = new ATXTextSetting("httpsProxy", SettingsGroup.UPLOAD, "", "", "http://user:pass@127.0.0.1:8081");
-        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.UPLOAD, "", "", false);
+        final ATXTextSetting httpProxy = new ATXTextSetting("httpProxy", SettingsGroup.CONNECTION, "", "", "http://user:pass" +
+                "@127.0.0.1:8080");
+        final ATXTextSetting httpsProxy = new ATXTextSetting("httpsProxy", SettingsGroup.CONNECTION, "", "", "http://user:pass" +
+                "@127.0.0.1:8081");
+        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.CONNECTION, "",
+                "", false);
         uploadSettings.add(httpProxy);
         uploadSettings.add(httpsProxy);
         uploadSettings.add(useHttpsConnection);
@@ -187,9 +194,12 @@ public class ATXUtilTest {
     @Test
     public void testHttpsProxyUrlBySpecificConfig() {
         final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
-        final ATXTextSetting httpProxy = new ATXTextSetting("httpProxy", SettingsGroup.UPLOAD, "", "", "http://user:pass@127.0.0.1:8080");
-        final ATXTextSetting httpsProxy = new ATXTextSetting("httpsProxy", SettingsGroup.UPLOAD, "", "", "http://user:pass@127.0.0.1:8081");
-        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.UPLOAD, "", "", true);
+        final ATXTextSetting httpProxy = new ATXTextSetting("httpProxy", SettingsGroup.CONNECTION, "", "", "http://user:pass" +
+                "@127.0.0.1:8080");
+        final ATXTextSetting httpsProxy = new ATXTextSetting("httpsProxy", SettingsGroup.CONNECTION, "", "", "http://user:pass" +
+                "@127.0.0.1:8081");
+        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.CONNECTION, "",
+                "", true);
         uploadSettings.add(httpProxy);
         uploadSettings.add(httpsProxy);
         uploadSettings.add(useHttpsConnection);
@@ -202,8 +212,9 @@ public class ATXUtilTest {
     @Test
     public void testHttpProxyUrlByExpandedConfig() {
         final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
-        final ATXTextSetting httpProxy = new ATXTextSetting("httpProxy", SettingsGroup.UPLOAD, "", "", "${PROXY_URL}");
-        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.UPLOAD, "", "", false);
+        final ATXTextSetting httpProxy = new ATXTextSetting("httpProxy", SettingsGroup.CONNECTION, "", "", "${PROXY_URL}");
+        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.CONNECTION, "",
+                "", false);
         uploadSettings.add(httpProxy);
         uploadSettings.add(useHttpsConnection);
 
@@ -225,8 +236,9 @@ public class ATXUtilTest {
     @Test
     public void testHttpsProxyUrlByExpandedConfig() {
         final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
-        final ATXTextSetting httpsProxy = new ATXTextSetting("httpsProxy", SettingsGroup.UPLOAD, "", "", "${PROXY_URL}");
-        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.UPLOAD, "", "", true);
+        final ATXTextSetting httpsProxy = new ATXTextSetting("httpsProxy", SettingsGroup.CONNECTION, "", "", "${PROXY_URL}");
+        final ATXBooleanSetting useHttpsConnection = new ATXBooleanSetting("useHttpsConnection", SettingsGroup.CONNECTION, "",
+                "", true);
         uploadSettings.add(httpsProxy);
         uploadSettings.add(useHttpsConnection);
 
@@ -248,7 +260,7 @@ public class ATXUtilTest {
     @Test
     public void testProjectId() {
         final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
-        final ATXTextSetting projectId = new ATXTextSetting("projectId", SettingsGroup.UPLOAD, "", "", "2");
+        final ATXTextSetting projectId = new ATXTextSetting("projectId", SettingsGroup.CONNECTION, "", "", "2");
         uploadSettings.add(projectId);
 
         final ATXConfig atxConfig = new ATXConfig(uploadSettings, null);
@@ -259,7 +271,7 @@ public class ATXUtilTest {
     @Test
     public void testProjectIdByExpandedConfig() {
         final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
-        final ATXTextSetting projectId = new ATXTextSetting("projectId", SettingsGroup.UPLOAD, "", "", "${PROJECT_ID}");
+        final ATXTextSetting projectId = new ATXTextSetting("projectId", SettingsGroup.CONNECTION, "", "", "${PROJECT_ID}");
         uploadSettings.add(projectId);
 
         final ATXConfig atxConfig = new ATXConfig(uploadSettings, null);

@@ -8,35 +8,49 @@ installations:
         name: "customLabel"
         value: "test"
     settings:
+    - atxTextSetting:
+        group: CONNECTION
+        name: "serverURL"
+        value: "127.0.0.1"
+    - atxTextSetting:
+        group: CONNECTION
+        name: "serverLabel"
+    - atxBooleanSetting:
+        group: CONNECTION
+        name: "useHttpsConnection"
+        value: false
+    - atxBooleanSetting:
+        group: CONNECTION
+        name: "ignoreSSL"
+        value: false
+    - atxTextSetting:
+        group: CONNECTION
+        name: "serverPort"
+        value: "8085"
+    - atxTextSetting:
+        group: CONNECTION
+        name: "serverContextPath"
+    - atxTextSetting:
+        group: CONNECTION
+        name: "httpProxy"
+    - atxTextSetting:
+        group: CONNECTION
+        name: "httpsProxy"
+    - atxTextSetting:
+        group: CONNECTION
+        name: "projectId"
+        value: "1"
+    - atxTextSetting:
+        group: CONNECTION
+        name: "uploadAuthenticationKey"
+    - atxBooleanSetting:
+        group: CONNECTION
+        name: "useSettingsFromServer"
+        value: false
     - atxBooleanSetting:
         group: UPLOAD
         name: "uploadToServer"
         value: true
-    - atxTextSetting:
-        group: UPLOAD
-        name: "serverURL"
-        value: "127.0.0.1"
-    - atxTextSetting:
-        group: UPLOAD
-        name: "serverLabel"
-    - atxBooleanSetting:
-        group: UPLOAD
-        name: "useHttpsConnection"
-        value: false
-    - atxBooleanSetting:
-        group: UPLOAD
-        name: "ignoreSSL"
-        value: false
-    - atxTextSetting:
-        group: UPLOAD
-        name: "serverPort"
-        value: "8085"
-    - atxTextSetting:
-        group: UPLOAD
-        name: "serverContextPath"
-    - atxTextSetting:
-        group: UPLOAD
-        name: "uploadAuthenticationKey"
     - atxBooleanSetting:
         group: UPLOAD
         name: "uploadAsync"
@@ -45,16 +59,6 @@ installations:
         group: UPLOAD
         name: "maxUploadTries"
         value: "42"
-    - atxTextSetting:
-        group: UPLOAD
-        name: "httpProxy"
-    - atxTextSetting:
-        group: UPLOAD
-        name: "httpsProxy"
-    - atxTextSetting:
-        group: UPLOAD
-        name: "projectId"
-        value: "1"
     - atxBooleanSetting:
         group: UPLOAD
         name: "compressUpload"

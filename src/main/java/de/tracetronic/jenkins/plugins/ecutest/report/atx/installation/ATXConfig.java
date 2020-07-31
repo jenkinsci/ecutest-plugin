@@ -56,7 +56,7 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
      * @since 2.7.0
      * @deprecated due to CasC compatibility
      */
-    @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "DeprecatedIsStillUsed"})
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     @Deprecated
     private transient Map<String, List<ATXSetting<?>>> configMap;
 

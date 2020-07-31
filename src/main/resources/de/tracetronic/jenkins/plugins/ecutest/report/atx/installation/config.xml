@@ -18,20 +18,7 @@
         ReportProject
     </PROJECT-TEMPLATE>
     <SETTINGS>
-        <!-- Uploadeinstellungen -->
-        <SETTING name="uploadToServer" default="False" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
-            <DESCRIPTION xsi:type="I18NItem">
-                <MULTILANGDATA>
-                    <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Automatischen Upload zum Server aktivieren?</DVALUE>
-                    </ELEMENT>
-                    <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Enable auto upload to the server?</DVALUE>
-                    </ELEMENT>
-                </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
-            </DESCRIPTION>
-        </SETTING>
+        <!-- Verbindungseinstellungen -->
         <SETTING name="serverURL" default="127.0.0.1" canBeOverwrittenByServer="false" xsi:type="reportConfigItem"/>
         <SETTING name="serverLabel" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
@@ -42,7 +29,7 @@
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Optional name for the server-instance,
+                        <DVALUE xsi:type="string">Optional name for the server instance,
                             which is used for log messages.
                         </DVALUE>
                     </ELEMENT>
@@ -77,92 +64,6 @@
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Path of the server URL to the server
                             application e.g. atx -> localhost:8085/atx
-                        </DVALUE>
-                    </ELEMENT>
-                </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
-            </DESCRIPTION>
-        </SETTING>
-        <SETTING name="useSettingsFromServer" default="False" canBeOverwrittenByServer="false"
-                 xsi:type="reportConfigItem">
-            <DESCRIPTION xsi:type="I18NItem">
-                <MULTILANGDATA>
-                    <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">True, wenn die Einstellungen für die
-                            ATX-Generierung vom TEST-GUIDE Server abgefragt werden sollen.
-                            Die Einstellungen hier (außer die Verbindungseinstellungen) werden überschrieben.
-                        </DVALUE>
-                    </ELEMENT>
-                    <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">True, if the settings for the
-                            ATX generation shall be retrieved from the TEST-GUIDE server.
-                            The settings here will be overridden (except for the connection settings).
-                        </DVALUE>
-                    </ELEMENT>
-                </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
-            </DESCRIPTION>
-        </SETTING>
-        <SETTING name="uploadAuthenticationKey" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
-            <DESCRIPTION xsi:type="I18NItem">
-                <MULTILANGDATA>
-                    <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Authentifizierungsschlüssel für den Upload
-                            zum Server (nur bei aktivierter Authentifizierung notwendig).
-                            Kann im TEST-GUIDE unter dem Benutzerprofil abgerufen werden.
-                        </DVALUE>
-                    </ELEMENT>
-                    <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Authentication key for upload to the
-                            server (only by activated authentication required). Can be found
-                            under the user profile in the TEST GUIDE.
-                        </DVALUE>
-                    </ELEMENT>
-                </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
-            </DESCRIPTION>
-        </SETTING>
-        <SETTING name="uploadAsync" default="True" xsi:type="reportConfigItem">
-            <DESCRIPTION xsi:type="I18NItem">
-                <MULTILANGDATA>
-                    <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">True, wenn der Upload der Daten asynchron
-                            mit TEST-GUIDE geschehen soll, damit die Verbindungsdauern zu
-                            TEST-GUIDE kurz sind, sonst False. Die Empfehlung ist einen
-                            asynchronen Upload vorzunehmen.
-                        </DVALUE>
-                    </ELEMENT>
-                    <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">True if the data upload is to be
-                            asynchronous with TEST-GUIDE so that the connection times to
-                            TEST-GUIDE are short, otherwise False. The recommendation is to
-                            perform an asynchronous upload.
-                        </DVALUE>
-                    </ELEMENT>
-                </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
-            </DESCRIPTION>
-        </SETTING>
-        <SETTING name="maxUploadTries" default="42" xsi:type="reportConfigItem">
-            <DESCRIPTION xsi:type="I18NItem">
-                <MULTILANGDATA>
-                    <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Anzahl der Uploadversuche, wenn TEST-GUIDE
-                            z.B. gerade hochfährt oder sich im Wartungsmodus befindet.
-                            TEST-GUIDE sendet dabei einen Zeitpunkt (z.B. in 5min), ab dem
-                            ein Client sich wieder melden darf. Bei 42 Versuchen mit einer
-                            Wartezeit von 5min bedeutet dies, 3,5h lang den Upload zu
-                            versuchen. Ein Wert kleiner oder gleich 0 resultiert in unendlich
-                            vielen Uploadversuchen!
-                        </DVALUE>
-                    </ELEMENT>
-                    <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Number of upload tries, e.g. if TEST-GUIDE
-                            is still starting up or is in maintenance mode. TEST-GUIDE sends
-                            a point in time (e.g. in 5min) after that a client should retry.
-                            With 42 tries and a waiting time of 5min, this means that the
-                            upload is tried for 3.5h. A value of less than or equal to 0
-                            results in an infinite number of upload tries.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -222,6 +123,107 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
+        <SETTING name="uploadAuthenticationKey" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Authentifizierungsschlüssel für den Upload
+                            zum Server (nur bei aktivierter Authentifizierung notwendig).
+                            Kann im TEST-GUIDE unter dem Benutzerprofil abgerufen werden.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Authentication key for upload to the
+                            server (only by activated authentication required). Can be found
+                            under the user profile in the TEST GUIDE.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="useSettingsFromServer" default="False" canBeOverwrittenByServer="false"
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">True, wenn die Einstellungen für die
+                            ATX-Generierung vom TEST-GUIDE Server abgefragt werden sollen.
+                            Die Einstellungen hier (außer die Verbindungseinstellungen) werden überschrieben.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">True, if the settings for the
+                            ATX generation shall be retrieved from the TEST-GUIDE server.
+                            The settings here will be overridden (except for the connection settings).
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <!-- Uploadeinstellungen -->
+        <SETTING name="uploadToServer" default="False" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Automatischen Upload zum Server aktivieren?</DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Enable auto upload to the server?</DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="uploadAsync" default="True" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">True, wenn der Upload der Daten asynchron
+                            mit TEST-GUIDE geschehen soll, damit die Verbindungsdauern zu
+                            TEST-GUIDE kurz sind, sonst False. Die Empfehlung ist einen
+                            asynchronen Upload vorzunehmen.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">True if the data upload is to be
+                            asynchronous with TEST-GUIDE so that the connection times to
+                            TEST-GUIDE are short, otherwise False. The recommendation is to
+                            perform an asynchronous upload.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="maxUploadTries" default="42" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Anzahl der Uploadversuche, wenn TEST-GUIDE
+                            z.B. gerade hochfährt oder sich im Wartungsmodus befindet.
+                            TEST-GUIDE sendet dabei einen Zeitpunkt (z.B. in 5min), ab dem
+                            ein Client sich wieder melden darf. Bei 42 Versuchen mit einer
+                            Wartezeit von 5min bedeutet dies, 3,5h lang den Upload zu
+                            versuchen. Ein Wert kleiner oder gleich 0 resultiert in unendlich
+                            vielen Uploadversuchen!
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Number of upload tries, e.g. if TEST-GUIDE
+                            is still starting up or is in maintenance mode. TEST-GUIDE sends
+                            a point in time (e.g. in 5min) after that a client should retry.
+                            With 42 tries and a waiting time of 5min, this means that the
+                            upload is tried for 3.5h. A value of less than or equal to 0
+                            results in an infinite number of upload tries.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+
         <SETTING name="compressUpload" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
