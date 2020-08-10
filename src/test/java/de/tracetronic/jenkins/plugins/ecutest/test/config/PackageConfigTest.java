@@ -24,7 +24,7 @@ public class PackageConfigTest {
 
     @Test
     public void testNullConstructor() {
-        final PackageConfig config = new PackageConfig(true, true, null);
+        final PackageConfig config = new PackageConfig(true, true, null, null);
         assertTrue(config.isRunTest());
         assertTrue(config.isRunTraceAnalysis());
         assertNotNull(config.getParameters());
@@ -42,7 +42,7 @@ public class PackageConfigTest {
     public void testEmptyParameters() {
         final List<PackageParameter> parameters = new ArrayList<PackageParameter>();
         parameters.add(new PackageParameter(" ", " "));
-        final PackageConfig config = new PackageConfig(true, true, parameters);
+        final PackageConfig config = new PackageConfig(true, true, parameters, null);
         assertTrue(config.getParameters().isEmpty());
     }
 
@@ -50,7 +50,9 @@ public class PackageConfigTest {
     public void testExpand() {
         final List<PackageParameter> params = new ArrayList<PackageParameter>();
         params.add(new PackageParameter("${NAME}", "${VALUE}"));
-        final PackageConfig config = new PackageConfig(true, true, params);
+        final List<PackageOutputParameter> outParams = new ArrayList<PackageOutputParameter>();
+        outParams.add(new PackageOutputParameter("${VARIABLE}"));
+        final PackageConfig config = new PackageConfig(true, true, params, outParams);
         final EnvVars envVars = new EnvVars();
         envVars.put("NAME", "name");
         envVars.put("VALUE", "value");

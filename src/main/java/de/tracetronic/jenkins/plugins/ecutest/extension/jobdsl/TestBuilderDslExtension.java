@@ -26,6 +26,7 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectAttribute
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ImportProjectDirConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageOutputParameter;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageParameter;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecutionMode;
@@ -257,7 +258,8 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         public void packageConfig(final Runnable closure) {
             final PackageConfigContext context = new PackageConfigContext();
             executeInContext(closure, context);
-            packageConfig = new PackageConfig(context.runTest, context.runTraceAnalysis, context.parameters);
+            packageConfig = new PackageConfig(context.runTest, context.runTraceAnalysis, context.parameters,
+                    context.outputParameters);
         }
     }
 
@@ -269,6 +271,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         private boolean runTest = true;
         private boolean runTraceAnalysis = true;
         private List<PackageParameter> parameters;
+        private List<PackageOutputParameter> outputParameters;
 
         /**
          * Option defining whether to run the test.
@@ -297,6 +300,17 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             final PackageParametersContext context = new PackageParametersContext();
             executeInContext(closure, context);
             parameters = context.parameters;
+        }
+
+        /**
+         * Option defining the package variables.
+         *
+         * @param closure the nested Groovy closure
+         */
+        public void outputParameters(final Runnable closure) {
+            final PackageOutputParametersContext context = new PackageOutputParametersContext();
+            executeInContext(closure, context);
+            outputParameters = context.outputParameters;
         }
 
         /**
@@ -370,6 +384,62 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
                     Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR,
                         validation.getMessage());
                     this.value = value.toString();
+                }
+            }
+        }
+
+        /**
+         * {@link Context} class providing the package output parameters methods for the nested DSL context.
+         */
+        public class PackageOutputParametersContext implements Context {
+
+            private static final String OPT_OUT_PARAM_NAME = "output parameter name";
+
+            private final List<PackageOutputParameter> outputParameters = new ArrayList<>();
+
+            /**
+             * Option defining the package output parameter.
+             *
+             * @param name the output parameter name
+             */
+            public void outputParameters(final CharSequence name) {
+                Preconditions.checkNotNull(name, NOT_NULL_MSG, OPT_OUT_PARAM_NAME);
+
+                final FormValidation validation = validator.validatePackageOutputParameterName(name.toString());
+                Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
+
+                outputParameters.add(new PackageOutputParameter(name.toString()));
+            }
+
+            /**
+             * Option defining the package variables.
+             *
+             * @param closure the nested Groovy closure
+             */
+            public void outputParameters(final Runnable closure) {
+                final PackageOutputParameterContext context = new PackageOutputParameterContext();
+                executeInContext(closure, context);
+                outputParameters.add(new PackageOutputParameter(context.name));
+            }
+
+            /**
+             * {@link Context} class providing the single package parameter methods for the nested DSL context.
+             */
+            public class PackageOutputParameterContext implements Context {
+
+                private String name;
+
+                /**
+                 * Option defining the package parameter name.
+                 *
+                 * @param value the value
+                 */
+                public void name(final CharSequence value) {
+                    Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_OUT_PARAM_NAME);
+                    final FormValidation validation = validator.validatePackageOutputParameterName(value.toString());
+                    Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR,
+                            validation.getMessage());
+                    name = value.toString();
                 }
             }
         }
@@ -484,7 +554,8 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
         public void packageConfig(final Runnable closure) {
             final PackageConfigContext context = new PackageConfigContext();
             executeInContext(closure, context);
-            packageConfig = new PackageConfig(context.runTest, context.runTraceAnalysis, context.parameters);
+            packageConfig = new PackageConfig(context.runTest, context.runTraceAnalysis, context.parameters,
+                context.outputParameters);
         }
 
         /**
