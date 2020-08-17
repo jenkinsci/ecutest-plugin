@@ -14,6 +14,7 @@ import hudson.model.TaskListener;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Contributor which adds various test related variables into the build environment variables.
@@ -71,6 +72,12 @@ public class TestEnvContributor extends EnvironmentContributor {
      */
     public static final String TEST_TIMEOUT = "TEST_TIMEOUT_";
 
+    /**
+     * Build environment variable part for the timeout running the test.
+     */
+    public static final String TEST_RETVAL = "TEST_RETVAL_";
+
+
     @Override
     public void buildEnvironmentFor(@Nonnull final Run r, @Nonnull final EnvVars envs,
                                     @Nonnull final TaskListener listener) {
@@ -78,6 +85,7 @@ public class TestEnvContributor extends EnvironmentContributor {
         for (final TestEnvInvisibleAction action : envActions) {
             final String id = String.valueOf(action.getTestId());
             final TestType testType = action.getTestType();
+            final Map<String, String> outParams = action.getOutParams();
             // Exclude test description for project type
             if (testType.equals(TestType.PACKAGE)) {
                 envs.put(PREFIX + TEST_DESCRIPTION + id, action.getTestDescription());
@@ -90,6 +98,9 @@ public class TestEnvContributor extends EnvironmentContributor {
             envs.put(PREFIX + TEST_REPORT + id, action.getTestReportDir());
             envs.put(PREFIX + TEST_RESULT + id, action.getTestResult());
             envs.put(PREFIX + TEST_TIMEOUT + id, String.valueOf(action.getTimeout()));
+            for (Map.Entry<String, String> outParam : outParams.entrySet()) {
+                envs.put(PREFIX + TEST_RETVAL + outParam.getKey() + "_" + id, outParam.getValue());
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ public abstract class AbstractTestClient implements TestClient {
     private String testReportDir;
     private String testResult;
     private boolean isAborted;
+    private Map<String, String> outputParameters;
 
     /**
      * Instantiates a new {@link AbstractTestClient}.
@@ -49,9 +51,23 @@ public abstract class AbstractTestClient implements TestClient {
      */
     public AbstractTestClient(final String testFile, final TestConfig testConfig,
                               final ExecutionConfig executionConfig) {
+        this(testFile, testConfig, executionConfig, Collections.emptyMap());
+    }
+
+    /**
+     * Instantiates a new {@link AbstractTestClient}.
+     *
+     * @param testFile        the test file path
+     * @param testConfig      the test configuration
+     * @param executionConfig the execution configuration
+     * @param outParams       the test output parameters
+     */
+    public AbstractTestClient(final String testFile, final TestConfig testConfig,
+                              final ExecutionConfig executionConfig, final Map<String, String> outParams) {
         this.testFile = StringUtils.trimToEmpty(testFile);
         this.testConfig = testConfig;
         this.executionConfig = executionConfig;
+        this.outputParameters = outParams;
         testName = "";
         testDescription = "";
         testReportDir = "";
@@ -69,6 +85,14 @@ public abstract class AbstractTestClient implements TestClient {
 
     public ExecutionConfig getExecutionConfig() {
         return executionConfig;
+    }
+
+    public Map<String, String> getOutputParameters() {
+        return outputParameters;
+    }
+
+    public void setOutputParameters(final Map<String, String> outParams) {
+        this.outputParameters = outParams;
     }
 
     public String getTestName() {
@@ -246,6 +270,7 @@ public abstract class AbstractTestClient implements TestClient {
         private final String testResult;
         private final String testReportDir;
         private final boolean isAborted;
+        private final Map<String, String> outputParam;
 
         /**
          * Instantiates a new {@link TestInfoHolder}.
@@ -253,11 +278,14 @@ public abstract class AbstractTestClient implements TestClient {
          * @param testResult    the test result
          * @param testReportDir the test report directory
          * @param isAborted     specifies whether test execution is aborted
+         * @param outParam      the output parameter map
          */
-        public TestInfoHolder(final String testResult, final String testReportDir, final boolean isAborted) {
+        public TestInfoHolder(final String testResult, final String testReportDir, final boolean isAborted,
+                              final Map<String, String> outParam) {
             this.testResult = testResult;
             this.testReportDir = testReportDir;
             this.isAborted = isAborted;
+            this.outputParam = outParam;
         }
 
         public String getTestResult() {
@@ -270,6 +298,10 @@ public abstract class AbstractTestClient implements TestClient {
 
         public boolean isAborted() {
             return isAborted;
+        }
+
+        public Map<String, String> getOutputParam() {
+            return outputParam;
         }
     }
 

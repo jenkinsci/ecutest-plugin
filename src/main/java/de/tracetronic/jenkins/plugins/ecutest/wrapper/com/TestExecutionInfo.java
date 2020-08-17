@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
 import com.jacob.com.Dispatch;
+import com.jacob.com.Variant;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComTestExecutionInfo;
 
 /**
@@ -50,5 +51,10 @@ public class TestExecutionInfo extends ETComDispatch implements ComTestExecution
     @Override
     public String getState() throws ETComException {
         return performRequest("GetState").getString();
+    }
+
+    @Override
+    public String getReturnValue(final String varName) throws ETComException {
+        return performRequest("GetReturnValue", new Variant(varName)).toString();
     }
 }

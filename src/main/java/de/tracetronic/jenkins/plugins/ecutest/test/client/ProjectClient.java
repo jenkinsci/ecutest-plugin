@@ -26,6 +26,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -284,7 +285,7 @@ public class ProjectClient extends AbstractTestClient {
                 isAborted ? "aborted" : "completed", testResult));
             final String testReportDir = new File(execInfo.getReportDb()).getParentFile().getAbsolutePath();
             logger.logInfo(String.format("-> Test report directory: %s", testReportDir));
-            return new TestInfoHolder(testResult, testReportDir, isAborted);
+            return new TestInfoHolder(testResult, testReportDir, isAborted, Collections.emptyMap());
         }
 
         /**
