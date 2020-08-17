@@ -60,14 +60,14 @@ public abstract class AbstractTestClient implements TestClient {
      * @param testFile        the test file path
      * @param testConfig      the test configuration
      * @param executionConfig the execution configuration
-     * @param outParams       the test output parameters
+     * @param outputParameters       the test output parameters
      */
     public AbstractTestClient(final String testFile, final TestConfig testConfig,
-                              final ExecutionConfig executionConfig, final Map<String, String> outParams) {
+                              final ExecutionConfig executionConfig, final Map<String, String> outputParameters) {
         this.testFile = StringUtils.trimToEmpty(testFile);
         this.testConfig = testConfig;
         this.executionConfig = executionConfig;
-        this.outputParameters = outParams;
+        this.outputParameters = outputParameters;
         testName = "";
         testDescription = "";
         testReportDir = "";
@@ -270,7 +270,7 @@ public abstract class AbstractTestClient implements TestClient {
         private final String testResult;
         private final String testReportDir;
         private final boolean isAborted;
-        private final Map<String, String> outputParam;
+        private final Map<String, String> outputParameters;
 
         /**
          * Instantiates a new {@link TestInfoHolder}.
@@ -278,14 +278,14 @@ public abstract class AbstractTestClient implements TestClient {
          * @param testResult    the test result
          * @param testReportDir the test report directory
          * @param isAborted     specifies whether test execution is aborted
-         * @param outParam      the output parameter map
+         * @param outputParameters      the output parameter map
          */
         public TestInfoHolder(final String testResult, final String testReportDir, final boolean isAborted,
-                              final Map<String, String> outParam) {
+                              final Map<String, String> outputParameters) {
             this.testResult = testResult;
             this.testReportDir = testReportDir;
             this.isAborted = isAborted;
-            this.outputParam = outParam;
+            this.outputParameters = outputParameters;
         }
 
         public String getTestResult() {
@@ -300,8 +300,8 @@ public abstract class AbstractTestClient implements TestClient {
             return isAborted;
         }
 
-        public Map<String, String> getOutputParam() {
-            return outputParam;
+        public Map<String, String> getOutputParameters() {
+            return outputParameters;
         }
     }
 

@@ -103,7 +103,7 @@ public class PackageClient extends AbstractTestClient {
                 setTestResult(testInfo.getTestResult());
                 setTestReportDir(testInfo.getTestReportDir());
                 setAborted(testInfo.isAborted());
-                setOutputParameters(testInfo.getOutputParam());
+                setOutputParameters(testInfo.getOutputParameters());
             } else {
                 return false;
             }

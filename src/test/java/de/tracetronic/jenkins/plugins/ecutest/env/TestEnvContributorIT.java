@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -74,6 +74,7 @@ public class TestEnvContributorIT extends IntegrationTestBase {
             envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_RESULT + testId));
         assertEquals("TT_TEST_TIMEOUT_0 should match env action", String.valueOf(testEnvAction.getTimeout()),
             envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TIMEOUT + testId));
+        assertEquals("TT_TEST_RETVAL_0 should not exist",0, testEnvAction.getOutParams().size());
     }
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -21,7 +21,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Class holding a package variables.
+ * Class holding a package output parameter name.
  */
 public class PackageOutputParameter extends AbstractDescribableImpl<PackageOutputParameter> implements Serializable,
     ExpandableConfig {

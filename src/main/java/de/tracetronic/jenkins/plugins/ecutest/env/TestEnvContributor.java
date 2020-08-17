@@ -73,7 +73,7 @@ public class TestEnvContributor extends EnvironmentContributor {
     public static final String TEST_TIMEOUT = "TEST_TIMEOUT_";
 
     /**
-     * Build environment variable part for the timeout running the test.
+     * Build environment variable part for the output parameter.
      */
     public static final String TEST_RETVAL = "TEST_RETVAL_";
 
@@ -99,7 +99,7 @@ public class TestEnvContributor extends EnvironmentContributor {
             envs.put(PREFIX + TEST_RESULT + id, action.getTestResult());
             envs.put(PREFIX + TEST_TIMEOUT + id, String.valueOf(action.getTimeout()));
             for (Map.Entry<String, String> outParam : outParams.entrySet()) {
-                envs.put(PREFIX + TEST_RETVAL + outParam.getKey() + "_" + id, outParam.getValue());
+                envs.put(PREFIX + TEST_RETVAL + outParam.getKey(), outParam.getValue());
             }
         }
     }
