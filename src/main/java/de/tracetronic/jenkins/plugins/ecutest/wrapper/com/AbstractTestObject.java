@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -64,5 +64,15 @@ public abstract class AbstractTestObject extends ETComDispatch {
             }
         }
         return errorList;
+    }
+
+    /**
+     * Returns converted error descriptions into specific WarningsNG plugin JSON format.
+     *
+     * @return the error descriptions as issues in JSON format
+     * @throws ETComException in case of a COM exception
+     */
+    public String checkNG() throws ETComException {
+        return performRequest("CheckNG").getString();
     }
 }
