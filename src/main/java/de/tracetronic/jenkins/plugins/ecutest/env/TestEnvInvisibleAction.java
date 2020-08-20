@@ -43,7 +43,7 @@ public class TestEnvInvisibleAction extends InvisibleAction {
         testName = testClient.getTestName();
         if (testClient instanceof PackageClient) {
             testType = TestType.PACKAGE;
-            outParams = testClient.getOutputParameters();
+            outParams = ((PackageClient) testClient).getOutputParameters();
         } else {
             testType = TestType.PROJECT;
             outParams = Collections.emptyMap();

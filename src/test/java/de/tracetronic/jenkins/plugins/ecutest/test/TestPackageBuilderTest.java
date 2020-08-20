@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -64,6 +64,7 @@ public class TestPackageBuilderTest {
         assertTrue(builder.getPackageConfig().isRunTest());
         assertTrue(builder.getPackageConfig().isRunTraceAnalysis());
         assertNotNull(builder.getPackageConfig().getParameters());
+        assertNotNull(builder.getPackageConfig().getOutputParameters());
         assertNotNull(builder.getExecutionConfig().getParsedTimeout());
         assertEquals(ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig().getParsedTimeout());
         assertTrue(builder.getExecutionConfig().isStopOnError());

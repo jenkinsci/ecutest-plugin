@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -8,9 +8,14 @@ package de.tracetronic.jenkins.plugins.ecutest.test;
 import com.gargoylesoftware.htmlunit.WebAssert;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
+import de.tracetronic.jenkins.plugins.ecutest.test.client.PackageClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.GlobalConstant;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageOutputParameter;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageParameter;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Package;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import hudson.model.Result;
@@ -21,6 +26,9 @@ import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.jenkinsci.plugins.workflow.steps.CoreStep;
 import org.jenkinsci.plugins.workflow.steps.StepConfigTester;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -68,10 +76,19 @@ public class TestPackageBuilderIT extends IntegrationTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true, true);
-        final PackageConfig packageConfig = new PackageConfig(true, true);
+        final List<GlobalConstant> globalConstants = new ArrayList<GlobalConstant>();
+        globalConstants.add(new GlobalConstant("testGlobalName", "testGlobalValue"));
+        final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true, true,
+            false, globalConstants);
+        final List<PackageParameter> parameters = new ArrayList<PackageParameter>();
+        parameters.add(new PackageParameter("testParamName", "testParamValue"));
+        final List<PackageOutputParameter> outputParameters = new ArrayList<PackageOutputParameter>();
+        outputParameters.add(new PackageOutputParameter("testOutputParamName"));
+        final PackageConfig packageConfig = new PackageConfig(true, true, parameters,
+            outputParameters);
         final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
         final TestPackageBuilder builder = new TestPackageBuilder("test.pkg");
+
         builder.setTestConfig(testConfig);
         builder.setPackageConfig(packageConfig);
         builder.setExecutionConfig(executionConfig);
@@ -93,6 +110,11 @@ public class TestPackageBuilderIT extends IntegrationTestBase {
         WebAssert.assertInputContainsValue(page, "_.timeout", "600");
         jenkins.assertXPath(page, "//input[@name='_.stopOnError' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.checkTestFile' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.name' and @value='testGlobalName']");
+        jenkins.assertXPath(page, "//input[@name='_.value' and @value='testGlobalValue']");
+        jenkins.assertXPath(page, "//input[@name='_.name' and @value='testParamName']");
+        jenkins.assertXPath(page, "//input[@name='_.value' and @value='testParamValue']");
+        jenkins.assertXPath(page, "//input[@name='_.name' and @value='testOutputParamName']");
     }
 
     @Test

@@ -21,7 +21,6 @@ import org.apache.commons.lang.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,6 @@ public abstract class AbstractTestClient implements TestClient {
     private String testReportDir;
     private String testResult;
     private boolean isAborted;
-    private Map<String, String> outputParameters;
 
     /**
      * Instantiates a new {@link AbstractTestClient}.
@@ -51,23 +49,9 @@ public abstract class AbstractTestClient implements TestClient {
      */
     public AbstractTestClient(final String testFile, final TestConfig testConfig,
                               final ExecutionConfig executionConfig) {
-        this(testFile, testConfig, executionConfig, Collections.emptyMap());
-    }
-
-    /**
-     * Instantiates a new {@link AbstractTestClient}.
-     *
-     * @param testFile        the test file path
-     * @param testConfig      the test configuration
-     * @param executionConfig the execution configuration
-     * @param outputParameters       the test output parameters
-     */
-    public AbstractTestClient(final String testFile, final TestConfig testConfig,
-                              final ExecutionConfig executionConfig, final Map<String, String> outputParameters) {
         this.testFile = StringUtils.trimToEmpty(testFile);
         this.testConfig = testConfig;
         this.executionConfig = executionConfig;
-        this.outputParameters = outputParameters;
         testName = "";
         testDescription = "";
         testReportDir = "";
@@ -85,14 +69,6 @@ public abstract class AbstractTestClient implements TestClient {
 
     public ExecutionConfig getExecutionConfig() {
         return executionConfig;
-    }
-
-    public Map<String, String> getOutputParameters() {
-        return outputParameters;
-    }
-
-    public void setOutputParameters(final Map<String, String> outParams) {
-        this.outputParameters = outParams;
     }
 
     public String getTestName() {
@@ -261,9 +237,46 @@ public abstract class AbstractTestClient implements TestClient {
     }
 
     /**
-     * Helper class storing information about the test result and the test report directory.
+     * Helper class storing project information about the test result and the test report directory.
      */
-    protected static final class TestInfoHolder implements Serializable {
+    protected static final class TestProjectInfoHolder implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        private final String testResult;
+        private final String testReportDir;
+        private final boolean isAborted;
+
+        /**
+         * Instantiates a new {@link TestProjectInfoHolder}.
+         *
+         * @param testResult    the test result
+         * @param testReportDir the test report directory
+         * @param isAborted     specifies whether test execution is aborted
+         */
+        public TestProjectInfoHolder(final String testResult, final String testReportDir, final boolean isAborted) {
+            this.testResult = testResult;
+            this.testReportDir = testReportDir;
+            this.isAborted = isAborted;
+        }
+
+        public String getTestResult() {
+            return testResult;
+        }
+
+        public String getTestReportDir() {
+            return testReportDir;
+        }
+
+        public boolean isAborted() {
+            return isAborted;
+        }
+    }
+
+    /**
+     * Helper class storing package information about the test result and the test report directory.
+     */
+    protected static final class TestPackageInfoHolder implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
@@ -273,14 +286,14 @@ public abstract class AbstractTestClient implements TestClient {
         private final Map<String, String> outputParameters;
 
         /**
-         * Instantiates a new {@link TestInfoHolder}.
+         * Instantiates a new {@link TestPackageInfoHolder}.
          *
-         * @param testResult    the test result
-         * @param testReportDir the test report directory
-         * @param isAborted     specifies whether test execution is aborted
-         * @param outputParameters      the output parameter map
+         * @param testResult        the test result
+         * @param testReportDir     the test report directory
+         * @param isAborted         specifies whether test execution is aborted
+         * @param outputParameters  the output parameter map
          */
-        public TestInfoHolder(final String testResult, final String testReportDir, final boolean isAborted,
+        public TestPackageInfoHolder(final String testResult, final String testReportDir, final boolean isAborted,
                               final Map<String, String> outputParameters) {
             this.testResult = testResult;
             this.testReportDir = testReportDir;

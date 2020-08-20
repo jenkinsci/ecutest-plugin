@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 public class PackageClient extends AbstractTestClient {
 
     private final PackageConfig packageConfig;
+    private Map<String, String> outputParameters;
 
     /**
      * Instantiates a new {@link PackageClient}.
@@ -62,6 +63,24 @@ public class PackageClient extends AbstractTestClient {
      */
     public PackageConfig getPackageConfig() {
         return packageConfig;
+    }
+
+    /**
+     * Gets output parameters.
+     *
+     * @return the output parameters
+     */
+    public Map<String, String> getOutputParameters() {
+        return outputParameters;
+    }
+
+    /**
+     * Sets output parameters.
+     *
+     * @param outParams the out params
+     */
+    public void setOutputParameters(final Map<String, String> outParams) {
+        this.outputParameters = outParams;
     }
 
     @Override
@@ -95,7 +114,7 @@ public class PackageClient extends AbstractTestClient {
 
         try {
             // Run package
-            final TestInfoHolder testInfo = launcher.getChannel().call(
+            final TestPackageInfoHolder testInfo = launcher.getChannel().call(
                 new RunPackageCallable(getTestFile(), getPackageConfig(), getExecutionConfig(), listener));
 
             // Set test result information
@@ -186,7 +205,7 @@ public class PackageClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to run a package via COM.
      */
-    private static final class RunPackageCallable extends MasterToSlaveCallable<TestInfoHolder, IOException> {
+    private static final class RunPackageCallable extends MasterToSlaveCallable<TestPackageInfoHolder, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -212,11 +231,11 @@ public class PackageClient extends AbstractTestClient {
         }
 
         @Override
-        public TestInfoHolder call() throws IOException {
+        public TestPackageInfoHolder call() throws IOException {
             final boolean runTest = packageConfig.isRunTest();
             final boolean runTraceAnalysis = packageConfig.isRunTraceAnalysis();
             final int timeout = executionConfig.getParsedTimeout();
-            TestInfoHolder testInfo = null;
+            TestPackageInfoHolder testInfo = null;
 
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Running package...");
@@ -285,8 +304,8 @@ public class PackageClient extends AbstractTestClient {
          * @return the test information
          * @throws ETComException in case of a COM exception
          */
-        private TestInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
-                                           final TTConsoleLogger logger, final List<String> outParamList)
+        private TestPackageInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
+                                                  final TTConsoleLogger logger, final List<String> outParamList)
             throws ETComException {
 
             final String testResult = execInfo.getResult();
@@ -304,7 +323,7 @@ public class PackageClient extends AbstractTestClient {
                     }
                 }));
 
-            return new TestInfoHolder(testResult, testReportDir, isAborted, outParamMap);
+            return new TestPackageInfoHolder(testResult, testReportDir, isAborted, outParamMap);
         }
 
         /**
@@ -316,9 +335,10 @@ public class PackageClient extends AbstractTestClient {
          * @param outParamList  the output parameter list
          * @return the test information
          */
-        private TestInfoHolder abortTestExecution(final int timeout, final String progId,
-                                                  final TTConsoleLogger logger, final List<String> outParamList) {
-            TestInfoHolder testInfo = null;
+        private TestPackageInfoHolder abortTestExecution(final int timeout, final String progId,
+                                                         final TTConsoleLogger logger,
+                                                         final List<String> outParamList) {
+            TestPackageInfoHolder testInfo = null;
             try (ETComClient comClient = new ETComClient(progId);
                  TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                  TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {

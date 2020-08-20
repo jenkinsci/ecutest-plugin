@@ -99,7 +99,7 @@ public class TestEnvContributor extends EnvironmentContributor {
             envs.put(PREFIX + TEST_RESULT + id, action.getTestResult());
             envs.put(PREFIX + TEST_TIMEOUT + id, String.valueOf(action.getTimeout()));
             for (Map.Entry<String, String> outParam : outParams.entrySet()) {
-                envs.put(PREFIX + TEST_RETVAL + outParam.getKey(), outParam.getValue());
+                envs.put(PREFIX + TEST_RETVAL + outParam.getKey() + "_" + id, outParam.getValue());
             }
         }
     }
