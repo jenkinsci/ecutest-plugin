@@ -237,9 +237,9 @@ public abstract class AbstractTestClient implements TestClient {
     }
 
     /**
-     * Helper class storing project information about the test result and the test report directory.
+     * Helper class storing information about the test result and the test report directory.
      */
-    protected static final class TestProjectInfoHolder implements Serializable {
+    protected static class TestInfoHolder implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
@@ -248,13 +248,13 @@ public abstract class AbstractTestClient implements TestClient {
         private final boolean isAborted;
 
         /**
-         * Instantiates a new {@link TestProjectInfoHolder}.
+         * Instantiates a new {@link TestInfoHolder}.
          *
          * @param testResult    the test result
          * @param testReportDir the test report directory
          * @param isAborted     specifies whether test execution is aborted
          */
-        public TestProjectInfoHolder(final String testResult, final String testReportDir, final boolean isAborted) {
+        public TestInfoHolder(final String testResult, final String testReportDir, final boolean isAborted) {
             this.testResult = testResult;
             this.testReportDir = testReportDir;
             this.isAborted = isAborted;
@@ -270,51 +270,6 @@ public abstract class AbstractTestClient implements TestClient {
 
         public boolean isAborted() {
             return isAborted;
-        }
-    }
-
-    /**
-     * Helper class storing package information about the test result and the test report directory.
-     */
-    protected static final class TestPackageInfoHolder implements Serializable {
-
-        private static final long serialVersionUID = 1L;
-
-        private final String testResult;
-        private final String testReportDir;
-        private final boolean isAborted;
-        private final Map<String, String> outputParameters;
-
-        /**
-         * Instantiates a new {@link TestPackageInfoHolder}.
-         *
-         * @param testResult        the test result
-         * @param testReportDir     the test report directory
-         * @param isAborted         specifies whether test execution is aborted
-         * @param outputParameters  the output parameter map
-         */
-        public TestPackageInfoHolder(final String testResult, final String testReportDir, final boolean isAborted,
-                              final Map<String, String> outputParameters) {
-            this.testResult = testResult;
-            this.testReportDir = testReportDir;
-            this.isAborted = isAborted;
-            this.outputParameters = outputParameters;
-        }
-
-        public String getTestResult() {
-            return testResult;
-        }
-
-        public String getTestReportDir() {
-            return testReportDir;
-        }
-
-        public boolean isAborted() {
-            return isAborted;
-        }
-
-        public Map<String, String> getOutputParameters() {
-            return outputParameters;
         }
     }
 

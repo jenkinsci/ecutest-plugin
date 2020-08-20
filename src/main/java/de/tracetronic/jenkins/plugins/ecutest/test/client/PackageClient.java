@@ -448,4 +448,32 @@ public class PackageClient extends AbstractTestClient {
             return testDescription;
         }
     }
+
+    /**
+     * Helper class storing package information about the test result and the test report directory.
+     */
+    protected static final class TestPackageInfoHolder extends TestInfoHolder implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        private final Map<String, String> outputParameters;
+
+        /**
+         * Instantiates a new {@link TestPackageInfoHolder}.
+         *
+         * @param testResult        the test result
+         * @param testReportDir     the test report directory
+         * @param isAborted         specifies whether test execution is aborted
+         * @param outputParameters  the output parameter map
+         */
+        public TestPackageInfoHolder(final String testResult, final String testReportDir, final boolean isAborted,
+                                     final Map<String, String> outputParameters) {
+            super(testResult, testReportDir, isAborted);
+            this.outputParameters = outputParameters;
+        }
+
+        public Map<String, String> getOutputParameters() {
+            return outputParameters;
+        }
+    }
 }
