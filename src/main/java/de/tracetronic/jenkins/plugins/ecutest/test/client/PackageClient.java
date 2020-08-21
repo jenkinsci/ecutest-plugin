@@ -114,7 +114,7 @@ public class PackageClient extends AbstractTestClient {
 
         try {
             // Run package
-            final TestPackageInfoHolder testInfo = launcher.getChannel().call(
+            final PackageTestInfoHolder testInfo = launcher.getChannel().call(
                 new RunPackageCallable(getTestFile(), getPackageConfig(), getExecutionConfig(), listener));
 
             // Set test result information
@@ -205,7 +205,7 @@ public class PackageClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to run a package via COM.
      */
-    private static final class RunPackageCallable extends MasterToSlaveCallable<TestPackageInfoHolder, IOException> {
+    private static final class RunPackageCallable extends MasterToSlaveCallable<PackageTestInfoHolder, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -231,11 +231,11 @@ public class PackageClient extends AbstractTestClient {
         }
 
         @Override
-        public TestPackageInfoHolder call() throws IOException {
+        public PackageTestInfoHolder call() throws IOException {
             final boolean runTest = packageConfig.isRunTest();
             final boolean runTraceAnalysis = packageConfig.isRunTraceAnalysis();
             final int timeout = executionConfig.getParsedTimeout();
-            TestPackageInfoHolder testInfo = null;
+            PackageTestInfoHolder testInfo = null;
 
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Running package...");
@@ -304,7 +304,7 @@ public class PackageClient extends AbstractTestClient {
          * @return the test information
          * @throws ETComException in case of a COM exception
          */
-        private TestPackageInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
+        private PackageTestInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
                                                   final TTConsoleLogger logger, final List<String> outParamList)
             throws ETComException {
 
@@ -323,7 +323,7 @@ public class PackageClient extends AbstractTestClient {
                     }
                 }));
 
-            return new TestPackageInfoHolder(testResult, testReportDir, isAborted, outParamMap);
+            return new PackageTestInfoHolder(testResult, testReportDir, isAborted, outParamMap);
         }
 
         /**
@@ -335,10 +335,10 @@ public class PackageClient extends AbstractTestClient {
          * @param outParamList  the output parameter list
          * @return the test information
          */
-        private TestPackageInfoHolder abortTestExecution(final int timeout, final String progId,
+        private PackageTestInfoHolder abortTestExecution(final int timeout, final String progId,
                                                          final TTConsoleLogger logger,
                                                          final List<String> outParamList) {
-            TestPackageInfoHolder testInfo = null;
+            PackageTestInfoHolder testInfo = null;
             try (ETComClient comClient = new ETComClient(progId);
                  TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                  TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {
@@ -452,21 +452,21 @@ public class PackageClient extends AbstractTestClient {
     /**
      * Helper class storing package information about the test result and the test report directory.
      */
-    protected static final class TestPackageInfoHolder extends TestInfoHolder implements Serializable {
+    protected static final class PackageTestInfoHolder extends TestInfoHolder implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
         private final Map<String, String> outputParameters;
 
         /**
-         * Instantiates a new {@link TestPackageInfoHolder}.
+         * Instantiates a new {@link PackageTestInfoHolder}.
          *
          * @param testResult        the test result
          * @param testReportDir     the test report directory
          * @param isAborted         specifies whether test execution is aborted
          * @param outputParameters  the output parameter map
          */
-        public TestPackageInfoHolder(final String testResult, final String testReportDir, final boolean isAborted,
+        public PackageTestInfoHolder(final String testResult, final String testReportDir, final boolean isAborted,
                                      final Map<String, String> outputParameters) {
             super(testResult, testReportDir, isAborted);
             this.outputParameters = outputParameters;
