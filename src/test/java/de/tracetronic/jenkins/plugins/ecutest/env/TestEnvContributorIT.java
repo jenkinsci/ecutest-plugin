@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -15,9 +15,13 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecu
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 import hudson.EnvVars;
 import hudson.model.FreeStyleBuild;
+import jdk.nashorn.internal.codegen.ObjectClassGenerator;
 import org.junit.Test;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -43,11 +47,15 @@ public class TestEnvContributorIT extends IntegrationTestBase {
     public void testWithTestPackageEnvInvisibleAction() throws Exception {
         final FreeStyleBuild build = jenkins.createFreeStyleProject().scheduleBuild2(0).get();
         final int testId = 0;
+        final String outParamKey = "MYTESTOUTPARAM";
+        final String outParamValue = "Test";
         final EnvVars envVars = new EnvVars();
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf");
         final PackageConfig packageConfig = new PackageConfig(true, true);
         final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
-        final PackageClient packageClient = new PackageClient("test.pkg", testConfig, packageConfig, executionConfig);
+        final PackageClient packageClient = new PackageClient("test.pkg", testConfig, packageConfig,
+            executionConfig);
+        packageClient.setOutputParameters(Collections.singletonMap(outParamKey, outParamValue));
         final TestEnvInvisibleAction testEnvAction = new TestEnvInvisibleAction(testId, packageClient);
         build.addAction(testEnvAction);
 
@@ -74,6 +82,12 @@ public class TestEnvContributorIT extends IntegrationTestBase {
             envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_RESULT + testId));
         assertEquals("TT_TEST_TIMEOUT_0 should match env action", String.valueOf(testEnvAction.getTimeout()),
             envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_TIMEOUT + testId));
+        for (Map.Entry<String, String> outParam : testEnvAction.getOutParams().entrySet()) {
+            String message = String.format("TT_TEST_RETVAL_%s_0 should match env action", outParamKey);
+            assertEquals(message, outParam.getValue(),
+                envVars.get(TestEnvContributor.PREFIX + TestEnvContributor.TEST_RETVAL + outParam.getKey() + "_"
+                    + testId));
+        }
     }
 
     @Test

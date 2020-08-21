@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -8,6 +8,9 @@ package de.tracetronic.jenkins.plugins.ecutest.env;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient;
 import de.tracetronic.jenkins.plugins.ecutest.test.client.PackageClient;
 import hudson.model.InvisibleAction;
+
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Helper invisible action which is used for exchanging information between {@link AbstractTestClient}s
@@ -25,6 +28,8 @@ public class TestEnvInvisibleAction extends InvisibleAction {
     private final String testReportDir;
     private final String testResult;
     private final int timeout;
+    private final Map<String, String> outParams;
+
     /**
      * Instantiates a new {@link TestEnvInvisibleAction}.
      *
@@ -38,8 +43,10 @@ public class TestEnvInvisibleAction extends InvisibleAction {
         testName = testClient.getTestName();
         if (testClient instanceof PackageClient) {
             testType = TestType.PACKAGE;
+            outParams = ((PackageClient) testClient).getOutputParameters();
         } else {
             testType = TestType.PROJECT;
+            outParams = Collections.emptyMap();
         }
         testDescription = testClient.getTestDescription();
         testFile = testClient.getTestFile();
@@ -88,6 +95,10 @@ public class TestEnvInvisibleAction extends InvisibleAction {
 
     public int getTimeout() {
         return timeout;
+    }
+
+    public Map<String, String> getOutParams() {
+        return outParams;
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -33,12 +33,13 @@ public class PackageClientTest {
         assertTrue(client.getPackageConfig().isRunTest());
         assertTrue(client.getPackageConfig().isRunTraceAnalysis());
         assertTrue(client.getPackageConfig().getParameters().isEmpty());
+        assertTrue(client.getPackageConfig().getOutputParameters().isEmpty());
     }
 
     @Test
     public void testNullConstructor() {
         final TestConfig testConfig = new TestConfig(null, null, false, false, false, null);
-        final PackageConfig packageConfig = new PackageConfig(true, true, null);
+        final PackageConfig packageConfig = new PackageConfig(true, true, null, null);
         final ExecutionConfig executionConfig = new ExecutionConfig(30, true, true);
         final PackageClient client = new PackageClient(null, testConfig, packageConfig, executionConfig);
         assertNotNull(client);
@@ -56,6 +57,7 @@ public class PackageClientTest {
         assertTrue(client.getPackageConfig().isRunTest());
         assertTrue(client.getPackageConfig().isRunTraceAnalysis());
         assertTrue(client.getPackageConfig().getParameters().isEmpty());
+        assertTrue(client.getPackageConfig().getOutputParameters().isEmpty());
         assertEquals("Check timeout", 30, client.getExecutionConfig().getParsedTimeout());
         assertTrue("Check stop mode", client.getExecutionConfig().isStopOnError());
         assertTrue(client.getExecutionConfig().isCheckTestFile());

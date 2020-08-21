@@ -89,7 +89,7 @@ public class TestValidator extends AbstractValidator {
         } else if (name.contains(PARAMETER)) {
             returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
         } else if (!isValidVariableName(name)) {
-            returnValue = FormValidation.error(Messages.PackageParameter_InvalidName());
+            returnValue = FormValidation.error(Messages.PackageOutputParameter_InvalidName());
         }
         return returnValue;
     }
@@ -106,6 +106,24 @@ public class TestValidator extends AbstractValidator {
             returnValue = FormValidation.validateRequired(value);
         } else if (value.contains(PARAMETER)) {
             returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
+        }
+        return returnValue;
+    }
+
+    /**
+     * Validates the variable names.
+     *
+     * @param name the variable names
+     * @return FormValidation
+     */
+    public FormValidation validatePackageOutputParameterName(final String name) {
+        FormValidation returnValue = FormValidation.ok();
+        if (StringUtils.isBlank(name)) {
+            returnValue = FormValidation.validateRequired(name);
+        } else if (name.contains(PARAMETER)) {
+            returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
+        } else if (!isValidVariableName(name)) {
+            returnValue = FormValidation.error(Messages.PackageOutputParameter_InvalidName());
         }
         return returnValue;
     }

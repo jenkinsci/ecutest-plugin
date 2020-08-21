@@ -136,6 +136,7 @@ The post-build actions are extended by these test report related post-build step
 | TT_TEST_TIMEOUT | Maximum execution time |
 | TT_TEST_RESULT | Test result (SUCCESS, INCONCLUSIVE, FAILED, ERROR, NONE) |
 | TT_TEST_REPORT | Full path to test report directory |
+| TT_TEST_RETVAL_\<VARIABLE NAME\> | Test related package output parameter (only for package execution)|
 </details>
 
 ## Downstream report generation

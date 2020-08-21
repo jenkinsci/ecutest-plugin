@@ -19,5 +19,11 @@
                 <f:repeatableProperty field="parameters" add="${%parameters.add}" minimum="0"/>
             </f:entry>
         </f:advanced>
+        <f:advanced title="${%outputParameters.advanced}">
+            <f:entry title="${%outputParameters.title}" description="${%outputParameters.description}"
+                     field="outputParameters">
+                <f:repeatableProperty field="outputParameters" add="${%outputParameters.add}" minimum="0"/>
+            </f:entry>
+        </f:advanced>
     </f:section>
 </j:jelly>

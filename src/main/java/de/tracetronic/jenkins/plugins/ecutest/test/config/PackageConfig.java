@@ -30,6 +30,7 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
     private final boolean runTest;
     private final boolean runTraceAnalysis;
     private final List<PackageParameter> parameters;
+    private final List<PackageOutputParameter> outputParameters;
 
     /**
      * Instantiates a new {@link PackageConfig}.
@@ -37,14 +38,17 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
      * @param runTest          specifies whether to run the test case
      * @param runTraceAnalysis specifies whether to run the trace analysis
      * @param parameters       the list of package parameters
+     * @param outputParameters        the list of package parameters
      */
     @DataBoundConstructor
     public PackageConfig(final boolean runTest, final boolean runTraceAnalysis,
-                         final List<PackageParameter> parameters) {
+                         final List<PackageParameter> parameters, final List<PackageOutputParameter> outputParameters) {
         super();
         this.runTest = runTest;
         this.runTraceAnalysis = runTraceAnalysis;
         this.parameters = parameters == null ? new ArrayList<>() : removeEmptyParameters(parameters);
+        this.outputParameters = outputParameters == null ? new ArrayList<>()
+            : removeEmptyOutputParameters(outputParameters);
     }
 
     /**
@@ -58,6 +62,7 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
         this.runTest = runTest;
         this.runTraceAnalysis = runTraceAnalysis;
         parameters = new ArrayList<>();
+        outputParameters = new ArrayList<>();
     }
 
     /**
@@ -77,12 +82,29 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
     }
 
     /**
+     * Removes empty package variables.
+     *
+     * @param outputParameters the variables
+     * @return the list of valid package variables
+     */
+    private static List<PackageOutputParameter> removeEmptyOutputParameters(
+            final List<PackageOutputParameter> outputParameters) {
+        final List<PackageOutputParameter> validOutputParameters = new ArrayList<>();
+        for (final PackageOutputParameter outputParameter : outputParameters) {
+            if (StringUtils.isNotBlank(outputParameter.getName())) {
+                validOutputParameters.add(outputParameter);
+            }
+        }
+        return validOutputParameters;
+    }
+
+    /**
      * Instantiates a new {@link PackageConfig} with default values.
      *
      * @return the default {@link PackageConfig}
      */
     public static PackageConfig newInstance() {
-        return new PackageConfig(true, true, null);
+        return new PackageConfig(true, true, null, null);
     }
 
     public boolean isRunTest() {
@@ -97,13 +119,21 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
         return parameters;
     }
 
+    public List<PackageOutputParameter> getOutputParameters() {
+        return outputParameters;
+    }
+
     @Override
     public PackageConfig expand(final EnvVars envVars) {
         final List<PackageParameter> parameters = new ArrayList<>();
         for (final PackageParameter param : getParameters()) {
             parameters.add(param.expand(envVars));
         }
-        return new PackageConfig(isRunTest(), isRunTraceAnalysis(), parameters);
+        final List<PackageOutputParameter> outputParameters = new ArrayList<>();
+        for (final PackageOutputParameter outParam : getOutputParameters()) {
+            outputParameters.add(outParam.expand(envVars));
+        }
+        return new PackageConfig(isRunTest(), isRunTraceAnalysis(), parameters, outputParameters);
     }
 
     @Override
@@ -111,15 +141,16 @@ public class PackageConfig extends AbstractDescribableImpl<PackageConfig> implem
         boolean result = false;
         if (other instanceof PackageConfig) {
             final PackageConfig that = (PackageConfig) other;
-            result = Objects.equals(parameters, that.parameters)
-                && runTest == that.runTest && runTraceAnalysis == that.runTraceAnalysis;
+            result = Objects.equals(parameters, that.parameters) && Objects.equals(outputParameters,
+                that.outputParameters) && runTest == that.runTest && runTraceAnalysis == that.runTraceAnalysis;
         }
         return result;
     }
 
     @Override
     public final int hashCode() {
-        return new HashCodeBuilder(17, 31).append(runTest).append(runTraceAnalysis).append(parameters).toHashCode();
+        return new HashCodeBuilder(17, 31).append(runTest).
+            append(runTraceAnalysis).append(parameters).append(outputParameters).toHashCode();
     }
 
     /**
