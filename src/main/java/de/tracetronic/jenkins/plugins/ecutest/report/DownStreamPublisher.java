@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -36,16 +36,27 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
     private final String workspace;
     @Nonnull
     private List<AbstractReportPublisher> publishers = new ArrayList<>();
+    /**
+     * {@code Boolean} type is required to retain backward compatibility with default value {@code false}.
+     *
+     * @since 2.19
+     */
+    private boolean reporting;
+    private transient String reportDir;
 
     /**
      * Instantiates a new {@link DownStreamPublisher}.
      *
      * @param workspace the downstream workspace
+     * @param reporting specifies whether custom report directory is enabled
+     * @param reportDir the report directory
      */
     @DataBoundConstructor
-    public DownStreamPublisher(final String workspace) {
+    public DownStreamPublisher(final String workspace, final boolean reporting, final String reportDir) {
         super();
         this.workspace = StringUtils.trimToEmpty(workspace);
+        this.reporting = reporting;
+        this.reportDir = reportDir;
     }
 
     @Nonnull
@@ -56,6 +67,34 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
     @Nonnull
     public List<AbstractReportPublisher> getPublishers() {
         return publishers;
+    }
+
+    /**
+     * Returns whether custom report directory is enabled.
+     *
+     * @return {@code true} if custom report directory is enabled, {@code false} otherwise
+     */
+    public boolean isReporting() {
+        return reporting;
+    }
+
+    /**
+     * Equivalent getter with {@code boolean} return type.
+     *
+     * @return {@code true} if custom report directory is enabled, {@code false} otherwise
+     * @see #isReporting()
+     */
+    public boolean getReporting() {
+        return reporting;
+    }
+
+    @DataBoundSetter
+    public void setReporting(final boolean reporting) {
+        this.reporting = reporting;
+    }
+
+    public String getReportDir() {
+        return reportDir;
     }
 
     @DataBoundSetter
@@ -73,6 +112,11 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
             if (publisher != null) {
                 publisher.setDownstream(true);
                 publisher.setWorkspace(getWorkspace());
+                if (isReporting()) {
+                    publisher.setReportDir(getReportDir());
+                } else {
+                    publisher.setReportDir("TestReports");
+                }
                 publisher.perform(run, workspace, launcher, listener);
             }
         }
