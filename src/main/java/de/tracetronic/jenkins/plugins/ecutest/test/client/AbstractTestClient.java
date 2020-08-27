@@ -388,7 +388,7 @@ public abstract class AbstractTestClient implements TestClient {
     /**
      * Helper class storing information about a test file.
      */
-    protected static final class TestInfoHolder implements Serializable {
+    protected static class TestInfoHolder implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
