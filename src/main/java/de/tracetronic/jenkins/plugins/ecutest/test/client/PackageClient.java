@@ -20,20 +20,12 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Package;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestExecutionInfo;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.AbstractBuild;
-import hudson.model.BuildListener;
-import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
-import io.jenkins.plugins.analysis.core.steps.IssuesRecorder;
-import io.jenkins.plugins.analysis.warnings.WarningsPlugin;
 import jenkins.security.MasterToSlaveCallable;
-import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -112,7 +104,7 @@ public class PackageClient extends AbstractTestClient {
         }
 
         // Open and check package
-        final PackageInfoHolder pkgInfo = launcher.getChannel().call(
+        final TestInfoHolder pkgInfo = launcher.getChannel().call(
                 new OpenPackageCallable(getTestFile(), getExecutionConfig().isCheckTestFile(),
                         getExecutionConfig().isRecordWarnings(), listener));
 
@@ -129,7 +121,7 @@ public class PackageClient extends AbstractTestClient {
 
         try {
             // Run package
-            final PackageTestInfoHolder testInfo = launcher.getChannel().call(
+            final PackageExecutioInfoHolder testInfo = launcher.getChannel().call(
                 new RunPackageCallable(getTestFile(), getPackageConfig(), getExecutionConfig(), listener));
 
             // Set test result information
@@ -150,51 +142,12 @@ public class PackageClient extends AbstractTestClient {
         return launcher.getChannel().call(new ClosePackageCallable(getTestFile(), listener));
     }
 
-    /**
-     * Records test file checks as Warnings NG issues.
-     *
-     * @param pkgInfo   the stored package information
-     * @param run       the run
-     * @param workspace the workspace
-     * @param launcher  the launcher
-     * @param listener  the listener
-     * @return {@code true} if recording works without detecting any issues, {@code false} otherwise
-     */
-    @SuppressFBWarnings("BC_UNCONFIRMED_CAST")
-    private boolean recordWarnings(final PackageInfoHolder pkgInfo, final Run<?, ?> run, final FilePath workspace,
-                                   final Launcher launcher, final TaskListener listener) throws IOException,
-            InterruptedException {
-        if (StringUtils.isNotBlank(pkgInfo.warningsIssues)) {
-            final FilePath issuesFile = workspace.child("issues.json");
-            try {
-                issuesFile.write(pkgInfo.getWarningsIssues(), "UTF-8");
 
-                final WarningsPlugin plugin = new WarningsPlugin();
-                plugin.setName("Package Check");
-                plugin.setPattern("issues.json");
-                plugin.setReportEncoding("UTF-8");
-                plugin.setId(String.format("%s-%s", pkgInfo.getTestName(), RandomStringUtils.randomAlphanumeric(8)));
-
-                final IssuesRecorder recorder = new IssuesRecorder();
-                recorder.setTools(plugin);
-                recorder.setFailOnError(true);
-                recorder.setEnabledForFailure(true);
-                recorder.perform((AbstractBuild<?, ?>) run, launcher, (BuildListener) listener);
-            } catch (final InterruptedException | IOException e) {
-                return false;
-            } finally {
-                issuesFile.delete();
-            }
-
-            return run.getResult() == null || !run.getResult().isWorseOrEqualTo(Result.FAILURE);
-        }
-        return true;
-    }
 
     /**
      * {@link Callable} providing remote access to open and check a package via COM.
      */
-    private static final class OpenPackageCallable extends MasterToSlaveCallable<PackageInfoHolder, IOException> {
+    private static final class OpenPackageCallable extends MasterToSlaveCallable<TestInfoHolder, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -220,15 +173,15 @@ public class PackageClient extends AbstractTestClient {
         }
 
         @Override
-        public PackageInfoHolder call() throws IOException {
-            PackageInfoHolder pkgInfo = null;
+        public TestInfoHolder call() throws IOException {
+            TestInfoHolder testInfo = null;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Opening package...");
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
                  Package pkg = (Package) comClient.openPackage(packageFile)) {
                 logger.logInfo("-> Package opened successfully.");
-                pkgInfo = new PackageInfoHolder(pkg.getName(), pkg.getDescription());
+                testInfo = new TestInfoHolder(pkg.getName(), pkg.getDescription());
                 if (checkTestFile) {
                     logger.logInfo("- Checking package...");
                     if (recordWarnings) {
@@ -237,7 +190,7 @@ public class PackageClient extends AbstractTestClient {
                             logger.logInfo("-> Recording package checks as Warnings NG issues...");
                             final String checks = pkg.checkNG();
                             // Replace possible null values introduced by an issue in COM API
-                            pkgInfo.setWarningsIssues(checks.replace("null", "0"));
+                            testInfo.setWarningsIssues(checks.replace("null", "0"));
                         } else {
                             logger.logInfo("-> Recording package checks as Warnings NG issues will be skipped!");
                             logger.logWarn(String.format(
@@ -259,7 +212,7 @@ public class PackageClient extends AbstractTestClient {
                                     break;
                                 case ERROR:
                                     logger.logError(logMessage);
-                                    pkgInfo = null;
+                                    testInfo = null;
                                     break;
                                 default:
                                     break;
@@ -273,14 +226,14 @@ public class PackageClient extends AbstractTestClient {
             } catch (final ETComException e) {
                 logger.logComException("-> Opening package failed", e);
             }
-            return pkgInfo;
+            return testInfo;
         }
     }
 
     /**
      * {@link Callable} providing remote access to run a package via COM.
      */
-    private static final class RunPackageCallable extends MasterToSlaveCallable<PackageTestInfoHolder, IOException> {
+    private static final class RunPackageCallable extends MasterToSlaveCallable<PackageExecutioInfoHolder, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -306,11 +259,11 @@ public class PackageClient extends AbstractTestClient {
         }
 
         @Override
-        public PackageTestInfoHolder call() throws IOException {
+        public PackageExecutioInfoHolder call() throws IOException {
             final boolean runTest = packageConfig.isRunTest();
             final boolean runTraceAnalysis = packageConfig.isRunTraceAnalysis();
             final int timeout = executionConfig.getParsedTimeout();
-            PackageTestInfoHolder testInfo = null;
+            PackageExecutioInfoHolder testInfo = null;
 
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Running package...");
@@ -379,8 +332,8 @@ public class PackageClient extends AbstractTestClient {
          * @return the test information
          * @throws ETComException in case of a COM exception
          */
-        private PackageTestInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
-                                                  final TTConsoleLogger logger, final List<String> outParamList)
+        private PackageExecutioInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
+                                                      final TTConsoleLogger logger, final List<String> outParamList)
             throws ETComException {
 
             final String testResult = execInfo.getResult();
@@ -398,7 +351,7 @@ public class PackageClient extends AbstractTestClient {
                     }
                 }));
 
-            return new PackageTestInfoHolder(testResult, testReportDir, isAborted, outParamMap);
+            return new PackageExecutioInfoHolder(testResult, testReportDir, isAborted, outParamMap);
         }
 
         /**
@@ -410,10 +363,10 @@ public class PackageClient extends AbstractTestClient {
          * @param outParamList  the output parameter list
          * @return the test information
          */
-        private PackageTestInfoHolder abortTestExecution(final int timeout, final String progId,
-                                                         final TTConsoleLogger logger,
-                                                         final List<String> outParamList) {
-            PackageTestInfoHolder testInfo = null;
+        private PackageExecutioInfoHolder abortTestExecution(final int timeout, final String progId,
+                                                             final TTConsoleLogger logger,
+                                                             final List<String> outParamList) {
+            PackageExecutioInfoHolder testInfo = null;
             try (ETComClient comClient = new ETComClient(progId);
                  TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                  TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {
@@ -485,73 +438,24 @@ public class PackageClient extends AbstractTestClient {
     }
 
     /**
-     * Helper class storing information about a package.
+     * Helper class storing package execution information.
      */
-    private static final class PackageInfoHolder implements Serializable {
-
-        private static final long serialVersionUID = 1L;
-
-        private final String testName;
-        private final String testDescription;
-        private String warningsIssues = "";
-
-        /**
-         * Instantiates a new {@link PackageInfoHolder}.
-         *
-         * @param testName        the test name
-         * @param testDescription the test description
-         */
-        PackageInfoHolder(final String testName, final String testDescription) {
-            this.testName = testName;
-            this.testDescription = testDescription;
-        }
-
-        /**
-         * Gets test name.
-         *
-         * @return the test name
-         */
-        public String getTestName() {
-            return testName;
-        }
-
-        /**
-         * Gets test description.
-         *
-         * @return the test description
-         */
-        public String getTestDescription() {
-            return testDescription;
-        }
-
-        public String getWarningsIssues() {
-            return warningsIssues;
-        }
-
-        public void setWarningsIssues(final String warningsIssues) {
-            this.warningsIssues = warningsIssues;
-        }
-    }
-
-    /**
-     * Helper class storing package information about the test result and the test report directory.
-     */
-    protected static final class PackageTestInfoHolder extends TestInfoHolder implements Serializable {
+    protected static final class PackageExecutioInfoHolder extends ExecutionInfoHolder implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
         private final Map<String, String> outputParameters;
 
         /**
-         * Instantiates a new {@link PackageTestInfoHolder}.
+         * Instantiates a new {@link PackageExecutioInfoHolder}.
          *
          * @param testResult        the test result
          * @param testReportDir     the test report directory
          * @param isAborted         specifies whether test execution is aborted
          * @param outputParameters  the output parameter map
          */
-        public PackageTestInfoHolder(final String testResult, final String testReportDir, final boolean isAborted,
-                                     final Map<String, String> outputParameters) {
+        public PackageExecutioInfoHolder(final String testResult, final String testReportDir, final boolean isAborted,
+                                         final Map<String, String> outputParameters) {
             super(testResult, testReportDir, isAborted);
             this.outputParameters = outputParameters;
         }

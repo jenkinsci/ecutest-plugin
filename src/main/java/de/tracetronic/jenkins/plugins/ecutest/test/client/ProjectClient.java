@@ -85,7 +85,7 @@ public class ProjectClient extends AbstractTestClient {
 
         try {
             // Run project
-            final TestInfoHolder testInfo = launcher.getChannel().call(
+            final ExecutionInfoHolder testInfo = launcher.getChannel().call(
                 new RunProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig(), listener));
 
             // Set project information
@@ -182,7 +182,7 @@ public class ProjectClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to run a project via COM.
      */
-    private static final class RunProjectCallable extends MasterToSlaveCallable<TestInfoHolder, IOException> {
+    private static final class RunProjectCallable extends MasterToSlaveCallable<ExecutionInfoHolder, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -208,10 +208,10 @@ public class ProjectClient extends AbstractTestClient {
         }
 
         @Override
-        public TestInfoHolder call() throws IOException {
+        public ExecutionInfoHolder call() throws IOException {
             final int jobExecutionMode = projectConfig.getJobExecMode().getValue();
             final int timeout = executionConfig.getParsedTimeout();
-            TestInfoHolder testInfo = null;
+            ExecutionInfoHolder testInfo = null;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Running project...");
             final String progId = ETComProperty.getInstance().getProgId();
@@ -254,9 +254,9 @@ public class ProjectClient extends AbstractTestClient {
          * @param logger  the logger
          * @return the test information
          */
-        private TestInfoHolder abortTestExecution(final int timeout, final String progId,
-                                                  final TTConsoleLogger logger) {
-            TestInfoHolder testInfo = null;
+        private ExecutionInfoHolder abortTestExecution(final int timeout, final String progId,
+                                                       final TTConsoleLogger logger) {
+            ExecutionInfoHolder testInfo = null;
             try (ETComClient comClient = new ETComClient(progId);
                  TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                  TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {
@@ -279,14 +279,14 @@ public class ProjectClient extends AbstractTestClient {
          * @return the test information
          * @throws ETComException in case of a COM exception
          */
-        private TestInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
-                                           final TTConsoleLogger logger) throws ETComException {
+        private ExecutionInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
+                                                final TTConsoleLogger logger) throws ETComException {
             final String testResult = execInfo.getResult();
             logger.logInfo(String.format("-> Project execution %s with result: %s",
                 isAborted ? "aborted" : "completed", testResult));
             final String testReportDir = new File(execInfo.getReportDb()).getParentFile().getAbsolutePath();
             logger.logInfo(String.format("-> Test report directory: %s", testReportDir));
-            return new TestInfoHolder(testResult, testReportDir, isAborted);
+            return new ExecutionInfoHolder(testResult, testReportDir, isAborted);
         }
 
         /**
