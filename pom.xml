@@ -206,6 +206,10 @@
                     <artifactId>script-security</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.jenkins-ci.plugins.workflow</groupId>
                     <artifactId>workflow-api</artifactId>
                 </exclusion>
