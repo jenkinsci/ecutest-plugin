@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -25,7 +25,7 @@ public class ProjectClientTest {
     public void testBlankConstructor() {
         final TestConfig testConfig = new TestConfig("", "");
         final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(0, true, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(0, true, true, false);
         final ProjectClient client = new ProjectClient("", testConfig, projectConfig, executionConfig);
         assertEquals("", client.getTestFile());
         assertEquals("", client.getTestConfig().getTbcFile());
@@ -40,7 +40,7 @@ public class ProjectClientTest {
     public void testNullConstructor() {
         final TestConfig testConfig = new TestConfig(null, null, false, false, false, null);
         final ProjectConfig projectConfig = new ProjectConfig(false, null, JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(30, true, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(30, true, true, false);
         final ProjectClient client = new ProjectClient(null, testConfig, projectConfig, executionConfig);
         assertNotNull(client);
         assertEquals("", client.getTestFile());

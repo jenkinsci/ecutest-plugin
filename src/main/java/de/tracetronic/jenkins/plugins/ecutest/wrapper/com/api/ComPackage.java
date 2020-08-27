@@ -33,8 +33,8 @@ public interface ComPackage {
 
     /**
      * Returns a list of the errors of the package (including all sub packages).
-     * <p>
-     * Every list element is a tuple containing:
+     *
+     * <p>Every list element is a tuple containing:</p>
      *
      * <ul>
      *   <li>file path</li>
@@ -49,7 +49,7 @@ public interface ComPackage {
     List<CheckInfoHolder> check() throws ETComException;
 
     /**
-     * Returns converted error descriptions into specific WarningsNG plugin JSON format.
+     * Returns converted error descriptions into specific Warnings NG plugin JSON format.
      *
      * <ul>
      *   <li>issues

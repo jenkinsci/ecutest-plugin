@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -44,18 +44,30 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
     private final boolean checkTestFile;
 
     /**
+     * Specifies whether to record returned test file checks as issues of
+     * <a href="https://github.com/jenkinsci/warnings-ng-plugin">Warnings Next Generation</a>
+     * plugin, therefore {@link #checkTestFile} must be enabled.
+     *
+     * @since 2.19
+     */
+    private final boolean recordWarnings;
+
+    /**
      * Instantiates a new {@link ExecutionConfig}.
      *
      * @param timeout       the timeout to run the test
      * @param stopOnError   specifies whether to stop ECU-TEST and Tool-Server instances if an error occurred
      * @param checkTestFile specifies whether to check the test file
+     * @param recordWarnings specifies whether to record returned test file checks as Warnings NG issues
      */
     @DataBoundConstructor
-    public ExecutionConfig(final String timeout, final boolean stopOnError, final boolean checkTestFile) {
+    public ExecutionConfig(final String timeout, final boolean stopOnError, final boolean checkTestFile,
+                           final boolean recordWarnings) {
         super();
         this.timeout = StringUtils.defaultIfBlank(timeout, String.valueOf(DEFAULT_TIMEOUT));
         this.stopOnError = stopOnError;
         this.checkTestFile = checkTestFile;
+        this.recordWarnings = recordWarnings;
     }
 
     /**
@@ -64,9 +76,11 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
      * @param timeout       the timeout to run the test
      * @param stopOnError   specifies whether to stop ECU-TEST and Tool-Server instances if an error occurred
      * @param checkTestFile specifies whether to check the test file
+     * @param recordWarnings specifies whether to record returned test file checks as Warnings NG issues
      */
-    public ExecutionConfig(final int timeout, final boolean stopOnError, final boolean checkTestFile) {
-        this(String.valueOf(timeout), stopOnError, checkTestFile);
+    public ExecutionConfig(final int timeout, final boolean stopOnError, final boolean checkTestFile,
+                           final boolean recordWarnings) {
+        this(String.valueOf(timeout), stopOnError, checkTestFile, recordWarnings);
     }
 
     /**
@@ -94,7 +108,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
      * @return the default {@link ExecutionConfig}
      */
     public static ExecutionConfig newInstance() {
-        return new ExecutionConfig(null, true, true);
+        return new ExecutionConfig(null, true, true, false);
     }
 
     public int getParsedTimeout() {
@@ -113,11 +127,15 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
         return checkTestFile;
     }
 
+    public boolean isRecordWarnings() {
+        return recordWarnings;
+    }
+
     @Override
     public ExecutionConfig expand(final EnvVars envVars) {
         final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars,
                 String.valueOf(DEFAULT_TIMEOUT));
-        return new ExecutionConfig(expTimeout, isStopOnError(), isCheckTestFile());
+        return new ExecutionConfig(expTimeout, isStopOnError(), isCheckTestFile(), recordWarnings);
     }
 
     @Override
@@ -126,14 +144,17 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
         if (other instanceof ExecutionConfig) {
             final ExecutionConfig that = (ExecutionConfig) other;
             result = Objects.equals(timeout, that.timeout)
-                    && stopOnError == that.stopOnError && checkTestFile == that.checkTestFile;
+                    && stopOnError == that.stopOnError
+                    && checkTestFile == that.checkTestFile
+                    && recordWarnings == that.recordWarnings;
         }
         return result;
     }
 
     @Override
     public final int hashCode() {
-        return new HashCodeBuilder(17, 31).append(timeout).append(stopOnError).append(checkTestFile).toHashCode();
+        return new HashCodeBuilder(17, 31).append(timeout).append(stopOnError).append(checkTestFile)
+                .append(recordWarnings).toHashCode();
     }
 
     /**

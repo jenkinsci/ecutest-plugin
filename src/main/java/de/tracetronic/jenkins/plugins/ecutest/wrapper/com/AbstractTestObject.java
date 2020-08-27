@@ -67,7 +67,7 @@ public abstract class AbstractTestObject extends ETComDispatch {
     }
 
     /**
-     * Returns converted error descriptions into specific WarningsNG plugin JSON format.
+     * Returns converted error descriptions into specific Warnings NG plugin JSON format.
      *
      * @return the error descriptions as issues in JSON format
      * @throws ETComException in case of a COM exception

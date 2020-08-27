@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -74,7 +74,8 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
         public void executionConfig(final Runnable closure) {
             final ExecutionConfigContext context = new ExecutionConfigContext();
             executeInContext(closure, context);
-            executionConfig = new ExecutionConfig(context.timeout, context.stopOnError, context.checkTestFile);
+            executionConfig = new ExecutionConfig(context.timeout, context.stopOnError, context.checkTestFile,
+                    context.recordWarnings);
         }
 
         /**
@@ -237,6 +238,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             private String timeout;
             private boolean stopOnError = true;
             private boolean checkTestFile = true;
+            private boolean recordWarnings = false;
 
             /**
              * Option defining the timeout.
@@ -276,6 +278,15 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
              */
             public void checkTestFile(final boolean value) {
                 checkTestFile = value;
+            }
+
+            /**
+             * Option defining whether to record returned test file checks as Warnings NG issues.
+             *
+             * @param value the value
+             */
+            public void recordWarnings(final boolean value) {
+                recordWarnings = value;
             }
         }
     }

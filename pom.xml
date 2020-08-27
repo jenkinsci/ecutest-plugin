@@ -76,6 +76,7 @@
         <junit.version>1.27</junit.version>
         <structs.version>1.19</structs.version>
         <job-dsl.version>1.67</job-dsl.version>
+        <warnings-ng.version>6.0.0</warnings-ng.version>
         <credentials.version>2.1.19</credentials.version>
         <jquery-plugin.version>1.12.4-1</jquery-plugin.version>
 
@@ -171,6 +172,54 @@
                 <exclusion>
                     <groupId>org.codehaus.groovy</groupId>
                     <artifactId>groovy-all</artifactId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>warnings-ng</artifactId>
+            <version>${warnings-ng.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr4-runtime</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-text</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jenkins-ci.plugins</groupId>
+                    <artifactId>script-security</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jenkins-ci.plugins.workflow</groupId>
+                    <artifactId>workflow-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jenkins-ci.plugins.workflow</groupId>
+                    <artifactId>workflow-cps</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jenkins-ci.plugins.workflow</groupId>
+                    <artifactId>workflow-job</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jenkins-ci.plugins.workflow</groupId>
+                    <artifactId>workflow-step-api</artifactId>
                 </exclusion>
             </exclusions>
             <optional>true</optional>
@@ -465,6 +514,7 @@
             <id>fast</id>
             <properties>
                 <skipUTs>true</skipUTs>
+                <skipITs>true</skipITs>
                 <checkstyle.skip>true</checkstyle.skip>
                 <pmd.skip>true</pmd.skip>
                 <spotbugs.skip>true</spotbugs.skip>

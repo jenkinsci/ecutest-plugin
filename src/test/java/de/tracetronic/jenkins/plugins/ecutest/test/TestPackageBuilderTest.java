@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -27,7 +27,7 @@ public class TestPackageBuilderTest {
     public void testDefaultStep() throws IOException {
         final TestConfig testConfig = new TestConfig("", "");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig("", true, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig("", true, true, false);
         final TestPackageBuilder builder = new TestPackageBuilder("");
         builder.setTestConfig(testConfig);
         builder.setPackageConfig(packageConfig);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -28,7 +28,7 @@ public class TestProjectBuilderTest {
     public void testDefaultStep() throws IOException {
         final TestConfig testConfig = new TestConfig("", "");
         final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig("", true, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig("", true, true, false);
         final TestProjectBuilder builder = new TestProjectBuilder("");
         builder.setTestConfig(testConfig);
         builder.setProjectConfig(projectConfig);

@@ -33,8 +33,8 @@ public interface ComProject {
 
     /**
      * Returns a list of the errors of the project.
-     * <p>
-     * Every list element is a tuple containing:
+     *
+     * <p>Every list element is a tuple containing:</p>
      *
      * <ul>
      *   <li>file path</li>
@@ -49,7 +49,7 @@ public interface ComProject {
     List<CheckInfoHolder> check() throws ETComException;
 
     /**
-     * Returns converted error descriptions into specific WarningsNG plugin JSON format.
+     * Returns converted error descriptions into specific Warnings NG plugin JSON format.
      *
      * <ul>
      *   <li>issues

@@ -19,6 +19,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestExecutionInfo;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 import jenkins.security.MasterToSlaveCallable;
@@ -54,7 +55,8 @@ public class ProjectClient extends AbstractTestClient {
     }
 
     @Override
-    public boolean runTestCase(final FilePath workspace, final Launcher launcher, final TaskListener listener)
+    public boolean runTestCase(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+                               final TaskListener listener)
         throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 

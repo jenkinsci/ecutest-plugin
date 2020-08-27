@@ -12,17 +12,27 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageParameter;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
+import de.tracetronic.jenkins.plugins.ecutest.util.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Package;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestExecutionInfo;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.model.AbstractBuild;
+import hudson.model.BuildListener;
+import hudson.model.Result;
+import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
+import io.jenkins.plugins.analysis.core.steps.IssuesRecorder;
+import io.jenkins.plugins.analysis.warnings.WarningsPlugin;
 import jenkins.security.MasterToSlaveCallable;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,8 +67,9 @@ public class PackageClient extends AbstractTestClient {
     }
 
     @Override
-    public boolean runTestCase(final FilePath workspace, final Launcher launcher, final TaskListener listener)
-        throws IOException, InterruptedException {
+    public boolean runTestCase(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+                               final TaskListener listener)
+            throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -73,14 +84,18 @@ public class PackageClient extends AbstractTestClient {
             return false;
         }
 
-        // Open package
+        // Open and check package
         final PackageInfoHolder pkgInfo = launcher.getChannel().call(
-            new OpenPackageCallable(getTestFile(), getExecutionConfig().isCheckTestFile(), listener));
+                new OpenPackageCallable(getTestFile(), getExecutionConfig().isCheckTestFile(),
+                        getExecutionConfig().isRecordWarnings(), listener));
 
         // Set package information
         if (pkgInfo != null) {
             setTestName(pkgInfo.getTestName());
             setTestDescription(pkgInfo.getTestDescription());
+            if (!recordWarnings(pkgInfo, run, workspace, launcher, listener)) {
+                return false;
+            }
         } else {
             return false;
         }
@@ -108,7 +123,48 @@ public class PackageClient extends AbstractTestClient {
     }
 
     /**
-     * {@link Callable} providing remote access to open a package via COM.
+     * Records test file checks as Warnings NG issues.
+     *
+     * @param pkgInfo   the stored package information
+     * @param run       the run
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
+     * @return {@code true} if recording works without detecting any issues, {@code false} otherwise
+     */
+    @SuppressFBWarnings("BC_UNCONFIRMED_CAST")
+    private boolean recordWarnings(final PackageInfoHolder pkgInfo, final Run<?, ?> run, final FilePath workspace,
+                                   final Launcher launcher, final TaskListener listener) throws IOException,
+            InterruptedException {
+        if (StringUtils.isNotBlank(pkgInfo.warningsIssues)) {
+            final FilePath issuesFile = workspace.child("issues.json");
+            try {
+                issuesFile.write(pkgInfo.getWarningsIssues(), "UTF-8");
+
+                final WarningsPlugin plugin = new WarningsPlugin();
+                plugin.setName("Package Check");
+                plugin.setPattern("issues.json");
+                plugin.setReportEncoding("UTF-8");
+                plugin.setId(String.format("%s-%s", pkgInfo.getTestName(), RandomStringUtils.randomAlphanumeric(8)));
+
+                final IssuesRecorder recorder = new IssuesRecorder();
+                recorder.setTools(plugin);
+                recorder.setFailOnError(true);
+                recorder.setEnabledForFailure(true);
+                recorder.perform((AbstractBuild<?, ?>) run, launcher, (BuildListener) listener);
+            } catch (final InterruptedException | IOException e) {
+                return false;
+            } finally {
+                issuesFile.delete();
+            }
+
+            return run.getResult() == null || !run.getResult().isWorseOrEqualTo(Result.FAILURE);
+        }
+        return true;
+    }
+
+    /**
+     * {@link Callable} providing remote access to open and check a package via COM.
      */
     private static final class OpenPackageCallable extends MasterToSlaveCallable<PackageInfoHolder, IOException> {
 
@@ -116,18 +172,22 @@ public class PackageClient extends AbstractTestClient {
 
         private final String packageFile;
         private final boolean checkTestFile;
+        private final boolean recordWarnings;
         private final TaskListener listener;
 
         /**
          * Instantiates a new {@link OpenPackageCallable}.
          *
-         * @param packageFile   the package file
-         * @param checkTestFile specifies whether to check the package file
-         * @param listener      the listener
+         * @param packageFile    the package file
+         * @param checkTestFile  specifies whether to check the package file
+         * @param recordWarnings specifies whether to record returned package checks as Warnings NG issues
+         * @param listener       the listener
          */
-        OpenPackageCallable(final String packageFile, final boolean checkTestFile, final TaskListener listener) {
+        OpenPackageCallable(final String packageFile, final boolean checkTestFile, final boolean recordWarnings,
+                            final TaskListener listener) {
             this.packageFile = packageFile;
             this.checkTestFile = checkTestFile;
+            this.recordWarnings = recordWarnings;
             this.listener = listener;
         }
 
@@ -143,28 +203,43 @@ public class PackageClient extends AbstractTestClient {
                 pkgInfo = new PackageInfoHolder(pkg.getName(), pkg.getDescription());
                 if (checkTestFile) {
                     logger.logInfo("- Checking package...");
-                    final List<CheckInfoHolder> checks = pkg.check();
-                    for (final CheckInfoHolder check : checks) {
-                        final String logMessage = String.format("%s (line %s): %s", check.getFilePath(),
-                            check.getLineNumber(), check.getErrorMessage());
-                        final Seriousness seriousness = check.getSeriousness();
-                        switch (seriousness) {
-                            case NOTE:
-                                logger.logInfo(logMessage);
-                                break;
-                            case WARNING:
-                                logger.logWarn(logMessage);
-                                break;
-                            case ERROR:
-                                logger.logError(logMessage);
-                                pkgInfo = null;
-                                break;
-                            default:
-                                break;
+                    if (recordWarnings) {
+                        final ToolVersion comVersion = ToolVersion.parse(comClient.getVersion());
+                        if (comVersion.compareWithoutMicroTo(new ToolVersion(2020, 3, 0)) >= 0) {
+                            logger.logInfo("-> Recording package checks as Warnings NG issues...");
+                            final String checks = pkg.checkNG();
+                            // Replace possible null values introduced by an issue in COM API
+                            pkgInfo.setWarningsIssues(checks.replace("null", "0"));
+                        } else {
+                            logger.logInfo("-> Recording package checks as Warnings NG issues will be skipped!");
+                            logger.logWarn(String.format(
+                                    "The configured ECU-TEST version %s does not support recording WarningNG issues. "
+                                            + "Please use at least ECU-TEST 2020.3 or higher!", comVersion));
                         }
-                    }
-                    if (checks.isEmpty()) {
-                        logger.logInfo("-> Package validated successfully.");
+                    } else {
+                        final List<CheckInfoHolder> checks = pkg.check();
+                        for (final CheckInfoHolder check : checks) {
+                            final String logMessage = String.format("%s (line %s): %s", check.getFilePath(),
+                                    check.getLineNumber(), check.getErrorMessage());
+                            final Seriousness seriousness = check.getSeriousness();
+                            switch (seriousness) {
+                                case NOTE:
+                                    logger.logInfo(logMessage);
+                                    break;
+                                case WARNING:
+                                    logger.logWarn(logMessage);
+                                    break;
+                                case ERROR:
+                                    logger.logError(logMessage);
+                                    pkgInfo = null;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        if (checks.isEmpty()) {
+                            logger.logInfo("-> Package validated successfully.");
+                        }
                     }
                 }
             } catch (final ETComException e) {
@@ -369,6 +444,7 @@ public class PackageClient extends AbstractTestClient {
 
         private final String testName;
         private final String testDescription;
+        private String warningsIssues = "";
 
         /**
          * Instantiates a new {@link PackageInfoHolder}.
@@ -387,6 +463,14 @@ public class PackageClient extends AbstractTestClient {
 
         public String getTestDescription() {
             return testDescription;
+        }
+
+        public String getWarningsIssues() {
+            return warningsIssues;
+        }
+
+        public void setWarningsIssues(final String warningsIssues) {
+            this.warningsIssues = warningsIssues;
         }
     }
 }

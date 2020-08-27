@@ -30,7 +30,7 @@ public class TestFolderBuilderTest {
         final TestConfig testConfig = new TestConfig("", "");
         final PackageConfig packageConfig = new PackageConfig(true, true);
         final ProjectConfig projectConfig = new ProjectConfig(false, "", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig("", true, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig("", true, true, false);
         final TestFolderBuilder builder = new TestFolderBuilder("");
         builder.setTestConfig(testConfig);
         builder.setPackageConfig(packageConfig);
