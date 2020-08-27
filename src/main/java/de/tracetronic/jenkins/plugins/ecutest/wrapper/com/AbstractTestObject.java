@@ -34,14 +34,22 @@ public abstract class AbstractTestObject extends ETComDispatch {
     }
 
     /**
-     * Queries the package name.
+     * Queries the test object name.
      *
-     * @return the name of this package
+     * @return the name of this test object
      * @throws ETComException in case of a COM exception
      */
     public String getName() throws ETComException {
         return performRequest("GetName").getString();
     }
+
+    /**
+     * Queries the test object description.
+     *
+     * @return the description of this test object
+     * @throws ETComException in case of a COM exception
+     */
+    public abstract String getDescription() throws ETComException;
 
     /**
      * Returns a list of the errors of the project.

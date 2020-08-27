@@ -6,7 +6,6 @@
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder.Seriousness;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
@@ -23,11 +22,9 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 import jenkins.security.MasterToSlaveCallable;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Client to execute ECU-TEST projects via COM interface.
@@ -73,20 +70,24 @@ public class ProjectClient extends AbstractTestClient {
         }
 
         // Open and check project
-        if (!launcher.getChannel().call(
-            new OpenProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig().isCheckTestFile(),
-                listener))) {
+        final TestInfoHolder prjInfo = launcher.getChannel().call(
+                new OpenProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig(), listener));
+
+        // Set project information
+        if (prjInfo != null) {
+            setTestName(prjInfo.getTestName());
+            setTestDescription(prjInfo.getTestDescription());
+            if (!recordWarnings(prjInfo, run, workspace, launcher, listener)) {
+                return false;
+            }
+        } else {
             return false;
         }
-
-        // Set default project information
-        setTestDescription("");
-        setTestName(FilenameUtils.getBaseName(new File(getTestFile()).getName()));
 
         try {
             // Run project
             final ExecutionInfoHolder testInfo = launcher.getChannel().call(
-                new RunProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig(), listener));
+                    new RunProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig(), listener));
 
             // Set project information
             if (testInfo != null) {
@@ -108,74 +109,39 @@ public class ProjectClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to open a project via COM.
      */
-    private static final class OpenProjectCallable extends MasterToSlaveCallable<Boolean, IOException> {
+    private static final class OpenProjectCallable extends OpenTestFileCallable {
 
         private static final long serialVersionUID = 1L;
-
-        private final String projectFile;
-        private final ProjectConfig projectConfig;
-        private final boolean checkTestFile;
-        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link OpenProjectCallable}.
          *
-         * @param projectFile   the project file
-         * @param projectConfig the project configuration
-         * @param checkTestFile specifies whether to check the project file
-         * @param listener      the listener
+         * @param projectFile     the project file
+         * @param projectConfig   the project configurations
+         * @param executionConfig the execution configurations
+         * @param listener        the listener
          */
         OpenProjectCallable(final String projectFile, final ProjectConfig projectConfig,
-                            final boolean checkTestFile, final TaskListener listener) {
-            this.projectFile = projectFile;
-            this.projectConfig = projectConfig;
-            this.checkTestFile = checkTestFile;
-            this.listener = listener;
+                            final ExecutionConfig executionConfig, final TaskListener listener) {
+            super(projectFile, projectConfig, executionConfig, listener);
         }
 
         @Override
-        public Boolean call() throws IOException {
-            final boolean execInCurrentPkgDir = projectConfig.isExecInCurrentPkgDir();
-            final String filterExpression = projectConfig.getFilterExpression();
-            boolean isOpened = true;
-            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        public TestInfoHolder call() throws IOException {
+            TestInfoHolder testInfo = null;
+            final TTConsoleLogger logger = new TTConsoleLogger(getListener());
             logger.logInfo("- Opening project...");
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
-                 Project project = (Project) comClient.openProject(projectFile, execInCurrentPkgDir,
-                     filterExpression)) {
+                 Project prj = (Project) comClient.openProject(getTestFile(),
+                         ((ProjectConfig) getTestFileConfig()).isExecInCurrentPkgDir(),
+                         ((ProjectConfig) getTestFileConfig()).getFilterExpression())) {
                 logger.logInfo("-> Project opened successfully.");
-                if (checkTestFile) {
-                    logger.logInfo("- Checking project...");
-                    final List<CheckInfoHolder> checks = project.check();
-                    for (final CheckInfoHolder check : checks) {
-                        final String logMessage = String.format("%s (line %s): %s", check.getFilePath(),
-                            check.getLineNumber(), check.getErrorMessage());
-                        final Seriousness seriousness = check.getSeriousness();
-                        switch (seriousness) {
-                            case NOTE:
-                                logger.logInfo(logMessage);
-                                break;
-                            case WARNING:
-                                logger.logWarn(logMessage);
-                                break;
-                            case ERROR:
-                                logger.logError(logMessage);
-                                isOpened = false;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    if (checks.isEmpty()) {
-                        logger.logInfo("-> Project validated successfully!");
-                    }
-                }
+                testInfo = checkTestFile(prj, comClient, logger);
             } catch (final ETComException e) {
-                isOpened = false;
                 logger.logComException("-> Opening project failed", e);
             }
-            return isOpened;
+            return testInfo;
         }
     }
 

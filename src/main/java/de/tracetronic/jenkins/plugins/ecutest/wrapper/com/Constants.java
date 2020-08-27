@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -13,7 +13,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComConstants;
 /**
  * COM object giving access to all global constants of the currently loaded test configuration.
  */
-public class Constants extends AbstractTestObject implements ComConstants {
+public class Constants extends ETComDispatch implements ComConstants {
 
     /**
      * Instantiates a new {@link Constants}.

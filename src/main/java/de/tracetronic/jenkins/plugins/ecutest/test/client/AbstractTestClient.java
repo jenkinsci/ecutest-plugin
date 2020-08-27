@@ -7,8 +7,11 @@ package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExpandableConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.GlobalConstant;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
+import de.tracetronic.jenkins.plugins.ecutest.util.ToolVersion;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.AbstractTestObject;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
@@ -28,6 +31,7 @@ import jenkins.security.MasterToSlaveCallable;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 
+import javax.annotation.CheckForNull;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -165,6 +169,100 @@ public abstract class AbstractTestClient implements TestClient {
             return run.getResult() == null || !run.getResult().isWorseOrEqualTo(Result.FAILURE);
         }
         return true;
+    }
+
+    /**
+     * {@link Callable} providing remote access to open a test file via COM.
+     */
+    protected abstract static class OpenTestFileCallable extends MasterToSlaveCallable<TestInfoHolder, IOException> {
+
+        private final String testFile;
+        private final ExpandableConfig testFileConfig;
+        private final ExecutionConfig executionConfig;
+        private final TaskListener listener;
+
+        /**
+         * Instantiates a new {@link OpenTestFileCallable}.
+         *
+         * @param testFile        the test file
+         * @param testFileConfig  the test file configuration
+         * @param executionConfig the execution configuration
+         * @param listener        the listener
+         */
+        public OpenTestFileCallable(final String testFile, final ExpandableConfig testFileConfig,
+                                    final ExecutionConfig executionConfig, final TaskListener listener) {
+            this.testFile = testFile;
+            this.testFileConfig = testFileConfig;
+            this.executionConfig = executionConfig;
+            this.listener = listener;
+        }
+
+        public String getTestFile() {
+            return testFile;
+        }
+
+        public ExpandableConfig getTestFileConfig() {
+            return testFileConfig;
+        }
+
+        public ExecutionConfig getExecutionConfig() {
+            return executionConfig;
+        }
+
+        public TaskListener getListener() {
+            return listener;
+        }
+
+        @Override
+        public abstract TestInfoHolder call() throws IOException;
+
+        @CheckForNull
+        protected TestInfoHolder checkTestFile(final AbstractTestObject testObject, final ETComClient comClient,
+                                               final TTConsoleLogger logger) throws ETComException {
+            TestInfoHolder testInfo = new TestInfoHolder(testObject.getName(), testObject.getDescription());
+            if (executionConfig.isCheckTestFile()) {
+                logger.logInfo("- Checking project...");
+                if (executionConfig.isRecordWarnings()) {
+                    final ToolVersion comVersion = ToolVersion.parse(comClient.getVersion());
+                    if (comVersion.compareWithoutMicroTo(new ToolVersion(2020, 3, 0)) >= 0) {
+                        logger.logInfo("-> Recording project checks as Warnings NG issues...");
+                        final String checks = testObject.checkNG();
+                        // Replace possible null values introduced by an issue in COM API
+                        testInfo.setWarningsIssues(checks.replace("null", "0"));
+                    } else {
+                        logger.logInfo("-> Recording project checks as Warnings NG issues will be skipped!");
+                        logger.logWarn(String.format(
+                                "The configured ECU-TEST version %s does not support recording WarningNG issues. "
+                                        + "Please use at least ECU-TEST 2020.3 or higher!", comVersion));
+                    }
+                } else {
+                    final List<CheckInfoHolder> checks = testObject.check();
+                    for (final CheckInfoHolder check : checks) {
+                        final String logMessage = String.format("%s (line %s): %s", check.getFilePath(),
+                                check.getLineNumber(), check.getErrorMessage());
+                        final CheckInfoHolder.Seriousness seriousness = check.getSeriousness();
+                        switch (seriousness) {
+                            case NOTE:
+                                logger.logInfo(logMessage);
+                                break;
+                            case WARNING:
+                                logger.logWarn(logMessage);
+                                break;
+                            case ERROR:
+                                logger.logError(logMessage);
+                                testInfo = null;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    if (checks.isEmpty()) {
+                        logger.logInfo("-> Project validated successfully!");
+                    }
+                }
+            }
+            return testInfo;
+        }
     }
 
     /**

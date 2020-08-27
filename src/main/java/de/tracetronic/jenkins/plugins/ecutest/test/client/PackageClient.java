@@ -6,14 +6,12 @@
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder.Seriousness;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageOutputParameter;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageParameter;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
-import de.tracetronic.jenkins.plugins.ecutest.util.ToolVersion;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
@@ -99,14 +97,13 @@ public class PackageClient extends AbstractTestClient {
 
         // Load test configuration
         if (!getTestConfig().isKeepConfig() && !launcher.getChannel().call(
-            new LoadConfigCallable(getTestConfig(), listener))) {
+                new LoadConfigCallable(getTestConfig(), listener))) {
             return false;
         }
 
         // Open and check package
         final TestInfoHolder pkgInfo = launcher.getChannel().call(
-                new OpenPackageCallable(getTestFile(), getExecutionConfig().isCheckTestFile(),
-                        getExecutionConfig().isRecordWarnings(), listener));
+                new OpenPackageCallable(getTestFile(), getPackageConfig(), getExecutionConfig(), listener));
 
         // Set package information
         if (pkgInfo != null) {
@@ -143,86 +140,36 @@ public class PackageClient extends AbstractTestClient {
     }
 
 
-
     /**
      * {@link Callable} providing remote access to open and check a package via COM.
      */
-    private static final class OpenPackageCallable extends MasterToSlaveCallable<TestInfoHolder, IOException> {
+    private static final class OpenPackageCallable extends OpenTestFileCallable {
 
         private static final long serialVersionUID = 1L;
-
-        private final String packageFile;
-        private final boolean checkTestFile;
-        private final boolean recordWarnings;
-        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link OpenPackageCallable}.
          *
-         * @param packageFile    the package file
-         * @param checkTestFile  specifies whether to check the package file
-         * @param recordWarnings specifies whether to record returned package checks as Warnings NG issues
-         * @param listener       the listener
+         * @param packageFile     the package file
+         * @param packageConfig   the package configuration
+         * @param executionConfig the execution configuration
+         * @param listener        the listener
          */
-        OpenPackageCallable(final String packageFile, final boolean checkTestFile, final boolean recordWarnings,
-                            final TaskListener listener) {
-            this.packageFile = packageFile;
-            this.checkTestFile = checkTestFile;
-            this.recordWarnings = recordWarnings;
-            this.listener = listener;
+        OpenPackageCallable(final String packageFile, final PackageConfig packageConfig,
+                            final ExecutionConfig executionConfig, final TaskListener listener) {
+            super(packageFile, packageConfig, executionConfig, listener);
         }
 
         @Override
         public TestInfoHolder call() throws IOException {
             TestInfoHolder testInfo = null;
-            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            final TTConsoleLogger logger = new TTConsoleLogger(getListener());
             logger.logInfo("- Opening package...");
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
-                 Package pkg = (Package) comClient.openPackage(packageFile)) {
+                 Package pkg = (Package) comClient.openPackage(getTestFile())) {
                 logger.logInfo("-> Package opened successfully.");
-                testInfo = new TestInfoHolder(pkg.getName(), pkg.getDescription());
-                if (checkTestFile) {
-                    logger.logInfo("- Checking package...");
-                    if (recordWarnings) {
-                        final ToolVersion comVersion = ToolVersion.parse(comClient.getVersion());
-                        if (comVersion.compareWithoutMicroTo(new ToolVersion(2020, 3, 0)) >= 0) {
-                            logger.logInfo("-> Recording package checks as Warnings NG issues...");
-                            final String checks = pkg.checkNG();
-                            // Replace possible null values introduced by an issue in COM API
-                            testInfo.setWarningsIssues(checks.replace("null", "0"));
-                        } else {
-                            logger.logInfo("-> Recording package checks as Warnings NG issues will be skipped!");
-                            logger.logWarn(String.format(
-                                    "The configured ECU-TEST version %s does not support recording WarningNG issues. "
-                                            + "Please use at least ECU-TEST 2020.3 or higher!", comVersion));
-                        }
-                    } else {
-                        final List<CheckInfoHolder> checks = pkg.check();
-                        for (final CheckInfoHolder check : checks) {
-                            final String logMessage = String.format("%s (line %s): %s", check.getFilePath(),
-                                    check.getLineNumber(), check.getErrorMessage());
-                            final Seriousness seriousness = check.getSeriousness();
-                            switch (seriousness) {
-                                case NOTE:
-                                    logger.logInfo(logMessage);
-                                    break;
-                                case WARNING:
-                                    logger.logWarn(logMessage);
-                                    break;
-                                case ERROR:
-                                    logger.logError(logMessage);
-                                    testInfo = null;
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        if (checks.isEmpty()) {
-                            logger.logInfo("-> Package validated successfully.");
-                        }
-                    }
-                }
+                testInfo = checkTestFile(pkg, comClient, logger);
             } catch (final ETComException e) {
                 logger.logComException("-> Opening package failed", e);
             }
@@ -233,7 +180,8 @@ public class PackageClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to run a package via COM.
      */
-    private static final class RunPackageCallable extends MasterToSlaveCallable<PackageExecutioInfoHolder, IOException> {
+    private static final class RunPackageCallable
+            extends MasterToSlaveCallable<PackageExecutioInfoHolder, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -299,7 +247,7 @@ public class PackageClient extends AbstractTestClient {
                     Thread.sleep(1000L);
                     tickCounter++;
                 }
-                testInfo = getTestInfo(execInfo, isAborted, logger, outParamList);
+                testInfo = getExecutionInfo(execInfo, isAborted, logger, outParamList);
                 postExecution(timeout, comClient, logger);
             } catch (final ETComException e) {
                 logger.logComException(e);
@@ -325,16 +273,17 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Gets the information of the executed package.
          *
-         * @param execInfo      the execution info
-         * @param isAborted     specifies whether the package execution is aborted
-         * @param logger        the logger
-         * @param outParamList  the output parameter list
+         * @param execInfo     the execution info
+         * @param isAborted    specifies whether the package execution is aborted
+         * @param logger       the logger
+         * @param outParamList the output parameter list
          * @return the test information
          * @throws ETComException in case of a COM exception
          */
-        private PackageExecutioInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
-                                                      final TTConsoleLogger logger, final List<String> outParamList)
-            throws ETComException {
+        private PackageExecutioInfoHolder getExecutionInfo(final TestExecutionInfo execInfo, final boolean isAborted,
+                                                           final TTConsoleLogger logger,
+                                                           final List<String> outParamList)
+                throws ETComException {
 
             final String testResult = execInfo.getResult();
             logger.logInfo(String.format("-> Package execution %s with result: %s",
@@ -357,10 +306,10 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Aborts the test execution.
          *
-         * @param timeout       the timeout
-         * @param progId        the programmatic id
-         * @param logger        the logger
-         * @param outParamList  the output parameter list
+         * @param timeout      the timeout
+         * @param progId       the programmatic id
+         * @param logger       the logger
+         * @param outParamList the output parameter list
          * @return the test information
          */
         private PackageExecutioInfoHolder abortTestExecution(final int timeout, final String progId,
@@ -372,7 +321,7 @@ public class PackageClient extends AbstractTestClient {
                  TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {
                 logger.logWarn("-> Build interrupted! Aborting test exection...");
                 execInfo.abort();
-                testInfo = getTestInfo(execInfo, true, logger, outParamList);
+                testInfo = getExecutionInfo(execInfo, true, logger, outParamList);
                 postExecution(timeout, comClient, logger);
             } catch (final ETComException e) {
                 logger.logComException(e);
@@ -449,10 +398,10 @@ public class PackageClient extends AbstractTestClient {
         /**
          * Instantiates a new {@link PackageExecutioInfoHolder}.
          *
-         * @param testResult        the test result
-         * @param testReportDir     the test report directory
-         * @param isAborted         specifies whether test execution is aborted
-         * @param outputParameters  the output parameter map
+         * @param testResult       the test result
+         * @param testReportDir    the test report directory
+         * @param isAborted        specifies whether test execution is aborted
+         * @param outputParameters the output parameter map
          */
         public PackageExecutioInfoHolder(final String testResult, final String testReportDir, final boolean isAborted,
                                          final Map<String, String> outputParameters) {
