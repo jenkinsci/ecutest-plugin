@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -32,20 +32,37 @@ import java.util.List;
  */
 public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
 
+    /**
+     * Defines the default report folder.
+     */
+    protected static final String DEFAULT_REPORT_DIR = "TestReports";
     @Nonnull
     private final String workspace;
     @Nonnull
     private List<AbstractReportPublisher> publishers = new ArrayList<>();
 
     /**
+     * Custom report folder name or path.
+     *
+     * @since 2.19
+     */
+    private final String reportDir;
+
+    /**
      * Instantiates a new {@link DownStreamPublisher}.
      *
      * @param workspace the downstream workspace
+     * @param reportDir the report directory
      */
     @DataBoundConstructor
-    public DownStreamPublisher(final String workspace) {
+    public DownStreamPublisher(final String workspace, final String reportDir) {
         super();
         this.workspace = StringUtils.trimToEmpty(workspace);
+        this.reportDir = StringUtils.defaultString(reportDir, getDefaultReportDir());
+    }
+
+    public static String getDefaultReportDir() {
+        return DEFAULT_REPORT_DIR;
     }
 
     @Nonnull
@@ -63,6 +80,10 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
         this.publishers = publishers == null ? new ArrayList<>() : publishers;
     }
 
+    public String getReportDir() {
+        return reportDir;
+    }
+
     @Override
     public void perform(@Nonnull final Run<?, ?> run, @Nonnull final FilePath workspace,
                         @Nonnull final Launcher launcher, @Nonnull final TaskListener listener)
@@ -73,6 +94,7 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
             if (publisher != null) {
                 publisher.setDownstream(true);
                 publisher.setWorkspace(getWorkspace());
+                publisher.setReportDir(getReportDir());
                 publisher.perform(run, workspace, launcher, listener);
             }
         }
@@ -95,12 +117,16 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
     @Extension(ordinal = 10000)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
+        public static String getDefaultReportDir() {
+            return DownStreamPublisher.DEFAULT_REPORT_DIR;
+        }
+
         /**
          * Gets the applicable publishers.
          *
          * @return the applicable publishers
          */
-        public List<Descriptor<? extends Publisher>> getApplicablePublishers() {
+        public static List<Descriptor<? extends Publisher>> getApplicablePublishers() {
             final List<Descriptor<? extends Publisher>> list = new ArrayList<>();
             final DescriptorExtensionList<Publisher, Descriptor<Publisher>> publishers = AbstractReportPublisher.all();
             if (publishers != null) {

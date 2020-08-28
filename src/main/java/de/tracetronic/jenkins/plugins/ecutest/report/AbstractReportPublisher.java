@@ -66,7 +66,9 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
 
     private transient boolean downstream;
     private transient String workspace;
+    private transient String reportDir;
     private transient TTConsoleLogger logger;
+
 
     /**
      * Instantiates a new {@link AbstractReportPublisher}.
@@ -233,6 +235,19 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
      */
     public void setWorkspace(final String workspace) {
         this.workspace = workspace;
+    }
+
+    public String getReportDir() {
+        return reportDir;
+    }
+
+    /**
+     * Transient setter for the downstream report directory.
+     *
+     * @param reportDir the downstream report directory
+     */
+    public void setReportDir(final String reportDir) {
+        this.reportDir = reportDir;
     }
 
     @Override
@@ -520,7 +535,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
         if (isDownstream()) {
             final FilePath wsDir = workspace.child(getWorkspace());
             if (wsDir.exists()) {
-                final FilePath reportDir = wsDir.child("TestReports");
+                final FilePath reportDir = wsDir.child(getReportDir());
                 if (reportDir.exists()) {
                     reportDirs.addAll(reportDir.listDirectories());
                 }

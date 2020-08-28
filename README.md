@@ -200,7 +200,7 @@ node('windows') {
 
     // Class notation is required for publisher steps inside downstream wrapper!
     // Available: ATXPublisher, ETLogPublisher, JUnitPublisher, ReportGeneratorPublisher, TMSPublisher, TRFPublisher
-    downstreamPublisher workspace: '', publishers: [
+    downstreamPublisher workspace: '', reportDir: 'TestReports', publishers: [
         [$class: 'ATXPublisher', atxName: 'TEST-GUIDE'],
         [$class: 'JUnitPublisher', toolName: 'ECU-TEST']]
 }
@@ -264,7 +264,7 @@ node('windows') {
     copyArtifacts filter: 'TestReports/**/*.trf, TestReports/**/*.ajob, Packages/**, Traces/**, TraceStepTemplates/**', projectName: 'upstream', selector: lastSuccessful()
 
     // Class notation is required for publisher steps inside downstream wrapper!
-    downstreamPublisher workspace: '', publishers: [
+    downstreamPublisher workspace: '', reportDir: 'TestReports', publishers: [
         [$class: 'TraceAnalysisPublisher', toolName: 'ECU-TEST', mergeReports: true]]
 }
 ```

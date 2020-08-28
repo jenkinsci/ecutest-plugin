@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
+  Copyright (c) 2015-2020 TraceTronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
@@ -8,6 +8,9 @@
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
     <f:entry title="${%workspace.title}" description="${%workspace.description}" field="workspace">
         <f:textbox/>
+    </f:entry>
+    <f:entry title="${%reportDir.title}" description="${%reportDir.description}" field="reportDir">
+        <f:textbox default="${descriptor.defaultReportDir}"/>
     </f:entry>
     <f:entry title="${%publisher.title}" description="${%publisher.description}">
         <f:hetero-list name="publishers"
