@@ -25,6 +25,7 @@ import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
+import io.jenkins.plugins.analysis.core.model.ResultAction;
 import io.jenkins.plugins.analysis.core.steps.IssuesRecorder;
 import io.jenkins.plugins.analysis.warnings.WarningsPlugin;
 import jenkins.security.MasterToSlaveCallable;
@@ -39,6 +40,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 /**
  * Common base class for {@link PackageClient} and {@link ProjectClient}.
@@ -138,12 +140,13 @@ public abstract class AbstractTestClient implements TestClient {
      * @param workspace the workspace
      * @param launcher  the launcher
      * @param listener  the listener
-     * @return {@code true} if recording works without detecting any issues, {@code false} otherwise
+     * @return {@code true} if recording detects any issues with error severity, {@code false} otherwise
      */
     @SuppressFBWarnings("BC_UNCONFIRMED_CAST")
     protected boolean recordWarnings(final TestInfoHolder testInfo, final Run<?, ?> run, final FilePath workspace,
-                                   final Launcher launcher, final TaskListener listener) throws IOException,
-            InterruptedException {
+                                     final Launcher launcher, final TaskListener listener) throws IOException,
+        InterruptedException {
+        boolean hasIssues = false;
         if (StringUtils.isNotBlank(testInfo.warningsIssues)) {
             final FilePath issuesFile = workspace.child("issues.json");
             try {
@@ -157,18 +160,24 @@ public abstract class AbstractTestClient implements TestClient {
 
                 final IssuesRecorder recorder = new IssuesRecorder();
                 recorder.setTools(plugin);
-                recorder.setFailOnError(true);
+                // Prevent to fail the build due to missing fingerprints
+                recorder.setFailOnError(false);
                 recorder.setEnabledForFailure(true);
+                recorder.setMinimumSeverity("ERROR");
                 recorder.perform((AbstractBuild<?, ?>) run, launcher, (BuildListener) listener);
-            } catch (final InterruptedException | IOException e) {
-                return false;
+
+                // Check for issues with ERROR severity and stop further execution if any
+                final Optional<ResultAction> result = run.getActions(ResultAction.class).stream().filter(action ->
+                        action.getId().equals(plugin.getId())).findFirst();
+                if (result.isPresent() && result.get().getResult().getIssues().getSizeOf("ERROR") > 0) {
+                    run.setResult(Result.FAILURE);
+                    hasIssues = true;
+                }
             } finally {
                 issuesFile.delete();
             }
-
-            return run.getResult() == null || !run.getResult().isWorseOrEqualTo(Result.FAILURE);
         }
-        return true;
+        return hasIssues;
     }
 
     /**
