@@ -66,8 +66,8 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
 
     private transient boolean downstream;
     private transient String workspace;
-    private transient TTConsoleLogger logger;
     private transient String reportDir;
+    private transient TTConsoleLogger logger;
 
 
     /**

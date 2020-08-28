@@ -10,7 +10,7 @@
         <f:textbox/>
     </f:entry>
     <f:entry title="${%reportDir.title}" description="${%reportDir.description}" field="reportDir">
-            <f:textbox default="${descriptor.defaultReportDir}"/>
+        <f:textbox default="${descriptor.defaultReportDir}"/>
     </f:entry>
     <f:entry title="${%publisher.title}" description="${%publisher.description}">
         <f:hetero-list name="publishers"
