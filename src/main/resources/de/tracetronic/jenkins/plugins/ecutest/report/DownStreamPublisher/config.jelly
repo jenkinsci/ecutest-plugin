@@ -9,11 +9,9 @@
     <f:entry title="${%workspace.title}" description="${%workspace.description}" field="workspace">
         <f:textbox/>
     </f:entry>
-    <f:optionalBlock inline="true" checked="${instance.isReporting()}" title="${%report.title}" field="reporting">
-        <f:entry title="${%reportDir.title}" description="${%reportDir.description}" field="reportDir">
-            <f:textbox/>
-        </f:entry>
-    </f:optionalBlock>
+    <f:entry title="${%reportDir.title}" description="${%reportDir.description}" field="reportDir">
+            <f:textbox default="${descriptor.defaultReportDir}"/>
+    </f:entry>
     <f:entry title="${%publisher.title}" description="${%publisher.description}">
         <f:hetero-list name="publishers"
                        descriptors="${descriptor.getApplicablePublishers()}" items="${instance.getPublishers()}"
