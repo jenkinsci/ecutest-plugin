@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -51,7 +51,7 @@ public class TestProjectBuilderIT extends IntegrationTestBase {
     public void testConfigRoundTripStep() throws Exception {
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true, true);
         final ProjectConfig projectConfig = new ProjectConfig(true, "filter", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true, false);
         final TestProjectBuilder before = new TestProjectBuilder("test.pkg");
         before.setTestConfig(testConfig);
         before.setProjectConfig(projectConfig);
@@ -71,7 +71,7 @@ public class TestProjectBuilderIT extends IntegrationTestBase {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true, true);
         final ProjectConfig projectConfig = new ProjectConfig(true, "filter", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true, false);
         final TestProjectBuilder builder = new TestProjectBuilder("test.prj");
         builder.setTestConfig(testConfig);
         builder.setProjectConfig(projectConfig);

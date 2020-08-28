@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -7,6 +7,7 @@ package de.tracetronic.jenkins.plugins.ecutest.wrapper.com;
 
 import com.jacob.com.Dispatch;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api.ComProject;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * COM object giving access to the properties of an opened project.
@@ -25,6 +26,16 @@ public class Project extends AbstractTestObject implements ComProject {
      */
     public Project(final Dispatch dispatch, final boolean useTimeout) {
         super(dispatch, useTimeout);
+    }
+
+    @Override
+    public String getName() throws ETComException {
+        return FilenameUtils.getBaseName(performRequest("GetFilename").getString());
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
     }
 
     @Override

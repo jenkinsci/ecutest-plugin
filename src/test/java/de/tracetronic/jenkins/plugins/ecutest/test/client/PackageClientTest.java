@@ -24,7 +24,7 @@ public class PackageClientTest {
     public void testBlankConstructor() {
         final TestConfig testConfig = new TestConfig("", "");
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true, false);
         final PackageClient client = new PackageClient("", testConfig, packageConfig, executionConfig);
         assertEquals("", client.getTestFile());
         assertEquals("", client.getTestConfig().getTbcFile());
@@ -40,7 +40,7 @@ public class PackageClientTest {
     public void testNullConstructor() {
         final TestConfig testConfig = new TestConfig(null, null, false, false, false, null);
         final PackageConfig packageConfig = new PackageConfig(true, true, null, null);
-        final ExecutionConfig executionConfig = new ExecutionConfig(30, true, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(30, true, true, false);
         final PackageClient client = new PackageClient(null, testConfig, packageConfig, executionConfig);
         assertNotNull(client);
         assertEquals("", client.getTestFile());

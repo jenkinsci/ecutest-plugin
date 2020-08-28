@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -34,14 +34,22 @@ public abstract class AbstractTestObject extends ETComDispatch {
     }
 
     /**
-     * Queries the package name.
+     * Queries the test object name.
      *
-     * @return the name of this package
+     * @return the name of this test object
      * @throws ETComException in case of a COM exception
      */
     public String getName() throws ETComException {
         return performRequest("GetName").getString();
     }
+
+    /**
+     * Queries the test object description.
+     *
+     * @return the description of this test object
+     * @throws ETComException in case of a COM exception
+     */
+    public abstract String getDescription() throws ETComException;
 
     /**
      * Returns a list of the errors of the project.
@@ -64,5 +72,15 @@ public abstract class AbstractTestObject extends ETComDispatch {
             }
         }
         return errorList;
+    }
+
+    /**
+     * Returns converted error descriptions into specific Warnings NG plugin JSON format.
+     *
+     * @return the error descriptions as issues in JSON format
+     * @throws ETComException in case of a COM exception
+     */
+    public String checkNG() throws ETComException {
+        return performRequest("CheckNG").getString();
     }
 }

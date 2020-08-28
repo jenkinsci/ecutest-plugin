@@ -53,7 +53,7 @@ public class TestFolderBuilderIT extends IntegrationTestBase {
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true, true);
         final PackageConfig packageConfig = new PackageConfig(true, true);
         final ProjectConfig projectConfig = new ProjectConfig(true, "filter", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true, false);
         final TestFolderBuilder before = new TestFolderBuilder("tests");
         before.setRecursiveScan(true);
         before.setFailFast(false);
@@ -78,7 +78,7 @@ public class TestFolderBuilderIT extends IntegrationTestBase {
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true, true);
         final PackageConfig packageConfig = new PackageConfig(true, true);
         final ProjectConfig projectConfig = new ProjectConfig(true, "filter", JobExecutionMode.SEQUENTIAL_EXECUTION);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true, false);
         final TestFolderBuilder builder = new TestFolderBuilder("tests");
         builder.setRecursiveScan(true);
         builder.setFailFast(false);

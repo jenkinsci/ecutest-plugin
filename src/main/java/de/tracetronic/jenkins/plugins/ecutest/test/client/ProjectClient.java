@@ -6,7 +6,6 @@
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.test.client.AbstractTestClient.CheckInfoHolder.Seriousness;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
@@ -19,14 +18,13 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestEnvironment;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestExecutionInfo;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 import jenkins.security.MasterToSlaveCallable;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Client to execute ECU-TEST projects via COM interface.
@@ -54,7 +52,8 @@ public class ProjectClient extends AbstractTestClient {
     }
 
     @Override
-    public boolean runTestCase(final FilePath workspace, final Launcher launcher, final TaskListener listener)
+    public boolean runTestCase(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
+                               final TaskListener listener)
         throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
@@ -71,20 +70,24 @@ public class ProjectClient extends AbstractTestClient {
         }
 
         // Open and check project
-        if (!launcher.getChannel().call(
-            new OpenProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig().isCheckTestFile(),
-                listener))) {
+        final TestInfoHolder prjInfo = launcher.getChannel().call(
+                new OpenProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig(), listener));
+
+        // Set project information
+        if (prjInfo != null) {
+            setTestName(prjInfo.getTestName());
+            setTestDescription(prjInfo.getTestDescription());
+            if (recordWarnings(prjInfo, run, workspace, launcher, listener)) {
+                return false;
+            }
+        } else {
             return false;
         }
 
-        // Set default project information
-        setTestDescription("");
-        setTestName(FilenameUtils.getBaseName(new File(getTestFile()).getName()));
-
         try {
             // Run project
-            final TestInfoHolder testInfo = launcher.getChannel().call(
-                new RunProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig(), listener));
+            final ExecutionInfoHolder testInfo = launcher.getChannel().call(
+                    new RunProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig(), listener));
 
             // Set project information
             if (testInfo != null) {
@@ -106,81 +109,46 @@ public class ProjectClient extends AbstractTestClient {
     /**
      * {@link Callable} providing remote access to open a project via COM.
      */
-    private static final class OpenProjectCallable extends MasterToSlaveCallable<Boolean, IOException> {
+    private static final class OpenProjectCallable extends OpenTestFileCallable {
 
         private static final long serialVersionUID = 1L;
-
-        private final String projectFile;
-        private final ProjectConfig projectConfig;
-        private final boolean checkTestFile;
-        private final TaskListener listener;
 
         /**
          * Instantiates a new {@link OpenProjectCallable}.
          *
-         * @param projectFile   the project file
-         * @param projectConfig the project configuration
-         * @param checkTestFile specifies whether to check the project file
-         * @param listener      the listener
+         * @param projectFile     the project file
+         * @param projectConfig   the project configurations
+         * @param executionConfig the execution configurations
+         * @param listener        the listener
          */
         OpenProjectCallable(final String projectFile, final ProjectConfig projectConfig,
-                            final boolean checkTestFile, final TaskListener listener) {
-            this.projectFile = projectFile;
-            this.projectConfig = projectConfig;
-            this.checkTestFile = checkTestFile;
-            this.listener = listener;
+                            final ExecutionConfig executionConfig, final TaskListener listener) {
+            super(projectFile, projectConfig, executionConfig, listener);
         }
 
         @Override
-        public Boolean call() throws IOException {
-            final boolean execInCurrentPkgDir = projectConfig.isExecInCurrentPkgDir();
-            final String filterExpression = projectConfig.getFilterExpression();
-            boolean isOpened = true;
-            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        public TestInfoHolder call() throws IOException {
+            TestInfoHolder testInfo = null;
+            final TTConsoleLogger logger = new TTConsoleLogger(getListener());
             logger.logInfo("- Opening project...");
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
-                 Project project = (Project) comClient.openProject(projectFile, execInCurrentPkgDir,
-                     filterExpression)) {
+                 Project prj = (Project) comClient.openProject(getTestFile(),
+                         ((ProjectConfig) getTestFileConfig()).isExecInCurrentPkgDir(),
+                         ((ProjectConfig) getTestFileConfig()).getFilterExpression())) {
                 logger.logInfo("-> Project opened successfully.");
-                if (checkTestFile) {
-                    logger.logInfo("- Checking project...");
-                    final List<CheckInfoHolder> checks = project.check();
-                    for (final CheckInfoHolder check : checks) {
-                        final String logMessage = String.format("%s (line %s): %s", check.getFilePath(),
-                            check.getLineNumber(), check.getErrorMessage());
-                        final Seriousness seriousness = check.getSeriousness();
-                        switch (seriousness) {
-                            case NOTE:
-                                logger.logInfo(logMessage);
-                                break;
-                            case WARNING:
-                                logger.logWarn(logMessage);
-                                break;
-                            case ERROR:
-                                logger.logError(logMessage);
-                                isOpened = false;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    if (checks.isEmpty()) {
-                        logger.logInfo("-> Project validated successfully!");
-                    }
-                }
+                testInfo = checkTestFile(prj, comClient, logger);
             } catch (final ETComException e) {
-                isOpened = false;
                 logger.logComException("-> Opening project failed", e);
             }
-            return isOpened;
+            return testInfo;
         }
     }
 
     /**
      * {@link Callable} providing remote access to run a project via COM.
      */
-    private static final class RunProjectCallable extends MasterToSlaveCallable<TestInfoHolder, IOException> {
+    private static final class RunProjectCallable extends MasterToSlaveCallable<ExecutionInfoHolder, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -206,10 +174,10 @@ public class ProjectClient extends AbstractTestClient {
         }
 
         @Override
-        public TestInfoHolder call() throws IOException {
+        public ExecutionInfoHolder call() throws IOException {
             final int jobExecutionMode = projectConfig.getJobExecMode().getValue();
             final int timeout = executionConfig.getParsedTimeout();
-            TestInfoHolder testInfo = null;
+            ExecutionInfoHolder testInfo = null;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("- Running project...");
             final String progId = ETComProperty.getInstance().getProgId();
@@ -252,9 +220,9 @@ public class ProjectClient extends AbstractTestClient {
          * @param logger  the logger
          * @return the test information
          */
-        private TestInfoHolder abortTestExecution(final int timeout, final String progId,
-                                                  final TTConsoleLogger logger) {
-            TestInfoHolder testInfo = null;
+        private ExecutionInfoHolder abortTestExecution(final int timeout, final String progId,
+                                                       final TTConsoleLogger logger) {
+            ExecutionInfoHolder testInfo = null;
             try (ETComClient comClient = new ETComClient(progId);
                  TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                  TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {
@@ -277,14 +245,14 @@ public class ProjectClient extends AbstractTestClient {
          * @return the test information
          * @throws ETComException in case of a COM exception
          */
-        private TestInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
-                                           final TTConsoleLogger logger) throws ETComException {
+        private ExecutionInfoHolder getTestInfo(final TestExecutionInfo execInfo, final boolean isAborted,
+                                                final TTConsoleLogger logger) throws ETComException {
             final String testResult = execInfo.getResult();
             logger.logInfo(String.format("-> Project execution %s with result: %s",
                 isAborted ? "aborted" : "completed", testResult));
             final String testReportDir = new File(execInfo.getReportDb()).getParentFile().getAbsolutePath();
             logger.logInfo(String.format("-> Test report directory: %s", testReportDir));
-            return new TestInfoHolder(testResult, testReportDir, isAborted);
+            return new ExecutionInfoHolder(testResult, testReportDir, isAborted);
         }
 
         /**

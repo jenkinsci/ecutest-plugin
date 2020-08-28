@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -68,7 +68,7 @@ public class TestPackageBuilder extends AbstractTestBuilder {
             executionConfig);
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo(String.format("Executing package %s...", testFile));
-        if (testClient.runTestCase(workspace, launcher, listener)) {
+        if (testClient.runTestCase(run, workspace, launcher, listener)) {
             addBuildAction(run, testClient);
             if (testClient.isAborted()) {
                 logger.logWarn("Package execution aborted!");

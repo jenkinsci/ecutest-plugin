@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -20,7 +20,7 @@ public class ExecutionConfigTest {
 
     @Test
     public void testIntConstructor() {
-        final ExecutionConfig config = new ExecutionConfig(60, true, true);
+        final ExecutionConfig config = new ExecutionConfig(60, true, true, false);
         assertThat(config.getParsedTimeout(), is(60));
         assertTrue(config.isStopOnError());
         assertTrue(config.isCheckTestFile());
@@ -28,19 +28,19 @@ public class ExecutionConfigTest {
 
     @Test
     public void testStringConstructor() {
-        final ExecutionConfig config = new ExecutionConfig("60", true, true);
+        final ExecutionConfig config = new ExecutionConfig("60", true, true, false);
         assertThat(config.getParsedTimeout(), is(60));
     }
 
     @Test
     public void testInvalidConstructor() {
-        final ExecutionConfig config = new ExecutionConfig("abc", true, true);
+        final ExecutionConfig config = new ExecutionConfig("abc", true, true, false);
         assertThat(config.getParsedTimeout(), is(ExecutionConfig.getDefaultTimeout()));
     }
 
     @Test
     public void testExpand() {
-        final ExecutionConfig config = new ExecutionConfig("${TIMEOUT}", true, true);
+        final ExecutionConfig config = new ExecutionConfig("${TIMEOUT}", true, true, false);
         final EnvVars envVars = new EnvVars();
         envVars.put("TIMEOUT", "60");
         assertThat(config.expand(envVars).getParsedTimeout(), is(60));

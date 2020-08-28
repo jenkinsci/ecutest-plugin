@@ -58,7 +58,7 @@ public class TestPackageBuilderIT extends IntegrationTestBase {
     public void testConfigRoundTripStep() throws Exception {
         final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true, true);
         final PackageConfig packageConfig = new PackageConfig(true, true);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true, false);
         final TestPackageBuilder before = new TestPackageBuilder("test.pkg");
         before.setTestConfig(testConfig);
         before.setPackageConfig(packageConfig);
@@ -78,15 +78,13 @@ public class TestPackageBuilderIT extends IntegrationTestBase {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final List<GlobalConstant> globalConstants = new ArrayList<GlobalConstant>();
         globalConstants.add(new GlobalConstant("testGlobalName", "testGlobalValue"));
-        final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true, true,
-            false, globalConstants);
+        final TestConfig testConfig = new TestConfig("test.tbc", "test.tcf", true, true, false, globalConstants);
         final List<PackageParameter> parameters = new ArrayList<PackageParameter>();
         parameters.add(new PackageParameter("testParamName", "testParamValue"));
         final List<PackageOutputParameter> outputParameters = new ArrayList<PackageOutputParameter>();
         outputParameters.add(new PackageOutputParameter("testOutputParamName"));
-        final PackageConfig packageConfig = new PackageConfig(true, true, parameters,
-            outputParameters);
-        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true);
+        final PackageConfig packageConfig = new PackageConfig(true, true, parameters,  outputParameters);
+        final ExecutionConfig executionConfig = new ExecutionConfig(600, true, true, false);
         final TestPackageBuilder builder = new TestPackageBuilder("test.pkg");
 
         builder.setTestConfig(testConfig);

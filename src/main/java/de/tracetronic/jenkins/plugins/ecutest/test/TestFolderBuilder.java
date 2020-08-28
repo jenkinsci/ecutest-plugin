@@ -151,7 +151,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
         for (final String pkgFile : pkgFiles) {
             final PackageClient testClient = new PackageClient(pkgFile, testConfig, packageConfig, executionConfig);
             logger.logInfo(String.format("Executing package %s...", pkgFile));
-            if (testClient.runTestCase(workspace, launcher, listener)) {
+            if (testClient.runTestCase(run, workspace, launcher, listener)) {
                 addBuildAction(run, testClient);
                 if (testClient.isAborted()) {
                     logger.logWarn("Package execution aborted!");
@@ -176,7 +176,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
         for (final String prjFile : prjFiles) {
             final ProjectClient testClient = new ProjectClient(prjFile, testConfig, projectConfig, executionConfig);
             logger.logInfo(String.format("Executing project %s...", prjFile));
-            if (testClient.runTestCase(workspace, launcher, listener)) {
+            if (testClient.runTestCase(run, workspace, launcher, listener)) {
                 addBuildAction(run, testClient);
                 if (testClient.isAborted()) {
                     logger.logWarn("Project execution aborted!");

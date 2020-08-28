@@ -7,17 +7,32 @@ package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
+import de.tracetronic.jenkins.plugins.ecutest.test.config.ExpandableConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.GlobalConstant;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
+import de.tracetronic.jenkins.plugins.ecutest.util.ToolVersion;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.AbstractTestObject;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestConfiguration;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.AbstractBuild;
+import hudson.model.BuildListener;
+import hudson.model.Result;
+import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
+import io.jenkins.plugins.analysis.core.model.ResultAction;
+import io.jenkins.plugins.analysis.core.steps.IssuesRecorder;
+import io.jenkins.plugins.analysis.warnings.WarningsPlugin;
 import jenkins.security.MasterToSlaveCallable;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 
+import javax.annotation.CheckForNull;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -25,6 +40,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 /**
  * Common base class for {@link PackageClient} and {@link ProjectClient}.
@@ -117,6 +133,148 @@ public abstract class AbstractTestClient implements TestClient {
     }
 
     /**
+     * Records test file checks as Warnings NG issues.
+     *
+     * @param testInfo  the stored test file information
+     * @param run       the run
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @param listener  the listener
+     * @return {@code true} if recording detects any issues with error severity, {@code false} otherwise
+     */
+    @SuppressFBWarnings("BC_UNCONFIRMED_CAST")
+    protected boolean recordWarnings(final TestInfoHolder testInfo, final Run<?, ?> run, final FilePath workspace,
+                                     final Launcher launcher, final TaskListener listener) throws IOException,
+        InterruptedException {
+        boolean hasIssues = false;
+        if (StringUtils.isNotBlank(testInfo.warningsIssues)) {
+            final FilePath issuesFile = workspace.child("issues.json");
+            try {
+                issuesFile.write(testInfo.getWarningsIssues(), "UTF-8");
+
+                final WarningsPlugin plugin = new WarningsPlugin();
+                plugin.setName("Package Check");
+                plugin.setPattern("issues.json");
+                plugin.setReportEncoding("UTF-8");
+                plugin.setId(String.format("%s-%s", testInfo.getTestName(), RandomStringUtils.randomAlphanumeric(8)));
+
+                final IssuesRecorder recorder = new IssuesRecorder();
+                recorder.setTools(plugin);
+                // Prevent to fail the build due to missing fingerprints
+                recorder.setFailOnError(false);
+                recorder.setEnabledForFailure(true);
+                recorder.setMinimumSeverity("ERROR");
+                recorder.perform((AbstractBuild<?, ?>) run, launcher, (BuildListener) listener);
+
+                // Check for issues with ERROR severity and stop further execution if any
+                final Optional<ResultAction> result = run.getActions(ResultAction.class).stream().filter(action ->
+                        action.getId().equals(plugin.getId())).findFirst();
+                if (result.isPresent() && result.get().getResult().getIssues().getSizeOf("ERROR") > 0) {
+                    run.setResult(Result.FAILURE);
+                    hasIssues = true;
+                }
+            } finally {
+                issuesFile.delete();
+            }
+        }
+        return hasIssues;
+    }
+
+    /**
+     * {@link Callable} providing remote access to open a test file via COM.
+     */
+    protected abstract static class OpenTestFileCallable extends MasterToSlaveCallable<TestInfoHolder, IOException> {
+
+        private final String testFile;
+        private final ExpandableConfig testFileConfig;
+        private final ExecutionConfig executionConfig;
+        private final TaskListener listener;
+
+        /**
+         * Instantiates a new {@link OpenTestFileCallable}.
+         *
+         * @param testFile        the test file
+         * @param testFileConfig  the test file configuration
+         * @param executionConfig the execution configuration
+         * @param listener        the listener
+         */
+        public OpenTestFileCallable(final String testFile, final ExpandableConfig testFileConfig,
+                                    final ExecutionConfig executionConfig, final TaskListener listener) {
+            this.testFile = testFile;
+            this.testFileConfig = testFileConfig;
+            this.executionConfig = executionConfig;
+            this.listener = listener;
+        }
+
+        public String getTestFile() {
+            return testFile;
+        }
+
+        public ExpandableConfig getTestFileConfig() {
+            return testFileConfig;
+        }
+
+        public ExecutionConfig getExecutionConfig() {
+            return executionConfig;
+        }
+
+        public TaskListener getListener() {
+            return listener;
+        }
+
+        @Override
+        public abstract TestInfoHolder call() throws IOException;
+
+        @CheckForNull
+        protected TestInfoHolder checkTestFile(final AbstractTestObject testObject, final ETComClient comClient,
+                                               final TTConsoleLogger logger) throws ETComException {
+            TestInfoHolder testInfo = new TestInfoHolder(testObject.getName(), testObject.getDescription());
+            if (executionConfig.isCheckTestFile()) {
+                logger.logInfo("- Checking project...");
+                if (executionConfig.isRecordWarnings()) {
+                    final ToolVersion comVersion = ToolVersion.parse(comClient.getVersion());
+                    if (comVersion.compareWithoutMicroTo(new ToolVersion(2020, 3, 0)) >= 0) {
+                        logger.logInfo("-> Recording project checks as Warnings NG issues...");
+                        final String checks = testObject.checkNG();
+                        // Replace possible null values introduced by an issue in COM API
+                        testInfo.setWarningsIssues(checks.replace("null", "0"));
+                    } else {
+                        logger.logInfo("-> Recording project checks as Warnings NG issues will be skipped!");
+                        logger.logWarn(String.format(
+                                "The configured ECU-TEST version %s does not support recording WarningNG issues. "
+                                        + "Please use at least ECU-TEST 2020.3 or higher!", comVersion));
+                    }
+                } else {
+                    final List<CheckInfoHolder> checks = testObject.check();
+                    for (final CheckInfoHolder check : checks) {
+                        final String logMessage = String.format("%s (line %s): %s", check.getFilePath(),
+                                check.getLineNumber(), check.getErrorMessage());
+                        final CheckInfoHolder.Seriousness seriousness = check.getSeriousness();
+                        switch (seriousness) {
+                            case NOTE:
+                                logger.logInfo(logMessage);
+                                break;
+                            case WARNING:
+                                logger.logWarn(logMessage);
+                                break;
+                            case ERROR:
+                                logger.logError(logMessage);
+                                testInfo = null;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    if (checks.isEmpty()) {
+                        logger.logInfo("-> Project validated successfully!");
+                    }
+                }
+            }
+            return testInfo;
+        }
+    }
+
+    /**
      * {@link Callable} providing remote access to load configurations via COM.
      */
     protected static final class LoadConfigCallable extends MasterToSlaveCallable<Boolean, IOException> {
@@ -205,15 +363,15 @@ public abstract class AbstractTestClient implements TestClient {
         }
 
         /**
-         * Sets the new global constants for the currently loaded test configuration.
-         * This requires to start the configuration, add the constants and reload the configuration.
+         * Sets the new global constants for the currently loaded test configuration. This requires to start the
+         * configuration, add the constants and reload the configuration.
          *
          * @param comClient   the COM client
          * @param constantMap the constants to set
          * @throws ETComException in case of a COM exception
          */
         private void setGlobalConstants(final ETComClient comClient, final Map<String, String> constantMap)
-            throws ETComException {
+                throws ETComException {
             comClient.start();
             final TestConfiguration testConfig = (TestConfiguration) comClient.getCurrentTestConfiguration();
             for (final Entry<String, String> newConstant : constantMap.entrySet()) {
@@ -237,9 +395,48 @@ public abstract class AbstractTestClient implements TestClient {
     }
 
     /**
-     * Helper class storing information about the test result and the test report directory.
+     * Helper class storing information about a test file.
      */
     protected static class TestInfoHolder implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        private final String testName;
+        private final String testDescription;
+        private String warningsIssues = "";
+
+        /**
+         * Instantiates a new {@link TestInfoHolder}.
+         *
+         * @param testName        the test name
+         * @param testDescription the test description
+         */
+        public TestInfoHolder(final String testName, final String testDescription) {
+            this.testName = testName;
+            this.testDescription = testDescription;
+        }
+
+        public String getTestName() {
+            return testName;
+        }
+
+        public String getTestDescription() {
+            return testDescription;
+        }
+
+        public String getWarningsIssues() {
+            return warningsIssues;
+        }
+
+        public void setWarningsIssues(final String warningsIssues) {
+            this.warningsIssues = warningsIssues;
+        }
+    }
+
+    /**
+     * Helper class storing execution information about the test result and the test report directory.
+     */
+    protected static class ExecutionInfoHolder implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
@@ -248,13 +445,13 @@ public abstract class AbstractTestClient implements TestClient {
         private final boolean isAborted;
 
         /**
-         * Instantiates a new {@link TestInfoHolder}.
+         * Instantiates a new {@link ExecutionInfoHolder}.
          *
          * @param testResult    the test result
          * @param testReportDir the test report directory
          * @param isAborted     specifies whether test execution is aborted
          */
-        public TestInfoHolder(final String testResult, final String testReportDir, final boolean isAborted) {
+        public ExecutionInfoHolder(final String testResult, final String testReportDir, final boolean isAborted) {
             this.testResult = testResult;
             this.testReportDir = testReportDir;
             this.isAborted = isAborted;
