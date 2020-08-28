@@ -6,7 +6,6 @@
 package de.tracetronic.jenkins.plugins.ecutest.report;
 
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
-import de.tracetronic.jenkins.plugins.ecutest.util.validation.TestValidator;
 import hudson.DescriptorExtensionList;
 import hudson.Extension;
 import hudson.FilePath;
@@ -17,15 +16,12 @@ import hudson.model.TaskListener;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
-import hudson.util.FormValidation;
 import jenkins.tasks.SimpleBuildStep;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
-import org.kohsuke.stapler.QueryParameter;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,12 +32,14 @@ import java.util.List;
  */
 public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
 
+    /**
+     * Defines the default report folder.
+     */
+    protected static final String DEFAULT_REPORT_DIR = "TestReports";
     @Nonnull
     private final String workspace;
     @Nonnull
     private List<AbstractReportPublisher> publishers = new ArrayList<>();
-    @Nonnull
-    protected static final String DEFAULT_REPORT_DIR = "TestReports";
 
     /**
      * Custom report folder name or path.
@@ -63,6 +61,10 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
         this.reportDir = StringUtils.defaultString(reportDir, getDefaultReportDir());
     }
 
+    public static String getDefaultReportDir() {
+        return DEFAULT_REPORT_DIR;
+    }
+
     @Nonnull
     public String getWorkspace() {
         return workspace;
@@ -73,17 +75,13 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
         return publishers;
     }
 
-    public static String getDefaultReportDir() {
-        return DEFAULT_REPORT_DIR;
+    @DataBoundSetter
+    public void setPublishers(final List<AbstractReportPublisher> publishers) {
+        this.publishers = publishers == null ? new ArrayList<>() : publishers;
     }
 
     public String getReportDir() {
         return reportDir;
-    }
-
-    @DataBoundSetter
-    public void setPublishers(final List<AbstractReportPublisher> publishers) {
-        this.publishers = publishers == null ? new ArrayList<>() : publishers;
     }
 
     @Override
@@ -119,17 +117,16 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
     @Extension(ordinal = 10000)
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
-        /**
-         * Validator to check form fields.
-         */
-        private final TestValidator testValidator = new TestValidator();
+        public static String getDefaultReportDir() {
+            return DownStreamPublisher.DEFAULT_REPORT_DIR;
+        }
 
         /**
          * Gets the applicable publishers.
          *
          * @return the applicable publishers
          */
-        public List<Descriptor<? extends Publisher>> getApplicablePublishers() {
+        public static List<Descriptor<? extends Publisher>> getApplicablePublishers() {
             final List<Descriptor<? extends Publisher>> list = new ArrayList<>();
             final DescriptorExtensionList<Publisher, Descriptor<Publisher>> publishers = AbstractReportPublisher.all();
             if (publishers != null) {
@@ -141,10 +138,6 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
                 }
             }
             return list;
-        }
-
-        public static String getDefaultReportDir() {
-            return DEFAULT_REPORT_DIR;
         }
 
         @Nonnull
