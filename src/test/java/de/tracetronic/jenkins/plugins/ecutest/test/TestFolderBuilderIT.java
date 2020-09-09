@@ -109,6 +109,7 @@ public class TestFolderBuilderIT extends IntegrationTestBase {
         WebAssert.assertInputContainsValue(page, "_.timeout", "600");
         jenkins.assertXPath(page, "//input[@name='_.stopOnError' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.checkTestFile' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.recordWarnings and @checked='false']");
     }
 
     @Test

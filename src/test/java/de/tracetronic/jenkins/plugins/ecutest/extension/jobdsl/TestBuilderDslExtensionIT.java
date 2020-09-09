@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -191,6 +191,7 @@ public class TestBuilderDslExtensionIT extends AbstractDslExtensionIT {
         assertThat(config.getParsedTimeout(), is(600));
         assertFalse(config.isStopOnError());
         assertFalse(config.isCheckTestFile());
+        assertTrue(config.isRecordWarnings());
     }
 
     private void testProjectConfigWithDsl(final ProjectConfig config) throws Exception {

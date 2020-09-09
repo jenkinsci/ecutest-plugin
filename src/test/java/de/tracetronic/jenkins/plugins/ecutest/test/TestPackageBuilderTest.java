@@ -65,9 +65,9 @@ public class TestPackageBuilderTest {
         assertTrue(builder.getPackageConfig().isRunTraceAnalysis());
         assertNotNull(builder.getPackageConfig().getParameters());
         assertNotNull(builder.getPackageConfig().getOutputParameters());
-        assertNotNull(builder.getExecutionConfig().getParsedTimeout());
         assertEquals(ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig().getParsedTimeout());
         assertTrue(builder.getExecutionConfig().isStopOnError());
         assertTrue(builder.getExecutionConfig().isCheckTestFile());
+        assertFalse(builder.getExecutionConfig().isRecordWarnings());
     }
 }
