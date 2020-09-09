@@ -26,7 +26,7 @@ public class WarningsRecorderIT extends IntegrationTestBase {
     @Test
     public void recordWarnings() throws Exception {
         final String issueFileName = "issues.json";
-        final String issues = loadPipelineScript(issueFileName);
+        final String issues = loadTestResource(issueFileName);
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.getBuildersList().add(new TestBuilder() {
