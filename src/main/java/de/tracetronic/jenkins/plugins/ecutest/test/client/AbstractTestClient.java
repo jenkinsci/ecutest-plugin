@@ -5,6 +5,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
+import de.tracetronic.jenkins.plugins.ecutest.extension.warnings.WarningsRecorder;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExpandableConfig;
@@ -16,20 +17,14 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestConfiguration;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.AbstractBuild;
-import hudson.model.BuildListener;
-import hudson.model.Result;
+import hudson.Plugin;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
-import io.jenkins.plugins.analysis.core.model.ResultAction;
-import io.jenkins.plugins.analysis.core.steps.IssuesRecorder;
-import io.jenkins.plugins.analysis.warnings.WarningsPlugin;
+import jenkins.model.Jenkins;
 import jenkins.security.MasterToSlaveCallable;
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.CheckForNull;
@@ -40,7 +35,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 
 /**
  * Common base class for {@link PackageClient} and {@link ProjectClient}.
@@ -142,37 +136,26 @@ public abstract class AbstractTestClient implements TestClient {
      * @param listener  the listener
      * @return {@code true} if recording detects any issues with error severity, {@code false} otherwise
      */
-    @SuppressFBWarnings("BC_UNCONFIRMED_CAST")
     protected boolean recordWarnings(final TestInfoHolder testInfo, final Run<?, ?> run, final FilePath workspace,
-                                     final Launcher launcher, final TaskListener listener) throws IOException,
-        InterruptedException {
+                                     final Launcher launcher, final TaskListener listener)
+            throws IOException, InterruptedException {
+        final Plugin plugin = Jenkins.getInstance().getPlugin("warnings-ng");
+        if (plugin == null || !(plugin.getWrapper().isActive())) {
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+            logger.logError("Warnings NG plugin not found or disabled, please install using the Update Center!");
+            return true;
+        }
+
         boolean hasIssues = false;
         if (StringUtils.isNotBlank(testInfo.warningsIssues)) {
-            final FilePath issuesFile = workspace.child("issues.json");
+            final String issueFileName = "issues.json";
+            final FilePath issuesFile = workspace.child(issueFileName);
             try {
                 issuesFile.write(testInfo.getWarningsIssues(), "UTF-8");
 
-                final WarningsPlugin plugin = new WarningsPlugin();
-                plugin.setName("Package Check");
-                plugin.setPattern("issues.json");
-                plugin.setReportEncoding("UTF-8");
-                plugin.setId(String.format("%s-%s", testInfo.getTestName(), RandomStringUtils.randomAlphanumeric(8)));
-
-                final IssuesRecorder recorder = new IssuesRecorder();
-                recorder.setTools(plugin);
-                // Prevent to fail the build due to missing fingerprints
-                recorder.setFailOnError(false);
-                recorder.setEnabledForFailure(true);
-                recorder.setMinimumSeverity("ERROR");
-                recorder.perform((AbstractBuild<?, ?>) run, launcher, (BuildListener) listener);
-
-                // Check for issues with ERROR severity and stop further execution if any
-                final Optional<ResultAction> result = run.getActions(ResultAction.class).stream().filter(action ->
-                        action.getId().equals(plugin.getId())).findFirst();
-                if (result.isPresent() && result.get().getResult().getIssues().getSizeOf("ERROR") > 0) {
-                    run.setResult(Result.FAILURE);
-                    hasIssues = true;
-                }
+                final WarningsRecorder recorder = new WarningsRecorder(
+                        "Package Check", testInfo.getTestName(), issueFileName);
+                hasIssues = recorder.record(run, launcher, listener);
             } finally {
                 issuesFile.delete();
             }
