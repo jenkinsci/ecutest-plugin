@@ -24,6 +24,8 @@ import org.apache.commons.lang.RandomStringUtils;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Optional;
 
 /**
@@ -85,7 +87,10 @@ public class WarningsRecorder {
             try {
                 final Method perform = clazz.getDeclaredMethod("perform",
                         Run.class, FilePath.class, TaskListener.class, StageResultHandler.class);
-                perform.setAccessible(true);
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    perform.setAccessible(true);
+                    return null;
+                });
                 perform.invoke(recorder, run, workspace, listener, new RunResultHandler(run));
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 final TTConsoleLogger logger = new TTConsoleLogger(listener);
