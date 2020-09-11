@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -57,5 +57,4 @@ public interface ToolClient {
      */
     boolean restart(boolean checkProcesses, FilePath workspace, Launcher launcher, TaskListener listener)
         throws IOException, InterruptedException;
-
 }

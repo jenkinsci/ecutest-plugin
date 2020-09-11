@@ -42,6 +42,7 @@ public class ETClient extends AbstractToolClient {
     private String version;
     private String lastTbc;
     private String lastTcf;
+    private boolean licenseCheck;
 
     /**
      * Instantiates a new {@link ETClient}.
@@ -62,6 +63,7 @@ public class ETClient extends AbstractToolClient {
         version = "";
         lastTbc = "";
         lastTcf = "";
+        licenseCheck = false;
     }
 
     /**
@@ -78,6 +80,7 @@ public class ETClient extends AbstractToolClient {
         version = "";
         lastTbc = "";
         lastTcf = "";
+        licenseCheck = false;
     }
 
     /**
@@ -124,6 +127,26 @@ public class ETClient extends AbstractToolClient {
         return launcher.getChannel().call(new VersionCallable(listener));
     }
 
+    /**
+     * Check license of ECU-TEST.
+     *
+     * @param launcher the launcher
+     * @param listener the listener
+     * @return {@code true} if ECU-TEST instance has been stopped successfully
+     * @throws IOException          the io exception
+     * @throws InterruptedException the interrupted exception
+     */
+    public boolean checkLicense(final Launcher launcher, final TaskListener listener) throws IOException,
+            InterruptedException {
+        final ArgumentListBuilder args = createCmdLine();
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        logger.logInfo(args.toString());
+
+        // Launch tool process with arg -p
+        final int exitCode = launcher.launch().cmds(args).quiet(true).join();
+        return exitCode == 0;
+    }
+
     public String getWorkspaceDir() {
         return workspaceDir;
     }
@@ -146,6 +169,14 @@ public class ETClient extends AbstractToolClient {
 
     public String getLastTcf() {
         return lastTcf;
+    }
+
+    public boolean isLicenseCheck() {
+        return licenseCheck;
+    }
+
+    public void setLicenseCheck(final boolean licenseCheck) {
+        this.licenseCheck = licenseCheck;
     }
 
     @SuppressWarnings({"checkstyle:cyclomaticcomplexity", "checkstyle:npathcomplexity"})
@@ -263,20 +294,25 @@ public class ETClient extends AbstractToolClient {
         final ArgumentListBuilder args = new ArgumentListBuilder();
         args.add(getInstallPath());
 
-        if (!getWorkspaceDir().isEmpty()) {
-            args.add("--workspaceDir", getWorkspaceDir());
-        }
+        if (isLicenseCheck()) {
+            args.add("--startupAutomated=True");
+            args.add("-p");
+        } else {
+            if (!getWorkspaceDir().isEmpty()) {
+                args.add("--workspaceDir", getWorkspaceDir());
+            }
 
-        if (!getSettingsDir().isEmpty()) {
-            args.add("-s", getSettingsDir());
-        }
+            if (!getSettingsDir().isEmpty()) {
+                args.add("-s", getSettingsDir());
+            }
 
-        if (isDebugMode()) {
-            args.add("-d");
-        }
+            if (isDebugMode()) {
+                args.add("-d");
+            }
 
-        // Create full workspace automatically
-        args.add("--startupAutomated=CreateDirs");
+            // Create full workspace automatically
+            args.add("--startupAutomated=CreateDirs");
+        }
 
         return args;
     }

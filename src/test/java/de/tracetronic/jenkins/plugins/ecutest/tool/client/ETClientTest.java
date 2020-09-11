@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -33,9 +33,9 @@ public class ETClientTest {
         assertEquals("", client.getInstallPath());
         assertEquals("", client.getWorkspaceDir());
         assertEquals("", client.getSettingsDir());
-        assertNotNull(client.getTimeout());
         assertEquals("Check timeout", 30, client.getTimeout());
         assertFalse("Check debug mode", client.isDebugMode());
+        assertFalse("Check license check", client.isLicenseCheck());
         assertEquals("", client.getVersion());
     }
 
@@ -46,9 +46,9 @@ public class ETClientTest {
         assertEquals("", client.getToolName());
         assertEquals("", client.getInstallPath());
         assertEquals("", client.getWorkspaceDir());
-        assertNotNull(client.getTimeout());
         assertEquals("Check timeout", 30, client.getTimeout());
         assertFalse("Check debug mode", client.isDebugMode());
+        assertFalse("Check license check", client.isLicenseCheck());
         assertEquals("", client.getVersion());
     }
 
@@ -63,6 +63,14 @@ public class ETClientTest {
     public void testDebugCmdLineArgs() {
         final ETClient etClient = new ETClient("ECU-TEST", exe, ws, settings, 120, true);
         expectedArgs = Arrays.asList(exe, "--workspaceDir", ws, "-s", settings, "-d", "--startupAutomated=CreateDirs");
+        ensureCreateCmdLineArgs(etClient, expectedArgs);
+    }
+
+    @Test
+    public void testLicenseCmdLineArgs() {
+        final ETClient etClient = new ETClient("ECU-TEST", exe, "", "", 0, false);
+        etClient.setLicenseCheck(true);
+        expectedArgs = Arrays.asList(exe, "--startupAutomated=True", "-p");
         ensureCreateCmdLineArgs(etClient, expectedArgs);
     }
 
