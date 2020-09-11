@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2015-2020 TraceTronic GmbH
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 def strJobName = 'testBuilderParam'
 def strPkgFile = 'test.pkg'
 def strPrjFile = 'test.prj'
@@ -21,6 +26,7 @@ def strTimeout = '600'
 def intTimeout = 600
 def bStopOnError = false
 def bCheckTestFile = false
+def bRecordWarnings = true
 def bExecInCurrentPkgDir = false
 def strFilterExpression = "Name='TestCase'"
 def strJobExecutionMode = 'PARALLEL_EXECUTION'
@@ -29,7 +35,6 @@ def strScanMode = 'PACKAGES_ONLY'
 def bRecursiveScan = true
 def strArchivePath = 'test.prz'
 def strImportPath = 'import'
-def strExportPath = 'export'
 def bReplaceFiles = false
 def strCredentialsId = 'credentialsId'
 def strPackagePath = 'Subject/Test'
@@ -71,6 +76,7 @@ freeStyleJob("${strJobName}") {
                 timeout("${strTimeout}")
                 stopOnError(bStopOnError)
                 checkTestFile(bCheckTestFile)
+                recordWarnings(bRecordWarnings)
             }
         }
         testProject("${strPrjFile}") {
@@ -97,6 +103,7 @@ freeStyleJob("${strJobName}") {
                 timeout(intTimeout)
                 stopOnError(bStopOnError)
                 checkTestFile(bCheckTestFile)
+                recordWarnings(bRecordWarnings)
             }
         }
         testFolder("${strTestFolder}") {
@@ -136,6 +143,7 @@ freeStyleJob("${strJobName}") {
                 timeout("${strTimeout}")
                 stopOnError(bStopOnError)
                 checkTestFile(bCheckTestFile)
+                recordWarnings(bRecordWarnings)
             }
         }
         importPackages {

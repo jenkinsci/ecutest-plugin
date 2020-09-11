@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2015-2020 TraceTronic GmbH
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 freeStyleJob("testBuilder") {
     steps {
         testPackage("test.pkg") {
@@ -30,6 +35,7 @@ freeStyleJob("testBuilder") {
                 timeout("600")
                 stopOnError(false)
                 checkTestFile(false)
+                recordWarnings(true)
             }
         }
         testProject("test.prj") {
@@ -56,6 +62,7 @@ freeStyleJob("testBuilder") {
                 timeout(600)
                 stopOnError(false)
                 checkTestFile(false)
+                recordWarnings(true)
             }
         }
         testFolder("test") {
@@ -95,6 +102,7 @@ freeStyleJob("testBuilder") {
                 timeout("600")
                 stopOnError(false)
                 checkTestFile(false)
+                recordWarnings(true)
             }
         }
         importPackages {
