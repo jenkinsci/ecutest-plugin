@@ -1,0 +1,48 @@
+<!--
+  Copyright (c) 2015-2020 TraceTronic GmbH
+
+  SPDX-License-Identifier: BSD-3-Clause
+  -->
+
+<div>
+    <p>Beenden von ECU-TEST.</p>
+    <strong>Verwendung in Pipelines:</strong>
+    <dl>Signaturen:
+        <dd>
+            <pre>
+stopET(String toolName) : void
+            </pre>
+            <pre>
+stopET(String toolName, int timeout) : void
+            </pre>
+            <pre>
+ETInstance.stop() : void
+            </pre>
+            <pre>
+ETInstance.stop(int timeout) : void
+            </pre>
+            <pre>
+ETInstance.stop(Map&lt;String, Object&gt; settings) : void
+            </pre>
+        </dd>
+    </dl>
+    <dl>Beispiele:
+        <dd>
+            <pre>
+stopET('ECU-TEST')
+            </pre>
+            <pre>
+def instance = ET.installation('ECU-TEST')
+stopET installation: instance.installation
+            </pre>
+            <pre>
+def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+instance.stop()
+            </pre>
+            <pre>
+def instance = ET.newInstallation toolName: 'ECU-TEST', installPath: C:\\Program Files\\ECU-TEST 8.0'
+instance.stop timeout: 60
+            </pre>
+        </dd>
+    </dl>
+</div>

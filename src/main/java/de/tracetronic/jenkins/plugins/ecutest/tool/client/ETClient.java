@@ -20,6 +20,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestBenchConfiguration
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestConfiguration;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.Proc;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 import hudson.util.ArgumentListBuilder;
@@ -42,6 +43,7 @@ public class ETClient extends AbstractToolClient {
     private String version;
     private String lastTbc;
     private String lastTcf;
+    private boolean licenseCheck;
 
     /**
      * Instantiates a new {@link ETClient}.
@@ -62,6 +64,7 @@ public class ETClient extends AbstractToolClient {
         version = "";
         lastTbc = "";
         lastTcf = "";
+        licenseCheck = false;
     }
 
     /**
@@ -78,6 +81,7 @@ public class ETClient extends AbstractToolClient {
         version = "";
         lastTbc = "";
         lastTcf = "";
+        licenseCheck = false;
     }
 
     /**
@@ -124,6 +128,35 @@ public class ETClient extends AbstractToolClient {
         return launcher.getChannel().call(new VersionCallable(listener));
     }
 
+    /**
+     * Check license of ECU-TEST.
+     *
+     * @param launcher the launcher
+     * @param listener the listener
+     * @return {@code true} if ECU-TEST instance has been stopped successfully
+     * @throws IOException          the io exception
+     * @throws InterruptedException the interrupted exception
+     */
+    public boolean checkLicense(final Launcher launcher, final TaskListener listener) throws IOException,
+            InterruptedException {
+        final ArgumentListBuilder args = createCmdLine();
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        logger.logInfo(args.toString());
+
+        // Launch tool process with arg -p
+        final Proc process = launcher.launch().cmds(args).quiet(true).start();
+        final int exitCode = process.join();
+
+        if (exitCode != 0) {
+            // Exit code for invalid license
+            logger.logError(String.format("-> No valid license for 'ECU-TEST' found."));
+            return false;
+        } else {
+            logger.logInfo(String.format("-> Valid license for 'ECU-TEST' found."));
+            return true;
+        }
+    }
+
     public String getWorkspaceDir() {
         return workspaceDir;
     }
@@ -146,6 +179,14 @@ public class ETClient extends AbstractToolClient {
 
     public String getLastTcf() {
         return lastTcf;
+    }
+
+    public boolean isLicenseCheck() {
+        return licenseCheck;
+    }
+
+    public void setLicenseCheck(final boolean licenseCheck) {
+        this.licenseCheck = licenseCheck;
     }
 
     @SuppressWarnings({"checkstyle:cyclomaticcomplexity", "checkstyle:npathcomplexity"})
@@ -275,8 +316,13 @@ public class ETClient extends AbstractToolClient {
             args.add("-d");
         }
 
-        // Create full workspace automatically
-        args.add("--startupAutomated=CreateDirs");
+        if (isLicenseCheck()) {
+            args.add("--startupAutomated=True");
+            args.add("-p");
+        } else {
+            // Create full workspace automatically
+            args.add("--startupAutomated=CreateDirs");
+        }
 
         return args;
     }
