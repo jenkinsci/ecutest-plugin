@@ -60,5 +60,6 @@ public class ProjectClientTest {
         assertEquals("Check timeout", 30, client.getExecutionConfig().getParsedTimeout());
         assertTrue("Check stop mode", client.getExecutionConfig().isStopOnError());
         assertTrue(client.getExecutionConfig().isCheckTestFile());
+        assertFalse(client.getExecutionConfig().isRecordWarnings());
     }
 }

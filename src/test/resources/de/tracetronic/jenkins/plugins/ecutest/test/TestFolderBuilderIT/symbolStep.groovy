@@ -8,5 +8,5 @@ node('windows') {
                testConfig: [constants: [], forceReload: true, loadOnly: true, tbcFile: 'test.tbc', tcfFile: 'test.tcf'],
                packageConfig: [parameters: [], runTest: false, runTraceAnalysis: false],
                projectConfig: [execInCurrentPkgDir: true, filterExpression: 'Name="test"', jobExecMode: 'SEPARATE_SEQUENTIAL_EXECUTION'],
-               executionConfig: [checkTestFile: false, stopOnError: false, timeout: '0']
+               executionConfig: [checkTestFile: false, recordWarnings: true, stopOnError: false, timeout: '0']
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -187,7 +187,7 @@ public class ETLogPublisherIT extends IntegrationTestBase {
     private void assertPipelineStep(final String scriptName, final boolean status) throws Exception {
         assumeWindowsSlave();
 
-        final String script = loadPipelineScript(scriptName);
+        final String script = loadTestResource(scriptName);
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 

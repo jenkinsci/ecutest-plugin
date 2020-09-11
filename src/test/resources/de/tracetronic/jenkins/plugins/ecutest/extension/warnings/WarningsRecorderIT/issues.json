@@ -1,0 +1,24 @@
+{
+  "_class": "io.jenkins.plugins.analysis.core.restapi.ReportApi",
+  "issues": [
+    {
+      "description": "#1 Issue",
+      "fileName": "test.pkg",
+      "lineStart": 1,
+      "severity": "INFO"
+    },
+    {
+      "description": "#2 Issue",
+      "fileName": "test.pkg",
+      "lineStart": 2,
+      "severity": "INFO"
+    },
+    {
+      "description": "#3 Issue",
+      "fileName": "test.pkg",
+      "lineStart": 3,
+      "severity": "INFO"
+    }
+  ],
+  "size": 3
+}

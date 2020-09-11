@@ -47,17 +47,17 @@ public class IntegrationTestBase {
     }
 
     /**
-     * Loads given pipeline script from class specific test resources.
+     * Loads given class specific test resource.
      *
-     * @param name the file name
-     * @return the pipeline content
+     * @param fileName the resource file name
+     * @return the resource content
      */
-    protected String loadPipelineScript(final String name) {
+    protected String loadTestResource(final String fileName) {
         try {
             return new String(IOUtils.toByteArray(
-                getClass().getResourceAsStream(getClass().getSimpleName() + "/" + name)), StandardCharsets.UTF_8);
+                getClass().getResourceAsStream(getClass().getSimpleName() + "/" + fileName)), StandardCharsets.UTF_8);
         } catch (final Throwable t) {
-            throw new RuntimeException("Could not read resource: [" + name + "].");
+            throw new RuntimeException("Could not read resource: [" + fileName + "].");
         }
     }
 }

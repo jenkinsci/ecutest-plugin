@@ -97,6 +97,7 @@ public class TestProjectBuilderIT extends IntegrationTestBase {
         WebAssert.assertInputContainsValue(page, "_.timeout", "600");
         jenkins.assertXPath(page, "//input[@name='_.stopOnError' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.checkTestFile' and @checked='true']");
+        jenkins.assertXPath(page, "//input[@name='_.recordWarnings' and @checked='false']");
     }
 
     @Test
@@ -140,7 +141,7 @@ public class TestProjectBuilderIT extends IntegrationTestBase {
     private void assertPipelineStep(final String scriptName) throws Exception {
         assumeWindowsSlave();
 
-        final String script = loadPipelineScript(scriptName);
+        final String script = loadTestResource(scriptName);
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 

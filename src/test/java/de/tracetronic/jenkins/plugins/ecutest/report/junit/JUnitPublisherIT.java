@@ -213,7 +213,7 @@ public class JUnitPublisherIT extends IntegrationTestBase {
     private void assertPipelineStep(final String scriptName, final boolean emptyResults) throws Exception {
         assumeWindowsSlave();
 
-        final String script = loadPipelineScript(scriptName);
+        final String script = loadTestResource(scriptName);
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 

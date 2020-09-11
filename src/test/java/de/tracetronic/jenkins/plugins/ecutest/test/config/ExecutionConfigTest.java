@@ -10,6 +10,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -24,6 +25,7 @@ public class ExecutionConfigTest {
         assertThat(config.getParsedTimeout(), is(60));
         assertTrue(config.isStopOnError());
         assertTrue(config.isCheckTestFile());
+        assertFalse(config.isRecordWarnings());
     }
 
     @Test

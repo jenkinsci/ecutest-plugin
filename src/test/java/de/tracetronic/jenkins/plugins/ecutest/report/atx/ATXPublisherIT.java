@@ -279,7 +279,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
     private void assertPipelineStep(final String scriptName) throws Exception {
         assumeWindowsSlave();
 
-        final String script = loadPipelineScript(scriptName);
+        final String script = loadTestResource(scriptName);
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 

@@ -66,9 +66,9 @@ public class TestProjectBuilderTest {
         assertNotNull(builder.getProjectConfig().getFilterExpression());
         assertTrue(builder.getProjectConfig().getFilterExpression().isEmpty());
         assertEquals(JobExecutionMode.SEQUENTIAL_EXECUTION, builder.getProjectConfig().getJobExecMode());
-        assertNotNull(builder.getExecutionConfig().getParsedTimeout());
         assertEquals(ExecutionConfig.getDefaultTimeout(), builder.getExecutionConfig().getParsedTimeout());
         assertTrue(builder.getExecutionConfig().isStopOnError());
         assertTrue(builder.getExecutionConfig().isCheckTestFile());
+        assertFalse(builder.getExecutionConfig().isRecordWarnings());
     }
 }

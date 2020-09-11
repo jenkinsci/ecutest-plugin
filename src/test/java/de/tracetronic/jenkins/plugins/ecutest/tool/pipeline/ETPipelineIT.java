@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -62,7 +62,7 @@ public class ETPipelineIT extends IntegrationTestBase {
      * @throws Exception the exception
      */
     private void assertPipeline(final String scriptName) throws Exception {
-        final String script = loadPipelineScript(scriptName);
+        final String script = loadTestResource(scriptName);
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
