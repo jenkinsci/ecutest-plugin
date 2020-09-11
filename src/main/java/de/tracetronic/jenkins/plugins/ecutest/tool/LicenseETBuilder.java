@@ -29,11 +29,6 @@ import java.util.List;
 public class LicenseETBuilder extends AbstractToolBuilder {
 
     /**
-     * Defines the default timeout to stop ECU-TEST.
-     */
-    public static final int DEFAULT_TIMEOUT = 30;
-
-    /**
      * Instantiates a new {@link LicenseETBuilder}.
      *
      * @param toolName the tool name identifying the {@link ETInstallation} to be used
@@ -45,7 +40,7 @@ public class LicenseETBuilder extends AbstractToolBuilder {
 
     @Override
     public int getDefaultTimeout() {
-        return DEFAULT_TIMEOUT;
+        return 0;
     }
 
     @Override
@@ -67,9 +62,7 @@ public class LicenseETBuilder extends AbstractToolBuilder {
             // Check license of ECU-TEST
             final String installPath = getInstallation().getExecutable(launcher);
             final String toolName = getInstallation().getName();
-            final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), envVars,
-                    String.valueOf(DEFAULT_TIMEOUT)));
-            final ETClient etClient = new ETClient(toolName, installPath, "", "", expTimeout, false);
+            final ETClient etClient = new ETClient(toolName, installPath, "", "", getDefaultTimeout(), false);
             etClient.setLicenseCheck(true);
             if (!etClient.checkLicense(launcher, listener)) {
                 throw new ETPluginException(String.format("License check %s failed.", toolName));
@@ -86,7 +79,7 @@ public class LicenseETBuilder extends AbstractToolBuilder {
 
         @Override
         public int getDefaultTimeout() {
-            return DEFAULT_TIMEOUT;
+            return 0;
         }
 
         @Nonnull
