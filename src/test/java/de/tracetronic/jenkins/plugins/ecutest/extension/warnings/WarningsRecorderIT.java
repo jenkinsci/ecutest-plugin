@@ -35,9 +35,9 @@ public class WarningsRecorderIT extends IntegrationTestBase {
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
                                    final BuildListener listener) throws InterruptedException, IOException {
 
-                Objects.requireNonNull(build.getWorkspace()).child(issueFileName).write(issues,"UTF-8");
+                Objects.requireNonNull(build.getWorkspace()).child(issueFileName).write(issues, "UTF-8");
                 WarningsRecorder recorder = new WarningsRecorder("Test", "test", issueFileName);
-                return !recorder.record(build, launcher, listener);
+                return !recorder.record(build, build.getWorkspace(), launcher, listener);
             }
         });
 

@@ -155,7 +155,7 @@ public abstract class AbstractTestClient implements TestClient {
 
                 final WarningsRecorder recorder = new WarningsRecorder(
                         "Package Check", testInfo.getTestName(), issueFileName);
-                hasIssues = recorder.record(run, launcher, listener);
+                hasIssues = recorder.record(run, workspace, launcher, listener);
             } finally {
                 issuesFile.delete();
             }
