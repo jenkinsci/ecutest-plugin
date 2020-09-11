@@ -78,7 +78,7 @@ public class LicenseETBuilder extends AbstractToolBuilder {
      * DescriptorImpl for {@link LicenseETBuilder}.
      */
     @Symbol("checkETLicense")
-    @Extension(ordinal = 10010)
+    @Extension(ordinal = 10012)
     public static final class DescriptorImpl extends AbstractToolDescriptor {
 
         @Override
