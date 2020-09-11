@@ -20,7 +20,6 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestBenchConfiguration
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestConfiguration;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.Proc;
 import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 import hudson.util.ArgumentListBuilder;
@@ -144,17 +143,8 @@ public class ETClient extends AbstractToolClient {
         logger.logInfo(args.toString());
 
         // Launch tool process with arg -p
-        final Proc process = launcher.launch().cmds(args).quiet(true).start();
-        final int exitCode = process.join();
-
-        if (exitCode != 0) {
-            // Exit code for invalid license
-            logger.logError(String.format("-> No valid license for 'ECU-TEST' found."));
-            return false;
-        } else {
-            logger.logInfo(String.format("-> Valid license for 'ECU-TEST' found."));
-            return true;
-        }
+        final int exitCode = launcher.launch().cmds(args).quiet(true).join();
+        return exitCode == 0;
     }
 
     public String getWorkspaceDir() {
@@ -304,22 +294,22 @@ public class ETClient extends AbstractToolClient {
         final ArgumentListBuilder args = new ArgumentListBuilder();
         args.add(getInstallPath());
 
-        if (!getWorkspaceDir().isEmpty()) {
-            args.add("--workspaceDir", getWorkspaceDir());
-        }
-
-        if (!getSettingsDir().isEmpty()) {
-            args.add("-s", getSettingsDir());
-        }
-
-        if (isDebugMode()) {
-            args.add("-d");
-        }
-
         if (isLicenseCheck()) {
             args.add("--startupAutomated=True");
             args.add("-p");
         } else {
+            if (!getWorkspaceDir().isEmpty()) {
+                args.add("--workspaceDir", getWorkspaceDir());
+            }
+
+            if (!getSettingsDir().isEmpty()) {
+                args.add("-s", getSettingsDir());
+            }
+
+            if (isDebugMode()) {
+                args.add("-d");
+            }
+
             // Create full workspace automatically
             args.add("--startupAutomated=CreateDirs");
         }

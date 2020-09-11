@@ -9,15 +9,9 @@ import com.gargoylesoftware.htmlunit.WebAssert;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.DllUtil;
 import hudson.EnvVars;
-import hudson.FilePath;
-import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import jenkins.tasks.SimpleBuildStep;
-import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
-import org.jenkinsci.plugins.workflow.job.WorkflowJob;
-import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.jenkinsci.plugins.workflow.steps.CoreStep;
 import org.jenkinsci.plugins.workflow.steps.StepConfigTester;
 import org.junit.Before;
@@ -31,8 +25,6 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Integration tests for {@link StopETBuilder}.

@@ -63,8 +63,13 @@ public class LicenseETBuilder extends AbstractToolBuilder {
             final String toolName = getInstallation().getName();
             final ETClient etClient = new ETClient(toolName, installPath, "", "", getDefaultTimeout(), false);
             etClient.setLicenseCheck(true);
+            final TTConsoleLogger logger = new TTConsoleLogger(listener);
+
             if (!etClient.checkLicense(launcher, listener)) {
-                throw new ETPluginException(String.format("License check %s failed.", toolName));
+                logger.logError(String.format("-> No valid license for '%s' found.", toolName));
+                throw new ETPluginException(String.format("License check '%s' failed.", toolName));
+            } else {
+                logger.logInfo(String.format("-> Valid license for '%s' found.", toolName));
             }
         }
     }
