@@ -9,7 +9,6 @@ import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
-import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
