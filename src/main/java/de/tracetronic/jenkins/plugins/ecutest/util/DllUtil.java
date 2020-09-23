@@ -79,7 +79,7 @@ public final class DllUtil {
             jacobLib = getRemoteLibrary(computer);
             final FilePath localLib = getLocalLibrary(computer);
             if (!copyLibrary(localLib, jacobLib)) {
-                throw new IOException("Could not copy JACOB library to slave node!");
+                throw new IOException("Could not copy JACOB library to Jenkins agent!");
             }
         }
         return jacobLib;
