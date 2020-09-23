@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2020 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -109,7 +109,7 @@ public final class ProcessUtil {
     public static void checkOS(final Launcher launcher) throws ETPluginException {
         if (launcher.isUnix()) {
             throw new ETPluginException("Trying to build Windows related configuration on an Unix-based system! "
-                + "Restrict the project to be built on a particular Windows slave or master.");
+                + "Restrict the project to be built on a particular Windows agent or master.");
         }
     }
 
