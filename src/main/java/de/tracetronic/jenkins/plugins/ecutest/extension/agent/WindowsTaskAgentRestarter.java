@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-package de.tracetronic.jenkins.plugins.ecutest.extension.slave;
+package de.tracetronic.jenkins.plugins.ecutest.extension.agent;
 
-import de.tracetronic.jenkins.plugins.ecutest.extension.agent.AbstractTaskAgentRestarter;
+import hudson.Extension;
 
 /**
  * JNLP agent restarter based on Windows Task Scheduler.
@@ -15,15 +15,14 @@ import de.tracetronic.jenkins.plugins.ecutest.extension.agent.AbstractTaskAgentR
  * </p>
  * <p>
  * In order to work a new task in the Windows Task Scheduler has to be created named <br>
- * <i>RESTART_JENKINS_SLAVE</i> or renamed individually by system property <i>ecutest.taskName</i>.
+ * <i>RESTART_JENKINS_AGENT</i> or renamed individually by system property <i>ecutest.taskName</i>.
  * This task should be configured with actions how to restart the agent.
  * </p>
  *
- * @since 1.8
- * @deprecated in favor of WindowsTaskAgentRestarter
+ * @since 2.17
  */
-@Deprecated
-public class WindowsTaskSlaveRestarter extends AbstractTaskAgentRestarter {
+@Extension
+public class WindowsTaskAgentRestarter extends AbstractTaskAgentRestarter {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,7 +30,8 @@ public class WindowsTaskSlaveRestarter extends AbstractTaskAgentRestarter {
      * Change the task name by invoking -Decutest.taskName={@code taskName} to Jenkins agent JVM
      * or setting system property ecutest.taskName directly.
      */
-    private static final String TASKNAME = System.getProperty("ecutest.taskName", "RESTART_JENKINS_SLAVE");
+    private static final String TASKNAME = System.getProperty("ecutest.taskName", "RESTART_JENKINS_AGENT");
+
 
     @Override
     protected String getTaskName() {

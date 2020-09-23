@@ -3,37 +3,18 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-package de.tracetronic.jenkins.plugins.ecutest.extension.slave;
+package de.tracetronic.jenkins.plugins.ecutest.extension.agent;
 
-import hudson.Extension;
 import jenkins.slaves.restarter.SlaveRestarter;
 
 import java.io.IOException;
 
 /**
- * JNLP agent restarter based on Windows Task Scheduler.
- * <p>
- * This extension point will workaround the problem of already loaded libraries after reconnecting <br>
- * to the master (see <a href="https://issues.jenkins-ci.org/browse/JENKINS-31961">JENKINS-31961</a>).
- * </p>
- * <p>
- * In order to work a new task in the Windows Task Scheduler has to be created named <br>
- * <i>RESTART_JENKINS_AGENT</i> or renamed individually by system property <i>ecutest.taskName</i>.
- * This task should be configured with actions how to restart the agent.
- * </p>
- *
- * @since 2.17
+ * Abstract JNLP agent restarter based on Windows Task Scheduler.
  */
-@Extension
-public class WindowsTaskAgentRestarter extends SlaveRestarter {
+public abstract class AbstractTaskAgentRestarter extends SlaveRestarter {
 
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Change the task name by invoking -Decutest.taskName={@code taskName} to Jenkins slave JVM
-     * or setting system property ecutest.taskName directly.
-     */
-    private static final String TASKNAME = System.getProperty("ecutest.taskName", "RESTART_JENKINS_SLAVE");
+    protected abstract String getTaskName();
 
     @Override
     public boolean canWork() {
@@ -49,7 +30,7 @@ public class WindowsTaskAgentRestarter extends SlaveRestarter {
     @Override
     public void restart() throws Exception {
         final int ret = execTask();
-        throw new IOException("Failed restarting slave!\n"
+        throw new IOException("Failed restarting agent!\n"
                 + "Task completed with exit value: " + ret);
     }
 
@@ -84,7 +65,7 @@ public class WindowsTaskAgentRestarter extends SlaveRestarter {
      * @throws InterruptedException the interrupted exception
      */
     private int runProcess(final String option) throws IOException, InterruptedException {
-        final ProcessBuilder procBuilder = new ProcessBuilder("schtasks.exe", option, "/tn", TASKNAME);
+        final ProcessBuilder procBuilder = new ProcessBuilder("schtasks.exe", option, "/tn", getTaskName());
         final Process proc = procBuilder.start();
         return proc.waitFor();
     }
