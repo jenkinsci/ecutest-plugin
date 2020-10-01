@@ -109,7 +109,8 @@ public class PackageClient extends AbstractTestClient {
         if (pkgInfo != null) {
             setTestName(pkgInfo.getTestName());
             setTestDescription(pkgInfo.getTestDescription());
-            if (recordWarnings(pkgInfo, run, workspace, launcher, listener)) {
+            if (getExecutionConfig().isRecordWarnings()
+                    && recordWarnings(pkgInfo, run, workspace, launcher, listener)) {
                 return false;
             }
         } else {

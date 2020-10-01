@@ -77,7 +77,8 @@ public class ProjectClient extends AbstractTestClient {
         if (prjInfo != null) {
             setTestName(prjInfo.getTestName());
             setTestDescription(prjInfo.getTestDescription());
-            if (recordWarnings(prjInfo, run, workspace, launcher, listener)) {
+            if (getExecutionConfig().isRecordWarnings()
+                    && recordWarnings(prjInfo, run, workspace, launcher, listener)) {
                 return false;
             }
         } else {
