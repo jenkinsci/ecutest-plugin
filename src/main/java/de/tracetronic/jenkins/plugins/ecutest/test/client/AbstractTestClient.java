@@ -16,6 +16,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.AbstractTestObject;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
+import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.Package;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.TestConfiguration;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -138,7 +139,7 @@ public abstract class AbstractTestClient implements TestClient {
      */
     protected boolean recordWarnings(final TestInfoHolder testInfo, final Run<?, ?> run, final FilePath workspace,
                                      final Launcher launcher, final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         final Plugin plugin = Jenkins.getInstance().getPlugin("warnings-ng");
         if (plugin == null || !(plugin.getWrapper().isActive())) {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
@@ -154,7 +155,7 @@ public abstract class AbstractTestClient implements TestClient {
                 issuesFile.write(testInfo.getWarningsIssues(), "UTF-8");
 
                 final WarningsRecorder recorder = new WarningsRecorder(
-                        "Package Check", testInfo.getTestName(), issueFileName);
+                    "Package Check", testInfo.getTestName(), issueFileName);
                 hasIssues = recorder.record(run, workspace, launcher, listener);
             } finally {
                 issuesFile.delete();
@@ -212,26 +213,28 @@ public abstract class AbstractTestClient implements TestClient {
         protected TestInfoHolder checkTestFile(final AbstractTestObject testObject, final ETComClient comClient,
                                                final TTConsoleLogger logger) throws ETComException {
             TestInfoHolder testInfo = new TestInfoHolder(testObject.getName(), testObject.getDescription());
+            final String testType = testObject instanceof Package ? "package" : "project";
             if (executionConfig.isCheckTestFile()) {
-                logger.logInfo("- Checking project...");
+                logger.logInfo(String.format("- Checking %s...", testType));
                 if (executionConfig.isRecordWarnings()) {
                     final ToolVersion comVersion = ToolVersion.parse(comClient.getVersion());
                     if (comVersion.compareWithoutMicroTo(new ToolVersion(2020, 3, 0)) >= 0) {
-                        logger.logInfo("-> Recording project checks as Warnings NG issues...");
+                        logger.logInfo(String.format("-> Recording %s checks as Warnings NG issues...", testType));
                         final String checks = testObject.checkNG();
                         // Replace possible null values introduced by an issue in COM API
                         testInfo.setWarningsIssues(checks.replace("null", "0"));
                     } else {
-                        logger.logInfo("-> Recording project checks as Warnings NG issues will be skipped!");
+                        logger.logInfo(String.format("-> Recording %s checks as Warnings NG issues will be skipped!",
+                            testType));
                         logger.logWarn(String.format(
-                                "The configured ECU-TEST version %s does not support recording WarningNG issues. "
-                                        + "Please use at least ECU-TEST 2020.3 or higher!", comVersion));
+                            "The configured ECU-TEST version %s does not support recording WarningNG issues. "
+                                + "Please use at least ECU-TEST 2020.3 or higher!", comVersion));
                     }
                 } else {
                     final List<CheckInfoHolder> checks = testObject.check();
                     for (final CheckInfoHolder check : checks) {
                         final String logMessage = String.format("%s (line %s): %s", check.getFilePath(),
-                                check.getLineNumber(), check.getErrorMessage());
+                            check.getLineNumber(), check.getErrorMessage());
                         final CheckInfoHolder.Seriousness seriousness = check.getSeriousness();
                         switch (seriousness) {
                             case NOTE:
@@ -249,7 +252,8 @@ public abstract class AbstractTestClient implements TestClient {
                         }
                     }
                     if (checks.isEmpty()) {
-                        logger.logInfo("-> Project validated successfully!");
+                        logger.logInfo(String.format("-> %s validated successfully!",
+                            StringUtils.capitalize(testType)));
                     }
                 }
             }
@@ -354,7 +358,7 @@ public abstract class AbstractTestClient implements TestClient {
          * @throws ETComException in case of a COM exception
          */
         private void setGlobalConstants(final ETComClient comClient, final Map<String, String> constantMap)
-                throws ETComException {
+            throws ETComException {
             comClient.start();
             final TestConfiguration testConfig = (TestConfiguration) comClient.getCurrentTestConfiguration();
             for (final Entry<String, String> newConstant : constantMap.entrySet()) {
