@@ -15,6 +15,7 @@ import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.Run;
 import hudson.model.TaskListener;
+import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -46,25 +47,26 @@ public class LicenseETBuilder extends AbstractToolBuilder {
     public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
                             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         // Check running instance
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, listener, false);
         if (!foundProcesses.isEmpty()) {
-            final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logInfo("Running ECU-TEST instance found, therefore a license is available...");
         } else {
             // Verify selected ECU-TEST installation
             final EnvVars envVars = run.getEnvironment(listener);
-            // Verify selected ECU-TEST installation
             if (!isInstallationVerified(envVars)) {
                 setInstallation(configureToolInstallation(workspace.toComputer(), listener, envVars));
             }
-
-            // Check license of ECU-TEST
             final String installPath = getInstallation().getExecutable(launcher);
             final String toolName = getInstallation().getName();
+            if (StringUtils.isEmpty(installPath)) {
+                throw new ETPluginException(String.format("ECU-TEST executable for '%s' could not be found!",
+                    toolName));
+            }
+
+            // Check license of ECU-TEST
             final ETClient etClient = new ETClient(toolName, installPath, "", "", getDefaultTimeout(), false);
             etClient.setLicenseCheck(true);
-            final TTConsoleLogger logger = new TTConsoleLogger(listener);
-
             if (!etClient.checkLicense(launcher, listener)) {
                 logger.logError(String.format("-> No valid license for '%s' found.", toolName));
                 throw new ETPluginException(String.format("License check '%s' failed.", toolName));
