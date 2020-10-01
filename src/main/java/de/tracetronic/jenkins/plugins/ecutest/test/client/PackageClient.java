@@ -86,7 +86,7 @@ public class PackageClient extends AbstractTestClient {
     @Override
     public boolean runTestCase(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
                                final TaskListener listener)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
         // Load JACOB library
@@ -97,20 +97,20 @@ public class PackageClient extends AbstractTestClient {
 
         // Load test configuration
         if (!getTestConfig().isKeepConfig() && !launcher.getChannel().call(
-                new LoadConfigCallable(getTestConfig(), listener))) {
+            new LoadConfigCallable(getTestConfig(), listener))) {
             return false;
         }
 
         // Open and check package
         final TestInfoHolder pkgInfo = launcher.getChannel().call(
-                new OpenPackageCallable(getTestFile(), getPackageConfig(), getExecutionConfig(), listener));
+            new OpenPackageCallable(getTestFile(), getPackageConfig(), getExecutionConfig(), listener));
 
         // Set package information
         if (pkgInfo != null) {
             setTestName(pkgInfo.getTestName());
             setTestDescription(pkgInfo.getTestDescription());
             if (getExecutionConfig().isRecordWarnings()
-                    && recordWarnings(pkgInfo, run, workspace, launcher, listener)) {
+                && recordWarnings(pkgInfo, run, workspace, launcher, listener)) {
                 return false;
             }
         } else {
@@ -182,7 +182,7 @@ public class PackageClient extends AbstractTestClient {
      * {@link Callable} providing remote access to run a package via COM.
      */
     private static final class RunPackageCallable
-            extends MasterToSlaveCallable<PackageExecutioInfoHolder, IOException> {
+        extends MasterToSlaveCallable<PackageExecutioInfoHolder, IOException> {
 
         private static final long serialVersionUID = 1L;
 
@@ -221,8 +221,8 @@ public class PackageClient extends AbstractTestClient {
                 logger.logInfo("-> With parameters: " + paramMap.toString());
             }
             final List<String> outParamList =
-                    packageConfig.getOutputParameters().stream().map(PackageOutputParameter::getName).collect(
-                        Collectors.toList());
+                packageConfig.getOutputParameters().stream().map(PackageOutputParameter::getName).collect(
+                    Collectors.toList());
             if (!outParamList.isEmpty()) {
                 logger.logInfo("-> With output parameters: " + outParamList.toString());
             }
@@ -284,7 +284,7 @@ public class PackageClient extends AbstractTestClient {
         private PackageExecutioInfoHolder getExecutionInfo(final TestExecutionInfo execInfo, final boolean isAborted,
                                                            final TTConsoleLogger logger,
                                                            final List<String> outParamList)
-                throws ETComException {
+            throws ETComException {
 
             final String testResult = execInfo.getResult();
             logger.logInfo(String.format("-> Package execution %s with result: %s",

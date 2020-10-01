@@ -63,8 +63,7 @@ public class WarningsRecorder {
      */
     @SuppressFBWarnings("BC_UNCONFIRMED_CAST")
     public boolean record(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
-                          final TaskListener listener)
-            throws IOException, InterruptedException {
+                          final TaskListener listener) throws IOException, InterruptedException {
         boolean hasIssues = false;
 
         final WarningsPlugin plugin = new WarningsPlugin();
@@ -79,6 +78,7 @@ public class WarningsRecorder {
         recorder.setFailOnError(false);
         recorder.setEnabledForFailure(true);
         recorder.setMinimumSeverity("ERROR");
+
         if (run instanceof AbstractBuild) {
             recorder.perform((AbstractBuild<?, ?>) run, launcher, (BuildListener) listener);
         } else {
@@ -86,7 +86,7 @@ public class WarningsRecorder {
             final Class<? extends IssuesRecorder> clazz = recorder.getClass();
             try {
                 final Method perform = clazz.getDeclaredMethod("perform",
-                        Run.class, FilePath.class, TaskListener.class, StageResultHandler.class);
+                    Run.class, FilePath.class, TaskListener.class, StageResultHandler.class);
                 AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
                     perform.setAccessible(true);
                     return null;
@@ -101,7 +101,7 @@ public class WarningsRecorder {
 
         // Check for issues with ERROR severity and stop further execution if any
         final Optional<ResultAction> result = run.getActions(ResultAction.class).stream().filter(action ->
-                action.getId().equals(plugin.getId())).findFirst();
+            action.getId().equals(plugin.getId())).findFirst();
         if (result.isPresent() && result.get().getResult().getIssues().getSizeOf("ERROR") > 0) {
             run.setResult(Result.FAILURE);
             hasIssues = true;

@@ -71,14 +71,14 @@ public class ProjectClient extends AbstractTestClient {
 
         // Open and check project
         final TestInfoHolder prjInfo = launcher.getChannel().call(
-                new OpenProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig(), listener));
+            new OpenProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig(), listener));
 
         // Set project information
         if (prjInfo != null) {
             setTestName(prjInfo.getTestName());
             setTestDescription(prjInfo.getTestDescription());
             if (getExecutionConfig().isRecordWarnings()
-                    && recordWarnings(prjInfo, run, workspace, launcher, listener)) {
+                && recordWarnings(prjInfo, run, workspace, launcher, listener)) {
                 return false;
             }
         } else {
@@ -88,7 +88,7 @@ public class ProjectClient extends AbstractTestClient {
         try {
             // Run project
             final ExecutionInfoHolder testInfo = launcher.getChannel().call(
-                    new RunProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig(), listener));
+                new RunProjectCallable(getTestFile(), getProjectConfig(), getExecutionConfig(), listener));
 
             // Set project information
             if (testInfo != null) {
@@ -135,8 +135,8 @@ public class ProjectClient extends AbstractTestClient {
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId);
                  Project prj = (Project) comClient.openProject(getTestFile(),
-                         ((ProjectConfig) getTestFileConfig()).isExecInCurrentPkgDir(),
-                         ((ProjectConfig) getTestFileConfig()).getFilterExpression())) {
+                     ((ProjectConfig) getTestFileConfig()).isExecInCurrentPkgDir(),
+                     ((ProjectConfig) getTestFileConfig()).getFilterExpression())) {
                 logger.logInfo("-> Project opened successfully.");
                 testInfo = checkTestFile(prj, comClient, logger);
             } catch (final ETComException e) {
