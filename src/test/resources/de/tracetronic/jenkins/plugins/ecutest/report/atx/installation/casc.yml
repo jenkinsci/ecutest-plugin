@@ -47,6 +47,10 @@ unclassified:
                 group: UPLOAD
                 name: "uploadToServer"
                 value: true
+            - atxTextSetting:
+                group: UPLOAD
+                name: "uploadThroughResourceAdapter"
+                value: "0"
             - atxBooleanSetting:
                 group: UPLOAD
                 name: "uploadAsync"
@@ -166,6 +170,9 @@ unclassified:
             - atxTextSetting:
                 group: TCF_CONSTANTS
                 name: "setAttributes"
+            - atxTextSetting:
+                group: REVIEW
+                name: "setReviewTags"
             - atxBooleanSetting:
                 group: REVIEW
                 name: "reviewUseAbortCodeAsCustomEvaluation"
