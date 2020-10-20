@@ -1,0 +1,28 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  reviewers:
+  - cpoenisch
+  ignore:
+  - dependency-name: io.jenkins.plugins*
+    versions:
+    - ">= 0"
+  - dependency-name: org.antlr:antlr4*
+    versions:
+    - ">= 0"
+  - dependency-name: org.jenkins-ci.main:jenkins-core
+    versions:
+    - ">= 0"
+  - dependency-name: org.jenkins-ci.plugins*
+    versions:
+    - ">= 0"
+  - dependency-name: org.jenkins-ci:symbol-annotation
+    versions:
+    - ">= 0"
+  - dependency-name: org.xerial:sqlite-jdbc
+    versions:
+    - ">= 0"
