@@ -8,21 +8,29 @@ updates:
   reviewers:
   - cpoenisch
   ignore:
-  - dependency-name: io.jenkins.plugins*
+  - dependency-name: io.jenkins:configuration-as-code
     versions:
-    - ">= 0"
+    - "> 1.36.2"
+  - dependency-name: io.jenkins.configuration-as-code:test-harness
+    versions:
+    - "> 1.36.2"
+  - dependency-name: io.jenkins.plugins:warnings-ng
+    versions:
+    - "> 6.0.0"
   - dependency-name: org.antlr:antlr4*
     versions:
-    - ">= 0"
+    - "> 4.5.3"
   - dependency-name: org.jenkins-ci.main:jenkins-core
     versions:
-    - ">= 0"
+    - "> 2.60.3"
   - dependency-name: org.jenkins-ci.plugins*
-    versions:
-    - ">= 0"
-  - dependency-name: org.jenkins-ci:symbol-annotation
     versions:
     - ">= 0"
   - dependency-name: org.xerial:sqlite-jdbc
     versions:
-    - ">= 0"
+    - "> 3.7.2"
+
+- package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
