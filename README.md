@@ -854,7 +854,7 @@ To get a more debug output about plugin COM API communication a new log recorder
 
 ## Issues
 
-To report a bug or request an enhancement to this plugin please raise a new [GitHub issue](https://github.com/jenkinsci/ecutest-plugin/issues/new) or create a [ticket in JIRA](https://issues.jenkins-ci.org/secure/CreateIssueDetails!init.jspa?pid=10172&components=20856&issuetype=1&priority=4).
+To report a bug or request an enhancement to this plugin please raise a new [GitHub issue](https://github.com/jenkinsci/ecutest-plugin/issues/new/choose) or create a [ticket in JIRA](https://issues.jenkins.io/secure/CreateIssueDetails!init.jspa?pid=10172&components=20856&issuetype=1&priority=4).
 
 ## Known limitations
 
