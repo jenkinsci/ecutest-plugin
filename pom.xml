@@ -96,7 +96,7 @@
         <skipITs>true</skipITs>
 
         <!-- JACOB -->
-        <jacob.version>1.19</jacob.version>
+        <jacob.version>1.20</jacob.version>
 
         <!-- ANTLR -->
         <antlr4-maven-plugin.version>4.5.3</antlr4-maven-plugin.version>
@@ -108,12 +108,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.sf.jacob-project</groupId>
+            <groupId>com.jacob</groupId>
             <artifactId>jacob</artifactId>
             <version>${jacob.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.jacob-project</groupId>
+            <groupId>com.jacob</groupId>
             <artifactId>jacob</artifactId>
             <version>${jacob.version}</version>
             <type>dll</type>
@@ -121,7 +121,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.sf.jacob-project</groupId>
+            <groupId>com.jacob</groupId>
             <artifactId>jacob</artifactId>
             <version>${jacob.version}</version>
             <type>dll</type>
