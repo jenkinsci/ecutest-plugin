@@ -195,6 +195,12 @@ installations:
         group: REVIEW
         name: "reviewUseAbortCodeAsCustomEvaluation"
         value: false
+    - atxTextSetting:
+        group: REVIEW
+        name: "detectReviewTags"
+    - atxTextSetting:
+        group: REVIEW
+        name: "detectReviewDefects"
     - atxBooleanSetting:
         group: SPECIAL
         name: "autoATXGeneratorUpdate"
@@ -240,6 +246,10 @@ installations:
     - atxBooleanSetting:
         group: SPECIAL
         name: "includeResourceAdapterInfo"
+        value: true
+    - atxBooleanSetting:
+        group: SPECIAL
+        name: "captureExecutionTime"
         value: true
   name: "TEST-GUIDE"
   toolName: "ECU-TEST"

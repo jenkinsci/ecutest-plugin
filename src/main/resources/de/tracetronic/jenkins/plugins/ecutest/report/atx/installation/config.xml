@@ -895,6 +895,58 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
+        <SETTING name="detectReviewTags" default="" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Eine Liste von Tags ermöglicht
+                            automatisiertes Setzen von Tags in Reviews. Es werden die
+                            angegebenen Tags im Kommentartext der Reviews
+                            ermittelt und dem Review als explizite Eigenschaft hinzugefügt.
+                            Die Tags müssen im Kommentar in der Form #Hardware failure#
+                            enthalten sein.
+                            Beispiel: Hardware failure;Connnection lost
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">A list of tags that are automatically
+                            added to reviews. The specified tags are determined in the comment
+                            of the reviews and added to the review as an explicit property.
+                            The tags must be specified in the comment using the pattern
+                            #Hardware failure#.
+                            Example: Hardware failure;Connnection lost
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="detectReviewDefects" default="" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Eine Liste von Fehlerklassen ermöglicht
+                            automatisiertes Setzen der Fehlerklasse in Reviews. Es werden die
+                            angegebenen Fehlerklassen im Kommentartext der Reviews
+                            ermittelt und dem Review als explizite Eigenschaft hinzugefügt.
+                            Die Fehlerklasse muss im Kommentar in der Form |Critical|
+                            enthalten sein. Ein Review kann nur eine Fehlerklasse bekommen.
+                            Beispiel: Critical;Cosmetic
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">A list of defect that are automatically
+                            added to reviews. The specified defects are determined in the comment
+                            of the reviews and added to the review as an explicit property.
+                            The defect must be specified in the comment using the pattern
+                            |Critical|. A review can only have one defect class assigned.
+                            Example: Critical;Cosmetic
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
         <!-- Spezielle Einstellungen -->
         <SETTING name="autoATXGeneratorUpdate" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
@@ -1106,6 +1158,22 @@
                         <DVALUE xsi:type="string">True, if the ResourceAdapter info should
                             be recorded as ATX constant, otherwise False.
                         </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="captureExecutionTime" default="True"
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">True, wenn die Package-Ausführungszeit
+                            erfasst werden soll, sonst False.</DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">True, if the package execution time should
+                            be captured, otherwise False.</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
