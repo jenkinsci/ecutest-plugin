@@ -88,7 +88,7 @@
         <spotbugs.threshold>Low</spotbugs.threshold>
 
         <!-- Test scope -->
-        <configuration-as-code.version>1.36</configuration-as-code.version>
+        <configuration-as-code.version>1.36.2</configuration-as-code.version>
         <equalsverifier.version>3.5</equalsverifier.version>
         <mockito-core.version>3.6.28</mockito-core.version>
         <concurrency>2</concurrency>
