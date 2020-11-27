@@ -1,14 +1,15 @@
-<project>
-
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.sf.jacob-project</groupId>
+
+  <groupId>com.jacob</groupId>
   <artifactId>jacob</artifactId>
-  <version>1.19</version>
+  <version>1.20</version>
   <packaging>jar</packaging>
 
   <name>JAVA-COM Bridge</name>
-  <url>https://sourceforge.net/projects/jacob-project</url>
   <description>JACOB is a JAVA-COM Bridge that allows you to call COM Automation components from Java. It uses JNI to make native calls to the COM libraries. JACOB runs on x86 and x64 environments supporting 32 bit and 64 bit JVMs.</description>
+  <url>https://github.com/freemansoft/jacob-project</url>
   <licenses>
     <license>
       <name>GNU Library or Lesser General Public License (LGPL)</name>
@@ -16,10 +17,8 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-  <scm>
-    <url>https://git.code.sf.net/p/jacob-project/code</url>
-  </scm>
-  
-  <dependencies/>
 
+  <scm>
+    <url>https://github.com/freemansoft/jacob-project</url>
+  </scm>
 </project>
