@@ -978,6 +978,7 @@ Please download the modified Swarm client from [here](https://github.com/jenkins
 
     | Version |   latest - 2.19   |    2.18 - 2.15    |       2.15        |    2.14 - 2.13    |    2.12 - 2.8     |     2.7 - 2.5     |     2.4 - 2.2     |     2.1 - 2.0     |
     |:-------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|
+    | 2020.4  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
     | 2020.3  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
     | 2020.2  | :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
     | 2020.1  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
