@@ -1,0 +1,42 @@
+- name: bug
+  description: Bug fix
+  color: d73a4a
+- name: chore
+  color: f2cb4b
+  description: Maintenance
+- name: dependencies
+  description: Dependabot
+  color: 5b8eff
+- name: deprecated
+  description: Deprecated code
+  color: cfd3d7
+- name: discussion
+  description: Discussion
+  color: ffffff
+- name: documentation
+  description: Documentation
+  color: 000000
+- name: duplicate
+  description: Similar issue or pull request
+  color: a9f9dc
+- name: ecu-test
+  description: ECU-TEST related issue
+  color: ed8b00
+- name: feature
+  description: New feature request
+  color: 92d050
+- name: internal
+  desccription: Internal changes and refactoring
+  color: 7030a0
+- name: removed
+  desccription: Remove code
+  color: aa0f1c
+- name: test-guide
+  desccription: TEST-GUIDE related issue
+  color: 208ca3
+- name: test
+  desccription: Testing
+  color: 63666a
+- name: wontfix
+  desccription: No further work
+  color: 0b3972
