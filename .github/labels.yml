@@ -26,17 +26,17 @@
   description: New feature request
   color: 92d050
 - name: internal
-  desccription: Internal changes and refactoring
+  description: Internal changes and refactoring
   color: 7030a0
 - name: removed
-  desccription: Remove code
+  description: Remove code
   color: aa0f1c
 - name: test-guide
-  desccription: TEST-GUIDE related issue
+  description: TEST-GUIDE related issue
   color: 208ca3
 - name: test
-  desccription: Testing
+  description: Testing
   color: 63666a
 - name: wontfix
-  desccription: No further work
+  description: No further work
   color: 0b3972
