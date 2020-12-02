@@ -33,12 +33,12 @@ public final class DllUtil {
     /**
      * Defines the provided JACOB DLL for 32-bit systems.
      */
-    private static final String JACOB_DLL_X86 = "jacob-1.19-x86.dll";
+    private static final String JACOB_DLL_X86 = "jacob-1.20-x86.dll";
 
     /**
      * Defines the provided JACOB DLL for 64-bit systems.
      */
-    private static final String JACOB_DLL_X64 = "jacob-1.19-x64.dll";
+    private static final String JACOB_DLL_X64 = "jacob-1.20-x64.dll";
 
     /**
      * Instantiates a {@link DllUtil}.
