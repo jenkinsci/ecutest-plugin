@@ -6,6 +6,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting.SettingsGroup;
+import hudson.util.Secret;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -18,6 +19,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -41,6 +43,8 @@ public final class ATXSettingParser {
         + "[.=' TCF-Globale Konstanteneinstellungen ']]";
     private static final String REVIEW_EXPRESSION = PRECEDING_COMMENT + "[.=' Review Einstellungen ']]";
     private static final String SPECIAL_EXPRESSION = PRECEDING_COMMENT + "[.=' Spezielle Einstellungen ']]";
+    private static final List<String> SECRET_SETTINGS =
+        Arrays.asList("uploadAuthenticationKey", "httpProxy", "httpsProxy");
 
     /**
      * Instantiates a new {@link ATXSettingParser}.
@@ -106,12 +110,15 @@ public final class ATXSettingParser {
                 final String defaultValue = parseAttribute(settingNode, "default");
                 final String descGerman = parseDescription(settingNode, "de_DE");
                 final String descEnglish = parseDescription(settingNode, "en_US");
-                final boolean isCheckbox = isCheckbox(defaultValue);
 
                 // Add sub setting
-                if (isCheckbox) {
+                if (isCheckbox(defaultValue)) {
                     final ATXBooleanSetting setting = new ATXBooleanSetting(settingName, group,
                         descGerman, descEnglish, toBoolean(defaultValue));
+                    settings.add(setting);
+                } else if (isSecret(settingName)) {
+                    final ATXSecretSetting setting = new ATXSecretSetting(settingName, group,
+                        descGerman, descEnglish, Secret.fromString(defaultValue));
                     settings.add(setting);
                 } else {
                     final ATXTextSetting setting = new ATXTextSetting(settingName, group,
@@ -168,6 +175,16 @@ public final class ATXSettingParser {
     private static boolean isCheckbox(final String defaultValue) {
         return "true".equals(defaultValue.toLowerCase(Locale.getDefault()))
             || "false".equals(defaultValue.toLowerCase(Locale.getDefault()));
+    }
+
+    /**
+     * Determines whether a setting is a secret option.
+     *
+     * @param settingName the name of the setting
+     * @return {@code true} if is secret, {@code false} otherwise
+     */
+    private static boolean isSecret(final String settingName) {
+        return SECRET_SETTINGS.contains(settingName);
     }
 
     /**

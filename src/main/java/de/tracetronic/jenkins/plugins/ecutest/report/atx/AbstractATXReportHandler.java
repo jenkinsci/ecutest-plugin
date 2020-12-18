@@ -11,6 +11,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomB
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomTextSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSecretSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting;
 import hudson.EnvVars;
@@ -89,8 +90,8 @@ public abstract class AbstractATXReportHandler {
         }
 
         /**
-         * Converts the ATX configuration to a map containing all setting names and their current value.
-         * Parameterized values are expanded by given environment variables.
+         * Converts the ATX configuration to a map containing all setting names and their current value. Parameterized
+         * values are expanded by given environment variables.
          *
          * @param uploadToServer  specifies whether ATX upload is enabled or not
          * @param injectBuildVars specifies whether to inject common build variables as ATX constants
@@ -106,6 +107,8 @@ public abstract class AbstractATXReportHandler {
                         configMap.put(setting.getName(),
                             ATXSetting.toString(((ATXBooleanSetting) setting).getValue()));
                     }
+                } else if (setting instanceof ATXSecretSetting) {
+                    configMap.put(setting.getName(), envVars.expand(((ATXSecretSetting) setting).getSecretValue()));
                 } else {
                     configMap.put(setting.getName(), envVars.expand(((ATXTextSetting) setting).getValue()));
                 }
@@ -120,10 +123,10 @@ public abstract class AbstractATXReportHandler {
             }
             if (injectBuildVars) {
                 final List<String> constants = Arrays.asList(
-                        configMap.get("setConstants"),
-                        formatConstant("BUILD_NUMBER"),
-                        formatConstant("BUILD_URL"),
-                        formatConstant("JOB_NAME"));
+                    configMap.get("setConstants"),
+                    formatConstant("BUILD_NUMBER"),
+                    formatConstant("BUILD_URL"),
+                    formatConstant("JOB_NAME"));
                 configMap.replace("setConstants", String.join(";", constants));
             }
             return configMap;

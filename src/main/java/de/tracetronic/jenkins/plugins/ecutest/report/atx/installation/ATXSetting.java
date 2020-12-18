@@ -171,12 +171,21 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
     }
 
     /**
-     * Gets the checkbox status from the current value.
+     * Determines whether this setting is checkbox type.
      *
-     * @return {@code true} if checkbox is checked, {@code false} otherwise
+     * @return {@code true} if setting is checkbox type, {@code false} otherwise
      */
     public boolean isCheckbox() {
         return this instanceof ATXBooleanSetting;
+    }
+
+    /**
+     * Determines whether this setting is secret type.
+     *
+     * @return {@code true} if setting is secret type, {@code false} otherwise
+     */
+    public boolean isSecret() {
+        return this instanceof ATXSecretSetting;
     }
 
     /**

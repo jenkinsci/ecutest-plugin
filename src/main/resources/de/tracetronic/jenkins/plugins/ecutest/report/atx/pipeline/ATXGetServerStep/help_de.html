@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
+  Copyright (c) 2015-2020 TraceTronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
@@ -7,6 +7,9 @@
 <div>
     <p>Gibt eine TEST-GUIDE-Serverinstanz mit dem angegebenen Namen zurück, die in den TEST-GUIDE-Installationen
         vorhanden sein muss. Vorhandene Einstellungen können abgefragt und nachträglich überschrieben werden.</p>
+    <p>Vertrauliche Daten wie Upload-Authentifizierungsschlüssel oder Proxyeinstellungen sollten als maskierte
+        Umgebungsvariablen per <a href="https://plugins.jenkins.io/credentials-binding/">Credentials Binding</a>
+        übergeben werden.</p>
     <dl>Signatures:
         <dd>
             <pre>
