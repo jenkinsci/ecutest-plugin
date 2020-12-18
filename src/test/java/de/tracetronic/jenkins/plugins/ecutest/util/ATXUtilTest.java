@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.hamcrest.Matchers.blankOrNullString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertNull;
@@ -171,7 +172,7 @@ public class ATXUtilTest {
     @Test
     public void testProxyUrlByDefaultConfig() {
         final ATXConfig atxConfig = new ATXConfig();
-        assertThat(ATXUtil.getProxyUrl(atxConfig, new EnvVars()), nullValue());
+        assertThat(ATXUtil.getProxyUrl(atxConfig, new EnvVars()), blankOrNullString());
     }
 
     @Test
