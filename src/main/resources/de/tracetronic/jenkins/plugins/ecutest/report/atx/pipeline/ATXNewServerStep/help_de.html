@@ -6,8 +6,11 @@
 
 <div>
     <p>Erzeugt eine neue dynamische TEST-GUIDE-Serverinstanz, die nur während der Pipelineausführung verfügbar ist.
-       TEST-GUIDE-Name (<i>atxName</i>) und verwendete ECU-TEST-Installation (<i>toolName</i>) sind erforderlich
-       während fehlende optionale Einstellungen auf ihren Standardwert gesetzt werden.</p>
+        TEST-GUIDE-Name (<i>atxName</i>) und verwendete ECU-TEST-Installation (<i>toolName</i>) sind erforderlich
+        während fehlende optionale Einstellungen auf ihren Standardwert gesetzt werden.</p>
+    <p>Vertrauliche Daten wie Upload-Authentifizierungsschlüssel oder Proxyeinstellungen sollten als maskierte
+        Umgebungsvariablen per <a href="https://plugins.jenkins.io/credentials-binding/">Credentials Binding</a>
+        übergeben werden.</p>
     <dl>Signaturen:
         <dd>
             <pre>
@@ -62,10 +65,10 @@ ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST',
             atxBooleanSetting(group: 'CONNECTION', name: 'ignoreSSL', value: false),
             atxTextSetting(group: 'CONNECTION', name: 'serverPort', value: '8085'),
             atxTextSetting(group: 'CONNECTION', name: 'serverContextPath', value: ''),
-            atxTextSetting(group: 'CONNECTION', name: 'httpProxy', value: ''),
-            atxTextSetting(group: 'CONNECTION', name: 'httpsProxy', value: ''),
+            atxSecretSetting(group: 'CONNECTION', name: 'httpProxy', value: ''),
+            atxSecretSetting(group: 'CONNECTION', name: 'httpsProxy', value: ''),
             atxTextSetting(group: 'CONNECTION', name: 'projectId', value: '1'),
-            atxTextSetting(group: 'CONNECTION', name: 'uploadAuthenticationKey', value: ''),
+            atxSecretSetting(group: 'CONNECTION', name: 'uploadAuthenticationKey', value: ''),
             atxBooleanSetting(group: 'CONNECTION', name: 'useSettingsFromServer', value: false),
             atxBooleanSetting(group: 'UPLOAD', name: 'uploadAsync', value: true),
             atxBooleanSetting(group: 'UPLOAD', name: 'uploadToServer', value: false),

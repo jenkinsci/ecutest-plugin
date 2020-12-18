@@ -26,17 +26,17 @@ unclassified:
             - atxTextSetting:
                 group: CONNECTION
                 name: "serverContextPath"
-            - atxTextSetting:
+            - atxSecretSetting:
                 group: CONNECTION
                 name: "httpProxy"
-            - atxTextSetting:
+            - atxSecretSetting:
                 group: CONNECTION
                 name: "httpsProxy"
             - atxTextSetting:
                 group: CONNECTION
                 name: "projectId"
                 value: "1"
-            - atxTextSetting:
+            - atxSecretSetting:
                 group: CONNECTION
                 name: "uploadAuthenticationKey"
             - atxBooleanSetting:

@@ -1,0 +1,329 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  Copyright (c) 2015-2020 TraceTronic GmbH
+
+  SPDX-License-Identifier: BSD-3-Clause
+  -->
+<de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation_-DescriptorImpl plugin="ecutest@2.22">
+    <installations>
+        <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation>
+            <name>TEST-GUIDE</name>
+            <toolName>${ECUTEST}</toolName>
+            <config>
+                <settings>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string">127.0.0.1</value>
+                        <name>serverURL</name>
+                        <group>CONNECTION</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string"></value>
+                        <name>serverLabel</name>
+                        <group>CONNECTION</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>useHttpsConnection</name>
+                        <group>CONNECTION</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>ignoreSSL</name>
+                        <group>CONNECTION</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string">8085</value>
+                        <name>serverPort</name>
+                        <group>CONNECTION</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string"></value>
+                        <name>serverContextPath</name>
+                        <group>CONNECTION</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string">http://user:pass@10.10.10.2:8080</value>
+                        <name>httpProxy</name>
+                        <group>CONNECTION</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string">http://user:pass@10.10.10.2:8080</value>
+                        <name>httpsProxy</name>
+                        <group>CONNECTION</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string">1</value>
+                        <name>projectId</name>
+                        <group>CONNECTION</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string">API-TOKEN</value>
+                        <name>uploadAuthenticationKey</name>
+                        <group>CONNECTION</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>useSettingsFromServer</name>
+                        <group>CONNECTION</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>uploadToServer</name>
+                        <group>UPLOAD</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string">0</value>
+                        <name>uploadThroughResourceAdapter</name>
+                        <group>UPLOAD</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>uploadAsync</name>
+                        <group>UPLOAD</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string">42</value>
+                        <name>maxUploadTries</name>
+                        <group>UPLOAD</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>compressUpload</name>
+                        <group>UPLOAD</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>cleanAfterSuccessUpload</name>
+                        <group>UPLOAD</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>uploadOnlyProjectReport</name>
+                        <group>UPLOAD</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>enableArchive</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>archiveTrf</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>archivePkg</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>archiveTcf</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>archiveTbc</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>archiveMapping</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>archiveRecordings</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>archiveRecordingMetadata</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>archivePlots</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>archiveImages</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string"></value>
+                        <name>archiveMiscFiles</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string"></value>
+                        <name>archiveMiscFilePrefix</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>archiveMiscFilesOnlyInTestReportDir</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string"></value>
+                        <name>archiveFilesPerPackage</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string">NONE;SUCCESS;INCONCLUSIVE;FAILED;ERROR</value>
+                        <name>archiveBy</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>archiveDescriptionImages</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string">Testlevel;Designer;Execution Priority;Estimated Duration [min];</value>
+                        <name>coveredAttributes</name>
+                        <group>ATTRIBUTE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string"></value>
+                        <name>attributeDelimiter</name>
+                        <group>ATTRIBUTE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>mapIsTestCaseAsAttribute</name>
+                        <group>ATTRIBUTE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>mapTestCaseVersionAsAttribute</name>
+                        <group>ATTRIBUTE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>mapRootPrjAttrToPkgAttr</name>
+                        <group>ATTRIBUTE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string"></value>
+                        <name>excludePrjAttrPrefixFor</name>
+                        <group>ATTRIBUTE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>includePkgSVNRevision</name>
+                        <group>ATTRIBUTE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>mapSwkIdsAsAttribute</name>
+                        <group>ATTRIBUTE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>mapTbcToolAsConstant</name>
+                        <group>TBC_CONSTANTS</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>mapTcfTesterAsConstant</name>
+                        <group>TCF_CONSTANTS</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>mapTCFPropertyAsConstant</name>
+                        <group>TCF_CONSTANTS</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>mapUserDefinedReportDataAsConstant</name>
+                        <group>TCF_CONSTANTS</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string"></value>
+                        <name>setConstants</name>
+                        <group>TCF_CONSTANTS</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string"></value>
+                        <name>setAttributes</name>
+                        <group>TCF_CONSTANTS</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string"></value>
+                        <name>setReviewTags</name>
+                        <group>REVIEW</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>reviewUseAbortCodeAsCustomEvaluation</name>
+                        <group>REVIEW</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>autoATXGeneratorUpdate</name>
+                        <group>SPECIAL</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>includeToolIdentifier</name>
+                        <group>SPECIAL</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>includePkgTestSteps</name>
+                        <group>SPECIAL</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>onlyIncludePkgTestCases</name>
+                        <group>SPECIAL</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>overrideParamSetNameMapping</name>
+                        <group>SPECIAL</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>mapProjectElementNameAsTestCaseName</name>
+                        <group>SPECIAL</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string">0</value>
+                        <name>mapSubPackageAsTestCaseLevel</name>
+                        <group>SPECIAL</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string"></value>
+                        <name>captureSubPackageOnVerdict</name>
+                        <group>SPECIAL</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>mapSeparateProjectExecutionAsSingleTestplan</name>
+                        <group>SPECIAL</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string"></value>
+                        <name>mapAttributeAsConstant</name>
+                        <group>SPECIAL</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">false</value>
+                        <name>mapTestReportPathAsConstant</name>
+                        <group>SPECIAL</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                        <value class="boolean">true</value>
+                        <name>includeResourceAdapterInfo</name>
+                        <group>SPECIAL</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                </settings>
+                <customSettings/>
+            </config>
+        </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation>
+    </installations>
+</de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation_-DescriptorImpl>

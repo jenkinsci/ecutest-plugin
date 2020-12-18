@@ -9,6 +9,7 @@ import com.google.common.collect.Maps;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import hudson.util.Secret;
 import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 import org.jenkinsci.plugins.workflow.cps.CpsScript;
 
@@ -133,6 +134,9 @@ public class ATXServer implements Serializable {
         if (setting.isPresent()) {
             if (settingValue instanceof String || settingValue instanceof Boolean) {
                 script.println(String.format("[TT] INFO: Overriding ATX setting %s=%s", settingName, settingValue));
+                installation.getConfig().setSettingValueByName(settingName, settingValue);
+            } else if (settingValue instanceof Secret) {
+                script.println(String.format("[TT] INFO: Overriding ATX secret setting %s", settingName));
                 installation.getConfig().setSettingValueByName(settingName, settingValue);
             } else {
                 script.println("[TT] WARN: Ignore overriding ATX setting due to invalid value!");

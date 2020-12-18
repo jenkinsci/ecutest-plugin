@@ -10,6 +10,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
+import hudson.util.Secret;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.w3c.dom.Document;
@@ -103,6 +104,11 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
                         final ATXBooleanSetting newSetting = new ATXBooleanSetting(settingName, settingsGroup,
                             descGerman, descEnglish, (Boolean) setting.getDefaultValue());
                         newSetting.setValue(((ATXBooleanSetting) setting).getValue());
+                        settings.add(newSetting);
+                    } else if (setting.isSecret()) {
+                        final ATXSecretSetting newSetting = new ATXSecretSetting(settingName, settingsGroup,
+                            descGerman, descEnglish, (Secret) setting.getDefaultValue());
+                        newSetting.setValue(((ATXSecretSetting) setting).getValue());
                         settings.add(newSetting);
                     } else {
                         final ATXTextSetting newSetting = new ATXTextSetting(settingName, settingsGroup,
@@ -208,12 +214,12 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
     /**
      * Gets the ATX setting value by given setting name from all ATX settings.
      *
-     * @param name     the setting name
+     * @param name the setting name
      * @return the setting value or {@code null} if not found
      */
     public Object getSettingValueByName(final String name) throws IllegalArgumentException {
         return getSettingByName(name).map(ATXSetting::getValue)
-                .orElseThrow(() -> new IllegalArgumentException("No setting found with name: " + name));
+            .orElseThrow(() -> new IllegalArgumentException("No setting found with name: " + name));
     }
 
     /**
@@ -254,8 +260,14 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
                 ((ATXTextSetting) setting).setValue((String) value);
             } else if (setting instanceof ATXBooleanSetting) {
                 ((ATXBooleanSetting) setting).setValue((Boolean) value);
+            } else if (setting instanceof ATXSecretSetting) {
+                if (value instanceof String) {
+                    ((ATXSecretSetting) setting).setValue(Secret.fromString((String) value));
+                } else {
+                    ((ATXSecretSetting) setting).setValue((Secret) value);
+                }
             } else {
-                throw new IllegalArgumentException("Only String and Boolean value types are supported!");
+                throw new IllegalArgumentException("Only String, Boolean and Secret value types are supported!");
             }
         });
     }

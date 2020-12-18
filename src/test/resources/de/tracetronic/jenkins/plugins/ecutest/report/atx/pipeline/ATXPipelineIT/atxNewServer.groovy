@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2015-2020 TraceTronic GmbH
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 def server = ATX.newServer('TEST-GUIDE', 'ECU-TEST')
 assertDefaultSettings(server)
 
@@ -18,7 +23,7 @@ def assertDefaultSettings(server) {
     assert server.getSetting('serverPort').value == '8085'
     assert server.getSetting('useHttpsConnection').value == false
     assert server.getSetting('serverContextPath').value == ''
-    assert server.getSetting('uploadAuthenticationKey').value == ''
+    assert server.getSetting('uploadAuthenticationKey').secretValue == ''
     assert server.getSetting('projectId').value == '1'
 }
 
@@ -31,6 +36,6 @@ def assertCustomSettings(server) {
     assert server.getSetting('serverPort').value == '443'
     assert server.getSetting('useHttpsConnection').value == true
     assert server.getSetting('serverContextPath').value == 'test'
-    assert server.getSetting('uploadAuthenticationKey').value == 'auth-123'
+    assert server.getSetting('uploadAuthenticationKey').secretValue == 'auth-123'
     assert server.getSetting('projectId').value == '42'
 }

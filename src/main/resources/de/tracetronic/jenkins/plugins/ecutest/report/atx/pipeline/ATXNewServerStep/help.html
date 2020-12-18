@@ -6,8 +6,11 @@
 
 <div>
     <p>Creates a new dynamic TEST-GUIDE server instance which is only accessible during pipeline execution.
-       TEST-GUIDE name (<i>atxName</i>) and used ECU-TEST installation (<i>toolName</i>) are required
-       whereas missing optional settings will be initialized to their default values.</p>
+        TEST-GUIDE name (<i>atxName</i>) and used ECU-TEST installation (<i>toolName</i>) are required
+        whereas missing optional settings will be initialized to their default values.</p>
+    <p>For providing secrets like upload authentication key or proxy settings utilize
+        <a href="https://plugins.jenkins.io/credentials-binding/">credentials binding</a>
+        and pass as masked environment variables.</p>
     <dl>Signatures:
         <dd>
             <pre>
@@ -62,10 +65,10 @@ ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST',
             atxBooleanSetting(group: 'CONNECTION', name: 'ignoreSSL', value: false),
             atxTextSetting(group: 'CONNECTION', name: 'serverPort', value: '8085'),
             atxTextSetting(group: 'CONNECTION', name: 'serverContextPath', value: ''),
-            atxTextSetting(group: 'CONNECTION', name: 'httpProxy', value: ''),
-            atxTextSetting(group: 'CONNECTION', name: 'httpsProxy', value: ''),
+            atxSecretSetting(group: 'CONNECTION', name: 'httpProxy', value: ''),
+            atxSecretSetting(group: 'CONNECTION', name: 'httpsProxy', value: ''),
             atxTextSetting(group: 'CONNECTION', name: 'projectId', value: '1'),
-            atxTextSetting(group: 'CONNECTION', name: 'uploadAuthenticationKey', value: ''),
+            atxSecretSetting(group: 'CONNECTION', name: 'uploadAuthenticationKey', value: ''),
             atxBooleanSetting(group: 'CONNECTION', name: 'useSettingsFromServer', value: false),
             atxBooleanSetting(group: 'UPLOAD', name: 'uploadAsync', value: true),
             atxBooleanSetting(group: 'UPLOAD', name: 'uploadToServer', value: false),

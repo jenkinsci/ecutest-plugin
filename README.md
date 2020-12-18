@@ -544,7 +544,7 @@ node('windows') {
     // TEST-GUIDE server instantiation using global variable ATX
     def atx = ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST',
                             fullServerURL: 'http://localhost:8085', uploadToServer: false,
-                            authKey: 'xxx', projectId: '1'
+                            uploadAuthenticationKey: 'xxx', projectId: '1'
 
     // or getting existing instance from global configuration
     def atx = ATX.server('TEST-GUIDE')
@@ -617,17 +617,17 @@ unclassified:
           - atxTextSetting:
               group: CONNECTION
               name: "serverContextPath"
-          - atxTextSetting:
+          - atxSecretSetting:
               group: CONNECTION
               name: "httpProxy"
-          - atxTextSetting:
+          - atxSecretSetting:
               group: CONNECTION
               name: "httpsProxy"
           - atxTextSetting:
               group: CONNECTION
               name: "projectId"
               value: "1"
-          - atxTextSetting:
+          - atxSecretSetting:
               group: CONNECTION
               name: "uploadAuthenticationKey"
           - atxBooleanSetting:

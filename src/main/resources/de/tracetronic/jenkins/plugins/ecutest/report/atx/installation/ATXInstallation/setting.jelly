@@ -13,6 +13,9 @@
                     <f:checkbox name="${setting.getName()}" checked="${setting.getValue()}"
                                 default="${setting.getDefaultValue()}"/>
                 </j:when>
+                <j:when test="${setting.isSecret()}">
+                    <f:password name="${setting.getName()}" value="${setting.getValue()}"/>
+                </j:when>
                 <j:otherwise>
                     <f:textbox name="${setting.getName()}" value="${setting.getValue()}"
                                default="${setting.getDefaultValue()}"

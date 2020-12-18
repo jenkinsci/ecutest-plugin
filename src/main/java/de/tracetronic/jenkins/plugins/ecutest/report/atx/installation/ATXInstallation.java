@@ -19,6 +19,7 @@ import hudson.model.Saveable;
 import hudson.model.listeners.SaveableListener;
 import hudson.tools.ToolInstallation;
 import hudson.util.FormValidation;
+import hudson.util.Secret;
 import hudson.util.XStream2;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONArray;
@@ -328,7 +329,11 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                 if (settingsGroup != null) {
                     final Object currentSetting = settingsGroup.opt(setting.getName());
                     if (currentSetting instanceof String) {
-                        ((ATXTextSetting) setting).setValue((String) currentSetting);
+                        if (setting.isSecret()) {
+                            ((ATXSecretSetting) setting).setValue(Secret.fromString((String) currentSetting));
+                        } else {
+                            ((ATXTextSetting) setting).setValue((String) currentSetting);
+                        }
                     } else if (currentSetting instanceof Boolean) {
                         ((ATXBooleanSetting) setting).setValue((Boolean) currentSetting);
                     }

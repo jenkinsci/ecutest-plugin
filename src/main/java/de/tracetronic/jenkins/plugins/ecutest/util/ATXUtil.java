@@ -8,6 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.util;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import hudson.EnvVars;
+import hudson.util.Secret;
 import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.CheckForNull;
@@ -83,8 +84,8 @@ public final class ATXUtil {
     }
 
     /**
-     * Gets the server base URL of the ATX installation.
-     * Parameterized settings are expanded by given environment variables.
+     * Gets the server base URL of the ATX installation. Parameterized settings are expanded by given environment
+     * variables.
      *
      * @param config  the ATX configuration
      * @param envVars the environment variables
@@ -97,12 +98,12 @@ public final class ATXUtil {
             final List<ATXSetting<?>> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.CONNECTION);
             final Object useHttpsConnection = config.getSettingValueBySettings("useHttpsConnection", uploadSettings);
             final String serverUrl = envVars.expand((String) config.getSettingValueBySettings("serverURL",
-                    uploadSettings));
+                uploadSettings));
             final String serverPort = envVars.expand((String) config.getSettingValueBySettings("serverPort",
-                    uploadSettings));
+                uploadSettings));
             final String contextPath = envVars.expand((String) config.getSettingValueBySettings("serverContextPath",
                 uploadSettings));
-            if (serverUrl != null && serverPort != null && contextPath != null && useHttpsConnection != null) {
+            if (serverUrl != null && serverPort != null && useHttpsConnection != null) {
                 fullServerUrl = getBaseUrl(serverUrl, serverPort, contextPath, (boolean) useHttpsConnection);
             }
         }
@@ -121,17 +122,17 @@ public final class ATXUtil {
     public static String getBaseUrl(final String serverUrl, final String serverPort, final String contextPath,
                                     final boolean useHttpsConnection) {
         String fullServerUrl = null;
-        if (serverUrl != null && serverPort != null && contextPath != null) {
+        if (serverUrl != null && serverPort != null) {
             final String protocol = useHttpsConnection ? "https" : "http";
-            fullServerUrl = contextPath.isEmpty() ? String.format("%s://%s:%s", protocol, serverUrl, serverPort)
+            fullServerUrl = StringUtils.isBlank(contextPath)
+                ? String.format("%s://%s:%s", protocol, serverUrl, serverPort)
                 : String.format("%s://%s:%s/%s", protocol, serverUrl, serverPort, contextPath);
         }
         return fullServerUrl;
     }
 
     /**
-     * Gets the server base URL of the ATX installation.
-     * Parameterized settings are expanded by given environment variables.
+     * Gets the proxy URL of the ATX installation. Parameterized settings are expanded by given environment variables.
      *
      * @param config  the ATX configuration
      * @param envVars the environment variables
@@ -141,12 +142,16 @@ public final class ATXUtil {
     public static String getProxyUrl(final ATXConfig config, final EnvVars envVars) {
         String proxyUrl = null;
         if (config != null && envVars != null) {
+            final Secret secretProxyUrl;
             final List<ATXSetting<?>> uploadSettings = config.getSettingsByGroup(ATXSetting.SettingsGroup.CONNECTION);
             final Object useHttpsConnection = config.getSettingValueBySettings("useHttpsConnection", uploadSettings);
             if (useHttpsConnection != null && (boolean) useHttpsConnection) {
-                proxyUrl = envVars.expand((String) config.getSettingValueBySettings("httpsProxy", uploadSettings));
+                secretProxyUrl = (Secret) config.getSettingValueBySettings("httpsProxy", uploadSettings);
             } else {
-                proxyUrl = envVars.expand((String) config.getSettingValueBySettings("httpProxy", uploadSettings));
+                secretProxyUrl = (Secret) config.getSettingValueBySettings("httpProxy", uploadSettings);
+            }
+            if (secretProxyUrl != null) {
+                proxyUrl = envVars.expand(secretProxyUrl.getPlainText());
             }
         }
         return proxyUrl;

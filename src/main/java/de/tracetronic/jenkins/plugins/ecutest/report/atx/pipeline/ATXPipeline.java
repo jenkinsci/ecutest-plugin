@@ -7,6 +7,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline;
 
 import com.google.common.collect.Maps;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
+import hudson.util.Secret;
 import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 import org.jenkinsci.plugins.workflow.cps.CpsScript;
 
@@ -128,7 +129,7 @@ public class ATXPipeline implements Serializable {
             throws MalformedURLException {
         final Map<String, Object> additionalSettings = Maps.newLinkedHashMap();
         additionalSettings.put("uploadToServer", uploadToServer);
-        additionalSettings.put("uploadAuthenticationKey", authKey);
+        additionalSettings.put("uploadAuthenticationKey", Secret.fromString(authKey));
         additionalSettings.put("projectId", projectId);
 
         return newServer(atxName, toolName, fullServerUrl, additionalSettings);
