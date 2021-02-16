@@ -15,7 +15,6 @@ jobs:
     strategy:
       matrix:
         java: [8, 11]
-        jenkins-version: [ 2.235.1 ]
         os: [ubuntu-latest, windows-latest]
     steps:
       - name: Checkout
