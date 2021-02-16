@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -49,11 +49,13 @@ public class JUnitTestResultParser extends TestResultParser implements Serializa
         return testResult;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public String getDisplayName() {
         return "UNIT XML Parser";
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public String getTestResultLocationMessage() {
         return "UNIT XML reports:";

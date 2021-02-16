@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -9,8 +9,8 @@ import de.tracetronic.jenkins.plugins.ecutest.filter.RefFilterLexer;
 import de.tracetronic.jenkins.plugins.ecutest.filter.RefFilterParser;
 import de.tracetronic.jenkins.plugins.ecutest.test.Messages;
 import hudson.util.FormValidation;
-import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BaseErrorListener;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
@@ -175,7 +175,7 @@ public class TestValidator extends AbstractValidator {
                 returnValue = FormValidation.warning(Messages.Builder_NoValidatedValue());
             } else {
                 final String trimmedExpression = StringUtils.trimToEmpty(filterExpression)
-                        .replaceAll("^\\(\\s*", "(").replaceAll("\\s*\\)", ")");
+                    .replaceAll("^\\(\\s*", "(").replaceAll("\\s*\\)", ")");
                 final FilterExpressionValidator validator = new FilterExpressionValidator(trimmedExpression);
                 validator.validate();
                 if (!validator.isValid()) {
@@ -221,7 +221,7 @@ public class TestValidator extends AbstractValidator {
         public void validate() {
             isValid = true;
 
-            final RefFilterLexer lexer = new RefFilterLexer(new ANTLRInputStream(expression));
+            final RefFilterLexer lexer = new RefFilterLexer(CharStreams.fromString(expression));
             final RefFilterParser parser = new RefFilterParser(new CommonTokenStream(lexer));
 
             lexer.removeErrorListeners();
