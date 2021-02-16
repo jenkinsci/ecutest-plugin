@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -14,9 +14,11 @@ import javaposse.jobdsl.plugin.RemovedJobAction;
 import javaposse.jobdsl.plugin.RemovedViewAction;
 import org.apache.commons.io.IOUtils;
 
+import java.nio.charset.StandardCharsets;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 /**
  * Integration tests.
@@ -47,21 +49,19 @@ public abstract class AbstractDslExtensionIT extends IntegrationTestBase {
         buildSeedJob(getDslScript());
 
         assertThat(jenkins.getInstance().getJobNames(), hasItem(is(getJobName())));
-        final FreeStyleProject project = jenkins.getInstance().getItemByFullName(getJobName(), FreeStyleProject.class);
-        return project;
+        return jenkins.getInstance().getItemByFullName(getJobName(), FreeStyleProject.class);
     }
 
     /**
      * Builds the seed job which generates the test job.
      *
      * @param dslScript the DSL script
-     * @return the test job
      * @throws Exception the exception
      */
-    private FreeStyleProject buildSeedJob(final String dslScript) throws Exception {
+    private void buildSeedJob(final String dslScript) throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final ExecuteDslScripts builder = new ExecuteDslScripts();
-        builder.setScriptText(IOUtils.toString(this.getClass().getResourceAsStream(dslScript)));
+        builder.setScriptText(IOUtils.toString(this.getClass().getResourceAsStream(dslScript), StandardCharsets.UTF_8));
         builder.setRemovedJobAction(RemovedJobAction.DELETE);
         builder.setRemovedViewAction(RemovedViewAction.DELETE);
         builder.setLookupStrategy(LookupStrategy.JENKINS_ROOT);
@@ -69,6 +69,5 @@ public abstract class AbstractDslExtensionIT extends IntegrationTestBase {
         jenkins.getInstance().getDescriptorByType(GlobalJobDslSecurityConfiguration.class).setUseScriptSecurity(false);
 
         jenkins.buildAndAssertSuccess(project);
-        return project;
     }
 }

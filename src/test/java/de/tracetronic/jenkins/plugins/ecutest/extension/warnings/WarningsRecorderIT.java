@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -41,7 +41,7 @@ public class WarningsRecorderIT extends IntegrationTestBase {
             }
         });
 
-        final FreeStyleBuild build = jenkins.buildAndAssertStatus(Result.FAILURE, project);
+        final FreeStyleBuild build = jenkins.buildAndAssertStatus(Result.SUCCESS, project);
         jenkins.assertLogContains("found 1 file", build);
         jenkins.assertLogContains("found 3 issues", build);
     }
