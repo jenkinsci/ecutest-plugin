@@ -5,13 +5,13 @@
   -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:lsi="/shim/layout/icon">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
     <tr>
         <td>
             <div style="text-indent: ${indent}px;">
                 <j:choose>
                     <j:when test="${report.hasTrendReport()}">
-                        <lsi:icon class="${it.trendIconClassName} icon-sm" alt="ATX report"/>
+                        <l:icon class="${it.trendIconClassName} icon-sm" alt="ATX report"/>
                         <st:nbsp/>
                         <j:if test="${owner == build}">
                             <a href="${report.url}" target="_blank">${%trend.view}</a>
@@ -22,7 +22,7 @@
                         </j:if>
                     </j:when>
                     <j:otherwise>
-                        <lsi:icon class="${it.reportIconClassName} icon-sm" alt="ATX report"/>
+                        <l:icon class="${it.reportIconClassName} icon-sm" alt="ATX report"/>
                         <st:nbsp/>
                         <j:if test="${owner == build}">
                             <a href="${report.url}" target="_blank">${report.title}</a>

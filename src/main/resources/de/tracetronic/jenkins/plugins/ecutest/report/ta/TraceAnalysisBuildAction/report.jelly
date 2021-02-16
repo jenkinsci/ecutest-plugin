@@ -5,11 +5,11 @@
   -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:lsi="/shim/layout/icon">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
     <tr>
         <td>
             <div style="text-indent: ${indent}px;">
-                <lsi:icon class="${it.reportIconClassName} icon-sm" alt="Trace analysis report"/>
+                <l:icon class="${it.reportIconClassName} icon-sm" alt="Trace analysis report"/>
                 <st:nbsp/>
                 <j:if test="${owner == build}">
                     <a href="${report.url}">${report.title}</a>

@@ -5,14 +5,14 @@
   -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:lsi="/shim/layout/icon">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
     <j:set var="owner" value="${it.getOwner(request)}"/>
     <j:set var="build" value="${it.getBuild(request)}"/>
     <l:layout title="${it.displayName}" norefresh="true">
         <st:include page="sidepanel.jelly" it="${owner}"/>
         <l:main-panel>
             <h1>
-                <lsi:icon class="${it.iconClassName} icon-xlg" alt="TRF Reports"/>
+                <l:icon class="${it.iconClassName} icon-xlg" alt="TRF Reports"/>
                 ${it.displayName}
             </h1>
             <j:if test="${owner != null}">

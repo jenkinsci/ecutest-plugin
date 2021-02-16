@@ -19,8 +19,6 @@ import org.jenkins.ui.icon.Icon;
 import org.jenkins.ui.icon.IconSet;
 import org.jenkins.ui.icon.IconType;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -74,16 +72,8 @@ public class ETPlugin {
      * @param iconStyle     the icon style
      * @return the icon file name
      */
-    @SuppressWarnings("JavaReflectionMemberAccess")
     public static String getIconFileName(final String iconClassName, final String iconStyle) {
         final String iconClass = iconClassName + " " + iconStyle;
-        try {
-            // Workaround signature changes in different versions of {@link IconSet} by reflection
-            final Method getIconByClassSpec = IconSet.class.getMethod("getIconByClassSpec", Object.class);
-            return ((Icon) getIconByClassSpec.invoke(IconSet.icons, iconClass)).getUrl();
-        } catch (final NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
-            // no-op
-        }
         return IconSet.icons.getIconByClassSpec(iconClass).getUrl();
     }
 
