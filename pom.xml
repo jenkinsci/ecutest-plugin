@@ -80,7 +80,7 @@
         <jquery-plugin.version>1.12.4-1</jquery-plugin.version>
 
         <!-- Static code analysis -->
-        <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
+        <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
         <maven-pmd-plugin.version>3.14.0</maven-pmd-plugin.version>
         <pmd.version>6.29.0</pmd.version>
         <spotbugs.effort>Max</spotbugs.effort>
