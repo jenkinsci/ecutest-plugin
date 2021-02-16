@@ -197,7 +197,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
             stream.addCompatibilityAlias(oldClass.getName(), getClass());
 
             final XmlFile file = new XmlFile(stream,
-                    new File(Jenkins.getInstance().getRootDir(), oldClass.getEnclosingClass().getName() + ".xml"));
+                    new File(Jenkins.get().getRootDir(), oldClass.getEnclosingClass().getName() + ".xml"));
             if (file.exists()) {
                 try {
                     file.unmarshal(this);
@@ -418,7 +418,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                                                @QueryParameter final String httpProxy,
                                                @QueryParameter final String httpsProxy,
                                                @QueryParameter final boolean ignoreSSL) {
-            Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
+            Jenkins.get().checkPermission(Jenkins.ADMINISTER);
             final String proxyUrl = useHttpsConnection ? httpsProxy : httpProxy;
             return atxValidator.testConnection(serverURL, serverPort, serverContextPath, useHttpsConnection,
                     proxyUrl, ignoreSSL);

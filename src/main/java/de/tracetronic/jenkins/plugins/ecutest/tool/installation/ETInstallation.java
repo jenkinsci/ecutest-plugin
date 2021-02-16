@@ -384,7 +384,7 @@ public class ETInstallation extends AbstractToolInstallation {
             stream.addCompatibilityAlias(oldClass.getName(), getClass());
 
             final XmlFile file = new XmlFile(stream,
-                    new File(Jenkins.getInstance().getRootDir(), oldClass.getEnclosingClass().getName() + ".xml"));
+                    new File(Jenkins.get().getRootDir(), oldClass.getEnclosingClass().getName() + ".xml"));
             if (file.exists()) {
                 try {
                     file.unmarshal(this);
@@ -441,7 +441,7 @@ public class ETInstallation extends AbstractToolInstallation {
 
         @Override
         public FormValidation doCheckHome(@QueryParameter final File value) {
-            Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
+            Jenkins.get().checkPermission(Jenkins.ADMINISTER);
             FormValidation returnValue = FormValidation.ok();
             if (!Functions.isWindows()) {
                 returnValue = FormValidation.warning(Messages.ETInstallation_IsUnixSystem());

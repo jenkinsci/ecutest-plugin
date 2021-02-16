@@ -100,7 +100,7 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
          * @return the form validation
          */
         public FormValidation doCheckProgId(@QueryParameter final String value) {
-            Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
+            Jenkins.get().checkPermission(Jenkins.ADMINISTER);
             FormValidation returnValue = FormValidation.ok();
             if (!StringUtils.isEmpty(value)) {
                 final String pattern = "^(ECU-TEST\\.Application(\\.\\d+.\\d+)?|ECU-TEST6?\\.Application)";
