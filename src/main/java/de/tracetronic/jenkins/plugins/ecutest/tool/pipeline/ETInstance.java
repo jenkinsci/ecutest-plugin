@@ -36,7 +36,7 @@ public class ETInstance implements Serializable {
 
     @SuppressFBWarnings("SE_TRANSIENT_FIELD_NOT_RESTORED")
     @Nonnull
-    private transient final ETInstallation installation;
+    private final transient ETInstallation installation;
 
     @SuppressFBWarnings("SE_TRANSIENT_FIELD_NOT_RESTORED")
     private transient CpsScript script;
