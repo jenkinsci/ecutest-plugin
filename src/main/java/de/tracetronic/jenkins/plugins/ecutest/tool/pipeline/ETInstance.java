@@ -34,6 +34,7 @@ public class ETInstance implements Serializable {
     private static final String KEY_INSTALLATION = "installation";
     private static final String KEY_TIMEOUT = "timeout";
 
+    @SuppressFBWarnings("SE_TRANSIENT_FIELD_NOT_RESTORED")
     @Nonnull
     private transient final ETInstallation installation;
 
