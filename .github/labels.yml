@@ -31,6 +31,9 @@
 - name: removed
   description: Remove code
   color: aa0f1c
+- name: security
+  description: Security related issue
+  color: 7f0e6f
 - name: test-guide
   description: TEST-GUIDE related issue
   color: 208ca3

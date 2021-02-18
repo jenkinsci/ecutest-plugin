@@ -116,9 +116,7 @@ public class ATXServer implements Serializable {
     @Whitelisted
     public Map<String, Object> getSettings() {
         final Map<String, Object> settings = new LinkedHashMap<>();
-        installation.getConfig().getSettings().forEach(setting -> {
-            settings.put(setting.getName(), setting.getValue());
-        });
+        installation.getConfig().getSettings().forEach(setting -> settings.put(setting.getName(), setting.getValue()));
         return settings;
     }
 

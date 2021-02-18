@@ -8,24 +8,12 @@ updates:
     reviewers:
       - cpoenisch
     ignore:
-      - dependency-name: 'io.jenkins:configuration-as-code'
-        versions:
-          - '> 1.36.2'
-      - dependency-name: 'io.jenkins.configuration-as-code:test-harness'
-        versions:
-          - '> 1.36.2'
       - dependency-name: 'io.jenkins.plugins:warnings-ng'
         versions:
-          - '> 6.0.0'
-      - dependency-name: 'org.antlr:antlr4*'
-        versions:
-          - '> 4.5.3'
+          - '> 8.0.0'
       - dependency-name: 'org.jenkins-ci.main:jenkins-core'
         versions:
-          - '> 2.60.3'
-      - dependency-name: org.jenkins-ci.plugins*
-        versions:
-          - '>= 0'
+          - '> 2.235.1'
       - dependency-name: 'org.xerial:sqlite-jdbc'
         versions:
           - '> 3.7.2'

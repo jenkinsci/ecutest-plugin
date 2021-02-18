@@ -140,7 +140,7 @@ public abstract class AbstractTestClient implements TestClient {
     protected boolean recordWarnings(final TestInfoHolder testInfo, final Run<?, ?> run, final FilePath workspace,
                                      final Launcher launcher, final TaskListener listener)
         throws IOException, InterruptedException {
-        final Plugin plugin = Jenkins.getInstance().getPlugin("warnings-ng");
+        final Plugin plugin = Jenkins.get().getPlugin("warnings-ng");
         if (plugin == null || !(plugin.getWrapper().isActive())) {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logError("Warnings NG plugin not found or disabled, please install using the Update Center!");

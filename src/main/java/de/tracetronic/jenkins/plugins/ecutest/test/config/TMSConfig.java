@@ -65,7 +65,7 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
      * @return the descriptor extension list
      */
     public static DescriptorExtensionList<TMSConfig, Descriptor<TMSConfig>> all() {
-        return Jenkins.getInstance().getDescriptorList(TMSConfig.class);
+        return Jenkins.get().getDescriptorList(TMSConfig.class);
     }
 
     public String getCredentialsId() {
@@ -96,7 +96,7 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
 
     @Override
     public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl) Jenkins.getInstance().getDescriptor(getClass());
+        return (DescriptorImpl) Jenkins.get().getDescriptor(getClass());
     }
 
     /**
@@ -134,7 +134,7 @@ public abstract class TMSConfig implements Describable<TMSConfig>, Serializable,
                                                      @QueryParameter final String credentialsId) {
             final StandardListBoxModel result = new StandardListBoxModel();
             if (item == null) {
-                if (!Jenkins.getInstance().hasPermission(Jenkins.ADMINISTER)) {
+                if (!Jenkins.get().hasPermission(Jenkins.ADMINISTER)) {
                     return result.includeCurrentValue(credentialsId);
                 }
             } else {

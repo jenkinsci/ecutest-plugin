@@ -981,7 +981,7 @@ Please download the modified Swarm client from [here](https://github.com/jenkins
 
 ## Compatibility
 
-- Jenkins LTS 2.60.3 or higher
+- Jenkins LTS 2.235.1 or higher
 - Java SE Runtime Environment 8 or higher
 - <details>
     <summary><a href="https://www.tracetronic.com/products/ecu-test">ECU-TEST</a> 7.0.0 or higher </summary>

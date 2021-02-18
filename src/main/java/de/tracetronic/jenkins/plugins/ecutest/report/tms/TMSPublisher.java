@@ -193,7 +193,7 @@ public class TMSPublisher extends AbstractToolPublisher {
                                                      @QueryParameter final String credentialsId) {
             final StandardListBoxModel result = new StandardListBoxModel();
             if (item == null) {
-                if (!Jenkins.getInstance().hasPermission(Jenkins.ADMINISTER)) {
+                if (!Jenkins.get().hasPermission(Jenkins.ADMINISTER)) {
                     return result.includeCurrentValue(credentialsId);
                 }
             } else {

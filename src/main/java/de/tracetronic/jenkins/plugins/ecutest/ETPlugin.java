@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -82,8 +82,8 @@ public class ETPlugin {
      */
     @Initializer(after = InitMilestone.PLUGINS_STARTED)
     public void syncATXConfiguration() {
-        final ATXInstallation.DescriptorImpl descriptor = Jenkins.getInstance()
-                .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
+        final ATXInstallation.DescriptorImpl descriptor = Jenkins.get()
+            .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
         if (descriptor != null) {
             descriptor.syncWithDefaultConfig();
             descriptor.save();

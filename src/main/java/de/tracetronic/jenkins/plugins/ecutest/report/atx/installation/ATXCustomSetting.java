@@ -46,7 +46,7 @@ public abstract class ATXCustomSetting extends AbstractDescribableImpl<ATXCustom
      * @return the descriptor extension list
      */
     public static DescriptorExtensionList<ATXCustomSetting, Descriptor<ATXCustomSetting>> all() {
-        return Jenkins.getInstance().getDescriptorList(ATXCustomSetting.class);
+        return Jenkins.get().getDescriptorList(ATXCustomSetting.class);
     }
 
     public String getName() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -151,6 +151,7 @@ public abstract class AbstractRequestHandler {
      * @param archiveDir   the archive directory
      * @throws IOException signals that an I/O exception has occurred
      */
+    @SuppressWarnings("deprecation")
     private void zip(final OutputStream outputStream, final VirtualFile archiveDir) throws IOException {
         final ZipOutputStream zos = new ZipOutputStream(outputStream);
         zos.setEncoding(System.getProperty("file.encoding"));
@@ -162,11 +163,8 @@ public abstract class AbstractRequestHandler {
             entry.setTime(file.lastModified());
             zos.putNextEntry(entry);
 
-            final InputStream in = file.open();
-            try {
+            try (InputStream in = file.open()) {
                 IOUtils.copy(in, zos);
-            } finally {
-                IOUtils.closeQuietly(in);
             }
             zos.closeEntry();
         }
