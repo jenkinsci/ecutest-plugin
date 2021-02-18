@@ -1,19 +1,18 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.installation;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.EnvVars;
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
 import hudson.model.EnvironmentSpecific;
 import hudson.slaves.NodeSpecific;
 import hudson.tools.ToolInstallation;
 import hudson.tools.ToolProperty;
-import jenkins.security.MasterToSlaveCallable;
 
 import javax.annotation.CheckForNull;
 import java.io.File;
@@ -53,15 +52,19 @@ public abstract class AbstractToolInstallation extends ToolInstallation implemen
     }
 
     /**
-     * Gets the executable path of the tool on the given target system.
+     * Gets the executable file path of the tool on the given target system.
      *
      * @param launcher the launcher
-     * @return the executable
+     * @return the executable file path or {@code null} if home directory is not set or file does not exist
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
     public String getExecutable(final Launcher launcher) throws IOException, InterruptedException {
-        return launcher.getChannel().call(new GetExecutableCallable());
+        if (getExeFile() != null) {
+            final FilePath exeFilePath = new FilePath(launcher.getChannel(), getExeFile().getAbsolutePath());
+            return exeFilePath.exists() ? exeFilePath.getRemote() : null;
+        }
+        return null;
     }
 
     /**
@@ -87,19 +90,4 @@ public abstract class AbstractToolInstallation extends ToolInstallation implemen
      * @return the executable file
      */
     protected abstract File getExeFile(File home);
-
-    /**
-     * {@link MasterToSlaveCallable} providing remote access to return the tool executable path.
-     */
-    @SuppressFBWarnings("SE_INNER_CLASS")
-    private final class GetExecutableCallable extends MasterToSlaveCallable<String, IOException> {
-
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public String call() {
-            final File exe = getExeFile();
-            return exe != null && exe.exists() ? exe.getPath() : null;
-        }
-    }
 }

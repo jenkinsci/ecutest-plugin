@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -34,8 +34,9 @@ public class ETInstance implements Serializable {
     private static final String KEY_INSTALLATION = "installation";
     private static final String KEY_TIMEOUT = "timeout";
 
+    @SuppressFBWarnings("SE_TRANSIENT_FIELD_NOT_RESTORED")
     @Nonnull
-    private final ETInstallation installation;
+    private final transient ETInstallation installation;
 
     @SuppressFBWarnings("SE_TRANSIENT_FIELD_NOT_RESTORED")
     private transient CpsScript script;
