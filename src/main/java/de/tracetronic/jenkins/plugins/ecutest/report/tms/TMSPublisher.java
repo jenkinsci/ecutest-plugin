@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -97,7 +97,7 @@ public class TMSPublisher extends AbstractToolPublisher {
             return;
         }
 
-        final List<FilePath> reportFiles = getReportFiles(run, workspace, launcher);
+        final List<FilePath> reportFiles = getProjectReportFiles(run, workspace, launcher);
         if (reportFiles.isEmpty() && !isAllowMissing()) {
             throw new ETPluginException("Empty test results are not allowed, setting build status to FAILURE!");
         }
