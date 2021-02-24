@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -23,6 +23,16 @@ public interface ComTestExecutionInfo {
     boolean abort() throws ETComException;
 
     /**
+     * Aborts the current project test execution but waits for report generation.
+     *
+     * @param timeout the timeout in seconds to wait for aborting the current step
+     * @return {@code true} if the abortion succeeded, {@code false}, if the test execution has already finished or
+     * aborted
+     * @throws ETComException in case of a COM exception
+     */
+    boolean abortAfterCurrentProjectStep(int timeout) throws ETComException;
+
+    /**
      * Queries the path to report database of current (or most recent) test run.
      *
      * @return the path to report database
@@ -41,9 +51,9 @@ public interface ComTestExecutionInfo {
     String getLogFolder() throws ETComException;
 
     /**
-     * Returns the result of the project execution or package execution, depending on which method (
-     * {@link TestEnvironment#executeProject(String path)} or {@link TestEnvironment#executePackage(String path)}) has
-     * called before. If the test execution has not finished yet, the result equates the test result at calling time.
+     * Returns the result of the project execution or package execution, depending on which method ( {@link
+     * TestEnvironment#executeProject(String path)} or {@link TestEnvironment#executePackage(String path)}) has called
+     * before. If the test execution has not finished yet, the result equates the test result at calling time.
      *
      * @return the current overall test result. One of:
      * <ol>
@@ -73,9 +83,8 @@ public interface ComTestExecutionInfo {
     /**
      * Returns the final value of a package variable.
      *
-     * @param varName   the variable name
+     * @param varName the variable name
      * @return the final variable value
-     *
      * @throws ETComException in case of a COM exception
      */
     String getReturnValue(String varName) throws ETComException;
