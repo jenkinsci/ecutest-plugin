@@ -608,7 +608,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
                                                    final Launcher launcher)
         throws IOException, InterruptedException {
         final List<FilePath> projectReportFiles = new ArrayList<>();
-        List<FilePath> reportFiles = getReportFiles(run, workspace, launcher);
+        final List<FilePath> reportFiles = getReportFiles(run, workspace, launcher);
         for (final FilePath reportFile : reportFiles) {
             // Existence of log files next to TRF indicates a project report
             if (reportFile.getParent() != null && reportFile.getParent().list("ECU_TEST_*.log").length > 0) {
