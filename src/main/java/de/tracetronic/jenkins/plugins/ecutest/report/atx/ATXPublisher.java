@@ -237,7 +237,7 @@ public class ATXPublisher extends AbstractReportPublisher {
         final ATXConfig config = installation.getConfig();
         final Optional<ATXSetting<?>> uploadSetting = config.getSettingByName("uploadThroughResourceAdapter");
         if (uploadSetting.isPresent()) {
-            String value = ((ATXTextSetting) uploadSetting.get()).getValue();
+            final String value = ((ATXTextSetting) uploadSetting.get()).getValue();
             return Integer.parseInt(value) > 0;
         }
         return false;
