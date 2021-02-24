@@ -34,7 +34,7 @@ public class TestExecutionInfo extends ETComDispatch implements ComTestExecution
     }
 
     @Override
-    public boolean abortAfterCurrentProjectStep(int timeout) throws ETComException {
+    public boolean abortAfterCurrentProjectStep(final int timeout) throws ETComException {
         return performRequest("AbortAfterCurrentProjectStep", new Variant(timeout)).getBoolean();
     }
 
