@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -13,6 +13,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBoolean
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.ETClient;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
@@ -191,12 +192,13 @@ public class ATXPublisher extends AbstractReportPublisher {
         final TTConsoleLogger logger = getLogger();
         final List<FilePath> reportDirs = getReportDirs(run, workspace, launcher);
         final boolean isUploadEnabled = isUploadEnabled(installation);
+        final boolean isResourceAdapterUploadEnabled = isResourceAdapterUploadEnabled(installation);
         final boolean isServerReachable = isServerReachable(installation, run, launcher, listener);
-        if (isUploadEnabled && isServerReachable) {
+        if (isUploadEnabled && (isResourceAdapterUploadEnabled || isServerReachable)) {
             logger.logInfo("- Generating and uploading ATX reports...");
             final ATXReportUploader uploader = new ATXReportUploader(installation);
             return uploader.upload(reportDirs, isUsePersistedSettings(), isInjectBuildVars(), isAllowMissing(),
-                    run, launcher, listener);
+                run, launcher, listener);
         } else if (isUploadEnabled && failOnOffline) {
             logger.logError("-> TEST-GUIDE server is not reachable, setting build status to FAILURE!");
             return false;
@@ -217,12 +219,28 @@ public class ATXPublisher extends AbstractReportPublisher {
      * Checks whether the ATX upload setting is enabled.
      *
      * @param installation the ATX installation
-     * @return {@code true} if upload is possible, {@code false} otherwise
+     * @return {@code true} if upload is enabled, {@code false} otherwise
      */
     private boolean isUploadEnabled(final ATXInstallation installation) {
         final ATXConfig config = installation.getConfig();
         final Optional<ATXSetting<?>> uploadSetting = config.getSettingByName("uploadToServer");
         return uploadSetting.isPresent() && ((ATXBooleanSetting) uploadSetting.get()).getValue();
+    }
+
+    /**
+     * Checks whether the ATX upload through ResourceAdapter setting is configured.
+     *
+     * @param installation the ATX installation
+     * @return {@code true} if upload through ResourceAdapter is configured, {@code false} otherwise
+     */
+    private boolean isResourceAdapterUploadEnabled(final ATXInstallation installation) {
+        final ATXConfig config = installation.getConfig();
+        final Optional<ATXSetting<?>> uploadSetting = config.getSettingByName("uploadThroughResourceAdapter");
+        if (uploadSetting.isPresent()) {
+            String value = ((ATXTextSetting) uploadSetting.get()).getValue();
+            return Integer.parseInt(value) > 0;
+        }
+        return false;
     }
 
     /**
