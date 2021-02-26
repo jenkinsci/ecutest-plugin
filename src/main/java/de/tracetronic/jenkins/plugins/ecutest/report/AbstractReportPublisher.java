@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -591,6 +591,31 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
                 reportDir.list(includes, excludes)));
         }
         return reportFiles;
+    }
+
+    /**
+     * Builds a list of project report files for report generation. Includes the TRF files generated during separate
+     * sub-project execution and excludes all package report files.
+     *
+     * @param run       the run
+     * @param workspace the workspace
+     * @param launcher  the launcher
+     * @return the list of project report files
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the build gets interrupted
+     */
+    protected List<FilePath> getProjectReportFiles(final Run<?, ?> run, final FilePath workspace,
+                                                   final Launcher launcher)
+        throws IOException, InterruptedException {
+        final List<FilePath> projectReportFiles = new ArrayList<>();
+        final List<FilePath> reportFiles = getReportFiles(run, workspace, launcher);
+        for (final FilePath reportFile : reportFiles) {
+            // Existence of log files next to TRF indicates a project report
+            if (reportFile.getParent() != null && reportFile.getParent().list("ECU_TEST_*.log").length > 0) {
+                projectReportFiles.add(reportFile);
+            }
+        }
+        return projectReportFiles;
     }
 
     /**

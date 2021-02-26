@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -165,11 +165,10 @@ public interface ComTestManagement {
     boolean exportProjectAttributes(String filePath, int timeout) throws ETComException;
 
     /**
-     * Exports the given report file to test management system.
-     * The archive path may be used to copy the report to another directory and to reference
-     * it from the test management entry.
+     * Exports the given project report file to test management system. The archive path may be used to copy the report
+     * to another directory and to reference it from the test management entry.
      *
-     * @param filePath    the file path of the report file to be exported
+     * @param filePath    the file path of the project report file to be exported
      * @param archivePath if the exportPath does not exist, it will be created
      * @param timeout     the timeout in seconds to wait for export to be finished
      * @return {@code true} if export succeeded, {@code false} otherwise
