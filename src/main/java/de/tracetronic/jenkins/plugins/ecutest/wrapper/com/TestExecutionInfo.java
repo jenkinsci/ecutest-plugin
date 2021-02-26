@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -31,6 +31,11 @@ public class TestExecutionInfo extends ETComDispatch implements ComTestExecution
     @Override
     public boolean abort() throws ETComException {
         return performRequest("Abort").getBoolean();
+    }
+
+    @Override
+    public boolean abortAfterCurrentProjectStep(final int timeout) throws ETComException {
+        return performRequest("AbortAfterCurrentProjectStep", new Variant(timeout)).getBoolean();
     }
 
     @Override

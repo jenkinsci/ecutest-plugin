@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -197,7 +197,7 @@ public class ProjectClient extends AbstractTestClient {
                         logger.logWarn(String.format("-> Test execution timeout of %d seconds reached! "
                             + "Aborting project now...", timeout));
                         isAborted = true;
-                        execInfo.abort();
+                        execInfo.abortAfterCurrentProjectStep(ExecutionConfig.getDefaultTimeout());
                         break;
                     }
                     Thread.sleep(1000L);
@@ -228,7 +228,7 @@ public class ProjectClient extends AbstractTestClient {
                  TestEnvironment testEnv = (TestEnvironment) comClient.getTestEnvironment();
                  TestExecutionInfo execInfo = (TestExecutionInfo) testEnv.getTestExecutionInfo()) {
                 logger.logWarn("-> Build interrupted! Aborting test exection...");
-                execInfo.abort();
+                execInfo.abortAfterCurrentProjectStep(ExecutionConfig.getDefaultTimeout());
                 testInfo = getTestInfo(execInfo, true, logger);
                 postExecution(timeout, comClient, logger);
             } catch (final ETComException e) {
