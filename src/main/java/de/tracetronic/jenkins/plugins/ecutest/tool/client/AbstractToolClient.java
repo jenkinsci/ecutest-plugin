@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -102,6 +102,8 @@ public abstract class AbstractToolClient implements ToolClient {
                 logger.logError(String.format("-> Timeout of %d seconds reached! This can also be caused by an "
                     + "invalid  license.", getTimeout()));
             }
+            // Wait a moment before polling COM server
+            Thread.sleep(3000L);
         } catch (final IOException e) {
             logger.logError("-> Command line execution failed: " + e.getMessage());
         }
