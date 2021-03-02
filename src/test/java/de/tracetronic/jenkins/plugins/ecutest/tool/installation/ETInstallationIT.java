@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -9,12 +9,15 @@ import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
 import hudson.EnvVars;
+import hudson.Launcher;
 import hudson.slaves.DumbSlave;
 import hudson.tools.ToolLocationNodeProperty;
 import org.junit.Test;
 import org.jvnet.hudson.test.recipes.LocalData;
 
+import java.io.File;
 import java.util.Collections;
+import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -105,5 +108,62 @@ public class ETInstallationIT extends IntegrationTestBase {
         assertEquals(etDescriptor, location.getType());
         assertEquals("ECU-TEST", location.getName());
         assertEquals("C:\\ECU-TEST", location.getHome());
+    }
+
+    @Test
+    public void testExecutable() throws Exception {
+        DumbSlave agent = assumeWindowsSlave();
+        String exeFilePath = new File("C:\\ECU-TEST", "ECU-TEST.exe").getAbsolutePath();
+        Objects.requireNonNull(agent.createPath(exeFilePath)).write();
+
+        final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", null));
+        final ETInstallation[] installations = etDescriptor.getInstallations();
+        assertEquals(1, installations.length);
+
+        final ETInstallation inst = installations[0];
+        final Launcher launcher = agent.createLauncher(jenkins.createTaskListener());
+
+        String executable = inst.getExecutable(launcher);
+        assertEquals(exeFilePath, executable);
+    }
+
+    @Test
+    public void testComExecutable() throws Exception {
+        DumbSlave agent = assumeWindowsSlave();
+        String exeFilePath = new File("C:\\ECU-TEST", "ECU-TEST_COM.exe").getAbsolutePath();
+        Objects.requireNonNull(agent.createPath(exeFilePath)).write();
+
+        final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", null));
+        final ETInstallation[] installations = etDescriptor.getInstallations();
+        assertEquals(1, installations.length);
+
+        final ETInstallation inst = installations[0];
+        final Launcher launcher = agent.createLauncher(jenkins.createTaskListener());
+
+        String executable = inst.getComExecutable(launcher);
+        assertEquals(exeFilePath, executable);
+    }
+
+    @Test
+    public void testTSExecutable() throws Exception {
+        DumbSlave agent = assumeWindowsSlave();
+        String exeFilePath = new File("C:\\ECU-TEST", "Tool-Server.exe").getAbsolutePath();
+        Objects.requireNonNull(agent.createPath(exeFilePath)).write();
+
+        final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", null));
+        final ETInstallation[] installations = etDescriptor.getInstallations();
+        assertEquals(1, installations.length);
+
+        final ETInstallation inst = installations[0];
+        final Launcher launcher = agent.createLauncher(jenkins.createTaskListener());
+
+        String executable = inst.getTSExecutable(launcher);
+        assertEquals(exeFilePath, executable);
     }
 }
