@@ -5,8 +5,6 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.installation;
 
-import hudson.EnvVars;
-import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
 import hudson.model.EnvironmentSpecific;
@@ -14,8 +12,6 @@ import hudson.slaves.NodeSpecific;
 import hudson.tools.ToolInstallation;
 import hudson.tools.ToolProperty;
 
-import javax.annotation.CheckForNull;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -59,35 +55,5 @@ public abstract class AbstractToolInstallation extends ToolInstallation implemen
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
-    public String getExecutable(final Launcher launcher) throws IOException, InterruptedException {
-        if (getExeFile() != null) {
-            final FilePath exeFilePath = new FilePath(launcher.getChannel(), getExeFile().getAbsolutePath());
-            return exeFilePath.exists() ? exeFilePath.getRemote() : null;
-        }
-        return null;
-    }
-
-    /**
-     * Gets the expanded executable file path.
-     *
-     * @return the executable file path or {@code null} if home directory is not set
-     */
-    @CheckForNull
-    private File getExeFile() {
-        if (getHome() != null) {
-            final String home = Util.replaceMacro(getHome(), EnvVars.masterEnvVars);
-            if (home != null) {
-                return getExeFile(new File(home));
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Gets the executable file relative to given home directory.
-     *
-     * @param home the home directory of the tool
-     * @return the executable file
-     */
-    protected abstract File getExeFile(File home);
+    public abstract String getExecutable(Launcher launcher) throws IOException, InterruptedException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -95,13 +95,20 @@ public class ETInstallation extends AbstractToolInstallation {
 
     @Override
     public ETInstallation forNode(@Nonnull final Node node, final TaskListener log)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
         return new ETInstallation(this, translateFor(node, log), getProperties().toList());
     }
 
-    @Override
-    protected File getExeFile(final File home) {
-        return DescriptorImpl.getExeFile(home);
+    /**
+     * Gets the ECU-TEST executable path on the given target system.
+     *
+     * @param launcher the launcher
+     * @return the ECU-TEST executable
+     * @throws IOException          signals that an I/O exception has occurred
+     * @throws InterruptedException if the current thread is interrupted while waiting for the completion
+     */
+    public String getExecutable(final Launcher launcher) throws IOException, InterruptedException {
+        return launcher.getChannel().call(new GetExecutableCallable(getHome()));
     }
 
     /**
@@ -201,6 +208,48 @@ public class ETInstallation extends AbstractToolInstallation {
             }
         }
         return null;
+    }
+
+    /**
+     * {@link MasterToSlaveCallable} providing remote access to return the ECU-TEST executable path.
+     */
+    private static final class GetExecutableCallable extends MasterToSlaveCallable<String, IOException> {
+
+        private static final long serialVersionUID = 1L;
+
+        private final String home;
+
+        /**
+         * Instantiates a new {@link GetExecutableCallable}.
+         *
+         * @param home the home directory of ECU-TEST
+         */
+        GetExecutableCallable(final String home) {
+            this.home = home;
+        }
+
+        @Override
+        public String call() {
+            final File exe = getExeFile(home);
+            return exe != null && exe.exists() ? exe.getPath() : null;
+        }
+
+        /**
+         * Gets the expanded ECU-TEST COM server executable file path.
+         *
+         * @param home the home directory of ECU-TEST
+         * @return the executable file or {@code null} if home directory is not set
+         */
+        @CheckForNull
+        private File getExeFile(final String home) {
+            if (home != null) {
+                final String expHome = Util.replaceMacro(home, EnvVars.masterEnvVars);
+                if (expHome != null) {
+                    return DescriptorImpl.getExeFile(new File(expHome));
+                }
+            }
+            return null;
+        }
     }
 
     /**
@@ -448,7 +497,7 @@ public class ETInstallation extends AbstractToolInstallation {
             } else if (StringUtils.isNotEmpty(value.toString())) {
                 if (value.isDirectory()) {
                     final File etExe = getExeFile(value);
-                    if (etExe == null || !etExe.exists()) {
+                    if (!etExe.exists()) {
                         returnValue = FormValidation.error(Messages.ETInstallation_NotHomeDirectory(value));
                     }
                 } else {
