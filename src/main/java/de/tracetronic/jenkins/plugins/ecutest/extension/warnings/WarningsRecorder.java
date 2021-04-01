@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -57,14 +57,14 @@ public class WarningsRecorder {
      * @param workspace the workspace
      * @param launcher  the launcher
      * @param listener  the listener
-     * @return {@code true} if recording detects any issues with error severity, {@code false} otherwise
+     * @return {@code true} if recording detects any issues with ERROR severity, {@code false} otherwise
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
      */
     @SuppressFBWarnings("BC_UNCONFIRMED_CAST")
     public boolean record(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
                           final TaskListener listener) throws IOException, InterruptedException {
-        boolean hasIssues = false;
+        boolean hasErrors = false;
 
         final WarningsPlugin plugin = new WarningsPlugin();
         plugin.setName(displayName);
@@ -99,14 +99,19 @@ public class WarningsRecorder {
             }
         }
 
-        // Check for issues with ERROR severity and stop further execution if any
         final Optional<ResultAction> result = run.getActions(ResultAction.class).stream().filter(action ->
             action.getId().equals(plugin.getId())).findFirst();
-        if (result.isPresent() && result.get().getResult().getIssues().getSizeOf("ERROR") > 0) {
-            run.setResult(Result.FAILURE);
-            hasIssues = true;
+        if (result.isPresent()) {
+            if (result.get().getResult().getIssues().getSizeOf("ERROR") > 0) {
+                run.setResult(Result.FAILURE);
+                hasErrors = true;
+            } else if (result.get().getResult().getIssues().getSize() == 0) {
+                final TTConsoleLogger logger = new TTConsoleLogger(listener);
+                logger.logInfo("-> No issues found, empty result will be removed from build!");
+                run.removeAction(result.get());
+            }
         }
 
-        return hasIssues;
+        return hasErrors;
     }
 }
