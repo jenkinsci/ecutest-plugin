@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2021 TraceTronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -135,7 +135,7 @@ public abstract class AbstractTestClient implements TestClient {
      * @param workspace the workspace
      * @param launcher  the launcher
      * @param listener  the listener
-     * @return {@code true} if recording detects any issues with error severity, {@code false} otherwise
+     * @return {@code true} if recording detects any issues with ERROR severity, {@code false} otherwise
      */
     protected boolean recordWarnings(final TestInfoHolder testInfo, final Run<?, ?> run, final FilePath workspace,
                                      final Launcher launcher, final TaskListener listener)
@@ -147,7 +147,7 @@ public abstract class AbstractTestClient implements TestClient {
             return true;
         }
 
-        boolean hasIssues = false;
+        boolean hasErrors = false;
         if (StringUtils.isNotBlank(testInfo.warningsIssues)) {
             final String issueFileName = "issues.json";
             final FilePath issuesFile = workspace.child(issueFileName);
@@ -156,12 +156,12 @@ public abstract class AbstractTestClient implements TestClient {
 
                 final WarningsRecorder recorder = new WarningsRecorder(
                     "Package Check", testInfo.getTestName(), issueFileName);
-                hasIssues = recorder.record(run, workspace, launcher, listener);
+                hasErrors = recorder.record(run, workspace, launcher, listener);
             } finally {
                 issuesFile.delete();
             }
         }
-        return hasIssues;
+        return hasErrors;
     }
 
     /**
