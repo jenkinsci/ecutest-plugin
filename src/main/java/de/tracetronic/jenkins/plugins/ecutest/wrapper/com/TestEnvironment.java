@@ -160,7 +160,11 @@ public class TestEnvironment extends ETComDispatch implements ComTestEnvironment
             params[index][0] = param.getKey();
             final String value = param.getValue();
             if (castToInt && StringUtils.isNotEmpty(value) && StringUtils.isNumeric(value)) {
-                params[index][1] = Integer.valueOf(value);
+                try {
+                    params[index][1] = Integer.valueOf(value);
+                } catch (final NumberFormatException e) {
+                    params[index][1] = value;
+                }
             } else {
                 params[index][1] = value;
             }
