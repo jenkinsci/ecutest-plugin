@@ -9,7 +9,7 @@ This plugin integrates Jenkins with [ECU-TEST](https://www.tracetronic.com/produ
 
 **ECU-TEST** allows for a consistent and effective automation of the entire test environment. It supports and connects so many different software tools, that it easily fits in numerous existing test and validation processes. The test automation tool can be used in all phases of development up to the finished vehicle itself. It allows for a high reusability of the test cases in the various test areas MiL, SiL, HiL, PiL and ViL (vehicle), through generic test description and tool-access abstraction.
 
-<img src="docs/images/plaform_logo.png" align="right" alt="Automotive DevOps Platform">
+<img src="docs/images/platform_logo.png" align="right" alt="Automotive DevOps Platform">
 
 **ECU-TEST Jenkins Plugin** project is part of the [Automotive DevOps Platform](https://www.tracetronic.com/products/automotive-devops-platform/) by TraceTronic. With the **Automotive DevOps Platform**, we go from the big picture to the details and unite all phases of vehicle software testing – from planning the test scopes to summarizing the test results.<br>At the same time, continuous monitoring across all test phases always provides an overview of all activities – even with several thousand test executions per day and in different test environments.
 
