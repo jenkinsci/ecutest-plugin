@@ -320,8 +320,8 @@ public abstract class AbstractTestClient implements TestClient {
                         comClient.start();
                         if (!constants.isEmpty()) {
                             if (StringUtils.isBlank(tcfFile)) {
-                                logger.logWarn("-> Ignore setting global constants because no test configuration file" +
-                                    " is configured!");
+                                logger.logWarn("-> Ignore setting global constants because no test configuration file"
+                                    + " is configured!");
                             } else {
                                 final Map<String, String> constantMap = getGlobalConstantMap();
                                 logger.logInfo("-> With global constants: " + constantMap);
