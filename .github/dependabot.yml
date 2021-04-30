@@ -13,7 +13,7 @@ updates:
           - '> 8.0.0'
       - dependency-name: 'org.jenkins-ci.main:jenkins-core'
         versions:
-          - '> 2.235.1'
+          - '> 2.235.5'
       - dependency-name: 'org.xerial:sqlite-jdbc'
         versions:
           - '> 3.7.2'
