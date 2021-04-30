@@ -302,11 +302,6 @@ public abstract class AbstractTestClient implements TestClient {
                     comClient.stop();
                 }
                 if (comClient.openTestConfiguration(StringUtils.defaultIfBlank(tcfFile, null))) {
-                    if (tcfFile != null && !constants.isEmpty()) {
-                        final Map<String, String> constantMap = getGlobalConstantMap();
-                        logger.logInfo("-> With global constants: " + constantMap.toString());
-                        setGlobalConstants(comClient, constantMap);
-                    }
                     logger.logInfo("-> Test configuration loaded successfully.");
                 } else {
                     logger.logError(String.format("-> Loading TCF=%s failed!", tcfName));
@@ -323,6 +318,16 @@ public abstract class AbstractTestClient implements TestClient {
                     } else {
                         logger.logInfo("- Starting configurations...");
                         comClient.start();
+                        if (!constants.isEmpty()) {
+                            if (StringUtils.isBlank(tcfFile)) {
+                                logger.logWarn("-> Ignore setting global constants because no test configuration file"
+                                    + " is configured!");
+                            } else {
+                                final Map<String, String> constantMap = getGlobalConstantMap();
+                                logger.logInfo("-> With global constants: " + constantMap);
+                                setGlobalConstants(comClient, constantMap);
+                            }
+                        }
                         logger.logInfo("-> Configurations started successfully.");
                     }
                 }
@@ -350,8 +355,7 @@ public abstract class AbstractTestClient implements TestClient {
         }
 
         /**
-         * Sets the new global constants for the currently loaded test configuration. This requires to start the
-         * configuration, add the constants and reload the configuration.
+         * Sets the new global constants for the currently started test configuration.
          *
          * @param comClient   the COM client
          * @param constantMap the constants to set
@@ -359,12 +363,10 @@ public abstract class AbstractTestClient implements TestClient {
          */
         private void setGlobalConstants(final ETComClient comClient, final Map<String, String> constantMap)
             throws ETComException {
-            comClient.start();
             final TestConfiguration testConfig = (TestConfiguration) comClient.getCurrentTestConfiguration();
             for (final Entry<String, String> newConstant : constantMap.entrySet()) {
                 testConfig.setGlobalConstant(newConstant.getKey(), newConstant.getValue());
             }
-            comClient.stop();
         }
 
         /**
