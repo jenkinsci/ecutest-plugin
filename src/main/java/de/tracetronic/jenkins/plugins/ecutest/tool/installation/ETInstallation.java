@@ -380,6 +380,7 @@ public class ETInstallation extends AbstractToolInstallation {
          * @param home the home directory of ECU-TEST
          * @return the executable file or {@code null} if Unix-based system
          */
+        @SuppressWarnings("PMD.UnusedPrivateMethod")
         @CheckForNull
         private static File getComExeFile(final File home) {
             if (Functions.isWindows() && home != null) {
@@ -395,6 +396,7 @@ public class ETInstallation extends AbstractToolInstallation {
          * @param subDir the sub directory relative to home directory
          * @return the executable file or {@code null} if Unix-based system
          */
+        @SuppressWarnings("PMD.UnusedPrivateMethod")
         @CheckForNull
         private static File getTSExeFile(final File home, final String subDir) {
             if (Functions.isWindows() && home != null && subDir != null) {
