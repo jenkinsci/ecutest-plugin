@@ -83,7 +83,7 @@
         <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
         <checkstyle.version>8.44</checkstyle.version>
         <maven-pmd-plugin.version>3.14.0</maven-pmd-plugin.version>
-        <pmd.version>6.36.0</pmd.version>
+        <pmd.version>6.37.0</pmd.version>
         <spotbugs.effort>Max</spotbugs.effort>
         <spotbugs.threshold>Low</spotbugs.threshold>
 
