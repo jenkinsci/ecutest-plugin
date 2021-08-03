@@ -17,6 +17,9 @@ updates:
       - dependency-name: 'org.xerial:sqlite-jdbc'
         versions:
           - '> 3.7.2'
+      - dependency-name: 'io.jenkins.tools.bom:bom-2.235.x'
+        versions:
+          - '> 100.0'
   - package-ecosystem: github-actions
     directory: /
     schedule:
