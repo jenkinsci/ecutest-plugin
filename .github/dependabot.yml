@@ -6,7 +6,8 @@ updates:
       interval: daily
     open-pull-requests-limit: 10
     reviewers:
-      - cpoenisch
+      - 'TT-S3-D1'
+      - 'MartinGroscheTT'
     ignore:
       - dependency-name: 'io.jenkins.plugins:warnings-ng'
         versions:
