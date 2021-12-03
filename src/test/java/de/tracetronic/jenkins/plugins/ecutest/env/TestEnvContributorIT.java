@@ -15,10 +15,8 @@ import de.tracetronic.jenkins.plugins.ecutest.test.config.ProjectConfig.JobExecu
 import de.tracetronic.jenkins.plugins.ecutest.test.config.TestConfig;
 import hudson.EnvVars;
 import hudson.model.FreeStyleBuild;
-import jdk.nashorn.internal.codegen.ObjectClassGenerator;
 import org.junit.Test;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
