@@ -136,7 +136,12 @@ public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implem
         /**
          * Analysis job execution without running the test case part.
          */
-        NO_TESTCASE_EXECUTION(9);
+        NO_TESTCASE_EXECUTION(9),
+
+        /**
+         * Analysis job execution without running the test case part.
+         */
+        TEST_GUIDE_EXECUTION(16);
 
         private final int value;
 
@@ -208,6 +213,8 @@ public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implem
                 JobExecutionMode.SEPARATE_PARALLEL_EXECUTION.toString());
             items.add(Messages.TestProjectBuilder_JobExecutionMode_9(),
                 JobExecutionMode.NO_TESTCASE_EXECUTION.toString());
+            items.add(Messages.TestProjectBuilder_JobExecutionMode_16(),
+                JobExecutionMode.TEST_GUIDE_EXECUTION.toString());
             return items;
         }
 
