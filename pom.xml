@@ -70,7 +70,7 @@
         <java.level>8</java.level>
 
         <!-- Jenkins plugins -->
-        <job-dsl.version>1.78.1</job-dsl.version>
+        <job-dsl.version>1.78.3</job-dsl.version>
         <warnings-ng.version>8.0.0</warnings-ng.version>
 
         <!-- Direct dependencies -->
