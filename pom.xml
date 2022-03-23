@@ -66,7 +66,7 @@
 
     <properties>
         <!-- Jenkins base -->
-        <jenkins.version>2.235.5</jenkins.version>
+        <jenkins.version>2.289.3</jenkins.version>
         <java.level>8</java.level>
 
         <!-- Jenkins plugins -->
@@ -100,8 +100,8 @@
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-2.235.x</artifactId>
-                <version>29</version>
+                <artifactId>bom-2.289.x</artifactId>
+                <version>1198.v387c834fca_1a_</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -140,21 +140,6 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>${sqlite-jdbc.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.jvnet.hudson</groupId>
-            <artifactId>xstream</artifactId>
-            <version>1.4.7-jenkins-1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>xmlpull</groupId>
-                    <artifactId>xmlpull</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xpp3</groupId>
-                    <artifactId>xpp3_min</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <!-- Jenkins plugins -->
         <dependency>
@@ -164,6 +149,7 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>jquery</artifactId>
+            <version>1.12.4-1</version>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
