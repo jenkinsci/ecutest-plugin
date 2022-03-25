@@ -400,13 +400,43 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Produzierte oder konsumierte Aufnahmen als
-                            komprimierte ZIP Datei archivieren?
+                        <DVALUE xsi:type="string">True, wenn produzierte oder konsumierte
+                            Aufnahmen als komprimierte ZIP Datei archiviert werden sollen,
+                            sonst False. Bei Angabe von 'ByAttribute' können über die
+                            Einstellung 'archiveRecordingsByAttributes' Abhängigkeiten zur
+                            Erfassung definiert werden.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Archive produced or consumed recordings as
-                            compressed ZIP file?
+                        <DVALUE xsi:type="string">True, if produced or consumed recordings
+                            as compressed ZIP file should be archived, otherwise False.
+                            If 'ByAttribute' is specified, dependencies to the setting
+                            'archiveRecordingsByAttributes' to define dependencies for the
+                            recording can be defined.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="archiveRecordingsByAttributes" default="" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Angabe der Testfall-Attribute durch ';'
+                            getrennt für die die Aufzeichnungen bei Übereinstimmung erfasst
+                            werden sollen. Beispiele: env=XiL; priority=1. Die Attribute
+                            müssen im Parameter 'coveredAttributes' extra spezifiziert werden.
+                            Hinweis: Alle Attribute können durch Verwendung eines '*'
+                            einbezogen werden.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Specification of the test case attributes
+                            separated by ';' for which the records should be captured
+                            in case  of a match. Examples: env=XiL; priority=1.
+                            The attributes must be specified in the parameter 'coveredAttributes'.
+                            Hint: All attributes can be included by using a '*'.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
