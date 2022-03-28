@@ -147,7 +147,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
             // Determine packages directory by COM API
             final String packageDir = getPackagesDir(launcher, listener);
 
-            // Absolutize packages directory, if not absolute assume relative to ECU-TEST workspace
+            // Absolute packages directory, if not absolute assume relative to ECU-TEST workspace
             expPkgDir = PathUtil.makeAbsolutePath(packageDir, workspace);
         }
 
