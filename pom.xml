@@ -76,7 +76,7 @@
         <!-- Direct dependencies -->
         <jacob.version>1.20</jacob.version>
         <antlr4-maven-plugin.version>4.9.3</antlr4-maven-plugin.version>
-        <antlr4-runtime.version>4.9.3</antlr4-runtime.version>
+        <antlr4-runtime.version>4.10.1</antlr4-runtime.version>
         <sqlite-jdbc.version>3.7.2</sqlite-jdbc.version>
 
         <!-- Static code analysis -->
