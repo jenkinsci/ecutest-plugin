@@ -21,7 +21,9 @@ import hudson.remoting.Callable;
 import jenkins.security.MasterToSlaveCallable;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,11 +124,12 @@ public abstract class AbstractATXReportHandler {
                 }
             }
             if (injectBuildVars) {
-                final List<String> constants = Arrays.asList(
+                final List<String> constants = new ArrayList<>(Arrays.asList(
                     configMap.get("setConstants"),
                     formatConstant("BUILD_NUMBER"),
                     formatConstant("BUILD_URL"),
-                    formatConstant("JOB_NAME"));
+                    formatConstant("JOB_NAME")));
+                constants.removeAll(Collections.singleton(""));
                 configMap.replace("setConstants", String.join(";", constants));
             }
             return configMap;
