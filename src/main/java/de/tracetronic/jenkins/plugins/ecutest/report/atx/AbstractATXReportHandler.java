@@ -125,11 +125,14 @@ public abstract class AbstractATXReportHandler {
             }
             if (injectBuildVars) {
                 final List<String> constants = new ArrayList<>(Arrays.asList(
-                    configMap.get("setConstants"),
                     formatConstant("BUILD_NUMBER"),
                     formatConstant("BUILD_URL"),
                     formatConstant("JOB_NAME")));
-                constants.removeAll(Collections.singleton(""));
+                final String customConstants = configMap.get("setConstants");
+
+                if (!customConstants.isEmpty()) {
+                    constants.add(customConstants);
+                }
                 configMap.replace("setConstants", String.join(";", constants));
             }
             return configMap;
