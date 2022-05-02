@@ -169,12 +169,12 @@ public final class ATXSettingParser {
     /**
      * Determines whether a setting is a checkbox option.
      *
+     * @param settingName the name of the setting to check the type for
      * @param defaultValue the default value of the setting
-     * @param value
      * @return {@code true} if is checkbox, {@code false} otherwise
      */
     private static boolean isCheckbox(final String settingName, final String defaultValue) {
-        if(Arrays.asList("useSettingsFromServer", "archiveRecordings").contains(settingName)){
+        if (Arrays.asList("useSettingsFromServer", "archiveRecordings").contains(settingName)) {
             return false;
         }
         return "true".equals(defaultValue.toLowerCase(Locale.getDefault()))
