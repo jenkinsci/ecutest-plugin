@@ -142,21 +142,62 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="useSettingsFromServer" default="False" canBeOverwrittenByServer="false"
-                 xsi:type="reportConfigItem">
+        <SETTING name="useSettingsFromServer" default="False"
+                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">True, wenn die Einstellungen für die
-                            ATX-Generierung vom TEST-GUIDE Server abgefragt werden sollen.
-                            Die Einstellungen hier (außer die Verbindungseinstellungen) werden überschrieben.
+                        <DVALUE xsi:type="string">Always (ehemals True): alle Einstellungen
+                            für die
+                            ATX-Generierung vom TEST-GUIDE Server abfragen.
+                            WhereKeyword: nur die Einstellungen vom Server übernehmen, welche
+                            den
+                            Wert der Einstellung "useSettingsFromServerKeyword" haben.
+                            Never
+                            (ehemals False): ausschließlich die lokalen Einstellungen
+                            verwenden.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">True, if the settings for the
-                            ATX generation shall be retrieved from the TEST-GUIDE server.
-                            The settings here will be overridden (except for the connection settings).
-                        </DVALUE>
+                        <DVALUE xsi:type="string">Always (formerly True): apply all settings
+                            for the
+                            ATX generation from the TEST-GUIDE server.
+                            WhereKeyword:
+                            only apply settings from the server, which have the value
+                            of the
+                            setting "useSettingsFromServerKeyword".
+                            Never (formerly
+                            False): use
+                            only the local settings.</DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="useSettingsFromServerKeyword" default=""
+                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Schlüsselwort, das genutzt wird, wenn die
+                            Einstellung
+                            "useSettingsFromServer" auf "WhereKeyword" gesetzt
+                            ist: In diesem Fall wird für
+                            nachfolgende Einstellungen, bei denen
+                            das hier definierte
+                            Schlüsselwort gesetzt
+                            ist, die Konfiguration
+                            vom TEST-GUIDE Server übernommen.</DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Keyword that is used when the
+                            "useSettingsFromServer"
+                            setting is set to "WhereKeyword": In this
+                            case the configuration
+                            supplied by
+                            the TEST-GUIDE server is used
+                            for settings where this keyword is
+                            used.</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>

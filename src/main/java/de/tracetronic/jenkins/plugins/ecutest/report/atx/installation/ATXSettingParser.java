@@ -112,7 +112,7 @@ public final class ATXSettingParser {
                 final String descEnglish = parseDescription(settingNode, "en_US");
 
                 // Add sub setting
-                if (isCheckbox(defaultValue)) {
+                if (isCheckbox(settingName, defaultValue)) {
                     final ATXBooleanSetting setting = new ATXBooleanSetting(settingName, group,
                         descGerman, descEnglish, toBoolean(defaultValue));
                     settings.add(setting);
@@ -169,10 +169,14 @@ public final class ATXSettingParser {
     /**
      * Determines whether a setting is a checkbox option.
      *
+     * @param settingName the name of the setting to check the type for
      * @param defaultValue the default value of the setting
      * @return {@code true} if is checkbox, {@code false} otherwise
      */
-    private static boolean isCheckbox(final String defaultValue) {
+    private static boolean isCheckbox(final String settingName, final String defaultValue) {
+        if (Arrays.asList("useSettingsFromServer", "archiveRecordings").contains(settingName)) {
+            return false;
+        }
         return "true".equals(defaultValue.toLowerCase(Locale.getDefault()))
             || "false".equals(defaultValue.toLowerCase(Locale.getDefault()));
     }
