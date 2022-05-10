@@ -33,7 +33,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                                   final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) {
                 final TTConsoleLogger logger = new TTConsoleLogger(listener);
                 logger.log("TTConsoleLogger");
                 return true;
@@ -43,7 +43,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
         final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
         final HtmlPage consoleLog = getWebClient().getPage(build, "console");
         assertTrue("Plain text log output should be present in build console log",
-            consoleLog.asText().contains("TTConsoleLogger"));
+            consoleLog.asNormalizedText().contains("TTConsoleLogger"));
     }
 
     @Test
@@ -53,7 +53,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                                   final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) {
                 final TTConsoleLogger logger = new TTConsoleLogger(listener);
                 logger.logInfo("TTConsoleLogger");
                 return true;
@@ -63,7 +63,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
         final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
         final HtmlPage consoleLog = getWebClient().getPage(build, "console");
         assertTrue("Annotated info log output should be present in build console log",
-            consoleLog.asText().contains("[TT] INFO: TTConsoleLogger"));
+            consoleLog.asNormalizedText().contains("[TT] INFO: TTConsoleLogger"));
     }
 
     @Test
@@ -73,7 +73,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                                   final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) {
                 final TTConsoleLogger logger = new TTConsoleLogger(listener);
                 logger.logWarn("TTConsoleLogger");
                 return true;
@@ -83,7 +83,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
         final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
         final HtmlPage consoleLog = getWebClient().getPage(build, "console");
         assertTrue("Annotated warn log output should be present in build console log",
-            consoleLog.asText().contains("[TT] WARN: TTConsoleLogger"));
+            consoleLog.asNormalizedText().contains("[TT] WARN: TTConsoleLogger"));
     }
 
     @Test
@@ -93,7 +93,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                                   final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) {
                 final TTConsoleLogger logger = new TTConsoleLogger(listener);
                 logger.logError("TTConsoleLogger");
                 return true;
@@ -103,7 +103,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
         final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
         final HtmlPage consoleLog = getWebClient().getPage(build, "console");
         assertTrue("Annotated error log output should be present in build console log",
-            consoleLog.asText().contains("[TT] ERROR: TTConsoleLogger"));
+            consoleLog.asNormalizedText().contains("[TT] ERROR: TTConsoleLogger"));
     }
 
     @Test
@@ -113,7 +113,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                                   final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) {
                 final TTConsoleLogger logger = new TTConsoleLogger(listener);
                 logger.logComException(new ETComException("TTConsoleLogger"));
                 return true;
@@ -123,7 +123,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
         final FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
         final HtmlPage consoleLog = getWebClient().getPage(build, "console");
         assertTrue("Annotated error log output should be present in build console log",
-            consoleLog.asText().contains("[TT] ERROR: Caught ComException: TTConsoleLogger"));
+            consoleLog.asNormalizedText().contains("[TT] ERROR: Caught ComException: TTConsoleLogger"));
     }
 
     @Test
@@ -131,7 +131,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
         System.setProperty("ecutest.debugLog", "true");
         final HtmlPage consoleLog = logDebug();
         assertTrue("Annotated debug log output should be present in build console log",
-            consoleLog.asText().contains("[TT] DEBUG: TTConsoleLogger"));
+            consoleLog.asNormalizedText().contains("[TT] DEBUG: TTConsoleLogger"));
     }
 
     @Test
@@ -139,7 +139,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
         System.setProperty("ecutest.debugLog", "false");
         final HtmlPage consoleLog = logDebug();
         assertFalse("Annotated debug log output should NOT be present in build console log",
-            consoleLog.asText().contains("[TT] DEBUG: TTConsoleLogger"));
+            consoleLog.asNormalizedText().contains("[TT] DEBUG: TTConsoleLogger"));
     }
 
     private HtmlPage logDebug() throws Exception {
@@ -148,7 +148,7 @@ public class TTConsoleLoggerIT extends IntegrationTestBase {
 
             @Override
             public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-                                   final BuildListener listener) throws InterruptedException, IOException {
+                                   final BuildListener listener) {
                 final TTConsoleLogger logger = new TTConsoleLogger(listener);
                 logger.logDebug("TTConsoleLogger");
                 return true;

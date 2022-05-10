@@ -66,12 +66,12 @@
 
     <properties>
         <!-- Jenkins base -->
-        <jenkins.version>2.235.5</jenkins.version>
+        <jenkins.version>2.289.3</jenkins.version>
         <java.level>8</java.level>
 
         <!-- Jenkins plugins -->
         <job-dsl.version>1.78.3</job-dsl.version>
-        <warnings-ng.version>8.0.0</warnings-ng.version>
+        <warnings-ng.version>9.11.1</warnings-ng.version>
 
         <!-- Direct dependencies -->
         <jacob.version>1.20</jacob.version>
@@ -100,10 +100,25 @@
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-2.235.x</artifactId>
-                <version>29</version>
+                <artifactId>bom-2.289.x</artifactId>
+                <version>1340.vb_085767387d2</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jenkins-ci.main</groupId>
+                <artifactId>jenkins-test-harness</artifactId>
+                <version>1736.vc72c458c5103</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jenkins.plugins</groupId>
+                <artifactId>echarts-api</artifactId>
+                <version>5.3.0-2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.36</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -140,21 +155,6 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>${sqlite-jdbc.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.jvnet.hudson</groupId>
-            <artifactId>xstream</artifactId>
-            <version>1.4.7-jenkins-1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>xmlpull</groupId>
-                    <artifactId>xmlpull</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xpp3</groupId>
-                    <artifactId>xpp3_min</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <!-- Jenkins plugins -->
         <dependency>
@@ -164,6 +164,7 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>jquery</artifactId>
+            <version>1.12.4-1</version>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
