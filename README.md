@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2015-2021 TraceTronic GmbH <info@tracetronic.de>
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # TraceTronic ECU-TEST Plugin
 
 [![Build Status](https://ci.jenkins.io/buildStatus/icon?job=plugins/ecutest-plugin/master)](https://ci.jenkins.io/job/plugins/job/ecutest-plugin/job/master) <!-- markdown-link-check-disable -->[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjenkinsci%2Fecutest-plugin.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjenkinsci%2Fecutest-plugin?ref=badge_shield)<!-- markdown-link-check-enable --> [![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/ecutest.svg)](https://plugins.jenkins.io/ecutest)
@@ -1029,7 +1035,9 @@ Please download the modified Swarm client from [here](https://github.com/jenkins
 ## License
 
 This plugin is licensed under 3-clause BSD license.
-More information can be found inside the [LICENSE](LICENSE) file.
+More information can be found inside the [LICENSE](LICENSE) file or within the [LICENSES](./LICENSES) folder. Using 
+the [REUSE helper tool](https://github.com/fsfe/reuse-tool), you can run `reuse spdx` to get a bill of materials.
+
 
 ## Changelog
 
