@@ -69,6 +69,7 @@ An installation entry is specified by an arbitrary name and the path to the inst
 The execution on a Jenkins agent requires the adaption of the ECU-TEST installation directory on the agent configuration page.
 
 ![ECU-TEST](docs/images/ecutest.png "ECU-TEST")
+![ECU-TEST_AGENT](docs/images/ecutest2.png "ECU-TEST")
 
 ### TEST-GUIDE configuration
 
@@ -96,9 +97,10 @@ The post-build actions are extended by these test report related post-build step
 
 ### Job execution
 
-- After job configuration is done a new build can be triggerd by clicking on the "Build now" button
-- The console log contains detailed information per build step execution
-- The test results are published both on the build page and the job page based on the latest build
+- After job configuration is done a new build can be triggered by clicking on the "Build now" button
+- The test results are published both on the build page and the job page based on the latest build after the step 
+  *[TT] Publish UNIT* Reports has been executed.
+- The console log contains detailed information per build step execution.
 
 ![Demo Job](docs/images/demo_job.png "Demo Job")
 ![Demo Build](docs/images/demo_build.png "Demo Build")
@@ -106,9 +108,10 @@ The post-build actions are extended by these test report related post-build step
 
 ### Environment variables
 
-- This plugin also exposes the tool and test related information of the current build as environment variables
-- These variables are composed of _$TT_<TOOL | TEST>_<information>_n_ where n is the 0-based index of the related build steps in the job configuration
-- The summary of all generated environment variables is also shown on the build page
+- This plugin also exposes the tool and test related information of the current build as environment variables.
+- These variables are composed of ${TT_<TOOL | TEST>_<variable-info>_n} where n is the index of the 
+  related build steps in the job configuration, counting from 0.
+- The summary of all generated environment variables is also shown on the build page.
 
 <details>
     <summary>Tool related variables</summary>
@@ -523,7 +526,7 @@ node('windows') {
 ```groovy
 node('windows') {
     // ECU-TEST installation using global variable ET
-    def et = ET.newInstallation toolName: 'ECU-TEST', installPath: 'C:\\Program Files\\ECU-TEST 8.0'
+    def et = ET.newInstallation toolName: 'ECU-TEST', installPath: 'C:\\Program Files\\ECU-TEST xxx'
 
     // or getting existing installation from global tool configuration
     def et = ET.installation('ECU-TEST')
@@ -576,13 +579,13 @@ Existing configurations of both types can be exported to according YAML file usi
 tool:
   ecu-test:
     installations:
-    - name: "ECU-TEST 8.0"
-      home: "C:\\Program Files\\ECU-TEST 8.0"
-    - name: "ECU-TEST 8.1"
-      home: "C:\\Program Files\\ECU-TEST 8.1"
+    - name: "ECU-TEST versionX"
+      home: "C:\\Program Files\\ECU-TEST versionX"
+    - name: "ECU-TEST versionY"
+      home: "C:\\Program Files\\ECU-TEST versionY"
       properties:
       - ecuTestProperty:
-          progId: "ECU-TEST.Application.8.1"
+          progId: "ECU-TEST.Application.versionY"
           registerComServer: true
           timeout: 60
 ```
