@@ -234,13 +234,13 @@ Same as in [downstream report generation](#downstream-report-generation).
 
 Executing test cases without trace analysis and archiving the artifacts (_upstream_)
 
-![Upstream Build Steps](docs/images/upstream_build_steps.png "Upstream Build Steps")
-![Upstream Post-Build Steps](docs/images/upstream_post_build_steps.png "Upstream Post-Build Steps")
+![Upstream Build Steps](docs/images/upstream_build_steps2.png "Upstream Build Steps")
+![Upstream Post-Build Steps](docs/images/upstream_post_build_steps2.png "Upstream Post-Build Steps")
 
 Copying artifacts and running the trace analysis (_downstream_)
 
-![Downstream Build Steps](docs/images/downstream_build_steps.png "Downstream Build Steps")
-![Downstream Post-Build Steps](docs/images/downstream_post_build_steps.png "Downstream Post-Build Steps")
+![Downstream Build Steps](docs/images/downstream_build_steps2.png "Downstream Build Steps")
+![Downstream Post-Build Steps](docs/images/downstream_post_build_steps2.png "Downstream Post-Build Steps")
 
 #### Pipeline configuration
 
