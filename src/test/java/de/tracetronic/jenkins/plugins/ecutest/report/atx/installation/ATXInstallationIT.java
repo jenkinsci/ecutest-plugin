@@ -26,16 +26,27 @@ public class ATXInstallationIT extends IntegrationTestBase {
         final ATXInstallation installation = publisher.getInstallation();
         assertNotNull(installation);
 
-        assertMigratedSetting(installation, "httpProxy", "http://user:pass@10.10.10.2:8080");
-        assertMigratedSetting(installation, "httpsProxy", "http://user:pass@10.10.10.2:8080");
-        assertMigratedSetting(installation, "uploadAuthenticationKey", "API-TOKEN");
+        assertMigratedSecretSetting(installation, "httpProxy", "http://user:pass@10.10.10.2:8080");
+        assertMigratedSecretSetting(installation, "httpsProxy", "http://user:pass@10.10.10.2:8080");
+        assertMigratedSecretSetting(installation, "uploadAuthenticationKey", "API-TOKEN");
+
+        assertMigratedBoolean2StringSetting(installation, "archiveRecordings", "False");
+        assertMigratedBoolean2StringSetting(installation, "useSettingsFromServer", "Never");
     }
 
-    private void assertMigratedSetting(final ATXInstallation installation, final String settingName,
-                                       final String expectedValue) {
+    private void assertMigratedSecretSetting(final ATXInstallation installation, final String settingName,
+                                             final String expectedValue) {
         Optional<ATXSetting<?>> setting = installation.getConfig().getSettingByName(settingName);
         assertThat(setting.isPresent(), is(true));
         assertThat(setting.get(), instanceOf(ATXSecretSetting.class));
         assertThat(((ATXSecretSetting) setting.get()).getSecretValue(), is(expectedValue));
+    }
+
+    private void assertMigratedBoolean2StringSetting(final ATXInstallation installation, final String settingName,
+                                             final String expectedValue) {
+        Optional<ATXSetting<?>> setting = installation.getConfig().getSettingByName(settingName);
+        assertThat(setting.isPresent(), is(true));
+        assertThat(setting.get(), instanceOf(ATXTextSetting.class));
+        assertThat(((ATXTextSetting) setting.get()).getValue(), is(expectedValue));
     }
 }
