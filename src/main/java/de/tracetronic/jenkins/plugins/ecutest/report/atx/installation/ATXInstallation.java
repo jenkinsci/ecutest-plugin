@@ -424,8 +424,8 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                     proxyUrl, ignoreSSL);
         }
 
-        private Object onDemandValueMigration(ATXSetting<?> atxSetting){
-            switch(atxSetting.getName()){
+        private Object onDemandValueMigration(ATXSetting<?> atxSetting) {
+            switch(atxSetting.getName()) {
                 case "useSettingsFromServer": return migrateFromBooleanToString(atxSetting, "Always", "Never");
                 case "archiveRecordings": return migrateFromBooleanToString(atxSetting, "True", "False");
                 default: return atxSetting.getValue();
@@ -434,8 +434,8 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         }
 
         private String migrateFromBooleanToString(ATXSetting<?> atxSetting, String valueForTrue, String valueForFalse) {
-                if (atxSetting.getValue() instanceof Boolean){
-                    if((boolean) atxSetting.getValue()){
+                if (atxSetting.getValue() instanceof Boolean) {
+                    if((Boolean) atxSetting.getValue()) {
                         return valueForTrue;
                     }else{
                         return valueForFalse;
