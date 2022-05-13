@@ -301,7 +301,8 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                         final Optional<ATXSetting<?>> currentSetting =
                                 currentConfig.getSettingByName(newSetting.getName());
                         currentSetting.ifPresent(atxSetting ->
-                                newConfig.setSettingValueByName(atxSetting.getName(), onDemandValueMigration(atxSetting)));
+                                newConfig.setSettingValueByName(atxSetting.getName(),
+                                    onDemandValueMigration(atxSetting)));
                     }
                     final List<ATXCustomSetting> customSettings = currentConfig.getCustomSettings();
                     newConfig.setCustomSettings(customSettings == null ? new ArrayList<>() : customSettings);
@@ -424,8 +425,8 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
                     proxyUrl, ignoreSSL);
         }
 
-        private Object onDemandValueMigration(ATXSetting<?> atxSetting) {
-            switch(atxSetting.getName()) {
+        private Object onDemandValueMigration(final ATXSetting<?> atxSetting) {
+            switch (atxSetting.getName()) {
                 case "useSettingsFromServer": return migrateFromBooleanToString(atxSetting, "Always", "Never");
                 case "archiveRecordings": return migrateFromBooleanToString(atxSetting, "True", "False");
                 default: return atxSetting.getValue();
@@ -433,15 +434,16 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
 
         }
 
-        private String migrateFromBooleanToString(ATXSetting<?> atxSetting, String valueForTrue, String valueForFalse) {
-                if (atxSetting.getValue() instanceof Boolean) {
-                    if((Boolean) atxSetting.getValue()) {
-                        return valueForTrue;
-                    }else{
-                        return valueForFalse;
-                    }
+        private String migrateFromBooleanToString(final ATXSetting<?> atxSetting, final String valueForTrue,
+                                                  final String valueForFalse) {
+            if (atxSetting.getValue() instanceof Boolean) {
+                if ((Boolean) atxSetting.getValue()) {
+                    return valueForTrue;
+                } else {
+                    return valueForFalse;
                 }
-                return (String) atxSetting.getValue();
+            }
+            return (String) atxSetting.getValue();
         }
     }
 }
