@@ -526,7 +526,7 @@ node('windows') {
 ```groovy
 node('windows') {
     // ECU-TEST installation using global variable ET
-    def et = ET.newInstallation toolName: 'ECU-TEST', installPath: 'C:\\Program Files\\ECU-TEST xxx'
+    def et = ET.newInstallation toolName: 'ECU-TEST', installPath: 'C:\\Program Files\\ECU-TEST X.Y'
 
     // or getting existing installation from global tool configuration
     def et = ET.installation('ECU-TEST')
@@ -579,13 +579,13 @@ Existing configurations of both types can be exported to according YAML file usi
 tool:
   ecu-test:
     installations:
-    - name: "ECU-TEST versionX"
-      home: "C:\\Program Files\\ECU-TEST versionX"
-    - name: "ECU-TEST versionY"
-      home: "C:\\Program Files\\ECU-TEST versionY"
+    - name: "ECU-TEST X.Y"
+      home: "C:\\Program Files\\ECU-TEST X.Y"
+    - name: "ECU-TEST X2.Y2"
+      home: "C:\\Program Files\\ECU-TEST X2.Y2"
       properties:
       - ecuTestProperty:
-          progId: "ECU-TEST.Application.versionY"
+          progId: "ECU-TEST.Application.X2.Y2"
           registerComServer: true
           timeout: 60
 ```
