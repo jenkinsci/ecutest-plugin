@@ -21,18 +21,19 @@ public class ImportProjectConfigTest {
 
     @Test
     public void testNullConstructor() {
-        final ImportProjectConfig config = new ImportProjectConfig(null, null, false, null, null);
+        final ImportProjectConfig config = new ImportProjectConfig(null, null, false, null, null, null);
         assertThat(config.getTmsPath(), is(""));
         assertThat(config.getImportPath(), is(""));
         assertFalse(config.isImportMissingPackages());
         assertThat(config.getCredentialsId(), is(""));
         assertThat(config.getTimeout(), is(String.valueOf(ImportProjectConfig.getDefaultTimeout())));
+        assertThat(config.getTmProjectId(), is(""));
     }
 
     @Test
     public void testExpand() {
         final ImportProjectConfig config = new ImportProjectConfig("${PROJECT_PATH}", "${IMPORT_PATH}",
-            true, "${CREDENTIALS_ID}", "${TIMEOUT}");
+            true, "${CREDENTIALS_ID}", "${TIMEOUT}", "tmProjectId");
         final EnvVars envVars = new EnvVars();
         envVars.put("PROJECT_PATH", "project");
         envVars.put("IMPORT_PATH", "import");
@@ -44,6 +45,7 @@ public class ImportProjectConfigTest {
         assertTrue(config.isImportMissingPackages());
         assertThat(expConfig.getCredentialsId(), is("credentialsId"));
         assertThat(expConfig.getTimeout(), is("600"));
+        assertThat(config.getTmProjectId(), is("tmProjectId"));
     }
 
     @Test

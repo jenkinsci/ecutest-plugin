@@ -135,6 +135,7 @@ public class ImportProjectBuilderIT extends IntegrationTestBase {
         jenkins.assertXPath(page, "//input[@name='_.importPath' and @value='import']");
         jenkins.assertXPath(page, "//input[@name='_.importMissingPackages' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.timeout' and @value='600']");
+        jenkins.assertXPath(page, "//input[@name='_.tmProjectId' and @value='2']");
     }
 
     @Test
@@ -316,7 +317,7 @@ public class ImportProjectBuilderIT extends IntegrationTestBase {
     private ImportProjectBuilder createImportProjectBuilder() {
         final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
         final ImportProjectConfig tmsConfig = new ImportProjectConfig("project", "import", true,
-            "credentialsId", "600");
+            "credentialsId", "600", "2");
         importConfigs.add(tmsConfig);
         return new ImportProjectBuilder(importConfigs);
     }
