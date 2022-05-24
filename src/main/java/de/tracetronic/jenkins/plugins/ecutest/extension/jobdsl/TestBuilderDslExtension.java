@@ -790,7 +790,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          * @param importPath            the import path
          * @param importMissingPackages specifies whether to import missing packages
          * @param timeout               the import timeout
-         *                              todo comment
+         * @param tmProjectId           the project ID in test management system
          */
         public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
                                   final CharSequence importPath, final boolean importMissingPackages,
@@ -815,7 +815,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          * @param projectPath   the project path
          * @param importPath    the import path
          * @param timeout       the import timeout
-         *                      todo comment
+         * @param tmProjectId   the project ID in test management system
          */
         public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
                                   final CharSequence importPath, final int timeout, final CharSequence tmProjectId) {
@@ -830,7 +830,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          * @param importPath            the import path
          * @param importMissingPackages specifies whether to import missing packages
          * @param timeout               the import timeout
-         *                              todo comment
+         * @param tmProjectId           the project ID in test management system
          */
         public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
                                   final CharSequence importPath, final boolean importMissingPackages,
@@ -845,7 +845,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          * @param credentialsId the credentials id
          * @param projectPath   the project path
          * @param closure       the nested Groovy closure
-         *                      todo comment
+         * @param tmProjectId   the project ID in test management system
          */
         public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
                                   final Runnable closure, final CharSequence tmProjectId) {

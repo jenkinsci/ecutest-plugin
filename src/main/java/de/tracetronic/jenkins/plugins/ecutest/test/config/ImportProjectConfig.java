@@ -30,11 +30,14 @@ public class ImportProjectConfig extends ImportConfig {
      * @since 1.17
      */
     private final boolean importMissingPackages;
-    private final String tmProjectId; // todo: comment
+
+    /**
+     * If nonempty, the projects from the TMS will be imported via their project ID instead of their project path.
+     */
+    private final String tmProjectId;
 
     /**
      * Instantiates a new {@link ImportProjectConfig}.
-     * todo: adjust comment
      * @param tmsPath               the project path in test management system
      * @param importPath            the import path
      * @param importMissingPackages specifies whether to import missing packages
@@ -54,7 +57,7 @@ public class ImportProjectConfig extends ImportConfig {
      * @param importMissingPackages specifies whether to import missing packages
      * @param credentialsId         the credentials id
      * @param timeout               the import timeout
-     * @param tmProjectId todo: comment
+     * @param tmProjectId           the project ID in test management system
      */
     @DataBoundConstructor
     public ImportProjectConfig(final String tmsPath, final String importPath,
