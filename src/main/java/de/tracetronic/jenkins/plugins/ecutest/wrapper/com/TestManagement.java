@@ -130,6 +130,29 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
         }
     }
 
+    // todo: comment
+    public boolean importProjectById(final String tmProjectId, final String importPath) throws ETComException {
+        return importProjectById(tmProjectId, importPath, false, 0);
+    }
+
+    // todo: comment
+    public boolean importProjectById(final String tmProjectId, final String importPath,
+                                     final int timeout) throws ETComException {
+        return importProjectById(tmProjectId, importPath, false, timeout);
+        }
+
+    @Override
+    public boolean importProjectById(final String tmProjectId, final String importPath,
+                                     final boolean importMissingPackages, final int timeout) throws ETComException {
+        if (timeout == 0) {
+            return performDirectRequest("ImportProjectById", new Variant(tmProjectId), new Variant(importPath),
+                new Variant(importMissingPackages)).getBoolean();
+        } else {
+            return performDirectRequest("ImportProjectById", new Variant(tmProjectId), new Variant(importPath),
+                new Variant(importMissingPackages), new Variant(timeout)).getBoolean();
+        }
+    }
+
     /**
      * Same as {@link #importProjectDirectory(String, String, int)} but without timeout.
      *

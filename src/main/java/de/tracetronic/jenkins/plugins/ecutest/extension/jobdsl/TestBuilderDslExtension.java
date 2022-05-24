@@ -790,10 +790,11 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          * @param importPath            the import path
          * @param importMissingPackages specifies whether to import missing packages
          * @param timeout               the import timeout
+         *                              todo comment
          */
         public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
                                   final CharSequence importPath, final boolean importMissingPackages,
-                                  final CharSequence timeout) {
+                                  final CharSequence timeout, final CharSequence tmProjectId) {
             Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
             Preconditions.checkNotNull(projectPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
             Preconditions.checkNotNull(importPath, NOT_NULL_MSG, OPT_IMPORT_PATH);
@@ -804,7 +805,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
             validation = tmsValidator.validateImportPath(importPath.toString());
             Preconditions.checkArgument(validation.kind != FormValidation.Kind.ERROR, validation.getMessage());
             importConfigs.add(new ImportProjectConfig(projectPath.toString(), importPath.toString(),
-                importMissingPackages, credentialsId.toString(), timeout.toString()));
+                importMissingPackages, credentialsId.toString(), timeout.toString(), tmProjectId.toString()));
         }
 
         /**
@@ -814,10 +815,11 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          * @param projectPath   the project path
          * @param importPath    the import path
          * @param timeout       the import timeout
+         *                      todo comment
          */
         public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
-                                  final CharSequence importPath, final int timeout) {
-            importFromTMS(credentialsId, projectPath, importPath, false, String.valueOf(timeout));
+                                  final CharSequence importPath, final int timeout, final CharSequence tmProjectId) {
+            importFromTMS(credentialsId, projectPath, importPath, false, String.valueOf(timeout), tmProjectId.toString());
         }
 
         /**
@@ -828,11 +830,13 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          * @param importPath            the import path
          * @param importMissingPackages specifies whether to import missing packages
          * @param timeout               the import timeout
+         *                              todo comment
          */
         public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
                                   final CharSequence importPath, final boolean importMissingPackages,
-                                  final int timeout) {
-            importFromTMS(credentialsId, projectPath, importPath, importMissingPackages, String.valueOf(timeout));
+                                  final int timeout, final CharSequence tmProjectId) {
+            importFromTMS(credentialsId, projectPath, importPath, importMissingPackages, String.valueOf(timeout),
+                tmProjectId.toString());
         }
 
         /**
@@ -841,15 +845,16 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
          * @param credentialsId the credentials id
          * @param projectPath   the project path
          * @param closure       the nested Groovy closure
+         *                      todo comment
          */
         public void importFromTMS(final CharSequence credentialsId, final CharSequence projectPath,
-                                  final Runnable closure) {
+                                  final Runnable closure, final CharSequence tmProjectId) {
             Preconditions.checkNotNull(credentialsId, NOT_NULL_MSG, OPT_CREDENTIALS_ID);
             Preconditions.checkNotNull(projectPath, NOT_NULL_MSG, OPT_PROJECT_PATH);
             final ImportTMSContext context = new ImportTMSContext();
             executeInContext(closure, context);
             importConfigs.add(new ImportProjectConfig(projectPath.toString(), context.importPath,
-                context.importMissingPackages, credentialsId.toString(), context.timeout));
+                context.importMissingPackages, credentialsId.toString(), context.timeout, tmProjectId.toString()));
         }
 
         /**

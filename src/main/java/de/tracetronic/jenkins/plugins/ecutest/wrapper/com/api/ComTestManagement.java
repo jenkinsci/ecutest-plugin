@@ -79,6 +79,10 @@ public interface ComTestManagement {
     boolean importProject(String tmProjectPath, String importPath, boolean importMissingPackages, int timeout)
         throws ETComException;
 
+    //todo: comment
+    boolean importProjectById(String tmProjectId, String importPath, boolean importMissingPackages, int timeout)
+        throws ETComException;
+
     /**
      * Imports a directory from a test management system with all sub directories and projects.
      * The tmDirectoryPath specifies the directory in the test management system.
