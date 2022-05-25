@@ -131,7 +131,8 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     }
 
     /**
-     * Same as {@link #importProjectById(String, String, boolean, int)}, but without importMissingPackages, timeout
+     * Same as {@link #importProjectById(String, String, boolean, int)}, but without importMissingPackages, timeout.
+     *
      * @param tmProjectId   the project ID in test management system
      * @param importPath    the directory to save the project (relative to package directory or absolute)
      * @return {@code true} if import succeeded, {@code false} otherwise
@@ -142,7 +143,8 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     }
 
     /**
-     * Same as {@link #importProjectById(String, String, boolean, int)}, but without importMissingPackages
+     * Same as {@link #importProjectById(String, String, boolean, int)}, but without importMissingPackages.
+     *
      * @param tmProjectId   the project ID in test management system
      * @param importPath    the directory to save the project (relative to package directory or absolute)
      * @param timeout       the timeout in seconds to wait for import to be finished
@@ -152,10 +154,11 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     public boolean importProjectById(final String tmProjectId, final String importPath,
                                      final int timeout) throws ETComException {
         return importProjectById(tmProjectId, importPath, false, timeout);
-        }
+    }
 
     /**
-     * Dispatches the function call to the ECU-TEST COM-API method ImportProjectById
+     * Dispatches the function call to the ECU-TEST COM-API method ImportProjectById.
+     *
      * @param tmProjectId           the project ID in test management system
      * @param importPath            the directory to save the project (relative to package directory or absolute)
      * @param importMissingPackages specifies whether to import missing packages
