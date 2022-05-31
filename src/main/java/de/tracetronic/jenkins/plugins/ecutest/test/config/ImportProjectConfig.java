@@ -93,7 +93,7 @@ public class ImportProjectConfig extends ImportConfig {
             final ImportProjectConfig that = (ImportProjectConfig) other;
             result =
                 that.canEqual(this) && super.equals(that) && importMissingPackages == that.importMissingPackages
-                    && StringUtils.trimToEmpty(tmProjectId).equals(StringUtils.trimToEmpty(that.tmProjectId));
+                    && tmProjectId.equals(that.tmProjectId);
         }
         return result;
     }

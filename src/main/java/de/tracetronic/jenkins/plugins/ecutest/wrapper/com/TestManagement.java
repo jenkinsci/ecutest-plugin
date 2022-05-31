@@ -131,7 +131,8 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     }
 
     /**
-     * Same as {@link #importProjectById(String, String, boolean, int)}, but without importMissingPackages, timeout.
+     * Same as {@link #importProjectById(String, String, boolean, int)}, but without importMissingPackages and
+     * no timeout (= 0).
      *
      * @param tmProjectId   the project ID in test management system
      * @param importPath    the directory to save the project (relative to package directory or absolute)
@@ -147,7 +148,7 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
      *
      * @param tmProjectId   the project ID in test management system
      * @param importPath    the directory to save the project (relative to package directory or absolute)
-     * @param timeout       the timeout in seconds to wait for import to be finished
+     * @param timeout       the timeout in seconds to wait for import to be finished (timeout = 0: no timeout)
      * @return {@code true} if import succeeded, {@code false} otherwise
      * @throws ETComException in case of a COM exception
      */
@@ -162,7 +163,7 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
      * @param tmProjectId           the project ID in test management system
      * @param importPath            the directory to save the project (relative to package directory or absolute)
      * @param importMissingPackages specifies whether to import missing packages
-     * @param timeout               the timeout in seconds to wait for import to be finished
+     * @param timeout               the timeout in seconds to wait for import to be finished (timeout = 0: no timeout)
      * @return {@code true} if import succeeded, {@code false} otherwise
      * @throws ETComException in case of a COM exception
      */
