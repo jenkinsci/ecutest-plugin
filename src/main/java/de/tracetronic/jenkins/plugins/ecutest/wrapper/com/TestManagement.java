@@ -131,6 +131,55 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     }
 
     /**
+     * Same as {@link #importProjectById(String, String, boolean, int)}, but without importMissingPackages and
+     * no timeout (= 0).
+     *
+     * @param tmProjectId   the project ID in test management system
+     * @param importPath    the directory to save the project (relative to package directory or absolute)
+     * @return {@code true} if import succeeded, {@code false} otherwise
+     * @throws ETComException in case of a COM exception
+     */
+    public boolean importProjectById(final String tmProjectId, final String importPath) throws ETComException {
+        return importProjectById(tmProjectId, importPath, false, 0);
+    }
+
+    /**
+     * Same as {@link #importProjectById(String, String, boolean, int)}, but without importMissingPackages.
+     *
+     * @param tmProjectId   the project ID in test management system
+     * @param importPath    the directory to save the project (relative to package directory or absolute)
+     * @param timeout       the timeout in seconds to wait for import to be finished (timeout = 0: no timeout)
+     * @return {@code true} if import succeeded, {@code false} otherwise
+     * @throws ETComException in case of a COM exception
+     */
+    public boolean importProjectById(final String tmProjectId, final String importPath,
+                                     final int timeout) throws ETComException {
+        return importProjectById(tmProjectId, importPath, false, timeout);
+    }
+
+    /**
+     * Dispatches the function call to the ECU-TEST COM-API method ImportProjectById.
+     *
+     * @param tmProjectId           the project ID in test management system
+     * @param importPath            the directory to save the project (relative to package directory or absolute)
+     * @param importMissingPackages specifies whether to import missing packages
+     * @param timeout               the timeout in seconds to wait for import to be finished (timeout = 0: no timeout)
+     * @return {@code true} if import succeeded, {@code false} otherwise
+     * @throws ETComException in case of a COM exception
+     */
+    @Override
+    public boolean importProjectById(final String tmProjectId, final String importPath,
+                                     final boolean importMissingPackages, final int timeout) throws ETComException {
+        if (timeout == 0) {
+            return performDirectRequest("ImportProjectById", new Variant(tmProjectId), new Variant(importPath),
+                new Variant(importMissingPackages)).getBoolean();
+        } else {
+            return performDirectRequest("ImportProjectById", new Variant(tmProjectId), new Variant(importPath),
+                new Variant(importMissingPackages), new Variant(timeout)).getBoolean();
+        }
+    }
+
+    /**
      * Same as {@link #importProjectDirectory(String, String, int)} but without timeout.
      *
      * @param tmDirectoryPath the path specifying the project in the test management system

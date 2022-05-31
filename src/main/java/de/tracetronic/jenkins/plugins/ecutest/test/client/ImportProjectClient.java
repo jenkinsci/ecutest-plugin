@@ -247,8 +247,14 @@ public class ImportProjectClient extends AbstractTMSClient {
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
-                if (isImported = tm.importProject(importConfig.getTmsPath(), importConfig.getImportPath(),
-                    importConfig.isImportMissingPackages(), importConfig.getParsedTimeout())) {
+                if (importConfig.getTmProjectId().equals("")) {
+                    isImported = tm.importProject(importConfig.getTmsPath(), importConfig.getImportPath(),
+                        importConfig.isImportMissingPackages(), importConfig.getParsedTimeout());
+                } else {
+                    isImported = tm.importProjectById(importConfig.getTmProjectId(), importConfig.getImportPath(),
+                        importConfig.isImportMissingPackages(), importConfig.getParsedTimeout());
+                }
+                if (isImported) {
                     logger.logInfo(String.format("-> Project imported successfully to target directory %s.",
                         importConfig.getImportPath()));
                 }

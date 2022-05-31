@@ -80,6 +80,20 @@ public interface ComTestManagement {
         throws ETComException;
 
     /**
+     * Imports a project from a test management system.
+     * The tmProjectId specifies the project in the test management system via its ID.
+     * The project will be imported into directory given by importPath.
+     * @param tmProjectId           the project ID in test management system
+     * @param importPath            the directory to save the project (relative to package directory or absolute)
+     * @param importMissingPackages specifies whether missing packages will be automatically imported
+     * @param timeout               the timeout in seconds to wait for import to be finished
+     * @return {@code true} if import succeeded, {@code false} otherwise
+     * @throws ETComException in case of a COM exception
+     */
+    boolean importProjectById(String tmProjectId, String importPath, boolean importMissingPackages, int timeout)
+        throws ETComException;
+
+    /**
      * Imports a directory from a test management system with all sub directories and projects.
      * The tmDirectoryPath specifies the directory in the test management system.
      * The directory will be imported into the directory given by importPath.

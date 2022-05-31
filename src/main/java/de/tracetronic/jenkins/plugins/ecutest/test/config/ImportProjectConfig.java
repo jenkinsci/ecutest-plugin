@@ -10,6 +10,7 @@ import de.tracetronic.jenkins.plugins.ecutest.util.EnvUtil;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.util.FormValidation;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -31,6 +32,24 @@ public class ImportProjectConfig extends ImportConfig {
     private final boolean importMissingPackages;
 
     /**
+     * If nonempty, the projects from the TMS will be imported via their project ID instead of their project path.
+     */
+    private final String tmProjectId;
+
+    /**
+     * Instantiates a new {@link ImportProjectConfig}.
+     * @param tmsPath               the project path in test management system
+     * @param importPath            the import path
+     * @param importMissingPackages specifies whether to import missing packages
+     * @param credentialsId         the credentials id
+     * @param timeout               the import timeout
+     */
+    public ImportProjectConfig(final String tmsPath, final String importPath,
+                               final boolean importMissingPackages, final String credentialsId, final String timeout) {
+        this(tmsPath, importPath, importMissingPackages, credentialsId, timeout, "");
+    }
+
+    /**
      * Instantiates a new {@link ImportProjectConfig}.
      *
      * @param tmsPath               the project path in test management system
@@ -38,16 +57,23 @@ public class ImportProjectConfig extends ImportConfig {
      * @param importMissingPackages specifies whether to import missing packages
      * @param credentialsId         the credentials id
      * @param timeout               the import timeout
+     * @param tmProjectId           the project ID in test management system
      */
     @DataBoundConstructor
     public ImportProjectConfig(final String tmsPath, final String importPath,
-                               final boolean importMissingPackages, final String credentialsId, final String timeout) {
+                               final boolean importMissingPackages, final String credentialsId, final String timeout,
+                               final String tmProjectId) {
         super(tmsPath, importPath, credentialsId, timeout);
         this.importMissingPackages = importMissingPackages;
+        this.tmProjectId = StringUtils.trimToEmpty(tmProjectId);
     }
 
     public boolean isImportMissingPackages() {
         return importMissingPackages;
+    }
+
+    public String getTmProjectId() {
+        return tmProjectId;
     }
 
     @Override
@@ -57,7 +83,7 @@ public class ImportProjectConfig extends ImportConfig {
         final String expCredentialsId = envVars.expand(getCredentialsId());
         final String expTimeout = EnvUtil.expandEnvVar(getTimeout(), envVars, String.valueOf(DEFAULT_TIMEOUT));
         return new ImportProjectConfig(expTmsPath, expImportPath, isImportMissingPackages(),
-            expCredentialsId, expTimeout);
+            expCredentialsId, expTimeout, getTmProjectId());
     }
 
     @Override
@@ -65,7 +91,9 @@ public class ImportProjectConfig extends ImportConfig {
         boolean result = false;
         if (other instanceof ImportProjectConfig) {
             final ImportProjectConfig that = (ImportProjectConfig) other;
-            result = that.canEqual(this) && super.equals(that) && importMissingPackages == that.importMissingPackages;
+            result =
+                that.canEqual(this) && super.equals(that) && importMissingPackages == that.importMissingPackages
+                    && StringUtils.trimToEmpty(tmProjectId).equals(StringUtils.trimToEmpty(that.tmProjectId));
         }
         return result;
     }
@@ -77,7 +105,8 @@ public class ImportProjectConfig extends ImportConfig {
 
     @Override
     public final int hashCode() {
-        return new HashCodeBuilder(17, 31).append(super.hashCode()).append(importMissingPackages).toHashCode();
+        return new HashCodeBuilder(17, 31).append(super.hashCode())
+            .append(importMissingPackages).append(tmProjectId).toHashCode();
     }
 
     /**
