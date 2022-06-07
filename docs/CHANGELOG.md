@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2015-2021 TraceTronic GmbH <info@tracetronic.de>
-
-SPDX-License-Identifier: BSD-3-Clause
--->
-
 # Changelog (1.0 - 2.8)
 
 All notable changes of version 1.0 - 2.8 are documented below.
