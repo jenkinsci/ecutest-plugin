@@ -1,0 +1,2851 @@
+{
+  "name": "allowList",
+  "version": 1,
+  "product": "ecu-test-plugin",
+  "component": {
+    "group": "de.tracetronic.jenkins.plugins",
+    "name": "ecutest",
+    "version": "2.34-SNAPSHOT",
+    "licenses": [
+      {
+        "license": {
+          "id": "BSD-3-Clause"
+        }
+      }
+    ]
+  },
+  "components": [
+    {
+      "group": "com.jacob",
+      "name": "jacob",
+      "version": "1.20",
+      "licenses": [
+        {
+          "license": {
+            "id": "GNU Library or Lesser General Public License (LGPL)"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.jacob",
+      "name": "jacob",
+      "version": "1.20",
+      "licenses": [
+      ]
+    },
+    {
+      "group": "com.jacob",
+      "name": "jacob",
+      "version": "1.20",
+      "licenses": [
+      ]
+    },
+    {
+      "group": "org.antlr",
+      "name": "antlr4-runtime",
+      "version": "4.9.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "The BSD License"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.xerial",
+      "name": "sqlite-jdbc",
+      "version": "3.7.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.cyclonedx",
+      "name": "cyclonedx-maven-plugin",
+      "version": "2.6.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.cyclonedx",
+      "name": "cyclonedx-core-java",
+      "version": "7.1.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.github.package-url",
+      "name": "packageurl-java",
+      "version": "1.4.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.fasterxml.jackson.dataformat",
+      "name": "jackson-dataformat-xml",
+      "version": "2.13.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.codehaus.woodstox",
+      "name": "stax2-api",
+      "version": "4.2.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "The BSD License"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.fasterxml.woodstox",
+      "name": "woodstox-core",
+      "version": "6.2.7",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.networknt",
+      "name": "json-schema-validator",
+      "version": "1.0.66",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "commons-codec",
+      "name": "commons-codec",
+      "version": "1.15",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.commons",
+      "name": "commons-lang3",
+      "version": "3.12.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.maven.shared",
+      "name": "maven-dependency-tree",
+      "version": "3.1.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.maven",
+      "name": "maven-core",
+      "version": "3.0.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.maven",
+      "name": "maven-model",
+      "version": "3.0.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.maven",
+      "name": "maven-settings",
+      "version": "3.0.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.maven",
+      "name": "maven-settings-builder",
+      "version": "3.0.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.maven",
+      "name": "maven-repository-metadata",
+      "version": "3.0.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.maven",
+      "name": "maven-artifact",
+      "version": "3.0.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.maven",
+      "name": "maven-plugin-api",
+      "version": "3.0.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.maven",
+      "name": "maven-model-builder",
+      "version": "3.0.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.maven",
+      "name": "maven-aether-provider",
+      "version": "3.0.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.sonatype.aether",
+      "name": "aether-spi",
+      "version": "1.13.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-1.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.sonatype.aether",
+      "name": "aether-impl",
+      "version": "1.13.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-1.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.sonatype.aether",
+      "name": "aether-api",
+      "version": "1.13.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-1.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.sonatype.aether",
+      "name": "aether-util",
+      "version": "1.13.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-1.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.sonatype.sisu",
+      "name": "sisu-inject-plexus",
+      "version": "2.3.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-1.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.sonatype.sisu",
+      "name": "sisu-inject-bean",
+      "version": "2.3.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "EPL-1.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.sonatype.sisu",
+      "name": "sisu-guice",
+      "version": "3.1.0",
+      "licenses": [
+      ]
+    },
+    {
+      "group": "org.sonatype.sisu",
+      "name": "sisu-guava",
+      "version": "0.9.9",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.codehaus.plexus",
+      "name": "plexus-interpolation",
+      "version": "1.14",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.codehaus.plexus",
+      "name": "plexus-classworlds",
+      "version": "2.4",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.sonatype.plexus",
+      "name": "plexus-sec-dispatcher",
+      "version": "1.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.sonatype.plexus",
+      "name": "plexus-cipher",
+      "version": "1.4",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.eclipse.aether",
+      "name": "aether-util",
+      "version": "1.1.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-1.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.maven.shared",
+      "name": "maven-dependency-analyzer",
+      "version": "1.12.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.ow2.asm",
+      "name": "asm",
+      "version": "9.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.codehaus.plexus",
+      "name": "plexus-utils",
+      "version": "1.5.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.codehaus.plexus",
+      "name": "plexus-component-annotations",
+      "version": "2.1.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins",
+      "name": "credentials",
+      "version": "2.6.1.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins",
+      "name": "jquery",
+      "version": "1.12.4-1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke.stapler",
+      "name": "stapler-adjunct-jquery",
+      "version": "1.12.4-0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins",
+      "name": "matrix-project",
+      "version": "758.v7a_ea_491852f3",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins",
+      "name": "script-security",
+      "version": "1138.v8e727069a_025",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke",
+      "name": "groovy-sandbox",
+      "version": "1.27",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "caffeine-api",
+      "version": "2.9.2-29.v717aac953ff3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache License v2"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.github.ben-manes.caffeine",
+      "name": "caffeine",
+      "version": "2.9.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins",
+      "name": "structs",
+      "version": "318.va_f3ccb_729b_71",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins.workflow",
+      "name": "workflow-cps",
+      "version": "2660.vb_c0412dc4e6d",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins.workflow",
+      "name": "workflow-scm-step",
+      "version": "399.v9b_8f4da_65061",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins",
+      "name": "scm-api",
+      "version": "602.v6a_81757a_31d2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.cloudbees",
+      "name": "groovy-cps",
+      "version": "1.32",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.ui",
+      "name": "ace-editor",
+      "version": "1.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.cloudbees",
+      "name": "diff4j",
+      "version": "1.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "CDDL/GPLv2 dual license"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins.workflow",
+      "name": "workflow-step-api",
+      "version": "625.vd896b_f445a_f8",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins",
+      "name": "job-dsl",
+      "version": "1.78.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins",
+      "name": "job-dsl-core",
+      "version": "1.78.3",
+      "licenses": []
+    },
+    {
+      "group": "xmlunit",
+      "name": "xmlunit",
+      "version": "1.4",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD License"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins",
+      "name": "cloudbees-folder",
+      "version": "6.714.v79e858ef76a_2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins",
+      "name": "junit",
+      "version": "1.53",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "echarts-api",
+      "version": "5.3.0-2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "checks-api",
+      "version": "1.7.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "plugin-util-api",
+      "version": "2.16.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins",
+      "name": "display-url-api",
+      "version": "2.3.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "bootstrap4-api",
+      "version": "4.6.0-4",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "popper-api",
+      "version": "1.16.1-3",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins",
+      "name": "jackson2-api",
+      "version": "2.13.2.20220328-273.v11d70a_b_a_1a_52",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-databind",
+      "version": "2.13.2.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.fasterxml.jackson.datatype",
+      "name": "jackson-datatype-jsr310",
+      "version": "2.13.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.fasterxml.jackson.datatype",
+      "name": "jackson-datatype-jdk8",
+      "version": "2.13.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.fasterxml.jackson.datatype",
+      "name": "jackson-datatype-json-org",
+      "version": "2.13.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.fasterxml.jackson.module",
+      "name": "jackson-module-parameter-names",
+      "version": "2.13.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-core",
+      "version": "2.13.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-annotations",
+      "version": "2.13.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.fasterxml.jackson.module",
+      "name": "jackson-module-jaxb-annotations",
+      "version": "2.13.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "jakarta.xml.bind",
+      "name": "jakarta.xml.bind-api",
+      "version": "2.3.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Eclipse Distribution License - v 1.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.fasterxml.jackson.dataformat",
+      "name": "jackson-dataformat-cbor",
+      "version": "2.13.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.fasterxml.jackson.dataformat",
+      "name": "jackson-dataformat-yaml",
+      "version": "2.13.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "warnings-ng",
+      "version": "9.11.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.eclipse.collections",
+      "name": "eclipse-collections-api",
+      "version": "9.2.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-1.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Eclipse Distribution License - v 1.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.eclipse.collections",
+      "name": "eclipse-collections",
+      "version": "9.2.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-1.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Eclipse Distribution License - v 1.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "net.minidev",
+      "name": "json-smart",
+      "version": "2.4.8",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "net.minidev",
+      "name": "accessors-smart",
+      "version": "2.4.8",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jsoup",
+      "name": "jsoup",
+      "version": "1.14.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "analysis-model-api",
+      "version": "10.9.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "edu.hm.hafner",
+      "name": "analysis-model",
+      "version": "10.9.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        },
+        {
+          "license": {
+            "id": "Creative Commons Attribution 4.0 International License"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.commons",
+      "name": "commons-digester3",
+      "version": "3.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "cglib",
+      "name": "cglib",
+      "version": "2.2.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "ASF 2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "se.bjurr.violations",
+      "name": "violations-lib",
+      "version": "1.148.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "xerces",
+      "name": "xercesImpl",
+      "version": "2.12.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.github.spotbugs",
+      "name": "spotbugs",
+      "version": "4.5.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.bcel",
+      "name": "bcel",
+      "version": "6.5.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "net.sf.saxon",
+      "name": "Saxon-HE",
+      "version": "10.6",
+      "licenses": [
+        {
+          "license": {
+            "id": "MPL-2.0-no-copyleft-exception"
+          }
+        }
+      ]
+    },
+    {
+      "group": "net.sourceforge.pmd",
+      "name": "pmd-core",
+      "version": "6.42.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-style"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.beust",
+      "name": "jcommander",
+      "version": "1.48",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "net.sourceforge.pmd",
+      "name": "pmd-java",
+      "version": "6.42.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-style"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "font-awesome-api",
+      "version": "6.0.0-1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "bootstrap5-api",
+      "version": "5.1.3-5",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "popper2-api",
+      "version": "2.11.2-1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "jquery3-api",
+      "version": "3.6.0-3",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "data-tables-api",
+      "version": "1.11.4-1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "prism-api",
+      "version": "1.26.0-2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins",
+      "name": "antisamy-markup-formatter",
+      "version": "2.7",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.googlecode.owasp-java-html-sanitizer",
+      "name": "owasp-java-html-sanitizer",
+      "version": "20211018.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins",
+      "name": "apache-httpcomponents-client-4-api",
+      "version": "4.5.13-1.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.httpcomponents",
+      "name": "httpcore",
+      "version": "4.4.14",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.httpcomponents",
+      "name": "httpcore-nio",
+      "version": "4.4.14",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.httpcomponents",
+      "name": "httpclient",
+      "version": "4.5.13",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.httpcomponents",
+      "name": "httpmime",
+      "version": "4.5.13",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.httpcomponents",
+      "name": "fluent-hc",
+      "version": "4.5.13",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.httpcomponents",
+      "name": "httpclient-cache",
+      "version": "4.5.13",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.httpcomponents",
+      "name": "httpasyncclient",
+      "version": "4.1.4",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.httpcomponents",
+      "name": "httpasyncclient-cache",
+      "version": "4.1.4",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.google.code.gson",
+      "name": "gson",
+      "version": "2.9.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "forensics-api",
+      "version": "1.8.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins.workflow",
+      "name": "workflow-multibranch",
+      "version": "712.vc169a_1387405",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.plugins",
+      "name": "branch-api",
+      "version": "2.1046.v0ca_37783ecc5",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.json",
+      "name": "json",
+      "version": "20211205",
+      "licenses": [
+        {
+          "license": {
+            "id": "JSON"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.google.code.findbugs",
+      "name": "jsr305",
+      "version": "3.0.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.plugins",
+      "name": "snakeyaml-api",
+      "version": "1.30.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.yaml",
+      "name": "snakeyaml",
+      "version": "1.30",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.main",
+      "name": "jenkins-core",
+      "version": "2.289.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.main",
+      "name": "remoting",
+      "version": "4.7",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci.main",
+      "name": "cli",
+      "version": "2.289.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci",
+      "name": "version-number",
+      "version": "1.7",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci",
+      "name": "crypto-util",
+      "version": "1.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jvnet.hudson",
+      "name": "jtidy",
+      "version": "4aug2000r7-dev-hudson-1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Java HTML Tidy License"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.google.inject",
+      "name": "guice",
+      "version": "4.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "javax.inject",
+      "name": "javax.inject",
+      "version": "1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "aopalliance",
+      "name": "aopalliance",
+      "version": "1.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Public Domain"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.connectbot.jbcrypt",
+      "name": "jbcrypt",
+      "version": "1.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "ISC"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jruby.ext.posix",
+      "name": "jna-posix",
+      "version": "1.0.3-jenkins-1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Common Public License - v 1.0"
+          }
+        },
+        {
+          "license": {
+            "id": "GNU General Public License Version 2"
+          }
+        },
+        {
+          "license": {
+            "id": "GNU Lesser General Public License Version 2.1"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.github.jnr",
+      "name": "jnr-posix",
+      "version": "3.1.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "Eclipse Public License - v 2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "GNU General Public License Version 2"
+          }
+        },
+        {
+          "license": {
+            "id": "GNU Lesser General Public License Version 2.1"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.github.jnr",
+      "name": "jnr-ffi",
+      "version": "2.2.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.github.jnr",
+      "name": "jffi",
+      "version": "1.3.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.github.jnr",
+      "name": "jffi",
+      "version": "1.3.1",
+      "licenses": [
+      ]
+    },
+    {
+      "group": "org.ow2.asm",
+      "name": "asm-commons",
+      "version": "9.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.ow2.asm",
+      "name": "asm-analysis",
+      "version": "9.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.ow2.asm",
+      "name": "asm-tree",
+      "version": "9.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.ow2.asm",
+      "name": "asm-util",
+      "version": "9.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.github.jnr",
+      "name": "jnr-a64asm",
+      "version": "1.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.github.jnr",
+      "name": "jnr-x86asm",
+      "version": "1.0.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.github.jnr",
+      "name": "jnr-constants",
+      "version": "0.10.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke.stapler",
+      "name": "stapler",
+      "version": "1.263",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-2-Clause"
+          }
+        }
+      ]
+    },
+    {
+      "group": "javax.annotation",
+      "name": "javax.annotation-api",
+      "version": "1.2",
+      "licenses": [
+      ]
+    },
+    {
+      "group": "commons-discovery",
+      "name": "commons-discovery",
+      "version": "0.4",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jvnet",
+      "name": "tiger-types",
+      "version": "2.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "CDDL/GPLv2 dual license"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke",
+      "name": "asm5",
+      "version": "5.0.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD License"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke.stapler",
+      "name": "stapler-groovy",
+      "version": "1.263",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-2-Clause"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke.stapler",
+      "name": "stapler-jelly",
+      "version": "1.263",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-2-Clause"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci",
+      "name": "commons-jelly",
+      "version": "1.1-jenkins-20120928",
+      "licenses": [
+      ]
+    },
+    {
+      "group": "org.dom4j",
+      "name": "dom4j",
+      "version": "2.1.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD 3-clause New License"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke",
+      "name": "windows-package-checker",
+      "version": "1.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke.stapler",
+      "name": "stapler-adjunct-timeline",
+      "version": "1.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD License"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke.stapler",
+      "name": "stapler-adjunct-codemirror",
+      "version": "1.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.jenkins.stapler",
+      "name": "jenkins-stapler-support",
+      "version": "1.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.infradna.tool",
+      "name": "bridge-method-annotation",
+      "version": "1.18",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke.stapler",
+      "name": "json-lib",
+      "version": "2.4-jenkins-2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "net.sf.ezmorph",
+      "name": "ezmorph",
+      "version": "1.0.6",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "commons-httpclient",
+      "name": "commons-httpclient",
+      "version": "3.1-jenkins-2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "args4j",
+      "name": "args4j",
+      "version": "2.33",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci",
+      "name": "annotation-indexer",
+      "version": "1.14",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci",
+      "name": "bytecode-compatibility-transformer",
+      "version": "2.0-beta-2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke",
+      "name": "asm6",
+      "version": "6.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD License"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci",
+      "name": "constant-pool-scanner",
+      "version": "1.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "NetBeans CDDL/GPL"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci",
+      "name": "task-reactor",
+      "version": "1.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jvnet.localizer",
+      "name": "localizer",
+      "version": "1.31",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "antlr",
+      "name": "antlr",
+      "version": "2.7.7",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD License"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.thoughtworks.xstream",
+      "name": "xstream",
+      "version": "1.4.17",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ]
+    },
+    {
+      "group": "io.github.x-stream",
+      "name": "mxparser",
+      "version": "1.2.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Indiana University Extreme! Lab Software License"
+          }
+        }
+      ]
+    },
+    {
+      "group": "xpp3",
+      "name": "xpp3",
+      "version": "1.1.4c",
+      "licenses": [
+        {
+          "license": {
+            "id": "Indiana University Extreme! Lab Software License, vesion 1.1.1"
+          }
+        },
+        {
+          "license": {
+            "id": "Public Domain"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-1.1"
+          }
+        }
+      ]
+    },
+    {
+      "group": "net.sf.kxml",
+      "name": "kxml2",
+      "version": "2.3.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD style"
+          }
+        },
+        {
+          "license": {
+            "id": "Public Domain"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jfree",
+      "name": "jfreechart",
+      "version": "1.0.19",
+      "licenses": [
+        {
+          "license": {
+            "id": "GNU Lesser General Public Licence"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jfree",
+      "name": "jcommon",
+      "version": "1.0.23",
+      "licenses": [
+        {
+          "license": {
+            "id": "GNU Lesser General Public Licence"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.ant",
+      "name": "ant",
+      "version": "1.10.9",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.ant",
+      "name": "ant-launcher",
+      "version": "1.10.9",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.sun",
+      "name": "tools",
+      "version": "1.8.0",
+      "licenses": [
+      ]
+    },
+    {
+      "group": "commons-io",
+      "name": "commons-io",
+      "version": "2.8.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "commons-lang",
+      "name": "commons-lang",
+      "version": "2.6",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "commons-digester",
+      "name": "commons-digester",
+      "version": "2.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "commons-beanutils",
+      "name": "commons-beanutils",
+      "version": "1.9.4",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.apache.commons",
+      "name": "commons-compress",
+      "version": "1.20",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.sun.mail",
+      "name": "jakarta.mail",
+      "version": "1.6.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "GPL-2.0-with-classpath-exception"
+          }
+        },
+        {
+          "license": {
+            "id": "EDL 1.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.sun.activation",
+      "name": "jakarta.activation",
+      "version": "1.2.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "EDL 1.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "jaxen",
+      "name": "jaxen",
+      "version": "1.2.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD License 2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "commons-jelly",
+      "name": "commons-jelly-tags-fmt",
+      "version": "1.0",
+      "licenses": [
+      ]
+    },
+    {
+      "group": "commons-jelly",
+      "name": "commons-jelly-tags-xml",
+      "version": "1.1",
+      "licenses": [
+      ]
+    },
+    {
+      "group": "org.jvnet.hudson",
+      "name": "commons-jelly-tags-define",
+      "version": "1.0.1-hudson-20071021",
+      "licenses": [
+      ]
+    },
+    {
+      "group": "org.jenkins-ci",
+      "name": "commons-jexl",
+      "version": "1.1-jenkins-20111212",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.springframework.security",
+      "name": "spring-security-web",
+      "version": "5.4.6",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.springframework.security",
+      "name": "spring-security-core",
+      "version": "5.4.6",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.springframework",
+      "name": "spring-aop",
+      "version": "5.2.13.RELEASE",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.springframework",
+      "name": "spring-beans",
+      "version": "5.2.13.RELEASE",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.springframework",
+      "name": "spring-context",
+      "version": "5.2.13.RELEASE",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.springframework",
+      "name": "spring-core",
+      "version": "5.2.13.RELEASE",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.springframework",
+      "name": "spring-expression",
+      "version": "5.2.13.RELEASE",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.springframework",
+      "name": "spring-web",
+      "version": "5.2.13.RELEASE",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.codehaus.groovy",
+      "name": "groovy-all",
+      "version": "2.4.12",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "jline",
+      "name": "jline",
+      "version": "2.14.6",
+      "licenses": [
+        {
+          "license": {
+            "id": "The BSD License"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.fusesource.jansi",
+      "name": "jansi",
+      "version": "1.11",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "jakarta.servlet.jsp.jstl",
+      "name": "jakarta.servlet.jsp.jstl-api",
+      "version": "1.2.7",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "GPL-2.0-with-classpath-exception"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.slf4j",
+      "name": "jcl-over-slf4j",
+      "version": "1.7.30",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.slf4j",
+      "name": "slf4j-api",
+      "version": "1.7.36",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.slf4j",
+      "name": "log4j-over-slf4j",
+      "version": "1.7.30",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache Software Licenses"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.sun.xml.txw2",
+      "name": "txw2",
+      "version": "20110809",
+      "licenses": [
+        {
+          "license": {
+            "id": "CDDL-1.1"
+          }
+        }
+      ]
+    },
+    {
+      "group": "javax.xml.stream",
+      "name": "stax-api",
+      "version": "1.0-2",
+      "licenses": [
+        {
+          "license": {
+            "id": "GNU General Public Library"
+          }
+        },
+        {
+          "license": {
+            "id": "CDDL-1.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "relaxngDatatype",
+      "name": "relaxngDatatype",
+      "version": "20020414",
+      "licenses": [
+      ]
+    },
+    {
+      "group": "commons-collections",
+      "name": "commons-collections",
+      "version": "3.2.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jvnet.winp",
+      "name": "winp",
+      "version": "1.28",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci",
+      "name": "memory-monitor",
+      "version": "1.9",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.codehaus.woodstox",
+      "name": "wstx-asl",
+      "version": "3.2.9",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "stax",
+      "name": "stax-api",
+      "version": "1.0.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "net.java.dev.jna",
+      "name": "jna",
+      "version": "5.8.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "LGPL, version 2.1"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache License v2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke",
+      "name": "akuma",
+      "version": "1.10",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke",
+      "name": "libpam4j",
+      "version": "1.11",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.sun.solaris",
+      "name": "embedded_su4j",
+      "version": "1.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "net.java.sezpoz",
+      "name": "sezpoz",
+      "version": "1.13",
+      "licenses": [
+        {
+          "license": {
+            "id": "CDDL or GPL 2 with Classpath Exception"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke.jinterop",
+      "name": "j-interop",
+      "version": "2.0.8-kohsuke-1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke.jinterop",
+      "name": "j-interopdeps",
+      "version": "2.0.8-kohsuke-1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.samba.jcifs",
+      "name": "jcifs",
+      "version": "1.3.18-kohsuke-1",
+      "licenses": [
+        {
+          "license": {
+            "id": "GNU Lesser General Public License, version 2.1"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jvnet.robust-http-client",
+      "name": "robust-http-client",
+      "version": "1.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.jenkins-ci",
+      "name": "symbol-annotation",
+      "version": "1.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "commons-fileupload",
+      "name": "commons-fileupload",
+      "version": "1.4",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.google.guava",
+      "name": "guava",
+      "version": "11.0.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "com.jcraft",
+      "name": "jzlib",
+      "version": "1.1.3-kohsuke-1",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD"
+          }
+        }
+      ]
+    },
+    {
+      "group": "javax.servlet",
+      "name": "javax.servlet-api",
+      "version": "3.1.0",
+      "licenses": [
+      ]
+    },
+    {
+      "group": "com.github.spotbugs",
+      "name": "spotbugs-annotations",
+      "version": "4.4.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1"
+          }
+        }
+      ]
+    },
+    {
+      "group": "net.jcip",
+      "name": "jcip-annotations",
+      "version": "1.0",
+      "licenses": [
+      ]
+    },
+    {
+      "group": "org.codehaus.mojo",
+      "name": "animal-sniffer-annotations",
+      "version": "1.20",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "commons-logging",
+      "name": "commons-logging",
+      "version": "1.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "group": "org.kohsuke",
+      "name": "access-modifier-annotation",
+      "version": "1.25",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "group": "xml-apis",
+      "name": "xml-apis",
+      "version": "1.4.01",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "SAX-PD"
+          }
+        },
+        {
+          "license": {
+            "id": "The W3C License"
+          }
+        }
+      ]
+    }
+  ]
+}
