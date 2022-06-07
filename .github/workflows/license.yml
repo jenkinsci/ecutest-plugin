@@ -24,4 +24,4 @@ jobs:
       - name: Build Docker image
         run:  docker build -t license_check -f ./config/Dockerfile .
       - name: Run Docker image
-        run: docker run ./config -t license_check
+        run: docker run license_check
