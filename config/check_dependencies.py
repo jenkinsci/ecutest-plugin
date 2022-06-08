@@ -1,6 +1,8 @@
 #  Copyright (c) 2015-2022 TraceTronic GmbH
 #
 #  SPDX-License-Identifier: BSD-3-Clause
+#
+#  SPDX-License-Identifier: BSD-3-Clause
 
 import getopt
 import json
@@ -71,8 +73,17 @@ def validate(allow_list, sbom):
 
     # dependencies
     if len(allow_json["components"]) != len(sbom_json["components"]):
-        error_collection.append("Number expects {} but was {}.".format(len(allow_json["components"]),
-                                                                       len(sbom_json["components"])))
+        allowed_groups = [item["name"] for item in allow_json["components"]]
+        sbom_groups = [item["name"] for item in sbom_json["components"]]
+        error_collection.append("Number of licenses expects {} but was {}.".format(len(allow_json["components"]),
+                                                                                   len(sbom_json["components"])))
+        missing_allowed = set(sbom_groups).difference(allowed_groups)
+        missing_sbom = set(allowed_groups).difference(sbom_groups)
+        if missing_sbom:
+            error_collection.append("License {} not found in sbom but in allow list.".format(missing_sbom))
+        elif missing_allowed:
+            error_collection.append("License {} not found in allow list but in sbom.".format(missing_allowed))
+
     for component in sbom_json["components"]:
         if component["name"] not in [component["name"] for component in allow_json["components"]]:
             error_collection.append("Could not find component '{}' in allow list".format(component["name"]))
