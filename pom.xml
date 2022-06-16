@@ -72,6 +72,7 @@
         <!-- Jenkins plugins -->
         <job-dsl.version>1.78.3</job-dsl.version>
         <warnings-ng.version>9.11.1</warnings-ng.version>
+        <jquery.version>1.12.4-1</jquery.version>
 
         <!-- Direct dependencies -->
         <jacob.version>1.20</jacob.version>
@@ -86,6 +87,7 @@
         <pmd.version>6.41.0</pmd.version>
         <spotbugs.effort>Max</spotbugs.effort>
         <spotbugs.threshold>Low</spotbugs.threshold>
+        <cyclonedx-maven-plugin.version>2.6.2</cyclonedx-maven-plugin.version>
 
         <!-- Test scope -->
         <configuration-as-code.version>1.47</configuration-as-code.version>
@@ -173,7 +175,7 @@
         <dependency>
             <groupId>org.cyclonedx</groupId>
             <artifactId>cyclonedx-maven-plugin</artifactId>
-            <version>2.6.2</version>
+            <version>${cyclonedx-maven-plugin.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.sonatype.sisu</groupId>
@@ -190,7 +192,7 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>jquery</artifactId>
-            <version>1.12.4-1</version>
+            <version>${jquery.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>

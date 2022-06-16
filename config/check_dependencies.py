@@ -60,34 +60,33 @@ def read_json(file_path):
         return json.load(f)
 
 
-def validate(allow_list, sbom):
+def compare_license_files(allow_list, sbom):
     allow_json = read_json(allow_list)
     sbom_json = read_json(sbom)
-    error_collection = []
+    found_errors = []
+    found_warnings = []
 
     # product
     validator = ComponentValidator(allow_json["component"], sbom_json["metadata"]["component"])
     product_err = validator.validate(True)
     if product_err:
-        error_collection.append(product_err)
+        found_errors.append(product_err)
 
     # dependencies
     if len(allow_json["components"]) != len(sbom_json["components"]):
         allowed_groups = [item["name"] for item in allow_json["components"]]
         sbom_groups = [item["name"] for item in sbom_json["components"]]
-        error_collection.append("Number of licenses expects {} but was {}.".format(len(allow_json["components"]),
-                                                                                   len(sbom_json["components"])))
+        found_errors.append("Number of components expects {} but was {}.".format(len(allow_json["components"]),
+                                                                                 len(sbom_json["components"])))
         missing_allowed = set(sbom_groups).difference(allowed_groups)
         missing_sbom = set(allowed_groups).difference(sbom_groups)
         if missing_sbom:
-            error_collection.append("License {} not found in sbom but in allow list.".format(missing_sbom))
+            found_errors.append("License {} not found in sbom but in allow list.".format(missing_sbom))
         elif missing_allowed:
-            error_collection.append("License {} not found in allow list but in sbom.".format(missing_allowed))
+            found_warnings.append("License {} not found in allow list but in sbom. Check if necessary anymore.".format(
+                missing_allowed))
 
     for component in sbom_json["components"]:
-        if component["name"] not in [component["name"] for component in allow_json["components"]]:
-            error_collection.append("Could not find component '{}' in allow list".format(component["name"]))
-
         for allowed_component in allow_json["components"]:
             if not allowed_component.get("licenses"):
                 continue
@@ -98,9 +97,9 @@ def validate(allow_list, sbom):
                 validator = ComponentValidator(allowed_component, component)
                 dependency_err = validator.validate(False)
                 if dependency_err:
-                    error_collection.extend(dependency_err)
+                    found_errors.extend(dependency_err)
 
-    return error_collection
+    return found_errors, found_warnings
 
 
 def main(argv):
@@ -128,11 +127,16 @@ def main(argv):
             print("File '{}' does not end with '.json'.".format(filename))
             sys.exit(2)
 
-    err = validate(allow_file, sbom_file)
+    err, warn = compare_license_files(allow_file, sbom_file)
+    if warn:
+        print(*warn, sep="\n")
+
     if err:
         print(*err, sep="\n")
         sys.exit(2)
+
     print("License validation finished successfully.")
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
