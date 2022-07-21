@@ -78,4 +78,30 @@ public class ImportProjectBuilderTest {
         final ImportProjectBuilder builder = new ImportProjectBuilder(importConfigs);
         assertTrue(builder.getImportConfigs().isEmpty());
     }
+
+    @Test
+    public void testSetImportConfigs() {
+        final List<TMSConfig> importConfigs = new ArrayList<TMSConfig>();
+        importConfigs.add(new ImportProjectConfig("tmsPath", "importPath", false, "credentialsId", "timeout"));
+        final ImportProjectBuilder builder = new ImportProjectBuilder(importConfigs);
+        assertThat(builder.getImportConfigs(), hasSize(1));
+
+        builder.setImportConfigs(importConfigs);
+        assertThat(builder.getImportConfigs(), hasSize(1));
+
+        builder.setImportConfigs(null);
+        assertThat(builder.getImportConfigs(), hasSize(1));
+
+        // Check: If fields of importConfigs and importConfigs2 are the same, they are treated as equal.
+        final List<TMSConfig> importConfigs2 = new ArrayList<TMSConfig>();
+        importConfigs2.add(new ImportProjectConfig("tmsPath", "importPath", false, "credentialsId", "timeout"));
+        builder.setImportConfigs(importConfigs2);
+        assertThat(builder.getImportConfigs(), hasSize(1));
+
+        // Check: If fields of importConfigs and importConfigs2 are not the same, they are not treated as equal.
+        final List<TMSConfig> importConfigs3 = new ArrayList<TMSConfig>();
+        importConfigs3.add(new ImportProjectConfig("tmsPath", "importPath", true, "credentialsId", "timeout"));
+        builder.setImportConfigs(importConfigs3);
+        assertThat(builder.getImportConfigs(), hasSize(2));
+    }
 }
