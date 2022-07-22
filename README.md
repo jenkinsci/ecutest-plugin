@@ -95,7 +95,7 @@ The plugin provides several new build steps:
 
 - All build steps have an "Advanced" button through which more options can be accessed
 - All text fields can be parameterized and are resolved at build execution
-    - Syntax: _$parameter_ or _${parameter}_
+  - Syntax: _$parameter_ or _${parameter}_
 
 The post-build actions are extended by these test report related post-build steps:
 
@@ -888,7 +888,7 @@ Release 1.8 implemented an extension point that will workaround this issue. In o
 
 ## FAQ
 
-Frequently asked questions, common issues and error messages about the ECU-TEST Jenkins Plug-in and ECU-TEST itself
+Frequently asked questions, common issues and error messages about the [ECU-TEST Jenkins Plugin](https://github.com/jenkinsci/ecutest-plugin) and [ECU-TEST](https://www.tracetronic.de/produkte/ecu-test/) itself
 can be found in the [TraceTronic Knowledge Base](https://kb.tracetronic.com/display/KB/Jenkins+Plugin).
 
 ## Compatibility
