@@ -43,6 +43,9 @@ installations:
     - atxSecretSetting:
         group: CONNECTION
         name: "uploadAuthenticationKey"
+    - atxTextSetting:
+        group: CONNECTION
+        name: "uploadSettings"
     - atxBooleanSetting:
         group: CONNECTION
         name: "useSettingsFromServer"

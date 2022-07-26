@@ -142,6 +142,28 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
+        <SETTING name="uploadSettings" default=""
+                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Relativer Pfad im Workspace zu einer JSON
+                            Datei mit den Verbindungseinstellungen für den Upload. Ein
+                            Beispiel und weitere Erklärungen sind im Benutzerhandbuch
+                            von TEST-GUIDE enthalten. Diese Option ist aktuell nur bei
+                            automatisiertem Report Upload sinnvoll nutzbar.</DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Relative path in the workspace of a json
+                            file with the upload connection properties. An Exmaple and
+                            further explanations can be found in the user documentation of
+                            TEST-GUIDE. This option is currently only useful with automated
+                            report upload.</DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
         <SETTING name="useSettingsFromServer" default="False"
                  canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
