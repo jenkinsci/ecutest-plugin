@@ -157,6 +157,10 @@ unclassified:
                 value: true
             - atxBooleanSetting:
                 group: ATTRIBUTE
+                name: "mapIsAnalysisAsAttribute"
+                value: true
+            - atxBooleanSetting:
+                group: ATTRIBUTE
                 name: "mapRootPrjAttrToPkgAttr"
                 value: true
             - atxTextSetting:

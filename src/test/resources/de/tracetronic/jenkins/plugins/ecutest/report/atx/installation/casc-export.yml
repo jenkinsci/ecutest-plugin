@@ -167,6 +167,9 @@ installations:
         value: true
     - atxBooleanSetting:
         group: ATTRIBUTE
+        name: "mapIsAnalysisAsAttribute"
+    - atxBooleanSetting:
+        group: ATTRIBUTE
         name: "mapRootPrjAttrToPkgAttr"
         value: true
     - atxTextSetting:
