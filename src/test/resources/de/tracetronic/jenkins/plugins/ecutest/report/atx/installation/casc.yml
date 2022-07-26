@@ -153,6 +153,10 @@ unclassified:
                 value: true
             - atxBooleanSetting:
                 group: ATTRIBUTE
+                name: "mapIsStimulationAsAttribute"
+                value: true
+            - atxBooleanSetting:
+                group: ATTRIBUTE
                 name: "mapRootPrjAttrToPkgAttr"
                 value: true
             - atxTextSetting:
