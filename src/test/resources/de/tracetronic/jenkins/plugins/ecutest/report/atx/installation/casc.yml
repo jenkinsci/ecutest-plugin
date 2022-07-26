@@ -124,6 +124,10 @@ unclassified:
                 group: ARCHIVE
                 name: "archiveMiscFilesOnlyInTestReportDir"
                 value: true
+            - atxBooleanSetting:
+                group: ARCHIVE
+                name: "archiveFilesExcludeRecordings"
+                value: false
             - atxTextSetting:
                 group: ARCHIVE
                 name: "archiveBy"

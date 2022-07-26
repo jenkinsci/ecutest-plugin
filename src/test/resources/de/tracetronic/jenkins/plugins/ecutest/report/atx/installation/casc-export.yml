@@ -134,6 +134,10 @@ installations:
     - atxTextSetting:
         group: ARCHIVE
         name: "archiveFilesPerPackage"
+    - atxBooleanSetting:
+        group: ARCHIVE
+        name: "archiveFilesExcludeRecordings"
+        value: false
     - atxTextSetting:
         group: ARCHIVE
         name: "archiveBy"

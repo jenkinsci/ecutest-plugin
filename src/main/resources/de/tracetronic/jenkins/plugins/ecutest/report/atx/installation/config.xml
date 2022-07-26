@@ -647,6 +647,20 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
+        <SETTING name="archiveFilesExcludeRecordings" default="False"
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">True, falls Aufnahmen nicht als Misc-Files aufgenommen werden sollen, andernfalls False</DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">True if recordings are not to be included as misc files, otherwise False</DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
         <SETTING name="archiveBy" default="NONE;SUCCESS;INCONCLUSIVE;FAILED;ERROR" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
