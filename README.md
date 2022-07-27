@@ -1020,21 +1020,25 @@ Please download the modified Swarm client from [here](https://github.com/jenkins
  <details>
     <summary>optional: <a href="https://www.tracetronic.com/products/test-guide">TEST-GUIDE</a> 1.65.0 or higher</summary>
 
-| Version |   latest - 2.26   |    2.23 - 2.25    |        2.22       |    2.21 - 2.18    |    2.17 - 2.16    |     2.15 - 2.14   |    2.13 - 2.12    |        2.11       |    2.10 - 2.8     |     2.7 - 2.6     |
-|:-------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|
-| 1.120.0 | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.113.0 | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.104.0 | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.95.0  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.87.0  | :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.84.2  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.82.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.80.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.76.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.72.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |
-| 1.67.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |
-| 1.64.1  |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|
+| Version |   latest - 2.26   |    2.25 - 2.23     |        2.22       |    2.21 - 2.18    |    2.17 - 2.16    |     2.15 - 2.14   |    2.13 - 2.12    |        2.11       |    2.10 - 2.8     |     2.7 - 2.6     |
+|:-------:|:-----------------:|:------------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|
+| 1.129.0 | :heavy_check_mark:|        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.120.0 | :heavy_check_mark:|        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.113.0 | :heavy_check_mark:|        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.104.0 | :heavy_check_mark:|        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.95.0  | :heavy_check_mark:|        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.87.0  | :heavy_check_mark:| :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.84.2  | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.82.0  | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.80.0  | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.76.0  | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.72.0  | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |
+| 1.67.0  | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |
+| 1.64.1  |        :x:        |        :x:         |        :x:        |        :x:        |        :x:        |        :x:        | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|
  </details>
+* Note that some lacking version incompatibilities in the TEST-GUIDE - ECU-TEST-Plugin compatibility matrix are due 
+to configuration fields which are not natively supported. You may still add these lacking configurations via the 
+*custom fields* in the TEST-GUIDE configuration on the Jenkins server. 
 
 ## License
 
