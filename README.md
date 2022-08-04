@@ -104,7 +104,7 @@ The post-build actions are extended by these test report related post-build step
 ### Job execution
 
 - After job configuration is done a new build can be triggered by clicking on the "Build now" button
-- The test results are published both on the build page and the job page based on the latest build after the step 
+- The test results are published both on the build page and the job page based on the latest build after the step
   *[TT] Publish UNIT* Reports has been executed.
 - The console log contains detailed information per build step execution.
 
@@ -115,7 +115,7 @@ The post-build actions are extended by these test report related post-build step
 ### Environment variables
 
 - This plugin also exposes the tool and test related information of the current build as environment variables.
-- These variables are composed of ${TT_<TOOL | TEST>_<variable-info>_n} where n is the index of the 
+- These variables are composed of ${TT_<TOOL | TEST>_<variable-info>_n} where n is the index of the
   related build steps in the job configuration, counting from 0.
 - The summary of all generated environment variables is also shown on the build page.
 
@@ -296,29 +296,29 @@ Furthermore, if there is a method which is currently not supported then Job DSL 
 
 ```groovy
 steps {
-  // Start ECU-TEST
-  startET(String installation) {
-    workspaceDir(String directory)
-    settingsDir(String directory)
-    timeout(int | String timeout = 120)
-    debugMode(boolean debugMode = false)
-    keepInstance(boolean keepInstance = false)
- }
-  // Stop ECU-TEST
-  stopET(String installation) {
+    // Start ECU-TEST
+    startET(String installation) {
+        workspaceDir(String directory)
+        settingsDir(String directory)
+        timeout(int | String timeout = 120)
+        debugMode(boolean debugMode = false)
+        keepInstance(boolean keepInstance = false)
+    }
+    // Stop ECU-TEST
+    stopET(String installation) {
+        timeout(int | String timeout = 30)
+    }
+    // Start Tool-Server
+    startTS(String installation) {
+        toolLibsIni(String toolLibsPath)
+        tcpPort(int | String port = 5017)
+        timeout(int | String timeout = 120)
+        keepInstance(boolean keepInstance = false)
+    }
+    // Stop Tool-Server
+    stopTS(String installation)
     timeout(int | String timeout = 30)
-  }
-  // Start Tool-Server
-  startTS(String installation) {
-    toolLibsIni(String toolLibsPath)
-    tcpPort(int | String port = 5017)
-    timeout(int | String timeout = 120)
-    keepInstance(boolean keepInstance = false)
- }
-  // Stop Tool-Server
-  stopTS(String installation)
-    timeout(int | String timeout = 30)
-  }
+}
 }
 ```
 </details>
@@ -328,61 +328,61 @@ steps {
 
 ```groovy
 steps {
-  // Run package
-  testPackage(String packageFile) {
-    testConfig {
-      tbcFile(String tbcFile)
-      tcfFile(String tcfFile)
-      forceReload(boolean forceReload = false)
-      loadOnly(boolean loadOnly = false)
-      constants {
-        constant(String name, String value)
-        constant {
-          name(String name)
-          value(String value)
+    // Run package
+    testPackage(String packageFile) {
+        testConfig {
+            tbcFile(String tbcFile)
+            tcfFile(String tcfFile)
+            forceReload(boolean forceReload = false)
+            loadOnly(boolean loadOnly = false)
+            constants {
+                constant(String name, String value)
+                constant {
+                    name(String name)
+                    value(String value)
+                }
+            }
         }
-      }
-    }
-    packageConfig {
-      runTest(boolean runTest = true)
-      runTraceAnalysis(boolean runTraceAnalysis = true)
-      parameters {
-        parameter(String name, String value)
-        parameter {
-          name(String name)
-          value(String value)
+        packageConfig {
+            runTest(boolean runTest = true)
+            runTraceAnalysis(boolean runTraceAnalysis = true)
+            parameters {
+                parameter(String name, String value)
+                parameter {
+                    name(String name)
+                    value(String value)
+                }
+            }
         }
-      }
+        executionConfig {
+            timeout(int | String timeout = 3600)
+            checkTestFile(boolean checkTestFile = true)
+            stopOnError(boolean stopOnError = true)
+        }
     }
-    executionConfig {
-      timeout(int | String timeout = 3600)
-      checkTestFile(boolean checkTestFile = true)
-      stopOnError(boolean stopOnError = true)
+    // Run project
+    testProject(String projectFile) {
+        testConfig { (...) }
+        projectConfig {
+            execInCurrentPkgDir(boolean currentPkgDir = false)
+            filterExpression(String expression)
+            // modes: NO_EXECUTION(0), SEQUENTIAL_EXECUTION(1),
+            // PARALLEL_EXECUTION(2), SEPARATE_SEQUENTIAL_EXECUTION(5),
+            // SEPARATE_PARALLEL_EXECUTION(6), NO_TESTCASE_EXECUTION(9)
+            jobExecutionMode(int | String execMode = 1)
+        }
+        executionConfig { (...) }
     }
-  }
-  // Run project
-  testProject(String projectFile) {
-    testConfig { (...) }
-    projectConfig {
-      execInCurrentPkgDir(boolean currentPkgDir = false)
-      filterExpression(String expression)
-      // modes: NO_EXECUTION(0), SEQUENTIAL_EXECUTION(1),
-      // PARALLEL_EXECUTION(2), SEPARATE_SEQUENTIAL_EXECUTION(5),
-      // SEPARATE_PARALLEL_EXECUTION(6), NO_TESTCASE_EXECUTION(9)
-      jobExecutionMode(int | String execMode = 1)
+    // Run test folder
+    testFolder(String testFolder) {
+        // modes: PACKAGES_ONLY, PROJECTS_ONLY, PACKAGES_AND_PROJECTS
+        scanMode(String mode = 'PACKAGES_AND_PROJECTS')
+        recursiveScan(boolean recursive = false)
+        testConfig { (...) }
+        packageConfig { (...) }
+        projectConfig { (...) }
+        executionConfig { (...) }
     }
-    executionConfig { (...) }
-  }
-  // Run test folder
-  testFolder(String testFolder) {
-    // modes: PACKAGES_ONLY, PROJECTS_ONLY, PACKAGES_AND_PROJECTS
-    scanMode(String mode = 'PACKAGES_AND_PROJECTS')
-    recursiveScan(boolean recursive = false)
-    testConfig { (...) }
-    packageConfig { (...) }
-    projectConfig { (...) }
-    executionConfig { (...) }
-  }
 }
 ```
 </details>
@@ -392,53 +392,53 @@ steps {
 
 ```groovy
 steps {
-  // Import projects
-  importProjects {
-    importFromArchive(String archivePath, String importPath, String importConfigPath, boolean replaceFiles)
-    importFromArchive(String archivePath) {
-      importPath(String importPath)
-      importConfigPath(String importConfigPath)
-      replaceFiles(boolean replaceFiles)
+    // Import projects
+    importProjects {
+        importFromArchive(String archivePath, String importPath, String importConfigPath, boolean replaceFiles)
+        importFromArchive(String archivePath) {
+            importPath(String importPath)
+            importConfigPath(String importConfigPath)
+            replaceFiles(boolean replaceFiles)
+        }
+        importFromTMS(String credentialsId, String projectPath, String importPath, int | String timeout = 60)
+        importFromTMS(String credentialsId, String projectPath) {
+            importPath(String importPath)
+            timeout(int | String timeout = 60)
+        }
+        importFromTMSDir(String credentialsId, String projectDirPath, String importPath, int | String timeout = 60)
+        importFromTMSDir(String credentialsId, String projectDirPath) {
+            importPath(String importPath)
+            timeout(int | String timeout = 60)
+        }
+        importAttributesFromTMS(String credentialsId, String projectPath, int | String timeout = 60)
+        importAttributesFromTMS(String credentialsId, String projectPath) {
+            timeout(int | String timeout = 60)
+        }
     }
-    importFromTMS(String credentialsId, String projectPath, String importPath, int | String timeout = 60)
-    importFromTMS(String credentialsId, String projectPath) {
-      importPath(String importPath)
-      timeout(int | String timeout = 60)
+    // Import packages
+    importPackages {
+        importFromTMS { (...) }
+        importFromTMSDir { (...) }
+        importAttributesFromTMS { (...) }
     }
-    importFromTMSDir(String credentialsId, String projectDirPath, String importPath, int | String timeout = 60)
-    importFromTMSDir(String credentialsId, String projectDirPath) {
-      importPath(String importPath)
-      timeout(int | String timeout = 60)
+    // Export projects
+    exportProjects {
+        exportToTMS(String credentialsId, String projectPath, String exportPath, boolean createNewPath, int | String timeout = 60)
+        exportToTMS(String credentialsId, String projectPath) {
+            exportPath(String exportPath)
+            createNewPath(boolean createNewPath)
+            timeout(int | String timeout = 60)
+        }
+        exportAttributesToTMS(String credentialsId, String projectPath, int | String timeout = 60)
+        exportAttributesToTMS(String credentialsId, String projectPath) {
+            timeout(int | String timeout = 60)
+        }
     }
-    importAttributesFromTMS(String credentialsId, String projectPath, int | String timeout = 60)
-    importAttributesFromTMS(String credentialsId, String projectPath) {
-      timeout(int | String timeout = 60)
+    // Export packages
+    exportPackages {
+        exportToTMS { (...) }
+        exportAttributesToTMS { (...) }
     }
-  }
-  // Import packages
-  importPackages {
-    importFromTMS { (...) }
-    importFromTMSDir { (...) }
-    importAttributesFromTMS { (...) }
-  }
-  // Export projects
-  exportProjects {
-    exportToTMS(String credentialsId, String projectPath, String exportPath, boolean createNewPath, int | String timeout = 60)
-    exportToTMS(String credentialsId, String projectPath) {
-      exportPath(String exportPath)
-      createNewPath(boolean createNewPath)
-      timeout(int | String timeout = 60)
-    }
-    exportAttributesToTMS(String credentialsId, String projectPath, int | String timeout = 60)
-    exportAttributesToTMS(String credentialsId, String projectPath) {
-      timeout(int | String timeout = 60)
-    }
-  }
-  // Export packages
-  exportPackages {
-    exportToTMS { (...) }
-    exportAttributesToTMS { (...) }
-  }
 }
 ```
 </details>
@@ -448,54 +448,54 @@ steps {
 
 ```groovy
 publishers {
-  // Publish ATX reports
-  publishATX(String atxInstallation) {
-    // Archive options
-    allowMissing(boolean allowMissing = false)
-    runOnFailed(boolean runOnFailed = false)
-    archiving(boolean archiving = true)
-    keepAll(boolean keepAll = true)
-  }
-  // Publish TRF reports
-  publishTRF() {
-    // Archive options...
-  }
-  // Publish UNIT reports
-  publishUNIT(String installation) {
-    unstableThreshold(double threshold = 0)
-    failedThreshold(double threshold = 0)
-    // Archive options...
-  }
-  // Publish ECU-TEST logs
-  publishETLogs() {
-    unstableOnWarning(boolean markUnstable = false)
-    failedOnError(boolean markFailed = false)
-    testSpecific(boolean testSpecific = false)
-    // Archive options...
-  }
-  // Publish Report Generators
-  publishGenerators(String installation) {
-    generators {
-      generator(String generatorName) {
-        settings {
-          setting(String name, String value)
-          setting {
-            name(String name)
-            value(String value)
-          }
+    // Publish ATX reports
+    publishATX(String atxInstallation) {
+        // Archive options
+        allowMissing(boolean allowMissing = false)
+        runOnFailed(boolean runOnFailed = false)
+        archiving(boolean archiving = true)
+        keepAll(boolean keepAll = true)
+    }
+    // Publish TRF reports
+    publishTRF() {
+        // Archive options...
+    }
+    // Publish UNIT reports
+    publishUNIT(String installation) {
+        unstableThreshold(double threshold = 0)
+        failedThreshold(double threshold = 0)
+        // Archive options...
+    }
+    // Publish ECU-TEST logs
+    publishETLogs() {
+        unstableOnWarning(boolean markUnstable = false)
+        failedOnError(boolean markFailed = false)
+        testSpecific(boolean testSpecific = false)
+        // Archive options...
+    }
+    // Publish Report Generators
+    publishGenerators(String installation) {
+        generators {
+            generator(String generatorName) {
+                settings {
+                    setting(String name, String value)
+                    setting {
+                        name(String name)
+                        value(String value)
+                    }
+                }
+            }
         }
-      }
+        customGenerators {
+            customGenerator(String generatorName) { (...) }
+        }
+        // Archive options...
     }
-    customGenerators {
-       customGenerator(String generatorName) { (...) }
+    // Publish to Test Management System
+    publishTMS(String installation, String credentialsId) {
+        timeout(int | String timeout = 60)
+        // Archive options...
     }
-    // Archive options...
-  }
-  // Publish to Test Management System
-  publishTMS(String installation, String credentialsId) {
-    timeout(int | String timeout = 60)
-    // Archive options...
-  }
 }
 ```
 </details>
@@ -556,8 +556,8 @@ node('windows') {
 
     // TEST-GUIDE server instantiation using global variable ATX
     def atx = ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST',
-                            fullServerURL: 'http://localhost:8085', uploadToServer: false,
-                            uploadAuthenticationKey: 'xxx', projectId: '1'
+        fullServerURL: 'http://localhost:8085', uploadToServer: false,
+        uploadAuthenticationKey: 'xxx', projectId: '1'
 
     // or getting existing instance from global configuration
     def atx = ATX.server('TEST-GUIDE')
@@ -583,17 +583,17 @@ Existing configurations of both types can be exported to according YAML file usi
 
 ```yml
 tool:
-  ecu-test:
-    installations:
-    - name: "ECU-TEST X.Y"
-      home: "C:\\Program Files\\ECU-TEST X.Y"
-    - name: "ECU-TEST X2.Y2"
-      home: "C:\\Program Files\\ECU-TEST X2.Y2"
-      properties:
-      - ecuTestProperty:
-          progId: "ECU-TEST.Application.X2.Y2"
-          registerComServer: true
-          timeout: 60
+    ecu-test:
+        installations:
+            - name: "ECU-TEST X.Y"
+              home: "C:\\Program Files\\ECU-TEST X.Y"
+            - name: "ECU-TEST X2.Y2"
+              home: "C:\\Program Files\\ECU-TEST X2.Y2"
+              properties:
+                  - ecuTestProperty:
+                        progId: "ECU-TEST.Application.X2.Y2"
+                        registerComServer: true
+                        timeout: 60
 ```
 </details>
 
@@ -602,262 +602,262 @@ tool:
 
 ```yml
 unclassified:
-  testGuide:
-    installations:
-    - name: "TEST-GUIDE"
-      toolName: "ECU-TEST"
-      config:
-        settings:
-          - atxTextSetting:
-              group: CONNECTION
-              name: "serverURL"
-              value: "127.0.0.1"
-          - atxTextSetting:
-              group: CONNECTION
-              name: "serverLabel"
-          - atxBooleanSetting:
-              group: CONNECTION
-              name: "useHttpsConnection"
-              value: false
-          - atxBooleanSetting:
-              group: CONNECTION
-              name: "ignoreSSL"
-              value: false
-          - atxTextSetting:
-              group: CONNECTION
-              name: "serverPort"
-              value: "8085"
-          - atxTextSetting:
-              group: CONNECTION
-              name: "serverContextPath"
-          - atxSecretSetting:
-              group: CONNECTION
-              name: "httpProxy"
-          - atxSecretSetting:
-              group: CONNECTION
-              name: "httpsProxy"
-          - atxTextSetting:
-              group: CONNECTION
-              name: "projectId"
-              value: "1"
-          - atxSecretSetting:
-              group: CONNECTION
-              name: "uploadAuthenticationKey"
-          - atxBooleanSetting:
-              group: CONNECTION
-              name: "useSettingsFromServer"
-              value: false
-          - atxBooleanSetting:
-              group: UPLOAD
-              name: "uploadToServer"
-              value: true
-          - atxTextSetting:
-              group: UPLOAD
-              name: "uploadThroughResourceAdapter"
-              value: "0"
-          - atxBooleanSetting:
-              group: UPLOAD
-              name: "uploadAsync"
-              value: true
-          - atxTextSetting:
-              group: UPLOAD
-              name: "maxUploadTries"
-              value: "42"
-          - atxBooleanSetting:
-              group: UPLOAD
-              name: "compressUpload"
-              value: false
-          - atxBooleanSetting:
-              group: UPLOAD
-              name: "cleanAfterSuccessUpload"
-              value: true
-          - atxBooleanSetting:
-              group: UPLOAD
-              name: "uploadOnlyProjectReport"
-              value: false
-          - atxBooleanSetting:
-              group: ARCHIVE
-              name: "enableArchive"
-              value: true
-          - atxBooleanSetting:
-              group: ARCHIVE
-              name: "archiveTrf"
-              value: true
-          - atxBooleanSetting:
-              group: ARCHIVE
-              name: "archivePkg"
-              value: false
-          - atxBooleanSetting:
-              group: ARCHIVE
-              name: "archiveTcf"
-              value: false
-          - atxBooleanSetting:
-              group: ARCHIVE
-              name: "archiveTbc"
-              value: false
-          - atxBooleanSetting:
-              group: ARCHIVE
-              name: "archiveMapping"
-              value: false
-          - atxBooleanSetting:
-              group: ARCHIVE
-              name: "archiveRecordings"
-              value: false
-          - atxBooleanSetting:
-              group: ARCHIVE
-              name: "archiveRecordingMetadata"
-              value: true
-          - atxBooleanSetting:
-              group: ARCHIVE
-              name: "archivePlots"
-              value: true
-          - atxBooleanSetting:
-              group: ARCHIVE
-              name: "archiveImages"
-              value: true
-          - atxTextSetting:
-              group: ARCHIVE
-              name: "archiveMiscFiles"
-          - atxTextSetting:
-              group: ARCHIVE
-              name: "archiveMiscFilePrefix"
-          - atxBooleanSetting:
-              group: ARCHIVE
-              name: "archiveMiscFilesOnlyInTestReportDir"
-              value: true
-          - atxTextSetting:
-              group: ARCHIVE
-              name: "archiveFilesPerPackage"
-          - atxTextSetting:
-              group: ARCHIVE
-              name: "archiveBy"
-              value: "NONE;SUCCESS;INCONCLUSIVE;FAILED;ERROR"
-          - atxBooleanSetting:
-              group: ARCHIVE
-              name: "archiveDescriptionImages"
-              value: true
-          - atxTextSetting:
-              group: ATTRIBUTE
-              name: "coveredAttributes"
-              value: "Testlevel;Designer;Execution Priority;Estimated Duration [min];"
-          - atxTextSetting:
-              group: ATTRIBUTE
-              name: "attributeDelimiter"
-          - atxBooleanSetting:
-              group: ATTRIBUTE
-              name: "mapIsTestCaseAsAttribute"
-              value: true
-          - atxBooleanSetting:
-              group: ATTRIBUTE
-              name: "mapTestCaseVersionAsAttribute"
-              value: true
-          - atxBooleanSetting:
-              group: ATTRIBUTE
-              name: "mapRootPrjAttrToPkgAttr"
-              value: true
-          - atxTextSetting:
-              group: ATTRIBUTE
-              name: "excludePrjAttrPrefixFor"
-          - atxBooleanSetting:
-              group: ATTRIBUTE
-              name: "includePkgSVNRevision"
-              value: true
-          - atxBooleanSetting:
-              group: ATTRIBUTE
-              name: "mapSwkIdsAsAttribute"
-              value: true
-          - atxBooleanSetting:
-              group: TBC_CONSTANTS
-              name: "mapTbcToolAsConstant"
-              value: true
-          - atxBooleanSetting:
-              group: TCF_CONSTANTS
-              name: "mapTcfTesterAsConstant"
-              value: false
-          - atxBooleanSetting:
-              group: TCF_CONSTANTS
-              name: "mapTCFPropertyAsConstant"
-              value: true
-          - atxBooleanSetting:
-              group: TCF_CONSTANTS
-              name: "mapUserDefinedReportDataAsConstant"
-              value: true
-          - atxTextSetting:
-              group: TCF_CONSTANTS
-              name: "setConstants"
-          - atxTextSetting:
-              group: TCF_CONSTANTS
-              name: "setAttributes"
-          - atxTextSetting:
-              group: REVIEW
-              name: "setReviewTags"
-          - atxBooleanSetting:
-              group: REVIEW
-              name: "reviewUseAbortCodeAsCustomEvaluation"
-              value: false
-          - atxTextSetting:
-              group: REVIEW
-              name: "detectReviewTags"
-          - atxTextSetting:
-              group: REVIEW
-              name: "detectReviewDefects"
-          - atxBooleanSetting:
-              group: SPECIAL
-              name: "autoATXGeneratorUpdate"
-              value: true
-          - atxBooleanSetting:
-              group: SPECIAL
-              name: "includeToolIdentifier"
-              value: false
-          - atxBooleanSetting:
-              group: SPECIAL
-              name: "includePkgTestSteps"
-              value: true
-          - atxBooleanSetting:
-              group: SPECIAL
-              name: "onlyIncludePkgTestCases"
-              value: false
-          - atxBooleanSetting:
-              group: SPECIAL
-              name: "overrideParamSetNameMapping"
-              value: false
-          - atxBooleanSetting:
-              group: SPECIAL
-              name: "mapProjectElementNameAsTestCaseName"
-              value: false
-          - atxTextSetting:
-              group: SPECIAL
-              name: "mapSubPackageAsTestCaseLevel"
-              value: "0"
-          - atxTextSetting:
-              group: SPECIAL
-              name: "captureSubPackageOnVerdict"
-          - atxBooleanSetting:
-              group: SPECIAL
-              name: "mapSeparateProjectExecutionAsSingleTestplan"
-              value: false
-          - atxTextSetting:
-              group: SPECIAL
-              name: "mapAttributeAsConstant"
-          - atxBooleanSetting:
-              group: SPECIAL
-              name: "mapTestReportPathAsConstant"
-              value: false
-          - atxBooleanSetting:
-              group: SPECIAL
-              name: "includeResourceAdapterInfo"
-              value: true
-          - atxBooleanSetting:
-              group: SPECIAL
-              name: "captureExecutionTime"
-              value: true
-        customSettings:
-          - atxCustomBooleanSetting:
-              name: "customOption"
-              checked: true
-          - atxCustomTextSetting:
-              name: "customLabel"
-              value: "test"
+    testGuide:
+        installations:
+            - name: "TEST-GUIDE"
+              toolName: "ECU-TEST"
+              config:
+                  settings:
+                      - atxTextSetting:
+                            group: CONNECTION
+                            name: "serverURL"
+                            value: "127.0.0.1"
+                      - atxTextSetting:
+                            group: CONNECTION
+                            name: "serverLabel"
+                      - atxBooleanSetting:
+                            group: CONNECTION
+                            name: "useHttpsConnection"
+                            value: false
+                      - atxBooleanSetting:
+                            group: CONNECTION
+                            name: "ignoreSSL"
+                            value: false
+                      - atxTextSetting:
+                            group: CONNECTION
+                            name: "serverPort"
+                            value: "8085"
+                      - atxTextSetting:
+                            group: CONNECTION
+                            name: "serverContextPath"
+                      - atxSecretSetting:
+                            group: CONNECTION
+                            name: "httpProxy"
+                      - atxSecretSetting:
+                            group: CONNECTION
+                            name: "httpsProxy"
+                      - atxTextSetting:
+                            group: CONNECTION
+                            name: "projectId"
+                            value: "1"
+                      - atxSecretSetting:
+                            group: CONNECTION
+                            name: "uploadAuthenticationKey"
+                      - atxBooleanSetting:
+                            group: CONNECTION
+                            name: "useSettingsFromServer"
+                            value: false
+                      - atxBooleanSetting:
+                            group: UPLOAD
+                            name: "uploadToServer"
+                            value: true
+                      - atxTextSetting:
+                            group: UPLOAD
+                            name: "uploadThroughResourceAdapter"
+                            value: "0"
+                      - atxBooleanSetting:
+                            group: UPLOAD
+                            name: "uploadAsync"
+                            value: true
+                      - atxTextSetting:
+                            group: UPLOAD
+                            name: "maxUploadTries"
+                            value: "42"
+                      - atxBooleanSetting:
+                            group: UPLOAD
+                            name: "compressUpload"
+                            value: false
+                      - atxBooleanSetting:
+                            group: UPLOAD
+                            name: "cleanAfterSuccessUpload"
+                            value: true
+                      - atxBooleanSetting:
+                            group: UPLOAD
+                            name: "uploadOnlyProjectReport"
+                            value: false
+                      - atxBooleanSetting:
+                            group: ARCHIVE
+                            name: "enableArchive"
+                            value: true
+                      - atxBooleanSetting:
+                            group: ARCHIVE
+                            name: "archiveTrf"
+                            value: true
+                      - atxBooleanSetting:
+                            group: ARCHIVE
+                            name: "archivePkg"
+                            value: false
+                      - atxBooleanSetting:
+                            group: ARCHIVE
+                            name: "archiveTcf"
+                            value: false
+                      - atxBooleanSetting:
+                            group: ARCHIVE
+                            name: "archiveTbc"
+                            value: false
+                      - atxBooleanSetting:
+                            group: ARCHIVE
+                            name: "archiveMapping"
+                            value: false
+                      - atxBooleanSetting:
+                            group: ARCHIVE
+                            name: "archiveRecordings"
+                            value: false
+                      - atxBooleanSetting:
+                            group: ARCHIVE
+                            name: "archiveRecordingMetadata"
+                            value: true
+                      - atxBooleanSetting:
+                            group: ARCHIVE
+                            name: "archivePlots"
+                            value: true
+                      - atxBooleanSetting:
+                            group: ARCHIVE
+                            name: "archiveImages"
+                            value: true
+                      - atxTextSetting:
+                            group: ARCHIVE
+                            name: "archiveMiscFiles"
+                      - atxTextSetting:
+                            group: ARCHIVE
+                            name: "archiveMiscFilePrefix"
+                      - atxBooleanSetting:
+                            group: ARCHIVE
+                            name: "archiveMiscFilesOnlyInTestReportDir"
+                            value: true
+                      - atxTextSetting:
+                            group: ARCHIVE
+                            name: "archiveFilesPerPackage"
+                      - atxTextSetting:
+                            group: ARCHIVE
+                            name: "archiveBy"
+                            value: "NONE;SUCCESS;INCONCLUSIVE;FAILED;ERROR"
+                      - atxBooleanSetting:
+                            group: ARCHIVE
+                            name: "archiveDescriptionImages"
+                            value: true
+                      - atxTextSetting:
+                            group: ATTRIBUTE
+                            name: "coveredAttributes"
+                            value: "Testlevel;Designer;Execution Priority;Estimated Duration [min];"
+                      - atxTextSetting:
+                            group: ATTRIBUTE
+                            name: "attributeDelimiter"
+                      - atxBooleanSetting:
+                            group: ATTRIBUTE
+                            name: "mapIsTestCaseAsAttribute"
+                            value: true
+                      - atxBooleanSetting:
+                            group: ATTRIBUTE
+                            name: "mapTestCaseVersionAsAttribute"
+                            value: true
+                      - atxBooleanSetting:
+                            group: ATTRIBUTE
+                            name: "mapRootPrjAttrToPkgAttr"
+                            value: true
+                      - atxTextSetting:
+                            group: ATTRIBUTE
+                            name: "excludePrjAttrPrefixFor"
+                      - atxBooleanSetting:
+                            group: ATTRIBUTE
+                            name: "includePkgSVNRevision"
+                            value: true
+                      - atxBooleanSetting:
+                            group: ATTRIBUTE
+                            name: "mapSwkIdsAsAttribute"
+                            value: true
+                      - atxBooleanSetting:
+                            group: TBC_CONSTANTS
+                            name: "mapTbcToolAsConstant"
+                            value: true
+                      - atxBooleanSetting:
+                            group: TCF_CONSTANTS
+                            name: "mapTcfTesterAsConstant"
+                            value: false
+                      - atxBooleanSetting:
+                            group: TCF_CONSTANTS
+                            name: "mapTCFPropertyAsConstant"
+                            value: true
+                      - atxBooleanSetting:
+                            group: TCF_CONSTANTS
+                            name: "mapUserDefinedReportDataAsConstant"
+                            value: true
+                      - atxTextSetting:
+                            group: TCF_CONSTANTS
+                            name: "setConstants"
+                      - atxTextSetting:
+                            group: TCF_CONSTANTS
+                            name: "setAttributes"
+                      - atxTextSetting:
+                            group: REVIEW
+                            name: "setReviewTags"
+                      - atxBooleanSetting:
+                            group: REVIEW
+                            name: "reviewUseAbortCodeAsCustomEvaluation"
+                            value: false
+                      - atxTextSetting:
+                            group: REVIEW
+                            name: "detectReviewTags"
+                      - atxTextSetting:
+                            group: REVIEW
+                            name: "detectReviewDefects"
+                      - atxBooleanSetting:
+                            group: SPECIAL
+                            name: "autoATXGeneratorUpdate"
+                            value: true
+                      - atxBooleanSetting:
+                            group: SPECIAL
+                            name: "includeToolIdentifier"
+                            value: false
+                      - atxBooleanSetting:
+                            group: SPECIAL
+                            name: "includePkgTestSteps"
+                            value: true
+                      - atxBooleanSetting:
+                            group: SPECIAL
+                            name: "onlyIncludePkgTestCases"
+                            value: false
+                      - atxBooleanSetting:
+                            group: SPECIAL
+                            name: "overrideParamSetNameMapping"
+                            value: false
+                      - atxBooleanSetting:
+                            group: SPECIAL
+                            name: "mapProjectElementNameAsTestCaseName"
+                            value: false
+                      - atxTextSetting:
+                            group: SPECIAL
+                            name: "mapSubPackageAsTestCaseLevel"
+                            value: "0"
+                      - atxTextSetting:
+                            group: SPECIAL
+                            name: "captureSubPackageOnVerdict"
+                      - atxBooleanSetting:
+                            group: SPECIAL
+                            name: "mapSeparateProjectExecutionAsSingleTestplan"
+                            value: false
+                      - atxTextSetting:
+                            group: SPECIAL
+                            name: "mapAttributeAsConstant"
+                      - atxBooleanSetting:
+                            group: SPECIAL
+                            name: "mapTestReportPathAsConstant"
+                            value: false
+                      - atxBooleanSetting:
+                            group: SPECIAL
+                            name: "includeResourceAdapterInfo"
+                            value: true
+                      - atxBooleanSetting:
+                            group: SPECIAL
+                            name: "captureExecutionTime"
+                            value: true
+                  customSettings:
+                      - atxCustomBooleanSetting:
+                            name: "customOption"
+                            checked: true
+                      - atxCustomTextSetting:
+                            name: "customLabel"
+                            value: "test"
 ```
 </details>
 
@@ -888,109 +888,8 @@ Release 1.8 implemented an extension point that will workaround this issue. In o
 
 ## FAQ
 
-When encountering problems or error messages, please check the installed plugin version at first and update to the most recent version, if any.
-If the problem still exists search the following list of issues for possible solutions, otherwise you are asked to create an [issue](#issues).
-
-### :large_blue_circle: Common issues
-
-<details>
-    <summary>The configured tests are aborted after 60 minutes.</summary>
-
-> There is a default maximum execution timeout of 3600 seconds that can be changed in the advanced build step section under execution settings. Setting the value to 0 disables the timeout.
-</details>
-
-<details>
-    <summary>The ECU-TEST GUI is not visible or there are problems with external tool connections.</summary>
-
-> When running the Jenkins agent (or master) as a Windows service that executes ECU-TEST then by default this service runs in scope of the SYSTEM user in a background Windows session.
-Therefore all processes started in this session are not visible to the normal user session and there could be problems due to insufficient user rights.
-
-> In summary it is _**NOT**_ recommended to install the agent as a service but to run the agent from command line or to launch via Java Web Start.
-
-> In order to be able to use this prefered approach follow these instructions:
->  - Open "Global Security Configuration" in Jenkins and set the "TCP port for JNLP agents" either to "random" or to "fixed" unused port number greater than 1024.
->  - Create a new agent or configure an existing one and set the launch method to "Launch agent via Java Web Start".
->  - Start the agent by either using the "Launch" button or execute the displayed Java command in a command prompt.
-
-> Now the ECU-TEST GUI should appear in the same session as the Jenkins agent is running when starting a new build.
-Additionally, other problems with external tools connected to ECU-TEST or the Tool-Server should be limited.
-</details>
-
-### :red_circle: Error messages
-
-<details>
-    <summary>[TT] ERROR: Caught ComException: Can't co-create object / Can't get object clsid from progid</summary>
-
-> 1. **Re-register the ECU-TEST COM server** with the user that runs your Jenkins agent or master.<br/>
-  Since ECU-TEST 6.6 it is possible to register the COM server for each user separately.<br/>
-  This is useful if administrative rights are not available.
->  - With administrator privileges
->    - Open a new command prompt (cmd.exe) with administrator privileges
->    - Run following command: "C:\Program Files _[(x86)]_\ECU-TEST _[Version]_\ECU-TEST_COM.exe" /register
->    - Close command prompt after successful execution
->  - Without administrator privileges
->    - Open a new command prompt (cmd.exe) without administrator privileges
->    - Run following command: "C:\Program Files _[(x86)]_\ECU-TEST _[Version]_\ECU-TEST_COM.exe" /register /peruser
->    - Close command prompt after successful execution
-
-> 2. Check if the **port number 8000** is already in use by another running program. This port is needed in ECU-TEST for making internal XML-RPC requests. To change the default port please read the instructions in the ECU-TEST manual at section "9.5. Remote control of ECU-TEST".
-
-> 3. Check if the COM server was registered properly in the **Windows registry** (regedit.exe) by searching for these entries: _HKEY_CLASSES_ROOT\ECU-TEST.Application_ and _HKEY_LOCAL_MACHINE\SOFTWARE\Classes\ECU-TEST.Application_
-
-> 4. Try to use the **version specific COM programmatic identifier** for the configured ECU-TEST installation. This id can be set in the advanced settings of the ECU-TEST installation list.
-</details>
-
-<details>
-    <summary>[TT] ERROR: Caught ComException: Invoke of: Item Source: Description: &lt;Fault 1: 'Exception: method "CurrentTestConfiguration.GlobalConstants.Tell.GetName" is not supported'&gt;</summary>
-
-> This exception is already fixed in release 2.0, please update to at least this version.
-</details>
-
-<details>
-    <summary>[TT] ERROR: Caught ComException: Invoke of: Abort Source: Description: &lt;Fault 1: 'tt.Error: Fehler bei Abbruch per API! Status ABORTED nach 20.0s nicht erreicht.'&gt;</summary>
-
-> This is a known defect in ECU-TEST and occurs when the test execution could not be aborted within a fixed timeout of 20 seconds.
-</details>
-
-<details>
-    <summary>[TT] ERROR: Error while uploading ATX report: 401: report - ErrorCode-1118: Upload nicht möglich, da die Berechtigung fehlt. API-Schlüssel und Benutzerrechte überprüfen.</summary>
-
-> An upload authentication key is required to upload reports to TEST-GUIDE, which can be set in the TEST-GUIDE upload configuration.
-</details>
-
-<details>
-    <summary>[TT] ERROR: ECU-TEST executable could not be found!</summary>
-
-> Please check the installation paths for the configured ECU-TEST installation, both on master in the global tool configuration and in the agent configuration.
-</details>
-
-<details>
-    <summary>[TT] ERROR: No running ECU-TEST instance found, please configure one at first!</summary>
-
-> At first, check the installation paths for the configured ECU-TEST installation in the global tool configuration.
-
-> Otherwise there could be a limitation when using a 64-bit ECU-TEST installation running on a machine with 32-bit Java installed only.
-To solve this architecture incompatibility install a [64-bit Java Runtime Environment](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) and ensure to run your master or agent on this version.
-</details>
-
-<details>
-    <summary>java.io.IOException: Remote call on xxx failed at hudson.remoting.Channel.call</summary>
-
-> When using the [Swarm Plugin](https://plugins.jenkins.io/swarm) there exists an incompatibility with the plugin dependencies regarding the [Apache Commons Lang Library](https://commons.apache.org/proper/commons-lang/).
-Please download the modified Swarm client from [here](https://github.com/jenkinsci/ecutest-plugin/files/3743523/swarm-client-jar-with-dependencies.zip) and replace it with the existing _swarm-client-jar-with-dependencies.jar_.
-</details>
-
-<details>
-    <summary>java.lang.UnsatisfiedLinkError: Native Library jacob-1.18-x64/86.dll already loaded in another classloader</summary>
-
-> This is a [known limitation](#known-limitations) when running the ECU-TEST agent in a user session while the master restarts and reconnects to the agent. Ensure that the agent agent is always restarted when the master restarts.
-
-> This can be achieved by creating an appropriate Windows task named _RESTART_JENKINS_AGENT_.
-
-> Starting with release 2.6 the default Windows task name can be overridden by system property _ecutest.taskName_ on each agent individually.
-
-> An example configuration export is attached [here](docs/RESTART_JENKINS_AGENT.xml) and can be easily imported and modified in the Windows Task Scheduler.
-</details>
+Frequently asked questions, common issues and error messages about the [ECU-TEST Jenkins Plugin](https://github.com/jenkinsci/ecutest-plugin) and [ECU-TEST](https://www.tracetronic.de/produkte/ecu-test/) itself
+can be found in the [TraceTronic Knowledge Base](https://kb.tracetronic.com/display/KB/Jenkins+Plugin).
 
 ## Compatibility
 
@@ -999,23 +898,23 @@ Please download the modified Swarm client from [here](https://github.com/jenkins
  <details>
     <summary><a href="https://www.tracetronic.com/products/ecu-test">ECU-TEST</a> 7.0.0 or higher </summary>
 
-  | Version |   latest - 2.26   |    2.25 - 2.23    |    2.22 - 2.19    |    2.18 - 2.15    |       2.15        |    2.14 - 2.13    |    2.12 - 2.8     |     2.7 - 2.5     |     2.4 - 2.2     |     2.1 - 2.0     |
+| Version |   latest - 2.26   |    2.25 - 2.23    |    2.22 - 2.19    |    2.18 - 2.15    |       2.15        |    2.14 - 2.13    |    2.12 - 2.8     |     2.7 - 2.5     |     2.4 - 2.2     |     2.1 - 2.0     |
   |:-------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|
-  | 2022.2  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-  | 2022.1  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-  | 2021.4  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-  | 2021.3  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-  | 2021.2  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-  | 2021.1  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-  | 2020.4  | :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-  | 2020.3  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-  | 2020.2  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-  | 2020.1  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-  |  8.1.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |
-  |  8.0.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |
-  |  7.2.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |
-  |  7.1.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |
-  |  7.0.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|
+| 2022.2  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2022.1  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2021.4  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2021.3  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2021.2  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2021.1  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2020.4  | :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2020.3  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2020.2  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2020.1  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+|  8.1.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |
+|  8.0.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |
+|  7.2.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |
+|  7.1.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |
+|  7.0.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|
   </details>
  <details>
     <summary>optional: <a href="https://www.tracetronic.com/products/test-guide">TEST-GUIDE</a> 1.65.0 or higher</summary>
@@ -1039,7 +938,7 @@ Please download the modified Swarm client from [here](https://github.com/jenkins
 ## License
 
 This plugin is licensed under 3-clause BSD license.
-More information can be found inside the [LICENSE](LICENSE) file or within the [LICENSES](./LICENSES) folder. Using 
+More information can be found inside the [LICENSE](LICENSE) file or within the [LICENSES](./LICENSES) folder. Using
 the [REUSE helper tool](https://github.com/fsfe/reuse-tool), you can run `reuse spdx` to get a bill of materials.
 
 
