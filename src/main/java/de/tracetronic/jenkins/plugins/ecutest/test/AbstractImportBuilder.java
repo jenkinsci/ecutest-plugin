@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Common base class for all import related task builders implemented in this plugin.
@@ -96,7 +97,9 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
     @DataBoundSetter
     public void setImportConfigs(@CheckForNull final List<TMSConfig> importConfigs) {
         if (importConfigs != null) {
-            this.importConfigs.addAll(importConfigs);
+            final List<TMSConfig> newConfigs = importConfigs.stream()
+                .filter(e -> !this.importConfigs.contains(e)).collect(Collectors.toList());
+            this.importConfigs.addAll(newConfigs);
         }
     }
 
