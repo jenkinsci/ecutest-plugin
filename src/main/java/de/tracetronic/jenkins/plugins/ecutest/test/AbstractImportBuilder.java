@@ -97,7 +97,7 @@ public class AbstractImportBuilder extends AbstractTestHelper implements SimpleB
     @DataBoundSetter
     public void setImportConfigs(@CheckForNull final List<TMSConfig> importConfigs) {
         if (importConfigs != null) {
-            List<TMSConfig> newConfigs = importConfigs.stream()
+            final List<TMSConfig> newConfigs = importConfigs.stream()
                 .filter(e -> !this.importConfigs.contains(e)).collect(Collectors.toList());
             this.importConfigs.addAll(newConfigs);
         }
