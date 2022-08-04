@@ -242,15 +242,17 @@ public class ImportProjectClient extends AbstractTMSClient {
         public Boolean call() throws IOException {
             boolean isImported = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            logger.logInfo(String.format("- Importing project %s from test management system...",
-                importConfig.getTmsPath()));
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final TestManagement tm = (TestManagement) comClient.getTestManagement();
                 if (importConfig.getTmProjectId().equals("")) {
+                    logger.logInfo(String.format("- Importing project %s from test management system...",
+                        importConfig.getTmsPath()));
                     isImported = tm.importProject(importConfig.getTmsPath(), importConfig.getImportPath(),
                         importConfig.isImportMissingPackages(), importConfig.getParsedTimeout());
                 } else {
+                    logger.logInfo(String.format("- Importing project %s from test management system...",
+                        importConfig.getTmProjectId()));
                     isImported = tm.importProjectById(importConfig.getTmProjectId(), importConfig.getImportPath(),
                         importConfig.isImportMissingPackages(), importConfig.getParsedTimeout());
                 }
