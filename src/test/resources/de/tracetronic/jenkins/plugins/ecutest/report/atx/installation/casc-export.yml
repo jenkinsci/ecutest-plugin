@@ -43,6 +43,9 @@ installations:
     - atxSecretSetting:
         group: CONNECTION
         name: "uploadAuthenticationKey"
+    - atxTextSetting:
+        group: CONNECTION
+        name: "uploadSettings"
     - atxBooleanSetting:
         group: CONNECTION
         name: "useSettingsFromServer"
@@ -131,6 +134,10 @@ installations:
     - atxTextSetting:
         group: ARCHIVE
         name: "archiveFilesPerPackage"
+    - atxBooleanSetting:
+        group: ARCHIVE
+        name: "archiveFilesExcludeRecordings"
+        value: false
     - atxTextSetting:
         group: ARCHIVE
         name: "archiveBy"
@@ -153,6 +160,14 @@ installations:
     - atxBooleanSetting:
         group: ATTRIBUTE
         name: "mapTestCaseVersionAsAttribute"
+        value: true
+    - atxBooleanSetting:
+        group: ATTRIBUTE
+        name: "mapIsStimulationAsAttribute"
+        value: true
+    - atxBooleanSetting:
+        group: ATTRIBUTE
+        name: "mapIsAnalysisAsAttribute"
         value: true
     - atxBooleanSetting:
         group: ATTRIBUTE
