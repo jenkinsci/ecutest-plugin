@@ -36,6 +36,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Common base class for {@link PackageClient} and {@link ProjectClient}.
@@ -297,6 +299,7 @@ public abstract class AbstractTestClient implements TestClient {
                 logger.logInfo(String.format("- Loading configurations: TBC=%s TCF=%s", tbcName, tcfName));
                 logger.logDebug(String.format("TBC=%s", tbcFile));
                 logger.logDebug(String.format("TCF=%s", tcfFile));
+
                 if (testConfig.isForceReload()) {
                     logger.logInfo("-> Forcing reload configurations...");
                     comClient.stop();
@@ -325,6 +328,15 @@ public abstract class AbstractTestClient implements TestClient {
                             } else {
                                 final Map<String, String> constantMap = getGlobalConstantMap();
                                 logger.logInfo("-> With global constants: " + constantMap);
+                                // check for single backslashes in global constants
+                                Pattern p = Pattern.compile("([^\\\\]+)(\\\\)([^\\\\]+).*");
+                                for (String key: constantMap.keySet()) {
+                                    Matcher m = p.matcher(constantMap.get(key));
+                                    if (m.matches()) {
+                                        logger.logDebug("Single backslash found in constant value - not allowed in " +
+                                            "ECU-TEST 2022.3 and newer versions.");
+                                    }
+                                }
                                 setGlobalConstants(comClient, constantMap);
                             }
                         }

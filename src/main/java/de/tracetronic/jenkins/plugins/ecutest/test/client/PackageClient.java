@@ -32,6 +32,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -99,6 +101,17 @@ public class PackageClient extends AbstractTestClient {
         if (!getTestConfig().isKeepConfig() && !launcher.getChannel().call(
             new LoadConfigCallable(getTestConfig(), listener))) {
             return false;
+        }
+
+        // check for single backslashes in package parameters
+        List<PackageParameter> packageParameters = packageConfig.getParameters();
+        Pattern p = Pattern.compile("([^\\\\]+)(\\\\)([^\\\\]+).*");
+        for (PackageParameter parameter: packageParameters) {
+            Matcher m = p.matcher(parameter.getValue());
+            if (m.matches()) {
+                logger.logDebug("Single backslash found in parameter value - not allowed in " +
+                    "ECU-TEST 2022.3 and newer versions.");
+            }
         }
 
         // Open and check package
