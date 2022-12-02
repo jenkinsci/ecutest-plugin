@@ -888,7 +888,7 @@ Release 1.8 implemented an extension point that will workaround this issue. In o
 
 Please not that from [ECU-TEST](https://www.tracetronic.de/produkte/ecu-test/) Version 2022.3 on, **invalid escape sequences in expressions within ECU-TEST are 
 disallowed.** This means, in particular, that backslashes in Windows paths need to be escaped properly (e.g. 
-*C:\\my\\path* instead of *C:\my\path*) - otherwise, this will lead to an error within ECU-TEST.
+*C:\\\my\\\path* instead of *C:\my\path*) - otherwise, this will lead to an error within ECU-TEST.
 
 ## FAQ
 
