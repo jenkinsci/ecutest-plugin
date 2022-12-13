@@ -329,13 +329,15 @@ public abstract class AbstractTestClient implements TestClient {
                                 final Map<String, String> constantMap = getGlobalConstantMap();
                                 logger.logInfo("-> With global constants: " + constantMap);
                                 // check for single backslashes in global constants
-                                Pattern p = Pattern.compile("([^\\\\]+)(\\\\)([^\\\\]+).*");
-                                for (String key: constantMap.keySet()) {
-                                    Matcher m = p.matcher(constantMap.get(key));
+                                final Pattern p = Pattern.compile("([^\\\\]+)(\\\\)([^\\\\]+).*");
+                                for (String value: constantMap.values()) {
+                                    final Matcher m = p.matcher(value);
                                     if (m.matches()) {
-                                        logger.logDebug("Single backslash found in constant value - not allowed in " +
-                                            "ECU-TEST 2022.3 and newer versions.");
+                                        logger.logDebug("Single backslash found in constant value - not allowed in "
+                                            + "ECU-TEST 2022.3 and newer versions.");
+
                                     }
+
                                 }
                                 setGlobalConstants(comClient, constantMap);
                             }
