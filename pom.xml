@@ -89,7 +89,7 @@
 
         <!-- Test scope -->
         <configuration-as-code.version>1.47</configuration-as-code.version>
-        <equalsverifier.version>3.7.2</equalsverifier.version>
+        <equalsverifier.version>3.12.3</equalsverifier.version>
         <mockito-core.version>4.1.0</mockito-core.version>
         <concurrency>2</concurrency>
         <skipUTs>false</skipUTs>
