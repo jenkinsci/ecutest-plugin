@@ -105,11 +105,12 @@ public class PackageClient extends AbstractTestClient {
 
         // check for single backslashes in package parameters
         final List<PackageParameter> packageParameters = packageConfig.getParameters();
-        final Pattern p = Pattern.compile("([^\\\\]+)(\\\\)([^\\\\]+).*");
+        final Pattern p = Pattern.compile("([^\\\\]*)(\\\\)([^\\\\]+).*");
         for (PackageParameter parameter: packageParameters) {
             final Matcher m = p.matcher(parameter.getValue());
             if (m.matches()) {
-                logger.logDebug("Single backslash found in parameter value - not allowed in "
+                logger.logDebug("Single backslash found in parameter '" + parameter.getValue()
+                    + "' - note that invalid control characters are not allowed in "
                     + "ECU-TEST 2022.3 and newer versions.");
             }
         }
