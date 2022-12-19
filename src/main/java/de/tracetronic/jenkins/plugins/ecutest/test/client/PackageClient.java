@@ -5,6 +5,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
+import de.tracetronic.jenkins.plugins.ecutest.compat.CompatibilityWarner;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
@@ -32,8 +33,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -105,15 +104,12 @@ public class PackageClient extends AbstractTestClient {
 
         // check for single backslashes in package parameters
         final List<PackageParameter> packageParameters = packageConfig.getParameters();
-        final Pattern p = Pattern.compile("([^\\\\]*)(\\\\)([^\\\\]+).*");
-        for (PackageParameter parameter: packageParameters) {
-            final Matcher m = p.matcher(parameter.getValue());
-            if (m.matches()) {
-                logger.logDebug("Single backslash found in parameter '" + parameter.getValue()
-                    + "' - note that invalid control characters are not allowed in "
-                    + "ECU-TEST 2022.3 and newer versions.");
-            }
-        }
+        Map<String, String> packageParamMap = packageParameters.stream()
+            .collect(Collectors.toMap(PackageParameter::getName, PackageParameter::getValue));
+
+        CompatibilityWarner warner = new CompatibilityWarner();
+        warner.ET2022p3AddDebugMessageForSingleBackslash(packageParamMap , logger,
+            CompatibilityWarner.PackageInfo.PARAM);
 
         // Open and check package
         final TestInfoHolder pkgInfo = launcher.getChannel().call(

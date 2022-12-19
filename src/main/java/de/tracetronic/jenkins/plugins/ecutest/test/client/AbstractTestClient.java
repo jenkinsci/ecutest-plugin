@@ -5,6 +5,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
+import de.tracetronic.jenkins.plugins.ecutest.compat.CompatibilityWarner;
 import de.tracetronic.jenkins.plugins.ecutest.extension.warnings.WarningsRecorder;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
@@ -36,8 +37,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Common base class for {@link PackageClient} and {@link ProjectClient}.
@@ -328,18 +327,12 @@ public abstract class AbstractTestClient implements TestClient {
                             } else {
                                 final Map<String, String> constantMap = getGlobalConstantMap();
                                 logger.logInfo("-> With global constants: " + constantMap);
+
                                 // check for single backslashes in global constants
-                                final Pattern p = Pattern.compile("([^\\\\]*)(\\\\)([^\\\\]+).*");
-                                for (String value: constantMap.values()) {
-                                    final Matcher m = p.matcher(value);
-                                    if (m.matches()) {
-                                        logger.logDebug("Single backslash found in constant value '" + value
-                                            + "' - note that invalid control characters are not allowed in "
-                                            + "ECU-TEST 2022.3 and newer versions.");
+                                CompatibilityWarner warner = new CompatibilityWarner();
+                                warner.ET2022p3AddDebugMessageForSingleBackslash(constantMap, logger,
+                                    CompatibilityWarner.PackageInfo.CONST);
 
-                                    }
-
-                                }
                                 setGlobalConstants(comClient, constantMap);
                             }
                         }
