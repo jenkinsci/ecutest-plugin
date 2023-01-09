@@ -5,6 +5,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
+import de.tracetronic.jenkins.plugins.ecutest.compat.CompatibilityWarner;
 import de.tracetronic.jenkins.plugins.ecutest.extension.warnings.WarningsRecorder;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
@@ -297,6 +298,7 @@ public abstract class AbstractTestClient implements TestClient {
                 logger.logInfo(String.format("- Loading configurations: TBC=%s TCF=%s", tbcName, tcfName));
                 logger.logDebug(String.format("TBC=%s", tbcFile));
                 logger.logDebug(String.format("TCF=%s", tcfFile));
+
                 if (testConfig.isForceReload()) {
                     logger.logInfo("-> Forcing reload configurations...");
                     comClient.stop();
@@ -325,6 +327,12 @@ public abstract class AbstractTestClient implements TestClient {
                             } else {
                                 final Map<String, String> constantMap = getGlobalConstantMap();
                                 logger.logInfo("-> With global constants: " + constantMap);
+
+                                // check for single backslashes in global constants
+                                final CompatibilityWarner warner = new CompatibilityWarner();
+                                warner.et2022p3AddDebugMessageForSingleBackslash(constantMap, logger,
+                                    CompatibilityWarner.PackageInfo.CONST);
+
                                 setGlobalConstants(comClient, constantMap);
                             }
                         }

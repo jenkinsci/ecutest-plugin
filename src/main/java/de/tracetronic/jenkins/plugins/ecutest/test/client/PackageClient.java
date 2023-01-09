@@ -5,6 +5,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test.client;
 
+import de.tracetronic.jenkins.plugins.ecutest.compat.CompatibilityWarner;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.ExecutionConfig;
 import de.tracetronic.jenkins.plugins.ecutest.test.config.PackageConfig;
@@ -100,6 +101,15 @@ public class PackageClient extends AbstractTestClient {
             new LoadConfigCallable(getTestConfig(), listener))) {
             return false;
         }
+
+        // check for single backslashes in package parameters
+        final List<PackageParameter> packageParameters = packageConfig.getParameters();
+        final Map<String, String> packageParamMap = packageParameters.stream()
+            .collect(Collectors.toMap(PackageParameter::getName, PackageParameter::getValue));
+
+        final CompatibilityWarner warner = new CompatibilityWarner();
+        warner.et2022p3AddDebugMessageForSingleBackslash(packageParamMap, logger,
+            CompatibilityWarner.PackageInfo.PARAM);
 
         // Open and check package
         final TestInfoHolder pkgInfo = launcher.getChannel().call(

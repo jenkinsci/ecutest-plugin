@@ -886,6 +886,10 @@ This is due to already loaded libraries, for more information see this [blog pos
 
 Release 1.8 implemented an extension point that will workaround this issue. In order to work a new task has to be created in the Windows Task Scheduler named [RESTART_JENKINS_AGENT](docs/RESTART_JENKINS_AGENT.xml) and configured with actions how to restart the agent.
 
+Please not that from [ECU-TEST](https://www.tracetronic.de/produkte/ecu-test/) Version 2022.3 on, **invalid escape sequences in expressions within ECU-TEST are 
+disallowed.** This means, in particular, that backslashes in Windows paths need to be escaped properly (e.g. 
+*C:\\\my\\\path* instead of *C:\my\path*) - otherwise, this will lead to an error within ECU-TEST.
+
 ## FAQ
 
 Frequently asked questions, common issues and error messages about the [ECU-TEST Jenkins Plugin](https://github.com/jenkinsci/ecutest-plugin) and [ECU-TEST](https://www.tracetronic.de/produkte/ecu-test/) itself
