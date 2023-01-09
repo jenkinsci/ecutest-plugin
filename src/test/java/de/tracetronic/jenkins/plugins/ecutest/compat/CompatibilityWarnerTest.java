@@ -57,7 +57,7 @@ public class CompatibilityWarnerTest {
             TTConsoleLogger logger = Mockito.mock(TTConsoleLogger.class);
             CompatibilityWarner.PackageInfo info = CompatibilityWarner.PackageInfo.PARAM;
 
-            assert expected == warner.ET2022p3AddDebugMessageForSingleBackslash(toMap(key, value), logger, info);
+            assert expected == warner.et2022p3AddDebugMessageForSingleBackslash(toMap(key, value), logger, info);
         }
 
         private Map<String, String> toMap(String key, String value) {

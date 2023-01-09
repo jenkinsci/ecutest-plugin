@@ -104,11 +104,11 @@ public class PackageClient extends AbstractTestClient {
 
         // check for single backslashes in package parameters
         final List<PackageParameter> packageParameters = packageConfig.getParameters();
-        Map<String, String> packageParamMap = packageParameters.stream()
+        final Map<String, String> packageParamMap = packageParameters.stream()
             .collect(Collectors.toMap(PackageParameter::getName, PackageParameter::getValue));
 
-        CompatibilityWarner warner = new CompatibilityWarner();
-        warner.ET2022p3AddDebugMessageForSingleBackslash(packageParamMap , logger,
+        final CompatibilityWarner warner = new CompatibilityWarner();
+        warner.et2022p3AddDebugMessageForSingleBackslash(packageParamMap, logger,
             CompatibilityWarner.PackageInfo.PARAM);
 
         // Open and check package

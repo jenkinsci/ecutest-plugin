@@ -329,8 +329,8 @@ public abstract class AbstractTestClient implements TestClient {
                                 logger.logInfo("-> With global constants: " + constantMap);
 
                                 // check for single backslashes in global constants
-                                CompatibilityWarner warner = new CompatibilityWarner();
-                                warner.ET2022p3AddDebugMessageForSingleBackslash(constantMap, logger,
+                                final CompatibilityWarner warner = new CompatibilityWarner();
+                                warner.et2022p3AddDebugMessageForSingleBackslash(constantMap, logger,
                                     CompatibilityWarner.PackageInfo.CONST);
 
                                 setGlobalConstants(comClient, constantMap);
