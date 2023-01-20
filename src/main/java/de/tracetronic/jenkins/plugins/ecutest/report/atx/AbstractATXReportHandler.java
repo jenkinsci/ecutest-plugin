@@ -61,7 +61,7 @@ public abstract class AbstractATXReportHandler {
 
         private static final long serialVersionUID = 1L;
 
-        private final ATXConfig config;
+        protected final ATXConfig config;
         private final List<FilePath> reportFiles;
         private final EnvVars envVars;
         private final TaskListener listener;
