@@ -59,13 +59,13 @@ public abstract class AbstractATXReportHandler {
      */
     protected abstract static class AbstractReportCallable<T> extends MasterToSlaveCallable<T, IOException> {
 
-        /**
-         * ATX config
-         */
-        protected final ATXConfig config;
 
         private static final long serialVersionUID = 1L;
 
+        /**
+         * ATX config.
+         */
+        protected final ATXConfig config;
         private final List<FilePath> reportFiles;
         private final EnvVars envVars;
         private final TaskListener listener;
