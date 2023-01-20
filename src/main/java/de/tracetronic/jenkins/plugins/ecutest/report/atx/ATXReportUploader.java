@@ -10,6 +10,7 @@ import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.trf.TRFPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.util.ATXUtil;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ATXValidator;
@@ -583,7 +584,10 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             final URL url = new URL(redirect);
 
             // Handle SSL connection
-            if (redirect.startsWith("https://")) {
+            final Object ignoreSSL = config.getSettingValueByGroup(
+                "ignoreSSL", ATXSetting.SettingsGroup.CONNECTION);
+
+            if (redirect.startsWith("https://") && ignoreSSL != null && (boolean) ignoreSSL) {
                 connection = (HttpsURLConnection) url.openConnection();
                 ATXValidator.ignoreSSLIssues((HttpsURLConnection) connection);
             } else {
