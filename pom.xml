@@ -72,6 +72,7 @@
         <!-- Jenkins plugins -->
         <job-dsl.version>1.78.3</job-dsl.version>
         <warnings-ng.version>9.11.1</warnings-ng.version>
+        <jquery.version>1.12.4-1</jquery.version>
 
         <!-- Direct dependencies -->
         <jacob.version>1.20</jacob.version>
@@ -86,6 +87,7 @@
         <pmd.version>6.41.0</pmd.version>
         <spotbugs.effort>Max</spotbugs.effort>
         <spotbugs.threshold>Low</spotbugs.threshold>
+        <cyclonedx-maven-plugin.version>2.6.2</cyclonedx-maven-plugin.version>
 
         <!-- Test scope -->
         <configuration-as-code.version>1.47</configuration-as-code.version>
@@ -119,6 +121,21 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>1.7.36</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.11.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-xml</artifactId>
+                <version>2.13.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-utils</artifactId>
+                <version>2.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -155,6 +172,17 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>${sqlite-jdbc.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.cyclonedx</groupId>
+            <artifactId>cyclonedx-maven-plugin</artifactId>
+            <version>${cyclonedx-maven-plugin.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.sonatype.sisu</groupId>
+                    <artifactId>sisu-guice</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <!-- Jenkins plugins -->
         <dependency>
@@ -164,7 +192,7 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>jquery</artifactId>
-            <version>1.12.4-1</version>
+            <version>${jquery.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
@@ -484,6 +512,33 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.cyclonedx</groupId>
+                <artifactId>cyclonedx-maven-plugin</artifactId>
+                <version>2.6.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>makeAggregateBom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <projectType>application</projectType>
+                    <schemaVersion>1.4</schemaVersion>
+                    <includeBomSerialNumber>true</includeBomSerialNumber>
+                    <includeCompileScope>true</includeCompileScope>
+                    <includeProvidedScope>true</includeProvidedScope>
+                    <includeRuntimeScope>true</includeRuntimeScope>
+                    <includeSystemScope>true</includeSystemScope>
+                    <includeTestScope>false</includeTestScope>
+                    <includeLicenseText>false</includeLicenseText>
+                    <outputReactorProjects>true</outputReactorProjects>
+                    <outputFormat>all</outputFormat>
+                    <outputName>sbom</outputName>
+                </configuration>
             </plugin>
         </plugins>
     </build>
