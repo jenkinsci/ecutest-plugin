@@ -337,7 +337,7 @@
                     <excludes>
                         <exclude>InjectedTest.java</exclude>
                     </excludes>
-                    <argLine>@{argLine}</argLine>
+                    <!-- <argLine>@{argLine}</argLine> -->
                     <skipTests>${skipUTs}</skipTests>
                 </configuration>
             </plugin>
@@ -349,7 +349,7 @@
                         <include>**/*IT.java</include>
                         <include>InjectedTest.java</include>
                     </includes>
-                    <argLine>@{argLine}</argLine>
+                    <!--<argLine>@{argLine}</argLine> -->
                     <forkCount>${concurrency}</forkCount>
                     <reuseForks>true</reuseForks>
                     <skipITs>${skipITs}</skipITs>
