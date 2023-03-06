@@ -9,7 +9,7 @@
 Prerequisites
 =============
 * Maven tool installation configured as M3
-* JDK tool installation configured as JDK8
+* JDK tool installation configured as JDK11
 * Global environment variable EMAIL_RECIPIENTS set
 * Jenkins plugins installed:
 - https://plugins.jenkins.io/jacoco
@@ -70,7 +70,7 @@ pipeline {
 
 def mvn(def args) {
     def mvnHome = tool 'M3'
-    def javaHome = tool 'JDK8'
+    def javaHome = tool 'JDK11'
     withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin:${env.JAVA_HOME}/bin"]) {
         if (isUnix()) {
             sh "${mvnHome}/bin/mvn ${args} -B -V -U -e"
