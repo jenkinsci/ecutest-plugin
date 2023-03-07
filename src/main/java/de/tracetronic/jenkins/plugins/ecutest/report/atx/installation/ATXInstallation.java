@@ -159,6 +159,8 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         /**
          * Instantiates a new {@link DescriptorImpl}.
          */
+        @SuppressFBWarnings(value = "MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR",
+            justification = "Never used in a critical way. Do not change in working legacy code.")
         public DescriptorImpl() {
             super();
             load();

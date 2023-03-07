@@ -11,6 +11,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportDescriptor;
 import de.tracetronic.jenkins.plugins.ecutest.report.AbstractToolPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.JUnitValidator;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -129,6 +130,7 @@ public class JUnitPublisher extends AbstractToolPublisher implements MatrixAggre
     }
 
     @Override
+    @SuppressFBWarnings(value = "DCN_NULLPOINTER_EXCEPTION", justification = "Has been working as expected.")
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
                               final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = getLogger();
