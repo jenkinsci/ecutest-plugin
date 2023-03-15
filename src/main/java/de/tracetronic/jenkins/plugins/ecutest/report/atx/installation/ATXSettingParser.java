@@ -149,7 +149,7 @@ public final class ATXSettingParser {
             final XPathExpression xPathExpression = xpath.compile(expression);
             final Node descNode = (Node) xPathExpression.evaluate(node, XPathConstants.NODE);
             if (descNode != null) {
-                String content = descNode.getTextContent();
+                final String content = descNode.getTextContent();
                 if (content != null) {
                     description = descNode.getTextContent().replaceAll("\\s+", " ").trim();
                 }

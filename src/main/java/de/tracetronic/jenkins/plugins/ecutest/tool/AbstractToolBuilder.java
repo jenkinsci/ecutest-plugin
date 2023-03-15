@@ -38,8 +38,8 @@ import java.util.List;
 /**
  * Common base class for all tool related task builders implemented in this plugin.
  */
-@SuppressFBWarnings(value = "MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR", justification = "Never used in a " +
-    "critical way. Do not change in working legacy code.")
+@SuppressFBWarnings(value = "MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR", justification = "Never used in a "
+    + "critical way. Do not change in working legacy code.")
 public abstract class AbstractToolBuilder extends Builder implements SimpleBuildStep {
 
     @Nonnull

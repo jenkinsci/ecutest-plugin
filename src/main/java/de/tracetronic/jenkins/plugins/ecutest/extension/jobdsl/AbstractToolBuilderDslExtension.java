@@ -38,8 +38,8 @@ public abstract class AbstractToolBuilderDslExtension extends AbstractDslExtensi
     /**
      * {@link Context} class providing common test related methods for the nested DSL context.
      */
-    @SuppressFBWarnings(value = "MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR", justification = "Never used in a " +
-        "critical way. Do not change in working legacy code.")
+    @SuppressFBWarnings(value = "MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR", justification = "Never used in a "
+        + "critical way. Do not change in working legacy code.")
     public abstract class AbstractToolContext implements Context {
 
         /**
