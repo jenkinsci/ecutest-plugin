@@ -898,7 +898,7 @@ can be found in the [TraceTronic Knowledge Base](https://kb.tracetronic.com/disp
 ## Compatibility
 
 - Jenkins LTS 2.289.3 or higher
-- Java SE Runtime Environment 8 or higher
+- Java SE Runtime Environment 11 or higher
  <details>
     <summary><a href="https://www.tracetronic.com/products/ecu-test">ECU-TEST</a> 7.0.0 or higher </summary>
 

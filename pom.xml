@@ -10,7 +10,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>4.31</version>
+        <version>4.40</version>
         <relativePath />
     </parent>
 
@@ -66,8 +66,8 @@
 
     <properties>
         <!-- Jenkins base -->
-        <jenkins.version>2.289.3</jenkins.version>
-        <java.level>8</java.level>
+        <jenkins.version>2.319.3</jenkins.version>
+        <javaTargetJDK>11</javaTargetJDK>
 
         <!-- Jenkins plugins -->
         <job-dsl.version>1.78.3</job-dsl.version>
@@ -78,6 +78,7 @@
         <antlr4-maven-plugin.version>4.9.3</antlr4-maven-plugin.version>
         <antlr4-runtime.version>4.9.3</antlr4-runtime.version>
         <sqlite-jdbc.version>3.7.2</sqlite-jdbc.version>
+        <spotbugs-annotations.version>4.2.0</spotbugs-annotations.version>
 
         <!-- Static code analysis -->
         <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
@@ -100,20 +101,20 @@
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-2.289.x</artifactId>
-                <version>1340.vb_085767387d2</version>
+                <artifactId>bom-2.319.x</artifactId>
+                <version>1595.v8c71c13cc3a_9</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.jenkins-ci.main</groupId>
                 <artifactId>jenkins-test-harness</artifactId>
-                <version>1736.vc72c458c5103</version>
+                <version>1802.v9de0d87365d2</version>
             </dependency>
             <dependency>
                 <groupId>io.jenkins.plugins</groupId>
                 <artifactId>echarts-api</artifactId>
-                <version>5.3.0-2</version>
+                <version>5.3.2-1</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -154,6 +155,11 @@
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>${sqlite-jdbc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+            <version>${spotbugs-annotations.version}</version>
         </dependency>
 
         <!-- Jenkins plugins -->
@@ -331,7 +337,7 @@
                     <excludes>
                         <exclude>InjectedTest.java</exclude>
                     </excludes>
-                    <argLine>@{argLine}</argLine>
+                    <!-- <argLine>@{argLine}</argLine> -->
                     <skipTests>${skipUTs}</skipTests>
                 </configuration>
             </plugin>
@@ -343,7 +349,7 @@
                         <include>**/*IT.java</include>
                         <include>InjectedTest.java</include>
                     </includes>
-                    <argLine>@{argLine}</argLine>
+                    <!--<argLine>@{argLine}</argLine> -->
                     <forkCount>${concurrency}</forkCount>
                     <reuseForks>true</reuseForks>
                     <skipITs>${skipITs}</skipITs>
@@ -424,7 +430,7 @@
                 <configuration>
                     <analysisCache>true</analysisCache>
                     <minimumTokens>200</minimumTokens>
-                    <targetJdk>1.${java.level}</targetJdk>
+                    <targetJdk>${javaTargetJDK}</targetJdk>
                     <linkXRef>false</linkXRef>
                     <excludeRoots>
                         <excludeRoot>target/generated-sources/antlr4</excludeRoot>
