@@ -11,6 +11,7 @@ import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.util.ProcessUtil;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComProperty;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
@@ -37,6 +38,8 @@ import java.util.List;
 /**
  * Common base class for all tool related task builders implemented in this plugin.
  */
+@SuppressFBWarnings(value = "MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR", justification = "Never used in a "
+    + "critical way. Do not change in working legacy code.")
 public abstract class AbstractToolBuilder extends Builder implements SimpleBuildStep {
 
     @Nonnull

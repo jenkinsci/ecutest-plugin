@@ -8,6 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.extension.jobdsl;
 import com.google.common.base.Preconditions;
 import de.tracetronic.jenkins.plugins.ecutest.tool.AbstractToolBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.util.validation.ToolValidator;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.EnvVars;
 import hudson.util.FormValidation;
 import javaposse.jobdsl.dsl.Context;
@@ -37,6 +38,8 @@ public abstract class AbstractToolBuilderDslExtension extends AbstractDslExtensi
     /**
      * {@link Context} class providing common test related methods for the nested DSL context.
      */
+    @SuppressFBWarnings(value = "MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR", justification = "Never used in a "
+        + "critical way. Do not change in working legacy code.")
     public abstract class AbstractToolContext implements Context {
 
         /**
@@ -56,6 +59,7 @@ public abstract class AbstractToolBuilderDslExtension extends AbstractDslExtensi
          *
          * @param value the value as String
          */
+
         public void timeout(final CharSequence value) {
             Preconditions.checkNotNull(value, NOT_NULL_MSG, OPT_TIMEOUT);
             final FormValidation validation = validator.validateTimeout(value.toString(), getDefaultTimeout());

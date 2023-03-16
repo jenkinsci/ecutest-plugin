@@ -6,6 +6,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting.SettingsGroup;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.util.Secret;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -93,6 +94,7 @@ public final class ATXSettingParser {
      * @param expression the XPath expression for a separated setting
      * @return the parsed setting represented by a list of settings
      */
+    @SuppressFBWarnings(value = "DCN_NULLPOINTER_EXCEPTION", justification = "Has been working as expected.")
     public static List<ATXSetting<?>> parseSetting(final Document doc,
                                                 final SettingsGroup group,
                                                 final String expression) {
@@ -147,9 +149,12 @@ public final class ATXSettingParser {
             final XPathExpression xPathExpression = xpath.compile(expression);
             final Node descNode = (Node) xPathExpression.evaluate(node, XPathConstants.NODE);
             if (descNode != null) {
-                description = descNode.getTextContent().replaceAll("\\s+", " ").trim();
+                final String content = descNode.getTextContent();
+                if (content != null) {
+                    description = descNode.getTextContent().replaceAll("\\s+", " ").trim();
+                }
             }
-        } catch (final XPathExpressionException | IllegalArgumentException | NullPointerException e) {
+        } catch (final XPathExpressionException | IllegalArgumentException e) {
             LOGGER.log(Level.SEVERE, "Error parsing description: " + e.getMessage(), e);
         }
         return description;
