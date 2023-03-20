@@ -70,7 +70,7 @@
         <javaTargetJDK>11</javaTargetJDK>
 
         <!-- Jenkins plugins -->
-        <job-dsl.version>1.78.3</job-dsl.version>
+        <job-dsl.version>1.82</job-dsl.version>
         <warnings-ng.version>9.11.1</warnings-ng.version>
 
         <!-- Direct dependencies -->
