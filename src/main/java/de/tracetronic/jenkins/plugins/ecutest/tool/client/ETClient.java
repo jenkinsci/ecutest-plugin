@@ -295,6 +295,7 @@ public class ETClient extends AbstractToolClient {
 
         if (isLicenseCheck()) {
             args.add("--startupAutomated=True");
+            args.add("-q");
         } else {
             if (!getWorkspaceDir().isEmpty()) {
                 args.add("--workspaceDir", getWorkspaceDir());
