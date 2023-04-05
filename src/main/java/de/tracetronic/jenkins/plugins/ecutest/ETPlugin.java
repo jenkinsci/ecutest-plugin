@@ -35,7 +35,7 @@ public class ETPlugin {
     /**
      * Defines the maximum allowed ECU-TEST version supported by this plugin.
      */
-    public static final ToolVersion ET_MAX_VERSION = new ToolVersion(2022, 4, 0);
+    public static final ToolVersion ET_MAX_VERSION = new ToolVersion(2023, 1, 1);
 
     /**
      * Defines the minimum TEST-GUIDE version supported by this plugin.

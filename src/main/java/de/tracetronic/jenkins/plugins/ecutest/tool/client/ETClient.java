@@ -142,7 +142,6 @@ public class ETClient extends AbstractToolClient {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         logger.logInfo(args.toString());
 
-        // Launch tool process with arg -p
         final int exitCode = launcher.launch().cmds(args).quiet(true).join();
         return exitCode == 0;
     }
@@ -296,7 +295,7 @@ public class ETClient extends AbstractToolClient {
 
         if (isLicenseCheck()) {
             args.add("--startupAutomated=True");
-            args.add("-p");
+            args.add("-q");
         } else {
             if (!getWorkspaceDir().isEmpty()) {
                 args.add("--workspaceDir", getWorkspaceDir());

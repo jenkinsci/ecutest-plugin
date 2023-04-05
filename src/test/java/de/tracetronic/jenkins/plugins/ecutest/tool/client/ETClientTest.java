@@ -70,7 +70,7 @@ public class ETClientTest {
     public void testLicenseCmdLineArgs() {
         final ETClient etClient = new ETClient("ECU-TEST", exe, "", "", 0, false);
         etClient.setLicenseCheck(true);
-        expectedArgs = Arrays.asList(exe, "--startupAutomated=True", "-p");
+        expectedArgs = Arrays.asList(exe, "--startupAutomated=True", "-q");
         ensureCreateCmdLineArgs(etClient, expectedArgs);
     }
 
