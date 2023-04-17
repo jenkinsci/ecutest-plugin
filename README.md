@@ -42,8 +42,6 @@ Please consider other open-source automation solutions by [TraceTronic](https://
 - [Issues](#issues)
 - [Known limitations](#known-limitations)
 - [FAQ](#faq)
-    - [Common issues](#large_blue_circle-common-issues)
-    - [Error messages](#red_circle-error-messages)
 - [Compatibility](#compatibility)
 - [License](#license)
 - [Changelog](#changelog)
