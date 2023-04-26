@@ -899,28 +899,28 @@ can be found in the [TraceTronic Knowledge Base](https://kb.tracetronic.com/disp
  <details>
     <summary><a href="https://www.tracetronic.com/products/ecu-test">ECU-TEST</a> 2021.1 or higher </summary>
 
-| Version | latest - 2.39      |    2.38 - 2.26     |    2.25 - 2.23    |    2.22 - 2.19    |    2.18 - 2.15    |       2.15        |    2.14 - 2.13    |    2.12 - 2.8     |     2.7 - 2.5     |     2.4 - 2.2     |     2.1 - 2.0     |
-|:-------:|--------------------|:------------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|
-| 2023.1  | :heavy_check_mark: |        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2022.4  | :heavy_check_mark: | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2022.3  | :heavy_check_mark: | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2022.2  | :heavy_check_mark: | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2022.1  | :heavy_check_mark: | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2021.4  | :heavy_check_mark: | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2021.3  | :heavy_check_mark: | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2021.2  | :heavy_check_mark: | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2021.1  | :heavy_check_mark: | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2020.4  | :grey_question:    | :heavy_check_mark: | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2020.3  | :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2020.2  | :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2020.1  | :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-|  8.1.0  | :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |
-|  8.0.0  | :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |
-|  7.2.0  | :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |
-|  7.1.0  | :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |
-|  7.0.0  | :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|
+| Version |    latest - 2.39     |    2.38 - 2.26     |    2.25 - 2.23    |    2.22 - 2.19    |    2.18 - 2.15    |       2.15        |    2.14 - 2.13    |    2.12 - 2.8     |     2.7 - 2.5     |     2.4 - 2.2     |     2.1 - 2.0     |
+|:-------:|:--------------------:|:------------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|
+| 2023.1  |  :heavy_check_mark:  |        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2022.4  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2022.3  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2022.2  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2022.1  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2021.4  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2021.3  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2021.2  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2021.1  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2020.4  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2020.3  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2020.2  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2020.1  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+|  8.1.0  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |
+|  8.0.0  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |
+|  7.2.0  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |
+|  7.1.0  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |
+|  7.0.0  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|
   
-  **Explanation:** :heavy_check_mark: -> works together | :grey_question: -> not tested, might work | :x: -> not 
+  **Explanation:** :heavy_check_mark: -> compatible | :grey_question: -> not tested, might be compatible | :x: -> not 
   compatible 
 
   </details>
