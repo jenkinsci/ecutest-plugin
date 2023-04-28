@@ -33,7 +33,7 @@ public class ImportPackageClient extends AbstractTMSClient {
     /**
      * Defines the minimum required ECU-TEST version for this client to work properly.
      */
-    private static final ToolVersion ET_MIN_VERSION = new ToolVersion(6, 6, 0);
+    private static final ToolVersion ET_MIN_VERSION = new ToolVersion(2021, 1, 0);
 
     private final TMSConfig importConfig;
 

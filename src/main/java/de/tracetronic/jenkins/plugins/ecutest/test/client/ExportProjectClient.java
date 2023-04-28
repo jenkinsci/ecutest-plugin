@@ -32,12 +32,12 @@ public class ExportProjectClient extends AbstractTMSClient {
     /**
      * Defines the minimum required ECU-TEST version for this client to export project.
      */
-    private static final ToolVersion ET_MIN_VERSION = new ToolVersion(6, 5, 0);
+    private static final ToolVersion ET_MIN_VERSION = new ToolVersion(2021, 1, 0);
 
     /**
      * Defines the minimum required ECU-TEST version for this client to export project attributes.
      */
-    private static final ToolVersion ET_MIN_ATTR_VERSION = new ToolVersion(6, 6, 0);
+    private static final ToolVersion ET_MIN_ATTR_VERSION = new ToolVersion(2021, 1, 0);
 
     private final TMSConfig exportConfig;
 
