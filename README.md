@@ -317,7 +317,6 @@ steps {
     stopTS(String installation)
     timeout(int | String timeout = 30)
 }
-}
 ```
 </details>
 
@@ -884,13 +883,19 @@ This is due to already loaded libraries, for more information see this [blog pos
 
 Release 1.8 implemented an extension point that will workaround this issue. In order to work a new task has to be created in the Windows Task Scheduler named [RESTART_JENKINS_AGENT](docs/RESTART_JENKINS_AGENT.xml) and configured with actions how to restart the agent.
 
-Please not that from [ECU-TEST](https://www.tracetronic.de/produkte/ecu-test/) Version 2022.3 on, **invalid escape sequences in expressions within ECU-TEST are 
-disallowed.** This means, in particular, that backslashes in Windows paths need to be escaped properly (e.g. 
-*C:\\\my\\\path* instead of *C:\my\path*) - otherwise, this will lead to an error within ECU-TEST.
+Please note that from [ECU-TEST](https://www.tracetronic.com/products/ecu-test/) Version 2022.3 on, **invalid escape 
+sequences in expressions within ECU-TEST are disallowed.** This means, in particular, that backslashes in Windows 
+paths need to be escaped properly (e.g. *C:\\\my\\\path* instead of *C:\my\path*) - otherwise, this will lead to an 
+error within ECU-TEST.
+
+Since [release 2.39](https://github.com/jenkinsci/ecutest-plugin/releases/tag/ecutest-2.39) we test only against 
+[ECU-TEST](https://www.tracetronic.com/products/ecu-test/) versions, that are inside the support window of the 
+TraceTronic tool support terms. Please consult the [compatibility matrix](#compatibility) for detailed 
+information.
 
 ## FAQ
 
-Frequently asked questions, common issues and error messages about the [ECU-TEST Jenkins Plugin](https://github.com/jenkinsci/ecutest-plugin) and [ECU-TEST](https://www.tracetronic.de/produkte/ecu-test/) itself
+Frequently asked questions, common issues and error messages about the [ECU-TEST Jenkins Plugin](https://github.com/jenkinsci/ecutest-plugin) and [ECU-TEST](https://www.tracetronic.com/products/ecu-test/) itself
 can be found in the [TraceTronic Knowledge Base](https://kb.tracetronic.com/display/KB/Jenkins+Plugin).
 
 ## Compatibility
@@ -898,28 +903,32 @@ can be found in the [TraceTronic Knowledge Base](https://kb.tracetronic.com/disp
 - Jenkins LTS 2.319.3 or higher
 - Java SE Runtime Environment 11 or higher
  <details>
-    <summary><a href="https://www.tracetronic.com/products/ecu-test">ECU-TEST</a> 7.0.0 or higher </summary>
+    <summary><a href="https://www.tracetronic.com/products/ecu-test">ECU-TEST</a> 2021.1 or higher </summary>
 
-| Version |   latest - 2.26   |    2.25 - 2.23    |    2.22 - 2.19    |    2.18 - 2.15    |       2.15        |    2.14 - 2.13    |    2.12 - 2.8     |     2.7 - 2.5     |     2.4 - 2.2     |     2.1 - 2.0     |
-|:-------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|
-| 2023.1  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2022.4  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2022.3  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2022.2  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2022.1  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2021.4  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2021.3  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2021.2  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2021.1  | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2020.4  | :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2020.3  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2020.2  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 2020.1  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-|  8.1.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |
-|  8.0.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |
-|  7.2.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |
-|  7.1.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |
-|  7.0.0  | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|
+| Version |    latest - 2.39     |    2.38 - 2.26     |    2.25 - 2.23    |    2.22 - 2.19    |    2.18 - 2.15    |       2.15        |    2.14 - 2.13    |    2.12 - 2.8     |     2.7 - 2.5     |     2.4 - 2.2     |     2.1 - 2.0     |
+|:-------:|:--------------------:|:------------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|
+| 2023.1  |  :heavy_check_mark:  |        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2022.4  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2022.3  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2022.2  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2022.1  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2021.4  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2021.3  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2021.2  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2021.1  |  :heavy_check_mark:  | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2020.4  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2020.3  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2020.2  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 2020.1  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+|  8.1.0  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |
+|  8.0.0  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |
+|  7.2.0  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |
+|  7.1.0  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |
+|  7.0.0  |   :grey_question:    | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|
+  
+  **Explanation:** :heavy_check_mark: -> compatible | :grey_question: -> not tested, might be compatible | :x: -> not 
+  compatible 
+
   </details>
  <details>
     <summary>optional: <a href="https://www.tracetronic.com/products/test-guide">TEST-GUIDE</a> 1.65.0 or higher</summary>
