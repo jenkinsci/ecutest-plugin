@@ -11,7 +11,7 @@ updates:
     ignore:
       - dependency-name: 'io.jenkins.plugins:warnings-ng'
         versions:
-          - '> 8.0.0'
+          - '> 9.11.1'
       - dependency-name: 'org.jenkins-ci.main:jenkins-core'
         versions:
           - '> 2.319.3'
