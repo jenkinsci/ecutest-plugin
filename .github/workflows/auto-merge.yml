@@ -8,7 +8,7 @@ permissions:
 jobs:
   dependabot:
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' && contains( github.event.pull_request.labels.*.name, 'auto-merge') }}
+    if: ${{ github.actor == 'dependabot[bot]' && contains( github.event.pull_request.labels.*.name, 'github_actions') }}
     steps:
       - name: Enable auto-merge for Dependabot GitHub Actions PRs
         run: gh pr merge --auto --squash "$PR_TITLE"

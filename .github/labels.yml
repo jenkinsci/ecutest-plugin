@@ -43,6 +43,3 @@
 - name: wontfix
   description: No further work
   color: 0b3972
-- name: auto-merge
-  description: Enable dependabot auto merge (e.g. GitHub actions)
-  color: 00fff7

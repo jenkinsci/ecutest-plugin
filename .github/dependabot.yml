@@ -25,5 +25,3 @@ updates:
     directory: /
     schedule:
       interval: daily
-    labels:
-      - "auto-merge"
