@@ -696,10 +696,13 @@ unclassified:
                             group: ARCHIVE
                             name: "archiveMapping"
                             value: false
-                      - atxBooleanSetting:
+                      - atxTextSetting:
                             group: ARCHIVE
                             name: "archiveRecordings"
-                            value: false
+                            value: "False"
+                      - atxTextSetting:
+                            group: ARCHIVE
+                            name: "archiveRecordingsByAttributes"
                       - atxBooleanSetting:
                             group: ARCHIVE
                             name: "archiveRecordingMetadata"

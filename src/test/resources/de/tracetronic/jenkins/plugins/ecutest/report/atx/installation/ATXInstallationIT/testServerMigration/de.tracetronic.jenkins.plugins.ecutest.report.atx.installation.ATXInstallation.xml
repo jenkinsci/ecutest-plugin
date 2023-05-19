@@ -131,11 +131,16 @@
                         <name>archiveMapping</name>
                         <group>ARCHIVE</group>
                     </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
-                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
-                        <value class="boolean">false</value>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string">False</value>
                         <name>archiveRecordings</name>
                         <group>ARCHIVE</group>
-                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                    <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
+                        <value class="string"></value>
+                        <name>archiveRecordingsByAttributes</name>
+                        <group>ARCHIVE</group>
+                    </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXTextSetting>
                     <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXBooleanSetting>
                         <value class="boolean">true</value>
                         <name>archiveRecordingMetadata</name>
