@@ -11,14 +11,14 @@ updates:
     ignore:
       - dependency-name: 'io.jenkins.plugins:warnings-ng'
         versions:
-          - '> 8.0.0'
+          - '> 9.11.1'
       - dependency-name: 'org.jenkins-ci.main:jenkins-core'
         versions:
-          - '> 2.235.5'
+          - '> 2.319.3'
       - dependency-name: 'org.xerial:sqlite-jdbc'
         versions:
           - '> 3.7.2'
-      - dependency-name: 'io.jenkins.tools.bom:bom-2.235.x'
+      - dependency-name: 'io.jenkins.tools.bom:bom-2.319.x'
         versions:
           - '> 100.0'
   - package-ecosystem: github-actions
