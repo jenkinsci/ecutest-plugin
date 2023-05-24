@@ -512,13 +512,13 @@
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Aufnahmemetadaten archivieren,
                             um später beliebige Trace-Analysen auf Aufnahmen auszuführen?
-                            Nur aktiv wenn archiveRecordings auch True ist.
+                            Nur aktiv wenn archiveRecordings auch 'True' ist.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Archive recording metadata to later run arbitrary
                             trace analyses on the recordings? Only active when archiveRecordings is
-                            also True.
+                            also 'True'.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>

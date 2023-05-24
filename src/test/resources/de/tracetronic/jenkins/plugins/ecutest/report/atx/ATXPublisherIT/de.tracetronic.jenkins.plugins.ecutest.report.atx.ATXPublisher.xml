@@ -123,7 +123,23 @@
                 <descGerman>Produzierte oder konsumierte Aufnahmen als komprimierte ZIP Datei archivieren?</descGerman>
                 <descEnglish>Archive produced or consumed recordings as compressed ZIP file?</descEnglish>
                 <defaultValue>False</defaultValue>
-                <currentValue class="boolean">false</currentValue>
+                <currentValue class="string">False</currentValue>
+                <isCheckbox>false</isCheckbox>
+              </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting>
+              <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting>
+                <name>archiveRecordingsByAttributes</name>
+                <descGerman>Produzierte oder konsumierte Aufnahmen über Attribute Pattern archivieren?</descGerman>
+                <descEnglish>Archive produced or consumed recordings via pattern?</descEnglish>
+                <defaultValue></defaultValue>
+                <currentValue class="string"></currentValue>
+                <isCheckbox>false</isCheckbox>
+              </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting>
+              <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting>
+                <name>archiveRecordingMetadata</name>
+                <descGerman>Produzierte oder konsumierte Aufnahmenmetadaten archivieren?</descGerman>
+                <descEnglish>Archive produced or consumed recordings metadata?</descEnglish>
+                <defaultValue>true</defaultValue>
+                <currentValue class="boolean">true</currentValue>
                 <isCheckbox>true</isCheckbox>
               </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting>
               <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting>
