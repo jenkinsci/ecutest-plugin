@@ -25,14 +25,6 @@
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "com.github.jnr:jnr-x86asm",
-      "moduleVersion": "1.0.2",
-      "moduleLicense": " LGPLv3 or MIT",
-      "moduleCopyright": "Wayne Meissner,2010",
-      "licenseUrl": "https://github.com/jnr/jnr-x86asm/commit/5828d80a0cc7d5dcaac292f5acd142eac08bc2c0",
-      "actualLicense": "MIT"
-    },
-    {
       "moduleName": "org.ow2.asm:asm",
       "moduleVersion": "5.0.3",
       "moduleLicense": "BSD",
@@ -70,14 +62,6 @@
       "moduleLicense": "The Apache Software License 2.0",
       "moduleCopyright": "The Apache Software Foundation,2002,2004",
       "licenseUrl": "https://github.com/apache/commons-jelly/blob/commons-jelly-1.0/README.txt",
-      "actualLicense": "Apache-2.0"
-    },
-    {
-      "moduleName": "commons-jelly:commons-jelly-tags-fmt",
-      "moduleVersion": "1.0-RC2",
-      "moduleLicense": "The Apache Software License, Version 2.0",
-      "moduleCopyright": "Apache Software Foundation ,2002,2004",
-      "licenseUrl": "https://github.com/apache/commons-jelly/blob/commons-jelly-1.0-RC2/README.txt",
       "actualLicense": "Apache-2.0"
     },
     {
@@ -145,14 +129,6 @@
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.kohsuke.jinterop:j-interop",
-      "moduleVersion": "2.0.6-kohsuke-1",
-      "moduleLicense": ".",
-      "moduleCopyright": ".",
-      "licenseUrl": ".",
-      "actualLicense": "$moduleLicense"
-    },
-    {
       "moduleName": "org.kohsuke.jinterop:j-interopdeps",
       "moduleVersion": "2.0.6-kohsuke-1",
       "moduleLicense": ".",
@@ -161,28 +137,12 @@
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.samba.jcifs:jcifs",
-      "moduleVersion": "1.2.19",
-      "moduleLicense": "GNU Lesser General Public License, version 2.1",
-      "moduleCopyright": ".",
-      "licenseUrl": ".",
-      "actualLicense": "GNU LGPL-2.1"
-    },
-    {
       "moduleName": "org.kohsuke.stapler:stapler-jelly",
       "moduleVersion": "1.258",
       "moduleLicense": "2-clause BSD license",
       "moduleCopyright": "2009-, Kohsuke Kawaguchi and other contributors",
       "licenseUrl": "hhttps://github.com/jenkinsci/stapler/blob/stapler-parent-1.258/LICENSE.txt",
       "actualLicense": "BSD-2-Clause"
-    },
-    {
-      "moduleName": "org.dom4j:dom4j",
-      "moduleVersion": "2.1.1",
-      "moduleLicense": "BSD 3-clause New License",
-      "moduleCopyright": "2001-2016, (C) MetaStuff, Ltd. and DOM4J contributors",
-      "licenseUrl": "https://github.com/dom4j/dom4j/blob/version-2.1.1/LICENSE",
-      "actualLicense": "BSD-3-Clause"
     },
     {
       "moduleName": "javax.xml.bind:jaxb-api",
@@ -215,14 +175,6 @@
       "moduleCopyright": "2000-2005 INRIA, France Telecom",
       "licenseUrl": "https://github.com/findbugsproject/findbugs/blob/1.3.7/findbugs/LICENSE-ASM.txt",
       "actualLicense": "Apache-2.0"
-    },
-    {
-      "moduleName": "com.google.code.findbugs:jsr305",
-      "moduleVersion": "3.0.2",
-      "moduleLicense": "New BSD license",
-      "moduleCopyright": "2006, University of Maryland",
-      "licenseUrl": "https://github.com/findbugsproject/findbugs/blob/3.0.2_preview/findbugs/licenses/LICENSE-jsr305.txt",
-      "actualLicense": "BSD-2-Clause"
     },
     {
       "moduleName": "org.eclipse.collections:eclipse-collections-api",
@@ -641,14 +593,6 @@
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.jsoup:jsoup",
-      "moduleVersion": "1.14.3",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2009-2021 Jonathan Hedley <https://jsoup.org/>",
-      "licenseUrl": "https://github.com/jhy/jsoup/blob/jsoup-1.14.3/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
       "moduleName": "io.jenkins.plugins:analysis-model-api",
       "moduleVersion": "10.9.2",
       "moduleLicense": "MIT",
@@ -947,14 +891,6 @@
     {
       "moduleName": "org.jenkins-ci.main:cli",
       "moduleVersion": "2.289.3",
-      "moduleLicense": "MIT",
-      "moduleCopyright": ".",
-      "licenseUrl": ".",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci:crypto-util",
-      "moduleVersion": "1.5",
       "moduleLicense": "MIT",
       "moduleCopyright": ".",
       "licenseUrl": ".",
@@ -1505,14 +1441,6 @@
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.kohsuke.jinterop:j-interopdeps",
-      "moduleVersion": "2.0.8-kohsuke-1",
-      "moduleLicense": "MIT",
-      "moduleCopyright": ".",
-      "licenseUrl": ".",
-      "actualLicense": "$moduleLicense"
-    },
-    {
       "moduleName": "org.samba.jcifs:jcifs",
       "moduleVersion": "1.3.18-kohsuke-1",
       "moduleLicense": "GNU Lesser General Public moduleLicense, Version 2.1",
@@ -1531,7 +1459,7 @@
     {
       "moduleName": "commons-fileupload:commons-fileupload",
       "moduleVersion": "1.4",
-      "moduleLicense": "MIT",
+      "moduleLicense": "Apache-2.0",
       "moduleCopyright": ".",
       "licenseUrl": ".",
       "actualLicense": "$moduleLicense"

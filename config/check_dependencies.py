@@ -1,14 +1,14 @@
 #  Copyright (c) 2015-2023 TraceTronic GmbH
 #
 #  SPDX-License-Identifier: BSD-3-Clause
-#
-#  SPDX-License-Identifier: BSD-3-Clause
 
+import argparse
 import getopt
 import json
 import jsonschema
 import sys
 import os
+from collections import Counter
 
 from os.path import exists
 
@@ -43,16 +43,11 @@ class ComponentValidator:
         self.errors = []
 
     def validate(self, product=False):
-        self.__name()
         self.__licenses()
         if not product:
             self.__version()
         return self.errors
 
-    def __name(self):
-        sbom_name = "{}:{}".format(self.sbom["group"], self.sbom["name"])
-        if self.allow["moduleName"] != sbom_name:
-            self.append_error("name", self.allow["moduleName"], sbom_name)
 
     def __version(self):
         if self.allow["moduleVersion"] != self.sbom["version"]:
@@ -67,6 +62,21 @@ class ComponentValidator:
         prepared_license_list = [lic.lower() for lic in COMPATIBLE_LICENSES]
         if not (any([allow_license.lower() == lic for lic in prepared_license_list])):
             self.append_error("license", COMPATIBLE_LICENSES, allow_license)
+
+        sbom_licenses = []
+        for license in self.sbom.get('licenses', []):
+            if license.get('license'):
+                sbom_licenses.append(license.get('license').get('name', license['license'].get('id', '')))
+            elif license.get('expression'):
+                sbom_licenses.append(license.get('expression'))
+            else:
+                sbom_licenses.append('')
+
+        if all(sbom_lic == "" for sbom_lic in sbom_licenses):
+            return
+
+        if self.allow["moduleLicense"] not in sbom_licenses:
+            self.append_error("license", sbom_licenses, self.allow["moduleLicense"])
 
     def append_error(self, key, expect, current):
         self.errors.append("Component '{}':'{}' expects (one of) '{}' but was '{}'."
@@ -99,6 +109,11 @@ def compare_license_files(allowlist_path, sbom_path, allowschema_path):
     allowed_packages = [item["moduleName"] for item in allow_json["allowedLicenses"]]
     sbom_packages = ["{}:{}".format(item["group"], item["name"]) for item in sbom_json["components"]]
 
+    count_allowed_packages = Counter(allowed_packages)
+    duplicates = [package for package, count in count_allowed_packages.items() if count > 1]
+    if duplicates:
+        found_errors.append("Packages in allowed_licenses have to be unique: {} ".format(duplicates))
+
     if len(allowed_packages) != len(sbom_packages):
         found_errors.append("Number of components expects {} but was {}.".format(len(allow_json["allowedLicenses"]),
                                                                                  len(sbom_json["components"])))
@@ -106,15 +121,15 @@ def compare_license_files(allowlist_path, sbom_path, allowschema_path):
     missing_sbom = set(allowed_packages).difference(set(sbom_packages))
 
     if len(missing_sbom):
-        found_errors.append("Dependency {} not found in sbom_path but in allow list.".format(missing_sbom))
+        found_errors.append("Dependencies {} not found in sbom_path but in allow list. Check if still "
+                            "necessary.".format(missing_sbom))
     elif len(missing_allowed):
-        found_warnings.append("Dependency {} not found in allow list but in sbom_path. Check if still necessary."
+        found_warnings.append("Dependencies {} not found in allow list but in sbom_path."
                               .format(missing_allowed))
 
     for component in sbom_json["components"]:
         # component["license"] = metadata(component["name"])["license"]
         for allowed_component in allow_json["allowedLicenses"]:
-
             name = allowed_component["moduleName"] == "{}:{}".format(component["group"], component["name"])
             if name:
                 validator = ComponentValidator(allowed_component, component)
@@ -126,32 +141,24 @@ def compare_license_files(allowlist_path, sbom_path, allowschema_path):
 
 
 def main(argv):
-    allow_filepath = ''
-    sbom_filepath = ''
-    schema_filepath = "config/allowlist_schema.json"
-    try:
-        opts, args = getopt.getopt(argv, "h", ["allowlist=", "sbom=", "schema="])
-    except getopt.GetoptError:
-        print("{} -a <allowfile> -s <sbomfile>".format(filename))
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt == "-h":
-            print("{} -a <allowfile> -s <sbomfile>".format(filename))
-            sys.exit()
-        elif opt == "--allowlist":
-            allow_filepath = arg
-        elif opt == "--sbom":
-            sbom_filepath = arg
-        elif opt == "--schema":
-            schema_filepath = arg
+    parser = argparse.ArgumentParser(prog="DependencyChecker",
+                                     description="Checks the license entries of a sbom against a allowed list.")
+
+    parser.add_argument("--allowlist", "-a", type=str, required=True, help="Path to allowlist file")
+    parser.add_argument("--sbom", "-s", type=str, required=True, help="Path to sbom file")
+    parser.add_argument("--schema", type=str, default="config/allowlist_schema.json", help="Path to schema file")
+
+    args = parser.parse_args()
+
+    allow_filepath = args.allowlist
+    sbom_filepath = args.sbom
+    schema_filepath = args.schema
 
     for file in [allow_filepath, sbom_filepath]:
         if "" == file:
-            print(f"Allow list and sbom_path file path have to be set. For more information run '{filename} -h'.")
-            sys.exit(2)
+            parser.error("Allow list and sbom file paths have to be set.")
         if not file.endswith(".json"):
-            print(f"File '{filename}' does not end with '.json'.")
-            sys.exit(2)
+            parser.error("File does not end with '.json'.")
 
     err, warn = compare_license_files(allow_filepath, sbom_filepath, schema_filepath)
     if warn:
