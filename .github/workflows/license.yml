@@ -23,7 +23,7 @@ jobs:
         run: mvn clean cyclonedx:makeAggregateBom -f pom.xml
       - name: Check license compliance against allowlist
         run: |
-          python config/check_dependencies.py `
-          --allowlist="config/allowlist.json" `
-          --sbom="target/sbom.json" `
+          python config/check_dependencies.py \
+          --allowlist="config/allowlist.json" \
+          --sbom="target/sbom.json" \
           --schema="config/license/allowlist_schema.json"
