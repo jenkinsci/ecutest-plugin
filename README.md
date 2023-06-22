@@ -6,7 +6,7 @@ SPDX-License-Identifier: BSD-3-Clause
 
 # TraceTronic ECU-TEST Plugin
 
-[![Build Status](https://ci.jenkins.io/buildStatus/icon?job=plugins/ecutest-plugin/master)](https://ci.jenkins.io/job/plugins/job/ecutest-plugin/job/master) <!-- markdown-link-check-disable --> [![Third Party License Check](https://github.com/jenkinsci/ecutest-plugin/actions/workflows/license.yml/badge.svg)](https://github.com/jenkinsci/ecutest-plugin/actions/workflows/license.yml) <!-- markdown-link-check-enable --> [![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/ecutest.svg)](https://plugins.jenkins.io/ecutest)
+[![Build Status](https://ci.jenkins.io/buildStatus/icon?job=plugins/ecutest-plugin/master)](https://ci.jenkins.io/job/plugins/job/ecutest-plugin/job/master) [![Third Party License Check](https://github.com/jenkinsci/ecutest-plugin/actions/workflows/license.yml/badge.svg)](https://github.com/jenkinsci/ecutest-plugin/actions/workflows/license.yml)  [![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/ecutest.svg)](https://plugins.jenkins.io/ecutest)
 [![Jenkins Release](https://img.shields.io/github/release/jenkinsci/ecutest-plugin.svg?label=changelog)](https://github.com/jenkinsci/ecutest-plugin/releases) [![Plugin Installs](https://img.shields.io/jenkins/plugin/i/ecutest.svg?color=blue)](https://plugins.jenkins.io/ecutest) [![License](https://img.shields.io/badge/license-3--clause%20BSD-blue.svg?style=flat)](https://github.com/jenkinsci/ecutest-plugin/blob/master/LICENSE)
 
 This plugin integrates Jenkins with [ECU-TEST](https://www.tracetronic.com/products/ecu-test) and generates reports on automated test execution.
