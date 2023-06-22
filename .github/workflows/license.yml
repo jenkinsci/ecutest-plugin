@@ -3,10 +3,10 @@ name: Third Party License Check
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   validate-sbom:
