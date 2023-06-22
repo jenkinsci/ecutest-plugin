@@ -88,6 +88,9 @@
         <spotbugs.effort>Max</spotbugs.effort>
         <spotbugs.threshold>Low</spotbugs.threshold>
 
+        <!-- Compliance -->
+        <cyclonedx.version>2.7.9</cyclonedx.version>
+
         <!-- Test scope -->
         <configuration-as-code.version>1.47</configuration-as-code.version>
         <equalsverifier.version>3.7.2</equalsverifier.version>
@@ -242,6 +245,19 @@
                 </exclusion>
             </exclusions>
             <optional>true</optional>
+        </dependency>
+
+        <!-- Compliance -->
+        <dependency>
+            <groupId>org.cyclonedx</groupId>
+            <artifactId>cyclonedx-maven-plugin</artifactId>
+            <version>${cyclonedx.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Test scope -->
@@ -488,6 +504,25 @@
                             <overWriteReleases>true</overWriteReleases>
                             <overWriteSnapshots>true</overWriteSnapshots>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.cyclonedx</groupId>
+                <artifactId>cyclonedx-maven-plugin</artifactId>
+                <configuration>
+                    <projectType>library</projectType>
+                    <schemaVersion>1.4</schemaVersion>
+                    <outputFormat>json</outputFormat>
+                    <outputName>sbom</outputName>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>makeAggregateBom</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
