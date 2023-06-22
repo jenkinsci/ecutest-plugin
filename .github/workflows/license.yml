@@ -20,7 +20,7 @@ jobs:
           java-version: 11
           distribution: adopt
       - name: Generate json bom
-        run: cyclonedx:makeAggregateBom -f pom.xml
+        run: mvn clean cyclonedx:makeAggregateBom -f pom.xml
       - name: Check license compliance against allowlist
         run: |
           python config/check_dependencies.py `
