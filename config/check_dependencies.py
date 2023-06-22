@@ -106,36 +106,32 @@ def compare_license_files(allowlist_path, sbom_path, allowschema_path):
         found_errors.append(f"allowlist does not comply to the schema...\n{error.message}")
 
     # dependencies
-    allowed_packages = [item["moduleName"] for item in allow_json["allowedLicenses"]]
-    sbom_packages = ["{}:{}".format(item["group"], item["name"]) for item in sbom_json["components"]]
-
-    count_allowed_packages = Counter(allowed_packages)
+    count_allowed_packages = Counter([item["moduleName"] for item in allow_json["allowedLicenses"]])
     duplicates = [package for package, count in count_allowed_packages.items() if count > 1]
     if duplicates:
         found_errors.append("Packages in allowed_licenses have to be unique: {} ".format(duplicates))
 
-    if len(allowed_packages) != len(sbom_packages):
-        found_errors.append("Number of components expects {} but was {}.".format(len(allow_json["allowedLicenses"]),
-                                                                                 len(sbom_json["components"])))
+    allowed_packages = {allowed["moduleName"]: allowed for allowed in allow_json["allowedLicenses"]}
+    sbom_packages = {"{}:{}".format(sbom["group"], sbom["name"]):  sbom for sbom in sbom_json["components"]}
+    if len(allowed_packages.keys()) != len(sbom_packages.keys()):
+        found_errors.append("Number of components expects {} but was {}.".format(len(allowed_packages.keys()),
+                                                                                 len(sbom_packages.keys())))
     missing_allowed = set(sbom_packages).difference(set(allowed_packages))
     missing_sbom = set(allowed_packages).difference(set(sbom_packages))
 
-    if len(missing_sbom):
+    if missing_sbom:
         found_errors.append("Dependencies {} not found in sbom_path but in allow list. Check if still "
                             "necessary.".format(missing_sbom))
-    elif len(missing_allowed):
+    elif missing_allowed:
         found_warnings.append("Dependencies {} not found in allow list but in sbom_path."
                               .format(missing_allowed))
 
-    for component in sbom_json["components"]:
-        # component["license"] = metadata(component["name"])["license"]
-        for allowed_component in allow_json["allowedLicenses"]:
-            name = allowed_component["moduleName"] == "{}:{}".format(component["group"], component["name"])
-            if name:
-                validator = ComponentValidator(allowed_component, component)
-                dependency_err = validator.validate(False)
-                if dependency_err:
-                    found_errors.extend(dependency_err)
+    for name, sbom_entry in sbom_packages.items():
+        if name in allowed_packages:
+            validator = ComponentValidator(allowed_packages[name], sbom_entry)
+            dependency_err = validator.validate(False)
+            if dependency_err:
+                found_errors.extend(dependency_err)
 
     return found_errors, found_warnings
 
