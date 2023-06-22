@@ -26,4 +26,4 @@ jobs:
           python config/check_dependencies.py \
           --allowlist="config/allowed_licenses.json" \
           --sbom="target/sbom.json" \
-          --schema="config/license/allowlist_schema.json"
+          --schema="config/allowlist_schema.json"
