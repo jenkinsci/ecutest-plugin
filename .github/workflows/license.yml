@@ -1,0 +1,29 @@
+name: Third Party License Check
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  validate-sbom:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: adopt
+      - name: Generate json bom
+        run: mvn clean cyclonedx:makeAggregateBom -f pom.xml
+      - name: Check license compliance against allowlist
+        run: |
+          python config/check_dependencies.py \
+          --allowlist="config/allowed_licenses.json" \
+          --sbom="target/sbom.json" \
+          --schema="config/allowlist_schema.json"

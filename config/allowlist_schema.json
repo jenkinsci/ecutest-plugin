@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "allowedLicenses": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "moduleLicense": {
+              "type": ["string", "null"]
+            },
+            "moduleVersion": {
+              "type": "string"
+            },
+            "moduleName": {
+              "type": "string"
+            },
+            "licenseUrl": {
+              "type": ["string", "null"],
+              "format": "uri"
+            },
+            "moduleCopyright": {
+              "type": ["string", "null"]
+            },
+            "actualLicense": {
+              "type": ["string", "null"]
+            },
+            "violationAllowance": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "moduleLicense",
+            "moduleVersion",
+            "moduleName",
+            "licenseUrl",
+            "moduleCopyright",
+            "actualLicense"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "allowedLicenses"
+  ]
+}
