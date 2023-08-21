@@ -15,23 +15,9 @@ from os.path import exists
 filename = "check_dependencies.py"
 
 COMPATIBLE_LICENSES = [
-    "MIT",
-    "GPLv2",
-    "The MIT License",
-    "Apache-2.0",
-    "Apache-1.1",
-    "PSF-2.0",
-    "BSD",
-    "BSD-2-Clause",
-    "BSD-3-Clause",
-    "GNU LGPL",
-    "GNU LGPL-2.1",
-    "GNU LGPL-3.0",
-    "CDDL-1.1",
-    "EDL-1.0",
-    "MPL-2.0-no-copyleft-exception",
-    "EPL-1.0",
-    "The JSON License"
+    "ISC", "MIT", "GPLv2", "The MIT License", "Apache-2.0", "Apache-1.0", "Apache-1.1", "PSF-2.0", "BSD",
+    "BSD-2-Clause", "BSD-3-Clause", "BSD-4-Clause", "GNU LGPL", "GNU LGPL-2.1", "GNU LGPL-3.0",  "CDDL-1.1", "EDL-1.0",
+    "MPL-2.0-no-copyleft-exception", "EPL-1.0", "EPL-2.0",  "The JSON License", "Indiana University"
 ]
 
 
