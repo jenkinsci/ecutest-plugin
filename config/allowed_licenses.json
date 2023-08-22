@@ -68,8 +68,8 @@
       "moduleName": "commons-logging:commons-logging",
       "moduleVersion": "1.2",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "1999-2001, The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/commons-logging/blob/LOGGING_1_0/src/test/org/apache/commons/logging/TestAll.java",
+      "moduleCopyright": "2003-2014 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/commons-logging/blob/LOGGING_1_2/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -204,8 +204,8 @@
       "moduleName": "com.github.package-url:packageurl-java",
       "moduleVersion": "1.4.1",
       "moduleLicense": "MIT",
-      "moduleCopyright": "Steve Springett",
-      "licenseUrl": "https://github.com/package-url/packageurl-java/blob/packageurl-java-1.4.1/src/main/java/com/github/packageurl/PackageURL.java",
+      "moduleCopyright": ".",
+      "licenseUrl": "https://github.com/package-url/packageurl-java/blob/packageurl-java-1.4.1/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -221,7 +221,7 @@
       "moduleVersion": "4.2.1",
       "moduleLicense": "BSD-4-Clause",
       "moduleCopyright": "2005- Tatu Saloranta, tatu.saloranta@iki.fi",
-      "licenseUrl": "https://github.com/FasterXML/stax2-api/blob/stax2-api-4.2.1/src/main/java/org/codehaus/stax2/typed/Base64Variant.java",
+      "licenseUrl": "https://github.com/FasterXML/stax2-api/blob/stax2-api-4.2.1",
       "actualLicense": "BSD"
     },
     {
@@ -229,7 +229,7 @@
       "moduleVersion": "6.2.7",
       "moduleLicense": "Apache-2.0",
       "moduleCopyright": "2004- Tatu Saloranta, tatu.saloranta@iki.fi",
-      "licenseUrl": "https://github.com/FasterXML/woodstox/blob/woodstox-core-6.2.7/src/main/java/com/ctc/wstx/sax/SAXFeature.java",
+      "licenseUrl": "https://github.com/FasterXML/woodstox/blob/woodstox-core-6.2.7/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -317,7 +317,7 @@
       "moduleVersion": "1138.v8e727069a_025",
       "moduleLicense": "MIT",
       "moduleCopyright": "2014 CloudBees, Inc.",
-      "licenseUrl": "https://github.com/jenkinsci/script-security-plugin/blob/1138.v8e727069a_025/src/main/java/org/jenkinsci/plugins/scriptsecurity/scripts/UnapprovedUsageException.java",
+      "licenseUrl": "https://github.com/jenkinsci/script-security-plugin/blob/1138.v8e727069a_025",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -413,7 +413,7 @@
       "moduleVersion": "1.78.3",
       "moduleLicense": "The Apache Software License, Version 2.0",
       "moduleCopyright": "2015 the original author or authors.",
-      "licenseUrl": "https://github.com/jenkinsci/job-dsl-plugin/blob/job-dsl-1.78.3/gradlew.bat",
+      "licenseUrl": "https://github.com/jenkinsci/job-dsl-plugin/blob/job-dsl-1.78.3/LICENSE.txt",
       "actualLicense": "Apache-2.0"
     },
     {
@@ -581,7 +581,7 @@
       "moduleVersion": "2.4.8",
       "moduleLicense": "Apache-2.0",
       "moduleCopyright": "2011 JSON-SMART authors",
-      "licenseUrl": "https://github.com/netplex/json-smart-v2/blob/2.4.8/json-smart/src/main/java/net/minidev/json/JSONUtil.java",
+      "licenseUrl": "https://github.com/netplex/json-smart-v2/blob/2.4.8/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -589,7 +589,7 @@
       "moduleVersion": "2.4.8",
       "moduleLicense": "Apache-2.0",
       "moduleCopyright": "2011 JSON-SMART authors",
-      "licenseUrl": "https://github.com/netplex/json-smart-v2/blob/2.4.8/accessors-smart/src/main/java/net/minidev/asm/Accessor.java",
+      "licenseUrl": "https://github.com/netplex/json-smart-v2/blob/2.4.8/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -620,8 +620,8 @@
       "moduleName": "cglib:cglib",
       "moduleVersion": "2.2.2",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2003,2004 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/cglib/cglib/blob/RELEASE_2_2/src/proxy/net/sf/cglib/core/VisibilityPredicate.java",
+      "moduleCopyright": "The Apache Software Foundation",
+      "licenseUrl": "https://github.com/cglib/cglib/blob/RELEASE_2_2/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -669,7 +669,7 @@
       "moduleVersion": "6.42.0",
       "moduleLicense": "BSD-style",
       "moduleCopyright": ".",
-      "licenseUrl": "https://github.com/pmd/pmd/blob/pmd_releases/6.42.0/pmd-core/src/main/java/net/sourceforge/pmd/SourceCodeProcessor.java",
+      "licenseUrl": "https://github.com/pmd/pmd/blob/pmd_releases/6.42.0/LICENSE",
       "actualLicense": "BSD"
     },
     {
@@ -685,7 +685,7 @@
       "moduleVersion": "6.42.0",
       "moduleLicense": "BSD-style",
       "moduleCopyright": ".",
-      "licenseUrl": "https://github.com/pmd/pmd/blob/pmd_releases/6.42.0/pmd-java/src/main/java/net/sourceforge/pmd/lang/java/JavaTokenManager.java",
+      "licenseUrl": "https://github.com/pmd/pmd/blob/pmd_releases/6.42.0/LICENSE",
       "actualLicense": "BSD"
     },
     {
@@ -909,7 +909,7 @@
       "moduleVersion": "1",
       "moduleLicense": "Apache-2.0",
       "moduleCopyright": "2009, The JSR-330 Expert Group",
-      "licenseUrl": "https://github.com/javax-inject/javax-inject/blob/1/src/javax/inject/Inject.java",
+      "licenseUrl": "https://github.com/javax-inject/javax-inject/tree/1",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -1029,7 +1029,7 @@
       "moduleVersion": "2.2",
       "moduleLicense": "CDDL/GPLv2 dual license",
       "moduleCopyright": "2010, Oracle and/or its affiliates",
-      "licenseUrl": "https://github.com/kohsuke/tiger-types/blob/tiger-types-2.2/src/main/java/org/jvnet/tiger_types/GenericArrayTypeImpl.java",
+      "licenseUrl": "https://github.com/kohsuke/tiger-types/blob/tiger-types-2.2",
       "actualLicense": "GPLv2"
     },
     {
@@ -1133,7 +1133,7 @@
       "moduleVersion": "1.31",
       "moduleLicense": "MIT",
       "moduleCopyright": "2007-, the localizer project contributors",
-      "licenseUrl": "https://github.com/kohsuke/localizer/blob/localizer-parent-1.31/lib/src/main/java/org/jvnet/localizer/ResourceBundleHolder.java",
+      "licenseUrl": "https://github.com/kohsuke/localizer/blob/localizer-parent-1.31",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -1165,7 +1165,7 @@
       "moduleVersion": "1.1.4c",
       "moduleLicense": "Indiana University Extreme! Lab Software License, vesion 1.1.1",
       "moduleCopyright": "2002-2004 Extreme! Lab, Indiana University",
-      "licenseUrl": "https://github.com/codelibs/xpp3/blob/xpp3-1.1.4c.0/src/main/java/org/xmlpull/mxp1/MXParserNonValidating.java",
+      "licenseUrl": "https://github.com/codelibs/xpp3/blob/xpp3-1.1.4c.0",
       "actualLicense": "Indiana University"
     },
     {
@@ -1245,7 +1245,7 @@
       "moduleVersion": "1.0.1-hudson-20071021",
       "moduleLicense": "The Apache Software License, Version 2.0",
       "moduleCopyright": "2002,2004 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/hudson3-plugins/commons-jelly-tags-define/blob/commons-jelly-tags-define-1.0.1-hudson-20120704/src/main/java/org/apache/commons/jelly/tags/define/AttributeTag.java",
+      "licenseUrl": "https://github.com/hudson3-plugins/commons-jelly-tags-define/blob/commons-jelly-tags-define-1.0.1-hudson-20120704",
       "actualLicense": "Apache-2.0"
     },
     {
@@ -1405,7 +1405,7 @@
       "moduleVersion": "1.9",
       "moduleLicense": "MIT",
       "moduleCopyright": "2008-2011, Sun Microsystems, Inc.",
-      "licenseUrl": "https://github.com/jenkinsci/extras-memory-monitor/blob/memory-monitor-1.9/src/main/java/org/jvnet/hudson/Top.java",
+      "licenseUrl": "https://github.com/jenkinsci/extras-memory-monitor/blob/memory-monitor-1.9",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -1453,7 +1453,7 @@
       "moduleVersion": "1.2",
       "moduleLicense": "MIT",
       "moduleCopyright": "2009, Sun Microsystems, Inc.",
-      "licenseUrl": "https://github.com/kohsuke/robust-http-client/blob/robust-http-client-1.2/src/main/java/org/jvnet/robust_http_client/RetryableHttpStream.java",
+      "licenseUrl": "https://github.com/kohsuke/robust-http-client/blob/robust-http-client-1.2",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -1501,7 +1501,7 @@
       "moduleVersion": "1.0",
       "moduleLicense": "The Apache License, Version 2.0",
       "moduleCopyright": "2013 Stephen Connolly",
-      "licenseUrl": "https://github.com/stephenc/jcip-annotations/blob/jcip-annotations-1.0-1/src/main/java/net/jcip/annotations/ThreadSafe.java",
+      "licenseUrl": "https://github.com/stephenc/jcip-annotations/blob/jcip-annotations-1.0-1/LICENSE.txt",
       "actualLicense": "Apache-2.0"
     },
     {
