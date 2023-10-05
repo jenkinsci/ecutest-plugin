@@ -28,7 +28,7 @@ pipeline {
     agent any
     environment {
         authKey = credentials('TG_authkey_test_report_upload')
-        pipeline_report_dir = "pipeline_report2TG/build-$env.BUILD_NUMBER"
+        pipeline_report_dir = "report2TG/build-$env.BUILD_NUMBER"
     }
     tools {
         maven 'M3'
