@@ -22,7 +22,7 @@ Prerequisites
 
 pipeline {
     options {
-        buildDiscarder(logRotator(numToKeepStr: '10'))
+        buildDiscarder(logRotator(daysToKeepStr: '14'))
         timestamps()
     }
     agent any
