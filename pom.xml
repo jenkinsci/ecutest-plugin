@@ -117,7 +117,7 @@
             <dependency>
                 <groupId>io.jenkins.plugins</groupId>
                 <artifactId>echarts-api</artifactId>
-                <version>5.3.2-1</version>
+                <version>5.4.3-1</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
