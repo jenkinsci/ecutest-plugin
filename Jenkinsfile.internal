@@ -55,6 +55,7 @@ pipeline {
             steps {
                 mvn 'jacoco:prepare-agent surefire:test -Dsurefire.useFile=false'
                 junit 'target/surefire-reports/TEST-*.xml'
+                convertX2Json("${currentBuild.startTimeInMillis}", "target/surefire-reports/TEST-*.xml","${pipeline_report_dir}", "JUnit")
                 jacoco exclusionPattern: '**/Messages.class', execPattern: 'target/jacoco.exec'
             }
         }
