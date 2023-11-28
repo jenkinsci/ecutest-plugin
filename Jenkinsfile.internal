@@ -30,7 +30,7 @@ pipeline {
         authKey = credentials('TG_authkey_test_report_upload')
         pipeline_report_dir = "report2TG/build-$env.BUILD_NUMBER"
         PRODUCT_NAME = "ecutest-plugin"
-        PRODUCT_VERSION = $TAG_NAME
+        PRODUCT_VERSION = '$TAG_NAME'
     }
     tools {
         maven 'M3'
@@ -57,7 +57,7 @@ pipeline {
             steps {
                 mvn 'jacoco:prepare-agent surefire:test -Dsurefire.useFile=false'
                 junit 'target/surefire-reports/TEST-*.xml'
-                withEnv(["TEST_LEVEL = UnitTest"]) {
+                withEnv(["TEST_LEVEL = Unit"]) {
                     Xml2TG("${currentBuild.startTimeInMillis}", "target/surefire-reports/", "JUnit", "${pipeline_report_dir}")
                 }
                 jacoco exclusionPattern: '**/Messages.class', execPattern: 'target/jacoco.exec'
