@@ -58,7 +58,8 @@ pipeline {
                 mvn 'jacoco:prepare-agent surefire:test -Dsurefire.useFile=false'
                 junit 'target/surefire-reports/TEST-*.xml'
                 withEnv(["TEST_LEVEL = Unit"]) {
-                    Xml2TG("${currentBuild.startTimeInMillis}", "target/surefire-reports/", "JUnit", "${pipeline_report_dir}")
+                    startTime = currentBuild.startTimeInMillis
+                    Xml2TG((long) startTime, "target/surefire-reports/", "JUnit", "${pipeline_report_dir}")
                 }
                 jacoco exclusionPattern: '**/Messages.class', execPattern: 'target/jacoco.exec'
             }
