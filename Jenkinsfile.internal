@@ -74,7 +74,7 @@ pipeline {
             dir("${pipeline_report_dir}") {
                 pipeline2ATX(true)
             }
-            uploadJson2TG("${TESTGUIDE_url}", "${authKey}", "${TESTGUIDE_projectID}", "${pipeline_report_dir}/**", '')
+            uploadJson2TG("${TESTGUIDE_url}", "${authKey}", "${TESTGUIDE_projectID}", "${pipeline_report_dir.toString()}/**", '')
         }
         unsuccessful {
             mail to: "${env.EMAIL_RECIPIENTS}",
