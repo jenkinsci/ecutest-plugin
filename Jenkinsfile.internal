@@ -30,8 +30,8 @@ pipeline {
         authKey = credentials('TG_authkey_test_report_upload')
         pipeline_report_dir = "report2TG/build-$env.BUILD_NUMBER"
         PRODUCT_NAME = "ecutest-plugin"
-        PRODUCT_VERSION = '$TAG_NAME'
-        TEST_LEVEL = "Unit"
+        PRODUCT_VERSION = readMavenPom().getVersion()
+        TEST_LEVEL = "Unit Tests"
     }
     tools {
         maven 'M3'
