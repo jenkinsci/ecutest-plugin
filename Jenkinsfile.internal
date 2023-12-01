@@ -58,7 +58,7 @@ pipeline {
             steps {
                 mvn 'jacoco:prepare-agent surefire:test -Dsurefire.useFile=false'
                 junit 'target/surefire-reports/TEST-*.xml'
-                Xml2TG((long) currentBuild.startTimeInMillis, "target/surefire-reports/", "JUnit")
+                Xml2TG((long) currentBuild.startTimeInMillis, "target/surefire-reports", "JUnit","uploadJson", [:], [:], "${TESTGUIDE_url}", "${authKey}", "${TESTGUIDE_projectID}")
                 jacoco exclusionPattern: '**/Messages.class', execPattern: 'target/jacoco.exec'
             }
         }
