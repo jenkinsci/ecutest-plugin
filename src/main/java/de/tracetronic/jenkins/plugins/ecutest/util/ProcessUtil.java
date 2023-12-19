@@ -27,7 +27,8 @@ public final class ProcessUtil {
     /**
      * Defines ecu.test related process names.
      */
-    private static final List<String> ET_PROCS = Arrays.asList("ECU-TEST.exe", "ecu.test.exe", "ECU-TEST_COM.exe", "ECU-TE~1.EXE");
+    private static final List<String> ET_PROCS = Arrays.asList("ECU-TEST.exe", "ecu.test.exe", "ECU-TEST_COM.exe",
+        "ECU-TE~1.EXE");
 
     /**
      * Defines Tool-Server related process names.
