@@ -1,11 +1,11 @@
 <!--
-  Copyright (c) 2015-2020 TraceTronic GmbH
+  Copyright (c) 2015-2023 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
 
 <div>
-    <p>Gets a TEST-GUIDE server instance by name which must be present in the TEST-GUIDE installations.
+    <p>Gets a test.guide server instance by name which must be present in the test.guide installations.
         Existing settings can be discovered and overridden afterwards.</p>
     <p>For providing secrets like upload authentication key or proxy settings utilize
         <a href="https://plugins.jenkins.io/credentials-binding/">credentials binding</a>
@@ -32,13 +32,13 @@ ATXServer.overrideSettings(Map&lt;String, Object&gt; settings) : void
     <dl>Examples:
         <dd>
             <pre>
-ATX.server('TEST-GUIDE')
+ATX.server('test.guide')
             </pre>
             <pre>
-ATX.server atxName: 'TEST-GUIDE'
+ATX.server atxName: 'test.guide'
             </pre>
             <pre>
-def server ATX.server atxName: 'TEST-GUIDE'
+def server ATX.server atxName: 'test.guide'
 server.getSetting('serverURL')
 server.getSettings()
 server.overrideSetting('uploadToServer', true)

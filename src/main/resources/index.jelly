@@ -1,11 +1,11 @@
 <!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
+  Copyright (c) 2015-2023 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
 
 <?jelly escape-by-default='true'?>
 <div>This plugin integrates Jenkins with
-    <a href="https://www.tracetronic.com/products/ecu-test/">ECU-TEST</a>
+    <a href="https://www.tracetronic.com/products/ecu-test/">ecu.test</a>
     and generates reports on automated test execution.
 </div>

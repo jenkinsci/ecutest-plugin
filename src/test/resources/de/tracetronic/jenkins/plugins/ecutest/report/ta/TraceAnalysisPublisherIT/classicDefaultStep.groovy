@@ -1,3 +1,3 @@
 node('windows') {
-    step([$class: 'TraceAnalysisPublisher', toolName: 'ECU-TEST'])
+    step([$class: 'TraceAnalysisPublisher', toolName: 'ecu.test'])
 }

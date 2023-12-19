@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -25,9 +25,9 @@ import java.util.List;
 public final class ProcessUtil {
 
     /**
-     * Defines ECU-TEST related process names.
+     * Defines ecu.test related process names.
      */
-    private static final List<String> ET_PROCS = Arrays.asList("ECU-TEST.exe", "ECU-TEST_COM.exe", "ECU-TE~1.EXE");
+    private static final List<String> ET_PROCS = Arrays.asList("ECU-TEST.exe", "ecu.test.exe", "ECU-TEST_COM.exe", "ECU-TE~1.EXE");
 
     /**
      * Defines Tool-Server related process names.
@@ -42,7 +42,7 @@ public final class ProcessUtil {
     }
 
     /**
-     * Check the ECU-TEST processes and kills them if appropriate.
+     * Check the ecu.test processes and kills them if appropriate.
      *
      * @param kill specifies whether to task-kill the running processes
      * @return the list of found or killed processes

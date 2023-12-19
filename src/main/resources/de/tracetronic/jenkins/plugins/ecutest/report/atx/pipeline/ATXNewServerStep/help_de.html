@@ -1,12 +1,12 @@
 <!--
-  Copyright (c) 2015-2020 TraceTronic GmbH
+  Copyright (c) 2015-2023 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
 
 <div>
-    <p>Erzeugt eine neue dynamische TEST-GUIDE-Serverinstanz, die nur während der Pipelineausführung verfügbar ist.
-        TEST-GUIDE-Name (<i>atxName</i>) und verwendete ECU-TEST-Installation (<i>toolName</i>) sind erforderlich
+    <p>Erzeugt eine neue dynamische test.guide-Serverinstanz, die nur während der Pipelineausführung verfügbar ist.
+        test.guide-Name (<i>atxName</i>) und verwendete ecu.test-Installation (<i>toolName</i>) sind erforderlich
         während fehlende optionale Einstellungen auf ihren Standardwert gesetzt werden.</p>
     <p>Vertrauliche Daten wie Upload-Authentifizierungsschlüssel oder Proxyeinstellungen sollten als maskierte
         Umgebungsvariablen per <a href="https://plugins.jenkins.io/credentials-binding/">Credentials Binding</a>
@@ -30,17 +30,17 @@ ATXServer.newServer(Map&lt;String, Object&gt; serverArgs) : ATXServer
     <dl>Beispiele:
         <dd>
             <pre>
-ATX.newServer('TEST-GUIDE', 'ECU-TEST')
+ATX.newServer('test.guide', 'ecu.test')
             </pre>
             <pre>
-ATX.newServer('TEST-GUIDE', 'ECU-TEST', 'http://localhost:8085', false, '', '1')
+ATX.newServer('test.guide', 'ecu.test', 'http://localhost:8085', false, '', '1')
             </pre>
             <pre>
-ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST', fullServerURL: 'https://127.0.0.1:8086/context', uploadToServer: true
+ATX.newServer atxName: 'test.guide', toolName: 'ecu.test', fullServerURL: 'https://127.0.0.1:8086/context', uploadToServer: true
             </pre>
             <p>ist äquivalent zu:</p>
             <pre>
-def server =  ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST'
+def server =  ATX.newServer atxName: 'test.guide', toolName: 'ecu.test'
 server.overrideSetting('serverURL', '127.0.0.1')
 server.overrideSetting('serverPort', '8086')
 server.overrideSetting('serverContextPath', 'context')
@@ -48,15 +48,15 @@ server.overrideSetting('useHttpsConnection', true)
 server.overrideSetting('uploadToServer', true)
             </pre>
             <pre>
-ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST', enableArchive: false
+ATX.newServer atxName: 'test.guide', toolName: 'ecu.test', enableArchive: false
             </pre>
             <p>ist äquivalent zu:</p>
             <pre>
-def server =  ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST'
+def server =  ATX.newServer atxName: 'test.guide', toolName: 'ecu.test'
 server.overrideSetting('enableArchive', false)
             </pre>
             <pre>
-ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST',
+ATX.newServer atxName: 'test.guide', toolName: 'ecu.test',
     config: atxConfig(
         settings: [
             atxTextSetting(group: 'CONNECTION', name: 'serverURL', value: '127.0.0.1'),

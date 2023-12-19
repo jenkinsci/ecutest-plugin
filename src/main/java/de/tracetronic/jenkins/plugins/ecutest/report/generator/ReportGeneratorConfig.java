@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -106,7 +106,7 @@ public class ReportGeneratorConfig extends AbstractDescribableImpl<ReportGenerat
     public static class DescriptorImpl extends Descriptor<ReportGeneratorConfig> {
 
         /**
-         * Defines the standard report generators shipped with ECU-TEST installation.
+         * Defines the standard report generators shipped with ecu.test installation.
          */
         private static final List<String> REPORT_GENERATORS = Arrays.asList(
                 "ATX", "EXCEL", "HTML", "JSON", "OMR", "TestSpec", "TRF-SPLIT", "TXT", "UNIT");

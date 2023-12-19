@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -48,12 +48,12 @@ public class JUnitPublisherIT extends IntegrationTestBase {
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
     }
 
     @Test
     public void testDefaultConfigRoundTripStep() throws Exception {
-        final JUnitPublisher before = new JUnitPublisher("ECU-TEST");
+        final JUnitPublisher before = new JUnitPublisher("ecu.test");
 
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
@@ -66,7 +66,7 @@ public class JUnitPublisherIT extends IntegrationTestBase {
 
     @Test
     public void testConfigRoundTripStep() throws Exception {
-        final JUnitPublisher before = new JUnitPublisher("ECU-TEST");
+        final JUnitPublisher before = new JUnitPublisher("ecu.test");
         before.setUnstableThreshold(0);
         before.setFailedThreshold(0);
         before.setAllowMissing(false);
@@ -84,7 +84,7 @@ public class JUnitPublisherIT extends IntegrationTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final JUnitPublisher publisher = new JUnitPublisher("ECU-TEST");
+        final JUnitPublisher publisher = new JUnitPublisher("ecu.test");
         publisher.setUnstableThreshold(0);
         publisher.setFailedThreshold(0);
         publisher.setAllowMissing(true);
@@ -96,7 +96,7 @@ public class JUnitPublisherIT extends IntegrationTestBase {
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.JUnitPublisher_DisplayName());
         jenkins.assertXPath(page, "//select[@name='toolName']");
-        jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
+        jenkins.assertXPath(page, "//option[@value='ecu.test']");
         WebAssert.assertInputPresent(page, "_.unstableThreshold");
         WebAssert.assertInputContainsValue(page, "_.unstableThreshold", "0.0");
         WebAssert.assertInputPresent(page, "_.failedThreshold");
@@ -111,7 +111,7 @@ public class JUnitPublisherIT extends IntegrationTestBase {
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.setAssignedNode(agent);
-        final JUnitPublisher publisher = new JUnitPublisher("ECU-TEST");
+        final JUnitPublisher publisher = new JUnitPublisher("ecu.test");
         publisher.setAllowMissing(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -132,7 +132,7 @@ public class JUnitPublisherIT extends IntegrationTestBase {
                 return false;
             }
         });
-        final JUnitPublisher publisher = new JUnitPublisher("ECU-TEST");
+        final JUnitPublisher publisher = new JUnitPublisher("ecu.test");
         publisher.setRunOnFailed(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -153,18 +153,18 @@ public class JUnitPublisherIT extends IntegrationTestBase {
                 private static final long serialVersionUID = 1L;
 
                 {
-                    put("ECUTEST", "ECU-TEST");
+                    put("ECUTEST", "ecu.test");
                 }
             }));
 
-        assertEquals("Tool name should be resolved", "ECU-TEST",
+        assertEquals("Tool name should be resolved", "ecu.test",
             publisher.getToolInstallation(publisher.getToolName(), envVars).getName());
     }
 
     @Test
     public void testParameterizedToolInstallation() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ETInstallation installation = new ETInstallation("ECUT-TEST2", "C:\\ECU-TEST2",
+        final ETInstallation installation = new ETInstallation("ecu.test2", "C:\\ECU-TEST2",
             JenkinsRule.NO_PROPERTIES);
         final JUnitPublisher publisher = new JUnitPublisher("${ECUTEST}");
         project.getPublishersList().add(publisher);
@@ -173,7 +173,7 @@ public class JUnitPublisherIT extends IntegrationTestBase {
             Collections.unmodifiableMap(new HashMap<String, String>() {
                 private static final long serialVersionUID = 1L;
                 {
-                    put("ECUTEST", "ECU-TEST");
+                    put("ECUTEST", "ecu.test");
                 }
             }));
 
@@ -220,7 +220,7 @@ public class JUnitPublisherIT extends IntegrationTestBase {
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
         jenkins.assertLogContains("Publishing UNIT reports...", run);
         if (emptyResults == false) {
-            jenkins.assertLogContains("Starting ECU-TEST failed.", run);
+            jenkins.assertLogContains("Starting ecu.test failed.", run);
         } else {
             jenkins.assertLogContains("Empty test results are not allowed, setting build status to FAILURE!", run);
         }

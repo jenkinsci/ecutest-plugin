@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 /**
  * Helper class to easily compare tool versions defined by major, minor, micro and qualifier version. Mainly used to
  * enable or disable plugin features by comparing {@link de.tracetronic.jenkins.plugins.ecutest.ETPlugin#ET_MIN_VERSION}
- * with the configured ECU-TEST version.
+ * with the configured ecu.test version.
  */
 public final class ToolVersion implements Comparable<ToolVersion>, Serializable {
 

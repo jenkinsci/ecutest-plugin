@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Builder providing generation of ECU-TEST file caches.
+ * Builder providing generation of ecu.test file caches.
  */
 public class CacheBuilder extends Builder implements SimpleBuildStep {
 

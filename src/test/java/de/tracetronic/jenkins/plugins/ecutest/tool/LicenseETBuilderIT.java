@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -38,12 +38,12 @@ public class LicenseETBuilderIT extends IntegrationTestBase {
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
     }
 
     @Test
     public void testDefaultConfigRoundTripStep() throws Exception {
-        final LicenseETBuilder before = new LicenseETBuilder("ECU-TEST");
+        final LicenseETBuilder before = new LicenseETBuilder("ecu.test");
 
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
@@ -57,13 +57,13 @@ public class LicenseETBuilderIT extends IntegrationTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final LicenseETBuilder builder = new LicenseETBuilder("ECU-TEST");
+        final LicenseETBuilder builder = new LicenseETBuilder("ecu.test");
         project.getBuildersList().add(builder);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.LicenseETBuilder_DisplayName());
         jenkins.assertXPath(page, "//select[@name='toolName']");
-        jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
+        jenkins.assertXPath(page, "//option[@value='ecu.test']");
     }
 
     @Test
@@ -78,11 +78,11 @@ public class LicenseETBuilderIT extends IntegrationTestBase {
                 private static final long serialVersionUID = 1L;
 
                 {
-                    put("ECUTEST", "ECU-TEST");
+                    put("ECUTEST", "ecu.test");
                 }
             }));
 
-        assertEquals("Tool name should be resolved", "ECU-TEST", builder.getToolInstallation(envVars).getName());
+        assertEquals("Tool name should be resolved", "ecu.test", builder.getToolInstallation(envVars).getName());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class LicenseETBuilderIT extends IntegrationTestBase {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
 
-        final ETInstallation installation = new ETInstallation("ECUT-TEST2", "C:\\ECU-TEST2",
+        final ETInstallation installation = new ETInstallation("ecu.test2", "C:\\ECU-TEST2",
             JenkinsRule.NO_PROPERTIES);
         final LicenseETBuilder builder = new LicenseETBuilder("${ECUTEST}");
         builder.setInstallation(installation);
@@ -103,7 +103,7 @@ public class LicenseETBuilderIT extends IntegrationTestBase {
                 private static final long serialVersionUID = 1L;
 
                 {
-                    put("ECUTEST", "ECU-TEST");
+                    put("ECUTEST", "ecu.test");
                 }
             }));
 
@@ -113,12 +113,12 @@ public class LicenseETBuilderIT extends IntegrationTestBase {
     @Test
     public void verifyInvalidToolInstallation() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final LicenseETBuilder builder = new LicenseETBuilder("ECU-TEST");
+        final LicenseETBuilder builder = new LicenseETBuilder("ecu.test");
         project.getBuildersList().add(builder);
 
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
         assertThat("Error message should be present in console log", build.getLog(100).toString(),
-            containsString("ECU-TEST executable for 'ECU-TEST' could not be found"));
+            containsString("ecu.test executable for 'ecu.test' could not be found"));
     }
 }

@@ -1,11 +1,11 @@
 <!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
+  Copyright (c) 2015-2023 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
 
 <div>
-    <p>Gets an ECU-TEST installation instance by name which must be present in Jenkins global tool configuration.</p>
+    <p>Gets an ecu.test installation instance by name which must be present in Jenkins global tool configuration.</p>
     <dl>Signatures:
         <dd>
             <pre>
@@ -19,10 +19,10 @@ ET.installation(Map&lt;String, Object&gt; installArgs) : ETInstance
     <dl>Examples:
         <dd>
             <pre>
-ET.installation('ECU-TEST')
+ET.installation('ecu.test')
             </pre>
             <pre>
-ET.installation toolName: 'ECU-TEST'
+ET.installation toolName: 'ecu.test'
             </pre>
         </dd>
     </dl>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -111,7 +111,7 @@ public class ETNewInstallationStep extends Step {
 
         @Override
         public String getDisplayName() {
-            return "Return new ECU-TEST installation";
+            return "Return new ecu.test installation";
         }
 
         @Override

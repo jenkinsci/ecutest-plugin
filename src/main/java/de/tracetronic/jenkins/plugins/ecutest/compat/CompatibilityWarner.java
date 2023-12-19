@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2022 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -12,13 +12,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Warns the user in case of possible compatibility issues between this version of the ECU-TEST plugin and the version
- * of ECU-TEST used by the user. Different methods hint at different compatibility issues.
+ * Warns the user in case of possible compatibility issues between this version of the ecu.test plugin and the version
+ * of ecu.test used by the user. Different methods hint at different compatibility issues.
  */
 public class CompatibilityWarner {
     /**
      * Adds a debug message in case the user uses single backslashes in Constants and package parameters (relevant from
-     * ECU-TEST 2022.3 upwards).
+     * ecu.test 2022.3 upwards).
      * @param inputMap the map the values of which are checked for single backslashes
      * @param logger logger where the warnings for single backslashes are written to
      * @param info information about the kind of values handed as inputMap
@@ -38,7 +38,7 @@ public class CompatibilityWarner {
                 isMatchFound = true;
                 logger.logDebug("Single backslash found in " + info.getLogMessage() + " '" + value
                     + "' - note that invalid control characters are not allowed in "
-                    + "ECU-TEST 2022.3 and newer versions.");
+                    + "ecu.test 2022.3 and newer versions.");
 
             }
         }

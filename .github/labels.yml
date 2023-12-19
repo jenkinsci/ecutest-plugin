@@ -19,8 +19,8 @@
 - name: duplicate
   description: Similar issue or pull request
   color: a9f9dc
-- name: ecu-test
-  description: ECU-TEST related issue
+- name: ecu.test
+  description: ecu.test related issue
   color: ed8b00
 - name: feature
   description: New feature request
@@ -34,8 +34,8 @@
 - name: security
   description: Security related issue
   color: 7f0e6f
-- name: test-guide
-  description: TEST-GUIDE related issue
+- name: test.guide
+  description: test.guide related issue
   color: 208ca3
 - name: test
   description: Testing

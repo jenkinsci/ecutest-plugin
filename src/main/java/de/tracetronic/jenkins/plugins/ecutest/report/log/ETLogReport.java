@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Holds a link to the ECU-TEST log report. The build that holds the artifact is resolved by
+ * Holds a link to the ecu.test log report. The build that holds the artifact is resolved by
  * {@link StaplerRequest#findAncestorObject(Class)} at runtime.
  */
 public class ETLogReport extends AbstractArchiveFileReport {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -31,7 +31,7 @@ public class ETLogBuildAction extends AbstractETLogAction implements SimpleBuild
     }
 
     /**
-     * Gets the ECU-TEST log reports.
+     * Gets the ecu.test log reports.
      *
      * @return the log reports
      */
@@ -40,18 +40,18 @@ public class ETLogBuildAction extends AbstractETLogAction implements SimpleBuild
     }
 
     /**
-     * Adds a ECU-TEST log report.
+     * Adds a ecu.test log report.
      *
-     * @param report the ECU-TEST log report to add
+     * @param report the ecu.test log report to add
      */
     public void add(final ETLogReport report) {
         this.logReports.add(report);
     }
 
     /**
-     * Adds a bundle of ECU-TEST log reports.
+     * Adds a bundle of ecu.test log reports.
      *
-     * @param reports the collection of ECU-TEST log reports
+     * @param reports the collection of ecu.test log reports
      */
     public void addAll(final Collection<ETLogReport> reports) {
         this.logReports.addAll(reports);

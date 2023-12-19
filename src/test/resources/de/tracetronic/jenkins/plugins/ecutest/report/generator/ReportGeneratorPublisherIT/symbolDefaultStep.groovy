@@ -1,3 +1,3 @@
 node('windows') {
-    publishGenerators toolName: 'ECU-TEST'
+    publishGenerators toolName: 'ecu.test'
 }

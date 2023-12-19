@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -25,12 +25,12 @@ import jenkins.security.MasterToSlaveCallable;
 import java.io.IOException;
 
 /**
- * Client to export ECU-TEST packages via COM interface.
+ * Client to export ecu.test packages via COM interface.
  */
 public class ExportPackageClient extends AbstractTMSClient {
 
     /**
-     * Defines the minimum required ECU-TEST version for this client to work properly.
+     * Defines the minimum required ecu.test version for this client to work properly.
      */
     private static final ToolVersion ET_MIN_VERSION = new ToolVersion(2021, 1, 0);
 

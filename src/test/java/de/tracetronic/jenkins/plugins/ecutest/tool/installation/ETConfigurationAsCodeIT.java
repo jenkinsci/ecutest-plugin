@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -42,7 +42,7 @@ public class ETConfigurationAsCodeIT {
         assertThat(installations.length, is(2));
 
         ETInstallation installation = installations[0];
-        assertThat(installation.getName(), is("ECU-TEST"));
+        assertThat(installation.getName(), is("ecu.test"));
         assertThat(installation.getHome(), is("C:\\ECU-TEST"));
         assertThat(installation.getProgId(), is(ETComProperty.DEFAULT_PROG_ID));
         assertThat(installation.getTimeout(), is(ETComProperty.DEFAULT_TIMEOUT));

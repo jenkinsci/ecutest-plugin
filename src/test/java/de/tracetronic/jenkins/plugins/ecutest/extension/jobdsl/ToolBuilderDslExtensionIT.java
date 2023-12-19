@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -47,7 +47,7 @@ public class ToolBuilderDslExtensionIT extends AbstractDslExtensionIT {
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
     }
 
     @Test
@@ -64,8 +64,8 @@ public class ToolBuilderDslExtensionIT extends AbstractDslExtensionIT {
 
         final DescribableList<Builder, Descriptor<Builder>> builders = project.getBuildersList();
         final StartETBuilder builder = builders.get(StartETBuilder.class);
-        assertNotNull("Start ECU-TEST builder should exist", builder);
-        assertThat(builder.getToolName(), is("ECU-TEST"));
+        assertNotNull("Start ecu.test builder should exist", builder);
+        assertThat(builder.getToolName(), is("ecu.test"));
         assertThat(builder.getWorkspaceDir(), is("test"));
         assertThat(builder.getSettingsDir(), is("settings"));
         assertThat(builder.getTimeout(), is("60"));
@@ -79,8 +79,8 @@ public class ToolBuilderDslExtensionIT extends AbstractDslExtensionIT {
 
         final DescribableList<Builder, Descriptor<Builder>> builders = project.getBuildersList();
         final StopETBuilder builder = builders.get(StopETBuilder.class);
-        assertNotNull("Stop ECU-TEST builder should exist", builder);
-        assertThat(builder.getToolName(), is("ECU-TEST"));
+        assertNotNull("Stop ecu.test builder should exist", builder);
+        assertThat(builder.getToolName(), is("ecu.test"));
         assertThat(builder.getTimeout(), is("60"));
     }
 
@@ -91,7 +91,7 @@ public class ToolBuilderDslExtensionIT extends AbstractDslExtensionIT {
         final DescribableList<Builder, Descriptor<Builder>> builders = project.getBuildersList();
         final StartTSBuilder builder = builders.get(StartTSBuilder.class);
         assertNotNull("Start Tool-Server builder should exist", builder);
-        assertThat(builder.getToolName(), is("ECU-TEST"));
+        assertThat(builder.getToolName(), is("ecu.test"));
         assertThat(builder.getTimeout(), is("60"));
         assertThat(builder.getTcpPort(), is("5000"));
         assertThat(builder.getToolLibsIni(), is("C:\\ToolLibs.ini"));
@@ -105,7 +105,7 @@ public class ToolBuilderDslExtensionIT extends AbstractDslExtensionIT {
         final DescribableList<Builder, Descriptor<Builder>> builders = project.getBuildersList();
         final StopTSBuilder builder = builders.get(StopTSBuilder.class);
         assertNotNull("Stop Tool-Server builder should exist", builder);
-        assertThat(builder.getToolName(), is("ECU-TEST"));
+        assertThat(builder.getToolName(), is("ecu.test"));
         assertThat(builder.getTimeout(), is("60"));
     }
 }

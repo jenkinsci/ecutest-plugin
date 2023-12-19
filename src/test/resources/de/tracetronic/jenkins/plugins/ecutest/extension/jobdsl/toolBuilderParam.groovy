@@ -1,5 +1,5 @@
 def strJobName = 'toolBuilderParam'
-def strETInstall = 'ECU-TEST'
+def strETInstall = 'ecu.test'
 def strWorkspaceDir = 'test'
 def strSettingsDir = 'settings'
 def strTimeout = '60'

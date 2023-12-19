@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -43,12 +43,12 @@ public class StopETBuilderIT extends IntegrationTestBase {
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
     }
 
     @Test
     public void testDefaultConfigRoundTripStep() throws Exception {
-        final StopETBuilder before = new StopETBuilder("ECU-TEST");
+        final StopETBuilder before = new StopETBuilder("ecu.test");
 
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
@@ -61,7 +61,7 @@ public class StopETBuilderIT extends IntegrationTestBase {
 
     @Test
     public void testConfigRoundTripStep() throws Exception {
-        final StopETBuilder before = new StopETBuilder("ECU-TEST");
+        final StopETBuilder before = new StopETBuilder("ecu.test");
         before.setTimeout("120");
 
         CoreStep step = new CoreStep(before);
@@ -76,14 +76,14 @@ public class StopETBuilderIT extends IntegrationTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final StopETBuilder builder = new StopETBuilder("ECU-TEST");
+        final StopETBuilder builder = new StopETBuilder("ecu.test");
         builder.setTimeout("30");
         project.getBuildersList().add(builder);
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.StopETBuilder_DisplayName());
         jenkins.assertXPath(page, "//select[@name='toolName']");
-        jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
+        jenkins.assertXPath(page, "//option[@value='ecu.test']");
         WebAssert.assertInputPresent(page, "_.timeout");
         WebAssert.assertInputContainsValue(page, "_.timeout", "30");
     }
@@ -91,7 +91,7 @@ public class StopETBuilderIT extends IntegrationTestBase {
     @Test
     public void testToolId() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final StopETBuilder builder = new StopETBuilder("ECU-TEST");
+        final StopETBuilder builder = new StopETBuilder("ecu.test");
         project.getBuildersList().add(builder);
 
         final FreeStyleBuild build = mock(FreeStyleBuild.class);
@@ -112,11 +112,11 @@ public class StopETBuilderIT extends IntegrationTestBase {
                 private static final long serialVersionUID = 1L;
 
                 {
-                    put("ECUTEST", "ECU-TEST");
+                    put("ECUTEST", "ecu.test");
                 }
             }));
 
-        assertEquals("Tool name should be resolved", "ECU-TEST", builder.getToolInstallation(envVars).getName());
+        assertEquals("Tool name should be resolved", "ecu.test", builder.getToolInstallation(envVars).getName());
     }
 
     @Test
@@ -125,7 +125,7 @@ public class StopETBuilderIT extends IntegrationTestBase {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
 
-        final ETInstallation installation = new ETInstallation("ECUT-TEST2", "C:\\ECU-TEST2",
+        final ETInstallation installation = new ETInstallation("ecu.test2", "C:\\ecu.test2",
             JenkinsRule.NO_PROPERTIES);
         final StopETBuilder builder = new StopETBuilder("${ECUTEST}");
         builder.setInstallation(installation);
@@ -136,7 +136,7 @@ public class StopETBuilderIT extends IntegrationTestBase {
             Collections.unmodifiableMap(new HashMap<String, String>() {
                 private static final long serialVersionUID = 1L;
                 {
-                    put("ECUTEST", "ECU-TEST");
+                    put("ECUTEST", "ecu.test");
                 }
             }));
 
@@ -184,7 +184,7 @@ public class StopETBuilderIT extends IntegrationTestBase {
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
-        jenkins.assertLogContains("Stopping ECU-TEST...", run);
-        jenkins.assertLogContains("No running ECU-TEST instance found!", run);
+        jenkins.assertLogContains("Stopping ecu.test...", run);
+        jenkins.assertLogContains("No running ecu.test instance found!", run);
     }
 }

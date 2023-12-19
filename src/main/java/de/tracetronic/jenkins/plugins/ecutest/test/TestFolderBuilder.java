@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Builder providing the execution of ECU-TEST packages and projects inside of a test folder.
+ * Builder providing the execution of ecu.test packages and projects inside of a test folder.
  */
 public class TestFolderBuilder extends AbstractTestBuilder {
 
@@ -198,7 +198,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     }
 
     /**
-     * Scans for ECU-TEST packages.
+     * Scans for ecu.test packages.
      *
      * @param testFolder the test folder
      * @param launcher   the launcher
@@ -224,7 +224,7 @@ public class TestFolderBuilder extends AbstractTestBuilder {
     }
 
     /**
-     * Scan for ECU-TEST projects.
+     * Scan for ecu.test projects.
      *
      * @param testFolder the test folder
      * @param launcher   the launcher

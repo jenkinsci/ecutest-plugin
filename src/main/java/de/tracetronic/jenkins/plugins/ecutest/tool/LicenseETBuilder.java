@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Builder providing the license check of ECU-TEST.
+ * Builder providing the license check of ecu.test.
  */
 public class LicenseETBuilder extends AbstractToolBuilder {
 
@@ -50,9 +50,9 @@ public class LicenseETBuilder extends AbstractToolBuilder {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, listener, false);
         if (!foundProcesses.isEmpty()) {
-            logger.logInfo("Running ECU-TEST instance found, therefore a license is available...");
+            logger.logInfo("Running ecu.test instance found, therefore a license is available...");
         } else {
-            // Verify selected ECU-TEST installation
+            // Verify selected ecu.test installation
             final EnvVars envVars = run.getEnvironment(listener);
             if (!isInstallationVerified(envVars)) {
                 setInstallation(configureToolInstallation(workspace.toComputer(), listener, envVars));
@@ -60,11 +60,11 @@ public class LicenseETBuilder extends AbstractToolBuilder {
             final String installPath = getInstallation().getExecutable(launcher);
             final String toolName = getInstallation().getName();
             if (StringUtils.isEmpty(installPath)) {
-                throw new ETPluginException(String.format("ECU-TEST executable for '%s' could not be found!",
+                throw new ETPluginException(String.format("ecu.test executable for '%s' could not be found!",
                     toolName));
             }
 
-            // Check license of ECU-TEST
+            // Check license of ecu.test
             final ETClient etClient = new ETClient(toolName, installPath, "", "", getDefaultTimeout(), false);
             etClient.setLicenseCheck(true);
             if (!etClient.checkLicense(launcher, listener)) {

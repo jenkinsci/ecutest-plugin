@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -42,12 +42,12 @@ public class StartETBuilderIT extends IntegrationTestBase {
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
     }
 
     @Test
     public void testDefaultConfigRoundTripStep() throws Exception {
-        final StartETBuilder before = new StartETBuilder("ECU-TEST");
+        final StartETBuilder before = new StartETBuilder("ecu.test");
 
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
@@ -60,7 +60,7 @@ public class StartETBuilderIT extends IntegrationTestBase {
 
     @Test
     public void testConfigRoundTripStep() throws Exception {
-        final StartETBuilder before = new StartETBuilder("ECU-TEST");
+        final StartETBuilder before = new StartETBuilder("ecu.test");
         before.setWorkspaceDir("workspace");
         before.setSettingsDir("settings");
         before.setTimeout("120");
@@ -80,7 +80,7 @@ public class StartETBuilderIT extends IntegrationTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final StartETBuilder builder = new StartETBuilder("ECU-TEST");
+        final StartETBuilder builder = new StartETBuilder("ecu.test");
         builder.setWorkspaceDir("workspace");
         builder.setSettingsDir("settings");
         builder.setTimeout("120");
@@ -92,7 +92,7 @@ public class StartETBuilderIT extends IntegrationTestBase {
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.StartETBuilder_DisplayName());
         jenkins.assertXPath(page, "//select[@name='toolName']");
-        jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
+        jenkins.assertXPath(page, "//option[@value='ecu.test']");
         WebAssert.assertInputPresent(page, "_.workspaceDir");
         WebAssert.assertInputContainsValue(page, "_.workspaceDir", "workspace");
         WebAssert.assertInputPresent(page, "_.settingsDir");
@@ -107,7 +107,7 @@ public class StartETBuilderIT extends IntegrationTestBase {
     @Test
     public void testToolId() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final StartETBuilder builder = new StartETBuilder("ECU-TEST");
+        final StartETBuilder builder = new StartETBuilder("ecu.test");
         project.getBuildersList().add(builder);
 
         final FreeStyleBuild build = mock(FreeStyleBuild.class);
@@ -128,11 +128,11 @@ public class StartETBuilderIT extends IntegrationTestBase {
                     private static final long serialVersionUID = 1L;
 
                     {
-                        put("ECUTEST", "ECU-TEST");
+                        put("ECUTEST", "ecu.test");
                     }
                 }));
 
-        assertEquals("Tool name should be resolved", "ECU-TEST", builder.getToolInstallation(envVars).getName());
+        assertEquals("Tool name should be resolved", "ecu.test", builder.getToolInstallation(envVars).getName());
     }
 
     @Test
@@ -141,7 +141,7 @@ public class StartETBuilderIT extends IntegrationTestBase {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
 
-        final ETInstallation installation = new ETInstallation("ECUT-TEST2", "C:\\ECU-TEST2",
+        final ETInstallation installation = new ETInstallation("ecu.test2", "C:\\ECU-TEST2",
             JenkinsRule.NO_PROPERTIES);
         final StartETBuilder builder = new StartETBuilder("${ECUTEST}");
         builder.setInstallation(installation);
@@ -151,7 +151,7 @@ public class StartETBuilderIT extends IntegrationTestBase {
             Collections.unmodifiableMap(new HashMap<String, String>() {
                 private static final long serialVersionUID = 1L;
                 {
-                    put("ECUTEST", "ECU-TEST");
+                    put("ECUTEST", "ecu.test");
                 }
             }));
 
@@ -192,6 +192,6 @@ public class StartETBuilderIT extends IntegrationTestBase {
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
-        jenkins.assertLogContains("ECU-TEST executable could not be found!", run);
+        jenkins.assertLogContains("ecu.test executable could not be found!", run);
     }
 }

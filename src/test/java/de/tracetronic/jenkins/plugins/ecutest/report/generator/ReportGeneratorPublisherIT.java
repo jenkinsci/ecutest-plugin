@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -48,12 +48,12 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
     }
 
     @Test
     public void testDefaultConfigRoundTripStep() throws Exception {
-        final ReportGeneratorPublisher before = new ReportGeneratorPublisher("ECU-TEST");
+        final ReportGeneratorPublisher before = new ReportGeneratorPublisher("ecu.test");
 
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
@@ -66,7 +66,7 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
 
     @Test
     public void testConfigRoundTripStep() throws Exception {
-        final ReportGeneratorPublisher before = new ReportGeneratorPublisher("ECU-TEST");
+        final ReportGeneratorPublisher before = new ReportGeneratorPublisher("ecu.test");
         before.setAllowMissing(true);
         before.setRunOnFailed(true);
         before.setArchiving(true);
@@ -90,7 +90,7 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
         generators.add(new ReportGeneratorConfig("HTML", settings, true));
         final List<ReportGeneratorConfig> customGenerators = new ArrayList<>();
         customGenerators.add(new ReportGeneratorConfig("Custom", settings, false));
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ecu.test");
         publisher.setGenerators(generators);
         publisher.setCustomGenerators(customGenerators);
         publisher.setAllowMissing(true);
@@ -102,7 +102,7 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.ReportGeneratorPublisher_DisplayName());
         jenkins.assertXPath(page, "//select[@name='toolName']");
-        jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
+        jenkins.assertXPath(page, "//option[@value='ecu.test']");
         jenkins.assertXPath(page, "//select[@name='_.name' and @value='HTML']");
         jenkins.assertXPath(page, "//input[@name='_.usePersistedSettings' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.name' and @value='Custom']");
@@ -120,7 +120,7 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.setAssignedNode(agent);
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ecu.test");
         publisher.setAllowMissing(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -141,7 +141,7 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
                 return false;
             }
         });
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ecu.test");
         publisher.setRunOnFailed(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -162,11 +162,11 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
                 private static final long serialVersionUID = 1L;
 
                 {
-                    put("ECUTEST", "ECU-TEST");
+                    put("ECUTEST", "ecu.test");
                 }
             }));
 
-        assertEquals("Tool name should be resolved", "ECU-TEST",
+        assertEquals("Tool name should be resolved", "ecu.test",
             publisher.getToolInstallation(publisher.getToolName(), envVars).getName());
     }
 
@@ -207,7 +207,7 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
         if (emptyResults == false) {
             final WorkflowRun run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
             jenkins.assertLogContains("Publishing generator reports...", run);
-            jenkins.assertLogContains("Starting ECU-TEST failed.", run);
+            jenkins.assertLogContains("Starting ecu.test failed.", run);
         } else {
             final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
             jenkins.assertLogContains("Publishing generator reports...", run);

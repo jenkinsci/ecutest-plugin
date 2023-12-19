@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Client to execute ECU-TEST packages via COM interface.
+ * Client to execute ecu.test packages via COM interface.
  */
 public class PackageClient extends AbstractTestClient {
 

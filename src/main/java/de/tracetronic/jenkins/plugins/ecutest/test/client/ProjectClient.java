@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -27,7 +27,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Client to execute ECU-TEST projects via COM interface.
+ * Client to execute ecu.test projects via COM interface.
  */
 public class ProjectClient extends AbstractTestClient {
 

@@ -1,11 +1,11 @@
 <!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
+  Copyright (c) 2015-2023 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
 
 <div>
-    <p>Konfigurieren und Starten von ECU-TEST.</p>
+    <p>Konfigurieren und Starten von ecu.test.</p>
     <strong>Verwendung in Pipelines</strong>
     <dl>Signaturen:
         <dd>
@@ -31,18 +31,18 @@ ETInstance.start(Map&lt;String, Object&gt; settings) : void
     <dl>Beispiele:
         <dd>
             <pre>
-startET('ECU-TEST')
+startET('ecu.test')
             </pre>
             <pre>
-def instance = ET.installation('ECU-TEST')
+def instance = ET.installation('ecu.test')
 startET installation: instance.installation, workspaceDir: 'C:\\Data'
             </pre>
             <pre>
-def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+def instance = ET.newInstallation('ecu.test', 'C:\\Program Files\\ECU-TEST 8.0')
 instance.start()
             </pre>
             <pre>
-def instance = ET.newInstallation toolName: 'ECU-TEST', installPath: C:\\Program Files\\ECU-TEST 8.0'
+def instance = ET.newInstallation toolName: 'ecu.test', installPath: C:\\Program Files\\ECU-TEST 8.0'
 instance.start workspaceDir: 'C:\\Data', settingsDir: 'C:\\Data', timeout: 120, debugMode: true, keepInstance: false, updateUserLibs: true
             </pre>
         </dd>

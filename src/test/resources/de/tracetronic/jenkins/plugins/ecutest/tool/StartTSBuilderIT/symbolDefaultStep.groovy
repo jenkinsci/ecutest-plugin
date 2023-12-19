@@ -1,3 +1,3 @@
 node('windows') {
-    startTS toolName: 'ECU-TEST'
+    startTS toolName: 'ecu.test'
 }

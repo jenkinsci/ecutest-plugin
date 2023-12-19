@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -131,12 +131,12 @@ public class StartTSBuilder extends AbstractToolBuilder {
                     expToolLibsPath.getRemote()));
             }
 
-            // Get selected ECU-TEST installation
+            // Get selected ecu.test installation
             if (!isInstallationVerified(envVars)) {
                 setInstallation(configureToolInstallation(workspace.toComputer(), listener, envVars));
             }
 
-            // Start selected Tool-Server of related ECU-TEST installation
+            // Start selected Tool-Server of related ecu.test installation
             final String installPath = getInstallation().getTSExecutable(launcher);
             final TSClient tsClient = new TSClient(getToolName(), installPath, expTimeout, expToolLibs, expTcpPort);
             if (!tsClient.start(true, workspace, launcher, listener)) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -22,7 +22,7 @@ public class ATXInstallationIT extends IntegrationTestBase {
     @Test
     @LocalData
     public void testServerMigration() {
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        final ATXPublisher publisher = new ATXPublisher("test.guide");
         final ATXInstallation installation = publisher.getInstallation();
         assertNotNull(installation);
 

@@ -1,3 +1,3 @@
 node('windows') {
-    step([$class: 'StopTSBuilder', toolName: 'ECU-TEST'])
+    step([$class: 'StopTSBuilder', toolName: 'ecu.test'])
 }

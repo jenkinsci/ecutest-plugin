@@ -1,6 +1,6 @@
 freeStyleJob("reportPublisher") {
     publishers {
-        publishATX("TEST-GUIDE") {
+        publishATX("test.guide") {
             allowMissing(true)
             runOnFailed(true)
             archiving(false)
@@ -12,7 +12,7 @@ freeStyleJob("reportPublisher") {
             archiving(false)
             keepAll(false)
         }
-        publishUNIT("ECU-TEST") {
+        publishUNIT("ecu.test") {
             unstableThreshold(15)
             failedThreshold(30)
             allowMissing(true)
@@ -28,7 +28,7 @@ freeStyleJob("reportPublisher") {
             archiving(false)
             keepAll(false)
         }
-        publishGenerators("ECU-TEST") {
+        publishGenerators("ecu.test") {
             generators {
                 generator("HTML") {
                     settings {
@@ -58,7 +58,7 @@ freeStyleJob("reportPublisher") {
             archiving(false)
             keepAll(false)
         }
-        publishTMS("ECU-TEST", "credentialsId") {
+        publishTMS("ecu.test", "credentialsId") {
             timeout("600")
             allowMissing(true)
             runOnFailed(true)

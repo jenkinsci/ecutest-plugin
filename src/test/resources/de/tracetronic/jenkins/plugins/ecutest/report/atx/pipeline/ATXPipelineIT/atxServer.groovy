@@ -1,7 +1,7 @@
-def server = ATX.server('TEST-GUIDE')
+def server = ATX.server('test.guide')
 assertSettings(server)
 
-server = ATX.server atxName: 'TEST-GUIDE'
+server = ATX.server atxName: 'test.guide'
 assertSettings(server)
 
 def assertSettings(server) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -50,16 +50,16 @@ public class ATXPublisherIT extends IntegrationTestBase {
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
         final ATXInstallation.DescriptorImpl atxImpl = jenkins.jenkins
             .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
-        final ATXInstallation inst = new ATXInstallation("TEST-GUIDE", "ECU-TEST", new ATXConfig());
+        final ATXInstallation inst = new ATXInstallation("test.guide", "ecu.test", new ATXConfig());
         atxImpl.setInstallations(inst);
     }
 
     @Test
     public void testDefaultConfigRoundTripStep() throws Exception {
-        final ATXPublisher before = new ATXPublisher("TEST-GUIDE");
+        final ATXPublisher before = new ATXPublisher("test.guide");
 
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
@@ -72,7 +72,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
 
     @Test
     public void testConfigRoundTripStep() throws Exception {
-        final ATXPublisher before = new ATXPublisher("TEST-GUIDE");
+        final ATXPublisher before = new ATXPublisher("test.guide");
         before.setFailOnOffline(false);
         before.setUsePersistedSettings(false);
         before.setInjectBuildVars(false);
@@ -95,7 +95,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        final ATXPublisher publisher = new ATXPublisher("test.guide");
         publisher.setFailOnOffline(true);
         publisher.setUsePersistedSettings(true);
         publisher.setInjectBuildVars(true);
@@ -108,7 +108,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.ATXPublisher_DisplayName());
         jenkins.assertXPath(page, "//select[@name='atxName']");
-        jenkins.assertXPath(page, "//option[@value='TEST-GUIDE']");
+        jenkins.assertXPath(page, "//option[@value='test.guide']");
         jenkins.assertXPath(page, "//input[@name='_.failOnOffline' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.usePersistedSettings' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.injectBuildVars' and @checked='true']");
@@ -121,7 +121,8 @@ public class ATXPublisherIT extends IntegrationTestBase {
     @Test
     public void testGlobalConfigPresence() throws Exception {
         final HtmlPage page = getWebClient().goTo("configure");
-        jenkins.assertXPath(page, "//tr[@name='de-tracetronic-jenkins-plugins-ecutest-report-atx-installation-ATXInstallation']");
+        jenkins.assertXPath(page, "//div[@name='de-tracetronic-jenkins-plugins-ecutest-report-atx-installation" +
+            "-ATXInstallation']");
     }
 
     @Test
@@ -135,7 +136,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
     @Test
     @LocalData
     public void testCurrentInstallation() {
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        final ATXPublisher publisher = new ATXPublisher("test.guide");
         assertNotNull(publisher.getInstallation());
     }
 
@@ -145,11 +146,11 @@ public class ATXPublisherIT extends IntegrationTestBase {
             .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
         assertEquals(1, atxImpl.getInstallations().length);
 
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        final ATXPublisher publisher = new ATXPublisher("test.guide");
         final ATXInstallation installation = publisher.getInstallation();
         assertNotNull(installation);
-        assertEquals(installation.getName(), "TEST-GUIDE");
-        assertEquals(installation.getToolName(), "ECU-TEST");
+        assertEquals(installation.getName(), "test.guide");
+        assertEquals(installation.getToolName(), "ecu.test");
     }
 
     @Test
@@ -158,7 +159,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.setAssignedNode(agent);
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        final ATXPublisher publisher = new ATXPublisher("test.guide");
         publisher.setFailOnOffline(true);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -171,7 +172,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.setAssignedNode(slave);
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        final ATXPublisher publisher = new ATXPublisher("test.guide");
         publisher.setAllowMissing(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -192,7 +193,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
                 return false;
             }
         });
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        final ATXPublisher publisher = new ATXPublisher("test.guide");
         publisher.setRunOnFailed(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -205,7 +206,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
     public void testParameterizedATXName() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         final ATXPublisher publisher = new ATXPublisher("${TESTGUIDE}");
@@ -217,21 +218,21 @@ public class ATXPublisherIT extends IntegrationTestBase {
                 private static final long serialVersionUID = 1L;
 
                 {
-                    put("TESTGUIDE", "TEST-GUIDE");
+                    put("TESTGUIDE", "test.guide");
                 }
             }));
 
-        assertEquals("ATX name should be resolved", "TEST-GUIDE", publisher.getInstallation(envVars).getName());
+        assertEquals("ATX name should be resolved", "test.guide", publisher.getInstallation(envVars).getName());
     }
 
     @Test
     public void testParameterizedToolName() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        final ATXPublisher publisher = new ATXPublisher("test.guide");
         project.getPublishersList().add(publisher);
 
         final EnvVars envVars = new EnvVars(
@@ -240,13 +241,13 @@ public class ATXPublisherIT extends IntegrationTestBase {
                 private static final long serialVersionUID = 1L;
 
                 {
-                    put("ECUTEST", "ECU-TEST");
+                    put("ECUTEST", "ecu.test");
                 }
             }));
 
         final ATXInstallation installation = publisher.getInstallation();
         assertNotNull(installation);
-        assertEquals("Tool name should be resolved", "ECU-TEST",
+        assertEquals("Tool name should be resolved", "ecu.test",
             publisher.getToolInstallation(installation.getToolName(), envVars).getName());
     }
 
@@ -284,7 +285,7 @@ public class ATXPublisherIT extends IntegrationTestBase {
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
-        jenkins.assertLogContains("Publishing ATX reports to TEST-GUIDE...", run);
-        jenkins.assertLogContains("Starting ECU-TEST failed.", run);
+        jenkins.assertLogContains("Publishing ATX reports to test.guide...", run);
+        jenkins.assertLogContains("Starting ecu.test failed.", run);
     }
 }

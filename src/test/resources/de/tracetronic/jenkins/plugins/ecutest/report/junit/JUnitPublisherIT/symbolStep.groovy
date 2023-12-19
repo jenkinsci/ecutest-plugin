@@ -1,5 +1,5 @@
 node('windows') {
-    publishUNIT toolName: 'ECU-TEST',
+    publishUNIT toolName: 'ecu.test',
         unstableThreshold: 0, failedThreshold: 0,
         allowMissing: true, runOnFailed: true
 }

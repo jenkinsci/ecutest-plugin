@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -263,7 +263,7 @@ public abstract class AbstractTestBuilderDslExtension extends AbstractDslExtensi
             }
 
             /**
-             * Option defining whether to stop ECU-TEST and Tool-Server instances if an error occurred.
+             * Option defining whether to stop ecu.test and Tool-Server instances if an error occurred.
              *
              * @param value the value
              */

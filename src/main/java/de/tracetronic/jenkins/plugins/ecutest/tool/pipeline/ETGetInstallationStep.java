@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -73,7 +73,7 @@ public class ETGetInstallationStep extends Step {
             final ETInstallation installation = ETInstallation.get(step.toolName);
             if (installation == null) {
                 final TaskListener listener = getContext().get(TaskListener.class);
-                final String message = String.format("ECU-TEST installation with name '%s' is not configured!",
+                final String message = String.format("ecu.test installation with name '%s' is not configured!",
                     step.toolName);
                 throw new ETPluginException(message, listener);
             }
@@ -94,7 +94,7 @@ public class ETGetInstallationStep extends Step {
 
         @Override
         public String getDisplayName() {
-            return "Get ECU-TEST installation by name";
+            return "Get ecu.test installation by name";
         }
 
         @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -261,7 +261,7 @@ public class ImportProjectBuilderIT extends IntegrationTestBase {
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
-        jenkins.assertLogContains("No running ECU-TEST instance found, please configure one at first!", run);
+        jenkins.assertLogContains("No running ecu.test instance found, please configure one at first!", run);
     }
 
     /**

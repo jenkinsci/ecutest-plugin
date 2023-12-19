@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--
-  Copyright (c) 2015-2020 TraceTronic GmbH
+  Copyright (c) 2015-2023 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
 <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation_-DescriptorImpl plugin="ecutest@2.22">
     <installations>
         <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation>
-            <name>TEST-GUIDE</name>
+            <name>test.guide</name>
             <toolName>${ECUTEST}</toolName>
             <config>
                 <settings>

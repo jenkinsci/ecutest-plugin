@@ -1,3 +1,3 @@
 node('windows') {
-    publishTraceAnalysis toolName: 'ECU-TEST'
+    publishTraceAnalysis toolName: 'ecu.test'
 }

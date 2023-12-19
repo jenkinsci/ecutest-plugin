@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -97,7 +97,7 @@ public class TestProjectBuilderIT extends IntegrationTestBase {
         WebAssert.assertInputContainsValue(page, "_.timeout", "600");
         jenkins.assertXPath(page, "//input[@name='_.stopOnError' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.checkTestFile' and @checked='true']");
-        jenkins.assertXPath(page, "//input[@name='_.recordWarnings' and @checked='false']");
+        jenkins.assertXPath(page, "//input[@name='_.recordWarnings' and not(@checked)]");
     }
 
     @Test
@@ -146,6 +146,6 @@ public class TestProjectBuilderIT extends IntegrationTestBase {
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
-        jenkins.assertLogContains("No running ECU-TEST instance found, please configure one at first!", run);
+        jenkins.assertLogContains("No running ecu.test instance found, please configure one at first!", run);
     }
 }

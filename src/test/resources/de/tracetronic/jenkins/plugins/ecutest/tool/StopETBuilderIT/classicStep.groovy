@@ -1,3 +1,3 @@
 node('windows') {
-    step([$class: 'StopETBuilder', toolName: 'ECU-TEST', timeout: '120'])
+    step([$class: 'StopETBuilder', toolName: 'ecu.test', timeout: '120'])
 }

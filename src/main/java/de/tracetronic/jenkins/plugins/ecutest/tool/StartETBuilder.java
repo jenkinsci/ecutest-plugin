@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -35,12 +35,12 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Builder providing the start up of ECU-TEST.
+ * Builder providing the start up of ecu.test.
  */
 public class StartETBuilder extends AbstractToolBuilder {
 
     /**
-     * Defines the default timeout to start up ECU-TEST.
+     * Defines the default timeout to start up ecu.test.
      */
     public static final int DEFAULT_TIMEOUT = 120;
 
@@ -130,14 +130,14 @@ public class StartETBuilder extends AbstractToolBuilder {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, listener, false);
         if (isKeepInstance() && !foundProcesses.isEmpty()) {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
-            logger.logInfo("Re-using already running ECU-TEST instance...");
+            logger.logInfo("Re-using already running ecu.test instance...");
         } else {
             // Expand build parameters
             final EnvVars envVars = run.getEnvironment(listener);
             final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), envVars,
                 String.valueOf(DEFAULT_TIMEOUT)));
 
-            // Absolutize ECU-TEST workspace directory, if not absolute assume relative to build workspace
+            // Absolutize ecu.test workspace directory, if not absolute assume relative to build workspace
             String expWorkspaceDir = EnvUtil.expandEnvVar(getWorkspaceDir(), envVars, workspace.getRemote());
             expWorkspaceDir = PathUtil.makeAbsolutePath(expWorkspaceDir, workspace);
             String expSettingsDir = EnvUtil.expandEnvVar(getSettingsDir(), envVars, workspace.getRemote());
@@ -155,12 +155,12 @@ public class StartETBuilder extends AbstractToolBuilder {
                 ETLogPublisher.RunListenerImpl.onStarted(expSettingsPath, listener);
             }
 
-            // Verify selected ECU-TEST installation
+            // Verify selected ecu.test installation
             if (!isInstallationVerified(envVars)) {
                 setInstallation(configureToolInstallation(workspace.toComputer(), listener, envVars));
             }
 
-            // Register ECU-TEST COM server
+            // Register ecu.test COM server
             final String toolName = getInstallation().getName();
             if (getInstallation().isRegisterComServer()) {
                 final String installPath = getInstallation().getComExecutable(launcher);
@@ -168,7 +168,7 @@ public class StartETBuilder extends AbstractToolBuilder {
                 comClient.start(false, workspace, launcher, listener);
             }
 
-            // Start selected ECU-TEST
+            // Start selected ecu.test
             final String installPath = getInstallation().getExecutable(launcher);
             final ETClient etClient = new ETClient(toolName, installPath, expWorkspaceDir, expSettingsDir,
                 expTimeout, isDebugMode());
@@ -188,7 +188,7 @@ public class StartETBuilder extends AbstractToolBuilder {
     }
 
     /**
-     * Checks whether the ECU-TEST workspace and settings directory exist.
+     * Checks whether the ecu.test workspace and settings directory exist.
      *
      * @param workspacePath the workspace path
      * @param settingsPath  the settings path
@@ -199,11 +199,11 @@ public class StartETBuilder extends AbstractToolBuilder {
     private void checkWorkspace(final FilePath workspacePath, final FilePath settingsPath)
         throws IOException, InterruptedException, ETPluginException {
         if (!workspacePath.exists()) {
-            throw new ETPluginException(String.format("ECU-TEST workspace at %s does not exist!",
+            throw new ETPluginException(String.format("ecu.test workspace at %s does not exist!",
                 workspacePath.getRemote()));
         }
         if (!settingsPath.exists()) {
-            throw new ETPluginException(String.format("ECU-TEST settings directory at %s does not exist!",
+            throw new ETPluginException(String.format("ecu.test settings directory at %s does not exist!",
                 settingsPath.getRemote()));
         }
     }

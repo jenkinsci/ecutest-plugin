@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Builder providing the export of one or multiple ECU-TEST packages.
+ * Builder providing the export of one or multiple ecu.test packages.
  */
 public class ExportPackageBuilder extends AbstractExportBuilder {
 

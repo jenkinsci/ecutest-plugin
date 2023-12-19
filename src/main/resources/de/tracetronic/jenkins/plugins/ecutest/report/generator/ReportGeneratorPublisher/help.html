@@ -1,12 +1,12 @@
 <!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
+  Copyright (c) 2015-2023 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
 
 <div>
     <p>Publishes and generates reports by configuration of predefined and/or custom report generators.<br/>
-        These reports will be generated for all configured ECU-TEST packages or projects in this job.</p>
+        These reports will be generated for all configured ecu.test packages or projects in this job.</p>
     <strong>Pipeline usage</strong>
     <dl>Signatures:
         <dd>
@@ -29,18 +29,18 @@ ETInstance.publishGenerators(Map&lt;String, Object&gt; settings) : void
     <dl>Examples:
         <dd>
             <pre>
-publishGenerators toolName: 'ECU-TEST', generators: [[name: 'JSON']]
+publishGenerators toolName: 'ecu.test', generators: [[name: 'JSON']]
             </pre>
             <pre>
-def instance = ET.installation('ECU-TEST')
+def instance = ET.installation('ecu.test')
 publishGenerators installation: instance.installation, generators: [[name: 'JSON']]
             </pre>
             <pre>
-def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+def instance = ET.newInstallation('ecu.test', 'C:\\Program Files\\ECU-TEST 8.0')
 instance.publishGenerators([[name: 'JSON']], [[name: 'Custom-JSON']])
             </pre>
             <pre>
-def instance = ET.newInstallation toolName: 'ECU-TEST', installPath: C:\\Program Files\\ECU-TEST 8.0'
+def instance = ET.newInstallation toolName: 'ecu.test', installPath: C:\\Program Files\\ECU-TEST 8.0'
 instance.publishGenerators generators: [[name: 'JSON']], customGenerators: [[name: 'Custom-JSON']], allowMissing: true, runOnFailed: true, archiving: true, keepAll: true
             </pre>
         </dd>

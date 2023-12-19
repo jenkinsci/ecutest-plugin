@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -27,7 +27,7 @@ import java.io.IOException;
 public abstract class AbstractTMSClient {
 
     /**
-     * Logs in to preconfigured test management service in ECU-TEST.
+     * Logs in to preconfigured test management service in ecu.test.
      *
      * @param credentials the credentials
      * @param launcher    the launcher
@@ -42,7 +42,7 @@ public abstract class AbstractTMSClient {
     }
 
     /**
-     * Logs out from preconfigured test management service in ECU-TEST.
+     * Logs out from preconfigured test management service in ecu.test.
      *
      * @param launcher the launcher
      * @param listener the listener
@@ -55,10 +55,10 @@ public abstract class AbstractTMSClient {
     }
 
     /**
-     * Checks the currently running ECU-TEST version for compatibility reasons and
+     * Checks the currently running ecu.test version for compatibility reasons and
      * tests whether the test management module is available.
      *
-     * @param minVersion the minimum required ECU-TEST version
+     * @param minVersion the minimum required ecu.test version
      * @param workspace  the workspace
      * @param launcher   the launcher
      * @param listener   the listener
@@ -79,7 +79,7 @@ public abstract class AbstractTMSClient {
 
     /**
      * {@link Callable} providing remote access to determine whether the test management module is available in
-     * ECU-TEST.
+     * ecu.test.
      */
     private static final class CompatibleTMSCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
@@ -91,7 +91,7 @@ public abstract class AbstractTMSClient {
         /**
          * Instantiates a {@link CompatibleTMSCallable}.
          *
-         * @param minVersion the minimum required ECU-TEST version
+         * @param minVersion the minimum required ecu.test version
          * @param listener   the listener
          */
         CompatibleTMSCallable(final ToolVersion minVersion, final TaskListener listener) {
@@ -104,21 +104,21 @@ public abstract class AbstractTMSClient {
             boolean isAvailable = false;
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
-            // Check ECU-TEST version and TMS module
+            // Check ecu.test version and TMS module
             final String progId = ETComProperty.getInstance().getProgId();
             try (ETComClient comClient = new ETComClient(progId)) {
                 final String comVersion = comClient.getVersion();
                 final ToolVersion comToolVersion = ToolVersion.parse(comVersion);
                 if (comToolVersion.compareTo(minVersion) < 0) {
                     logger.logError(String.format(
-                        "The configured ECU-TEST version %s does not support this test management method. "
-                            + "Please use at least ECU-TEST %s!", comVersion, minVersion.toMicroString()));
+                        "The configured ecu.test version %s does not support this test management method. "
+                            + "Please use at least ecu.test %s!", comVersion, minVersion.toMicroString()));
                 } else if (comClient.getTestManagement().isAvailable()) {
                     isAvailable = true;
                 }
             } catch (final ETComException e) {
-                logger.logError("The test management module is not available in running ECU-TEST instance! "
-                    + "Please check the ECU-TEST log files for more details.");
+                logger.logError("The test management module is not available in running ecu.test instance! "
+                    + "Please check the ecu.test log files for more details.");
                 logger.logComException(e);
             }
             return isAvailable;

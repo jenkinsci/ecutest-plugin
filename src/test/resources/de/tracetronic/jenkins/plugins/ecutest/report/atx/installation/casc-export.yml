@@ -46,10 +46,13 @@ installations:
     - atxTextSetting:
         group: CONNECTION
         name: "uploadSettings"
-    - atxBooleanSetting:
+    - atxTextSetting:
         group: CONNECTION
         name: "useSettingsFromServer"
-        value: false
+        value: "Never"
+    - atxTextSetting:
+        group: CONNECTION
+        name: "useSettingsFromServerKeyword"
     - atxBooleanSetting:
         group: UPLOAD
         name: "uploadToServer"
@@ -269,5 +272,5 @@ installations:
         group: SPECIAL
         name: "captureExecutionTime"
         value: true
-  name: "TEST-GUIDE"
-  toolName: "ECU-TEST"
+  name: "test.guide"
+  toolName: "ecu.test"

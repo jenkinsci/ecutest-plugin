@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -30,5 +30,5 @@ public abstract class AbstractDslExtension extends ContextExtensionPoint {
     /**
      * Exception message for invalid tool installation option.
      */
-    protected static final String NO_INSTALL_MSG = "'%s' is not in the list of configured ECU-TEST installations!";
+    protected static final String NO_INSTALL_MSG = "'%s' is not in the list of configured ecu.test installations!";
 }

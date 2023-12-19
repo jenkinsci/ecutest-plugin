@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -108,7 +108,7 @@ public class ATXNewServerStep extends Step {
 
         @Override
         public String getDisplayName() {
-            return "Return new TEST-GUIDE server";
+            return "Return new test.guide server";
         }
 
         @Override

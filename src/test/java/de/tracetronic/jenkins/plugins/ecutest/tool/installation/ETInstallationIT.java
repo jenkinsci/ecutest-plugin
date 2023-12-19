@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -35,7 +35,7 @@ public class ETInstallationIT extends IntegrationTestBase {
         assertEquals(1, installations.length);
 
         final ETInstallation inst = installations[0];
-        assertEquals("ECU-TEST", inst.getName());
+        assertEquals("ecu.test", inst.getName());
         assertEquals("C:\\ECU-TEST", inst.getHome());
         assertEquals("ECU-TEST.Application", inst.getProgId());
         assertFalse(inst.isRegisterComServer());
@@ -49,7 +49,7 @@ public class ETInstallationIT extends IntegrationTestBase {
         assertEquals(1, installations.length);
 
         final ETInstallation inst = installations[0];
-        assertEquals("ECU-TEST", inst.getName());
+        assertEquals("ecu.test", inst.getName());
         assertEquals("C:\\ECU-TEST", inst.getHome());
         assertEquals("ECU-TEST6.Application", inst.getProgId());
         assertFalse(inst.isRegisterComServer());
@@ -71,7 +71,7 @@ public class ETInstallationIT extends IntegrationTestBase {
         assertEquals(1, installations.length);
 
         final ETInstallation inst = installations[0];
-        assertEquals("ECU-TEST", inst.getName());
+        assertEquals("ecu.test", inst.getName());
         assertEquals("C:\\ECU-TEST", inst.getHome());
         assertEquals("ECU-TEST.Application", inst.getProgId());
     }
@@ -80,18 +80,18 @@ public class ETInstallationIT extends IntegrationTestBase {
     public void testGlobalConfigPresence() throws Exception {
         final HtmlPage page = getWebClient().goTo("configureTools");
         jenkins.assertXPath(page,
-            "//tr[@name='de-tracetronic-jenkins-plugins-ecutest-tool-installation-ETInstallation']");
+            "//div[@name='de-tracetronic-jenkins-plugins-ecutest-tool-installation-ETInstallation']");
     }
 
     @Test
     public void testFormRoundTrip() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", Collections
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", Collections
             .singletonList(new ETToolProperty("ECU-TEST6.Application", 120, true))));
 
         final ToolLocationNodeProperty property = new ToolLocationNodeProperty(
-            new ToolLocationNodeProperty.ToolLocation(etDescriptor, "ECU-TEST", "C:\\ECU-TEST"));
+            new ToolLocationNodeProperty.ToolLocation(etDescriptor, "ecu.test", "C:\\ECU-TEST"));
         final DumbSlave agent = jenkins.createSlave("agent", new EnvVars());
         agent.getNodeProperties().add(property);
 
@@ -106,7 +106,7 @@ public class ETInstallationIT extends IntegrationTestBase {
 
         final ToolLocationNodeProperty.ToolLocation location = prop.getLocations().get(0);
         assertEquals(etDescriptor, location.getType());
-        assertEquals("ECU-TEST", location.getName());
+        assertEquals("ecu.test", location.getName());
         assertEquals("C:\\ECU-TEST", location.getHome());
     }
 
@@ -118,7 +118,7 @@ public class ETInstallationIT extends IntegrationTestBase {
 
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", null));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", null));
         final ETInstallation[] installations = etDescriptor.getInstallations();
         assertEquals(1, installations.length);
 
@@ -137,7 +137,7 @@ public class ETInstallationIT extends IntegrationTestBase {
 
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", null));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", null));
         final ETInstallation[] installations = etDescriptor.getInstallations();
         assertEquals(1, installations.length);
 
@@ -156,7 +156,7 @@ public class ETInstallationIT extends IntegrationTestBase {
 
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", null));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", null));
         final ETInstallation[] installations = etDescriptor.getInstallations();
         assertEquals(1, installations.length);
 

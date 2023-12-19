@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -22,12 +22,12 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**
- * Builder providing the tear down of ECU-TEST.
+ * Builder providing the tear down of ecu.test.
  */
 public class StopETBuilder extends AbstractToolBuilder {
 
     /**
-     * Defines the default timeout to stop ECU-TEST.
+     * Defines the default timeout to stop ecu.test.
      */
     public static final int DEFAULT_TIMEOUT = 30;
 
@@ -49,13 +49,13 @@ public class StopETBuilder extends AbstractToolBuilder {
     @Override
     public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
                             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
-        // Verify selected ECU-TEST installation
+        // Verify selected ecu.test installation
         final EnvVars envVars = run.getEnvironment(listener);
         if (!isInstallationVerified(envVars)) {
             setInstallation(configureToolInstallation(workspace.toComputer(), listener, envVars));
         }
 
-        // Stop selected ECU-TEST
+        // Stop selected ecu.test
         final String toolName = envVars.expand(getInstallation().getName());
         final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), envVars,
             String.valueOf(DEFAULT_TIMEOUT)));

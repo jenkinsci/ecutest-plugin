@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -106,7 +106,7 @@ public class TestEnvInvisibleAction extends InvisibleAction {
      */
     public enum TestType {
         /**
-         * ECU-TEST package or project type.
+         * ecu.test package or project type.
          */
         PACKAGE, PROJECT
     }

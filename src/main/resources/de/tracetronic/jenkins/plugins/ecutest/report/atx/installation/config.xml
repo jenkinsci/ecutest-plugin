@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright (c) 2015-2020 TraceTronic GmbH
+  Copyright (c) 2015-2023 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
@@ -108,14 +108,14 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Eindeutige Projekt-Id in TEST-GUIDE. Muss
-                            angegeben werden, wenn mehr als ein Projekt in einer TEST-GUIDE
+                        <DVALUE xsi:type="string">Eindeutige Projekt-Id in test.guide. Muss
+                            angegeben werden, wenn mehr als ein Projekt in einer test.guide
                             Instanz verwaltet wird.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Unique project id in TEST-GUIDE. Have to
-                            specified, if more than one project is managed in one TEST-GUIDE
+                        <DVALUE xsi:type="string">Unique project id in test.guide. Have to
+                            specified, if more than one project is managed in one test.guide
                             instance.
                         </DVALUE>
                     </ELEMENT>
@@ -129,7 +129,7 @@
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Authentifizierungsschlüssel für den Upload
                             zum Server (nur bei aktivierter Authentifizierung notwendig).
-                            Kann im TEST-GUIDE unter dem Benutzerprofil abgerufen werden.
+                            Kann im test.guide unter dem Benutzerprofil abgerufen werden.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
@@ -150,14 +150,14 @@
                         <DVALUE xsi:type="string">Relativer Pfad im Workspace zu einer JSON
                             Datei mit den Verbindungseinstellungen für den Upload. Ein
                             Beispiel und weitere Erklärungen sind im Benutzerhandbuch
-                            von TEST-GUIDE enthalten. Diese Option ist aktuell nur bei
+                            von test.guide enthalten. Diese Option ist aktuell nur bei
                             automatisiertem Report Upload sinnvoll nutzbar.</DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Relative path in the workspace of a json
                             file with the upload connection properties. An Exmaple and
                             further explanations can be found in the user documentation of
-                            TEST-GUIDE. This option is currently only useful with automated
+                            test.guide. This option is currently only useful with automated
                             report upload.</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -171,7 +171,7 @@
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Always (ehemals True): alle Einstellungen
                             für die
-                            ATX-Generierung vom TEST-GUIDE Server abfragen.
+                            ATX-Generierung vom test.guide Server abfragen.
                             WhereKeyword: nur die Einstellungen vom Server übernehmen, welche
                             den
                             Wert der Einstellung "useSettingsFromServerKeyword" haben.
@@ -183,7 +183,7 @@
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Always (formerly True): apply all settings
                             for the
-                            ATX generation from the TEST-GUIDE server.
+                            ATX generation from the test.guide server.
                             WhereKeyword:
                             only apply settings from the server, which have the value
                             of the
@@ -209,7 +209,7 @@
                             das hier definierte
                             Schlüsselwort gesetzt
                             ist, die Konfiguration
-                            vom TEST-GUIDE Server übernommen.</DVALUE>
+                            vom test.guide Server übernommen.</DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Keyword that is used when the
@@ -217,7 +217,7 @@
                             setting is set to "WhereKeyword": In this
                             case the configuration
                             supplied by
-                            the TEST-GUIDE server is used
+                            the test.guide server is used
                             for settings where this keyword is
                             used.</DVALUE>
                     </ELEMENT>
@@ -247,11 +247,11 @@
                         <DVALUE xsi:type="string">Port des konfigurierten ResourceAdapter
                             "TestGuideUploadPlugin" auf dem diesem Computer.
                             Der Wert "0" deaktiviert die Funktion.
-                            Diese Option aktiviert den Upload zur TEST-GUIDE Instanz über das
+                            Diese Option aktiviert den Upload zur test.guide Instanz über das
                             "TestGuideUploadPlugin" des ResourceAdapters auf diesem Computer.
                             Die erzeugten Reports werden beim ResourceAdapter in eine
                             Warteschlange eingereiht und nacheinander hochgeladen.
-                            Hierdurch ist ECU-TEST zeitnah wieder bereit für Testausführungen.
+                            Hierdurch ist ecu.test zeitnah wieder bereit für Testausführungen.
                             Weitere Informationen sind in der Beispielkonfiguration des
                             ResourceAdapters enthalten.</DVALUE>
                     </ELEMENT>
@@ -259,11 +259,11 @@
                         <DVALUE xsi:type="string">The port of the configured ResourceAdapter
                             "TestGuideUploadPlugin" on this computer.
                             A value of "0" disables the function.
-                            This option enables the upload to the TEST-GUIDE instance via the
+                            This option enables the upload to the test.guide instance via the
                             "TestGuideUploadPlugin" of the ResourceAdapter on this computer.
                             The generated reports are stored at the ResourceAdapter in a queue
                             and uploaded one after the other.
-                            This way ECU-TEST is quickly available again for test executions.
+                            This way ecu.test is quickly available again for test executions.
                             For details, refer to the included sample configuration of the
                             ResourceAdapter.</DVALUE>
                     </ELEMENT>
@@ -276,15 +276,15 @@
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">True, wenn der Upload der Daten asynchron
-                            mit TEST-GUIDE geschehen soll, damit die Verbindungsdauern zu
-                            TEST-GUIDE kurz sind, sonst False. Die Empfehlung ist einen
+                            mit test.guide geschehen soll, damit die Verbindungsdauern zu
+                            test.guide kurz sind, sonst False. Die Empfehlung ist einen
                             asynchronen Upload vorzunehmen.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True if the data upload is to be
-                            asynchronous with TEST-GUIDE so that the connection times to
-                            TEST-GUIDE are short, otherwise False. The recommendation is to
+                            asynchronous with test.guide so that the connection times to
+                            test.guide are short, otherwise False. The recommendation is to
                             perform an asynchronous upload.
                         </DVALUE>
                     </ELEMENT>
@@ -296,9 +296,9 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Anzahl der Uploadversuche, wenn TEST-GUIDE
+                        <DVALUE xsi:type="string">Anzahl der Uploadversuche, wenn test.guide
                             z.B. gerade hochfährt oder sich im Wartungsmodus befindet.
-                            TEST-GUIDE sendet dabei einen Zeitpunkt (z.B. in 5min), ab dem
+                            test.guide sendet dabei einen Zeitpunkt (z.B. in 5min), ab dem
                             ein Client sich wieder melden darf. Bei 42 Versuchen mit einer
                             Wartezeit von 5min bedeutet dies, 3,5h lang den Upload zu
                             versuchen. Ein Wert kleiner oder gleich 0 resultiert in unendlich
@@ -306,8 +306,8 @@
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Number of upload tries, e.g. if TEST-GUIDE
-                            is still starting up or is in maintenance mode. TEST-GUIDE sends
+                        <DVALUE xsi:type="string">Number of upload tries, e.g. if test.guide
+                            is still starting up or is in maintenance mode. test.guide sends
                             a point in time (e.g. in 5min) after that a client should retry.
                             With 42 tries and a waiting time of 5min, this means that the
                             upload is tried for 3.5h. A value of less than or equal to 0
@@ -328,7 +328,7 @@
                             False. Achtung: Bei Aktivierung
                             dauert die Generierung der ATX-Zip
                             länger und auch die
-                            Verarbeitungsdauer auf TEST-GUIDE Seite nimmt
+                            Verarbeitungsdauer auf test.guide Seite nimmt
                             zu.
                         </DVALUE>
                     </ELEMENT>
@@ -336,7 +336,7 @@
                         <DVALUE xsi:type="string">True, if the data is to be extra
                             compressed before uploading (at minimum bandwidth), otherwise
                             False. Attention: With activation the generation of the ATX-Zip
-                            takes longer and also the processing time on the TEST-GUIDE side
+                            takes longer and also the processing time on the test.guide side
                             increases.
                         </DVALUE>
                     </ELEMENT>
@@ -530,13 +530,13 @@
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">True, wenn die erstellten Plots aus der
-                            Trace-Analyse für die Anzeige in TEST-GUIDE archviert werden
+                            Trace-Analyse für die Anzeige in test.guide archviert werden
                             sollen, sonst False
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True, if you want archive trace analysis
-                            plots to show in TEST-GUIDE, otherwise False.
+                            plots to show in test.guide, otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -548,14 +548,14 @@
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">True, wenn die erstellten Bilder aus den
-                            Bild-Lesen Testschritten für die Anzeige in TEST-GUIDE erfasst
+                            Bild-Lesen Testschritten für die Anzeige in test.guide erfasst
                             werden sollen, sonst False
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True, if the created images from the
                             image-read test steps should be captured for viewing in
-                            TEST-GUIDE, otherwise False
+                            test.guide, otherwise False
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -590,7 +590,7 @@
                         <DVALUE xsi:type="string">Präfix für den Dateinamen, welcher für
                             die Option 'archiveMiscFiles' angegeben werden kann z.B.
                             MyPrefix_ -> MyPrefix_2019-04-24_161212.zip.
-                            Damit kann beim Upload in TEST-GUIDE geprüft werden,
+                            Damit kann beim Upload in test.guide geprüft werden,
                             ob die erforderliche Zip-Datei mit erfasst wurde.
                         </DVALUE>
                     </ELEMENT>
@@ -598,7 +598,7 @@
                         <DVALUE xsi:type="string">Prefix for the file name, which can be
                             specified for the option 'archiveMiscFiles' e.g. MyPrefix_ ->
                             MyPrefix_2019-04-24_161212.zip. This allows you to check if the
-                            required zip file has been included when uploading to TEST-GUIDE.
+                            required zip file has been included when uploading to test.guide.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -611,12 +611,12 @@
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">True, wenn nur dann die 'misc files'
                             archiviert werden sollen, wenn sich der ausgewählt Testreport in
-                            einem ECU-TEST Testreport-Verzeichnis befindet, sonst False.
+                            einem ecu.test Testreport-Verzeichnis befindet, sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True, if you only want archive 'misc
-                            files' which are in a ECU-TEST 'test report directory' of the
+                            files' which are in a ecu.test 'test report directory' of the
                             given test report, otherwise False.
                         </DVALUE>
                     </ELEMENT>

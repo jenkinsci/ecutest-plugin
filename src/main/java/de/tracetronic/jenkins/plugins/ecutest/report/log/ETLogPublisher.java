@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -33,17 +33,17 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Publisher parsing the ECU-TEST log files and providing links to saved {@link ETLogReport}s.
+ * Publisher parsing the ecu.test log files and providing links to saved {@link ETLogReport}s.
  */
 public class ETLogPublisher extends AbstractReportPublisher {
 
     /**
-     * File name of the standard ECU-TEST log file.
+     * File name of the standard ecu.test log file.
      */
     public static final String INFO_LOG_NAME = "ECU_TEST_OUT.log";
 
     /**
-     * File name of the error ECU-TEST log file.
+     * File name of the error ecu.test log file.
      */
     public static final String ERROR_LOG_NAME = "ECU_TEST_ERR.log";
 
@@ -107,7 +107,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
     public void performReport(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
                               final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
         final TTConsoleLogger logger = getLogger();
-        logger.logInfo("Publishing ECU-TEST logs...");
+        logger.logInfo("Publishing ecu.test logs...");
 
         if (isSkipped(false, run, launcher)) {
             return;
@@ -139,7 +139,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
                             }
                         } catch (final IOException e) {
                             Util.displayIOException(e, listener);
-                            logger.logError("Failed publishing ECU-TEST logs.");
+                            logger.logError("Failed publishing ecu.test logs.");
                             run.setResult(Result.FAILURE);
                             return;
                         }
@@ -158,7 +158,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
                             if (isAllowMissing()) {
                                 continue;
                             } else {
-                                logger.logError(String.format("Specified ECU-TEST log file '%s' does not exist.",
+                                logger.logError(String.format("Specified ecu.test log file '%s' does not exist.",
                                     logFile));
                                 run.setResult(Result.FAILURE);
                                 return;
@@ -166,7 +166,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
                         }
                     } catch (final IOException e) {
                         Util.displayIOException(e, listener);
-                        logger.logError("Failed publishing ECU-TEST logs.");
+                        logger.logError("Failed publishing ecu.test logs.");
                         run.setResult(Result.FAILURE);
                         return;
                     }
@@ -187,14 +187,14 @@ public class ETLogPublisher extends AbstractReportPublisher {
                 setBuildResult(run, logReports);
             }
         } else {
-            logger.logInfo("Archiving ECU-TEST logs is disabled.");
+            logger.logInfo("Archiving ecu.test logs is disabled.");
         }
 
-        logger.logInfo("ECU-TEST logs published successfully.");
+        logger.logInfo("ecu.test logs published successfully.");
     }
 
     /**
-     * Parses the ECU-TEST log file.
+     * Parses the ecu.test log file.
      *
      * @param logFile          the log file
      * @param archiveTargetDir the archive target directory
@@ -307,22 +307,22 @@ public class ETLogPublisher extends AbstractReportPublisher {
         logger.logInfo("- Parsing log files...");
         if (totalErrors > 0 && isFailedOnError()) {
             logger.logInfo(String.format(
-                "-> %d error(s) found in the ECU-TEST logs, setting build status to FAILURE!",
+                "-> %d error(s) found in the ecu.test logs, setting build status to FAILURE!",
                 totalErrors));
             run.setResult(Result.FAILURE);
         } else if (totalWarnings > 0 && isUnstableOnWarning()) {
             logger.logInfo(String.format(
-                "-> %d warning(s) found in the ECU-TEST logs, setting build status to UNSTABLE!",
+                "-> %d warning(s) found in the ecu.test logs, setting build status to UNSTABLE!",
                 totalWarnings));
             run.setResult(Result.UNSTABLE);
         } else {
-            logger.logInfo(String.format("-> %d warning(s) and %d error(s) found in the ECU-TEST logs.",
+            logger.logInfo(String.format("-> %d warning(s) and %d error(s) found in the ecu.test logs.",
                 totalWarnings, totalErrors));
         }
     }
 
     /**
-     * Builds a list of the entire ECU-TEST log files for archiving.
+     * Builds a list of the entire ecu.test log files for archiving.
      *
      * @param run       the run
      * @param workspace the workspace
@@ -406,14 +406,14 @@ public class ETLogPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Listener that can be notified when a build is started to delete previous ECU-TEST log files.
+     * Listener that can be notified when a build is started to delete previous ecu.test log files.
      */
     public static final class RunListenerImpl {
 
         /**
-         * Deletes previous ECU-TEST log files.
+         * Deletes previous ecu.test log files.
          *
-         * @param workspace the ECU-TEST workspace containing log files
+         * @param workspace the ecu.test workspace containing log files
          * @param listener  the listener
          */
         public static void onStarted(final FilePath workspace, final TaskListener listener) {
@@ -429,7 +429,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
                     }
                 } catch (IOException | InterruptedException e) {
                     final TTConsoleLogger logger = new TTConsoleLogger(listener);
-                    logger.logWarn("Failed deleting ECU-TEST log files: " + e.getMessage());
+                    logger.logWarn("Failed deleting ecu.test log files: " + e.getMessage());
                 }
             }
         }

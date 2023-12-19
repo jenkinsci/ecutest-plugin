@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -42,12 +42,12 @@ public class StartTSBuilderIT extends IntegrationTestBase {
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
     }
 
     @Test
     public void testDefaultConfigRoundTripStep() throws Exception {
-        final StartTSBuilder before = new StartTSBuilder("ECU-TEST");
+        final StartTSBuilder before = new StartTSBuilder("ecu.test");
 
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
@@ -60,7 +60,7 @@ public class StartTSBuilderIT extends IntegrationTestBase {
 
     @Test
     public void testConfigRoundTripStep() throws Exception {
-        final StartTSBuilder before = new StartTSBuilder("ECU-TEST");
+        final StartTSBuilder before = new StartTSBuilder("ecu.test");
         before.setToolLibsIni("C:\\ToolLibs.ini");
         before.setTcpPort("5017");
         before.setTimeout("120");
@@ -78,7 +78,7 @@ public class StartTSBuilderIT extends IntegrationTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final StartTSBuilder builder = new StartTSBuilder("ECU-TEST");
+        final StartTSBuilder builder = new StartTSBuilder("ecu.test");
         builder.setToolLibsIni("C:\\ToolLibs.ini");
         builder.setTcpPort("5017");
         builder.setTimeout("120");
@@ -88,7 +88,7 @@ public class StartTSBuilderIT extends IntegrationTestBase {
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.StartTSBuilder_DisplayName());
         jenkins.assertXPath(page, "//select[@name='toolName']");
-        jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
+        jenkins.assertXPath(page, "//option[@value='ecu.test']");
         WebAssert.assertInputPresent(page, "_.timeout");
         WebAssert.assertInputContainsValue(page, "_.timeout", "120");
         WebAssert.assertInputPresent(page, "_.toolLibsIni");
@@ -101,7 +101,7 @@ public class StartTSBuilderIT extends IntegrationTestBase {
     @Test
     public void testToolId() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final StartTSBuilder builder = new StartTSBuilder("ECU-TEST");
+        final StartTSBuilder builder = new StartTSBuilder("ecu.test");
         project.getBuildersList().add(builder);
 
         final FreeStyleBuild build = mock(FreeStyleBuild.class);
@@ -117,7 +117,7 @@ public class StartTSBuilderIT extends IntegrationTestBase {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
                 .getDescriptorByType(ETInstallation.DescriptorImpl.class);
 
-        final ETInstallation installation = new ETInstallation("ECUT-TEST2", "C:\\ECU-TEST2",
+        final ETInstallation installation = new ETInstallation("ecu.test2", "C:\\ECU-TEST2",
                 JenkinsRule.NO_PROPERTIES);
         final StartTSBuilder builder = new StartTSBuilder("${ECUTEST}");
         builder.setInstallation(installation);
@@ -129,7 +129,7 @@ public class StartTSBuilderIT extends IntegrationTestBase {
                 private static final long serialVersionUID = 1L;
 
                 {
-                    put("ECUTEST", "ECU-TEST");
+                    put("ECUTEST", "ecu.test");
                 }
             }));
 

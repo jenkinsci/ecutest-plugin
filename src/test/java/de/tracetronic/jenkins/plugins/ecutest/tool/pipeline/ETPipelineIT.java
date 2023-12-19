@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -32,7 +32,7 @@ public class ETPipelineIT extends IntegrationTestBase {
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", Collections
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", Collections
             .singletonList(new ETToolProperty("ECU-TEST.Application.8.0", 120, false))));
 
         final ScriptApproval scriptApproval = ScriptApproval.get();

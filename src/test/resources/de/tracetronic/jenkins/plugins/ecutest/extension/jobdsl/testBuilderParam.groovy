@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -42,6 +42,7 @@ def strPackageDirPath = 'Subject/TestDir'
 def strProjectPath = 'Root/Test'
 def strProjectDirPath = 'Root/TestDir'
 def bImportMissingPackages = true
+def projectId = '1000'
 def bCreateNewPath = true
 
 freeStyleJob("${strJobName}") {
@@ -169,12 +170,13 @@ freeStyleJob("${strJobName}") {
                 importConfigPath("${strImportPath}")
                 replaceFiles(bReplaceFiles)
             }
-            importFromTMS("${strCredentialsId}", "${strProjectPath}", "${strImportPath}", bImportMissingPackages, "${strTimeout}")
-            importFromTMS("${strCredentialsId}", "${strProjectPath}") {
+            importFromTMS("${strCredentialsId}", "${strProjectPath}", "${strImportPath}", bImportMissingPackages,
+                "${strTimeout}", "${projectId}")
+            importFromTMS("${strCredentialsId}", "${strProjectPath}", {
                 importPath("${strImportPath}")
                 importMissingPackages(bImportMissingPackages)
                 timeout(intTimeout)
-            }
+            }, "${projectId}")
             importFromTMSDir("${strCredentialsId}", "${strProjectDirPath}", "${strImportPath}", "${strTimeout}")
             importFromTMSDir("${strCredentialsId}", "${strProjectDirPath}") {
                 importPath("${strImportPath}")

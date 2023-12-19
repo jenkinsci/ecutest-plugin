@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -11,7 +11,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import java.util.List;
 
 /**
- * Represents the ECU-TEST specific COMPackage API.
+ * Represents the ecu.test specific COMPackage API.
  */
 public interface ComPackage {
 

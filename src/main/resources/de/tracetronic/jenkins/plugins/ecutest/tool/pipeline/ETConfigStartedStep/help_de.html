@@ -1,11 +1,11 @@
 <!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
+  Copyright (c) 2015-2023 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
 
 <div>
-    <p>Prüft, ob die ECU-TEST-Konfigurationen bereits gestartet sind.
+    <p>Prüft, ob die ecu.test-Konfigurationen bereits gestartet sind.
         ist.</p>
     <dl>Signaturen:
         <dd>
@@ -17,7 +17,7 @@ ETInstance.isConfigStarted() : boolean
     <dl>Beispiele:
         <dd>
             <pre>
-def instance = ET.installation('ECU-TEST')
+def instance = ET.installation('ecu.test')
 boolean isConfigStarted = instance.isConfigStarted()
             </pre>
         </dd>

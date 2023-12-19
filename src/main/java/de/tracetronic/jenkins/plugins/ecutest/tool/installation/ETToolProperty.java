@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -32,7 +32,7 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
     private final String progId;
     private final int timeout;
     /**
-     * Specifies whether to register the COM server before each start of ECU-TEST.
+     * Specifies whether to register the COM server before each start of ecu.test.
      *
      * @since 2.13.0
      */
@@ -41,9 +41,9 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
     /**
      * Instantiates a new {@link ETToolProperty}.
      *
-     * @param progId            the ECU-TEST COM specific programmatic identifier
+     * @param progId            the ecu.test COM specific programmatic identifier
      * @param timeout           the current maximum COM response timeout
-     * @param registerComServer specifies whether to register the COM server before each start of ECU-TEST
+     * @param registerComServer specifies whether to register the COM server before each start of ecu.test
      */
     @DataBoundConstructor
     public ETToolProperty(final String progId, final int timeout, final boolean registerComServer) {
@@ -94,7 +94,7 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
         }
 
         /**
-         * Validates the ECU-TEST specific programmatic identifier.
+         * Validates the ecu.test specific programmatic identifier.
          *
          * @param value the programmatic identifier
          * @return the form validation

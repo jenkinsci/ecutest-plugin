@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -49,7 +49,7 @@ public class TMSPublisherIT extends IntegrationTestBase {
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
 
         SystemCredentialsProvider.getInstance().getCredentials().add(new UsernamePasswordCredentialsImpl(
             CredentialsScope.GLOBAL, "credentialsId", "test", "user", "password"));
@@ -57,7 +57,7 @@ public class TMSPublisherIT extends IntegrationTestBase {
 
     @Test
     public void testDefaultConfigRoundTripStep() throws Exception {
-        final TMSPublisher before = new TMSPublisher("ECU-TEST", "credentialsId");
+        final TMSPublisher before = new TMSPublisher("ecu.test", "credentialsId");
 
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
@@ -70,7 +70,7 @@ public class TMSPublisherIT extends IntegrationTestBase {
 
     @Test
     public void testConfigRoundTripStep() throws Exception {
-        final TMSPublisher before = new TMSPublisher("ECU-TEST", "credentialsId");
+        final TMSPublisher before = new TMSPublisher("ecu.test", "credentialsId");
         before.setTimeout("600");
         before.setAllowMissing(false);
         before.setRunOnFailed(false);
@@ -87,7 +87,7 @@ public class TMSPublisherIT extends IntegrationTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final TMSPublisher publisher = new TMSPublisher("ECU-TEST", "credentialsId");
+        final TMSPublisher publisher = new TMSPublisher("ecu.test", "credentialsId");
         publisher.setTimeout("600");
         publisher.setAllowMissing(true);
         publisher.setRunOnFailed(true);
@@ -98,7 +98,7 @@ public class TMSPublisherIT extends IntegrationTestBase {
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.TMSPublisher_DisplayName());
         jenkins.assertXPath(page, "//select[@name='toolName']");
-        jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
+        jenkins.assertXPath(page, "//option[@value='ecu.test']");
         jenkins.assertXPath(page, "//select[@name='_.credentialsId']");
         jenkins.assertXPath(page, "//option[@value='credentialsId']");
         WebAssert.assertInputPresent(page, "_.timeout");
@@ -113,7 +113,7 @@ public class TMSPublisherIT extends IntegrationTestBase {
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.setAssignedNode(slave);
-        final TMSPublisher publisher = new TMSPublisher("ECU-TEST", "credentialsId");
+        final TMSPublisher publisher = new TMSPublisher("ecu.test", "credentialsId");
         publisher.setAllowMissing(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -134,7 +134,7 @@ public class TMSPublisherIT extends IntegrationTestBase {
                 return false;
             }
         });
-        final TMSPublisher publisher = new TMSPublisher("ECU-TEST", "credentialsId");
+        final TMSPublisher publisher = new TMSPublisher("ecu.test", "credentialsId");
         publisher.setRunOnFailed(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -155,11 +155,11 @@ public class TMSPublisherIT extends IntegrationTestBase {
                 private static final long serialVersionUID = 1L;
 
                 {
-                    put("ECUTEST", "ECU-TEST");
+                    put("ECUTEST", "ecu.test");
                 }
             }));
 
-        assertEquals("Tool name should be resolved", "ECU-TEST",
+        assertEquals("Tool name should be resolved", "ecu.test",
             publisher.getToolInstallation(publisher.getToolName(), envVars).getName());
     }
 
@@ -200,7 +200,7 @@ public class TMSPublisherIT extends IntegrationTestBase {
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
         jenkins.assertLogContains("Publishing reports to test management system...", run);
         if (emptyResults == false) {
-            jenkins.assertLogContains("Starting ECU-TEST failed.", run);
+            jenkins.assertLogContains("Starting ecu.test failed.", run);
         } else {
             jenkins.assertLogContains("Empty test results are not allowed, setting build status to FAILURE!", run);
         }
