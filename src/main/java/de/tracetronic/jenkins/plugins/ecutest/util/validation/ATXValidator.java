@@ -478,7 +478,7 @@ public class ATXValidator extends AbstractValidator {
             final JSONObject info = jsonObject.optJSONObject("info");
             if (info != null) {
                 final String license = info.getString("license");
-                if (!license.contains("TraceTronic")) {
+                if (!license.contains("TraceTronic") && !license.contains("tracetronic")) {
                     returnValue = FormValidation.warning(Messages.ATXInstallation_InvalidServer(baseUrl));
                 } else {
                     final String version = info.getString("version");
