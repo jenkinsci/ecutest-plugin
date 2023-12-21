@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -27,7 +27,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     private static final String OPT_SETTINGS_DIR = "settingsDir";
 
     /**
-     * {@link DslExtensionMethod} providing the start up of ECU-TEST.
+     * {@link DslExtensionMethod} providing the start up of ecu.test.
      *
      * @param toolName the tool name identifying the {@link ETInstallation} to be used
      * @param closure  the nested Groovy closure
@@ -51,7 +51,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     }
 
     /**
-     * {@link DslExtensionMethod} providing the start up of ECU-TEST with default settings.
+     * {@link DslExtensionMethod} providing the start up of ecu.test with default settings.
      *
      * @param toolName the tool name identifying the {@link ETInstallation} to be used
      * @return the instance of a {@link StartETBuilder}
@@ -62,7 +62,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     }
 
     /**
-     * {@link DslExtensionMethod} providing the shut down of ECU-TEST.
+     * {@link DslExtensionMethod} providing the shut down of ecu.test.
      *
      * @param toolName the tool name identifying the {@link ETInstallation} to be used
      * @param closure  the nested Groovy closure
@@ -82,7 +82,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     }
 
     /**
-     * {@link DslExtensionMethod} providing the shut down of ECU-TEST with default settings.
+     * {@link DslExtensionMethod} providing the shut down of ecu.test with default settings.
      *
      * @param toolName the tool name identifying the {@link ETInstallation} to be used
      * @return the instance of a {@link StopETBuilder}
@@ -158,7 +158,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     }
 
     /**
-     * {@link Context} class providing ECU-TEST start up methods for the nested DSL context.
+     * {@link Context} class providing ecu.test start up methods for the nested DSL context.
      */
     public class StartETContext extends AbstractToolContext {
 
@@ -173,7 +173,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         }
 
         /**
-         * Option defining the ECU-TEST workspace directory.
+         * Option defining the ecu.test workspace directory.
          *
          * @param value the value
          */
@@ -185,7 +185,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
         }
 
         /**
-         * Option defining the ECU-TEST settings directory.
+         * Option defining the ecu.test settings directory.
          *
          * @param value the value
          */
@@ -216,7 +216,7 @@ public class ToolBuilderDslExtension extends AbstractToolBuilderDslExtension {
     }
 
     /**
-     * {@link Context} class providing ECU-TEST shut down methods for the nested DSL context.
+     * {@link Context} class providing ecu.test shut down methods for the nested DSL context.
      */
     public class StopETContext extends AbstractToolContext {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -16,7 +16,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Client to register the ECU-TEST COM server via command line execution.
+ * Client to register the ecu.test COM server via command line execution.
  */
 public class ETComRegisterClient extends AbstractToolClient {
 
@@ -37,9 +37,9 @@ public class ETComRegisterClient extends AbstractToolClient {
         logger.logInfo(String.format("Registering COM server of %s...", getToolName()));
 
         if (StringUtils.isEmpty(getInstallPath())) {
-            logger.logError("ECU-TEST COM server executable could not be found!");
+            logger.logError("ecu.test COM server executable could not be found!");
         } else if (launchProcess(launcher, listener)) {
-            logger.logInfo("ECU-TEST COM server registered successfully.");
+            logger.logInfo("ecu.test COM server registered successfully.");
             return true;
         }
         return false;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -54,21 +54,21 @@ public class ETClientTest {
 
     @Test
     public void testTypicalCmdLineArgs() {
-        final ETClient etClient = new ETClient("ECU-TEST", exe, ws, settings, 120, false);
+        final ETClient etClient = new ETClient("ecu.test", exe, ws, settings, 120, false);
         expectedArgs = Arrays.asList(exe, "--workspaceDir", ws, "-s", settings, "--startupAutomated=CreateDirs");
         ensureCreateCmdLineArgs(etClient, expectedArgs);
     }
 
     @Test
     public void testDebugCmdLineArgs() {
-        final ETClient etClient = new ETClient("ECU-TEST", exe, ws, settings, 120, true);
+        final ETClient etClient = new ETClient("ecu.test", exe, ws, settings, 120, true);
         expectedArgs = Arrays.asList(exe, "--workspaceDir", ws, "-s", settings, "-d", "--startupAutomated=CreateDirs");
         ensureCreateCmdLineArgs(etClient, expectedArgs);
     }
 
     @Test
     public void testLicenseCmdLineArgs() {
-        final ETClient etClient = new ETClient("ECU-TEST", exe, "", "", 0, false);
+        final ETClient etClient = new ETClient("ecu.test", exe, "", "", 0, false);
         etClient.setLicenseCheck(true);
         expectedArgs = Arrays.asList(exe, "--startupAutomated=True", "-q");
         ensureCreateCmdLineArgs(etClient, expectedArgs);

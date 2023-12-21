@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -52,11 +52,11 @@ public class ReportPublisherParamInstallDslExtensionIT extends AbstractDslExtens
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
 
         final ATXInstallation.DescriptorImpl atxImpl = jenkins.jenkins
             .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
-        final ATXInstallation inst = new ATXInstallation("TEST-GUIDE", "${ECUTEST}", new ATXConfig());
+        final ATXInstallation inst = new ATXInstallation("test.guide", "${ECUTEST}", new ATXConfig());
         atxImpl.setInstallations(inst);
     }
 
@@ -77,7 +77,7 @@ public class ReportPublisherParamInstallDslExtensionIT extends AbstractDslExtens
                 private static final long serialVersionUID = 1L;
 
                 {
-                    put("TESTGUIDE", "TEST-GUIDE");
+                    put("TESTGUIDE", "test.guide");
                 }
             }));
 
@@ -85,7 +85,7 @@ public class ReportPublisherParamInstallDslExtensionIT extends AbstractDslExtens
         final ATXPublisher publisher = publishers.get(ATXPublisher.class);
         assertNotNull("ATX report publisher should exist", publisher);
         assertThat(publisher.getAtxName(), is("${TESTGUIDE}"));
-        assertThat(publisher.getInstallation(envVars).getName(), is("TEST-GUIDE"));
+        assertThat(publisher.getInstallation(envVars).getName(), is("test.guide"));
         assertThat(publisher.getInstallation(envVars).getToolName(), is("${ECUTEST}"));
     }
 

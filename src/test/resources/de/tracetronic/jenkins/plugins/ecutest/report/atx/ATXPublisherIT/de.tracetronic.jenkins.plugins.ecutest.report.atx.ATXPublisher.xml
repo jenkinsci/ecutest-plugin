@@ -2,8 +2,8 @@
 <de.tracetronic.jenkins.plugins.ecutest.report.atx.ATXPublisher_-DescriptorImpl plugin="ecutest@1.0-SNAPSHOT">
   <installations>
     <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation>
-      <name>TEST-GUIDE</name>
-      <toolName>ECU-TEST 6.3.0</toolName>
+      <name>test.guide</name>
+      <toolName>ecu.test 6.3.0</toolName>
       <config>
         <configMap class="linked-hash-map">
           <entry>
@@ -51,7 +51,7 @@
               </de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting>
               <de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting>
                 <name>uploadAuthenticationKey</name>
-                <descGerman>Authentifizierungsschlüssel für den Upload zum Server (nur bei aktivierter Authentifizierung notwendig). Kann im TEST-GUIDE unter dem Benutzerprofil abgerufen werden. Wird kein Schlüssel hinterlegt wird der Guest-Benutzer automatisch verwendet.</descGerman>
+                <descGerman>Authentifizierungsschlüssel für den Upload zum Server (nur bei aktivierter Authentifizierung notwendig). Kann im test.guide unter dem Benutzerprofil abgerufen werden. Wird kein Schlüssel hinterlegt wird der Guest-Benutzer automatisch verwendet.</descGerman>
                 <descEnglish>Authentication key for upload to the server (only by activated authentication required). Can be found under the user profile in the TEST GUIDE. If no key is set the Guest user is automatically used.</descEnglish>
                 <defaultValue></defaultValue>
                 <currentValue class="string"></currentValue>

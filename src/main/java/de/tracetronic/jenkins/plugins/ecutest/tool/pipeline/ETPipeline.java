@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -45,7 +45,7 @@ public class ETPipeline implements Serializable {
      * Gets a {@link ETInstallation} instance by name.
      *
      * @param toolName the tool name
-     * @return the ECU-TEST installation
+     * @return the ecu.test installation
      */
     @Whitelisted
     public ETInstance installation(final String toolName) {
@@ -60,7 +60,7 @@ public class ETPipeline implements Serializable {
      * Gets a {@link ETInstallation} instance by named argument.
      *
      * @param installArgs the installation arguments
-     * @return the ECU-TEST installation
+     * @return the ecu.test installation
      */
     @Whitelisted
     public ETInstance installation(final Map<String, Object> installArgs) {
@@ -79,7 +79,7 @@ public class ETPipeline implements Serializable {
      *
      * @param toolName    the toolName name
      * @param installPath the installation path
-     * @return the ECU-TEST installation server
+     * @return the ecu.test installation server
      */
     @Whitelisted
     public ETInstance newInstallation(final String toolName, final String installPath) {
@@ -98,8 +98,8 @@ public class ETPipeline implements Serializable {
      * @param installPath       the installation path
      * @param progId            the COM programmatic identifier
      * @param timeout           the COM timeout
-     * @param registerComServer specifies whether to register the COM server before each start of ECU-TEST
-     * @return the ECU-TEST installation server
+     * @param registerComServer specifies whether to register the COM server before each start of ecu.test
+     * @return the ecu.test installation server
      */
     @Whitelisted
     public ETInstance newInstallation(final String toolName, final String installPath,
@@ -119,7 +119,7 @@ public class ETPipeline implements Serializable {
      * Creates a new {@link ETInstallation} instance with named arguments.
      *
      * @param installArgs the installation arguments
-     * @return the ECU-TEST installation
+     * @return the ecu.test installation
      */
     @Whitelisted
     public ETInstance newInstallation(final Map<String, Object> installArgs) {

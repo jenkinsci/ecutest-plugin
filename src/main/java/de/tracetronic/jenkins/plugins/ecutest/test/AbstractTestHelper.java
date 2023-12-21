@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -30,12 +30,12 @@ import java.util.List;
 public abstract class AbstractTestHelper extends Builder {
 
     /**
-     * Defines the default "Packages" directory in the ECU-TEST workspace.
+     * Defines the default "Packages" directory in the ecu.test workspace.
      */
     private static final String DEFAULT_PACKAGES_DIR = "Packages";
 
     /**
-     * Defines the default "Configurations" directory in the ECU-TEST workspace.
+     * Defines the default "Configurations" directory in the ecu.test workspace.
      */
     private static final String DEFAULT_CONFIG_DIR = "Configurations";
 
@@ -48,7 +48,7 @@ public abstract class AbstractTestHelper extends Builder {
     }
 
     /**
-     * Checks already opened ECU-TEST instances.
+     * Checks already opened ecu.test instances.
      *
      * @param launcher the launcher
      * @param listener the listener
@@ -64,7 +64,7 @@ public abstract class AbstractTestHelper extends Builder {
     }
 
     /**
-     * Tries to close already opened ECU-TEST instances via COM first.
+     * Tries to close already opened ecu.test instances via COM first.
      * If this is not successful tries to task-kill the running process.
      *
      * @param launcher the launcher
@@ -167,7 +167,7 @@ public abstract class AbstractTestHelper extends Builder {
     }
 
     /**
-     * Gets the configuration directory of the current ECU-TEST workspace by querying the settings file via COM.
+     * Gets the configuration directory of the current ecu.test workspace by querying the settings file via COM.
      *
      * @param launcher the launcher
      * @param listener the listener
@@ -187,7 +187,7 @@ public abstract class AbstractTestHelper extends Builder {
     }
 
     /**
-     * Gets the packages directory of the current ECU-TEST workspace by querying the settings file via COM.
+     * Gets the packages directory of the current ecu.test workspace by querying the settings file via COM.
      *
      * @param launcher the launcher
      * @param listener the listener
@@ -207,7 +207,7 @@ public abstract class AbstractTestHelper extends Builder {
     }
 
     /**
-     * {@link Callable} providing remote access to get a ECU-TEST workspace setting value via COM.
+     * {@link Callable} providing remote access to get a ecu.test workspace setting value via COM.
      */
     public static final class GetSettingCallable extends MasterToSlaveCallable<String, IOException> {
 

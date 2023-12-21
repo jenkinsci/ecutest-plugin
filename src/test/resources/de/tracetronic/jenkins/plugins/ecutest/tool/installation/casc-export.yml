@@ -1,6 +1,6 @@
 installations:
 - home: "C:\\ECU-TEST"
-  name: "ECU-TEST"
+  name: "ecu.test"
 - home: "C:\\Program Files\\ECU-TEST 7.2"
   name: "ECU-TEST 7.2"
   properties:

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**
- * Builder providing the execution of an ECU-TEST project.
+ * Builder providing the execution of an ecu.test project.
  */
 public class TestProjectBuilder extends AbstractTestBuilder {
 

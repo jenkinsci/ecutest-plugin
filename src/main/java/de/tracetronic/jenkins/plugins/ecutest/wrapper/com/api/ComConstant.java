@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -8,7 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.wrapper.com.api;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 
 /**
- * Represents the ECU-TEST specific COMConstant API.
+ * Represents the ecu.test specific COMConstant API.
  */
 public interface ComConstant {
 

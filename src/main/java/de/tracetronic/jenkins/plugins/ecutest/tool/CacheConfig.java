@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -24,7 +24,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Class holding the configuration for generating an ECU-TEST cache type.
+ * Class holding the configuration for generating an ecu.test cache type.
  */
 public class CacheConfig extends AbstractDescribableImpl<CacheConfig> implements ExpandableConfig, Serializable {
 

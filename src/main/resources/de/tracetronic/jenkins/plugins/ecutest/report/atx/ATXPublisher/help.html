@@ -1,12 +1,12 @@
 <!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
+  Copyright (c) 2015-2023 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
 
 <div>
-    <p>Publishes the ATX reports of all configured ECU-TEST packages or projects in this job.<br/>
-        These ATX reports are generated automatically in this post-build step and uploaded to TEST-GUIDE.</p>
+    <p>Publishes the ATX reports of all configured ecu.test packages or projects in this job.<br/>
+        These ATX reports are generated automatically in this post-build step and uploaded to test.guide.</p>
     <strong>Pipeline usage</strong>
     <dl>Signatures:
         <dd>
@@ -27,18 +27,18 @@ ATXServer.publish(Map&lt;String, Object&gt; settings) : void
     <dl>Examples:
         <dd>
             <pre>
-publishATX('TEST-GUIDE', false, false, true, true)
+publishATX('test.guide', false, false, true, true)
             </pre>
             <pre>
-def server = ATX.server('TEST-GUIDE')
+def server = ATX.server('test.guide')
 publishATX atxInstallation: server.installation
             </pre>
             <pre>
-def server = ATX.newServer('TEST-GUIDE', 'ECU-TEST')
+def server = ATX.newServer('test.guide', 'ecu.test')
 server.publish()
             </pre>
             <pre>
-def server = ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST'
+def server = ATX.newServer atxName: 'test.guide', toolName: 'ecu.test'
 server.publish allowMissing: true, runOnFailed: true, archiving: true, keepAll: true
             </pre>
         </dd>

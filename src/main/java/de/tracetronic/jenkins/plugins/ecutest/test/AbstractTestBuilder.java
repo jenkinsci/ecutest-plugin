@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -88,11 +88,11 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
             final boolean performed = performTest(run, workspace, launcher, listener);
             if (!performed) {
                 if (getExecutionConfig().isStopOnError()) {
-                    logger.logInfo("- Closing running ECU-TEST and Tool-Server instances...");
+                    logger.logInfo("- Closing running ecu.test and Tool-Server instances...");
                     if (closeETInstance(launcher, listener)) {
-                        logger.logInfo("-> ECU-TEST closed successfully.");
+                        logger.logInfo("-> ecu.test closed successfully.");
                     } else {
-                        logger.logInfo("-> No running ECU-TEST instance found.");
+                        logger.logInfo("-> No running ecu.test instance found.");
                     }
                     if (checkTSInstance(launcher, true)) {
                         logger.logInfo("-> Tool-Server closed successfully.");
@@ -127,9 +127,9 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
                                 final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
-        // Check for running ECU-TEST instance
+        // Check for running ecu.test instance
         if (!checkETInstance(launcher, listener, false)) {
-            logger.logError("No running ECU-TEST instance found, please configure one at first!");
+            logger.logError("No running ecu.test instance found, please configure one at first!");
             return false;
         }
 
@@ -147,7 +147,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
             // Determine packages directory by COM API
             final String packageDir = getPackagesDir(launcher, listener);
 
-            // Absolute packages directory, if not absolute assume relative to ECU-TEST workspace
+            // Absolute packages directory, if not absolute assume relative to ecu.test workspace
             expPkgDir = PathUtil.makeAbsolutePath(packageDir, workspace);
         }
 
@@ -172,7 +172,7 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
                 // Determine configuration directory by COM API
                 final String configDir = getConfigDir(launcher, listener);
 
-                // Absolutize configuration directory, if not absolute assume relative to ECU-TEST workspace
+                // Absolutize configuration directory, if not absolute assume relative to ecu.test workspace
                 final String expConfigDir = PathUtil.makeAbsolutePath(configDir, workspace);
                 expTbcConfigDir = IOUtils.isAbsolute(tbcFile) ? null : expConfigDir;
                 expTcfConfigDir = IOUtils.isAbsolute(tcfFile) ? null : expConfigDir;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -32,7 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Client to start and stop ECU-TEST by either COM or XML-RPC communication.
+ * Client to start and stop ecu.test by either COM or XML-RPC communication.
  */
 public class ETClient extends AbstractToolClient {
 
@@ -48,10 +48,10 @@ public class ETClient extends AbstractToolClient {
      * Instantiates a new {@link ETClient}.
      *
      * @param toolName     the tool name identifying the chosen {@link ETInstallation}.
-     * @param installPath  the ECU-TEST install path
-     * @param workspaceDir the ECU-TEST workspace directory
-     * @param settingsDir  the ECU-TEST settings directory
-     * @param timeout      the timeout to start ECU-TEST
+     * @param installPath  the ecu.test install path
+     * @param workspaceDir the ecu.test workspace directory
+     * @param settingsDir  the ecu.test settings directory
+     * @param timeout      the timeout to start ecu.test
      * @param debugMode    specifies whether to enable debug mode
      */
     public ETClient(final String toolName, final String installPath, final String workspaceDir,
@@ -70,7 +70,7 @@ public class ETClient extends AbstractToolClient {
      * Instantiates a new {@link ETClient}.
      *
      * @param toolName the tool name identifying the chosen {@link ETInstallation}.
-     * @param timeout  the timeout to start ECU-TEST
+     * @param timeout  the timeout to start ecu.test
      */
     public ETClient(final String toolName, final int timeout) {
         super(toolName, timeout);
@@ -84,7 +84,7 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
-     * Checks already opened ECU-TEST instances.
+     * Checks already opened ecu.test instances.
      *
      * @param launcher the launcher
      * @param listener the listener
@@ -99,12 +99,12 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
-     * Closes already opened ECU-TEST instances.
+     * Closes already opened ecu.test instances.
      *
      * @param launcher the launcher
      * @param listener the listener
      * @param kill     specifies whether to task-kill the running processes
-     * @return {@code true} if ECU-TEST instance has been stopped successfully
+     * @return {@code true} if ecu.test instance has been stopped successfully
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
@@ -114,7 +114,7 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
-     * Gets the COM version of currently running ECU-TEST instance.
+     * Gets the COM version of currently running ecu.test instance.
      *
      * @param launcher the launcher
      * @param listener the listener
@@ -128,11 +128,11 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
-     * Check license of ECU-TEST.
+     * Check license of ecu.test.
      *
      * @param launcher the launcher
      * @param listener the listener
-     * @return {@code true} if ECU-TEST instance has been stopped successfully
+     * @return {@code true} if ecu.test instance has been stopped successfully
      * @throws IOException          the io exception
      * @throws InterruptedException the interrupted exception
      */
@@ -193,16 +193,16 @@ public class ETClient extends AbstractToolClient {
             }
         }
 
-        // Check ECU-TEST location and architecture
+        // Check ecu.test location and architecture
         if (StringUtils.isEmpty(getInstallPath())) {
-            logger.logError("ECU-TEST executable could not be found!");
+            logger.logError("ecu.test executable could not be found!");
             return false;
         } else {
-            // Check architecture compatibility between JVM and ECU-TEST
+            // Check architecture compatibility between JVM and ecu.test
             final boolean is64BitJVM = ProcessUtil.is64BitJVM(workspace.toComputer());
             if (!checkProcessArchitecture(getInstallPath(), is64BitJVM, launcher)) {
-                logger.logError("The configured ECU-TEST executable is not compatible with running Java VM! "
-                        + "Please install a 64-bit JRE which supports 64-bit ECU-TEST installation!");
+                logger.logError("The configured ecu.test executable is not compatible with running Java VM! "
+                        + "Please install a 64-bit JRE which supports 64-bit ecu.test installation!");
                 return false;
             }
             // Launch process
@@ -218,7 +218,7 @@ public class ETClient extends AbstractToolClient {
         }
         final String comVersion = launcher.getChannel().call(new StartCallable(getTimeout(), listener));
         if (comVersion.isEmpty()) {
-            logger.logError("Could not determine ECU-TEST COM version!");
+            logger.logError("Could not determine ecu.test COM version!");
             return false;
         } else {
             version = comVersion;
@@ -226,18 +226,18 @@ public class ETClient extends AbstractToolClient {
             logger.logDebug("COM version: " + comVersion);
         }
 
-        // Check ECU-TEST version
+        // Check ecu.test version
         final ToolVersion comToolVersion = ToolVersion.parse(comVersion);
         if (comToolVersion.compareWithoutMicroTo(ETPlugin.ET_MAX_VERSION) > 0
                 || comToolVersion.compareTo(ETPlugin.ET_MIN_VERSION) < 0) {
             logger.logWarn(String.format(
-                    "The configured ECU-TEST version %s might be incompatible with this plugin. "
+                    "The configured ecu.test version %s might be incompatible with this plugin. "
                             + "Currently supported versions: %s up to %s", comVersion,
                     ETPlugin.ET_MIN_VERSION.toMinorString(), ETPlugin.ET_MAX_VERSION.toMinorString()));
         } else if (comToolVersion.compareTo(new ToolVersion(6, 3, 0)) < 0) {
             logger.logError(String.format(
-                    "The configured ECU-TEST version %s is not compatible with this plugin. "
-                            + "Please use at least ECU-TEST %s!", comVersion, ETPlugin.ET_MIN_VERSION.toMicroString()));
+                    "The configured ecu.test version %s is not compatible with this plugin. "
+                            + "Please use at least ecu.test %s!", comVersion, ETPlugin.ET_MIN_VERSION.toMicroString()));
             stop(checkProcesses, workspace, launcher, listener);
             return false;
         }
@@ -264,12 +264,12 @@ public class ETClient extends AbstractToolClient {
         if (checkProcesses) {
             final List<String> foundProcesses = checkProcesses(launcher, listener, false);
             if (foundProcesses.isEmpty()) {
-                logger.logWarn("No running ECU-TEST instance found!");
+                logger.logWarn("No running ecu.test instance found!");
                 return true;
             }
         }
 
-        // Close COM connection and stop ECU-TEST
+        // Close COM connection and stop ecu.test
         if (!DllUtil.loadLibrary(workspace.toComputer())) {
             logger.logError("Could not load JACOB library!");
             return false;
@@ -317,8 +317,8 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
-     * Checks the process architecture compatibility between ECU-TEST and underlying JVM that runs the agent. A 64-bit
-     * JVM supports both 32-bit and 64-bit ECU-TEST, while 32-bit JVM is only compatible with 32-bit ECU-TEST.
+     * Checks the process architecture compatibility between ecu.test and underlying JVM that runs the agent. A 64-bit
+     * JVM supports both 32-bit and 64-bit ecu.test, while 32-bit JVM is only compatible with 32-bit ecu.test.
      *
      * @param processPath the full process path
      * @param is64BitJVM  specifies whether the JVM supports 64-bit architecture
@@ -459,7 +459,7 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
-     * {@link Callable} providing remote access to close ECU-TEST via COM.
+     * {@link Callable} providing remote access to close ecu.test via COM.
      */
     private static final class StopCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
@@ -491,7 +491,7 @@ public class ETClient extends AbstractToolClient {
                 if (comClient.isApplicationRunning()) {
                     isTerminated = quit(progId, logger) || exit(progId, logger);
                 } else {
-                    logger.logError("ECU-TEST COM instance is not ready to use!");
+                    logger.logError("ecu.test COM instance is not ready to use!");
                 }
             } catch (final ETComException e) {
                 logger.logComException(e);
@@ -508,7 +508,7 @@ public class ETClient extends AbstractToolClient {
         }
 
         /**
-         * Tries to soft exit ECU-TEST with given timeout.
+         * Tries to soft exit ecu.test with given timeout.
          *
          * @param progId the COM programmatic identifier
          * @param logger the logger
@@ -525,7 +525,7 @@ public class ETClient extends AbstractToolClient {
         }
 
         /**
-         * Tries to hard exit ECU-TEST with given timeout.
+         * Tries to hard exit ecu.test with given timeout.
          *
          * @param progId the COM programmatic identifier
          * @param logger the logger
@@ -543,7 +543,7 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
-     * {@link Callable} providing remote access to check open ECU-TEST processes.
+     * {@link Callable} providing remote access to check open ecu.test processes.
      */
     private static final class CheckProcessCallable extends MasterToSlaveCallable<List<String>, IOException> {
 
@@ -573,7 +573,7 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
-     * {@link Callable} providing remote access to request the COM version of currently running ECU-TEST instance.
+     * {@link Callable} providing remote access to request the COM version of currently running ecu.test instance.
      */
     private static final class VersionCallable extends MasterToSlaveCallable<ToolVersion, IOException> {
 
@@ -606,7 +606,7 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
-     * {@link Callable} providing remote access to request the last loaded TBC of currently running ECU-TEST instance.
+     * {@link Callable} providing remote access to request the last loaded TBC of currently running ecu.test instance.
      */
     private static final class LastTbcCallable extends MasterToSlaveCallable<String, IOException> {
 
@@ -641,7 +641,7 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
-     * {@link Callable} providing remote access to request the last loaded TCF of currently running ECU-TEST instance.
+     * {@link Callable} providing remote access to request the last loaded TCF of currently running ecu.test instance.
      */
     private static final class LastTcfCallable extends MasterToSlaveCallable<String, IOException> {
 
@@ -675,7 +675,7 @@ public class ETClient extends AbstractToolClient {
     }
 
     /**
-     * {@link Callable} providing remote access to check architecture of ECU-TEST process against JVM architecture.
+     * {@link Callable} providing remote access to check architecture of ecu.test process against JVM architecture.
      */
     private static final class CheckProcessArchitectureCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
@@ -762,7 +762,7 @@ public class ETClient extends AbstractToolClient {
                     return comClient.isStarted();
                 } else {
                     logger.logWarn("-> Checking configuration status is not supported. "
-                            + "Please use at least ECU-TEST 8.0!");
+                            + "Please use at least ecu.test 8.0!");
                 }
             } catch (final ETComException e) {
                 logger.logComException(e);

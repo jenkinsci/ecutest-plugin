@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -33,7 +33,7 @@ public class ToolEnvActionViewIT extends IntegrationTestBase {
     @Test
     public void testWithToolEnvInvisibleAction() throws Exception {
         final int toolId = 0;
-        final ETClient etClient = new ETClient("ECU-TEST", "ECU-TEST", "workspace", "settings", 0, false);
+        final ETClient etClient = new ETClient("ecu.test", "ecu.test", "workspace", "settings", 0, false);
         final ToolEnvInvisibleAction toolEnvAction = new ToolEnvInvisibleAction(toolId, etClient);
         final FreeStyleBuild build = jenkins.createFreeStyleProject()
             .scheduleBuild2(0, null, Collections.singletonList(toolEnvAction)).get();

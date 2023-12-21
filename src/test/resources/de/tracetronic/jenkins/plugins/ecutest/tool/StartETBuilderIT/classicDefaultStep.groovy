@@ -1,3 +1,3 @@
 node('windows') {
-    step([$class: 'StartETBuilder', toolName: 'ECU-TEST'])
+    step([$class: 'StartETBuilder', toolName: 'ecu.test'])
 }

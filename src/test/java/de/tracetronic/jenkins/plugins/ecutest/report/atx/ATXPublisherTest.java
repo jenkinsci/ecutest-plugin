@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -27,15 +27,15 @@ public class ATXPublisherTest {
 
     @Test
     public void testDefaultStep() {
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
+        final ATXPublisher publisher = new ATXPublisher("test.guide");
         assertPublisher(publisher, true);
-        assertEquals("TEST-GUIDE", publisher.getAtxName());
+        assertEquals("test.guide", publisher.getAtxName());
     }
 
     @Test
     public void testNonDefaultStep() {
-        final ATXPublisher publisher = new ATXPublisher("TEST-GUIDE");
-        publisher.setAtxInstallation(new ATXInstallation("TEST-GUIDE", "ECU-TEST", new ATXConfig()));
+        final ATXPublisher publisher = new ATXPublisher("test.guide");
+        publisher.setAtxInstallation(new ATXInstallation("test.guide", "ecu.test", new ATXConfig()));
         publisher.setFailOnOffline(true);
         publisher.setUsePersistedSettings(true);
         publisher.setInjectBuildVars(true);

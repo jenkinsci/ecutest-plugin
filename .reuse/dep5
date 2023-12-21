@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: TraceTronic ECU-TEST Plugin
-Upstream-Contact: TraceTronic GmbH <info@tracetronic.de>
+Upstream-Name: tracetronic ecu.test Plugin
+Upstream-Contact: tracetronic GmbH <info@tracetronic.de>
 Source: https://github.com/jenkinsci/ecutest-plugin
 Year: 2015-2019
 

@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
+  Copyright (c) 2015-2023 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
@@ -9,7 +9,7 @@
     <tr>
         <td>
             <div style="text-indent: ${indent}px;">
-                <l:icon class="${it.iconClassName} icon-sm" alt="ECU-TEST Log"/>
+                <l:icon class="${it.iconClassName} icon-sm" alt="ecu.test Log"/>
                 <st:nbsp/>
                 <j:choose>
                     <j:when test="${!report.fileName.endsWith('.log')}">

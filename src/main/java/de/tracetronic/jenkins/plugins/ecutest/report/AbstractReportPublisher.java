@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -337,11 +337,11 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     }
 
     /**
-     * Checks whether an ECU-TEST instance is still running.
+     * Checks whether an ecu.test instance is still running.
      *
      * @param launcher the launcher
      * @param listener the listener
-     * @return {@code true} if ECU-TEST is running, {@code false} otherwise
+     * @return {@code true} if ecu.test is running, {@code false} otherwise
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException the interrupted exception
      */
@@ -352,14 +352,14 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     }
 
     /**
-     * Configures an ECU-TEST client with given workspace settings.
+     * Configures an ecu.test client with given workspace settings.
      *
      * @param toolName  the tool name
      * @param run       the run
      * @param workspace the workspace
      * @param launcher  the launcher
      * @param listener  the listener
-     * @return the ECU-TEST client
+     * @return the ecu.test client
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException the interrupted exception
      * @throws ETPluginException    in case of a COM exception
@@ -371,7 +371,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
             run.getEnvironment(listener));
         final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
 
-        // Register ECU-TEST COM server
+        // Register ecu.test COM server
         if (installation.isRegisterComServer()) {
             final String installPath = installation.getComExecutable(launcher);
             final ETComRegisterClient comClient = new ETComRegisterClient(expandedToolName, installPath);
@@ -408,9 +408,9 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
                 installation = installation.forEnvironment(envVars);
             }
         } else {
-            throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
+            throw new ETPluginException("The selected ecu.test installation is not configured for this node!");
         }
-        // Set the COM settings for the current ECU-TEST instance
+        // Set the COM settings for the current ecu.test instance
         final VirtualChannel channel = computer.getChannel();
         if (channel != null) {
             channel.call(new AbstractToolBuilder.SetComPropertyCallable(
@@ -443,7 +443,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     }
 
     /**
-     * Gets the workspace directory, either previous ECU-TEST workspace or default one.
+     * Gets the workspace directory, either previous ecu.test workspace or default one.
      *
      * @param run       the run
      * @param workspace the workspace
@@ -463,7 +463,7 @@ public abstract class AbstractReportPublisher extends Recorder implements Simple
     }
 
     /**
-     * Gets the settings directory, either previous ECU-TEST settings or default one.
+     * Gets the settings directory, either previous ecu.test settings or default one.
      *
      * @param run       the run
      * @param workspace the workspace

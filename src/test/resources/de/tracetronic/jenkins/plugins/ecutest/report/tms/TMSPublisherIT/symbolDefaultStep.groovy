@@ -1,3 +1,3 @@
 node('windows') {
-    publishTMS toolName: 'ECU-TEST', credentialsId: 'credentialsId'
+    publishTMS toolName: 'ecu.test', credentialsId: 'credentialsId'
 }

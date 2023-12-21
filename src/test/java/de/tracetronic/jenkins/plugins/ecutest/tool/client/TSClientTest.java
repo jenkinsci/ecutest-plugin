@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -43,14 +43,14 @@ public class TSClientTest {
 
     @Test
     public void testTypicalCmdLineArgs() {
-        final TSClient client = new TSClient("ECU-TEST", exe, 30, tlIni, 5017);
+        final TSClient client = new TSClient("ecu.test", exe, 30, tlIni, 5017);
         expectedArgs = Arrays.asList(exe, "--port", "5017", "--toollibsini", tlIni);
         ensureCreateCmdLineArgs(client, expectedArgs);
     }
 
     @Test
     public void testDefaultCmdLineArgs() {
-        final TSClient client = new TSClient("ECU-TEST", exe, 0, "", 0);
+        final TSClient client = new TSClient("ecu.test", exe, 0, "", 0);
         expectedArgs = Arrays.asList(exe, "--port", "5017");
         ensureCreateCmdLineArgs(client, expectedArgs);
     }

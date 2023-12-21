@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2015-2021 TraceTronic GmbH
+  Copyright (c) 2015-2023 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
@@ -28,18 +28,18 @@ ETInstance.publishTMS(Map&lt;String, Object&gt; settings) : void
     <dl>Beispiele:
         <dd>
             <pre>
-publishTMS('ECU-TEST')
+publishTMS('ecu.test')
             </pre>
             <pre>
-def instance = ET.installation('ECU-TEST')
+def instance = ET.installation('ecu.test')
 publishTMS installation: instance.installation, credentialsId: 'id', timeout: 120
             </pre>
             <pre>
-def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+def instance = ET.newInstallation('ecu.test', 'C:\\Program Files\\ECU-TEST 8.0')
 instance.publishTMS('id')
             </pre>
             <pre>
-def instance = ET.newInstallation toolName: 'ECU-TEST', installPath: C:\\Program Files\\ECU-TEST 8.0'
+def instance = ET.newInstallation toolName: 'ecu.test', installPath: C:\\Program Files\\ECU-TEST 8.0'
 instance.publishTMS credentialsId: 'id',  timeout: 120, allowMissing: true, runOnFailed: true, archiving: true, keepAll: true
             </pre>
         </dd>

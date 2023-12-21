@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -193,11 +193,11 @@ public class ETLogPublisherIT extends IntegrationTestBase {
 
         if (status == true) {
             final WorkflowRun run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
-            jenkins.assertLogContains("Publishing ECU-TEST logs...", run);
-            jenkins.assertLogContains("Archiving ECU-TEST logs is disabled.", run);
+            jenkins.assertLogContains("Publishing ecu.test logs...", run);
+            jenkins.assertLogContains("Archiving ecu.test logs is disabled.", run);
         } else {
             final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
-            jenkins.assertLogContains("Publishing ECU-TEST logs...", run);
+            jenkins.assertLogContains("Publishing ecu.test logs...", run);
             jenkins.assertLogContains("Empty log results are not allowed, setting build status to FAILURE!", run);
         }
     }

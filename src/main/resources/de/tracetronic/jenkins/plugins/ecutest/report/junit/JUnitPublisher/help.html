@@ -1,11 +1,11 @@
 <!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
+  Copyright (c) 2015-2023 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
 
 <div>
-    <p>Publishes the UNIT reports of all configured ECU-TEST packages or projects in this job.<br/>
+    <p>Publishes the UNIT reports of all configured ecu.test packages or projects in this job.<br/>
         These UNIT reports are generated automatically in this post-build step.</p>
     <strong>Pipeline usage</strong>
     <dl>Signatures:
@@ -27,18 +27,18 @@ ETInstance.publishUNIT(Map&lt;String, Object&gt; settings) : void
     <dl>Examples:
         <dd>
             <pre>
-publishUNIT('ECU-TEST', 10, 20)
+publishUNIT('ecu.test', 10, 20)
             </pre>
             <pre>
-def instance = ET.installation('ECU-TEST')
+def instance = ET.installation('ecu.test')
 publishUNIT installation: instance.installation, unstableThreshold: 10, failedThreshold: 20
             </pre>
             <pre>
-def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+def instance = ET.newInstallation('ecu.test', 'C:\\Program Files\\ECU-TEST 8.0')
 instance.publishUNIT()
             </pre>
             <pre>
-def instance = ET.newInstallation toolName: 'ECU-TEST', installPath: C:\\Program Files\\ECU-TEST 8.0'
+def instance = ET.newInstallation toolName: 'ecu.test', installPath: C:\\Program Files\\ECU-TEST 8.0'
 instance.publishUNIT unstableThreshold: 10, failedThreshold: 20, allowMissing: true, runOnFailed: true
             </pre>
         </dd>

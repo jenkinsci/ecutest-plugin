@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -21,10 +21,10 @@ public class ETInstallationTest {
 
     @Test
     public void testInstallation() {
-        final ETInstallation inst = new ETInstallation("ECU-TEST", "C:\\ECU-TEST",
+        final ETInstallation inst = new ETInstallation("ecu.test", "C:\\ECU-TEST",
             Collections.emptyList());
         assertNotNull(inst);
-        assertEquals("ECU-TEST", inst.getName());
+        assertEquals("ecu.test", inst.getName());
         assertEquals("C:\\ECU-TEST", inst.getHome());
         assertEquals("ECU-TEST.Application", inst.getProgId());
         assertEquals(0, inst.getTimeout());
@@ -33,10 +33,10 @@ public class ETInstallationTest {
 
     @Test
     public void testInstallationWithCustomSettings() {
-        final ETInstallation inst = new ETInstallation("ECU-TEST", "C:\\ECU-TEST",
+        final ETInstallation inst = new ETInstallation("ecu.test", "C:\\ECU-TEST",
             Collections.singletonList(new ETToolProperty("ECU-TEST6.Application", 120, true)));
         assertNotNull(inst);
-        assertEquals("ECU-TEST", inst.getName());
+        assertEquals("ecu.test", inst.getName());
         assertEquals("C:\\ECU-TEST", inst.getHome());
         assertEquals(1, inst.getProperties().size());
         assertEquals("ECU-TEST6.Application", inst.getProgId());

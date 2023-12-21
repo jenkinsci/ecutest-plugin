@@ -258,5 +258,5 @@ unclassified:
             - atxCustomTextSetting:
                 name: "customLabel"
                 value: "test"
-        name: "TEST-GUIDE"
-        toolName: "ECU-TEST"
+        name: "test.guide"
+        toolName: "ecu.test"

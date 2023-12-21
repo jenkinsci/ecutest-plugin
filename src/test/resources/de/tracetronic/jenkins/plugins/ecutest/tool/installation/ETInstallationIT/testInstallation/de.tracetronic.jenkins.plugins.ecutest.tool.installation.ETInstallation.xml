@@ -2,7 +2,7 @@
 <de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation_-DescriptorImpl plugin="ecutest@1.12">
   <installations>
     <de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation>
-      <name>ECU-TEST</name>
+      <name>ecu.test</name>
       <home>C:\ECU-TEST</home>
       <properties/>
     </de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation>

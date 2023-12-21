@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -8,7 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.log;
 import java.io.Serializable;
 
 /**
- * Annotates each parsed line in a ECU-TEST log file.
+ * Annotates each parsed line in a ecu.test log file.
  */
 public class ETLogAnnotation implements Serializable {
 

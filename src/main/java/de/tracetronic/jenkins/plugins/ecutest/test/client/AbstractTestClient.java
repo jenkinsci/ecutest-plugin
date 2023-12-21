@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -228,8 +228,8 @@ public abstract class AbstractTestClient implements TestClient {
                         logger.logInfo(String.format("-> Recording %s checks as Warnings NG issues will be skipped!",
                             testType));
                         logger.logWarn(String.format(
-                            "The configured ECU-TEST version %s does not support recording WarningNG issues. "
-                                + "Please use at least ECU-TEST 2020.3 or higher!", comVersion));
+                            "The configured ecu.test version %s does not support recording WarningNG issues. "
+                                + "Please use at least ecu.test 2020.3 or higher!", comVersion));
                     }
                 } else {
                     final List<CheckInfoHolder> checks = testObject.check();

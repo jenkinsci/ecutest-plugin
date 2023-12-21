@@ -1,3 +1,3 @@
 node('windows') {
-    publishATX atxName: 'TEST-GUIDE'
+    publishATX atxName: 'test.guide'
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -46,12 +46,12 @@ public class TraceAnalysisPublisherIT extends IntegrationTestBase {
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
     }
 
     @Test
     public void testDefaultConfigRoundTripStep() throws Exception {
-        final TraceAnalysisPublisher before = new TraceAnalysisPublisher("ECU-TEST");
+        final TraceAnalysisPublisher before = new TraceAnalysisPublisher("ecu.test");
 
         CoreStep step = new CoreStep(before);
         step = new StepConfigTester(jenkins).configRoundTrip(step);
@@ -64,7 +64,7 @@ public class TraceAnalysisPublisherIT extends IntegrationTestBase {
 
     @Test
     public void testConfigRoundTripStep() throws Exception {
-        final TraceAnalysisPublisher before = new TraceAnalysisPublisher("ECU-TEST");
+        final TraceAnalysisPublisher before = new TraceAnalysisPublisher("ecu.test");
         before.setTimeout("600");
         before.setAllowMissing(false);
         before.setRunOnFailed(false);
@@ -83,7 +83,7 @@ public class TraceAnalysisPublisherIT extends IntegrationTestBase {
     @Test
     public void testConfigView() throws Exception {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
-        final TraceAnalysisPublisher publisher = new TraceAnalysisPublisher("ECU-TEST");
+        final TraceAnalysisPublisher publisher = new TraceAnalysisPublisher("ecu.test");
         publisher.setTimeout("600");
         publisher.setMergeReports(true);
         publisher.setCreateReportDir(true);
@@ -96,7 +96,7 @@ public class TraceAnalysisPublisherIT extends IntegrationTestBase {
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.TraceAnalysisPublisher_DisplayName());
         jenkins.assertXPath(page, "//select[@name='toolName']");
-        jenkins.assertXPath(page, "//option[@value='ECU-TEST']");
+        jenkins.assertXPath(page, "//option[@value='ecu.test']");
         WebAssert.assertInputPresent(page, "_.timeout");
         WebAssert.assertInputContainsValue(page, "_.timeout", "600");
         jenkins.assertXPath(page, "//input[@name='_.mergeReports' and @checked='true']");
@@ -111,7 +111,7 @@ public class TraceAnalysisPublisherIT extends IntegrationTestBase {
 
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.setAssignedNode(agent);
-        final TraceAnalysisPublisher publisher = new TraceAnalysisPublisher("ECU-TEST");
+        final TraceAnalysisPublisher publisher = new TraceAnalysisPublisher("ecu.test");
         publisher.setAllowMissing(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -132,7 +132,7 @@ public class TraceAnalysisPublisherIT extends IntegrationTestBase {
                 return false;
             }
         });
-        final TraceAnalysisPublisher publisher = new TraceAnalysisPublisher("ECU-TEST");
+        final TraceAnalysisPublisher publisher = new TraceAnalysisPublisher("ecu.test");
         publisher.setRunOnFailed(false);
         project.getPublishersList().add(publisher);
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
@@ -153,11 +153,11 @@ public class TraceAnalysisPublisherIT extends IntegrationTestBase {
                 private static final long serialVersionUID = 1L;
 
                 {
-                    put("ECUTEST", "ECU-TEST");
+                    put("ECUTEST", "ecu.test");
                 }
             }));
 
-        assertEquals("Tool name should be resolved", "ECU-TEST",
+        assertEquals("Tool name should be resolved", "ecu.test",
             publisher.getToolInstallation(publisher.getToolName(), envVars).getName());
     }
 
@@ -198,7 +198,7 @@ public class TraceAnalysisPublisherIT extends IntegrationTestBase {
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
         jenkins.assertLogContains("Publishing trace analysis...", run);
         if (emptyResults == false) {
-            jenkins.assertLogContains("Starting ECU-TEST failed.", run);
+            jenkins.assertLogContains("Starting ecu.test failed.", run);
         } else {
             jenkins.assertLogContains("Empty analysis results are not allowed, setting build status to FAILURE!", run);
         }

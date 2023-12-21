@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**
- * Common base class all report publishers which are using ECU-TEST as tool.
+ * Common base class all report publishers which are using ecu.test as tool.
  */
 public abstract class AbstractToolPublisher extends AbstractReportPublisher {
 
@@ -67,9 +67,9 @@ public abstract class AbstractToolPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Sets the ECU-TEST installation and the derived name.
+     * Sets the ecu.test installation and the derived name.
      *
-     * @param installation the ECU-TEST installation
+     * @param installation the ecu.test installation
      */
     @DataBoundSetter
     public void setInstallation(final ETInstallation installation) {
@@ -78,14 +78,14 @@ public abstract class AbstractToolPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Configures an ECU-TEST client with given workspace settings.
-     * Re-registers the according ECU-TEST COM server if option is enabled.
+     * Configures an ecu.test client with given workspace settings.
+     * Re-registers the according ecu.test COM server if option is enabled.
      *
      * @param run       the run
      * @param workspace the workspace
      * @param launcher  the launcher
      * @param listener  the listener
-     * @return the ECU-TEST client
+     * @return the ecu.test client
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException the interrupted exception
      * @throws ETPluginException    in case of a COM exception
@@ -98,7 +98,7 @@ public abstract class AbstractToolPublisher extends AbstractReportPublisher {
                 run.getEnvironment(listener));
         }
 
-        // Register ECU-TEST COM server
+        // Register ecu.test COM server
         final String expandedToolName = run.getEnvironment(listener).expand(installation.getName());
         if (installation.isRegisterComServer()) {
             final String installPath = getInstallation().getComExecutable(launcher);

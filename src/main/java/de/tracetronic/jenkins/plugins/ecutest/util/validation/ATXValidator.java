@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -110,7 +110,7 @@ public class ATXValidator extends AbstractValidator {
     }
 
     /**
-     * Validates the TEST-GUIDE name.
+     * Validates the test.guide name.
      *
      * @param value the value
      * @return the form validation
@@ -370,7 +370,7 @@ public class ATXValidator extends AbstractValidator {
     }
 
     /**
-     * Checks the server connection by requesting the TEST-GUIDE API version endpoint.
+     * Checks the server connection by requesting the test.guide API version endpoint.
      *
      * @param baseUrl   the base server URL
      * @param proxyUrl  the proxy URL
@@ -464,8 +464,8 @@ public class ATXValidator extends AbstractValidator {
     }
 
     /**
-     * Parses the TEST-GUIDE server information from JSON response.
-     * Checks for valid license content and minimum supported TEST-GUIDE version.
+     * Parses the test.guide server information from JSON response.
+     * Checks for valid license content and minimum supported test.guide version.
      *
      * @param content     the JSON content
      * @param baseUrl     the base server URL
@@ -478,7 +478,7 @@ public class ATXValidator extends AbstractValidator {
             final JSONObject info = jsonObject.optJSONObject("info");
             if (info != null) {
                 final String license = info.getString("license");
-                if (!license.contains("TraceTronic")) {
+                if (!license.contains("TraceTronic") && !license.contains("tracetronic")) {
                     returnValue = FormValidation.warning(Messages.ATXInstallation_InvalidServer(baseUrl));
                 } else {
                     final String version = info.getString("version");

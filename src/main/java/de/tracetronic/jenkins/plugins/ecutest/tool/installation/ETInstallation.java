@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -43,19 +43,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Represents a ECU-TEST installation specified by name and home directory.
+ * Represents a ecu.test installation specified by name and home directory.
  */
 public class ETInstallation extends AbstractToolInstallation {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * Executable file name of ECU-TEST.
+     * Executable file name of ecu.test.
      */
     private static final String EXECUTABLE = "ECU-TEST.exe";
 
     /**
-     * Executable file name of ECU-TEST COM server.
+     * Executable file name of ecu.test COM server.
      */
     private static final String COM_EXECUTABLE = "ECU-TEST_COM.exe";
 
@@ -67,9 +67,9 @@ public class ETInstallation extends AbstractToolInstallation {
     /**
      * Instantiates a new {@link ETInstallation}.
      *
-     * @param name       the name of the ECU-TEST installation
-     * @param home       the home directory of the ECU-TEST installation
-     * @param properties the ECU-TEST properties
+     * @param name       the name of the ecu.test installation
+     * @param home       the home directory of the ecu.test installation
+     * @param properties the ecu.test properties
      */
     @DataBoundConstructor
     public ETInstallation(final String name, final String home, final List<? extends ToolProperty<?>> properties) {
@@ -79,9 +79,9 @@ public class ETInstallation extends AbstractToolInstallation {
     /**
      * Instantiates a new {@link ETInstallation}.
      *
-     * @param source     the source to install the ECU-TEST installation
-     * @param home       the home directory of the ECU-TEST installation
-     * @param properties the ECU-TEST properties
+     * @param source     the source to install the ecu.test installation
+     * @param home       the home directory of the ecu.test installation
+     * @param properties the ecu.test properties
      */
     public ETInstallation(final ETInstallation source, final String home,
                           final List<? extends ToolProperty<?>> properties) {
@@ -100,10 +100,10 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
-     * Gets the ECU-TEST executable path on the given target system.
+     * Gets the ecu.test executable path on the given target system.
      *
      * @param launcher the launcher
-     * @return the ECU-TEST executable
+     * @return the ecu.test executable
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
@@ -112,10 +112,10 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
-     * Gets the ECU-TEST COM server executable path on the given target system.
+     * Gets the ecu.test COM server executable path on the given target system.
      *
      * @param launcher the launcher
-     * @return the ECU-TEST COM server executable
+     * @return the ecu.test COM server executable
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the current thread is interrupted while waiting for the completion
      */
@@ -124,8 +124,8 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
-     * Gets the executable path of the Tool-Server on the given target system. According to ECU-TEST 6.5 and above the
-     * Tool-Server executable is directly located in ECU-TEST installation path, otherwise in sub directory
+     * Gets the executable path of the Tool-Server on the given target system. According to ecu.test 6.5 and above the
+     * Tool-Server executable is directly located in ecu.test installation path, otherwise in sub directory
      * 'ToolServer'.
      *
      * @param launcher the launcher
@@ -170,7 +170,7 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
-     * Returns whether to register the COM server before each start of ECU-TEST.
+     * Returns whether to register the COM server before each start of ecu.test.
      *
      * @return {@code true} if option enabled,  {@code false } otherwise
      */
@@ -180,7 +180,7 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
-     * Gets all ECU-TEST installations.
+     * Gets all ecu.test installations.
      *
      * @return all available installations, never {@code null}
      */
@@ -194,7 +194,7 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
-     * Gets the ECU-TEST installation by name.
+     * Gets the ecu.test installation by name.
      *
      * @param name the name
      * @return installation by name, {@code null} if not found
@@ -211,7 +211,7 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
-     * {@link MasterToSlaveCallable} providing remote access to return the ECU-TEST executable path.
+     * {@link MasterToSlaveCallable} providing remote access to return the ecu.test executable path.
      */
     private static final class GetExecutableCallable extends MasterToSlaveCallable<String, IOException> {
 
@@ -222,7 +222,7 @@ public class ETInstallation extends AbstractToolInstallation {
         /**
          * Instantiates a new {@link GetExecutableCallable}.
          *
-         * @param home the home directory of ECU-TEST
+         * @param home the home directory of ecu.test
          */
         GetExecutableCallable(final String home) {
             this.home = home;
@@ -235,9 +235,9 @@ public class ETInstallation extends AbstractToolInstallation {
         }
 
         /**
-         * Gets the expanded ECU-TEST COM server executable file path.
+         * Gets the expanded ecu.test COM server executable file path.
          *
-         * @param home the home directory of ECU-TEST
+         * @param home the home directory of ecu.test
          * @return the executable file or {@code null} if home directory is not set
          */
         @CheckForNull
@@ -253,7 +253,7 @@ public class ETInstallation extends AbstractToolInstallation {
     }
 
     /**
-     * {@link MasterToSlaveCallable} providing remote access to return the ECU-TEST COM server executable path.
+     * {@link MasterToSlaveCallable} providing remote access to return the ecu.test COM server executable path.
      */
     private static final class GetComExecutableCallable extends MasterToSlaveCallable<String, IOException> {
 
@@ -264,7 +264,7 @@ public class ETInstallation extends AbstractToolInstallation {
         /**
          * Instantiates a new {@link GetComExecutableCallable}.
          *
-         * @param home the home directory of ECU-TEST
+         * @param home the home directory of ecu.test
          */
         GetComExecutableCallable(final String home) {
             this.home = home;
@@ -277,9 +277,9 @@ public class ETInstallation extends AbstractToolInstallation {
         }
 
         /**
-         * Gets the expanded ECU-TEST COM server executable file path.
+         * Gets the expanded ecu.test COM server executable file path.
          *
-         * @param home the home directory of ECU-TEST
+         * @param home the home directory of ecu.test
          * @return the executable file or {@code null} if home directory is not set
          */
         @CheckForNull
@@ -306,7 +306,7 @@ public class ETInstallation extends AbstractToolInstallation {
         /**
          * Instantiates a new {@link GetTSExecutableCallable}.
          *
-         * @param home the home directory of ECU-TEST
+         * @param home the home directory of ecu.test
          */
         GetTSExecutableCallable(final String home) {
             this.home = home;
@@ -363,9 +363,9 @@ public class ETInstallation extends AbstractToolInstallation {
         }
 
         /**
-         * Gets the ECU-TEST executable file.
+         * Gets the ecu.test executable file.
          *
-         * @param home the home directory of ECU-TEST
+         * @param home the home directory of ecu.test
          * @return the executable file or {@code null} if Unix-based system
          */
         @CheckForNull
@@ -377,9 +377,9 @@ public class ETInstallation extends AbstractToolInstallation {
         }
 
         /**
-         * Gets the ECU-TEST COM server executable file.
+         * Gets the ecu.test COM server executable file.
          *
-         * @param home the home directory of ECU-TEST
+         * @param home the home directory of ecu.test
          * @return the executable file or {@code null} if Unix-based system
          */
         @SuppressWarnings("PMD.UnusedPrivateMethod")
@@ -394,7 +394,7 @@ public class ETInstallation extends AbstractToolInstallation {
         /**
          * Gets the Tool-Server executable file.
          *
-         * @param home   the home directory of ECU-TEST
+         * @param home   the home directory of ecu.test
          * @param subDir the sub directory relative to home directory
          * @return the executable file or {@code null} if Unix-based system
          */
@@ -431,7 +431,7 @@ public class ETInstallation extends AbstractToolInstallation {
          */
         @SuppressWarnings("rawtypes")
         private void migrateFromOldConfigFile(final Class oldClass) {
-            LOGGER.log(Level.FINE, "Migrating ECU-TEST installations from: " + oldClass.getName());
+            LOGGER.log(Level.FINE, "Migrating ecu.test installations from: " + oldClass.getName());
 
             final XStream2 stream = new XStream2();
             stream.addCompatibilityAlias(oldClass.getName(), getClass());
@@ -442,7 +442,7 @@ public class ETInstallation extends AbstractToolInstallation {
                 try {
                     file.unmarshal(this);
                 } catch (final IOException e) {
-                    LOGGER.log(Level.WARNING, "Failed to migrate ECU-TEST installations from: " + file, e);
+                    LOGGER.log(Level.WARNING, "Failed to migrate ecu.test installations from: " + file, e);
                 } finally {
                     file.delete();
                 }
@@ -477,7 +477,7 @@ public class ETInstallation extends AbstractToolInstallation {
         }
 
         /**
-         * Gets the ECU-TEST installation specified by name.
+         * Gets the ecu.test installation specified by name.
          *
          * @param name the installation name
          * @return the installation or {@code null} if not found

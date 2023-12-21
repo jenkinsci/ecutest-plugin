@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -25,23 +25,23 @@ public class ATXValidatorTest {
         atxValidator = new ATXValidator();
     }
 
-    // Validation of TEST-GUIDE name
+    // Validation of test.guide name
     @Test
     public void testEmptyName() {
         final FormValidation validation = atxValidator.validateName("");
-        assertEquals("Error if empty TEST-GUIDE name", FormValidation.Kind.ERROR, validation.kind);
+        assertEquals("Error if empty test.guide name", FormValidation.Kind.ERROR, validation.kind);
     }
 
     @Test
     public void testNullName() {
         final FormValidation validation = atxValidator.validateName(null);
-        assertEquals("Error if no TEST-GUIDE name", FormValidation.Kind.ERROR, validation.kind);
+        assertEquals("Error if no test.guide name", FormValidation.Kind.ERROR, validation.kind);
     }
 
     @Test
     public void testValidName() {
-        final FormValidation validation = atxValidator.validateName("TEST-GUIDE");
-        assertEquals("Valid TEST-GUIDE name", FormValidation.Kind.OK, validation.kind);
+        final FormValidation validation = atxValidator.validateName("test.guide");
+        assertEquals("Valid test.guide name", FormValidation.Kind.OK, validation.kind);
     }
 
     // Validation of server URL

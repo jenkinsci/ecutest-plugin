@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -49,7 +49,7 @@ public class StopTSBuilder extends AbstractToolBuilder {
     @Override
     public void performTool(final Run<?, ?> run, final FilePath workspace, final Launcher launcher,
                             final TaskListener listener) throws InterruptedException, IOException, ETPluginException {
-        // Stop selected Tool-Server of related ECU-TEST installation
+        // Stop selected Tool-Server of related ecu.test installation
         final EnvVars envVars = run.getEnvironment(listener);
         final int expTimeout = Integer.parseInt(EnvUtil.expandEnvVar(getTimeout(), envVars,
             String.valueOf(DEFAULT_TIMEOUT)));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -135,9 +135,9 @@ public class AbstractExportBuilder extends AbstractTestHelper implements SimpleB
                                   final TaskListener listener) throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
-        // Check for running ECU-TEST instance
+        // Check for running ecu.test instance
         if (!checkETInstance(launcher, listener, false)) {
-            logger.logError("No running ECU-TEST instance found, please configure one at first!");
+            logger.logError("No running ecu.test instance found, please configure one at first!");
             return false;
         }
 

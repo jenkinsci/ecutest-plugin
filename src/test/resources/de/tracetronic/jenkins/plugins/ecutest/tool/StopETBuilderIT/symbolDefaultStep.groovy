@@ -1,3 +1,3 @@
 node('windows') {
-    stopET toolName: 'ECU-TEST'
+    stopET toolName: 'ecu.test'
 }

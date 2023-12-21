@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
+  Copyright (c) 2015-2023 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
@@ -29,18 +29,18 @@ ETInstance.startTS(Map&lt;String, Object&gt; settings) : void
     <dl>Beispiele:
         <dd>
             <pre>
-startTS('ECU-TEST')
+startTS('ecu.test')
             </pre>
             <pre>
-def instance = ET.installation('ECU-TEST')
+def instance = ET.installation('ecu.test')
 startTS installation: instance.installation
             </pre>
             <pre>
-def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+def instance = ET.newInstallation('ecu.test', 'C:\\Program Files\\ECU-TEST 8.0')
 instance.startTS()
             </pre>
             <pre>
-def instance = ET.newInstallation toolName: 'ECU-TEST', installPath: C:\\Program Files\\ECU-TEST 8.0'
+def instance = ET.newInstallation toolName: 'ecu.test', installPath: C:\\Program Files\\ECU-TEST 8.0'
 instance.startTS toolLibsIniPath: C:\\ToolLibs.ini, tcpPort: 5017, timeout: 60, keepInstance: false
             </pre>
         </dd>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -8,7 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.test.scan;
 import hudson.Launcher;
 
 /**
- * Directory scanner searching for ECU-TEST packages.
+ * Directory scanner searching for ecu.test packages.
  */
 public class TestPackageScanner extends AbstractTestScanner {
 

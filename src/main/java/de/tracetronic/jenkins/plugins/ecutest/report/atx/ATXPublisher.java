@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Publisher providing the generation and upload of {@link ATXReport}s to TEST-GUIDE.
+ * Publisher providing the generation and upload of {@link ATXReport}s to test.guide.
  */
 public class ATXPublisher extends AbstractReportPublisher {
 
@@ -142,7 +142,7 @@ public class ATXPublisher extends AbstractReportPublisher {
         if (atxInstallation == null) {
             atxInstallation = getInstallation(envVars);
             if (atxInstallation == null) {
-                throw new ETPluginException("Selected TEST-GUIDE installation is not configured!");
+                throw new ETPluginException("Selected test.guide installation is not configured!");
             }
         }
 
@@ -200,12 +200,12 @@ public class ATXPublisher extends AbstractReportPublisher {
             return uploader.upload(reportDirs, isUsePersistedSettings(), isInjectBuildVars(), isAllowMissing(),
                 run, launcher, listener);
         } else if (isUploadEnabled && failOnOffline) {
-            logger.logError("-> TEST-GUIDE server is not reachable, setting build status to FAILURE!");
+            logger.logError("-> test.guide server is not reachable, setting build status to FAILURE!");
             return false;
         } else {
             logger.logInfo("- Generating ATX reports...");
             if (!isServerReachable) {
-                logger.logWarn("-> ATX upload will be skipped because selected TEST-GUIDE server is not reachable!");
+                logger.logWarn("-> ATX upload will be skipped because selected test.guide server is not reachable!");
             }
             final FilePath archiveTarget = getArchiveTarget(run);
 
@@ -244,7 +244,7 @@ public class ATXPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Checks whether the selected TEST-GUIDE server is reachable.
+     * Checks whether the selected test.guide server is reachable.
      *
      * @param installation the ATX installation
      * @param run          the run
@@ -289,7 +289,7 @@ public class ATXPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * {@link Callable} providing remote access to test the TEST-GUIDE server availability.
+     * {@link Callable} providing remote access to test the test.guide server availability.
      */
     private static final class TestConnectionCallable extends MasterToSlaveCallable<Boolean, IOException> {
 

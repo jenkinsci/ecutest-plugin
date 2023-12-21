@@ -2,7 +2,7 @@
 tool:
   ecuTest:
     installations:
-      - name: "ECU-TEST"
+      - name: "ecu.test"
         home: "C:\\ECU-TEST"
       - name: "ECU-TEST 7.2"
         home: "C:\\Program Files\\ECU-TEST 7.2"

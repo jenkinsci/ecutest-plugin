@@ -5,7 +5,7 @@ labels: feature
 ---
 
 <!--
-For reporting issues containing NDA relevant information please use our [TraceTronic Support Center](https://support.tracetronic.com).
+For reporting issues containing NDA relevant information please use our [tracetronic Support Center](https://support.tracetronic.com).
 -->
 
 **Describe the feature request**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -10,7 +10,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import java.util.Map;
 
 /**
- * Represents the ECU-TEST specific COMTestEnvironment API.
+ * Represents the ecu.test specific COMTestEnvironment API.
  */
 public interface ComTestEnvironment {
 

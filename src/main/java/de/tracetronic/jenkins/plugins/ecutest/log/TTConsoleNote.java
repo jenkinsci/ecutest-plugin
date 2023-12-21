@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -89,7 +89,7 @@ public class TTConsoleNote extends ConsoleNote<Object> {
 
         @Override
         public String getDisplayName() {
-            return "TraceTronic Console Note";
+            return "tracetronic Console Note";
         }
     }
 }

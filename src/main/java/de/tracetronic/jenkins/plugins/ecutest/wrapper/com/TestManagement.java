@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -158,7 +158,7 @@ public class TestManagement extends ETComDispatch implements ComTestManagement {
     }
 
     /**
-     * Dispatches the function call to the ECU-TEST COM-API method ImportProjectById.
+     * Dispatches the function call to the ecu.test COM-API method ImportProjectById.
      *
      * @param tmProjectId           the project ID in test management system
      * @param importPath            the directory to save the project (relative to package directory or absolute)

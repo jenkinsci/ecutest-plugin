@@ -1,38 +1,37 @@
 <!--
-SPDX-FileCopyrightText: 2015-2021 TraceTronic GmbH <info@tracetronic.de>
+SPDX-FileCopyrightText: 2015-2023 tracetronic GmbH <info@tracetronic.de>
 
 SPDX-License-Identifier: BSD-3-Clause
 -->
 
-# TraceTronic ECU-TEST Plugin
+# tracetronic ecu.test plugin
 
 [![Build Status](https://ci.jenkins.io/buildStatus/icon?job=plugins/ecutest-plugin/master)](https://ci.jenkins.io/job/plugins/job/ecutest-plugin/job/master) [![Third Party License Check](https://github.com/jenkinsci/ecutest-plugin/actions/workflows/license.yml/badge.svg)](https://github.com/jenkinsci/ecutest-plugin/actions/workflows/license.yml)  [![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/ecutest.svg)](https://plugins.jenkins.io/ecutest)
 [![Jenkins Release](https://img.shields.io/github/release/jenkinsci/ecutest-plugin.svg?label=changelog)](https://github.com/jenkinsci/ecutest-plugin/releases) [![Plugin Installs](https://img.shields.io/jenkins/plugin/i/ecutest.svg?color=blue)](https://plugins.jenkins.io/ecutest) [![License](https://img.shields.io/badge/license-3--clause%20BSD-blue.svg?style=flat)](https://github.com/jenkinsci/ecutest-plugin/blob/master/LICENSE)
 
 | ⚠️ End of Life ⚠️                 | 
 |------------------------------------------|
-| You should migrate to the [ECU-TEST Execution Plugin](https://github.com/jenkinsci/ecu-test-execution-plugin) - this plugin is deprecated and will be out of support soon.    |
+| You should migrate to the [ecu.test Execution Plugin](https://github.com/jenkinsci/ecu-test-execution-plugin) - this plugin is deprecated and will be out of support soon.    |
 
 <br/><br/>
 
-This plugin integrates Jenkins with [ECU-TEST](https://www.tracetronic.com/products/ecu-test) and generates reports on automated test execution.
+This plugin integrates Jenkins with [ecu.test](https://www.tracetronic.com/products/ecu-test) and generates reports on automated test execution.
 
-<img src="docs/images/ecutest_logo.png" align="left" alt="ECU-TEST Logo">
+<img src="docs/images/ecu.test.png" align="left" alt="ecu.test Logo" style="padding-right: 15px;height:150px">
 
-**ECU-TEST** allows for a consistent and effective automation of the entire test environment. It supports and connects so many different software tools, that it easily fits in numerous existing test and validation processes. The test automation tool can be used in all phases of development up to the finished vehicle itself. It allows for a high reusability of the test cases in the various test areas MiL, SiL, HiL, PiL and ViL (vehicle), through generic test description and tool-access abstraction.
+**ecu.test** allows for a consistent and effective automation of the entire test environment. It supports and connects so many different software tools, that it easily fits in numerous existing test and validation processes. The test automation tool can be used in all phases of development up to the finished vehicle itself. It allows for a high reusability of the test cases in the various test areas MiL, SiL, HiL, PiL and ViL (vehicle), through generic test description and tool-access abstraction.
 
-<img src="docs/images/platform_logo.png" align="right" alt="Automotive DevOps Platform">
 
-**ECU-TEST Jenkins Plugin** project is part of the [Automotive DevOps Platform](https://www.tracetronic.com/products/automotive-devops-platform/) by TraceTronic. With the **Automotive DevOps Platform**, we go from the big picture to the details and unite all phases of vehicle software testing – from planning the test scopes to summarizing the test results. At the same time, continuous monitoring across all test phases always provides an overview of all activities – even with several thousand test executions per day and in different test environments.
+**ecu.test Jenkins Plugin** project is part of the [Automotive DevOps Platform](https://www.tracetronic.com/products/automotive-devops-platform/) by tracetronic. With the **Automotive DevOps Platform**, we go from the big picture to the details and unite all phases of vehicle software testing – from planning the test scopes to summarizing the test results. At the same time, continuous monitoring across all test phases always provides an overview of all activities – even with several thousand test executions per day and in different test environments.
 
-Please consider other open-source automation solutions by [TraceTronic](https://github.com/tracetronic?type=source), especially [Jenkins Library](https://github.com/tracetronic/jenkins-library) and [CX Templates](https://github.com/tracetronic/cx-templates).
+Please consider other open-source automation solutions by [tracetronic](https://github.com/tracetronic?type=source), especially [Jenkins Library](https://github.com/tracetronic/jenkins-library) and [CX Templates](https://github.com/tracetronic/cx-templates).
 
 ## Table of Contents
 
 - [Features](#features)
 - [Configuration](#configuration)
-    - [ECU-TEST configuration](#ecu-test-configuration)
-    - [TEST-GUIDE configuration](#test-guide-configuration)
+    - [ecu.test configuration](#ecutest-configuration)
+    - [test.guide configuration](#testguide-configuration)
     - [Job configuration](#job-configuration)
     - [Job execution](#job-execution)
     - [Environment variables](#environment-variables)
@@ -54,16 +53,16 @@ Please consider other open-source automation solutions by [TraceTronic](https://
 
 ## Features
 
-- Provides an easy integration and control of ECU-TEST and the Tool-Server with Jenkins
-- Enables the execution of ECU-TEST packages and projects with their respective configurations
+- Provides an easy integration and control of ecu.test and the Tool-Server with Jenkins
+- Enables the execution of ecu.test packages and projects with their respective configurations
 
 Moreover publishing test results is included in form of:
 
 - Linking the TRF reports
 - Generating various report formats
 - Displaying test result trend graphs
-- Uploading ATX test reports to [TEST-GUIDE](https://www.tracetronic.com/products/test-guide)
-- Parsing the ECU-TEST logs for warnings and errors
+- Uploading ATX test reports to [test.guide](https://www.tracetronic.com/products/test-guide)
+- Parsing the ecu.test logs for warnings and errors
 
 Advanced workflows integrated for:
 
@@ -72,22 +71,22 @@ Advanced workflows integrated for:
 
 ## Configuration
 
-### ECU-TEST configuration
+### ecu.test configuration
 
-ECU-TEST installations are administrated in the Jenkins system configuration or starting with Jenkins 2.0 in the global tool configuration at section "ECU-TEST".
+ecu.test installations are administrated in the Jenkins system configuration or starting with Jenkins 2.0 in the global tool configuration at section "ecu.test".
 An installation entry is specified by an arbitrary name and the path to the installation directory.
-The execution on a Jenkins agent requires the adaption of the ECU-TEST installation directory on the agent configuration page.
+The execution on a Jenkins agent requires the adaption of the ecu.test installation directory on the agent configuration page.
 
-![ECU-TEST](docs/images/ecutest.png "ECU-TEST")
-![ECU-TEST_AGENT](docs/images/ecutest2.png "ECU-TEST")
+![ecu.test](docs/images/ecutest.png "ecu.test")
+![ecu.test_AGENT](docs/images/ecutest2.png "ecu.test")
 
-### TEST-GUIDE configuration
+### test.guide configuration
 
-TEST-GUIDE is also configured in the Jenkins system configuration at section "TEST-GUIDE".
-A new entry requires both an arbitrary name and the selection of a previously configured ECU-TEST installation.
+test.guide is also configured in the Jenkins system configuration at section "test.guide".
+A new entry requires both an arbitrary name and the selection of a previously configured ecu.test installation.
 Further settings like the server or ATX specific configuration can be found in the advanced block.
 
-![TEST-GUIDE](docs/images/testguide.png "TEST-GUIDE")
+![test.guide](docs/images/testguide.png "test.guide")
 
 ### Job configuration
 
@@ -128,12 +127,12 @@ The post-build actions are extended by these test report related post-build step
 
 | Environment variable | Description |
 | --- | --- |
-| TT_TOOL_NAME | Name of the selected ECU-TEST installation |
-| TT_TOOL_INSTALL | Full path to related ECU-TEST executable |
-| TT_TOOL_VERSION | Program version of selected ECU-TEST installation |
-| TT_TOOL_WORKSPACE | ECU-TEST workspace directory |
-| TT_TOOL_SETTINGS | ECU-TEST settings directory |
-| TT_TOOL_DEBUG | ECU-TEST debug mode |
+| TT_TOOL_NAME | Name of the selected ecu.test installation |
+| TT_TOOL_INSTALL | Full path to related ecu.test executable |
+| TT_TOOL_VERSION | Program version of selected ecu.test installation |
+| TT_TOOL_WORKSPACE | ecu.test workspace directory |
+| TT_TOOL_SETTINGS | ecu.test settings directory |
+| TT_TOOL_DEBUG | ecu.test debug mode |
 | TT_TOOL_TIMEOUT | Maximum execution time |
 | TT_TOOL_LAST_TBC | Last loaded TBC file path |
 | TT_TOOL_LAST_TCF | Last loaded TCF file path |
@@ -196,9 +195,9 @@ Copying artifacts and generating ATX report (_downstream_)
 node('windows') {
     deleteDir()
 
-    startET 'ECU-TEST'
+    startET 'ecu.test'
     testPackage testFile: 'sample.pkg', testConfig: [tbcFile: 'sample.tbc', tcfFile: 'sample.tcf']
-    stopET 'ECU-TEST'
+    stopET 'ecu.test'
 
     archiveArtifacts 'TestReports/**/*.trf'
     build job: 'downstream', wait: false
@@ -218,8 +217,8 @@ node('windows') {
     // Class notation is required for publisher steps inside downstream wrapper!
     // Available: ATXPublisher, ETLogPublisher, JUnitPublisher, ReportGeneratorPublisher, TMSPublisher, TRFPublisher
     downstreamPublisher workspace: '', reportDir: 'TestReports', publishers: [
-        [$class: 'ATXPublisher', atxName: 'TEST-GUIDE'],
-        [$class: 'JUnitPublisher', toolName: 'ECU-TEST']]
+        [$class: 'ATXPublisher', atxName: 'test.guide'],
+        [$class: 'JUnitPublisher', toolName: 'ecu.test']]
 }
 ```
 </details>
@@ -261,9 +260,9 @@ Copying artifacts and running the trace analysis (_downstream_)
 node('windows') {
     deleteDir()
 
-    startET 'ECU-TEST'
+    startET 'ecu.test'
     testPackage testFile: 'sample.pkg', testConfig: [tbcFile: 'sample.tbc', tcfFile: 'sample.tcf'], packageConfig: [runTraceAnalysis: false]
-    stopET 'ECU-TEST'
+    stopET 'ecu.test'
 
     archiveArtifacts 'TestReports/**/*.trf, TestReports/**/*.ajob, Packages/**, Traces/**, TraceStepTemplates/**'
     build job: 'downstream', wait: false
@@ -282,7 +281,7 @@ node('windows') {
 
     // Class notation is required for publisher steps inside downstream wrapper!
     downstreamPublisher workspace: '', reportDir: 'TestReports', publishers: [
-        [$class: 'TraceAnalysisPublisher', toolName: 'ECU-TEST', mergeReports: true]]
+        [$class: 'TraceAnalysisPublisher', toolName: 'ecu.test', mergeReports: true]]
 }
 ```
 </details>
@@ -300,7 +299,7 @@ Furthermore, if there is a method which is currently not supported then Job DSL 
 
 ```groovy
 steps {
-    // Start ECU-TEST
+    // Start ecu.test
     startET(String installation) {
         workspaceDir(String directory)
         settingsDir(String directory)
@@ -308,7 +307,7 @@ steps {
         debugMode(boolean debugMode = false)
         keepInstance(boolean keepInstance = false)
     }
-    // Stop ECU-TEST
+    // Stop ecu.test
     stopET(String installation) {
         timeout(int | String timeout = 30)
     }
@@ -403,11 +402,11 @@ steps {
             importConfigPath(String importConfigPath)
             replaceFiles(boolean replaceFiles)
         }
-        importFromTMS(String credentialsId, String projectPath, String importPath, int | String timeout = 60)
-        importFromTMS(String credentialsId, String projectPath) {
+        importFromTMS(String credentialsId, String projectPath, String importPath, int | String timeout = 60, String tmProjectId)
+        importFromTMS(String credentialsId, String projectPath, {
             importPath(String importPath)
             timeout(int | String timeout = 60)
-        }
+        }, String tmProjectId)
         importFromTMSDir(String credentialsId, String projectDirPath, String importPath, int | String timeout = 60)
         importFromTMSDir(String credentialsId, String projectDirPath) {
             importPath(String importPath)
@@ -469,7 +468,7 @@ publishers {
         failedThreshold(double threshold = 0)
         // Archive options...
     }
-    // Publish ECU-TEST logs
+    // Publish ecu.test logs
     publishETLogs() {
         unstableOnWarning(boolean markUnstable = false)
         failedOnError(boolean markFailed = false)
@@ -513,57 +512,57 @@ The [Pipeline Plugin](https://plugins.jenkins.io/workflow-aggregator) allows to 
 ```groovy
 node('windows') {
     stage('Start Tools') {
-        startET 'ECU-TEST'
+        startET 'ecu.test'
     }
     stage('Test Execution') {
         testPackage testFile: 'sample.pkg', testConfig: [tbcFile: 'sample.tbc', tcfFile: 'sample.tcf']
         testProject testFile: 'sample.prj', testConfig: [tbcFile: 'sample.tbc', tcfFile: 'sample.tcf']
     }
     stage('Publish Reports') {
-        publishATX 'TEST-GUIDE'
+        publishATX 'test.guide'
     }
     stage('Stop Tools') {
-        stopET 'ECU-TEST'
+        stopET 'ecu.test'
     }
 }
 ```
 </details>
 
 <details>
-    <summary>Dynamic ECU-TEST pipeline example</summary>
+    <summary>Dynamic ecu.test pipeline example</summary>
 
 ```groovy
 node('windows') {
-    // ECU-TEST installation using global variable ET
-    def et = ET.newInstallation toolName: 'ECU-TEST', installPath: 'C:\\Program Files\\ECU-TEST X.Y'
+    // ecu.test installation using global variable ET
+    def et = ET.newInstallation toolName: 'ecu.test', installPath: 'C:\\Program Files\\ECU-TEST X.Y'
 
     // or getting existing installation from global tool configuration
-    def et = ET.installation('ECU-TEST')
+    def et = ET.installation('ecu.test')
 
-    // Start ECU-TEST
+    // Start ecu.test
     et.start('C:\\Data\\workspace', 'C:\\Data\\settings')
 
-    // Stop ECU-TEST
+    // Stop ecu.test
     et.stop()
 }
 ```
 </details>
 
 <details>
-    <summary>Dynamic TEST-GUIDE pipeline example</summary>
+    <summary>Dynamic test.guide pipeline example</summary>
 
 ```groovy
 node('windows') {
     // Start tools, execute tests
     ...
 
-    // TEST-GUIDE server instantiation using global variable ATX
-    def atx = ATX.newServer atxName: 'TEST-GUIDE', toolName: 'ECU-TEST',
+    // test.guide server instantiation using global variable ATX
+    def atx = ATX.newServer atxName: 'test.guide', toolName: 'ecu.test',
         fullServerURL: 'http://localhost:8085', uploadToServer: false,
         uploadAuthenticationKey: 'xxx', projectId: '1'
 
     // or getting existing instance from global configuration
-    def atx = ATX.server('TEST-GUIDE')
+    def atx = ATX.server('test.guide')
 
     // Override one or multiple settings explicitly
     atx.overrideSetting('useHttpsConnection', true)
@@ -577,20 +576,20 @@ node('windows') {
 
 ### Configuration as Code
 
-The [Jenkins Configuration as Code Plugin](https://plugins.jenkins.io/configuration-as-code) (a.k.a. JCasC) allows to configure Jenkins based on human-readable declarative configuration files. This plugin supports the external configuration of ECU-TEST tool installations and of TEST-GUIDE server instances in the Jenkins global configuration.
+The [Jenkins Configuration as Code Plugin](https://plugins.jenkins.io/configuration-as-code) (a.k.a. JCasC) allows to configure Jenkins based on human-readable declarative configuration files. This plugin supports the external configuration of ecu.test tool installations and of test.guide server instances in the Jenkins global configuration.
 
 Existing configurations of both types can be exported to according YAML file using the [JCasC export view](https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/docs/features/configExport.md).
 
 <details>
-    <summary>ECU-TEST installation</summary>
+    <summary>ecu.test installation</summary>
 
 ```yml
 tool:
     ecu-test:
         installations:
-            - name: "ECU-TEST X.Y"
+            - name: "ecu.test X.Y"
               home: "C:\\Program Files\\ECU-TEST X.Y"
-            - name: "ECU-TEST X2.Y2"
+            - name: "ecu.test X2.Y2"
               home: "C:\\Program Files\\ECU-TEST X2.Y2"
               properties:
                   - ecuTestProperty:
@@ -601,14 +600,14 @@ tool:
 </details>
 
 <details>
-    <summary>TEST-GUIDE server</summary>
+    <summary>test.guide server</summary>
 
 ```yml
 unclassified:
     testGuide:
         installations:
-            - name: "TEST-GUIDE"
-              toolName: "ECU-TEST"
+            - name: "test.guide"
+              toolName: "ecu.test"
               config:
                   settings:
                       - atxTextSetting:
@@ -892,27 +891,27 @@ This is due to already loaded libraries, for more information see this [blog pos
 
 Release 1.8 implemented an extension point that will workaround this issue. In order to work a new task has to be created in the Windows Task Scheduler named [RESTART_JENKINS_AGENT](docs/RESTART_JENKINS_AGENT.xml) and configured with actions how to restart the agent.
 
-Please note that from [ECU-TEST](https://www.tracetronic.com/products/ecu-test/) Version 2022.3 on, **invalid escape 
-sequences in expressions within ECU-TEST are disallowed.** This means, in particular, that backslashes in Windows 
+Please note that from [ecu.test](https://www.tracetronic.com/products/ecu-test/) Version 2022.3 on, **invalid escape 
+sequences in expressions within ecu.test are disallowed.** This means, in particular, that backslashes in Windows 
 paths need to be escaped properly (e.g. *C:\\\my\\\path* instead of *C:\my\path*) - otherwise, this will lead to an 
-error within ECU-TEST.
+error within ecu.test.
 
 Since [release 2.39](https://github.com/jenkinsci/ecutest-plugin/releases/tag/ecutest-2.39) we test only against 
-[ECU-TEST](https://www.tracetronic.com/products/ecu-test/) versions, that are inside the support window of the 
-TraceTronic tool support terms. Please consult the [compatibility matrix](#compatibility) for detailed 
+[ecu.test](https://www.tracetronic.com/products/ecu-test/) versions, that are inside the support window of the 
+tracetronic tool support terms. Please consult the [compatibility matrix](#compatibility) for detailed 
 information.
 
 ## FAQ
 
-Frequently asked questions, common issues and error messages about the [ECU-TEST Jenkins Plugin](https://github.com/jenkinsci/ecutest-plugin) and [ECU-TEST](https://www.tracetronic.com/products/ecu-test/) itself
-can be found in the [TraceTronic Knowledge Base](https://kb.tracetronic.com/display/KB/Jenkins+Plugin).
+Frequently asked questions, common issues and error messages about the [ecu.test Jenkins Plugin](https://github.com/jenkinsci/ecutest-plugin) and [ecu.test](https://www.tracetronic.com/products/ecu-test/) itself
+can be found in the [tracetronic Knowledge Base](https://kb.tracetronic.com/display/KB/Jenkins+Plugin).
 
 ## Compatibility
 
 - Jenkins LTS 2.319.3 or higher
 - Java SE Runtime Environment 11 or higher
  <details>
-    <summary><a href="https://www.tracetronic.com/products/ecu-test">ECU-TEST</a> 2021.1 or higher </summary>
+    <summary><a href="https://www.tracetronic.com/products/ecu-test">ecu.test</a> 2021.1 or higher </summary>
 
 | Version |    latest - 2.39     |    2.38 - 2.26     |    2.25 - 2.23    |    2.22 - 2.19    |    2.18 - 2.15    |       2.15        |    2.14 - 2.13    |    2.12 - 2.8     |     2.7 - 2.5     |     2.4 - 2.2     |     2.1 - 2.0     |
 |:-------:|:--------------------:|:------------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|
@@ -942,7 +941,7 @@ can be found in the [TraceTronic Knowledge Base](https://kb.tracetronic.com/disp
 
   </details>
  <details>
-    <summary>optional: <a href="https://www.tracetronic.com/products/test-guide">TEST-GUIDE</a> 1.65.0 or higher</summary>
+    <summary>optional: <a href="https://www.tracetronic.com/products/test-guide">test.guide</a> 1.65.0 or higher</summary>
 
 | Version |   latest - 2.26   |    2.25 - 2.23     |        2.22       |    2.21 - 2.18    |    2.17 - 2.16    |     2.15 - 2.14   |    2.13 - 2.12    |        2.11       |    2.10 - 2.8     |     2.7 - 2.6     |
 |:-------:|:-----------------:|:------------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|
@@ -960,9 +959,9 @@ can be found in the [TraceTronic Knowledge Base](https://kb.tracetronic.com/disp
 | 1.67.0  | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |
 | 1.64.1  |        :x:        |        :x:         |        :x:        |        :x:        |        :x:        |        :x:        | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|
  </details>
-* Note that some lacking version incompatibilities in the TEST-GUIDE - ECU-TEST-Plugin compatibility matrix are due 
+* Note that some lacking version incompatibilities in the test.guide - ecu.test-Plugin compatibility matrix are due 
 to configuration fields which are not natively supported. You may still add these lacking configurations via the 
-*custom fields* in the TEST-GUIDE configuration on the Jenkins server. 
+*custom fields* in the test.guide configuration on the Jenkins server. 
 
 ## License
 

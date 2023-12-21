@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -10,7 +10,7 @@ import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import java.util.List;
 
 /**
- * Represents the ECU-TEST specific COMApplication API.
+ * Represents the ecu.test specific COMApplication API.
  */
 public interface ComApplication {
 
@@ -117,7 +117,7 @@ public interface ComApplication {
 
     /**
      * Exits the currently running instance of the application (Soft Exit).
-     * The optional timeout parameter was introduced with ECU-TEST 8.0.
+     * The optional timeout parameter was introduced with ecu.test 8.0.
      *
      * @param timeout the timeout in seconds before giving up to wait for application shutdown and raising an exception
      * @return {@code true} if successful
@@ -127,7 +127,7 @@ public interface ComApplication {
 
     /**
      * Exits the currently running instance of the application (Hard Exit), prefer {@link #quit(int)} instead.
-     * The optional timeout parameter was introduced with ECU-TEST 8.0.
+     * The optional timeout parameter was introduced with ecu.test 8.0.
      *
      * @param timeout the timeout in seconds before giving up to wait for application shutdown and raising an exception
      * @return {@code true} if successful

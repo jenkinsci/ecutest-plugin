@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -47,7 +47,7 @@ public class ToolBuilderParamInstallDslExtensionIT extends AbstractDslExtensionI
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class ToolBuilderParamInstallDslExtensionIT extends AbstractDslExtensionI
 
         final DescribableList<Builder, Descriptor<Builder>> builders = project.getBuildersList();
         final StartETBuilder builder = builders.get(StartETBuilder.class);
-        assertNotNull("Start ECU-TEST builder should exist", builder);
+        assertNotNull("Start ecu.test builder should exist", builder);
         assertThat(builder.getToolName(), is("${ECUTEST}"));
     }
 
@@ -74,7 +74,7 @@ public class ToolBuilderParamInstallDslExtensionIT extends AbstractDslExtensionI
 
         final DescribableList<Builder, Descriptor<Builder>> builders = project.getBuildersList();
         final StopETBuilder builder = builders.get(StopETBuilder.class);
-        assertNotNull("Stop ECU-TEST builder should exist", builder);
+        assertNotNull("Stop ecu.test builder should exist", builder);
         assertThat(builder.getToolName(), is("${ECUTEST}"));
     }
 

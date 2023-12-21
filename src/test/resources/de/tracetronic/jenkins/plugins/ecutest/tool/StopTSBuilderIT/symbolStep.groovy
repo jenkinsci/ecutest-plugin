@@ -1,3 +1,3 @@
 node('windows') {
-    stopTS toolName: 'ECU-TEST', timeout: '120'
+    stopTS toolName: 'ecu.test', timeout: '120'
 }

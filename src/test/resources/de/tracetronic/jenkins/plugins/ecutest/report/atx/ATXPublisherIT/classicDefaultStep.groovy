@@ -1,3 +1,3 @@
 node('windows') {
-    step([$class: 'ATXPublisher', atxName: 'TEST-GUIDE'])
+    step([$class: 'ATXPublisher', atxName: 'test.guide'])
 }

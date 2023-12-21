@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -76,7 +76,7 @@ public class ATXGetServerStep extends Step {
             final ATXInstallation installation = ATXInstallation.get(step.atxName);
             if (installation == null) {
                 final TaskListener listener = getContext().get(TaskListener.class);
-                final String message = String.format("TEST-GUIDE installation with name '%s' is not configured!",
+                final String message = String.format("test.guide installation with name '%s' is not configured!",
                     step.atxName);
                 throw new ETPluginException(message, listener);
             }
@@ -97,7 +97,7 @@ public class ATXGetServerStep extends Step {
 
         @Override
         public String getDisplayName() {
-            return "Get TEST-GUIDE server by name";
+            return "Get test.guide server by name";
         }
 
         @Override

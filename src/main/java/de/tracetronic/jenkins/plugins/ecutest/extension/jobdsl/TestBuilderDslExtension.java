@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -46,7 +46,7 @@ import java.util.List;
 public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
 
     /**
-     * {@link DslExtensionMethod} providing the execution of an ECU-TEST package.
+     * {@link DslExtensionMethod} providing the execution of an ecu.test package.
      *
      * @param pkgFile the package file
      * @param closure the nested Groovy closure
@@ -67,7 +67,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
     }
 
     /**
-     * {@link DslExtensionMethod} providing the execution of an ECU-TEST package with default settings.
+     * {@link DslExtensionMethod} providing the execution of an ecu.test package with default settings.
      *
      * @param pkgFile the package file
      * @return the instance of a {@link TestPackageBuilder}
@@ -78,7 +78,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
     }
 
     /**
-     * {@link DslExtensionMethod} providing the execution of an ECU-TEST project.
+     * {@link DslExtensionMethod} providing the execution of an ecu.test project.
      *
      * @param prjFile the project file
      * @param closure the nested Groovy closure
@@ -99,7 +99,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
     }
 
     /**
-     * {@link DslExtensionMethod} providing the execution of an ECU-TEST project with default settings.
+     * {@link DslExtensionMethod} providing the execution of an ecu.test project with default settings.
      *
      * @param prjFile the project file
      * @return the instance of a {@link TestProjectBuilder}
@@ -110,7 +110,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
     }
 
     /**
-     * {@link DslExtensionMethod} providing the execution of ECU-TEST
+     * {@link DslExtensionMethod} providing the execution of ecu.test
      * packages and projects inside of a test folder.
      *
      * @param testFolder the test folder
@@ -135,7 +135,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
     }
 
     /**
-     * {@link DslExtensionMethod} providing the execution of ECU-TEST
+     * {@link DslExtensionMethod} providing the execution of ecu.test
      * packages and projects inside of a test folder with default settings.
      *
      * @param testFolder the test folder
@@ -244,7 +244,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
     }
 
     /**
-     * {@link Context} class providing ECU-TEST package execution methods for the nested DSL context.
+     * {@link Context} class providing ecu.test package execution methods for the nested DSL context.
      */
     public class TestPackageContext extends AbstractTestContext {
 
@@ -446,7 +446,7 @@ public class TestBuilderDslExtension extends AbstractTestBuilderDslExtension {
     }
 
     /**
-     * {@link Context} class providing ECU-TEST project execution methods for the nested DSL context.
+     * {@link Context} class providing ecu.test project execution methods for the nested DSL context.
      */
     public class TestProjectContext extends AbstractTestContext {
 

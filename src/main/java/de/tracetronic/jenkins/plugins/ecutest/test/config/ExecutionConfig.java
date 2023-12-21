@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -56,7 +56,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
      * Instantiates a new {@link ExecutionConfig}.
      *
      * @param timeout       the timeout to run the test
-     * @param stopOnError   specifies whether to stop ECU-TEST and Tool-Server instances if an error occurred
+     * @param stopOnError   specifies whether to stop ecu.test and Tool-Server instances if an error occurred
      * @param checkTestFile specifies whether to check the test file
      * @param recordWarnings specifies whether to record returned test file checks as Warnings NG issues
      */
@@ -74,7 +74,7 @@ public class ExecutionConfig extends AbstractDescribableImpl<ExecutionConfig>
      * Instantiates a new {@link ExecutionConfig}.
      *
      * @param timeout       the timeout to run the test
-     * @param stopOnError   specifies whether to stop ECU-TEST and Tool-Server instances if an error occurred
+     * @param stopOnError   specifies whether to stop ecu.test and Tool-Server instances if an error occurred
      * @param checkTestFile specifies whether to check the test file
      * @param recordWarnings specifies whether to record returned test file checks as Warnings NG issues
      */

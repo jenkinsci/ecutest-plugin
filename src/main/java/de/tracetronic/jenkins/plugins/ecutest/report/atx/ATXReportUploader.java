@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -103,7 +103,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
         final String projectId = ATXUtil.getProjectId(config, envVars);
         final String baseUrl = ATXUtil.getBaseUrl(config, envVars);
         if (baseUrl == null) {
-            logger.logError(String.format("Error getting base URL for selected TEST-GUIDE installation: %s",
+            logger.logError(String.format("Error getting base URL for selected test.guide installation: %s",
                 getInstallation().getName()));
             return false;
         }
@@ -156,7 +156,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
     private void checkForWarning(final ATXConfig config, final TTConsoleLogger logger) {
         if ((boolean) config.getSettingValueByName("cleanAfterSuccessUpload")) {
             logger.logWarn("-> In order to generate ATX report links with unique ATX identifiers "
-                    + "disable the upload setting 'Clean After Success Upload' in the TEST-GUIDE configuration.");
+                    + "disable the upload setting 'Clean After Success Upload' in the test.guide configuration.");
         }
     }
 
@@ -221,7 +221,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
             final FilePath reportFile = AbstractReportPublisher.getFirstReportFile(subDir);
             if (reportFile != null && reportFile.exists()) {
                 final String testName;
-                // Ensure compatibility with ECU-TEST 6.x using report.trf as report name
+                // Ensure compatibility with ecu.test 6.x using report.trf as report name
                 if ("report.trf".equals(reportFile.getName())) {
                     testName = reportFile.getParent().getName().replaceFirst("^Report\\s", "");
                 } else {
@@ -370,7 +370,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
 
         /**
          * File name of the success file which is created in case of a regular ATX upload.
-         * Will only be written by TEST-GUIDE 1.53.0 and above.
+         * Will only be written by test.guide 1.53.0 and above.
          */
         private static final String SUCCESS_FILE_NAME = "success.json";
 
@@ -441,7 +441,7 @@ public class ATXReportUploader extends AbstractATXReportHandler {
 
         /**
          * Checks the success log file and parse upload information.
-         * The success log file will only be written by TEST-GUIDE 1.53.0 and above.
+         * The success log file will only be written by test.guide 1.53.0 and above.
          *
          * @param successFile the success file
          * @param uploadFile  the upload file

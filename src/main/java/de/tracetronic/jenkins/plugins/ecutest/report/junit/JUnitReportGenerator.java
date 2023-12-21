@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -26,12 +26,12 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Class providing the generation of JUnit reports with ECU-TEST.
+ * Class providing the generation of JUnit reports with ecu.test.
  */
 public class JUnitReportGenerator {
 
     /**
-     * Generates UNIT reports by invoking the startup of ECU-TEST if not already running, otherwise using the current
+     * Generates UNIT reports by invoking the startup of ecu.test if not already running, otherwise using the current
      * instance without closing when finished.
      *
      * @param installation the installation
@@ -52,11 +52,11 @@ public class JUnitReportGenerator {
         final List<String> foundProcesses = ETClient.checkProcesses(launcher, listener, false);
         final boolean isETRunning = !foundProcesses.isEmpty();
 
-        // Start ECU-TEST if necessary and generate the UNIT reports
+        // Start ecu.test if necessary and generate the UNIT reports
         if (isETRunning) {
             isGenerated = generateReports(reportFiles, launcher, listener);
         } else {
-            // Register ECU-TEST COM server
+            // Register ecu.test COM server
             final String toolName = run.getEnvironment(listener).expand(installation.getName());
             if (installation.isRegisterComServer()) {
                 final String installPath = installation.getComExecutable(launcher);
@@ -101,7 +101,7 @@ public class JUnitReportGenerator {
     }
 
     /**
-     * Gets the workspace directory, either previous ECU-TEST workspace or default one.
+     * Gets the workspace directory, either previous ecu.test workspace or default one.
      *
      * @param run the run
      * @return the workspace directory
@@ -116,7 +116,7 @@ public class JUnitReportGenerator {
     }
 
     /**
-     * Gets the settings directory, either previous ECU-TEST settings or default one.
+     * Gets the settings directory, either previous ecu.test settings or default one.
      *
      * @param run the run
      * @return the settings directory

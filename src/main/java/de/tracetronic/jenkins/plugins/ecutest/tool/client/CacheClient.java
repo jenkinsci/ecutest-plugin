@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -25,12 +25,12 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Client to generate ECU-TEST caches via COM interface.
+ * Client to generate ecu.test caches via COM interface.
  */
 public class CacheClient {
 
     /**
-     * Defines the minimum required ECU-TEST version for this client to work properly.
+     * Defines the minimum required ecu.test version for this client to work properly.
      */
     private static final ToolVersion ET_MIN_VERSION = new ToolVersion(2021, 1, 0);
 
@@ -91,7 +91,7 @@ public class CacheClient {
     }
 
     /**
-     * Checks the currently running ECU-TEST version for compatibility reasons and
+     * Checks the currently running ecu.test version for compatibility reasons and
      * tests whether the cache module is available.
      *
      * @param workspace the workspace
@@ -105,9 +105,9 @@ public class CacheClient {
         throws IOException, InterruptedException {
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
 
-        // Check for running ECU-TEST instance
+        // Check for running ecu.test instance
         if (!checkETInstance(launcher, listener)) {
-            logger.logError("No running ECU-TEST instance found, please configure one at first!");
+            logger.logError("No running ecu.test instance found, please configure one at first!");
             return false;
         }
 
@@ -121,7 +121,7 @@ public class CacheClient {
     }
 
     /**
-     * Checks already opened ECU-TEST instances.
+     * Checks already opened ecu.test instances.
      *
      * @param launcher the launcher
      * @param listener the listener
@@ -182,7 +182,7 @@ public class CacheClient {
     }
 
     /**
-     * {@link Callable} providing remote access to determine whether the cache module is available in ECU-TEST.
+     * {@link Callable} providing remote access to determine whether the cache module is available in ecu.test.
      */
     private static final class CompatibleCacheCallable extends MasterToSlaveCallable<Boolean, IOException> {
 
@@ -194,7 +194,7 @@ public class CacheClient {
         /**
          * Instantiates a {@link CompatibleCacheCallable}.
          *
-         * @param minVersion the minimum required ECU-TEST version
+         * @param minVersion the minimum required ecu.test version
          * @param listener   the listener
          */
         CompatibleCacheCallable(final ToolVersion minVersion, final TaskListener listener) {
@@ -208,20 +208,20 @@ public class CacheClient {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             final String progId = ETComProperty.getInstance().getProgId();
 
-            // Check ECU-TEST version and cache module
+            // Check ecu.test version and cache module
             try (ETComClient comClient = new ETComClient(progId)) {
                 final String comVersion = comClient.getVersion();
                 final ToolVersion comToolVersion = ToolVersion.parse(comVersion);
                 if (comToolVersion.compareTo(minVersion) < 0) {
                     logger.logError(String.format(
-                        "The configured ECU-TEST version %s does not support the cache module. "
-                            + "Please use at least ECU-TEST %s!", comVersion, minVersion.toMicroString()));
+                        "The configured ecu.test version %s does not support the cache module. "
+                            + "Please use at least ecu.test %s!", comVersion, minVersion.toMicroString()));
                 }
                 comClient.getCaches();
                 isAvailable = true;
             } catch (final ETComException e) {
-                logger.logError(String.format("The cache module is not available in running ECU-TEST instance! "
-                    + "Please use at least ECU-TEST %s!", minVersion.toMicroString()));
+                logger.logError(String.format("The cache module is not available in running ecu.test instance! "
+                    + "Please use at least ecu.test %s!", minVersion.toMicroString()));
                 logger.logComException(e);
             }
             return isAvailable;

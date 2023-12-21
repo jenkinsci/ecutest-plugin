@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -42,8 +42,8 @@ public class ATXConfigurationAsCodeIT {
         assertThat(installations.length, is(1));
 
         ATXInstallation installation = installations[0];
-        assertThat(installation.getName(), is("TEST-GUIDE"));
-        assertThat(installation.getToolName(), is("ECU-TEST"));
+        assertThat(installation.getName(), is("test.guide"));
+        assertThat(installation.getToolName(), is("ecu.test"));
 
         ATXConfig config = installation.getConfig();
         assertThat(config, notNullValue());

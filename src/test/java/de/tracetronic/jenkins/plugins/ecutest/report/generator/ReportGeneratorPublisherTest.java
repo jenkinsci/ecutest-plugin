@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -49,11 +49,11 @@ public class ReportGeneratorPublisherTest {
         generators.add(new ReportGeneratorConfig("HTML", null, true));
         final List<ReportGeneratorConfig> customGenerators = new ArrayList<ReportGeneratorConfig>();
         customGenerators.add(new ReportGeneratorConfig("Custom", null, false));
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ecu.test");
         publisher.setGenerators(generators);
         publisher.setCustomGenerators(customGenerators);
         assertPublisher(publisher);
-        assertEquals("ECU-TEST", publisher.getToolName());
+        assertEquals("ecu.test", publisher.getToolName());
         assertThat(publisher.getGenerators(), hasSize(1));
         assertThat(publisher.getCustomGenerators(), hasSize(1));
         assertThat(publisher.getGenerators().get(0).getName(), is("HTML"));
@@ -67,7 +67,7 @@ public class ReportGeneratorPublisherTest {
     public void testEmptyGenerators() {
         final List<ReportGeneratorConfig> generators = new ArrayList<ReportGeneratorConfig>();
         generators.add(new ReportGeneratorConfig(" ", null, false));
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ecu.test");
         publisher.setGenerators(generators);
         assertTrue(publisher.getGenerators().isEmpty());
     }
@@ -76,7 +76,7 @@ public class ReportGeneratorPublisherTest {
     public void testEmptyCustomGenerators() {
         final List<ReportGeneratorConfig> customGenerators = new ArrayList<ReportGeneratorConfig>();
         customGenerators.add(new ReportGeneratorConfig(" ", null, false));
-        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ECU-TEST");
+        final ReportGeneratorPublisher publisher = new ReportGeneratorPublisher("ecu.test");
         publisher.setCustomGenerators(customGenerators);
         assertTrue(publisher.getCustomGenerators().isEmpty());
     }

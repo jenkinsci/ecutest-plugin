@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-def server = ATX.server('TEST-GUIDE')
+def server = ATX.server('test.guide')
 assert server.getSetting('uploadToServer').value == false
 
 server.overrideSetting('uploadToServer', true)

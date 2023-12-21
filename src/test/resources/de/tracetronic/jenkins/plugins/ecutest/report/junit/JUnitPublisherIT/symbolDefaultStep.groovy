@@ -1,3 +1,3 @@
 node('windows') {
-    publishUNIT toolName: 'ECU-TEST'
+    publishUNIT toolName: 'ecu.test'
 }

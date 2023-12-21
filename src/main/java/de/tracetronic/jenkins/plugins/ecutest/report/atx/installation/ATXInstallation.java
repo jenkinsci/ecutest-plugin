@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -365,7 +365,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         }
 
         /**
-         * Gets the tool descriptor holding the ECU-TEST installations.
+         * Gets the tool descriptor holding the ecu.test installations.
          *
          * @return the tool descriptor
          */
@@ -380,7 +380,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
         }
 
         /**
-         * Validates the TEST-GUIDE name which is a required field.
+         * Validates the test.guide name which is a required field.
          *
          * @param value the name
          * @return the form validation

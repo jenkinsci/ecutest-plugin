@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Class holding ECU-TEST installation specific settings in order to start and stop instances.
+ * Class holding ecu.test installation specific settings in order to start and stop instances.
  */
 public class ETInstance implements Serializable {
 
@@ -44,7 +44,7 @@ public class ETInstance implements Serializable {
     /**
      * Instantiates a new {@link ETInstance}.
      *
-     * @param installation the ECU-TEST installation
+     * @param installation the ecu.test installation
      */
     public ETInstance(@Nonnull final ETInstallation installation) {
         this.installation = installation;
@@ -66,7 +66,7 @@ public class ETInstance implements Serializable {
     }
 
     /**
-     * Starts ECU-TEST with default settings.
+     * Starts ecu.test with default settings.
      */
     @Whitelisted
     public void start() {
@@ -74,7 +74,7 @@ public class ETInstance implements Serializable {
     }
 
     /**
-     * Starts ECU-TEST with given workspace settings.
+     * Starts ecu.test with given workspace settings.
      *
      * @param workspaceDir the workspace directory
      * @param settingsDir  the settings directory
@@ -85,7 +85,7 @@ public class ETInstance implements Serializable {
     }
 
     /**
-     * Starts ECU-TEST with all available settings.
+     * Starts ecu.test with all available settings.
      *
      * @param workspaceDir   the workspace directory
      * @param settingsDir    the settings directory
@@ -110,7 +110,7 @@ public class ETInstance implements Serializable {
     }
 
     /**
-     * Starts ECU-TEST with given settings as named arguments map.
+     * Starts ecu.test with given settings as named arguments map.
      *
      * @param settings the settings map
      */
@@ -121,7 +121,7 @@ public class ETInstance implements Serializable {
 
 
     /**
-     * Stops ECU-TEST with default settings.
+     * Stops ecu.test with default settings.
      */
     @Whitelisted
     public void stop() {
@@ -129,7 +129,7 @@ public class ETInstance implements Serializable {
     }
 
     /**
-     * Stops ECU-TEST with all available settings.
+     * Stops ecu.test with all available settings.
      *
      * @param timeout the timeout
      */
@@ -143,7 +143,7 @@ public class ETInstance implements Serializable {
     }
 
     /**
-     * Stops ECU-TEST with given settings as named arguments map.
+     * Stops ecu.test with given settings as named arguments map.
      *
      * @param settings the settings map
      */

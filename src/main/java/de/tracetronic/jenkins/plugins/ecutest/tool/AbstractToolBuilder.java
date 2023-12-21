@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -89,9 +89,9 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
     }
 
     /**
-     * Sets the ECU-TEST installation and the derived name.
+     * Sets the ecu.test installation and the derived name.
      *
-     * @param installation the ECU-TEST installation
+     * @param installation the ecu.test installation
      */
     @DataBoundSetter
     public void setInstallation(final ETInstallation installation) {
@@ -201,9 +201,9 @@ public abstract class AbstractToolBuilder extends Builder implements SimpleBuild
                 installation = installation.forEnvironment(envVars);
             }
         } else {
-            throw new ETPluginException("The selected ECU-TEST installation is not configured for this node!");
+            throw new ETPluginException("The selected ecu.test installation is not configured for this node!");
         }
-        // Set the COM settings for the current ECU-TEST instance
+        // Set the COM settings for the current ecu.test instance
         final VirtualChannel channel = computer.getChannel();
         if (channel != null) {
             channel.call(new SetComPropertyCallable(installation.getProgId(), installation.getTimeout()));

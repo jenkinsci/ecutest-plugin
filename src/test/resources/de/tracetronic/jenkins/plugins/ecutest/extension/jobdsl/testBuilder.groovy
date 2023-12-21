@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -128,12 +128,12 @@ freeStyleJob("testBuilder") {
                 importConfigPath("import")
                 replaceFiles(false)
             }
-            importFromTMS("credentialsId", "Root/Test", "import", true, "600")
-            importFromTMS("credentialsId", "Root/Test") {
+            importFromTMS("credentialsId", "Root/Test", "import", true, "600", "1000")
+            importFromTMS("credentialsId", "Root/Test", {
                 importPath("import")
                 importMissingPackages(true)
                 timeout(600)
-            }
+            }, "1000")
             importFromTMSDir("credentialsId", "Root/TestDir", "import", "600")
             importFromTMSDir("credentialsId", "Root/TestDir") {
                 importPath("import")

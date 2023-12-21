@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -56,11 +56,11 @@ public class ReportPublisherDslExtensionIT extends AbstractDslExtensionIT {
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ECU-TEST", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", JenkinsRule.NO_PROPERTIES));
 
         final ATXInstallation.DescriptorImpl atxImpl = jenkins.jenkins
             .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
-        final ATXInstallation inst = new ATXInstallation("TEST-GUIDE", "ECU-TEST", new ATXConfig());
+        final ATXInstallation inst = new ATXInstallation("test.guide", "ecu.test", new ATXConfig());
         atxImpl.setInstallations(inst);
     }
 
@@ -79,8 +79,8 @@ public class ReportPublisherDslExtensionIT extends AbstractDslExtensionIT {
         final DescribableList<Publisher, Descriptor<Publisher>> publishers = project.getPublishersList();
         final ATXPublisher publisher = publishers.get(ATXPublisher.class);
         assertNotNull("ATX report publisher should exist", publisher);
-        assertThat(publisher.getAtxName(), is("TEST-GUIDE"));
-        assertThat(publisher.getInstallation().getToolName(), is("ECU-TEST"));
+        assertThat(publisher.getAtxName(), is("test.guide"));
+        assertThat(publisher.getInstallation().getToolName(), is("ecu.test"));
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
         assertFalse(publisher.isArchiving());
@@ -107,7 +107,7 @@ public class ReportPublisherDslExtensionIT extends AbstractDslExtensionIT {
         final DescribableList<Publisher, Descriptor<Publisher>> publishers = project.getPublishersList();
         final JUnitPublisher publisher = publishers.get(JUnitPublisher.class);
         assertNotNull("UNIT report publisher should exist", publisher);
-        assertThat(publisher.getToolName(), is("ECU-TEST"));
+        assertThat(publisher.getToolName(), is("ecu.test"));
         assertEquals(0, Double.compare(15, publisher.getUnstableThreshold()));
         assertEquals(0, Double.compare(30, publisher.getFailedThreshold()));
         assertTrue(publisher.isAllowMissing());
@@ -122,7 +122,7 @@ public class ReportPublisherDslExtensionIT extends AbstractDslExtensionIT {
 
         final DescribableList<Publisher, Descriptor<Publisher>> publishers = project.getPublishersList();
         final ETLogPublisher publisher = publishers.get(ETLogPublisher.class);
-        assertNotNull("ECU-TEST log publisher should exist", publisher);
+        assertNotNull("ecu.test log publisher should exist", publisher);
         assertTrue(publisher.isUnstableOnWarning());
         assertTrue(publisher.isFailedOnError());
         assertTrue(publisher.isAllowMissing());
@@ -138,7 +138,7 @@ public class ReportPublisherDslExtensionIT extends AbstractDslExtensionIT {
         final DescribableList<Publisher, Descriptor<Publisher>> publishers = project.getPublishersList();
         final ReportGeneratorPublisher publisher = publishers.get(ReportGeneratorPublisher.class);
         assertNotNull("Report generator publisher should exist", publisher);
-        assertThat(publisher.getToolName(), is("ECU-TEST"));
+        assertThat(publisher.getToolName(), is("ecu.test"));
         assertTrue(publisher.isAllowMissing());
         assertTrue(publisher.isRunOnFailed());
         assertFalse(publisher.isArchiving());
@@ -176,7 +176,7 @@ public class ReportPublisherDslExtensionIT extends AbstractDslExtensionIT {
         final DescribableList<Publisher, Descriptor<Publisher>> publishers = project.getPublishersList();
         final TMSPublisher publisher = publishers.get(TMSPublisher.class);
         assertNotNull("TMS publisher should exist", publisher);
-        assertThat(publisher.getToolName(), is("ECU-TEST"));
+        assertThat(publisher.getToolName(), is("ecu.test"));
         assertThat(publisher.getCredentialsId(), is("credentialsId"));
         assertThat(publisher.getTimeout(), is("600"));
         assertTrue(publisher.isAllowMissing());

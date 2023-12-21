@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -148,7 +148,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     }
 
     /**
-     * {@link DslExtensionMethod} for publishing ECU-TEST logs.
+     * {@link DslExtensionMethod} for publishing ecu.test logs.
      *
      * @param closure the nested Groovy closure
      * @return the instance of a {@link ETLogPublisher}
@@ -169,7 +169,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     }
 
     /**
-     * {@link DslExtensionMethod} for publishing ECU-TEST logs with default settings.
+     * {@link DslExtensionMethod} for publishing ecu.test logs with default settings.
      *
      * @return the instance of a {@link ETLogPublisher}
      */
@@ -296,7 +296,7 @@ public class ReportPublisherDslExtension extends AbstractReportPublisherDslExten
     }
 
     /**
-     * {@link Context} class providing ECU-TEST log publisher methods for the nested DSL context.
+     * {@link Context} class providing ecu.test log publisher methods for the nested DSL context.
      */
     public static class PublishETLogContext extends AbstractReportContext {
 

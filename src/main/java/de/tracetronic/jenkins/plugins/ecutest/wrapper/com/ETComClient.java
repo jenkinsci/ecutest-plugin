@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -309,7 +309,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     /**
      * Same as {@link #quit(int)} but without timeout.
-     * Must be used for ECU-TEST below version 8.0.
+     * Must be used for ecu.test below version 8.0.
      *
      * @return {@code true} if successful
      * @throws ETComException in case of a COM exception
@@ -330,7 +330,7 @@ public class ETComClient implements ComApplication, AutoCloseable {
 
     /**
      * Same as {@link #exit(int)} but without timeout.
-     * Must be used for ECU-TEST below version 8.0.
+     * Must be used for ecu.test below version 8.0.
      *
      * @return {@code true} if successful
      * @throws ETComException in case of a COM exception

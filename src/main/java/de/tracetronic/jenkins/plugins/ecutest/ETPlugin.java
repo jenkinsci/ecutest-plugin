@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -28,22 +28,22 @@ import java.util.Map.Entry;
 public class ETPlugin {
 
     /**
-     * Defines the minimum required ECU-TEST version supported by this plugin.
+     * Defines the minimum required ecu.test version supported by this plugin.
      */
     public static final ToolVersion ET_MIN_VERSION = new ToolVersion(2021, 1, 0);
 
     /**
-     * Defines the maximum allowed ECU-TEST version supported by this plugin.
+     * Defines the maximum allowed ecu.test version supported by this plugin.
      */
     public static final ToolVersion ET_MAX_VERSION = new ToolVersion(2023, 3, 0);
 
     /**
-     * Defines the minimum TEST-GUIDE version supported by this plugin.
+     * Defines the minimum test.guide version supported by this plugin.
      */
     public static final ToolVersion ATX_MIN_VERSION = new ToolVersion(1, 65, 0);
 
     /**
-     * Defines the TEST-GUIDE version that the provided ATX configuration is based on.
+     * Defines the test.guide version that the provided ATX configuration is based on.
      */
     public static final ToolVersion ATX_CONFIG_VERSION = new ToolVersion(1, 129, 0);
 

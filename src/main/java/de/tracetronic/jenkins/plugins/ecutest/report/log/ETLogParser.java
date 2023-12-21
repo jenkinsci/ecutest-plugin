@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
- * Class providing a parser for the ECU-TEST log files.
+ * Class providing a parser for the ecu.test log files.
  */
 public class ETLogParser {
 
@@ -44,7 +44,7 @@ public class ETLogParser {
     }
 
     /**
-     * Parses the ECU-TEST log file.
+     * Parses the ecu.test log file.
      *
      * @return the list of annotated log messages
      */

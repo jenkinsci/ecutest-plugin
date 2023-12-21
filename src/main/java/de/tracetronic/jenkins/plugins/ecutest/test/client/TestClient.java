@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2020 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -18,7 +18,7 @@ import java.io.IOException;
 public interface TestClient {
 
     /**
-     * Runs a test case, can be either an ECU-TEST package or project.
+     * Runs a test case, can be either an ecu.test package or project.
      *
      * @param run       the run
      * @param workspace the workspace

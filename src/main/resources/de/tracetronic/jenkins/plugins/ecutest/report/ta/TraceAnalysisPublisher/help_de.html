@@ -1,11 +1,11 @@
 <!--
-  Copyright (c) 2015-2019 TraceTronic GmbH
+  Copyright (c) 2015-2023 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
 
 <div>
-    <p>Veröffentlicht die Ergebnisse der Traceanalyse aller in diesem Job konfigurierten ECU-TEST-Packages bzw.
+    <p>Veröffentlicht die Ergebnisse der Traceanalyse aller in diesem Job konfigurierten ecu.test-Packages bzw.
         -Projekte.</p>
     <strong>Verwendung in Pipelines</strong>
     <dl>Signaturen:
@@ -28,18 +28,18 @@ ETInstance.publishTraceAnalysis(Map&lt;String, Object&gt; settings) : void
     <dl>Beispiele:
         <dd>
             <pre>
-publishTraceAnalysis('ECU-TEST')
+publishTraceAnalysis('ecu.test')
             </pre>
             <pre>
-def instance = ET.installation('ECU-TEST')
+def instance = ET.installation('ecu.test')
 publishTraceAnalysis installation: instance.installation, mergeReports: true, createReportDir: false
             </pre>
             <pre>
-def instance = ET.newInstallation('ECU-TEST', 'C:\\Program Files\\ECU-TEST 8.0')
+def instance = ET.newInstallation('ecu.test', 'C:\\Program Files\\ECU-TEST 8.0')
 instance.publishTraceAnalysis()
             </pre>
             <pre>
-def instance = ET.newInstallation toolName: 'ECU-TEST', installPath: C:\\Program Files\\ECU-TEST 8.0'
+def instance = ET.newInstallation toolName: 'ecu.test', installPath: C:\\Program Files\\ECU-TEST 8.0'
 instance.publishTraceAnalysis mergeReports: true, createReportDir: false, timeout: 120, allowMissing: true, runOnFailed: true, archiving: true, keepAll: true
             </pre>
         </dd>

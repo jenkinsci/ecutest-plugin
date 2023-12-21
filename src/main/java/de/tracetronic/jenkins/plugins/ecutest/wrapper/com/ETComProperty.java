@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 TraceTronic GmbH
+ * Copyright (c) 2015-2023 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -46,7 +46,7 @@ public final class ETComProperty implements Serializable {
     }
 
     /**
-     * Gets the current COM specific programmatic identifier set by latest ECU-TEST startup.
+     * Gets the current COM specific programmatic identifier set by latest ecu.test startup.
      *
      * @return the programmatic identifier
      */
@@ -64,7 +64,7 @@ public final class ETComProperty implements Serializable {
     }
 
     /**
-     * Gets the current COM response timeout set by latest ECU-TEST startup.
+     * Gets the current COM response timeout set by latest ecu.test startup.
      *
      * @return the timeout
      */
