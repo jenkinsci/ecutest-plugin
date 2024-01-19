@@ -31,7 +31,7 @@ pipeline {
         pipeline_report_dir = "report2TG/build-$env.BUILD_NUMBER"
         PRODUCT_NAME = "ecutest-plugin"
         PRODUCT_VERSION = readMavenPom().getVersion()
-        TEST_LEVEL = "Unit Tests"
+        TEST_LEVEL = "unit"
     }
     tools {
         maven 'M3'
