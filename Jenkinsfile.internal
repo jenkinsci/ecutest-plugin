@@ -32,7 +32,6 @@ pipeline {
         PRODUCT_NAME = "ecutest-plugin"
         PRODUCT_VERSION = readMavenPom().getVersion()
         TEST_LEVEL = "unit"
-        TEST_VAR = sh(returnStdout: true, script: 'git rev-parse HEAD')
     }
     tools {
         maven 'M3'
