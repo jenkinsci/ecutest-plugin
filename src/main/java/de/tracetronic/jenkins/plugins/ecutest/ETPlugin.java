@@ -43,8 +43,7 @@ public class ETPlugin {
     public static final ToolVersion ATX_MIN_VERSION = new ToolVersion(1, 65, 0);
 
     /**
-     * Defines the test.guide version that the provided ATX configuration is based
-     * on.
+     * Defines the test.guide version that the provided ATX configuration is based on.
      */
     public static final ToolVersion ATX_CONFIG_VERSION = new ToolVersion(1, 129, 0);
 
@@ -84,7 +83,7 @@ public class ETPlugin {
     @Initializer(after = InitMilestone.PLUGINS_STARTED)
     public void syncATXConfiguration() {
         final ATXInstallation.DescriptorImpl descriptor = Jenkins.get()
-                .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
+            .getDescriptorByType(ATXInstallation.DescriptorImpl.class);
         if (descriptor != null) {
             descriptor.syncWithDefaultConfig();
             descriptor.save();
@@ -96,43 +95,47 @@ public class ETPlugin {
      */
     @Initializer(after = InitMilestone.JOB_LOADED)
     public void registerIcons() {
-        for (final String name : new String[] {
-                "atx-report",
-                "atx-trend",
-                "ecu-test",
-                "ecu-test-pkg",
-                "ecu-test-prj",
-                "report-generator",
-                "test-guide",
-                "test-param",
-                "tool-param",
-                "trf-report",
-                "trace-check",
-                "trace-report"
+        for (final String name : new String[]{
+            "atx-report",
+            "atx-trend",
+            "ecu-test",
+            "ecu-test-pkg",
+            "ecu-test-prj",
+            "report-generator",
+            "test-guide",
+            "test-param",
+            "tool-param",
+            "trf-report",
+            "trace-check",
+            "trace-report"
         }) {
             // Register small (16x16) icons
             IconSet.icons.addIcon(new Icon(
                     String.format("icon-ecutest-%s icon-sm", name),
                     String.format("ecutest/icons/16x16/%s.png", name),
-                    Icon.ICON_SMALL_STYLE, IconType.PLUGIN));
+                    Icon.ICON_SMALL_STYLE, IconType.PLUGIN)
+            );
 
             // Register medium (24x24) icons
             IconSet.icons.addIcon(new Icon(
                     String.format("icon-ecutest-%s icon-md", name),
                     String.format("ecutest/icons/24x24/%s.png", name),
-                    Icon.ICON_MEDIUM_STYLE, IconType.PLUGIN));
+                    Icon.ICON_MEDIUM_STYLE, IconType.PLUGIN)
+            );
 
             // Register large (32x32) icons
             IconSet.icons.addIcon(new Icon(
                     String.format("icon-ecutest-%s icon-lg", name),
                     String.format("ecutest/icons/32x32/%s.png", name),
-                    Icon.ICON_LARGE_STYLE, IconType.PLUGIN));
+                    Icon.ICON_LARGE_STYLE, IconType.PLUGIN)
+            );
 
             // Register x-large (48x48) icons
             IconSet.icons.addIcon(new Icon(
                     String.format("icon-ecutest-%s icon-xlg", name),
                     String.format("ecutest/icons/48x48/%s.png", name),
-                    Icon.ICON_XLARGE_STYLE, IconType.PLUGIN));
+                    Icon.ICON_XLARGE_STYLE, IconType.PLUGIN)
+            );
         }
     }
 }
