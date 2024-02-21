@@ -551,6 +551,7 @@ node('windows') {
 <details>
     <summary>Dynamic test.guide pipeline example</summary>
 
+**Simple**
 ```groovy
 node('windows') {
     // Start tools, execute tests
@@ -570,6 +571,32 @@ node('windows') {
 
     // Publish ATX reports directly
     atx.publish()
+}
+```
+
+**With custom settings**
+```groovy
+node('windows') {
+    // Start tools, execute tests
+    ...
+
+    // test.guide server instantiation using newATXServer step
+    def atx = newAtxServer atxName: 'test.guide', toolName: 'ecu.test',
+        config: atxConfig(
+            settings: [
+                atxTextSetting(group: 'CONNECTION', name: 'serverURL', value: 'localhost'),
+                atxTextSetting(group: 'CONNECTION', name: 'serverPort', value: '8085'),
+                atxTextSetting(group: 'CONNECTION', name: 'projectId', value: '1'),
+                atxSecretSetting(group: 'CONNECTION', name: 'uploadAuthenticationKey', value: 'xxx'),
+                atxBooleanSetting(group: 'UPLOAD', name: 'uploadToServer', value: true),
+            ],
+            customSettings: [
+                atxCustomTextSetting(name: 'customSetting', value: 'customValue')
+            ]
+        )
+    
+    // Publish ATX reports
+    publishATX atxName: atx.installation.getName(), atxInstallation: atx.installation
 }
 ```
 </details>
