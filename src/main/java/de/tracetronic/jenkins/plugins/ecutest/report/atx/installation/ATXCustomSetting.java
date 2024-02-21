@@ -12,6 +12,7 @@ import hudson.model.Descriptor;
 import hudson.util.FormValidation;
 import jenkins.model.Jenkins;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 import org.kohsuke.stapler.QueryParameter;
 
 import java.io.Serializable;
@@ -49,6 +50,7 @@ public abstract class ATXCustomSetting extends AbstractDescribableImpl<ATXCustom
         return Jenkins.get().getDescriptorList(ATXCustomSetting.class);
     }
 
+    @Whitelisted
     public String getName() {
         return name;
     }

@@ -6,6 +6,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.pipeline;
 
 import com.google.common.collect.Maps;
+import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXCustomSetting;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -106,6 +107,17 @@ public class ATXServer implements Serializable {
     @Whitelisted
     public ATXSetting<?> getSetting(final String settingName) {
         return installation.getConfig().getSettingByName(settingName).orElse(null);
+    }
+
+    /**
+     * Gets a single ATX custom setting by name.
+     *
+     * @param settingName the custom setting name
+     * @return the custom setting
+     */
+    @Whitelisted
+    public ATXCustomSetting getCustomSetting(final String settingName) {
+        return installation.getConfig().getCustomSettingByName(settingName).orElse(null);
     }
 
     /**

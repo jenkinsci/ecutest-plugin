@@ -194,6 +194,16 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
     }
 
     /**
+     * Gets the ATX custom setting by given setting name.
+     *
+     * @param name the custom setting name
+     * @return the ATX setting or {@code null} if not found
+     */
+    public Optional<ATXCustomSetting> getCustomSettingByName(final String name) {
+        return customSettings.stream().filter(setting -> setting.getName().equals(name)).findFirst();
+    }
+
+    /**
      * Gets all ATX settings which belongs to a settings group.
      *
      * @param group the settings group

@@ -9,7 +9,9 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -80,17 +82,25 @@ public class ATXConfigTest {
         assertThat(setting.isPresent(), is(true));
         assertThat(setting.get().value, is("8085"));
     }
-
-    @Test
-    public void testGetInvalidSettingByName() {
-        final ATXConfig config = new ATXConfig(null, null);
-        assertFalse(config.getSettingByName("invalid").isPresent());
-    }
-
     @Test
     public void testGetNotExistingSettingByName() {
         final ATXConfig config = new ATXConfig();
         assertFalse(config.getSettingByName("notexisting").isPresent());
+    }
+
+    @Test
+    public void testGetCustomSettingByName() {
+        final ATXConfig config = new ATXConfig(null, Collections.singletonList(new ATXCustomTextSetting("foo",
+                "bar")));
+        Optional<ATXCustomSetting> setting = config.getCustomSettingByName("foo");
+        assertThat(setting.isPresent(), is(true));
+        assertThat(((ATXCustomTextSetting)setting.get()).getValue(), is("bar"));
+    }
+
+    @Test
+    public void testGetNotExistingCustomSettingByName() {
+        final ATXConfig config = new ATXConfig();
+        assertFalse(config.getCustomSettingByName("bar").isPresent());
     }
 
     @Test
