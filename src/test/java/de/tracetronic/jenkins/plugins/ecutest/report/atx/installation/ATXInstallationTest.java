@@ -12,6 +12,7 @@ import java.util.Collections;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyArray;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -34,7 +35,7 @@ public class ATXInstallationTest {
         final ATXConfig config = new ATXConfig(Collections.emptyList(), Collections.emptyList());
         final ATXInstallation inst = new ATXInstallation("TG", "ET", config);
         assertNotNull(inst.getConfig());
-        assertTrue(inst.getConfig().getSettings().isEmpty());
+        assertFalse(inst.getConfig().getSettings().isEmpty());
     }
 
     @Test

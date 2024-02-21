@@ -29,14 +29,14 @@ public class ATXConfigTest {
     @Test
     public void testNullConfigMap() {
         final ATXConfig config = new ATXConfig(null, null);
-        assertFalse(config.getSettings().isEmpty());
+        assertFalse(config.getSettings().isEmpty()); // will contain default settings
         assertTrue(config.getCustomSettings().isEmpty());
     }
 
     @Test
     public void testEmptyConfigMap() {
         final ATXConfig config = new ATXConfig(Collections.emptyList(), Collections.emptyList());
-        assertTrue(config.getSettings().isEmpty());
+        assertFalse(config.getSettings().isEmpty()); // will contain default settings
         assertTrue(config.getCustomSettings().isEmpty());
     }
 

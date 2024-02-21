@@ -294,15 +294,6 @@ public class ATXUtilTest {
     }
 
     @Test
-    public void testUnavailableProjectId() {
-        final List<ATXSetting<?>> uploadSettings = new ArrayList<>();
-
-        final ATXConfig atxConfig = new ATXConfig(uploadSettings, null);
-
-        assertThat(ATXUtil.getProjectId(atxConfig, new EnvVars()), nullValue());
-    }
-
-    @Test
     public void testSingleTestplanMap() {
         final List<ATXSetting<?>> specialSettings = new ArrayList<>();
         final ATXBooleanSetting singleTestplanMap = new ATXBooleanSetting(

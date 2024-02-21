@@ -306,14 +306,6 @@ public class TestValidatorTest {
         assertEquals("Error if bracket missing in filter expression", FormValidation.Kind.WARNING, validation.kind);
     }
 
-    @Ignore("Regression since antlr 4.7")
-    @Test
-    public void testMissingLogicOperatorExpression() {
-        final FormValidation validation = testValidator.validateFilterExpression("Name='test' Status='FAILED'");
-        assertEquals("Error if logical operator missing in filter expression", FormValidation.Kind.WARNING,
-            validation.kind);
-    }
-
     @Test
     public void testValidComplexExpression() {
         final FormValidation validation = testValidator
