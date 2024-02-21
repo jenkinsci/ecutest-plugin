@@ -78,7 +78,10 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
     @DataBoundConstructor
     public ATXConfig(final List<ATXSetting<?>> settings,
                      final List<ATXCustomSetting> customSettings) {
-        this.settings = settings == null ? parseDefaultConfig() : settings;
+        this.settings = parseDefaultConfig();
+        if (settings != null) {
+            settings.forEach(atxSetting -> this.setSettingValueByName(atxSetting.getName(), atxSetting.getValue()));
+        }
         this.customSettings = customSettings == null ? new ArrayList<>() : customSettings;
     }
 
