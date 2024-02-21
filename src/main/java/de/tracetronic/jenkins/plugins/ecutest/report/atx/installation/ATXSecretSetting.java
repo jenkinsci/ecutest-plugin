@@ -28,9 +28,21 @@ public class ATXSecretSetting extends ATXSetting<Secret> {
      * @param group the settings group
      * @param value the current value
      */
-    @DataBoundConstructor
+    //@DataBoundConstructor
     public ATXSecretSetting(final String name, final SettingsGroup group, final Secret value) {
         super(name, group, value);
+    }
+
+    /**
+     * Instantiates a new {@link ATXSecretSetting}.
+     *
+     * @param name  the name
+     * @param group the settings group
+     * @param value the current value
+     */
+    @DataBoundConstructor
+    public ATXSecretSetting(final String name, final SettingsGroup group, final String value) {
+        super(name, group, Secret.fromString(value));
     }
 
     /**

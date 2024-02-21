@@ -72,4 +72,4 @@ local.properties
 out/
 
 ### Jenkins ###
-work/
+work*/
