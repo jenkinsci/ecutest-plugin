@@ -28,9 +28,12 @@ import org.kohsuke.stapler.DataBoundSetter;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Publisher parsing the ecu.test log files and providing links to saved {@link ETLogReport}s.
@@ -40,12 +43,12 @@ public class ETLogPublisher extends AbstractReportPublisher {
     /**
      * File name of the standard ecu.test log file.
      */
-    public static final String INFO_LOG_NAME = "ECU_TEST_OUT.log";
+    public static final List<String> INFO_LOG_NAMES = Arrays.asList("ECU_TEST_OUT.log", "ecu.test_out.log");
 
     /**
      * File name of the error ecu.test log file.
      */
-    public static final String ERROR_LOG_NAME = "ECU_TEST_ERR.log";
+    public static final List<String> ERROR_LOG_NAMES = Arrays.asList("ECU_TEST_ERR.log", "ecu.test_err.log");
 
     /**
      * The URL name to {@link ETLogReport}s holding by {@link AbstractETLogAction}.
@@ -130,8 +133,11 @@ public class ETLogPublisher extends AbstractReportPublisher {
                     if (reportDir.exists()) {
                         try {
                             logger.logInfo(String.format("- Archiving log files: %s", reportDir));
-                            final int copiedFiles = reportDir.copyRecursiveTo(
-                                String.format("**/%s,**/%s", ERROR_LOG_NAME, INFO_LOG_NAME), archiveTargetDir);
+                            final String mask = Stream.concat(ERROR_LOG_NAMES.stream(), INFO_LOG_NAMES.stream())
+                                .map(s -> String.format("**/%s", s))
+                                .reduce((s, s2) -> String.format("%s,%s", s, s2))
+                                .orElse("");
+                            final int copiedFiles = reportDir.copyRecursiveTo(mask, archiveTargetDir);
                             if (copiedFiles == 0) {
                                 continue;
                             } else if (copiedFiles > 2) {
@@ -223,7 +229,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
     /**
      * Creates the main report and adds the sub-reports by traversing them recursively.
      *
-     * @param logReports       the TRF reports
+     * @param logReports       the log reports
      * @param archiveTargetDir the archive target directory
      * @throws IOException          signals that an I/O exception has occurred
      * @throws InterruptedException if the build gets interrupted
@@ -234,11 +240,23 @@ public class ETLogPublisher extends AbstractReportPublisher {
             archiveTargetDir.getName(), getDirectorySize(archiveTargetDir), Collections.emptyList(), 0, 0);
         logReports.add(logReport);
 
-        final FilePath errorLogFile = archiveTargetDir.child(ERROR_LOG_NAME);
-        final FilePath infoLogFile = archiveTargetDir.child(INFO_LOG_NAME);
-        if (errorLogFile.exists() && infoLogFile.exists()) {
-            final ETLogReport errorlogReport = parseLogFile(errorLogFile, archiveTargetDir.getParent());
-            logReport.addSubReport(errorlogReport);
+        FilePath errorLogFile = null;
+        FilePath infoLogFile = null;
+        for (final String logFileName: ERROR_LOG_NAMES) {
+            errorLogFile = archiveTargetDir.child(logFileName);
+            if (errorLogFile.exists()) {
+                break;
+            }
+        }
+        for (final String logFileName: INFO_LOG_NAMES) {
+            infoLogFile = archiveTargetDir.child(logFileName);
+            if (infoLogFile.exists()) {
+                break;
+            }
+        }
+        if (errorLogFile != null && errorLogFile.exists() && infoLogFile != null && infoLogFile.exists()) {
+            final ETLogReport errorLogReport = parseLogFile(errorLogFile, archiveTargetDir.getParent());
+            logReport.addSubReport(errorLogReport);
             final ETLogReport infoLogReport = parseLogFile(infoLogFile, archiveTargetDir.getParent());
             logReport.addSubReport(infoLogReport);
         }
@@ -251,7 +269,7 @@ public class ETLogPublisher extends AbstractReportPublisher {
      * Traverses the sub-report directories recursively and searches for TRF reports.
      * Includes the report files generated during separate sub-project execution.
      *
-     * @param logReport        the TRF report
+     * @param logReport        the log report
      * @param testReportDir    the main test report directory
      * @param subTestReportDir the sub test report directory
      * @throws IOException          signals that an I/O exception has occurred
@@ -260,17 +278,22 @@ public class ETLogPublisher extends AbstractReportPublisher {
     private void traverseSubReports(final ETLogReport logReport, final FilePath testReportDir,
                                     final FilePath subTestReportDir) throws IOException, InterruptedException {
         for (final FilePath subDir : subTestReportDir.listDirectories()) {
-            FilePath logFile = subDir.child(ERROR_LOG_NAME);
-            if (logFile.exists()) {
-                final ETLogReport subReport = parseLogFile(logFile, testReportDir);
-                logReport.addSubReport(subReport);
+            FilePath logFile;
+            for (final String logFileName: ERROR_LOG_NAMES) {
+                logFile = subDir.child(logFileName);
+                if (logFile.exists()) {
+                    final ETLogReport subReport = parseLogFile(logFile, testReportDir);
+                    logReport.addSubReport(subReport);
 
+                }
             }
-            logFile = subDir.child(INFO_LOG_NAME);
-            if (logFile.exists()) {
-                final ETLogReport subReport = parseLogFile(logFile, testReportDir);
-                logReport.addSubReport(subReport);
-                traverseSubReports(subReport, testReportDir, subDir);
+            for (final String logFileName: INFO_LOG_NAMES) {
+                logFile = subDir.child(logFileName);
+                if (logFile.exists()) {
+                    final ETLogReport subReport = parseLogFile(logFile, testReportDir);
+                    logReport.addSubReport(subReport);
+                    traverseSubReports(subReport, testReportDir, subDir);
+                }
             }
         }
     }
@@ -344,7 +367,9 @@ public class ETLogPublisher extends AbstractReportPublisher {
             workspacePath = workspace;
         }
         if (workspacePath != null && workspacePath.exists()) {
-            final String includes = String.format("%s,%s", INFO_LOG_NAME, ERROR_LOG_NAME);
+            final String includes = Stream.concat(ERROR_LOG_NAMES.stream(), INFO_LOG_NAMES.stream())
+                .reduce((s, s2) -> String.format("%s,%s", s, s2))
+                .orElse("");
             for (final String includeFile : workspacePath.act(new ListFilesCallable(includes, ""))) {
                 final FilePath logFile = new FilePath(launcher.getChannel(), includeFile);
                 logFiles.add(logFile);
@@ -419,13 +444,17 @@ public class ETLogPublisher extends AbstractReportPublisher {
         public static void onStarted(final FilePath workspace, final TaskListener listener) {
             if (workspace != null && listener != null) {
                 try {
-                    final FilePath infoLogFile = workspace.child(INFO_LOG_NAME);
-                    final FilePath errorLogFile = workspace.child(ERROR_LOG_NAME);
-                    if (infoLogFile.exists()) {
-                        infoLogFile.delete();
+                    for (final String logFileName: ERROR_LOG_NAMES) {
+                        final FilePath logFile = workspace.child(logFileName);
+                        if (logFile.exists()) {
+                            logFile.delete();
+                        }
                     }
-                    if (errorLogFile.exists()) {
-                        errorLogFile.delete();
+                    for (final String logFileName: INFO_LOG_NAMES) {
+                        final FilePath logFile = workspace.child(logFileName);
+                        if (logFile.exists()) {
+                            logFile.delete();
+                        }
                     }
                 } catch (IOException | InterruptedException e) {
                     final TTConsoleLogger logger = new TTConsoleLogger(listener);

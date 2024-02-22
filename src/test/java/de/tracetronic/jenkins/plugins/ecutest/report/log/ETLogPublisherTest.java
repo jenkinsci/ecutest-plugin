@@ -37,8 +37,8 @@ public class ETLogPublisherTest {
     @Test
     public void testRunListener() throws IOException {
         folder.create();
-        final File infoLog = folder.newFile(ETLogPublisher.INFO_LOG_NAME);
-        final File errorLog = folder.newFile(ETLogPublisher.ERROR_LOG_NAME);
+        final File infoLog = folder.newFile(ETLogPublisher.INFO_LOG_NAMES.get(0));
+        final File errorLog = folder.newFile(ETLogPublisher.ERROR_LOG_NAMES.get(0));
         final FilePath settingsDir = new FilePath(folder.getRoot());
         final TaskListener listener = mock(TaskListener.class);
         ETLogPublisher.RunListenerImpl.onStarted(settingsDir, listener);
