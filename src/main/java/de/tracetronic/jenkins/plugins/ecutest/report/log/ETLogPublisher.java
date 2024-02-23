@@ -40,6 +40,11 @@ import java.util.stream.Stream;
 public class ETLogPublisher extends AbstractReportPublisher {
 
     /**
+     * The URL name to {@link ETLogReport}s holding by {@link AbstractETLogAction}.
+     */
+    protected static final String URL_NAME = "ecutest-logs";
+
+    /**
      * File name variations of the standard ecu.test log file.
      */
     static final List<String> INFO_LOG_NAMES = Arrays.asList("ecu.test_out.log", "ECU_TEST_OUT.log");
@@ -48,11 +53,6 @@ public class ETLogPublisher extends AbstractReportPublisher {
      * File name variations of the error ecu.test log file.
      */
     static final List<String> ERROR_LOG_NAMES = Arrays.asList("ecu.test_err.log", "ECU_TEST_ERR.log");
-
-    /**
-     * The URL name to {@link ETLogReport}s holding by {@link AbstractETLogAction}.
-     */
-    protected static final String URL_NAME = "ecutest-logs";
 
     /**
      * Specifies hether to mark the build as unstable if warnings found.
