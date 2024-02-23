@@ -13,6 +13,9 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -37,14 +40,19 @@ public class ETLogPublisherTest {
     @Test
     public void testRunListener() throws IOException {
         folder.create();
-        final File infoLog = folder.newFile(ETLogPublisher.INFO_LOG_NAMES.get(0));
-        final File errorLog = folder.newFile(ETLogPublisher.ERROR_LOG_NAMES.get(0));
+        final List<File> files = new ArrayList<>();
+        for (String fileName : ETLogPublisher.INFO_LOG_NAMES) {
+            files.add(folder.newFile(fileName));
+        }
+        for (String fileName : ETLogPublisher.ERROR_LOG_NAMES) {
+            files.add(folder.newFile(fileName));
+        }
+
         final FilePath settingsDir = new FilePath(folder.getRoot());
         final TaskListener listener = mock(TaskListener.class);
         ETLogPublisher.RunListenerImpl.onStarted(settingsDir, listener);
 
-        assertFalse("Standard log should be deleted", infoLog.exists());
-        assertFalse("Errot log should be deleted", errorLog.exists());
+        files.forEach(f -> assertFalse("Log file should be deleted",f.exists()));
     }
 
     /**

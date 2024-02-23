@@ -28,7 +28,6 @@ import org.kohsuke.stapler.DataBoundSetter;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,14 +40,14 @@ import java.util.stream.Stream;
 public class ETLogPublisher extends AbstractReportPublisher {
 
     /**
-     * File name of the standard ecu.test log file.
+     * File name variations of the standard ecu.test log file.
      */
-    public static final List<String> INFO_LOG_NAMES = Arrays.asList("ECU_TEST_OUT.log", "ecu.test_out.log");
+    static final List<String> INFO_LOG_NAMES = Arrays.asList("ecu.test_out.log", "ECU_TEST_OUT.log");
 
     /**
-     * File name of the error ecu.test log file.
+     * File name variations of the error ecu.test log file.
      */
-    public static final List<String> ERROR_LOG_NAMES = Arrays.asList("ECU_TEST_ERR.log", "ecu.test_err.log");
+    static final List<String> ERROR_LOG_NAMES = Arrays.asList("ecu.test_err.log", "ECU_TEST_ERR.log");
 
     /**
      * The URL name to {@link ETLogReport}s holding by {@link AbstractETLogAction}.
