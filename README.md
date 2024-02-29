@@ -577,10 +577,10 @@ node('windows') {
 **With custom settings**
 ```groovy
 node('windows') {
-    // Start tools, execute tests
+    // Start tools, execute tests, generate reports
     ...
 
-    // test.guide server instantiation using newATXServer step
+    // dynamic test.guide server instantiation using newATXServer step
     def atx = newAtxServer atxName: 'test.guide', toolName: 'ecu.test',
         config: atxConfig(
             settings: [
@@ -591,7 +591,8 @@ node('windows') {
                 atxBooleanSetting(group: 'UPLOAD', name: 'uploadToServer', value: true),
             ],
             customSettings: [
-                atxCustomTextSetting(name: 'customSetting', value: 'customValue')
+                atxCustomTextSetting(name: 'customSetting', value: 'customValue'),
+                atxCustomBooleanSetting(name: 'boolSetting', checked: true)
             ]
         )
     
