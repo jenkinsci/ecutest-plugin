@@ -103,7 +103,7 @@ public class ETToolProperty extends ToolProperty<ETInstallation> implements Seri
             Jenkins.get().checkPermission(Jenkins.ADMINISTER);
             FormValidation returnValue = FormValidation.ok();
             if (!StringUtils.isEmpty(value)) {
-                final String pattern = "^(ECU-TEST\\.Application(\\.\\d+.\\d+)?|ECU-TEST6?\\.Application)";
+                final String pattern = "^(ECU-TEST|ecu\\.test)\\.Application(\\.\\d+.\\d+)?";
                 if (!Pattern.matches(pattern, value)) {
                     returnValue = FormValidation.error(Messages.ETToolProperty_InvalidProgID(value));
                 }
