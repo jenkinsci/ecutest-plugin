@@ -92,6 +92,7 @@ public class ATXPipeline implements Serializable {
     }
 
     /**
+     * Deprecated! Please use the newATXServer step directly!
      * Creates a new {@link ATXServer} instance with given {@link ATXConfig}.
      *
      * @param atxName  the ATX name
@@ -99,6 +100,7 @@ public class ATXPipeline implements Serializable {
      * @param config   the ATX configuration
      * @return the ATX server
      */
+    @Deprecated
     @Whitelisted
     public ATXServer newServer(final String atxName, final String toolName, final ATXConfig config) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();

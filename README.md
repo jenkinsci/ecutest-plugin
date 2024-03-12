@@ -551,7 +551,9 @@ node('windows') {
 <details>
     <summary>Dynamic test.guide pipeline example</summary>
 
-**Simple**
+**Simple**  
+For simple use cases there is the `newServer` method of the global `ATX` variable.
+
 ```groovy
 node('windows') {
     // Start tools, execute tests
@@ -574,7 +576,13 @@ node('windows') {
 }
 ```
 
-**With custom settings**
+**Complex configurations**  
+For more complex configurations it is recommended to use the `newATXServer` step, which allows to pass an ATXConfig 
+object. Reference the [configuration as code](#configuration-as-code) section to get a full list of all available 
+settings.  
+If there is a setting in ecu.test which is not supported by this plugin yet, you can still configure them as 
+`customSettings`.
+
 ```groovy
 node('windows') {
     // Start tools, execute tests, generate reports

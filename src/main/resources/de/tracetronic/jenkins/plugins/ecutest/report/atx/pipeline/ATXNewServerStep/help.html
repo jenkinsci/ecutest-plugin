@@ -17,9 +17,6 @@
 ATX.newServer(String atxName, String toolName) : ATXServer
             </pre>
             <pre>
-ATX.newServer(String atxName, String toolName, ATXConfig config) : ATXServer
-            </pre>
-            <pre>
 ATX.newServer(String atxName, String toolName, String fullServerURL, boolean uploadToServer, String authKey, String projectId) : ATXServer
             </pre>
             <pre>
@@ -56,7 +53,7 @@ def server =  ATX.newServer atxName: 'test.guide', toolName: 'ecu.test'
 server.overrideSetting('enableArchive', false)
             </pre>
             <pre>
-ATX.newServer atxName: 'test.guide', toolName: 'ecu.test',
+newATXServer atxName: 'test.guide', toolName: 'ecu.test',
     config: atxConfig(
         settings: [
             atxTextSetting(group: 'CONNECTION', name: 'serverURL', value: '127.0.0.1'),
