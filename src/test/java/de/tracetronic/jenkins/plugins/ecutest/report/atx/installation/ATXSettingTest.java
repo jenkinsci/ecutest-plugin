@@ -6,6 +6,7 @@
 package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXSetting.SettingsGroup;
+import hudson.util.Secret;
 import org.junit.Test;
 import org.jvnet.localizer.LocaleProvider;
 
@@ -144,5 +145,43 @@ public class ATXSettingTest {
         final ATXSetting<String> clone = setting.clone();
         clone.setValue("newCloneValue");
         assertThat(clone.getValue(), is(not(setting.getValue())));
+    }
+
+    @Test
+    public void testSecretType() {
+        final ATXSecretSetting setting = new ATXSecretSetting("settingName", SettingsGroup.SPECIAL,
+            "descGerman", "descEnglish", Secret.fromString("defaultValue"));
+        assertTrue(setting.isSecret());
+    }
+
+    @Test
+    public void testSecretFromString() {
+        final ATXSecretSetting setting = new ATXSecretSetting("settingName", SettingsGroup.SPECIAL,
+            "s3cr3t");
+        assertTrue(setting.isSecret());
+        assertThat(setting.getSecretValue(), is("s3cr3t"));
+    }
+
+    @Test
+    public void testSecretFromSecretSimple() {
+        final ATXSecretSetting setting = new ATXSecretSetting("settingName", SettingsGroup.SPECIAL,
+            Secret.fromString("s3cr3t"));
+        assertTrue(setting.isSecret());
+        assertThat(setting.getSecretValue(), is("s3cr3t"));
+    }
+
+    @Test
+    public void testCurrentValueForSecret() {
+        final ATXSecretSetting setting = new ATXSecretSetting("settingName", SettingsGroup.SPECIAL,
+            "descGerman", "descEnglish", Secret.fromString("defaultValue"));
+        setting.setValue(Secret.fromString("test"));
+        assertThat(setting.getSecretValue(), is("test"));
+    }
+
+    @Test
+    public void testDefaultValueForSecret() {
+        final ATXSecretSetting setting = new ATXSecretSetting("settingName", SettingsGroup.SPECIAL,
+            "descGerman", "descEnglish", Secret.fromString("defaultValue"));
+        assertThat(setting.getDefaultValue().getPlainText(), is("defaultValue"));
     }
 }

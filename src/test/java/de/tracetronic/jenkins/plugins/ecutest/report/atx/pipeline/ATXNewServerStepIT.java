@@ -17,21 +17,11 @@ public class ATXNewServerStepIT extends IntegrationTestBase {
 
     @Test
     public void TestNewATXServerWithDynamicConfig() throws Exception {
-        assertPipeline("atxNewDynamicServer.groovy", true);
-    }
 
-    /**
-     * Asserts the pipeline step execution.
-     *
-     * @param scriptName the script name
-     * @throws Exception the exception
-     */
-    private void assertPipeline(final String scriptName, boolean expectSuccess) throws Exception {
-        final String script = loadTestResource(scriptName);
+        final String script = loadTestResource("atxNewDynamicServer.groovy");
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
-        jenkins.assertBuildStatus(expectSuccess ? Result.SUCCESS : Result.FAILURE,
-            Objects.requireNonNull(job.scheduleBuild2(0)).get());
+        jenkins.assertBuildStatus(Result.SUCCESS, Objects.requireNonNull(job.scheduleBuild2(0)).get());
     }
 }

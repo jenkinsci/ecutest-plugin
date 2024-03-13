@@ -90,11 +90,17 @@ public class ATXConfigTest {
 
     @Test
     public void testGetCustomSettingByName() {
-        final ATXConfig config = new ATXConfig(null, Collections.singletonList(new ATXCustomTextSetting("foo",
-                "bar")));
-        Optional<ATXCustomSetting> setting = config.getCustomSettingByName("foo");
-        assertThat(setting.isPresent(), is(true));
-        assertThat(((ATXCustomTextSetting)setting.get()).getValue(), is("bar"));
+        final ATXConfig config = new ATXConfig(null, Arrays.asList(
+            new ATXCustomTextSetting("foo","bar"),
+            new ATXCustomBooleanSetting("bool", false)
+        ));
+        Optional<ATXCustomSetting> textSetting = config.getCustomSettingByName("foo");
+        Optional<ATXCustomSetting> boolSetting = config.getCustomSettingByName("bool");
+
+        assertThat(textSetting.isPresent(), is(true));
+        assertThat(boolSetting.isPresent(), is(true));
+        assertThat(((ATXCustomTextSetting)textSetting.get()).getValue(), is("bar"));
+        assertFalse(((ATXCustomBooleanSetting)boolSetting.get()).isChecked());
     }
 
     @Test

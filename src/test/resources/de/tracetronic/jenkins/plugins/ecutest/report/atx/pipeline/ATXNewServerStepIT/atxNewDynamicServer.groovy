@@ -15,7 +15,8 @@ server = newATXServer atxName: 'test.guide2', toolName: 'ecu.test',
             atxBooleanSetting(group: 'UPLOAD', name: 'uploadToServer', value: true)
         ],
         customSettings: [
-            atxCustomTextSetting(name: 'someCustomConst', value: 'theValue')
+            atxCustomTextSetting(name: 'someCustomConst', value: 'theValue'),
+            atxCustomBooleanSetting(name: 'someBoolValue', checked: true)
         ]
     )
 assertSettings(server)
@@ -33,4 +34,6 @@ def assertSettings(server) {
     assert server.getSetting('projectId').value == '21'
 
     assert server.getCustomSetting('someCustomConst').value == 'theValue'
+    assert server.getCustomSetting('someBoolValue').checked
+    assert server.getCustomSetting('unknown') == null
 }

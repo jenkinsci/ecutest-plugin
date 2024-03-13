@@ -578,8 +578,8 @@ node('windows') {
 
 **Complex configurations**  
 For more complex configurations it is recommended to use the `newATXServer` step, which allows to pass an ATXConfig 
-object. Reference the [configuration as code](#configuration-as-code) section to get a full list of all available 
-settings.  
+object. For some more information and/or examples refer the help section of the `newATXServer` step in your Jenkins 
+instance.  
 If there is a setting in ecu.test which is not supported by this plugin yet, you can still configure them as 
 `customSettings`.
 
