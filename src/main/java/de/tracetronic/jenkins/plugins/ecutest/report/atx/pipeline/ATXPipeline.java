@@ -92,13 +92,15 @@ public class ATXPipeline implements Serializable {
     }
 
     /**
-     * Deprecated! Please use the newATXServer step directly!
      * Creates a new {@link ATXServer} instance with given {@link ATXConfig}.
      *
      * @param atxName  the ATX name
      * @param toolName the tool name
      * @param config   the ATX configuration
      * @return the ATX server
+     *
+     * @deprecated
+     * The use of this signature might not work as expected. Please use the newATXServer step directly!
      */
     @Deprecated
     @Whitelisted
