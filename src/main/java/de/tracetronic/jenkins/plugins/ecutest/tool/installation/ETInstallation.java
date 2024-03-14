@@ -37,6 +37,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -50,15 +51,14 @@ public class ETInstallation extends AbstractToolInstallation {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Executable file name of ecu.test.
+     * Executable file names of ecu.test.
      */
-    private static final String EXECUTABLE = "ECU-TEST.exe";
+    private static final List<String> EXECUTABLES = Arrays.asList("ecu.test.exe", "ECU-TEST.exe");
 
     /**
-     * Executable file name of ecu.test COM server.
+     * Executable file names of ecu.test COM server.
      */
-    private static final String COM_EXECUTABLE = "ECU-TEST_COM.exe";
-
+    private static final List<String> COM_EXECUTABLES = Arrays.asList("ecu.test_com.exe", "ECU-TEST_COM.exe");
     /**
      * Executable file name of Tool-Server.
      */
@@ -371,7 +371,12 @@ public class ETInstallation extends AbstractToolInstallation {
         @CheckForNull
         private static File getExeFile(final File home) {
             if (Functions.isWindows() && home != null) {
-                return new File(home, EXECUTABLE);
+                for (String filename: EXECUTABLES) {
+                    File exe = new File(home, filename);
+                    if (exe.exists()) {
+                        return exe;
+                    }
+                }
             }
             return null;
         }
@@ -386,7 +391,12 @@ public class ETInstallation extends AbstractToolInstallation {
         @CheckForNull
         private static File getComExeFile(final File home) {
             if (Functions.isWindows() && home != null) {
-                return new File(home, COM_EXECUTABLE);
+                for (String filename: COM_EXECUTABLES) {
+                    File exe = new File(home, filename);
+                    if (exe.exists()) {
+                        return exe;
+                    }
+                }
             }
             return null;
         }
@@ -501,7 +511,7 @@ public class ETInstallation extends AbstractToolInstallation {
             } else if (StringUtils.isNotEmpty(value.toString())) {
                 if (value.isDirectory()) {
                     final File etExe = getExeFile(value);
-                    if (!etExe.exists()) {
+                    if (etExe != null && !etExe.exists()) {
                         returnValue = FormValidation.error(Messages.ETInstallation_NotHomeDirectory(value));
                     }
                 } else {
