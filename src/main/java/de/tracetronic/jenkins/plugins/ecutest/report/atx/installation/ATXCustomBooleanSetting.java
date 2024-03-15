@@ -8,6 +8,7 @@ package de.tracetronic.jenkins.plugins.ecutest.report.atx.installation;
 import hudson.Extension;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jenkinsci.Symbol;
+import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import javax.annotation.Nonnull;
@@ -33,6 +34,7 @@ public class ATXCustomBooleanSetting extends ATXCustomSetting {
         this.checked = checked;
     }
 
+    @Whitelisted
     public boolean isChecked() {
         return checked;
     }

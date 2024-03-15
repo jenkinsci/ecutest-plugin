@@ -551,6 +551,9 @@ node('windows') {
 <details>
     <summary>Dynamic test.guide pipeline example</summary>
 
+**Simple**  
+For simple use cases there is the `newServer` method of the global `ATX` variable.
+
 ```groovy
 node('windows') {
     // Start tools, execute tests
@@ -570,6 +573,39 @@ node('windows') {
 
     // Publish ATX reports directly
     atx.publish()
+}
+```
+
+**Complex configurations**  
+For more complex configurations it is recommended to use the `newATXServer` step, which allows to pass an ATXConfig 
+object. For some more information and/or examples refer the help section of the `newATXServer` step in your Jenkins 
+instance.  
+If there is a setting in ecu.test which is not supported by this plugin yet, you can still configure them as 
+`customSettings`.
+
+```groovy
+node('windows') {
+    // Start tools, execute tests, generate reports
+    ...
+
+    // dynamic test.guide server instantiation using newATXServer step
+    def atx = newAtxServer atxName: 'test.guide', toolName: 'ecu.test',
+        config: atxConfig(
+            settings: [
+                atxTextSetting(group: 'CONNECTION', name: 'serverURL', value: 'localhost'),
+                atxTextSetting(group: 'CONNECTION', name: 'serverPort', value: '8085'),
+                atxTextSetting(group: 'CONNECTION', name: 'projectId', value: '1'),
+                atxSecretSetting(group: 'CONNECTION', name: 'uploadAuthenticationKey', value: 'xxx'),
+                atxBooleanSetting(group: 'UPLOAD', name: 'uploadToServer', value: true),
+            ],
+            customSettings: [
+                atxCustomTextSetting(name: 'customSetting', value: 'customValue'),
+                atxCustomBooleanSetting(name: 'boolSetting', checked: true)
+            ]
+        )
+    
+    // Publish ATX reports
+    publishATX atxName: atx.installation.getName(), atxInstallation: atx.installation
 }
 ```
 </details>

@@ -98,7 +98,11 @@ public class ATXPipeline implements Serializable {
      * @param toolName the tool name
      * @param config   the ATX configuration
      * @return the ATX server
+     *
+     * @deprecated
+     * The use of this signature might not work as expected. Please use the newATXServer step directly!
      */
+    @Deprecated
     @Whitelisted
     public ATXServer newServer(final String atxName, final String toolName, final ATXConfig config) {
         final Map<String, Object> stepVariables = Maps.newLinkedHashMap();

@@ -9,7 +9,9 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -29,14 +31,14 @@ public class ATXConfigTest {
     @Test
     public void testNullConfigMap() {
         final ATXConfig config = new ATXConfig(null, null);
-        assertFalse(config.getSettings().isEmpty());
+        assertFalse(config.getSettings().isEmpty()); // will contain default settings
         assertTrue(config.getCustomSettings().isEmpty());
     }
 
     @Test
     public void testEmptyConfigMap() {
         final ATXConfig config = new ATXConfig(Collections.emptyList(), Collections.emptyList());
-        assertTrue(config.getSettings().isEmpty());
+        assertFalse(config.getSettings().isEmpty()); // will contain default settings
         assertTrue(config.getCustomSettings().isEmpty());
     }
 
@@ -80,17 +82,31 @@ public class ATXConfigTest {
         assertThat(setting.isPresent(), is(true));
         assertThat(setting.get().value, is("8085"));
     }
-
-    @Test
-    public void testGetInvalidSettingByName() {
-        final ATXConfig config = new ATXConfig(null, null);
-        assertFalse(config.getSettingByName("invalid").isPresent());
-    }
-
     @Test
     public void testGetNotExistingSettingByName() {
         final ATXConfig config = new ATXConfig();
         assertFalse(config.getSettingByName("notexisting").isPresent());
+    }
+
+    @Test
+    public void testGetCustomSettingByName() {
+        final ATXConfig config = new ATXConfig(null, Arrays.asList(
+            new ATXCustomTextSetting("foo","bar"),
+            new ATXCustomBooleanSetting("bool", false)
+        ));
+        Optional<ATXCustomSetting> textSetting = config.getCustomSettingByName("foo");
+        Optional<ATXCustomSetting> boolSetting = config.getCustomSettingByName("bool");
+
+        assertThat(textSetting.isPresent(), is(true));
+        assertThat(boolSetting.isPresent(), is(true));
+        assertThat(((ATXCustomTextSetting)textSetting.get()).getValue(), is("bar"));
+        assertFalse(((ATXCustomBooleanSetting)boolSetting.get()).isChecked());
+    }
+
+    @Test
+    public void testGetNotExistingCustomSettingByName() {
+        final ATXConfig config = new ATXConfig();
+        assertFalse(config.getCustomSettingByName("bar").isPresent());
     }
 
     @Test

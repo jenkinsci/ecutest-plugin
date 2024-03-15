@@ -9,6 +9,7 @@ import hudson.Extension;
 import hudson.util.FormValidation;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jenkinsci.Symbol;
+import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -36,6 +37,7 @@ public class ATXCustomTextSetting extends ATXCustomSetting {
         this.value = value;
     }
 
+    @Whitelisted
     public String getValue() {
         return value;
     }

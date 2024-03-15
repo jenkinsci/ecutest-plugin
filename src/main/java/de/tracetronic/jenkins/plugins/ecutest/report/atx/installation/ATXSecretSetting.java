@@ -22,15 +22,26 @@ public class ATXSecretSetting extends ATXSetting<Secret> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Instantiates a new {@link ATXSecretSetting}.
+     * Instantiates a new {@link ATXSecretSetting} directly from a {@link Secret}.
+     *
+     * @param name  the name
+     * @param group the settings group
+     * @param value the current value
+     */
+    public ATXSecretSetting(final String name, final SettingsGroup group, final Secret value) {
+        super(name, group, value);
+    }
+
+    /**
+     * Instantiates a new {@link ATXSecretSetting} from a string value.
      *
      * @param name  the name
      * @param group the settings group
      * @param value the current value
      */
     @DataBoundConstructor
-    public ATXSecretSetting(final String name, final SettingsGroup group, final Secret value) {
-        super(name, group, value);
+    public ATXSecretSetting(final String name, final SettingsGroup group, final String value) {
+        super(name, group, Secret.fromString(value));
     }
 
     /**
