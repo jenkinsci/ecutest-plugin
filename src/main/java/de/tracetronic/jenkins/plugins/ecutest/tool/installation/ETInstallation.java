@@ -372,7 +372,7 @@ public class ETInstallation extends AbstractToolInstallation {
         private static File getExeFile(final File home) {
             if (Functions.isWindows() && home != null) {
                 for (String filename: EXECUTABLES) {
-                    File exe = new File(home, filename);
+                    final File exe = new File(home, filename);
                     if (exe.exists()) {
                         return exe;
                     }
@@ -392,7 +392,7 @@ public class ETInstallation extends AbstractToolInstallation {
         private static File getComExeFile(final File home) {
             if (Functions.isWindows() && home != null) {
                 for (String filename: COM_EXECUTABLES) {
-                    File exe = new File(home, filename);
+                    final File exe = new File(home, filename);
                     if (exe.exists()) {
                         return exe;
                     }
