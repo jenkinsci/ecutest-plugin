@@ -12,7 +12,11 @@ import hudson.EnvVars;
 import hudson.Launcher;
 import hudson.slaves.DumbSlave;
 import hudson.tools.ToolLocationNodeProperty;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.jupiter.api.io.CleanupMode;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.rules.TemporaryFolder;
 import org.jvnet.hudson.test.recipes.LocalData;
 
 import java.io.File;
@@ -21,11 +25,15 @@ import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 
 /**
  * Integration tests for {@link ETInstallation}.
  */
 public class ETInstallationIT extends IntegrationTestBase {
+
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
 
     @Test
     @LocalData
@@ -111,14 +119,15 @@ public class ETInstallationIT extends IntegrationTestBase {
     }
 
     @Test
-    public void testExecutable() throws Exception {
+    public void testExecutableOldName() throws Exception {
+        String exeFilePath = tempFolder.newFile("ECU-TEST.exe").getAbsolutePath();
+
         DumbSlave agent = assumeWindowsSlave();
-        String exeFilePath = new File("C:\\ECU-TEST", "ECU-TEST.exe").getAbsolutePath();
-        Objects.requireNonNull(agent.createPath(exeFilePath)).write();
+        Objects.requireNonNull(agent.createPath(exeFilePath));
 
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", null));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", tempFolder.getRoot().getAbsolutePath(), null));
         final ETInstallation[] installations = etDescriptor.getInstallations();
         assertEquals(1, installations.length);
 
@@ -130,14 +139,57 @@ public class ETInstallationIT extends IntegrationTestBase {
     }
 
     @Test
-    public void testComExecutable() throws Exception {
+    public void testExecutableNewName() throws Exception {
+        String exeFilePath = tempFolder.newFile( "ecu.test.exe").getAbsolutePath();
+
         DumbSlave agent = assumeWindowsSlave();
-        String exeFilePath = new File("C:\\ECU-TEST", "ECU-TEST_COM.exe").getAbsolutePath();
-        Objects.requireNonNull(agent.createPath(exeFilePath)).write();
+        Objects.requireNonNull(agent.createPath(exeFilePath));
 
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", null));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", tempFolder.getRoot().getAbsolutePath(), null));
+        final ETInstallation[] installations = etDescriptor.getInstallations();
+        assertEquals(1, installations.length);
+
+        final ETInstallation inst = installations[0];
+        final Launcher launcher = agent.createLauncher(jenkins.createTaskListener());
+
+        String executable = inst.getExecutable(launcher);
+        assertEquals(exeFilePath, executable);
+    }
+
+    @Test
+    public void testExecutableNull() throws Exception {
+        //wrong name
+        String exeFilePath = tempFolder.newFile("ecu-test123.exe").getAbsolutePath();
+
+        DumbSlave agent = assumeWindowsSlave();
+        Objects.requireNonNull(agent.createPath(exeFilePath));
+
+        final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", tempFolder.getRoot().getAbsolutePath(), null));
+        final ETInstallation[] installations = etDescriptor.getInstallations();
+        assertEquals(1, installations.length);
+
+        final ETInstallation inst = installations[0];
+        final Launcher launcher = agent.createLauncher(jenkins.createTaskListener());
+
+        String executable = inst.getExecutable(launcher);
+        assertNull(executable);
+    }
+
+
+    @Test
+    public void testComExecutableOldName() throws Exception {
+        String exeFilePath = tempFolder.newFile("ECU-TEST_COM.exe").getAbsolutePath();
+
+        DumbSlave agent = assumeWindowsSlave();
+        Objects.requireNonNull(agent.createPath(exeFilePath));
+
+        final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", tempFolder.getRoot().getAbsolutePath(), null));
         final ETInstallation[] installations = etDescriptor.getInstallations();
         assertEquals(1, installations.length);
 
@@ -149,14 +201,55 @@ public class ETInstallationIT extends IntegrationTestBase {
     }
 
     @Test
-    public void testTSExecutable() throws Exception {
+    public void testComExecutableNewName() throws Exception {
+        String exeFilePath = tempFolder.newFile("ecu.test_com.exe").getAbsolutePath();
+
         DumbSlave agent = assumeWindowsSlave();
-        String exeFilePath = new File("C:\\ECU-TEST", "Tool-Server.exe").getAbsolutePath();
-        Objects.requireNonNull(agent.createPath(exeFilePath)).write();
+        Objects.requireNonNull(agent.createPath(exeFilePath));
 
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", null));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", tempFolder.getRoot().getAbsolutePath(), null));
+        final ETInstallation[] installations = etDescriptor.getInstallations();
+        assertEquals(1, installations.length);
+
+        final ETInstallation inst = installations[0];
+        final Launcher launcher = agent.createLauncher(jenkins.createTaskListener());
+
+        String executable = inst.getComExecutable(launcher);
+        assertEquals(exeFilePath, executable);
+    }
+
+    @Test
+    public void testComExecutableNull() throws Exception {
+        String exeFilePath = tempFolder.newFile("ecu-test_com123.exe").getAbsolutePath();
+
+        DumbSlave agent = assumeWindowsSlave();
+        Objects.requireNonNull(agent.createPath(exeFilePath));
+
+        final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", tempFolder.getRoot().getAbsolutePath(), null));
+        final ETInstallation[] installations = etDescriptor.getInstallations();
+        assertEquals(1, installations.length);
+
+        final ETInstallation inst = installations[0];
+        final Launcher launcher = agent.createLauncher(jenkins.createTaskListener());
+
+        String executable = inst.getComExecutable(launcher);
+        assertNull(executable);
+    }
+
+    @Test
+    public void testTSExecutable() throws Exception {
+        String exeFilePath = tempFolder.newFile("Tool-Server.exe").getAbsolutePath();
+
+        DumbSlave agent = assumeWindowsSlave();
+        Objects.requireNonNull(agent.createPath(exeFilePath));
+
+        final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", tempFolder.getRoot().getAbsolutePath(), null));
         final ETInstallation[] installations = etDescriptor.getInstallations();
         assertEquals(1, installations.length);
 
@@ -165,5 +258,26 @@ public class ETInstallationIT extends IntegrationTestBase {
 
         String executable = inst.getTSExecutable(launcher);
         assertEquals(exeFilePath, executable);
+    }
+
+    @Test
+    public void testTSExecutableNull() throws Exception {
+        //wrong Name
+        String exeFilePath = tempFolder.newFile( "tool-Server123.exe").getAbsolutePath();
+
+        DumbSlave agent = assumeWindowsSlave();
+        Objects.requireNonNull(agent.createPath(exeFilePath));
+
+        final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
+            .getDescriptorByType(ETInstallation.DescriptorImpl.class);
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", tempFolder.getRoot().getAbsolutePath(), null));
+        final ETInstallation[] installations = etDescriptor.getInstallations();
+        assertEquals(1, installations.length);
+
+        final ETInstallation inst = installations[0];
+        final Launcher launcher = agent.createLauncher(jenkins.createTaskListener());
+
+        String executable = inst.getTSExecutable(launcher);
+        assertNull(executable);
     }
 }
