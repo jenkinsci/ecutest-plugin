@@ -2,16 +2,17 @@ name: Auto merge for GH Actions
 on: pull_request
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
+  pull-requests: read
 
 jobs:
   dependabot:
     runs-on: ubuntu-latest
     if: ${{ github.actor == 'dependabot[bot]' && contains( github.event.pull_request.labels.*.name, 'github_actions') }}
     steps:
+      - name: Authenticate cli with a PAT
+        run: echo "${{ secrets.MERGE_TOKEN }}" | gh auth login --with-token
       - name: Enable auto-merge for Dependabot GitHub Actions PRs
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
