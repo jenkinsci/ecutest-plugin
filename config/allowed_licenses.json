@@ -13,7 +13,7 @@
       "moduleVersion": "3.42.0.1",
       "moduleLicense": "Apache-2.0",
       "moduleCopyright": "David Crawshaw, 2006",
-      "licenseUrl": "https://github.com/xerial/sqlite-jdbc/blob/3.42.0.1/LICENSE.zentus",
+      "licenseUrl": "https://github.com/xerial/sqlite-jdbc/blob/3.42.0.1/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -237,7 +237,7 @@
       "moduleVersion": "1.16.0",
       "moduleLicense": "Apache-2.0",
       "moduleCopyright": "2002-2023 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/commons-codec/blob/rel/commons-codec-1.16.0/NOTICE.txt",
+      "licenseUrl": "https://github.com/apache/commons-codec/blob/rel/commons-codec-1.16.0/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
