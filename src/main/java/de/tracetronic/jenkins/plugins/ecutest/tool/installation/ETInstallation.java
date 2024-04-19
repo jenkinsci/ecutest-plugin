@@ -9,6 +9,7 @@ import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPu
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
+import de.tracetronic.jenkins.plugins.ecutest.tool.StopETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopTSBuilder;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.CopyOnWrite;
@@ -423,6 +424,7 @@ public class ETInstallation extends AbstractToolInstallation {
             } else {
                 try {
                     migrateFromOldConfigFile(StartETBuilder.DescriptorImpl.class);
+                    migrateFromOldConfigFile(StopETBuilder.DescriptorImpl.class);
                     migrateFromOldConfigFile(StartTSBuilder.DescriptorImpl.class);
                     migrateFromOldConfigFile(StopTSBuilder.DescriptorImpl.class);
                     migrateFromOldConfigFile(JUnitPublisher.DescriptorImpl.class);
