@@ -9,7 +9,6 @@ import de.tracetronic.jenkins.plugins.ecutest.report.generator.ReportGeneratorPu
 import de.tracetronic.jenkins.plugins.ecutest.report.junit.JUnitPublisher;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StartTSBuilder;
-import de.tracetronic.jenkins.plugins.ecutest.tool.StopETBuilder;
 import de.tracetronic.jenkins.plugins.ecutest.tool.StopTSBuilder;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.CopyOnWrite;
@@ -422,13 +421,16 @@ public class ETInstallation extends AbstractToolInstallation {
             if (getConfigFile().exists()) {
                 super.load();
             } else {
-                migrateFromOldConfigFile(StartETBuilder.DescriptorImpl.class);
-                migrateFromOldConfigFile(StopETBuilder.DescriptorImpl.class);
-                migrateFromOldConfigFile(StartTSBuilder.DescriptorImpl.class);
-                migrateFromOldConfigFile(StopTSBuilder.DescriptorImpl.class);
-                migrateFromOldConfigFile(JUnitPublisher.DescriptorImpl.class);
-                migrateFromOldConfigFile(ReportGeneratorPublisher.DescriptorImpl.class);
-                save();
+                try {
+                    migrateFromOldConfigFile(StartETBuilder.DescriptorImpl.class);
+                    migrateFromOldConfigFile(StartTSBuilder.DescriptorImpl.class);
+                    migrateFromOldConfigFile(StopTSBuilder.DescriptorImpl.class);
+                    migrateFromOldConfigFile(JUnitPublisher.DescriptorImpl.class);
+                    migrateFromOldConfigFile(ReportGeneratorPublisher.DescriptorImpl.class);
+                    save();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
@@ -440,7 +442,7 @@ public class ETInstallation extends AbstractToolInstallation {
          * @since 1.12
          */
         @SuppressWarnings("rawtypes")
-        private void migrateFromOldConfigFile(final Class oldClass) {
+        private void migrateFromOldConfigFile(final Class oldClass) throws IOException {
             LOGGER.log(Level.FINE, "Migrating ecu.test installations from: " + oldClass.getName());
 
             final XStream2 stream = new XStream2();
