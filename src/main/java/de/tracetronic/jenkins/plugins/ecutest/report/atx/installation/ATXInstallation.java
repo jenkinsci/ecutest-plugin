@@ -180,7 +180,11 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
             if (getConfigFile().exists()) {
                 super.load();
             } else {
-                migrateFromOldConfigFile(ATXPublisher.DescriptorImpl.class);
+                try {
+                    migrateFromOldConfigFile(ATXPublisher.DescriptorImpl.class);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 save();
             }
         }
@@ -192,7 +196,7 @@ public class ATXInstallation extends AbstractDescribableImpl<ATXInstallation> im
          * @param oldClass the old descriptor class name
          * @since 2.7
          */
-        private void migrateFromOldConfigFile(final Class<ATXPublisher.DescriptorImpl> oldClass) {
+        private void migrateFromOldConfigFile(final Class<ATXPublisher.DescriptorImpl> oldClass) throws IOException {
             LOGGER.log(Level.FINE, "Migrating ATX installations from: " + oldClass.getName());
 
             final XStream2 stream = new XStream2();
