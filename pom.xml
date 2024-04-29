@@ -82,7 +82,7 @@
 
         <!-- Static code analysis -->
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
-        <checkstyle.version>9.2</checkstyle.version>
+        <checkstyle.version>10.16.0</checkstyle.version>
         <maven-pmd-plugin.version>3.15.0</maven-pmd-plugin.version>
         <pmd.version>6.41.0</pmd.version>
         <spotbugs.effort>Max</spotbugs.effort>
