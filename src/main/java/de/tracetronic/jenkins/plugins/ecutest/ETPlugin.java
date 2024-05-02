@@ -40,12 +40,12 @@ public class ETPlugin {
     /**
      * Defines the minimum test.guide version supported by this plugin.
      */
-    public static final ToolVersion ATX_MIN_VERSION = new ToolVersion(1, 65, 0);
+    public static final ToolVersion ATX_MIN_VERSION = new ToolVersion(1, 169, 1);
 
     /**
      * Defines the test.guide version that the provided ATX configuration is based on.
      */
-    public static final ToolVersion ATX_CONFIG_VERSION = new ToolVersion(1, 129, 0);
+    public static final ToolVersion ATX_CONFIG_VERSION = new ToolVersion(1, 169, 1);
 
     /**
      * Retains backward compatibility for renamed classes.
