@@ -681,10 +681,10 @@ unclassified:
                       - atxSecretSetting:
                             group: CONNECTION
                             name: "uploadAuthenticationKey"
-                      - atxBooleanSetting:
+                      - atxTextSetting:
                             group: CONNECTION
                             name: "useSettingsFromServer"
-                            value: false
+                            value: "Never"
                       - atxBooleanSetting:
                             group: UPLOAD
                             name: "uploadToServer"
