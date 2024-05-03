@@ -42,10 +42,10 @@ unclassified:
             - atxTextSetting:
                 group: CONNECTION
                 name: "uploadSettings"
-            - atxBooleanSetting:
+            - atxTextSetting:
                 group: CONNECTION
                 name: "useSettingsFromServer"
-                value: false
+                value: "Never"
             - atxBooleanSetting:
                 group: UPLOAD
                 name: "uploadToServer"

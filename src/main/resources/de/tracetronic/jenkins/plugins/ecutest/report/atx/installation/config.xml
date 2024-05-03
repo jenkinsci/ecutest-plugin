@@ -4,7 +4,8 @@
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
-<REPORT-CONFIG xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<REPORT-CONFIG
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <TYPE xsi:type="string">
         PYTHON
     </TYPE>
@@ -18,9 +19,29 @@
         ReportProject
     </PROJECT-TEMPLATE>
     <SETTINGS>
-        <!-- Verbindungseinstellungen -->
-        <SETTING name="serverURL" default="127.0.0.1" canBeOverwrittenByServer="false" xsi:type="reportConfigItem"/>
-        <SETTING name="serverLabel" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+        <!-- Verbindungs-Einstellungen (können nicht durch Projekt-Settings aus
+            TG überschrieben werden) -->
+        <SETTING name="uploadToServer" default="False"
+                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Automatischen Upload zum Server
+                            aktivieren?
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Enable auto upload to the server?
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="serverURL" default="127.0.0.1"
+                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem" />
+        <SETTING name="serverLabel" default=""
+                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -29,7 +50,7 @@
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Optional name for the server instance,
+                        <DVALUE xsi:type="string">Optional name for the server-instance,
                             which is used for log messages.
                         </DVALUE>
                     </ELEMENT>
@@ -37,23 +58,12 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="useHttpsConnection" default="False" canBeOverwrittenByServer="false"
-                 xsi:type="reportConfigItem"/>
-        <SETTING name="ignoreSSL" default="False" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
-            <DESCRIPTION xsi:type="I18NItem">
-                <MULTILANGDATA>
-                    <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Verifizierung von SSL-Zertifikaten deaktivieren?</DVALUE>
-                    </ELEMENT>
-                    <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Disable the SSL certificate verification?</DVALUE>
-                    </ELEMENT>
-                </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
-            </DESCRIPTION>
-        </SETTING>
-        <SETTING name="serverPort" default="8085" canBeOverwrittenByServer="false" xsi:type="reportConfigItem"/>
-        <SETTING name="serverContextPath" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+        <SETTING name="useHttpsConnection" default="False"
+                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem" />
+        <SETTING name="serverPort" default="8085"
+                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem" />
+        <SETTING name="serverContextPath" default=""
+                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -70,41 +80,28 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="httpProxy" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+        <SETTING name="uploadAuthenticationKey" default=""
+                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Angabe eines optionalen HTTP Proxies für
-                            den Upload. Beispiel: http://user:pass@10.10.10.2:8080
+                        <DVALUE xsi:type="string">Authentifizierungsschlüssel für den Upload
+                            zum Server (nur bei aktivierter Authentifizierung notwendig).
+                            Kann im test.guide unter dem Benutzerprofil abgerufen werden.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Specification of an optional HTTP proxy
-                            for the upload. Example: http://user:pass@10.10.10.2:8080
+                        <DVALUE xsi:type="string">Authentication key for upload to the
+                            server (only by activated authentication required). Can be found
+                            under the user profile in the test.guide.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="httpsProxy" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
-            <DESCRIPTION xsi:type="I18NItem">
-                <MULTILANGDATA>
-                    <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Angabe eines optionalen HTTPS Proxies für
-                            den Upload. Beispiel: http://user:pass@10.10.10.2:8080
-                        </DVALUE>
-                    </ELEMENT>
-                    <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Specification of an optional HTTPS proxy
-                            for the upload. Example: http://user:pass@10.10.10.2:8080
-                        </DVALUE>
-                    </ELEMENT>
-                </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
-            </DESCRIPTION>
-        </SETTING>
-        <SETTING name="projectId" default="1" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+        <SETTING name="projectId" default="1"
+                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -123,19 +120,38 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="uploadAuthenticationKey" default="" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+        <SETTING name="httpProxy" default=""
+                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Authentifizierungsschlüssel für den Upload
-                            zum Server (nur bei aktivierter Authentifizierung notwendig).
-                            Kann im test.guide unter dem Benutzerprofil abgerufen werden.
+                        <DVALUE xsi:type="string">Angabe eines optionalen HTTP Proxies für
+                            den Upload.
+                            Beispiel: http://user:pass@10.10.10.2:8080
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Authentication key for upload to the
-                            server (only by activated authentication required). Can be found
-                            under the user profile in the TEST GUIDE.
+                        <DVALUE xsi:type="string">Specification of an optional HTTP proxy
+                            for the upload. Example: http://user:pass@10.10.10.2:8080
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="httpsProxy" default=""
+                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Angabe eines optionalen HTTPS Proxies für
+                            den Upload.
+                            Beispiel: http://user:pass@10.10.10.2:8080
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Specification of an optional HTTPS proxy
+                            for the upload. Example: http://user:pass@10.10.10.2:8080
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -151,14 +167,16 @@
                             Datei mit den Verbindungseinstellungen für den Upload. Ein
                             Beispiel und weitere Erklärungen sind im Benutzerhandbuch
                             von test.guide enthalten. Diese Option ist aktuell nur bei
-                            automatisiertem Report Upload sinnvoll nutzbar.</DVALUE>
+                            automatisiertem Report Upload sinnvoll nutzbar.
+                        </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Relative path in the workspace of a json
                             file with the upload connection properties. An Exmaple and
                             further explanations can be found in the user documentation of
                             test.guide. This option is currently only useful with automated
-                            report upload.</DVALUE>
+                            report upload.
+                        </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
@@ -170,27 +188,20 @@
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Always (ehemals True): alle Einstellungen
-                            für die
-                            ATX-Generierung vom test.guide Server abfragen.
+                            für die ATX-Generierung vom test.guide Server abfragen.
                             WhereKeyword: nur die Einstellungen vom Server übernehmen, welche
-                            den
-                            Wert der Einstellung "useSettingsFromServerKeyword" haben.
-                            Never
-                            (ehemals False): ausschließlich die lokalen Einstellungen
+                            den Wert der Einstellung "useSettingsFromServerKeyword" haben.
+                            Never (ehemals False): ausschließlich die lokalen Einstellungen
                             verwenden.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Always (formerly True): apply all settings
-                            for the
-                            ATX generation from the test.guide server.
-                            WhereKeyword:
-                            only apply settings from the server, which have the value
-                            of the
-                            setting "useSettingsFromServerKeyword".
-                            Never (formerly
-                            False): use
-                            only the local settings.</DVALUE>
+                            for the ATX generation from the test.guide server.
+                            WhereKeyword: only apply settings from the server, which have the value
+                            of the setting "useSettingsFromServerKeyword". Never (formerly
+                            False): use only the local settings.
+                        </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
@@ -202,38 +213,18 @@
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Schlüsselwort, das genutzt wird, wenn die
-                            Einstellung
-                            "useSettingsFromServer" auf "WhereKeyword" gesetzt
-                            ist: In diesem Fall wird für
-                            nachfolgende Einstellungen, bei denen
-                            das hier definierte
-                            Schlüsselwort gesetzt
-                            ist, die Konfiguration
-                            vom test.guide Server übernommen.</DVALUE>
+                            Einstellung "useSettingsFromServer" auf "WhereKeyword" gesetzt
+                            ist: In diesem Fall wird für nachfolgende Einstellungen, bei denen
+                            das hier definierte Schlüsselwort gesetzt ist, die Konfiguration
+                            vom test.guide Server übernommen.
+                        </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Keyword that is used when the
-                            "useSettingsFromServer"
-                            setting is set to "WhereKeyword": In this
-                            case the configuration
-                            supplied by
-                            the test.guide server is used
-                            for settings where this keyword is
-                            used.</DVALUE>
-                    </ELEMENT>
-                </MULTILANGDATA>
-                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
-            </DESCRIPTION>
-        </SETTING>
-        <!-- Uploadeinstellungen -->
-        <SETTING name="uploadToServer" default="False" canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
-            <DESCRIPTION xsi:type="I18NItem">
-                <MULTILANGDATA>
-                    <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Automatischen Upload zum Server aktivieren?</DVALUE>
-                    </ELEMENT>
-                    <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Enable auto upload to the server?</DVALUE>
+                            "useSettingsFromServer" setting is set to "WhereKeyword": In
+                            this case the configuration supplied by the test.guide server is used
+                            for settings where this keyword is used.
+                        </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
@@ -246,31 +237,32 @@
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Port des konfigurierten ResourceAdapter
                             "TestGuideUploadPlugin" auf dem diesem Computer.
-                            Der Wert "0" deaktiviert die Funktion.
-                            Diese Option aktiviert den Upload zur test.guide Instanz über das
-                            "TestGuideUploadPlugin" des ResourceAdapters auf diesem Computer.
-                            Die erzeugten Reports werden beim ResourceAdapter in eine
-                            Warteschlange eingereiht und nacheinander hochgeladen.
-                            Hierdurch ist ecu.test zeitnah wieder bereit für Testausführungen.
-                            Weitere Informationen sind in der Beispielkonfiguration des
-                            ResourceAdapters enthalten.</DVALUE>
+                            Der Wert "0" deaktiviert die Funktion. Diese Option aktiviert den
+                            Upload zur test.guide Instanz über das "TestGuideUploadPlugin" des
+                            ResourceAdapters auf diesem Computer. Die erzeugten Reports werden
+                            beim ResourceAdapter in eine Warteschlange eingereiht und
+                            nacheinander hochgeladen. Hierdurch ist ecu.test zeitnah wieder
+                            bereit für Testausführungen. Weitere Informationen sind in der
+                            Beispielkonfiguration des ResourceAdapters enthalten.
+                        </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">The port of the configured ResourceAdapter
                             "TestGuideUploadPlugin" on this computer.
-                            A value of "0" disables the function.
-                            This option enables the upload to the test.guide instance via the
-                            "TestGuideUploadPlugin" of the ResourceAdapter on this computer.
+                            A value of "0" disables the function. This option enables the
+                            upload to the test.guide instance via the "TestGuideUploadPlugin"
+                            of the ResourceAdapter on this computer.
                             The generated reports are stored at the ResourceAdapter in a queue
-                            and uploaded one after the other.
-                            This way ecu.test is quickly available again for test executions.
-                            For details, refer to the included sample configuration of the
-                            ResourceAdapter.</DVALUE>
+                            and uploaded one after the other. This way ecu.test is quickly
+                            available again for test executions. For details, refer to the
+                            included sample configuration of the ResourceAdapter.
+                        </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
+        <!-- Uploadeinstellungen -->
         <SETTING name="uploadAsync" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
@@ -282,10 +274,10 @@
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">True if the data upload is to be
-                            asynchronous with test.guide so that the connection times to
-                            test.guide are short, otherwise False. The recommendation is to
-                            perform an asynchronous upload.
+                        <DVALUE xsi:type="string">True, if the data upload to test.guide
+                            shall be done asynchronously to keep the durations of the
+                            connections to test.guide short, otherwise False. The
+                            recommendation is to perform an asynchronous upload.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -390,14 +382,33 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
+        <SETTING name="archiveExternalLinks" default="False" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Auf True setzen, um externe Links zu erfassen.
+                            Externe Links referenzen Artefakte, die nicht direkt mit dem Report
+                            ausgeliefert werden, sondern auf einem Drittsystem (z.B. Samba) liegen.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Set to True to capture external links. External
+                            links reference artifacts that are not delivered directly with the
+                            report, but are located on a third-party system (e.g. Samba).
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
         <SETTING name="archiveTrf" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">TRF-Dateien archivieren?</DVALUE>
+                        <DVALUE xsi:type="string">TRF- und PRF-Dateien archivieren?</DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Archive TRF files?</DVALUE>
+                        <DVALUE xsi:type="string">Archive TRF and PRF files?</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
@@ -488,16 +499,18 @@
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Angabe der Testfall-Attribute durch ';'
                             getrennt für die die Aufzeichnungen bei Übereinstimmung erfasst
-                            werden sollen. Beispiele: env=XiL; priority=1. Die Attribute
-                            müssen im Parameter 'coveredAttributes' extra spezifiziert werden.
-                            Hinweis: Alle Attribute können durch Verwendung eines '*'
-                            einbezogen werden.
+                            werden sollen.
+                            Beispiele: env=XiL; priority=1 .
+                            Die Attribute müssen im Parameter 'coveredAttributes'
+                            extra spezifiziert werden.
+                            Hinweis: Alle Attribute können durch Verwendung eines '*' einbezogen werden.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Specification of the test case attributes
                             separated by ';' for which the records should be captured
-                            in case  of a match. Examples: env=XiL; priority=1.
+                            in case of a match.
+                            Examples: env=XiL; priority=1 .
                             The attributes must be specified in the parameter 'coveredAttributes'.
                             Hint: All attributes can be included by using a '*'.
                         </DVALUE>
@@ -512,13 +525,13 @@
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Aufnahmemetadaten archivieren,
                             um später beliebige Trace-Analysen auf Aufnahmen auszuführen?
-                            Nur aktiv wenn archiveRecordings auch 'True' ist.
+                            Nur aktiv wenn archiveRecordings auch True ist.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">Archive recording metadata to later run arbitrary
-                            trace analyses on the recordings? Only active when archiveRecordings is
-                            also 'True'.
+                        <DVALUE xsi:type="string">Archive recording metadata to later run
+                            arbitrary trace analyses on the recordings? Only active when
+                            archiveRecordings is also True.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -647,8 +660,7 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="archiveFilesExcludeRecordings" default="False"
-                 xsi:type="reportConfigItem">
+        <SETTING name="archiveFilesExcludeRecordings" default="False" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -683,12 +695,14 @@
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">True wenn Bilder aus HTML img Tags in der
-                            Package-Beschreibung erfasst und archiviert werden sollen, sonst False.
+                            Package-Beschreibung erfasst und archiviert werden sollen, sonst
+                            False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True if images from HTML img tags in the
-                            package description should be detected and archived, otherwise False.
+                            package description should be detected and archived, otherwise
+                            False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -702,12 +716,15 @@
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Die Package/Projekt-Attribute, welche als
-                            ATX-Attribut für die Suche erfasst werden sollen. Getrennt durch ';'.
+                            ATX-Attribut für die
+                            Suche erfasst werden sollen. Getrennt durch
+                            ';'.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">The package/project attributes
-                            which are mapped to ATX attributes. Separated by ';'.
+                            which are
+                            mapped to ATX attributes. Separated by ';'.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -722,17 +739,16 @@
                             Package/Projekt-Attribut, getrennt durch ';'
                             z.B. ReqId=_;Ref=- .
                             Ermöglicht das Erfassen von Listen in Attributwerten, z.B.
-                            ReqID=RQ1_RQ2_RQ3 bzw.
-                            Ref=A-B-C
+                            ReqID=RQ1_RQ2_RQ3 bzw. Ref=A-B-C
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">The separators per package/project
                             attribute, separated by ';'
-                            e.g. ReqId=_;Ref=- . Allows to capture
-                            lists in attribute values,
-                            e.g. ReqID=RQ1_RQ2_RQ3 or
-                            Ref=A-B-C
+                            e.g. ReqId=_;Ref=- .
+                            Allows to capture
+                            lists in attribute values, e.g.
+                            ReqID=RQ1_RQ2_RQ3 or Ref=A-B-C
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -744,13 +760,11 @@
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Den Haken der Packageeigenschaft
-                            'Testfall' als ATX-Attribut 'isTestCase' erfassen?
-                        </DVALUE>
+                            'Testfall' als ATX-Attribut 'isTestCase' erfassen?</DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Map the package property 'Testcase' to ATX
-                            attribut 'isTestCase'?
-                        </DVALUE>
+                            attribut 'isTestCase'?</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
@@ -761,49 +775,52 @@
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">True, wenn die Packageeigenschaft
-                            'Version' als ATX-Attribut 'TestCaseVersion' erfasst werden soll, sonst False.
+                            'Version' als ATX-Attribut 'TestCaseVersion' erfasst werden soll,
+                            sonst False.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True if the package property 'version'
-                            should be mapped as attribute 'TestCaseVersion', otherwise False.
+                            should be
+                            mapped as attribute 'TestCaseVersion', otherwise False.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="mapIsStimulationAsAttribute" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="mapIsStimulationAsAttribute" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">True, wenn die Packageeigenschaft
                             'Stimulation Package' als ATX-Attribut 'isStimulationPackage' erfasst werden soll,
-                            sonst False.</DVALUE>
+                            sonst False.
+                        </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True if the package property 'Stimulation package'
                             should be
-                            mapped as attribute 'isStimulationPackage', otherwise False.</DVALUE>
+                            mapped as attribute 'isStimulationPackage', otherwise False.
+                        </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="mapIsAnalysisAsAttribute" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="mapIsAnalysisAsAttribute" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">True, wenn die Packageeigenschaft
                             'Analyse Package' als ATX-Attribut 'isAnalysisPackage' erfasst werden soll,
-                            sonst False.</DVALUE>
+                            sonst False.
+                        </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True if the package property 'Analysis package'
-                            should be
-                            mapped as attribute 'isAnalysisPackage', otherwise False.</DVALUE>
+                            should be mapped as attribute 'isAnalysisPackage', otherwise False.
+                        </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
@@ -881,6 +898,26 @@
             </DESCRIPTION>
         </SETTING>
         <!-- TBC-Globale Konstanteneinstellungen -->
+        <SETTING name="coveredConstants" default="*; SWK_Version; TT_*; TBC_*; TCF_*" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Die Package/Projekt-Konstanten, welche als
+                            ATX-Konstante für die
+                            Suche erfasst werden sollen. Getrennt durch
+                            ';'.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">The package/project constants
+                            which are
+                            mapped to ATX constants. Separated by ';'.
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
         <SETTING name="mapTbcToolAsConstant" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
@@ -1002,8 +1039,7 @@
             </DESCRIPTION>
         </SETTING>
         <!-- Review Einstellungen -->
-        <SETTING name="setReviewTags" default=""
-                 xsi:type="reportConfigItem">
+        <SETTING name="setReviewTags" default="" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -1015,7 +1051,8 @@
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Specification of the static review tags
                             separated by ';', which should be assigned to each created review
-                            automatically during generation.</DVALUE>
+                            automatically during generation.
+                        </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
@@ -1042,21 +1079,21 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Eine Liste von Tags ermöglicht
+                        <DVALUE xsi:type="string">Liste von Tags, separiert per Semikolon. Ermöglicht
                             automatisiertes Setzen von Tags in Reviews. Es werden die
-                            angegebenen Tags im Kommentartext der Reviews
-                            ermittelt und dem Review als explizite Eigenschaft hinzugefügt.
-                            Die Tags müssen im Kommentar in der Form #Hardware failure#
+                            angegebenen Tags im Kommentartext der Reviews ermittelt und dem
+                            Review als explizite Eigenschaft hinzugefügt. Die Tags müssen im
+                            Kommentar in der Form #Hardware failure# oder #!tag Hardware failure!#
                             enthalten sein.
                             Beispiel: Hardware failure;Connnection lost
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">A list of tags that are automatically
-                            added to reviews. The specified tags are determined in the comment
-                            of the reviews and added to the review as an explicit property.
-                            The tags must be specified in the comment using the pattern
-                            #Hardware failure#.
+                            added to reviews. Semicolon-separated. The specified tags are determined in the
+                            comment of the reviews and added to the review as an explicit property.
+                            The tags must be specified in the comment using the
+                            pattern #Hardware failure# or #!tag Hardware failure!#.
                             Example: Hardware failure;Connnection lost
                         </DVALUE>
                     </ELEMENT>
@@ -1068,22 +1105,22 @@
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
-                        <DVALUE xsi:type="string">Eine Liste von Fehlerklassen ermöglicht
+                        <DVALUE xsi:type="string">Liste von Fehlerklassen, separiert per Semikolon. Ermöglicht
                             automatisiertes Setzen der Fehlerklasse in Reviews. Es werden die
                             angegebenen Fehlerklassen im Kommentartext der Reviews
                             ermittelt und dem Review als explizite Eigenschaft hinzugefügt.
                             Die Fehlerklasse muss im Kommentar in der Form |Critical|
-                            enthalten sein. Ein Review kann nur eine Fehlerklasse bekommen.
-                            Beispiel: Critical;Cosmetic
+                            oder #!defectClass Critical!# enthalten sein. Ein Review kann nur eine Fehlerklasse
+                            bekommen. Beispiel: Critical;Cosmetic
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
-                        <DVALUE xsi:type="string">A list of defect that are automatically
-                            added to reviews. The specified defects are determined in the comment
-                            of the reviews and added to the review as an explicit property.
-                            The defect must be specified in the comment using the pattern
-                            |Critical|. A review can only have one defect class assigned.
-                            Example: Critical;Cosmetic
+                        <DVALUE xsi:type="string">A list of defect classes that are automatically
+                            added to reviews. Semicolon-separated. The specified defect classes are determined in the
+                            comment of the reviews and added to the review as an explicit  property.
+                            The defect class must be specified in the comment using the pattern
+                            |Critical| or #!defectClass Critical!#. A review can only have one defect class
+                            assigned. Example: Critical;Cosmetic
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -1191,8 +1228,7 @@
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True, if the project reference name should
-                            be used instead of the
-                            package name as a ATX testcase name,
+                            be used instead of the package name as a ATX testcase name,
                             otherwise False.
                         </DVALUE>
                     </ELEMENT>
@@ -1211,7 +1247,8 @@
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Depth to which sub packages will be
-                            recorded as testcases. For 0 (default value) no sub packages are recorded.
+                            recorded as testcases. For 0 (default value) no sub packages
+                            are recorded.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -1223,12 +1260,35 @@
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">Legt fest bei welchen Ergebnissen der
-                            SubPackages deren TestSteps mit erfasst werden sollen. Beispiel: FAILED; ERROR
+                            SubPackages deren TestSteps mit erfasst werden sollen. Beispiel:
+                            FAILED; ERROR
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Defines the results of the sub packages on
                             which the test steps have to be recorded. Example: FAILED; ERROR
+                        </DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="captureSpecialTestSteps" default="" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Es können spezielle zusätzliche Testschritte
+                            vermerkt und erfasst werden. Die Erfassung zusätzlich Testschritte
+                            führt zu größeren ATX-Zips die länger zum Generieren benötigen und
+                            mehr Speicher in der test.guide Datenbank belegen! Testschritte die
+                            angegeben werden können: Calculation .
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">Special additional test steps can be entered
+                            and captured. The capturing of additional test steps leads to larger
+                            ATX-Zips which take longer to generate and require more memory in the
+                            test.guide database! Test steps that can be specified: Calculation.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -1306,17 +1366,18 @@
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
             </DESCRIPTION>
         </SETTING>
-        <SETTING name="captureExecutionTime" default="True"
-                 xsi:type="reportConfigItem">
+        <SETTING name="captureExecutionTime" default="True" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
                         <DVALUE xsi:type="string">True, wenn die Package-Ausführungszeit
-                            erfasst werden soll, sonst False.</DVALUE>
+                            erfasst werden soll, sonst False.
+                        </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True, if the package execution time should
-                            be captured, otherwise False.</DVALUE>
+                            be captured, otherwise False.
+                        </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
