@@ -681,10 +681,10 @@ unclassified:
                       - atxSecretSetting:
                             group: CONNECTION
                             name: "uploadAuthenticationKey"
-                      - atxBooleanSetting:
+                      - atxTextSetting:
                             group: CONNECTION
                             name: "useSettingsFromServer"
-                            value: false
+                            value: "Never"
                       - atxBooleanSetting:
                             group: UPLOAD
                             name: "uploadToServer"
@@ -717,6 +717,10 @@ unclassified:
                             group: ARCHIVE
                             name: "enableArchive"
                             value: true
+                      - atxBooleanSetting:
+                            group: ARCHIVE
+                            name: "archiveExternalLinks"
+                            value: false
                       - atxBooleanSetting:
                             group: ARCHIVE
                             name: "archiveTrf"
@@ -807,6 +811,10 @@ unclassified:
                             group: ATTRIBUTE
                             name: "mapSwkIdsAsAttribute"
                             value: true
+                      - atxTextSetting:
+                            group: TBC_CONSTANTS
+                            name: "coveredConstants"
+                            value: "*; SWK_Version; TT_*; TBC_*; TCF_*"
                       - atxBooleanSetting:
                             group: TBC_CONSTANTS
                             name: "mapTbcToolAsConstant"
@@ -873,6 +881,10 @@ unclassified:
                       - atxTextSetting:
                             group: SPECIAL
                             name: "captureSubPackageOnVerdict"
+                      - atxTextSetting:
+                            group: SPECIAL
+                            name: "captureSpecialTestSteps"
+                            value: ""
                       - atxBooleanSetting:
                             group: SPECIAL
                             name: "mapSeparateProjectExecutionAsSingleTestplan"
@@ -979,23 +991,25 @@ can be found in the [tracetronic Knowledge Base](https://kb.tracetronic.com/disp
 
   </details>
  <details>
-    <summary>optional: <a href="https://www.tracetronic.com/products/test-guide">test.guide</a> 1.65.0 or higher</summary>
+    <summary>optional: <a href="https://www.tracetronic.com/products/test-guide">test.guide</a> 1.87.0 or 
+higher</summary>
 
-| Version |   latest - 2.26   |    2.25 - 2.23     |        2.22       |    2.21 - 2.18    |    2.17 - 2.16    |     2.15 - 2.14   |    2.13 - 2.12    |        2.11       |    2.10 - 2.8     |     2.7 - 2.6     |
-|:-------:|:-----------------:|:------------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|
-| 1.129.0 | :heavy_check_mark:|        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.120.0 | :heavy_check_mark:|        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.113.0 | :heavy_check_mark:|        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.104.0 | :heavy_check_mark:|        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.95.0  | :heavy_check_mark:|        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.87.0  | :heavy_check_mark:| :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.84.2  | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.82.0  | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.80.0  | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.76.0  | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |
-| 1.72.0  | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |
-| 1.67.0  | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |
-| 1.64.1  |        :x:        |        :x:         |        :x:        |        :x:        |        :x:        |        :x:        | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|
+| Version |   latest - 2.44    |    2.43 - 2.26     |    2.25 - 2.23     |        2.22       |    2.21 - 2.18    | 2.17 - 2.16    |     2.15 - 2.14   |    2.13 - 2.12    |        2.11       |    2.10 - 2.8     |     2.7 - 2.6     |
+|:-------:|:------------------:|:------------------:|:------------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|
+| 1.169.1 | :heavy_check_mark: |        :x:         |        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.129.0 | :heavy_check_mark: | :heavy_check_mark: |        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.120.0 | :heavy_check_mark: | :heavy_check_mark: |        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.113.0 | :heavy_check_mark: | :heavy_check_mark: |        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.104.0 | :heavy_check_mark: | :heavy_check_mark: |        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.95.0  | :heavy_check_mark: | :heavy_check_mark: |        :x:         |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.87.0  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.84.2  |        :x:         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.82.0  |        :x:         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.80.0  |        :x:         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.76.0  |        :x:         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |        :x:        |        :x:        |
+| 1.72.0  |        :x:         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |        :x:        |
+| 1.67.0  |        :x:         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|        :x:        |
+| 1.64.1  |        :x:         |        :x:         |        :x:         |        :x:        |        :x:        |        :x:        |        :x:        | :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|
  </details>
 * Note that some lacking version incompatibilities in the test.guide - ecu.test-Plugin compatibility matrix are due 
 to configuration fields which are not natively supported. You may still add these lacking configurations via the 
