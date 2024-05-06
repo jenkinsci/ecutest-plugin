@@ -979,7 +979,8 @@ can be found in the [tracetronic Knowledge Base](https://kb.tracetronic.com/disp
 
   </details>
  <details>
-    <summary>optional: <a href="https://www.tracetronic.com/products/test-guide">test.guide</a> 1.65.0 or higher</summary>
+    <summary>optional: <a href="https://www.tracetronic.com/products/test-guide">test.guide</a> 1.87.0 or 
+higher</summary>
 
 | Version |   latest - 2.44    |    2.43 - 2.26     |    2.25 - 2.23     |        2.22       |    2.21 - 2.18    | 2.17 - 2.16    |     2.15 - 2.14   |    2.13 - 2.12    |        2.11       |    2.10 - 2.8     |     2.7 - 2.6     |
 |:-------:|:------------------:|:------------------:|:------------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------------:|
