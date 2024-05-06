@@ -5,8 +5,8 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool.installation;
 
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import org.htmlunit.html.HtmlForm;
+import org.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
 import hudson.EnvVars;
 import hudson.Launcher;
