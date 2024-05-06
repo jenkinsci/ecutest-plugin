@@ -719,6 +719,10 @@ unclassified:
                             value: true
                       - atxBooleanSetting:
                             group: ARCHIVE
+                            name: "archiveExternalLinks"
+                            value: false
+                      - atxBooleanSetting:
+                            group: ARCHIVE
                             name: "archiveTrf"
                             value: true
                       - atxBooleanSetting:
@@ -807,6 +811,10 @@ unclassified:
                             group: ATTRIBUTE
                             name: "mapSwkIdsAsAttribute"
                             value: true
+                      - atxTextSetting:
+                            group: TBC_CONSTANTS
+                            name: "coveredConstants"
+                            value: "*; SWK_Version; TT_*; TBC_*; TCF_*"
                       - atxBooleanSetting:
                             group: TBC_CONSTANTS
                             name: "mapTbcToolAsConstant"
@@ -873,6 +881,10 @@ unclassified:
                       - atxTextSetting:
                             group: SPECIAL
                             name: "captureSubPackageOnVerdict"
+                      - atxTextSetting:
+                            group: SPECIAL
+                            name: "captureSpecialTestSteps"
+                            value: ""
                       - atxBooleanSetting:
                             group: SPECIAL
                             name: "mapSeparateProjectExecutionAsSingleTestplan"
