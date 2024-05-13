@@ -10,7 +10,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>4.51</version>
+        <version>4.82</version>
         <relativePath />
     </parent>
 
@@ -67,11 +67,12 @@
     <properties>
         <!-- Jenkins base -->
         <jenkins.version>2.414.3</jenkins.version>
-        <javaTargetJDK>11</javaTargetJDK>
+        <javaTargetJDK>17</javaTargetJDK>
+        <maven.compiler.release>17</maven.compiler.release>
 
         <!-- Jenkins plugins -->
         <job-dsl.version>1.87</job-dsl.version>
-        <warnings-ng.version>9.11.1</warnings-ng.version>
+        <warnings-ng.version>10.7.0</warnings-ng.version>
 
         <!-- Direct dependencies -->
         <jacob.version>1.20</jacob.version>
@@ -92,7 +93,9 @@
         <cyclonedx.version>2.7.9</cyclonedx.version>
 
         <!-- Test scope -->
-        <configuration-as-code.version>1.53</configuration-as-code.version>
+        <configuration-as-code.version>1775.v810dc950b_514</configuration-as-code.version>
+        <cloudbees-folder.version>6.858.v898218f3609d</cloudbees-folder.version>
+        <branch-api.version>2.1128.v717130d4f816</branch-api.version>
         <equalsverifier.version>3.16.1</equalsverifier.version>
         <mockito-core.version>4.1.0</mockito-core.version>
         <concurrency>2</concurrency>
@@ -104,25 +107,30 @@
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-2.319.x</artifactId>
-                <version>1595.v8c71c13cc3a_9</version>
+                <artifactId>bom-2.414.x</artifactId>
+                <version>2982.vdce2153031a_0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.jenkins-ci.main</groupId>
-                <artifactId>jenkins-test-harness</artifactId>
-                <version>1802.v9de0d87365d2</version>
-            </dependency>
-            <dependency>
                 <groupId>io.jenkins.plugins</groupId>
                 <artifactId>echarts-api</artifactId>
-                <version>5.3.2-1</version>
+                <version>5.4.0-7</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>1.7.36</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-xml</artifactId>
+                <version>2.17.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.14.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -218,32 +226,6 @@
             <groupId>io.jenkins.plugins</groupId>
             <artifactId>warnings-ng</artifactId>
             <version>${warnings-ng.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-lang3</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-text</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.errorprone</groupId>
-                    <artifactId>error_prone_annotations</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.github.spotbugs</groupId>
-                    <artifactId>spotbugs-annotations</artifactId>
-                </exclusion>
-            </exclusions>
             <optional>true</optional>
         </dependency>
 
@@ -510,6 +492,7 @@
             <plugin>
                 <groupId>org.cyclonedx</groupId>
                 <artifactId>cyclonedx-maven-plugin</artifactId>
+                <version>${cyclonedx.version}</version>
                 <configuration>
                     <projectType>library</projectType>
                     <schemaVersion>1.4</schemaVersion>

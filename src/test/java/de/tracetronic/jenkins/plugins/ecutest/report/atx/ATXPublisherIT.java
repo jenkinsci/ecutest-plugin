@@ -5,8 +5,8 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.atx;
 
-import com.gargoylesoftware.htmlunit.WebAssert;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import org.htmlunit.WebAssert;
+import org.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXConfig;
 import de.tracetronic.jenkins.plugins.ecutest.report.atx.installation.ATXInstallation;

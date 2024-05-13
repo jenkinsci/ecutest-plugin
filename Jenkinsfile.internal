@@ -86,7 +86,7 @@ pipeline {
 
 def mvn(def args) {
     def mvnHome = tool 'M3'
-    def javaHome = tool 'JDK11'
+    def javaHome = tool 'JDK17'
     withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin:${env.JAVA_HOME}/bin"]) {
         if (isUnix()) {
             sh "${mvnHome}/bin/mvn ${args} -B -V -U -e"
