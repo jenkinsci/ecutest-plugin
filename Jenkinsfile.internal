@@ -9,7 +9,7 @@
 Prerequisites
 =============
 * Maven tool installation configured as M3
-* JDK tool installation configured as JDK11
+* JDK tool installation configured as JDK17
 * Global environment variable EMAIL_RECIPIENTS set
 * Jenkins plugins installed:
 - https://plugins.jenkins.io/jacoco

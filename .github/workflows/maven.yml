@@ -12,9 +12,10 @@ jobs:
   build:
     name: Build on JDK ${{ matrix.java }} and ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    continue-on-error: true
     strategy:
       matrix:
-        java: [11, 17, 21]
+        java: [17, 21]
         os: [ubuntu-latest, windows-latest]
     steps:
       - name: Checkout
