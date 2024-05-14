@@ -118,7 +118,7 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
     public static final class DescriptorImpl extends AbstractReportDescriptor {
 
         public static String getDefaultReportDir() {
-            return DownStreamPublisher.DEFAULT_REPORT_DIR;
+            return DEFAULT_REPORT_DIR;
         }
 
         /**
@@ -128,7 +128,7 @@ public class DownStreamPublisher extends Recorder implements SimpleBuildStep {
          */
         public static List<Descriptor<? extends Publisher>> getApplicablePublishers() {
             final List<Descriptor<? extends Publisher>> list = new ArrayList<>();
-            final DescriptorExtensionList<Publisher, Descriptor<Publisher>> publishers = AbstractReportPublisher.all();
+            final DescriptorExtensionList<Publisher, Descriptor<Publisher>> publishers = all();
             if (publishers != null) {
                 for (final Descriptor<Publisher> publisher : publishers) {
                     if (publisher instanceof AbstractReportDescriptor

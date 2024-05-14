@@ -169,7 +169,7 @@ public class ETComDispatch extends Dispatch implements AutoCloseable {
     private Variant callDispatch(final String method, final Object... params) throws ETComException {
         try {
             final String parameters = StringUtils.join(params, ',');
-            final Variant result = Dispatch.call(this, method, params);
+            final Variant result = call(this, method, params);
             final String dispatchName = this.getClass().getSimpleName();
             LOGGER.fine(String.format("%s.call(): %s (%s) --> %s", dispatchName, method, parameters, result));
             return result;

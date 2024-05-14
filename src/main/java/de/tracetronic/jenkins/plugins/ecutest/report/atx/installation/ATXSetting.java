@@ -270,7 +270,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
          * @throws IllegalArgumentException in case of unknown settings group for given config name
          */
         public static SettingsGroup fromString(final String configName) throws IllegalArgumentException {
-            return Arrays.stream(SettingsGroup.values())
+            return Arrays.stream(values())
                 .filter(v -> v.configName.equals(configName))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Unknown settings group for: " + configName));

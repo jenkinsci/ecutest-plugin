@@ -161,8 +161,8 @@ public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implem
          * @return the related {@code JobExecutionMode}
          */
         public static JobExecutionMode fromValue(final Integer value) {
-            JobExecutionMode execMode = JobExecutionMode.SEQUENTIAL_EXECUTION;
-            for (final JobExecutionMode mode : JobExecutionMode.values()) {
+            JobExecutionMode execMode = SEQUENTIAL_EXECUTION;
+            for (final JobExecutionMode mode : values()) {
                 if (mode.getValue() == value) {
                     execMode = mode;
                     break;
