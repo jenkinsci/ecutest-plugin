@@ -16,9 +16,9 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 import io.jenkins.plugins.analysis.core.model.ResultAction;
 import io.jenkins.plugins.analysis.core.steps.IssuesRecorder;
+import io.jenkins.plugins.analysis.warnings.WarningsPlugin;
 import io.jenkins.plugins.util.RunResultHandler;
 import io.jenkins.plugins.util.StageResultHandler;
-import io.jenkins.plugins.analysis.warnings.WarningsPlugin;
 import org.apache.commons.lang.RandomStringUtils;
 
 import java.io.IOException;
