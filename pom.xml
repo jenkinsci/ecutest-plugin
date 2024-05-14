@@ -66,7 +66,7 @@
 
     <properties>
         <!-- Jenkins base -->
-        <jenkins.version>2.414.3</jenkins.version>
+        <jenkins.version>2.426.3</jenkins.version>
         <javaTargetJDK>17</javaTargetJDK>
         <maven.compiler.release>17</maven.compiler.release>
 
@@ -93,11 +93,8 @@
         <cyclonedx.version>2.7.9</cyclonedx.version>
 
         <!-- Test scope -->
-        <configuration-as-code.version>1775.v810dc950b_514</configuration-as-code.version>
-        <cloudbees-folder.version>6.858.v898218f3609d</cloudbees-folder.version>
-        <branch-api.version>2.1128.v717130d4f816</branch-api.version>
         <equalsverifier.version>3.16.1</equalsverifier.version>
-        <mockito-core.version>4.1.0</mockito-core.version>
+        <!--<mockito-core.version>4.1.0</mockito-core.version>-->
         <concurrency>2</concurrency>
         <skipUTs>false</skipUTs>
         <skipITs>true</skipITs>
@@ -107,8 +104,8 @@
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-2.414.x</artifactId>
-                <version>2982.vdce2153031a_0</version>
+                <artifactId>bom-2.426.x</artifactId>
+                <version>3041.ve87ce2cdf223</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -246,7 +243,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockito-core.version}</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
