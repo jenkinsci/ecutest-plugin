@@ -73,18 +73,18 @@
 
         <!-- Jenkins plugins -->
         <job-dsl.version>1.87</job-dsl.version>
-        <warnings-ng.version>10.7.0</warnings-ng.version>
+        <warnings-ng.version>11.3.0</warnings-ng.version>
 
         <!-- Direct dependencies -->
         <jacob.version>1.20</jacob.version>
         <antlr4-maven-plugin.version>4.13.1</antlr4-maven-plugin.version>
         <antlr4-runtime.version>4.13.1</antlr4-runtime.version>
-        <sqlite-jdbc.version>3.42.0.1</sqlite-jdbc.version>
+        <sqlite-jdbc.version>3.45.3.0</sqlite-jdbc.version>
         <spotbugs-annotations.version>4.8.4</spotbugs-annotations.version>
 
         <!-- Static code analysis -->
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
-        <checkstyle.version>9.2</checkstyle.version>
+        <checkstyle.version>10.16.0</checkstyle.version>
         <maven-pmd-plugin.version>3.22.0</maven-pmd-plugin.version>
         <pmd.version>7.0.0</pmd.version>
         <spotbugs.effort>Max</spotbugs.effort>
@@ -113,7 +113,7 @@
             <dependency>
                 <groupId>io.jenkins.plugins</groupId>
                 <artifactId>echarts-api</artifactId>
-                <version>5.4.0-7</version>
+                <version>5.5.0-1</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
