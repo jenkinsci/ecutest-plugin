@@ -42,6 +42,24 @@
             <email>christian.poenisch@tracetronic.de</email>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <id>TT-S3-D1</id>
+            <name>Sebastian Dietze</name>
+            <email>sebastian.dietze@tracetronic.de</email>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <id>MartinGroscheTT</id>
+            <name>Martin Grosche</name>
+            <email>martin.grosche@tracetronic.de</email>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <id>ErikRehmTT</id>
+            <name>Erik Rehm</name>
+            <email>erik.rehm@tracetronic.de</email>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
     <contributors>
         <contributor>
@@ -95,7 +113,6 @@
 
         <!-- Test scope -->
         <equalsverifier.version>3.16.1</equalsverifier.version>
-        <!--<mockito-core.version>4.1.0</mockito-core.version>-->
         <concurrency>2</concurrency>
         <skipUTs>false</skipUTs>
         <skipITs>true</skipITs>
