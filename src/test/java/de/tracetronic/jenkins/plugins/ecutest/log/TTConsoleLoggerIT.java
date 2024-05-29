@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015-2023 tracetronic GmbH
+ * Copyright (c) 2015-2024 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.log;
 
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import org.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
 import de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComException;
 import hudson.Launcher;

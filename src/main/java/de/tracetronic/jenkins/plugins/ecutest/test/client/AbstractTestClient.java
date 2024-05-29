@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2023 tracetronic GmbH
+ * Copyright (c) 2015-2024 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -142,7 +142,7 @@ public abstract class AbstractTestClient implements TestClient {
                                      final Launcher launcher, final TaskListener listener)
         throws IOException, InterruptedException {
         final Plugin plugin = Jenkins.get().getPlugin("warnings-ng");
-        if (plugin == null || !(plugin.getWrapper().isActive())) {
+        if (plugin == null || !plugin.getWrapper().isActive()) {
             final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logError("Warnings NG plugin not found or disabled, please install using the Update Center!");
             return true;

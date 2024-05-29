@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2023 tracetronic GmbH
+ * Copyright (c) 2015-2024 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -270,7 +270,7 @@ public abstract class ATXSetting<T> extends AbstractDescribableImpl<ATXSetting<?
          * @throws IllegalArgumentException in case of unknown settings group for given config name
          */
         public static SettingsGroup fromString(final String configName) throws IllegalArgumentException {
-            return Arrays.stream(SettingsGroup.values())
+            return Arrays.stream(values())
                 .filter(v -> v.configName.equals(configName))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Unknown settings group for: " + configName));

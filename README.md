@@ -957,7 +957,7 @@ can be found in the [tracetronic Knowledge Base](https://kb.tracetronic.com/disp
 ## Compatibility
 
 - Jenkins LTS 2.319.3 or higher
-- Java SE Runtime Environment 11 or higher
+- Java SE Runtime Environment 17 or higher
  <details>
     <summary><a href="https://www.tracetronic.com/products/ecu-test">ecu.test</a> 2023.1 or higher </summary>
 

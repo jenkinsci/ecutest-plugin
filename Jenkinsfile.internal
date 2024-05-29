@@ -1,5 +1,5 @@
 /**
- * SPDX-FileCopyrightText: 2015-2023 tracetronic GmbH <info@tracetronic.de>
+ * SPDX-FileCopyrightText: 2015-2024 tracetronic GmbH <info@tracetronic.de>
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -9,7 +9,7 @@
 Prerequisites
 =============
 * Maven tool installation configured as M3
-* JDK tool installation configured as JDK11
+* JDK tool installation configured as JDK17
 * Global environment variable EMAIL_RECIPIENTS set
 * Jenkins plugins installed:
 - https://plugins.jenkins.io/jacoco
@@ -86,7 +86,7 @@ pipeline {
 
 def mvn(def args) {
     def mvnHome = tool 'M3'
-    def javaHome = tool 'JDK11'
+    def javaHome = tool 'JDK17'
     withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin:${env.JAVA_HOME}/bin"]) {
         if (isUnix()) {
             sh "${mvnHome}/bin/mvn ${args} -B -V -U -e"

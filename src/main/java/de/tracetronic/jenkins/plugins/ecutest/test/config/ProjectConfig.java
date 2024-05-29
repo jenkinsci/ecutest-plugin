@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2023 tracetronic GmbH
+ * Copyright (c) 2015-2024 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -161,8 +161,8 @@ public class ProjectConfig extends AbstractDescribableImpl<ProjectConfig> implem
          * @return the related {@code JobExecutionMode}
          */
         public static JobExecutionMode fromValue(final Integer value) {
-            JobExecutionMode execMode = JobExecutionMode.SEQUENTIAL_EXECUTION;
-            for (final JobExecutionMode mode : JobExecutionMode.values()) {
+            JobExecutionMode execMode = SEQUENTIAL_EXECUTION;
+            for (final JobExecutionMode mode : values()) {
                 if (mode.getValue() == value) {
                     execMode = mode;
                     break;

@@ -1,4 +1,4 @@
-#  Copyright (c) 2015-2023 tracetronic GmbH
+#  Copyright (c) 2015-2024 tracetronic GmbH
 #
 #  SPDX-License-Identifier: BSD-3-Clause
 
@@ -15,9 +15,10 @@ from os.path import exists
 filename = "check_dependencies.py"
 
 COMPATIBLE_LICENSES = [
-    "ISC", "MIT", "GPLv2", "The MIT License", "Apache-2.0", "Apache-1.0", "Apache-1.1", "PSF-2.0", "BSD",
-    "BSD-2-Clause", "BSD-3-Clause", "BSD-4-Clause", "GNU LGPL", "GNU LGPL-2.1", "GNU LGPL-3.0",  "CDDL-1.1", "EDL-1.0",
-    "MPL-2.0-no-copyleft-exception", "EPL-1.0", "EPL-2.0",  "The JSON License", "Indiana University"
+    "ISC", "MIT", "MIT-0", "GPLv2", "The MIT License", "MIT No Attribution License", "Apache-2.0", "Apache-1.0",
+    "Apache-1.1", "PSF-2.0", "BSD", "BSD-2-Clause", "BSD-3-Clause", "BSD-4-Clause", "GNU LGPL", "GNU LGPL-2.1",
+    "GNU LGPL-3.0", "CDDL-1.1", "EDL-1.0","MPL-2.0-no-copyleft-exception", "EPL-1.0", "EPL-2.0",  "Public Domain",
+    "Indiana University"
 ]
 
 
@@ -108,7 +109,7 @@ def compare_license_files(allowlist_path, sbom_path, allowschema_path):
     if missing_sbom:
         found_errors.append("Dependencies {} not found in sbom_path but in allow list. Check if still "
                             "necessary.".format(missing_sbom))
-    elif missing_allowed:
+    if missing_allowed:
         found_warnings.append("Dependencies {} not found in allow list but in sbom_path."
                               .format(missing_allowed))
 

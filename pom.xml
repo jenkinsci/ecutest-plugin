@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright (c) 2015-2023 tracetronic GmbH
+  Copyright (c) 2015-2024 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
@@ -10,7 +10,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>4.51</version>
+        <version>4.82</version>
         <relativePath />
     </parent>
 
@@ -42,6 +42,24 @@
             <email>christian.poenisch@tracetronic.de</email>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <id>TT-S3-D1</id>
+            <name>Sebastian Dietze</name>
+            <email>sebastian.dietze@tracetronic.de</email>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <id>MartinGroscheTT</id>
+            <name>Martin Grosche</name>
+            <email>martin.grosche@tracetronic.de</email>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <id>ErikRehmTT</id>
+            <name>Erik Rehm</name>
+            <email>erik.rehm@tracetronic.de</email>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
     <contributors>
         <contributor>
@@ -66,25 +84,26 @@
 
     <properties>
         <!-- Jenkins base -->
-        <jenkins.version>2.414.3</jenkins.version>
-        <javaTargetJDK>11</javaTargetJDK>
+        <jenkins.version>2.426.3</jenkins.version>
+        <javaTargetJDK>17</javaTargetJDK>
+
+        <maven.compiler.release>${javaTargetJDK}</maven.compiler.release>
 
         <!-- Jenkins plugins -->
         <job-dsl.version>1.87</job-dsl.version>
-        <warnings-ng.version>9.11.1</warnings-ng.version>
+        <warnings-ng.version>11.3.0</warnings-ng.version>
 
         <!-- Direct dependencies -->
         <jacob.version>1.20</jacob.version>
         <antlr4-maven-plugin.version>4.13.1</antlr4-maven-plugin.version>
         <antlr4-runtime.version>4.13.1</antlr4-runtime.version>
-        <sqlite-jdbc.version>3.42.0.1</sqlite-jdbc.version>
+        <sqlite-jdbc.version>3.45.3.0</sqlite-jdbc.version>
         <spotbugs-annotations.version>4.8.4</spotbugs-annotations.version>
 
         <!-- Static code analysis -->
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
-        <checkstyle.version>9.2</checkstyle.version>
-        <maven-pmd-plugin.version>3.15.0</maven-pmd-plugin.version>
-        <pmd.version>6.41.0</pmd.version>
+        <checkstyle.version>10.16.0</checkstyle.version>
+        <maven-pmd-plugin.version>3.22.0</maven-pmd-plugin.version>
         <spotbugs.effort>Max</spotbugs.effort>
         <spotbugs.threshold>Low</spotbugs.threshold>
 
@@ -92,9 +111,7 @@
         <cyclonedx.version>2.7.9</cyclonedx.version>
 
         <!-- Test scope -->
-        <configuration-as-code.version>1.53</configuration-as-code.version>
         <equalsverifier.version>3.16.1</equalsverifier.version>
-        <mockito-core.version>4.1.0</mockito-core.version>
         <concurrency>2</concurrency>
         <skipUTs>false</skipUTs>
         <skipITs>true</skipITs>
@@ -104,25 +121,30 @@
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-2.319.x</artifactId>
-                <version>1595.v8c71c13cc3a_9</version>
+                <artifactId>bom-2.426.x</artifactId>
+                <version>3041.ve87ce2cdf223</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.jenkins-ci.main</groupId>
-                <artifactId>jenkins-test-harness</artifactId>
-                <version>1802.v9de0d87365d2</version>
-            </dependency>
-            <dependency>
                 <groupId>io.jenkins.plugins</groupId>
                 <artifactId>echarts-api</artifactId>
-                <version>5.3.2-1</version>
+                <version>5.5.0-1</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>1.7.36</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-xml</artifactId>
+                <version>2.17.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.14.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -218,32 +240,6 @@
             <groupId>io.jenkins.plugins</groupId>
             <artifactId>warnings-ng</artifactId>
             <version>${warnings-ng.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-lang3</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-text</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.errorprone</groupId>
-                    <artifactId>error_prone_annotations</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.github.spotbugs</groupId>
-                    <artifactId>spotbugs-annotations</artifactId>
-                </exclusion>
-            </exclusions>
             <optional>true</optional>
         </dependency>
 
@@ -258,13 +254,14 @@
                     <artifactId>maven-core</artifactId>
                 </exclusion>
             </exclusions>
+            <scope>test</scope>
         </dependency>
 
         <!-- Test scope -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockito-core.version}</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -431,18 +428,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>${maven-pmd-plugin.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.sourceforge.pmd</groupId>
-                        <artifactId>pmd-core</artifactId>
-                        <version>${pmd.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>net.sourceforge.pmd</groupId>
-                        <artifactId>pmd-java</artifactId>
-                        <version>${pmd.version}</version>
-                    </dependency>
-                </dependencies>
                 <configuration>
                     <analysisCache>true</analysisCache>
                     <minimumTokens>200</minimumTokens>
@@ -510,6 +495,7 @@
             <plugin>
                 <groupId>org.cyclonedx</groupId>
                 <artifactId>cyclonedx-maven-plugin</artifactId>
+                <version>${cyclonedx.version}</version>
                 <configuration>
                     <projectType>library</projectType>
                     <schemaVersion>1.4</schemaVersion>
