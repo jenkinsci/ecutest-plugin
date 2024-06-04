@@ -8,6 +8,10 @@ installations:
         name: "customLabel"
         value: "test"
     settings:
+    - atxBooleanSetting:
+        group: CONNECTION
+        name: "uploadToServer"
+        value: true
     - atxTextSetting:
         group: CONNECTION
         name: "serverURL"
@@ -19,10 +23,6 @@ installations:
         group: CONNECTION
         name: "useHttpsConnection"
         value: false
-    - atxBooleanSetting:
-        group: CONNECTION
-        name: "ignoreSSL"
-        value: false
     - atxTextSetting:
         group: CONNECTION
         name: "serverPort"
@@ -32,17 +32,17 @@ installations:
         name: "serverContextPath"
     - atxSecretSetting:
         group: CONNECTION
-        name: "httpProxy"
-    - atxSecretSetting:
-        group: CONNECTION
-        name: "httpsProxy"
+        name: "uploadAuthenticationKey"
     - atxTextSetting:
         group: CONNECTION
         name: "projectId"
         value: "1"
     - atxSecretSetting:
         group: CONNECTION
-        name: "uploadAuthenticationKey"
+        name: "httpProxy"
+    - atxSecretSetting:
+        group: CONNECTION
+        name: "httpsProxy"
     - atxTextSetting:
         group: CONNECTION
         name: "uploadSettings"
@@ -53,12 +53,8 @@ installations:
     - atxTextSetting:
         group: CONNECTION
         name: "useSettingsFromServerKeyword"
-    - atxBooleanSetting:
-        group: UPLOAD
-        name: "uploadToServer"
-        value: true
     - atxTextSetting:
-        group: UPLOAD
+        group: CONNECTION
         name: "uploadThroughResourceAdapter"
         value: "0"
     - atxBooleanSetting:
@@ -264,7 +260,6 @@ installations:
     - atxTextSetting:
         group: SPECIAL
         name: "captureSpecialTestSteps"
-        value: ""
     - atxBooleanSetting:
         group: SPECIAL
         name: "mapSeparateProjectExecutionAsSingleTestplan"

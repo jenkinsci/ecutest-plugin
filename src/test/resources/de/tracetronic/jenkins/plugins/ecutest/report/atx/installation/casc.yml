@@ -29,9 +29,11 @@ unclassified:
             - atxSecretSetting:
                 group: CONNECTION
                 name: "httpProxy"
+                value: "a"
             - atxSecretSetting:
                 group: CONNECTION
                 name: "httpsProxy"
+                value: "b"
             - atxTextSetting:
                 group: CONNECTION
                 name: "projectId"
@@ -39,6 +41,7 @@ unclassified:
             - atxSecretSetting:
                 group: CONNECTION
                 name: "uploadAuthenticationKey"
+                value: "c"
             - atxTextSetting:
                 group: CONNECTION
                 name: "uploadSettings"
@@ -47,7 +50,7 @@ unclassified:
                 name: "useSettingsFromServer"
                 value: "Never"
             - atxBooleanSetting:
-                group: UPLOAD
+                group: CONNECTION
                 name: "uploadToServer"
                 value: true
             - atxTextSetting:
