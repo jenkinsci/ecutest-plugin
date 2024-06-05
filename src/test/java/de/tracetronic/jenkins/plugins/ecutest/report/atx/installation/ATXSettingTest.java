@@ -184,4 +184,11 @@ public class ATXSettingTest {
             "descGerman", "descEnglish", Secret.fromString("defaultValue"));
         assertThat(setting.getDefaultValue().getPlainText(), is("defaultValue"));
     }
+
+    @Test
+    public void testSecretFromNull() {
+        final ATXSecretSetting setting = new ATXSecretSetting("settingName", SettingsGroup.SPECIAL, (String) null);
+        assertTrue(setting.isSecret());
+        assertThat(setting.getSecretValue(), is(""));
+    }
 }

@@ -41,7 +41,11 @@ public class ATXSecretSetting extends ATXSetting<Secret> {
      */
     @DataBoundConstructor
     public ATXSecretSetting(final String name, final SettingsGroup group, final String value) {
-        super(name, group, Secret.decrypt(value));
+        super(name, group, Secret.fromString(value));
+        // Secret.fromString creates non-null Secret if value is null
+        if (value == null){
+            this.value = null;
+        }
     }
 
     /**
