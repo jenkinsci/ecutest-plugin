@@ -47,7 +47,7 @@ unclassified:
                 name: "useSettingsFromServer"
                 value: "Never"
             - atxBooleanSetting:
-                group: UPLOAD
+                group: CONNECTION
                 name: "uploadToServer"
                 value: true
             - atxTextSetting:

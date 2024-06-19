@@ -190,6 +190,7 @@ public class TSClient extends AbstractToolClient {
             } catch (final InterruptedException e) {
                 logger.logError(e.getMessage());
             }
+            logger.getLogger().flush();
             return isTerminated;
         }
     }
