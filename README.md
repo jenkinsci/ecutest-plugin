@@ -961,7 +961,7 @@ can be found in the [tracetronic Knowledge Base](https://kb.tracetronic.com/disp
 
 - Jenkins LTS 2.319.3 or higher
 - Java SE Runtime Environment 17 or higher
-- Check [min versions](minVersions.yml) for tt tools 
+- Check [min versions](toolDependencies.yml) for tt tools 
  <details>
     <summary><a href="https://www.tracetronic.com/products/ecu-test">ecu.test</a> compat matrix (min 2023.1)</summary>
 
