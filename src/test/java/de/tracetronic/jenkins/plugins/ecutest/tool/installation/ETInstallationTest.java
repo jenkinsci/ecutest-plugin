@@ -21,25 +21,25 @@ public class ETInstallationTest {
 
     @Test
     public void testInstallation() {
-        final ETInstallation inst = new ETInstallation("ecu.test", "C:\\ECU-TEST",
+        final ETInstallation inst = new ETInstallation("ecu.test", "C:\\ecu.test",
             Collections.emptyList());
         assertNotNull(inst);
         assertEquals("ecu.test", inst.getName());
-        assertEquals("C:\\ECU-TEST", inst.getHome());
-        assertEquals("ECU-TEST.Application", inst.getProgId());
+        assertEquals("C:\\ecu.test", inst.getHome());
+        assertEquals("ecu.test.Application", inst.getProgId());
         assertEquals(0, inst.getTimeout());
         assertFalse(inst.isRegisterComServer());
     }
 
     @Test
     public void testInstallationWithCustomSettings() {
-        final ETInstallation inst = new ETInstallation("ecu.test", "C:\\ECU-TEST",
-            Collections.singletonList(new ETToolProperty("ECU-TEST6.Application", 120, true)));
+        final ETInstallation inst = new ETInstallation("ecu.test", "C:\\ecu.test",
+            Collections.singletonList(new ETToolProperty("ecu.test.Application.2024.1", 120, true)));
         assertNotNull(inst);
         assertEquals("ecu.test", inst.getName());
-        assertEquals("C:\\ECU-TEST", inst.getHome());
+        assertEquals("C:\\ecu.test", inst.getHome());
         assertEquals(1, inst.getProperties().size());
-        assertEquals("ECU-TEST6.Application", inst.getProgId());
+        assertEquals("ecu.test.Application.2024.1", inst.getProgId());
         assertEquals(120, inst.getTimeout());
         assertTrue(inst.isRegisterComServer());
     }

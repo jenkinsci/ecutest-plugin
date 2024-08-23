@@ -30,12 +30,12 @@ public class ETPlugin {
     /**
      * Defines the minimum required ecu.test version supported by this plugin.
      */
-    public static final ToolVersion ET_MIN_VERSION = new ToolVersion(2023, 1, 0);
+    public static final ToolVersion ET_MIN_VERSION = new ToolVersion(2024, 1, 0);
 
     /**
      * Defines the maximum allowed ecu.test version supported by this plugin.
      */
-    public static final ToolVersion ET_MAX_VERSION = new ToolVersion(2024, 1, 0);
+    public static final ToolVersion ET_MAX_VERSION = new ToolVersion(2024, 3, 0);
 
     /**
      * Defines the minimum test.guide version supported by this plugin.

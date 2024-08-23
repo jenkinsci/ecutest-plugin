@@ -28,7 +28,7 @@ public class ETToolPropertyIT extends IntegrationTestBase {
     public void testDefaultProgId() throws Exception {
         final ETToolProperty.DescriptorImpl toolDescriptor = jenkins.jenkins
             .getDescriptorByType(ETToolProperty.DescriptorImpl.class);
-        final FormValidation validation = toolDescriptor.doCheckProgId("ECU-TEST.Application");
+        final FormValidation validation = toolDescriptor.doCheckProgId("ecu.test.Application");
         assertEquals("Valid if default ProgID", FormValidation.Kind.OK, validation.kind);
     }
 
@@ -36,24 +36,24 @@ public class ETToolPropertyIT extends IntegrationTestBase {
     public void testVersionedProgId() throws Exception {
         final ETToolProperty.DescriptorImpl toolDescriptor = jenkins.jenkins
             .getDescriptorByType(ETToolProperty.DescriptorImpl.class);
-        final FormValidation validation = toolDescriptor.doCheckProgId("ECU-TEST.Application.2023.1");
-        assertEquals("Valid if versioned ProgID", FormValidation.Kind.OK, validation.kind);
+        final FormValidation validation = toolDescriptor.doCheckProgId("ecu.test.Application.2024.1");
+        assertEquals("Valid if versioned new ProgID for >= ecu.test 2024.1", FormValidation.Kind.OK, validation.kind);
     }
 
     @Test
-    public void testNewProgId() throws Exception {
+    public void testOldProgId() throws Exception {
         final ETToolProperty.DescriptorImpl toolDescriptor = jenkins.jenkins
             .getDescriptorByType(ETToolProperty.DescriptorImpl.class);
-        final FormValidation validation = toolDescriptor.doCheckProgId("ecu.test.Application");
+        final FormValidation validation = toolDescriptor.doCheckProgId("ECU-TEST.Application");
         assertEquals("Valid if new ProgID for >= ecu.test 2024.1", FormValidation.Kind.OK, validation.kind);
     }
 
     @Test
-    public void testVersionedNewProgId() throws Exception {
+    public void testVersionedOldProgId() throws Exception {
         final ETToolProperty.DescriptorImpl toolDescriptor = jenkins.jenkins
             .getDescriptorByType(ETToolProperty.DescriptorImpl.class);
-        final FormValidation validation = toolDescriptor.doCheckProgId("ecu.test.Application.2024.1");
-        assertEquals("Valid if versioned new ProgID for >= ecu.test 2024.1", FormValidation.Kind.OK, validation.kind);
+        final FormValidation validation = toolDescriptor.doCheckProgId("ECU-TEST.Application.2023.1");
+        assertEquals("Valid if versioned ProgID", FormValidation.Kind.OK, validation.kind);
     }
 
     @Test

@@ -32,8 +32,8 @@ public class ETPipelineIT extends IntegrationTestBase {
     public void setUp() throws Exception {
         final ETInstallation.DescriptorImpl etDescriptor = jenkins.jenkins
             .getDescriptorByType(ETInstallation.DescriptorImpl.class);
-        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ECU-TEST", Collections
-            .singletonList(new ETToolProperty("ECU-TEST.Application.8.0", 120, false))));
+        etDescriptor.setInstallations(new ETInstallation("ecu.test", "C:\\ecu.test", Collections
+            .singletonList(new ETToolProperty("ecu.test.Application.2024.1", 120, false))));
 
         final ScriptApproval scriptApproval = ScriptApproval.get();
         List<String> approvedSignatures = Arrays.asList(

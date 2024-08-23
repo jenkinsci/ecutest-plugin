@@ -43,19 +43,19 @@ public class ETConfigurationAsCodeIT {
 
         ETInstallation installation = installations[0];
         assertThat(installation.getName(), is("ecu.test"));
-        assertThat(installation.getHome(), is("C:\\ECU-TEST"));
+        assertThat(installation.getHome(), is("C:\\ecu.test"));
         assertThat(installation.getProgId(), is(ETComProperty.DEFAULT_PROG_ID));
         assertThat(installation.getTimeout(), is(ETComProperty.DEFAULT_TIMEOUT));
         assertThat(installation.getProperties(), empty());
 
         installation = installations[1];
-        assertThat(installation.getName(), is("ECU-TEST 7.2"));
-        assertThat(installation.getHome(), is("C:\\Program Files\\ECU-TEST 7.2"));
-        assertThat(installation.getProgId(), is("ECU-TEST.Application.7.2"));
+        assertThat(installation.getName(), is("ecu.test 2024.1"));
+        assertThat(installation.getHome(), is("C:\\Program Files\\ecu.test 2024.1"));
+        assertThat(installation.getProgId(), is("ecu.test.Application.2024.1"));
         assertThat(installation.getTimeout(), is(60));
         assertThat(installation.getProperties().size(), is(1));
         assertThat(installation.getProperties().get(0), is(instanceOf(ETToolProperty.class)));
-        assertThat(((ETToolProperty) installation.getProperties().get(0)).getProgId(), is("ECU-TEST.Application.7.2"));
+        assertThat(((ETToolProperty) installation.getProperties().get(0)).getProgId(), is("ecu.test.Application.2024.1"));
         assertThat(((ETToolProperty) installation.getProperties().get(0)).getTimeout(), is(60));
         assertThat(((ETToolProperty) installation.getProperties().get(0)).isRegisterComServer(), is(true));
     }
