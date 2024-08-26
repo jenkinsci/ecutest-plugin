@@ -956,6 +956,10 @@ Since [release 2.39](https://github.com/jenkinsci/ecutest-plugin/releases/tag/ec
 tracetronic tool support terms. Please consult the [compatibility matrix](#compatibility) for detailed 
 information.
 
+Due to the deprecation and the feature freeze of this plugin it will not support this new PRF file format. Consider 
+migrating to the [ecu.test execution plugin](https://plugins.jenkins.io/ecu-test-execution/) if you want to publish 
+the new PRF files to Jenkins.
+
 ## FAQ
 
 Frequently asked questions, common issues and error messages about the [ecu.test Jenkins Plugin](https://github.com/jenkinsci/ecutest-plugin) and [ecu.test](https://www.tracetronic.com/products/ecu-test/) itself
