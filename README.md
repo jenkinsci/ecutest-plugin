@@ -917,6 +917,10 @@ unclassified:
 ```
 </details>
 
+### Warnings NG Plugin
+
+The [Warnings NG Plugin](https://plugins.jenkins.io/warnings-ng/) is used to record and manage issues within your Jenkins Pipelines. Supported versions of this plugin start at **11.0.0**. It is recommended to use these versions to ensure compatibility and stability.
+
 ## Debugging
 
 To change the job console log level to debug, the system property `ecutest.debugLog` should be set to `true`. This could be done either at startup
