@@ -17,8 +17,8 @@ import hudson.model.TaskListener;
 import io.jenkins.plugins.analysis.core.model.ResultAction;
 import io.jenkins.plugins.analysis.core.steps.IssuesRecorder;
 import io.jenkins.plugins.analysis.warnings.WarningsPlugin;
+import io.jenkins.plugins.util.ResultHandler;
 import io.jenkins.plugins.util.RunResultHandler;
-import io.jenkins.plugins.util.StageResultHandler;
 import org.apache.commons.lang.RandomStringUtils;
 
 import java.io.IOException;
@@ -86,7 +86,7 @@ public class WarningsRecorder {
             final Class<? extends IssuesRecorder> clazz = recorder.getClass();
             try {
                 final Method perform = clazz.getDeclaredMethod("perform",
-                    Run.class, FilePath.class, TaskListener.class, StageResultHandler.class);
+                    Run.class, FilePath.class, TaskListener.class, ResultHandler.class);
                 AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
                     perform.setAccessible(true);
                     return null;
