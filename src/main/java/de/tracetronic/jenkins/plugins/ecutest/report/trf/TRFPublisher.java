@@ -55,7 +55,7 @@ public class TRFPublisher extends AbstractReportPublisher {
     public static final String TRF_EXCLUDES = "*/**/Job_*" + TRF_EXTENSION;
 
     /**
-     * Pattern uses to match the not support .prf files
+     * Pattern uses to match the not support .prf files.
      */
     public static final String PRF_PATTERN = "**/*.prf";
 
@@ -97,9 +97,10 @@ public class TRFPublisher extends AbstractReportPublisher {
                 final FilePath archiveTargetDir = archiveTarget.child(reportDir.getName());
                 final FilePath reportFile = getFirstReportFile(reportDir);
                 if (reportDir.list(PRF_PATTERN).length > 0) {
-                    logger.logWarn(String.format("Found a .prf file in report folder %s. Due to the deprecation of " +
-                            "this plugin it does not support this new file format. Consider migrating to the ecu.test" +
-                            " execution plugin or deactivate the creation of .prf files. Skipping this report folder!",
+                    logger.logWarn(String.format("Found a .prf file in report folder %s. Due to the deprecation of "
+                            + "this plugin it does not support this new file format. Consider migrating to the ecu.test"
+                            + " execution plugin or deactivate the creation of .prf files. Skipping this report "
+                            + "folder!",
                         reportDir));
                     continue;
                 }
