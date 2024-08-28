@@ -98,7 +98,7 @@
         <antlr4-maven-plugin.version>4.13.2</antlr4-maven-plugin.version>
         <antlr4-runtime.version>4.13.1</antlr4-runtime.version>
         <sqlite-jdbc.version>3.45.3.0</sqlite-jdbc.version>
-        <spotbugs-annotations.version>4.8.4</spotbugs-annotations.version>
+        <spotbugs-annotations.version>4.8.6</spotbugs-annotations.version>
 
         <!-- Static code analysis -->
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
