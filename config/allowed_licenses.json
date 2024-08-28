@@ -1370,10 +1370,10 @@
     },
     {
       "moduleName": "com.github.spotbugs:spotbugs-annotations",
-      "moduleVersion": "4.8.4",
+      "moduleVersion": "4.8.6",
       "moduleLicense": "LGPL-2.1-only",
       "moduleCopyright": "2005 University of Maryland",
-      "licenseUrl": "https://github.com/spotbugs/spotbugs/blob/4.8.4/LICENSE",
+      "licenseUrl": "https://github.com/spotbugs/spotbugs/blob/4.8.6/LICENSE",
       "actualLicense": "GNU LGPL-2.1"
     },
     {
