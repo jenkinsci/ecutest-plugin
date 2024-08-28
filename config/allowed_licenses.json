@@ -579,7 +579,7 @@
     {
       "moduleName": "net.sf.saxon:Saxon-HE",
       "moduleVersion": "12.4",
-      "moduleLicense": "MPL-2.0-no-copyleft-exception",
+      "moduleLicense": "MPL-2.0",
       "moduleCopyright": "2018-2023 Saxonica Limited",
       "licenseUrl": "https://www.saxonica.com/documentation12/index.html#!conditions",
       "actualLicense": "$moduleLicense"

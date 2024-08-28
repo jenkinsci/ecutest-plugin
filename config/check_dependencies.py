@@ -17,8 +17,7 @@ filename = "check_dependencies.py"
 COMPATIBLE_LICENSES = [
     "ISC", "MIT", "MIT-0", "GPLv2", "The MIT License", "MIT No Attribution License", "Apache-2.0", "Apache-1.0",
     "Apache-1.1", "PSF-2.0", "BSD", "BSD-2-Clause", "BSD-3-Clause", "BSD-4-Clause", "GNU LGPL", "GNU LGPL-2.1",
-    "GNU LGPL-3.0", "CDDL-1.1", "EDL-1.0","MPL-2.0-no-copyleft-exception", "EPL-1.0", "EPL-2.0",  "Public Domain",
-    "Indiana University"
+    "GNU LGPL-3.0", "CDDL-1.1", "EDL-1.0", "MPL-2.0", "EPL-1.0", "EPL-2.0",  "Public Domain", "Indiana University"
 ]
 
 
