@@ -882,10 +882,10 @@
     },
     {
       "moduleName": "org.antlr:antlr4-runtime",
-      "moduleVersion": "4.13.1",
+      "moduleVersion": "4.13.2",
       "moduleLicense": "BSD-3-Clause",
       "moduleCopyright": "2012-2022 The ANTLR Project",
-      "licenseUrl": "https://github.com/antlr/antlr4/blob/4.13.1/LICENSE.txt",
+      "licenseUrl": "https://github.com/antlr/antlr4/blob/4.13.2/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
