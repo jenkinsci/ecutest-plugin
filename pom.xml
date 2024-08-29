@@ -108,7 +108,7 @@
         <spotbugs.threshold>Low</spotbugs.threshold>
 
         <!-- Compliance -->
-        <cyclonedx.version>2.7.9</cyclonedx.version>
+        <cyclonedx.version>2.8.1</cyclonedx.version>
 
         <!-- Test scope -->
         <equalsverifier.version>3.16.1</equalsverifier.version>
