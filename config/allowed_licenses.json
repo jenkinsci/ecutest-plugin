@@ -362,10 +362,10 @@
     },
     {
       "moduleName": "io.jenkins.plugins:echarts-api",
-      "moduleVersion": "5.5.0-1",
+      "moduleVersion": "5.5.1-1",
       "moduleLicense": "MIT",
       "moduleCopyright": "2019, Dr. Ullrich Hafner",
-      "licenseUrl": "https://github.com/jenkinsci/echarts-api-plugin/blob/v5.5.0-1/LICENSE",
+      "licenseUrl": "https://github.com/jenkinsci/echarts-api-plugin/blob/v5.5.1-1/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
