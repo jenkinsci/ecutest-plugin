@@ -39,7 +39,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                mvn 'package -DskipUTs'
+                mvn 'clean package -DskipUTs'
                 archiveArtifacts artifacts: 'target/*.hpi', fingerprint: true
             }
         }
@@ -65,7 +65,7 @@ pipeline {
         stage('Docs') {
             steps {
                 mvn 'javadoc:javadoc'
-                step([$class: 'JavadocArchiver', javadocDir: 'target/site/apidocs', keepAll: false])
+                step([$class: 'JavadocArchiver', javadocDir: 'target/reports/apidocs', keepAll: false])
             }
         }
     }
