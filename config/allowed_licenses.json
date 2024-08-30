@@ -1634,10 +1634,10 @@
     },
     {
       "moduleName": "net.bytebuddy:byte-buddy",
-      "moduleVersion": "1.14.12",
+      "moduleVersion": "1.14.15",
       "moduleLicense": "Apache-2.0",
       "moduleCopyright": "2014 - Present Rafael Winterhalter",
-      "licenseUrl": "https://github.com/raphw/byte-buddy/blob/byte-buddy-1.14.12/LICENSE",
+      "licenseUrl": "https://github.com/raphw/byte-buddy/blob/byte-buddy-1.14.15/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
