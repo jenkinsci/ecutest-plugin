@@ -3,7 +3,7 @@
   <installations>
     <de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation>
       <name>ecu.test</name>
-      <home>C:\ECU-TEST</home>
+      <home>C:\ecu.test</home>
       <properties/>
     </de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation>
   </installations>

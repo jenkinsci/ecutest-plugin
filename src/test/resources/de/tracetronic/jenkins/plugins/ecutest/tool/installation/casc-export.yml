@@ -1,10 +1,10 @@
 installations:
-- home: "C:\\ECU-TEST"
+- home: "C:\\ecu.test"
   name: "ecu.test"
-- home: "C:\\Program Files\\ECU-TEST 7.2"
-  name: "ECU-TEST 7.2"
+- home: "C:\\Program Files\\ecu.test 2024.1"
+  name: "ecu.test 2024.1"
   properties:
   - ecuTestProperty:
-      progId: "ECU-TEST.Application.7.2"
+      progId: "ecu.test.Application.2024.1"
       registerComServer: true
       timeout: 60

@@ -44,8 +44,8 @@ public class ETInstallationIT extends IntegrationTestBase {
 
         final ETInstallation inst = installations[0];
         assertEquals("ecu.test", inst.getName());
-        assertEquals("C:\\ECU-TEST", inst.getHome());
-        assertEquals("ECU-TEST.Application", inst.getProgId());
+        assertEquals("C:\\ecu.test", inst.getHome());
+        assertEquals("ecu.test.Application", inst.getProgId());
         assertFalse(inst.isRegisterComServer());
     }
 
@@ -58,8 +58,8 @@ public class ETInstallationIT extends IntegrationTestBase {
 
         final ETInstallation inst = installations[0];
         assertEquals("ecu.test", inst.getName());
-        assertEquals("C:\\ECU-TEST", inst.getHome());
-        assertEquals("ECU-TEST6.Application", inst.getProgId());
+        assertEquals("C:\\ecu.test", inst.getHome());
+        assertEquals("ecu.test.Application.2024.1", inst.getProgId());
         assertFalse(inst.isRegisterComServer());
     }
 
@@ -80,8 +80,8 @@ public class ETInstallationIT extends IntegrationTestBase {
 
         final ETInstallation inst = installations[0];
         assertEquals("ecu.test", inst.getName());
-        assertEquals("C:\\ECU-TEST", inst.getHome());
-        assertEquals("ECU-TEST.Application", inst.getProgId());
+        assertEquals("C:\\ecu.test", inst.getHome());
+        assertEquals("ecu.test.Application", inst.getProgId());
     }
 
     @Test

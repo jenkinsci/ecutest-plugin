@@ -6,9 +6,8 @@
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
-    <!-- Stretch to full width -->
-    <tr>
-        <td colspan="3" width="100%"/>
-    </tr>
+    <div class="alert alert-warning">
+        ${%prf.warning}
+    </div>
     <st:include class="de.tracetronic.jenkins.plugins.ecutest.report.AbstractReportPublisher" page="config.jelly"/>
 </j:jelly>

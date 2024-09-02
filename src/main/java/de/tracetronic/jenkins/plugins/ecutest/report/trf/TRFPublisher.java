@@ -55,6 +55,11 @@ public class TRFPublisher extends AbstractReportPublisher {
     public static final String TRF_EXCLUDES = "*/**/Job_*" + TRF_EXTENSION;
 
     /**
+     * Pattern uses to match the not support .prf files.
+     */
+    public static final String PRF_PATTERN = "**/*.prf";
+
+    /**
      * The URL name to {@link TRFReport}s holding by {@link AbstractTRFAction}.
      */
     protected static final String URL_NAME = "trf-reports";
@@ -91,6 +96,14 @@ public class TRFPublisher extends AbstractReportPublisher {
             for (final FilePath reportDir : reportDirs) {
                 final FilePath archiveTargetDir = archiveTarget.child(reportDir.getName());
                 final FilePath reportFile = getFirstReportFile(reportDir);
+                if (reportDir.list(PRF_PATTERN).length > 0) {
+                    logger.logWarn(String.format("Found a .prf file in report folder %s. Due to the deprecation of "
+                            + "this plugin it does not support this new file format. Consider migrating to the ecu.test"
+                            + " execution plugin or deactivate the creation of .prf files. Skipping this report "
+                            + "folder!",
+                        reportDir));
+                    continue;
+                }
                 if (reportFile != null && reportFile.exists()) {
                     try {
                         logger.logInfo(String.format("- Archiving TRF report: %s", reportFile));
@@ -153,8 +166,8 @@ public class TRFPublisher extends AbstractReportPublisher {
     }
 
     /**
-     * Traverses the sub-report directories recursively and searches for TRF reports.
-     * Includes the report files generated during separate sub-project execution.
+     * Traverses the sub-report directories recursively and searches for TRF reports. Includes the report files
+     * generated during separate sub-project execution.
      *
      * @param trfReport        the TRF report
      * @param testReportDir    the main test report directory

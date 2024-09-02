@@ -3,10 +3,10 @@
   <installations>
     <de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation>
       <name>ecu.test</name>
-      <home>C:\ECU-TEST</home>
+      <home>C:\ecu.test</home>
       <properties>
         <de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETToolProperty>
-          <progId>ECU-TEST6.Application</progId>
+          <progId>ecu.test.Application.2024.1</progId>
         </de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETToolProperty>
       </properties>
     </de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation>

@@ -17,7 +17,7 @@ public final class ETComProperty implements Serializable {
     /**
      * Default COM specific programmatic identifier.
      */
-    public static final String DEFAULT_PROG_ID = "ECU-TEST.Application";
+    public static final String DEFAULT_PROG_ID = "ecu.test.Application";
     /**
      * Default COM response timeout in seconds.
      */
