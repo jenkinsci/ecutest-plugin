@@ -68,6 +68,36 @@ public class WarningsRecorderIT extends IntegrationTestBase {
         assertThat(build.getAction(ResultAction.class).getResult().getTotalErrorsSize(), is(1));
     }
 
+    @Test
+    public void recordWarnings() throws Exception {
+        final String issueFileName = "warnings.json";
+        final String issues = loadTestResource(issueFileName);
+
+        final FreeStyleProject project = createProject(issueFileName, issues);
+        final FreeStyleBuild build = jenkins.buildAndAssertStatus(Result.SUCCESS, project);
+
+        jenkins.assertLogContains("found 1 file", build);
+        jenkins.assertLogContains("found 3 issues", build);
+        jenkins.assertLogContains("Successfully processed file '" + issueFileName + "'", build);
+
+        assertThat(build.getAction(ResultAction.class).getResult().getIssues().size(), is(3));
+    }
+
+    @Test
+    public void recordMixedSeverities() throws Exception {
+        final String issueFileName = "mixed-severities.json";
+        final String issues = loadTestResource(issueFileName);
+
+        final FreeStyleProject project = createProject(issueFileName, issues);
+        final FreeStyleBuild build = jenkins.buildAndAssertStatus(Result.FAILURE, project);
+
+        jenkins.assertLogContains("found 1 file", build);
+        jenkins.assertLogContains("found 3 issues", build);
+        jenkins.assertLogContains("Successfully processed file '" + issueFileName + "'", build);
+
+        assertThat(build.getAction(ResultAction.class).getResult().getIssues().size(), is(3));
+    }
+
     private FreeStyleProject createProject(final String issueFileName, final String issues) throws IOException {
         final FreeStyleProject project = jenkins.createFreeStyleProject();
         project.getBuildersList().add(new TestBuilder() {
