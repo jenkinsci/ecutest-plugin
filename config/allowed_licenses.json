@@ -162,10 +162,10 @@
     },
     {
       "moduleName": "org.jsoup:jsoup",
-      "moduleVersion": "1.17.2",
+      "moduleVersion": "1.18.1",
       "moduleLicense": "MIT",
-      "moduleCopyright": "2009-2023 Jonathan Hedley <https://jsoup.org/>",
-      "licenseUrl": "https://github.com/jhy/jsoup/blob/jsoup-1.17.2/LICENSE",
+      "moduleCopyright": "2009-2024 Jonathan Hedley",
+      "licenseUrl": "https://github.com/jhy/jsoup/blob/jsoup-1.18.1/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -482,10 +482,10 @@
     },
     {
       "moduleName": "io.jenkins.plugins:warnings-ng",
-      "moduleVersion": "11.3.0",
+      "moduleVersion": "11.4.1",
       "moduleLicense": "MIT",
       "moduleCopyright": "2007-2023 Dr. Ullrich Hafner",
-      "licenseUrl": "https://github.com/jenkinsci/warnings-ng-plugin/blob/v11.3.0/LICENSE",
+      "licenseUrl": "https://github.com/jenkinsci/warnings-ng-plugin/blob/v11.4.1/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
