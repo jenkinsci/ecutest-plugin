@@ -90,7 +90,7 @@
         <maven.compiler.release>${javaTargetJDK}</maven.compiler.release>
 
         <!-- Jenkins plugins -->
-        <job-dsl.version>1.87</job-dsl.version>
+        <job-dsl.version>1.89</job-dsl.version>
         <warnings-ng.version>11.4.1</warnings-ng.version>
 
         <!-- Direct dependencies -->
