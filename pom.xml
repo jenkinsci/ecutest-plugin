@@ -111,7 +111,7 @@
         <cyclonedx.version>2.8.2</cyclonedx.version>
 
         <!-- Test scope -->
-        <equalsverifier.version>3.17</equalsverifier.version>
+        <equalsverifier.version>3.17.1</equalsverifier.version>
         <concurrency>2</concurrency>
         <skipUTs>false</skipUTs>
         <skipITs>true</skipITs>
