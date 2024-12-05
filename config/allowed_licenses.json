@@ -170,10 +170,10 @@
     },
     {
       "moduleName": "com.fasterxml.jackson.dataformat:jackson-dataformat-xml",
-      "moduleVersion": "2.17.0",
+      "moduleVersion": "2.17.2",
       "moduleLicense": "Apache-2.0",
       "moduleCopyright": "2007-, Tatu Saloranta ",
-      "licenseUrl": "https://github.com/FasterXML/jackson-dataformat-xml/blob/jackson-dataformat-xml-2.17.0/LICENSE",
+      "licenseUrl": "https://github.com/FasterXML/jackson-dataformat-xml/blob/jackson-dataformat-xml-2.17.2/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
