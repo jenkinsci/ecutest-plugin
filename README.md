@@ -975,6 +975,7 @@ can be found in the [tracetronic Knowledge Base](https://kb.tracetronic.com/disp
 
 | Version |   latest - 2.45    |        2.44        |    2.43 - 2.39     |    2.38 - 2.26     |
 |:-------:|:------------------:|:------------------:|:------------------:|:------------------:|
+| 2024.4  | :heavy_check_mark: |        :x:         |        :x:         |        :x:         |
 | 2024.3  | :heavy_check_mark: |        :x:         |        :x:         |        :x:         |
 | 2024.2  | :heavy_check_mark: | :heavy_check_mark: |        :x:         |        :x:         |
 | 2024.1  | :heavy_check_mark: | :heavy_check_mark: |        :x:         |        :x:         |
