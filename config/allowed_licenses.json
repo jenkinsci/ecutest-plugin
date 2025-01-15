@@ -675,10 +675,10 @@
     {
       "moduleName": "net.java.dev.jna:jna",
       "moduleVersion": "5.15.0",
-      "moduleLicense": "Apache-2.0 OR LGPL-2.1",
+      "moduleLicense": "Apache-2.0",
       "moduleCopyright": "1991, 1999 Free Software Foundation, Inc.",
       "licenseUrl": "https://github.com/java-native-access/jna/blob/5.15.0/LICENSE",
-      "actualLicense": "Apache-2.0"
+      "actualLicense": "$moduleLicense"
     },
     {
       "moduleName": "net.java.sezpoz:sezpoz",
@@ -1011,7 +1011,7 @@
     {
       "moduleName": "org.eclipse.jetty.toolchain:jetty-servlet-api",
       "moduleVersion": "4.0.6",
-      "moduleLicense": "EPL-2.0 OR Apache-2.0",
+      "moduleLicense": "Apache-2.0",
       "moduleCopyright": "",
       "licenseUrl": "https://github.com/jetty/jetty-toolchain/blob/jetty-servlet-api-4.0.6/jetty-javax-servlet-api/src/main/resources/META-INF/LICENSE.md",
       "actualLicense": "Apache-2.0"
