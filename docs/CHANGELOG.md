@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2015-2021 TraceTronic GmbH <info@tracetronic.de>
+SPDX-FileCopyrightText: 2015-2025 TraceTronic GmbH <info@tracetronic.de>
 
 SPDX-License-Identifier: BSD-3-Clause
 -->
@@ -145,7 +145,7 @@ All future changes will be automatically logged by ![Release Drafter Icon](https
 - :heavy_plus_sign: Added support for parallel installations (configurable COM ProgID)
 - :heavy_check_mark: Properly log ATX report upload errors
 - :heavy_check_mark: Simplified configuration with automatic migration
-- :heavy_check_mark: Improved Windows process control (using [WinP](http://winp.kohsuke.org/))
+- :heavy_check_mark: Improved Windows process control (using WinP)
 - :x: Fixed absolute configuration path check
 - :information_source: Ensured compatibility up to ECU-TEST 6.5.0
 - :information_source: Updated available ATX settings to TEST-GUIDE 1.35.0
