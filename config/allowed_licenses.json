@@ -245,7 +245,7 @@
       "moduleVersion": "1.20",
       "moduleLicense": "GNU Library or Lesser General Public License (LGPL)",
       "moduleCopyright": "1999",
-      "licenseUrl": "https://github.com/freemansoft/jacob-project/blob/B-1_10/jacob/License.TXT",
+      "licenseUrl": "https://github.com/freemansoft/jacob-project/blob/B-1_10/jacob/LICENSE.TXT",
       "actualLicense": "GNU LGPL"
     },
     {
@@ -341,7 +341,7 @@
       "moduleVersion": "0.5",
       "moduleLicense": "Apache-2.0",
       "moduleCopyright": "2002 The Apache Software Foundation",
-      "licenseUrl": "https://svn.apache.org/repos/asf/commons/proper/discovery/tags/DISCOVERY_0_5_RC2/LICENSE",
+      "licenseUrl": "https://svn.apache.org/repos/asf/commons/dormant/discovery/tags/DISCOVERY_0_5/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
