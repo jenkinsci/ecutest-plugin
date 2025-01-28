@@ -1,315 +1,27 @@
 {
   "allowedLicenses": [
     {
-      "moduleName": "com.jacob:jacob",
-      "moduleVersion": "1.20",
-      "moduleLicense": "GNU Library or Lesser General Public License (LGPL)",
-      "moduleCopyright": "1999",
-      "licenseUrl": "https://github.com/freemansoft/jacob-project/blob/B-1_10/jacob/License.TXT",
-      "actualLicense": "GNU LGPL"
+      "moduleName": "args4j:args4j",
+      "moduleVersion": "2.37",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2013 Kohsuke Kawaguchi and other contributors",
+      "licenseUrl": "https://github.com/kohsuke/args4j/blob/args4j-site-2.37/LICENSE",
+      "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.xerial:sqlite-jdbc",
-      "moduleVersion": "3.45.3.0",
+      "moduleName": "cglib:cglib",
+      "moduleVersion": "2.2.2",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "David Crawshaw, 2006",
-      "licenseUrl": "https://github.com/xerial/sqlite-jdbc/blob/3.45.3.0/LICENSE",
+      "moduleCopyright": "The Apache Software Foundation",
+      "licenseUrl": "https://github.com/cglib/cglib/blob/RELEASE_2_2/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "com.infradna.tool:bridge-method-annotation",
-      "moduleVersion": "1.29",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2010, InfraDNA, Inc.",
-      "licenseUrl": "https://github.com/jenkinsci/bridge-method-injector/blob/bridge-method-injector-parent-1.29/pom.xml",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "com.sun.solaris:embedded_su4j",
-      "moduleVersion": "1.1",
-      "moduleLicense": "MIT",
-      "moduleCopyright": ".",
-      "licenseUrl": "https://github.com/kohsuke/embedded_su4j/tree/embedded_su4j-1.1",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "commons-jelly:commons-jelly-tags-fmt",
-      "moduleVersion": "1.0",
-      "moduleLicense": "The Apache Software License 2.0",
-      "moduleCopyright": "The Apache Software Foundation,2002,2004",
-      "licenseUrl": "https://github.com/apache/commons-jelly/blob/commons-jelly-1.0/README.txt",
-      "actualLicense": "Apache-2.0"
-    },
-    {
-      "moduleName": "commons-logging:commons-logging",
-      "moduleVersion": "1.2",
+      "moduleName": "com.beust:jcommander",
+      "moduleVersion": "1.82",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2003-2014 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/commons-logging/blob/LOGGING_1_2/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.apache.commons:commons-compress",
-      "moduleVersion": "1.24.0",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2002-2019, The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/commons-compress/blob/rel/commons-compress-1.24.0/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.json:json",
-      "moduleVersion": "20240303",
-      "moduleLicense": "Public Domain",
-      "moduleCopyright": ".",
-      "licenseUrl": "https://github.com/stleary/JSON-java/blob/20240303/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci:version-number",
-      "moduleVersion": "1.11",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2011-, Stephen Connolly, CloudBees, Inc., and a number of other of contributors",
-      "licenseUrl": "https://github.com/jenkinsci/lib-version-number/blob/version-number-1.11/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci:crypto-util",
-      "moduleVersion": "1.9",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2004-2009, Sun Microsystems, Inc.",
-      "licenseUrl": "https://github.com/jenkinsci/lib-crypto-util/tree/crypto-util-1.9",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci:symbol-annotation",
-      "moduleVersion": "1.24",
-      "moduleLicense": "MIT",
-      "moduleCopyright": ".",
-      "licenseUrl": "https://github.com/jenkinsci/lib-symbol-annotation/tree/symbol-annotation-1.24",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "commons-discovery:commons-discovery",
-      "moduleVersion": "0.5",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2002 The Apache Software Foundation",
-      "licenseUrl": "https://svn.apache.org/repos/asf/commons/proper/discovery/tags/DISCOVERY_0_5_RC2/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.kohsuke.jinterop:j-interopdeps",
-      "moduleVersion": "2.0.8-kohsuke-1",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2007 Free Software Foundation",
-      "licenseUrl": "https://github.com/skyghis/j-interop-ng/blob/2.0.8-kohsuke-1/j-interop/lgpl.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.kohsuke.stapler:stapler-jelly",
-      "moduleVersion": "1814.vdc9dd5217ee2",
-      "moduleLicense": "BSD-2-Clause",
-      "moduleCopyright": "2009-, Kohsuke Kawaguchi and other contributors",
-      "licenseUrl": "https://github.com/jenkinsci/stapler/blob/1814.vdc9dd5217ee2/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.kohsuke.stapler:stapler",
-      "moduleVersion": "1814.vdc9dd5217ee2",
-      "moduleLicense": "BSD-2-Clause",
-      "moduleCopyright": "2009-, Kohsuke Kawaguchi and other contributors",
-      "licenseUrl": "https://github.com/jenkinsci/stapler/blob/1814.vdc9dd5217ee2/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.kohsuke.stapler:stapler-groovy",
-      "moduleVersion": "1814.vdc9dd5217ee2",
-      "moduleLicense": "BSD-2-Clause",
-      "moduleCopyright": "2009-, Kohsuke Kawaguchi and other contributors",
-      "licenseUrl": "https://github.com/jenkinsci/stapler/blob/1814.vdc9dd5217ee2/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "javax.xml.bind:jaxb-api",
-      "moduleVersion": "2.3.1",
-      "moduleLicense": "CDDL-1.1",
-      "moduleCopyright": "2017-2018 Oracle and/or its affiliates",
-      "licenseUrl": "https://github.com/javaee/jaxb-spec/blob/2.3.1/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "net.sf.ezmorph:ezmorph",
-      "moduleVersion": "1.0.6",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": ".",
-      "licenseUrl": "https://ezmorph.cvs.sourceforge.net/ezmorph",
-      "actualLicense": "Apache-2.0"
-    },
-    {
-      "moduleName": "com.google.code.findbugs:jsr305",
-      "moduleVersion": "3.0.1",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2000-2005 INRIA, France Telecom",
-      "licenseUrl": "https://github.com/findbugsproject/findbugs/blob/3.0.1/findbugs/licenses/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.eclipse.collections:eclipse-collections-api",
-      "moduleVersion": "9.2.0",
-      "moduleLicense": "EPL-1.0",
-      "moduleCopyright": "2007, Eclipse Foundation, Inc. and its licensors.",
-      "licenseUrl": "https://github.com/eclipse/eclipse-collections/blob/9.2.0/LICENSE-EPL-1.0.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jsoup:jsoup",
-      "moduleVersion": "1.18.1",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2009-2024 Jonathan Hedley",
-      "licenseUrl": "https://github.com/jhy/jsoup/blob/jsoup-1.18.1/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "com.fasterxml.jackson.dataformat:jackson-dataformat-xml",
-      "moduleVersion": "2.17.0",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2007-, Tatu Saloranta ",
-      "licenseUrl": "https://github.com/FasterXML/jackson-dataformat-xml/blob/jackson-dataformat-xml-2.17.0/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.codehaus.woodstox:stax2-api",
-      "moduleVersion": "4.2.2",
-      "moduleLicense": "BSD-2-Clause",
-      "moduleCopyright": "2010 FasterXML.com",
-      "licenseUrl": "https://github.com/FasterXML/stax2-api/blob/stax2-api-4.2.2/src/main/resources/META-INF/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "com.fasterxml.woodstox:woodstox-core",
-      "moduleVersion": "6.6.1",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2004- Tatu Saloranta, tatu.saloranta@iki.fi",
-      "licenseUrl": "https://github.com/FasterXML/woodstox/blob/woodstox-core-6.6.1/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "commons-codec:commons-codec",
-      "moduleVersion": "1.16.0",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2002-2023 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/commons-codec/blob/rel/commons-codec-1.16.0/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.apache.commons:commons-lang3",
-      "moduleVersion": "3.17.0",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2001-2024, The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/commons-lang/blob/rel/commons-lang-3.17.0/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins:credentials",
-      "moduleVersion": "1371.vfee6b_095f0a_3",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2011-2012, CloudBees, Inc., Stephen Connolly.",
-      "licenseUrl": "https://github.com/jenkinsci/credentials-plugin/blob/1371.vfee6b_095f0a_3/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins:jquery",
-      "moduleVersion": "1.12.4-1",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2012 Jack Moore - jacklmoore.com",
-      "licenseUrl": "https://github.com/jenkinsci/jquery-plugin/blob/master/src/main/resources/hudson/plugins/jquery/colorbox/js/jquery.colorbox-min.js",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.kohsuke.stapler:stapler-adjunct-jquery",
-      "moduleVersion": "1.12.4-0",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "jQuery Foundation and other contributors",
-      "licenseUrl": "https://github.com/stapler/stapler-adjunct-jquery/blob/stapler-adjunct-jquery-1.12.4-0/src/main/resources/org/kohsuke/stapler/jquery/jquery.full.js",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins:matrix-project",
-      "moduleVersion": "822.824.v14451b_c0fd42",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2004-2010, Sun Microsystems, Inc., Kohsuke Kawaguchi",
-      "licenseUrl": "https://github.com/jenkinsci/matrix-project-plugin/blob/822.824.v14451b_c0fd42/pom.xml",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins:script-security",
-      "moduleVersion": "1341.va_2819b_414686",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2014 CloudBees, Inc.",
-      "licenseUrl": "https://github.com/jenkinsci/script-security-plugin/blob/1341.va_2819b_414686/pom.xml",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.kohsuke:groovy-sandbox",
-      "moduleVersion": "1.34",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2012-2014 Kohsuke Kawaguchi, CloudBees, Inc., other contributors",
-      "licenseUrl": "https://github.com/jenkinsci/groovy-sandbox/blob/groovy-sandbox-1.34/LICENSE.md",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "io.jenkins.plugins:caffeine-api",
-      "moduleVersion": "3.1.8-133.v17b_1ff2e0599",
-      "moduleLicense": "Apache License v2",
-      "moduleCopyright": "",
-      "licenseUrl": "https://github.com/jenkinsci/caffeine-api-plugin/blob/3.1.8-133.v17b_1ff2e0599/LICENSE",
-      "actualLicense": "Apache-2.0"
-    },
-    {
-      "moduleName": "com.github.ben-manes.caffeine:caffeine",
-      "moduleVersion": "3.1.8",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2015 Ben Manes.",
-      "licenseUrl": "https://github.com/ben-manes/caffeine/blob/v3.1.8/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins:structs",
-      "moduleVersion": "338.v848422169819",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2019 CloudBees, Inc",
-      "licenseUrl": "https://github.com/jenkinsci/structs-plugin/blob/338.v848422169819/pom.xml",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins.workflow:workflow-cps",
-      "moduleVersion": "3908.vd6b_b_5a_a_54010",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2013-2014, CloudBees, Inc.",
-      "licenseUrl": "https://github.com/jenkinsci/workflow-cps-plugin/blob/3908.vd6b_b_5a_a_54010/plugin/pom.xml",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins.workflow:workflow-scm-step",
-      "moduleVersion": "427.v4ca_6512e7df1",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2014, Jesse Glick",
-      "licenseUrl": "https://github.com/jenkinsci/workflow-scm-step-plugin/blob/427.v4ca_6512e7df1/pom.xml",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins:scm-api",
-      "moduleVersion": "690.vfc8b_54395023",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2011-2016, CloudBees, Inc., Stephen Connolly",
-      "licenseUrl": "https://github.com/jenkinsci/scm-api-plugin/blob/690.vfc8b_54395023/pom.xml",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "com.cloudbees:groovy-cps",
-      "moduleVersion": "3908.vd6b_b_5a_a_54010",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": ".",
-      "licenseUrl": "https://github.com/jenkinsci/workflow-cps-plugin/blob/3908.vd6b_b_5a_a_54010/lib/pom.xml",
+      "moduleCopyright": "2010 Cedric Beust cedric@beust.com",
+      "licenseUrl": "https://github.com/cbeust/jcommander/blob/1.82/license.txt",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -321,83 +33,27 @@
       "actualLicense": "GPLv2"
     },
     {
-      "moduleName": "org.jenkins-ci.plugins.workflow:workflow-step-api",
-      "moduleVersion": "678.v3ee58b_469476",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2019 CloudBees, Inc",
-      "licenseUrl": "https://github.com/jenkinsci/workflow-step-api-plugin/blob/678.v3ee58b_469476/pom.xml",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins:job-dsl-core",
-      "moduleVersion": "1.87",
+      "moduleName": "com.cloudbees:groovy-cps",
+      "moduleVersion": "4007.vd705fc76a_34e",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2015 the original author or authors.",
-      "licenseUrl": "https://github.com/jenkinsci/job-dsl-plugin/blob/job-dsl-1.87/LICENSE.txt",
+      "moduleCopyright": ".",
+      "licenseUrl": "https://github.com/jenkinsci/workflow-cps-plugin/blob/4007.vd705fc76a_34e/lib/pom.xml",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "xmlunit:xmlunit",
-      "moduleVersion": "1.6",
-      "moduleLicense": "BSD-3-Clause",
-      "moduleCopyright": "2001-2014, Jeff Martin, Tim Bacon",
-      "licenseUrl": "https://sourceforge.net/p/xmlunit/code/HEAD/tree/trunk/LICENSE.txt",
-      "actualLicense": "BSD"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins:cloudbees-folder",
-      "moduleVersion": "6.858.v898218f3609d",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2013 CloudBees",
-      "licenseUrl": "https://github.com/jenkinsci/cloudbees-folder-plugin/blob/6.858.v898218f3609d/pom.xml",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins:junit",
-      "moduleVersion": "1265.v65b_14fa_f12f0",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2004-2019 Sun Microsystems, Inc., and other Jenkins contributors",
-      "licenseUrl": "https://github.com/jenkinsci/junit-plugin/blob/1265.v65b_14fa_f12f0/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "io.jenkins.plugins:echarts-api",
-      "moduleVersion": "5.5.1-1",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2019, Dr. Ullrich Hafner",
-      "licenseUrl": "https://github.com/jenkinsci/echarts-api-plugin/blob/v5.5.1-1/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "io.jenkins.plugins:checks-api",
-      "moduleVersion": "2.2.0",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2020 Kezhi Xiong",
-      "licenseUrl": "https://github.com/jenkinsci/checks-api-plugin/blob/v2.2.0/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "io.jenkins.plugins:plugin-util-api",
-      "moduleVersion": "4.1.0",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2019, Dr. Ullrich Hafner",
-      "licenseUrl": "https://github.com/jenkinsci/plugin-util-api-plugin/blob/v4.1.0/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins:display-url-api",
-      "moduleVersion": "2.204.vf6fddd8a_8b_e9",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2016 CloudBees Inc and a number of other of contributors",
-      "licenseUrl": "https://github.com/jenkinsci/display-url-api-plugin/blob/2.204.vf6fddd8a_8b_e9/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins:jackson2-api",
-      "moduleVersion": "2.17.0-379.v02de8ec9f64c",
+      "moduleName": "com.fasterxml.jackson.core:jackson-annotations",
+      "moduleVersion": "2.17.0",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2015, CloudBees, Inc.",
-      "licenseUrl": "https://github.com/jenkinsci/jackson2-api-plugin/blob/2.17.0-379.v02de8ec9f64c/LICENSE.txt",
+      "moduleCopyright": "2007 Tatu Saloranta",
+      "licenseUrl": "https://github.com/FasterXML/jackson-annotations/blob/jackson-annotations-2.17.0/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.fasterxml.jackson.core:jackson-core",
+      "moduleVersion": "2.17.0",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "Copyright (c) 2007- Tatu Saloranta, tatu.saloranta@iki.fi",
+      "licenseUrl": "https://github.com/FasterXML/jackson-core/blob/jackson-core-2.17.0/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -409,11 +65,27 @@
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "com.fasterxml.jackson.datatype:jackson-datatype-jsr310",
+      "moduleName": "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor",
       "moduleVersion": "2.17.0",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2013 FasterXML.com",
-      "licenseUrl": "https://github.com/FasterXML/jackson-modules-java8/blob/jackson-modules-java8-2.17.0/LICENSE",
+      "moduleCopyright": "2021 FasterXML",
+      "licenseUrl": "https://github.com/FasterXML/jackson-dataformats-binary/blob/jackson-dataformats-binary-2.17.0/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.fasterxml.jackson.dataformat:jackson-dataformat-xml",
+      "moduleVersion": "2.17.0",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2007-, Tatu Saloranta ",
+      "licenseUrl": "https://github.com/FasterXML/jackson-dataformat-xml/blob/jackson-dataformat-xml-2.17.0/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
+      "moduleVersion": "2.17.0",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2019 FasterXML",
+      "licenseUrl": "https://github.com/FasterXML/jackson-dataformats-text/blob/jackson-dataformats-text-2.17.0/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -433,27 +105,11 @@
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "com.fasterxml.jackson.module:jackson-module-parameter-names",
+      "moduleName": "com.fasterxml.jackson.datatype:jackson-datatype-jsr310",
       "moduleVersion": "2.17.0",
       "moduleLicense": "Apache-2.0",
       "moduleCopyright": "2013 FasterXML.com",
       "licenseUrl": "https://github.com/FasterXML/jackson-modules-java8/blob/jackson-modules-java8-2.17.0/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "com.fasterxml.jackson.core:jackson-core",
-      "moduleVersion": "2.17.0",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "Copyright (c) 2007- Tatu Saloranta, tatu.saloranta@iki.fi",
-      "licenseUrl": "https://github.com/FasterXML/jackson-core/blob/jackson-core-2.17.0/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "com.fasterxml.jackson.core:jackson-annotations",
-      "moduleVersion": "2.17.0",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2007 Tatu Saloranta ",
-      "licenseUrl": "https://github.com/FasterXML/jackson-annotations/blob/jackson-annotations-2.17.0/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -465,99 +121,35 @@
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor",
+      "moduleName": "com.fasterxml.jackson.module:jackson-module-parameter-names",
       "moduleVersion": "2.17.0",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2021 FasterXML",
-      "licenseUrl": "https://github.com/FasterXML/jackson-dataformats-binary/blob/jackson-dataformats-binary-2.17.0/LICENSE",
+      "moduleCopyright": "2013 FasterXML.com",
+      "licenseUrl": "https://github.com/FasterXML/jackson-modules-java8/blob/jackson-modules-java8-2.17.0/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
-      "moduleVersion": "2.17.0",
+      "moduleName": "com.fasterxml.woodstox:woodstox-core",
+      "moduleVersion": "6.6.1",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2019 FasterXML",
-      "licenseUrl": "https://github.com/FasterXML/jackson-dataformats-text/blob/jackson-dataformats-text-2.17.0/LICENSE",
+      "moduleCopyright": "2004- Tatu Saloranta, tatu.saloranta@iki.fi",
+      "licenseUrl": "https://github.com/FasterXML/woodstox/blob/woodstox-core-6.6.1/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "io.jenkins.plugins:warnings-ng",
-      "moduleVersion": "11.4.1",
+      "moduleName": "com.github.ben-manes.caffeine:caffeine",
+      "moduleVersion": "3.1.8",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2015 Ben Manes.",
+      "licenseUrl": "https://github.com/ben-manes/caffeine/blob/v3.1.8/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.github.oowekyala.ooxml:nice-xml-messages",
+      "moduleVersion": "3.1",
       "moduleLicense": "MIT",
-      "moduleCopyright": "2007-2023 Dr. Ullrich Hafner",
-      "licenseUrl": "https://github.com/jenkinsci/warnings-ng-plugin/blob/v11.4.1/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.eclipse.collections:eclipse-collections",
-      "moduleVersion": "9.2.0",
-      "moduleLicense": "EPL-1.0",
-      "moduleCopyright": "2007, Eclipse Foundation, Inc. and its licensors.",
-      "licenseUrl": "https://github.com/eclipse/eclipse-collections/blob/9.2.0/LICENSE-EPL-1.0.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "net.minidev:json-smart",
-      "moduleVersion": "2.5.0",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2011 JSON-SMART authors",
-      "licenseUrl": "https://github.com/netplex/json-smart-v2/blob/2.5.0/json-smart/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "net.minidev:accessors-smart",
-      "moduleVersion": "2.5.0",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2011 JSON-SMART authors",
-      "licenseUrl": "https://github.com/netplex/json-smart-v2/blob/2.5.0/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "io.jenkins.plugins:analysis-model-api",
-      "moduleVersion": "12.4.0",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2007-2023 Dr. Ullrich Hafner",
-      "licenseUrl": "https://github.com/jenkinsci/analysis-model-api-plugin/blob/v12.4.0/pom.xml",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "edu.hm.hafner:analysis-model",
-      "moduleVersion": "12.4.0",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2007-2023 Dr. Ullrich Hafner",
-      "licenseUrl": "https://github.com/jenkinsci/analysis-model/blob/v12.4.0/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.apache.commons:commons-digester3",
-      "moduleVersion": "3.2",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2001-2011 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/commons-digester/blob/DIGESTER3_3_2/NOTICE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "cglib:cglib",
-      "moduleVersion": "2.2.2",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "The Apache Software Foundation",
-      "licenseUrl": "https://github.com/cglib/cglib/blob/RELEASE_2_2/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "se.bjurr.violations:violations-lib",
-      "moduleVersion": "1.157.1",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": ".",
-      "licenseUrl": "https://github.com/tomasbjerre/violations-lib/blob/1.157.1/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "xerces:xercesImpl",
-      "moduleVersion": "2.12.2",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": ".",
-      "licenseUrl": "https://svn.apache.org/repos/asf/xerces/java/tags/Xerces-J_2_12_2/LICENSE",
+      "moduleCopyright": "2022 Cl\u00c3\u00a9ment Fournier",
+      "licenseUrl": "https://github.com/oowekyala/nice-xml-messages/blob/bf8e73125d556559fbf4777339557f156d1ca422/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -569,11 +161,555 @@
       "actualLicense": "GNU LGPL-2.1"
     },
     {
-      "moduleName": "org.apache.bcel:bcel",
-      "moduleVersion": "6.9.0",
+      "moduleName": "com.github.spotbugs:spotbugs-annotations",
+      "moduleVersion": "4.8.6",
+      "moduleLicense": "LGPL-2.1-only",
+      "moduleCopyright": "2005 University of Maryland",
+      "licenseUrl": "https://github.com/spotbugs/spotbugs/blob/4.8.6/LICENSE",
+      "actualLicense": "GNU LGPL-2.1"
+    },
+    {
+      "moduleName": "com.github.stephenc.jcip:jcip-annotations",
+      "moduleVersion": "1.0-1",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2004-2024 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/commons-bcel/blob/rel/commons-bcel-6.9.0/LICENSE.txt",
+      "moduleCopyright": "2013 Stephen Connolly",
+      "licenseUrl": "https://github.com/stephenc/jcip-annotations/blob/jcip-annotations-1.0-1/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.google.code.findbugs:jsr305",
+      "moduleVersion": "3.0.1",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2000-2005 INRIA, France Telecom",
+      "licenseUrl": "https://github.com/findbugsproject/findbugs/blob/3.0.1/findbugs/licenses/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.google.code.gson:gson",
+      "moduleVersion": "2.11.0",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2008 Google Inc.",
+      "licenseUrl": "https://github.com/google/gson/blob/gson-parent-2.11.0/gson/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.google.guava:failureaccess",
+      "moduleVersion": "1.0.2",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2018 The Guava Authors",
+      "licenseUrl": "https://github.com/google/guava/blob/failureaccess-v1.0.2/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.google.guava:guava",
+      "moduleVersion": "33.3.0-jre",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "Copyright (C) 2011 The Guava Authors",
+      "licenseUrl": "https://github.com/google/guava/blob/v33.3.0/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.google.guava:listenablefuture",
+      "moduleVersion": "9999.0-empty-to-avoid-conflict-with-guava",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2007 The Guava Authors",
+      "licenseUrl": "https://github.com/google/guava/blob/master/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.google.inject:guice",
+      "moduleVersion": "6.0.0",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "Google Inc.",
+      "licenseUrl": "https://github.com/google/guice/blob/6.0.0/COPYING",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer",
+      "moduleVersion": "20220608.1",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2011, Mike Samuel",
+      "licenseUrl": "https://github.com/OWASP/java-html-sanitizer/blob/release-20220608.1/COPYING",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.infradna.tool:bridge-method-annotation",
+      "moduleVersion": "1.29",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2010, InfraDNA, Inc.",
+      "licenseUrl": "https://github.com/jenkinsci/bridge-method-injector/blob/bridge-method-injector-parent-1.29/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.jacob:jacob",
+      "moduleVersion": "1.20",
+      "moduleLicense": "GNU Library or Lesser General Public License (LGPL)",
+      "moduleCopyright": "1999",
+      "licenseUrl": "https://github.com/freemansoft/jacob-project/blob/B-1_10/jacob/LICENSE.TXT",
+      "actualLicense": "GNU LGPL"
+    },
+    {
+      "moduleName": "com.jayway.jsonpath:json-path",
+      "moduleVersion": "2.9.0",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "Copyright 2017 Jayway",
+      "licenseUrl": "https://github.com/json-path/JsonPath/blob/json-path-2.9.0/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.jcraft:jzlib",
+      "moduleVersion": "1.1.3-kohsuke-1",
+      "moduleLicense": "BSD-4-Clause",
+      "moduleCopyright": "2000,2001,2002,2003 ymnk, JCraft,Inc.",
+      "licenseUrl": "https://github.com/ymnk/jzlib/blob/1.1.3/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.pivovarit:parallel-collectors",
+      "moduleVersion": "2.6.1",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "Copyright 2020 Grzegorz Piwowarek",
+      "licenseUrl": "https://github.com/pivovarit/parallel-collectors/blob/2.6.1/LICENSE.md",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.sun.activation:javax.activation",
+      "moduleVersion": "1.2.0",
+      "moduleLicense": "(CDDL-1.0 OR GPL-2.0-with-classpath-exception)",
+      "moduleCopyright": "1997-2017 Oracle and/or its affiliates",
+      "licenseUrl": "https://github.com/javaee/activation/blob/JAF-1_2_0/LICENSE.txt",
+      "actualLicense": "GPLv2"
+    },
+    {
+      "moduleName": "com.sun.solaris:embedded_su4j",
+      "moduleVersion": "1.1",
+      "moduleLicense": "MIT",
+      "moduleCopyright": ".",
+      "licenseUrl": "https://github.com/kohsuke/embedded_su4j/tree/embedded_su4j-1.1",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.sun.xml.bind:jaxb-impl",
+      "moduleVersion": "2.3.9",
+      "moduleLicense": "BSD-3-Clause",
+      "moduleCopyright": "2013, 2022 Oracle and/or its affiliates",
+      "licenseUrl": "https://github.com/eclipse-ee4j/jaxb-ri/blob/2.3.9-RI/LICENSE.md",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.sun.xml.txw2:txw2",
+      "moduleVersion": "20110809",
+      "moduleLicense": "CDDL-1.1",
+      "moduleCopyright": "2005-2011 Oracle and/or its affiliates",
+      "licenseUrl": "https://javaee.github.io/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "com.thoughtworks.xstream:xstream",
+      "moduleVersion": "1.4.21",
+      "moduleLicense": "BSD-3-Clause",
+      "moduleCopyright": "2003-2006, Joe Walnes - 2006-2019, XStream Committers",
+      "licenseUrl": "https://github.com/x-stream/xstream/blob/XSTREAM_1_4_21/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "commons-beanutils:commons-beanutils",
+      "moduleVersion": "1.9.4",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2000-2019, The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/commons-beanutils/blob/commons-beanutils-1.9.4/NOTICE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "commons-codec:commons-codec",
+      "moduleVersion": "1.17.1",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2002-2024 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/commons-codec/blob/rel/commons-codec-1.17.1/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "commons-collections:commons-collections",
+      "moduleVersion": "3.2.2",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "The Apache Software Foundation,2001-2015",
+      "licenseUrl": "https://github.com/apache/commons-collections/blob/collections-3.2.2/NOTICE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "commons-discovery:commons-discovery",
+      "moduleVersion": "0.5",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2002 The Apache Software Foundation",
+      "licenseUrl": "https://svn.apache.org/repos/asf/commons/dormant/discovery/tags/DISCOVERY_0_5/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "commons-io:commons-io",
+      "moduleVersion": "2.17.0",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2002-2024 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/commons-io/blob/rel/commons-io-2.17.0/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "commons-jelly:commons-jelly-tags-fmt",
+      "moduleVersion": "1.0",
+      "moduleLicense": "The Apache Software License 2.0",
+      "moduleCopyright": "The Apache Software Foundation,2002,2004",
+      "licenseUrl": "https://github.com/apache/commons-jelly/blob/commons-jelly-1.0/README.txt",
+      "actualLicense": "Apache-2.0"
+    },
+    {
+      "moduleName": "commons-jelly:commons-jelly-tags-xml",
+      "moduleVersion": "1.1",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2002,2004 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/commons-jelly/tree/commons-jelly-tags-xml-1.1",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "commons-lang:commons-lang",
+      "moduleVersion": "2.6",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2001-2011, The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/commons-lang/blob/LANG_2_6/NOTICE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "commons-logging:commons-logging",
+      "moduleVersion": "1.3.4",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2001-2024 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/commons-logging/blob/rel/commons-logging-1.3.4/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "edu.hm.hafner:analysis-model",
+      "moduleVersion": "12.4.0",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2007-2023 Dr. Ullrich Hafner",
+      "licenseUrl": "https://github.com/jenkinsci/analysis-model/blob/v12.4.0/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.github.x-stream:mxparser",
+      "moduleVersion": "1.2.2",
+      "moduleLicense": "Indiana University Extreme! Lab Software License",
+      "moduleCopyright": "2003 The Trustees of Indiana University",
+      "licenseUrl": "https://github.com/x-stream/mxparser/blob/v-1.2.2/LICENSE.txt",
+      "actualLicense": "Indiana University"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:analysis-model-api",
+      "moduleVersion": "12.4.0",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2007-2023 Dr. Ullrich Hafner",
+      "licenseUrl": "https://github.com/jenkinsci/analysis-model-api-plugin/blob/v12.4.0/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:apache-httpcomponents-client-5-api",
+      "moduleVersion": "5.4-124.v31e2987e48f4",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2024 strangelookingnerd",
+      "licenseUrl": "https://github.com/jenkinsci/apache-httpcomponents-client-5-api-plugin/blob/5.4-124.v31e2987e48f4/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:asm-api",
+      "moduleVersion": "9.7.1-97.v4cc844130d97",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2024 Jenkins Project",
+      "licenseUrl": "https://github.com/jenkinsci/asm-api-plugin/blob/9.7.1-97.v4cc844130d97/LICENSE.md",
+      "actualLicense": "BSD-3-Clause"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:bootstrap5-api",
+      "moduleVersion": "5.3.3-1",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2019, Dr. Ullrich Hafner",
+      "licenseUrl": "https://github.com/jenkinsci/bootstrap5-api-plugin/blob/v5.3.3-1/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:caffeine-api",
+      "moduleVersion": "3.1.8-133.v17b_1ff2e0599",
+      "moduleLicense": "Apache License v2",
+      "moduleCopyright": "",
+      "licenseUrl": "https://github.com/jenkinsci/caffeine-api-plugin/blob/3.1.8-133.v17b_1ff2e0599/LICENSE",
+      "actualLicense": "Apache-2.0"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:checks-api",
+      "moduleVersion": "2.2.1",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2020 Kezhi Xiong",
+      "licenseUrl": "https://github.com/jenkinsci/checks-api-plugin/blob/v2.2.1/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:commons-lang3-api",
+      "moduleVersion": "3.17.0-84.vb_b_938040b_078",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "",
+      "licenseUrl": "https://github.com/jenkinsci/commons-lang3-api-plugin/blob/3.17.0-84.vb_b_938040b_078/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:commons-text-api",
+      "moduleVersion": "1.12.0-129.v99a_50df237f7",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "",
+      "licenseUrl": "https://github.com/jenkinsci/commons-text-api-plugin/blob/1.12.0-129.v99a_50df237f7/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:data-tables-api",
+      "moduleVersion": "2.1.8-1",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2019 Dr. Ullrich Hafner",
+      "licenseUrl": "https://github.com/jenkinsci/data-tables-api-plugin/blob/v2.1.8-1/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:echarts-api",
+      "moduleVersion": "5.5.1-5",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2019, Dr. Ullrich Hafner",
+      "licenseUrl": "https://github.com/jenkinsci/echarts-api-plugin/blob/v5.5.1-5/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:font-awesome-api",
+      "moduleVersion": "6.6.0-2",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2019, Dr. Ullrich Hafner",
+      "licenseUrl": "https://github.com/jenkinsci/font-awesome-api-plugin/blob/v6.6.0-2/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:forensics-api",
+      "moduleVersion": "2.7.0",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2019 Dr. Ullrich Hafner",
+      "licenseUrl": "https://github.com/jenkinsci/forensics-api-plugin/blob/v2.7.0/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:gson-api",
+      "moduleVersion": "2.11.0-85.v1f4e87273c33",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "",
+      "licenseUrl": "https://github.com/jenkinsci/gson-api-plugin/blob/2.11.0-85.v1f4e87273c33/LICENSE.md",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:ionicons-api",
+      "moduleVersion": "74.v93d5eb_813d5f",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2022 Alexander Brandes",
+      "licenseUrl": "https://github.com/jenkinsci/ionicons-api-plugin/blob/74.v93d5eb_813d5f/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:javax-activation-api",
+      "moduleVersion": "1.2.0-7",
+      "moduleLicense": "CDDL-1.1",
+      "moduleCopyright": ".",
+      "licenseUrl": "https://github.com/jenkinsci/javax-activation-api-plugin/blob/javax-activation-api-1.2.0-7/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:jaxb",
+      "moduleVersion": "2.3.9-1",
+      "moduleLicense": "MIT",
+      "moduleCopyright": ".",
+      "licenseUrl": "https://github.com/jenkinsci/jaxb-plugin/blob/jaxb-2.3.9-1/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:jquery3-api",
+      "moduleVersion": "3.7.1-2",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2019, Dr. Ullrich Hafner",
+      "licenseUrl": "https://github.com/jenkinsci/jquery3-api-plugin/blob/v3.7.1-2/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:json-api",
+      "moduleVersion": "20241224-119.va_dca_a_b_ea_7da_5",
+      "moduleLicense": "MIT No Attribution License",
+      "moduleCopyright": "2023",
+      "licenseUrl": "https://github.com/jenkinsci/json-api-plugin/blob/20241224-119.va_dca_a_b_ea_7da_5/LICENSE.md",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:json-path-api",
+      "moduleVersion": "2.9.0-118.v7f23ed82a_8b_8",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "",
+      "licenseUrl": "https://github.com/jenkinsci/json-path-api-plugin/blob/2.9.0-118.v7f23ed82a_8b_8/LICENSE.md",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:plugin-util-api",
+      "moduleVersion": "5.1.0",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2019, Dr. Ullrich Hafner",
+      "licenseUrl": "https://github.com/jenkinsci/plugin-util-api-plugin/blob/v5.1.0/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:prism-api",
+      "moduleVersion": "1.29.0-18",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2021 Dr. Ullrich Hafner",
+      "licenseUrl": "https://github.com/jenkinsci/prism-api-plugin/blob/v1.29.0-18/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:snakeyaml-api",
+      "moduleVersion": "2.3-123.v13484c65210a_",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2020 CloudBees, Inc.",
+      "licenseUrl": "https://github.com/jenkinsci/snakeyaml-api-plugin/blob/2.3-123.v13484c65210a_/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.plugins:warnings-ng",
+      "moduleVersion": "11.4.1",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2007-2023 Dr. Ullrich Hafner",
+      "licenseUrl": "https://github.com/jenkinsci/warnings-ng-plugin/blob/v11.4.1/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "io.jenkins.stapler:jenkins-stapler-support",
+      "moduleVersion": "1.1",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2018, CloudBees, Inc.",
+      "licenseUrl": "https://github.com/jenkinsci/lib-jenkins-stapler-support/blob/jenkins-stapler-support-1.1",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "jakarta.annotation:jakarta.annotation-api",
+      "moduleVersion": "3.0.0",
+      "moduleLicense": "EPL-2.0",
+      "moduleCopyright": "2012, 2024 Oracle and/or its affiliates",
+      "licenseUrl": "https://github.com/jakartaee/common-annotations-api/blob/3.0.0/LICENSE.md",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "jakarta.inject:jakarta.inject-api",
+      "moduleVersion": "2.0.1",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2009 The JSR-330 Expert Group",
+      "licenseUrl": "https://github.com/jakartaee/inject/blob/2.0.1/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api",
+      "moduleVersion": "2.0.0",
+      "moduleLicense": "EPL-2.0",
+      "moduleCopyright": "1997, 2020 Oracle and/or its affiliates",
+      "licenseUrl": "https://github.com/jakartaee/tags/blob/2.0.0-RELEASE/LICENSE.md",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "jakarta.servlet:jakarta.servlet-api",
+      "moduleVersion": "5.0.0",
+      "moduleLicense": "EPL-2.0",
+      "moduleCopyright": "1997, 2020 Oracle and/or its affiliates",
+      "licenseUrl": "https://github.com/jakartaee/servlet/blob/5.0.0-RELEASE/LICENSE.md",
+      "actualLicense": "EPL-2.0"
+    },
+    {
+      "moduleName": "javax.annotation:javax.annotation-api",
+      "moduleVersion": "1.3.2",
+      "moduleLicense": "(CDDL-1.0 OR GPL-2.0-with-classpath-exception)",
+      "moduleCopyright": "2005-2013, Oracle and/or its affiliates.",
+      "licenseUrl": "https://github.com/javaee/javax.annotation/blob/1.3.2/LICENSE",
+      "actualLicense": "GPLv2"
+    },
+    {
+      "moduleName": "javax.inject:javax.inject",
+      "moduleVersion": "1",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2009, The JSR-330 Expert Group",
+      "licenseUrl": "https://github.com/javax-inject/javax-inject/tree/1",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "javax.xml.bind:jaxb-api",
+      "moduleVersion": "2.3.1",
+      "moduleLicense": "CDDL-1.1",
+      "moduleCopyright": "2017-2018 Oracle and/or its affiliates",
+      "licenseUrl": "https://github.com/javaee/jaxb-spec/blob/2.3.1/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "jaxen:jaxen",
+      "moduleVersion": "2.0.0",
+      "moduleLicense": "BSD License 2.0",
+      "moduleCopyright": "2003-2006 The Werken Company",
+      "licenseUrl": "https://github.com/jaxen-xpath/jaxen/blob/v2.0.0/LICENSE.txt",
+      "actualLicense": "BSD-2-Clause"
+    },
+    {
+      "moduleName": "jline:jline",
+      "moduleVersion": "2.14.6",
+      "moduleLicense": "BSD-4-Clause",
+      "moduleCopyright": "2002-2016, the original author or authors",
+      "licenseUrl": "https://github.com/jline/jline2/blob/jline-2.14.6/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "net.bytebuddy:byte-buddy",
+      "moduleVersion": "1.15.11",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2014 - Present Rafael Winterhalter",
+      "licenseUrl": "https://github.com/raphw/byte-buddy/blob/byte-buddy-1.15.11/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "net.java.dev.jna:jna",
+      "moduleVersion": "5.15.0",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "1991, 1999 Free Software Foundation, Inc.",
+      "licenseUrl": "https://github.com/java-native-access/jna/blob/5.15.0/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "net.java.sezpoz:sezpoz",
+      "moduleVersion": "1.13",
+      "moduleLicense": "CDDL or GPL 2 with Classpath Exception",
+      "moduleCopyright": ".",
+      "licenseUrl": "https://github.com/jglick/sezpoz/issues/17",
+      "actualLicense": "CDDL-1.1"
+    },
+    {
+      "moduleName": "net.jcip:jcip-annotations",
+      "moduleVersion": "1.0",
+      "moduleLicense": "The Apache License, Version 2.0",
+      "moduleCopyright": "2013 Stephen Connolly",
+      "licenseUrl": "https://github.com/stephenc/jcip-annotations/blob/jcip-annotations-1.0-1/LICENSE.txt",
+      "actualLicense": "Apache-2.0"
+    },
+    {
+      "moduleName": "net.minidev:accessors-smart",
+      "moduleVersion": "2.5.0",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2011 JSON-SMART authors",
+      "licenseUrl": "https://github.com/netplex/json-smart-v2/blob/2.5.0/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "net.minidev:json-smart",
+      "moduleVersion": "2.5.0",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2011 JSON-SMART authors",
+      "licenseUrl": "https://github.com/netplex/json-smart-v2/blob/2.5.0/json-smart/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -593,14 +729,6 @@
       "actualLicense": "BSD"
     },
     {
-      "moduleName": "com.beust:jcommander",
-      "moduleVersion": "1.82",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2010 Cedric Beust cedric@beust.com",
-      "licenseUrl": "https://github.com/cbeust/jcommander/blob/1.82/license.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
       "moduleName": "net.sourceforge.pmd:pmd-java",
       "moduleVersion": "7.3.0",
       "moduleLicense": "BSD-style",
@@ -609,131 +737,83 @@
       "actualLicense": "BSD"
     },
     {
-      "moduleName": "io.jenkins.plugins:font-awesome-api",
-      "moduleVersion": "6.5.2-1",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2019, Dr. Ullrich Hafner",
-      "licenseUrl": "https://github.com/jenkinsci/font-awesome-api-plugin/blob/v6.5.2-1/LICENSE",
+      "moduleName": "org.antlr:antlr4-runtime",
+      "moduleVersion": "4.13.2",
+      "moduleLicense": "BSD-3-Clause",
+      "moduleCopyright": "2012-2022 The ANTLR Project",
+      "licenseUrl": "https://github.com/antlr/antlr4/blob/4.13.2/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "io.jenkins.plugins:bootstrap5-api",
-      "moduleVersion": "5.3.3-1",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2019, Dr. Ullrich Hafner",
-      "licenseUrl": "https://github.com/jenkinsci/bootstrap5-api-plugin/blob/v5.3.3-1/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "io.jenkins.plugins:jquery3-api",
-      "moduleVersion": "3.7.1-2",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2019, Dr. Ullrich Hafner",
-      "licenseUrl": "https://github.com/jenkinsci/jquery3-api-plugin/blob/v3.7.1-2/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "io.jenkins.plugins:data-tables-api",
-      "moduleVersion": "2.0.8-1",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2019 Dr. Ullrich Hafner",
-      "licenseUrl": "https://github.com/jenkinsci/data-tables-api-plugin/blob/v2.0.8-1/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "io.jenkins.plugins:prism-api",
-      "moduleVersion": "1.29.0-15",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2021 Dr. Ullrich Hafner",
-      "licenseUrl": "https://github.com/jenkinsci/prism-api-plugin/blob/v1.29.0-15/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins:antisamy-markup-formatter",
-      "moduleVersion": "162.v0e6ec0fcfcf6",
-      "moduleLicense": "MIT",
-      "moduleCopyright": ".",
-      "licenseUrl": "https://github.com/jenkinsci/antisamy-markup-formatter-plugin/blob/162.v0e6ec0fcfcf6/pom.xml",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer",
-      "moduleVersion": "20220608.1",
+      "moduleName": "org.apache.ant:ant",
+      "moduleVersion": "1.10.15",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2011, Mike Samuel",
-      "licenseUrl": "https://github.com/OWASP/java-html-sanitizer/blob/release-20220608.1/COPYING",
+      "moduleCopyright": "1999-2024 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/ant/blob/rel/1.10.15/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.jenkins-ci.plugins:apache-httpcomponents-client-4-api",
-      "moduleVersion": "4.5.14-208.v438351942757",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2009-2017, Sun Microsystems, Inc., CloudBees, Inc. and other contributors",
-      "licenseUrl": "https://github.com/jenkinsci/apache-httpcomponents-client-4-api-plugin/blob/4.5.14-208.v438351942757/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.apache.httpcomponents:httpcore",
-      "moduleVersion": "4.4.16",
+      "moduleName": "org.apache.ant:ant-launcher",
+      "moduleVersion": "1.10.15",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "Copyright 2005-2021 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/httpcomponents-core/blob/rel/v4.4.16/LICENSE.txt",
+      "moduleCopyright": "1999-2024, The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/ant/blob/rel/1.10.15/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.apache.httpcomponents:httpcore-nio",
-      "moduleVersion": "4.4.16",
+      "moduleName": "org.apache.bcel:bcel",
+      "moduleVersion": "6.9.0",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "Copyright 2005-2021 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/httpcomponents-core/blob/rel/v4.4.16/LICENSE.txt",
+      "moduleCopyright": "2004-2024 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/commons-bcel/blob/rel/commons-bcel-6.9.0/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.apache.httpcomponents:httpclient",
-      "moduleVersion": "4.5.14",
+      "moduleName": "org.apache.commons:commons-compress",
+      "moduleVersion": "1.26.1",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "1999-2021 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/httpcomponents-client/blob/rel/v4.5.14/LICENSE.txt",
+      "moduleCopyright": "2002-2024, The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/commons-compress/blob/rel/commons-compress-1.26.1/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.apache.httpcomponents:httpmime",
-      "moduleVersion": "4.5.14",
+      "moduleName": "org.apache.commons:commons-digester3",
+      "moduleVersion": "3.2",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "1999-2021 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/httpcomponents-client/blob/rel/v4.5.14/LICENSE.txt",
+      "moduleCopyright": "2001-2011 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/commons-digester/blob/DIGESTER3_3_2/NOTICE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.apache.httpcomponents:fluent-hc",
-      "moduleVersion": "4.5.14",
+      "moduleName": "org.apache.commons:commons-fileupload2-core",
+      "moduleVersion": "2.0.0-M2",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "1999-2021 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/httpcomponents-client/blob/rel/v4.5.14/LICENSE.txt",
+      "moduleCopyright": "2002-2023 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/commons-fileupload/blob/rel/commons-fileupload-2.0.0-M2/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.apache.httpcomponents:httpclient-cache",
-      "moduleVersion": "4.5.14",
+      "moduleName": "org.apache.commons:commons-fileupload2-jakarta-servlet5",
+      "moduleVersion": "2.0.0-M2",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "1999-2021 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/httpcomponents-client/blob/rel/v4.5.14/LICENSE.txt",
+      "moduleCopyright": "2002-2023 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/commons-fileupload/blob/rel/commons-fileupload-2.0.0-M2/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.apache.httpcomponents:httpasyncclient",
-      "moduleVersion": "4.1.5",
+      "moduleName": "org.apache.commons:commons-lang3",
+      "moduleVersion": "3.17.0",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2010-2021 The Apache Software Foundation",
-      "licenseUrl": "https://svn.apache.org/repos/asf/httpcomponents/httpasyncclient/tags/4.1.5/LICENSE.txt",
+      "moduleCopyright": "2001-2024, The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/commons-lang/blob/rel/commons-lang-3.17.0/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.apache.httpcomponents:httpasyncclient-cache",
-      "moduleVersion": "4.1.5",
+      "moduleName": "org.apache.commons:commons-text",
+      "moduleVersion": "1.12.0",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2010-2021 The Apache Software Foundation",
-      "licenseUrl": "https://svn.apache.org/repos/asf/httpcomponents/httpasyncclient/tags/4.1.5/LICENSE.txt",
+      "moduleCopyright": "2014-2023 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/commons-text/blob/rel/commons-text-1.12.0/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -762,674 +842,122 @@
     },
     {
       "moduleName": "org.apache.httpcomponents.core5:httpcore5",
-      "moduleVersion": "5.2.5",
+      "moduleVersion": "5.3.1",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2005-2022 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/httpcomponents-core/blob/rel/v5.2.5/LICENSE.txt",
+      "moduleCopyright": "2005-2024 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/httpcomponents-core/blob/rel/v5.3.1/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
       "moduleName": "org.apache.httpcomponents.core5:httpcore5-h2",
-      "moduleVersion": "5.2.5",
+      "moduleVersion": "5.3.1",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2005-2022 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/httpcomponents-core/blob/rel/v5.2.5/LICENSE.txt",
+      "moduleCopyright": "2005-2024 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/httpcomponents-core/blob/rel/v5.3.1/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
       "moduleName": "org.apache.httpcomponents.core5:httpcore5-reactive",
-      "moduleVersion": "5.2.5",
+      "moduleVersion": "5.3.1",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2005-2022 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/httpcomponents-core/blob/rel/v5.2.5/LICENSE.txt",
+      "moduleCopyright": "2005-2024 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/httpcomponents-core/blob/rel/v5.3.1/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "com.google.code.gson:gson",
-      "moduleVersion": "2.11.0",
+      "moduleName": "org.apache.httpcomponents:fluent-hc",
+      "moduleVersion": "4.5.14",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2008 Google Inc.",
-      "licenseUrl": "https://github.com/google/gson/blob/gson-parent-2.11.0/gson/LICENSE",
+      "moduleCopyright": "1999-2021 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/httpcomponents-client/blob/rel/v4.5.14/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "io.jenkins.plugins:forensics-api",
-      "moduleVersion": "2.4.0",
+      "moduleName": "org.apache.httpcomponents:httpasyncclient",
+      "moduleVersion": "4.1.5",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2010-2021 The Apache Software Foundation",
+      "licenseUrl": "https://svn.apache.org/repos/asf/httpcomponents/httpasyncclient/tags/4.1.5/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.apache.httpcomponents:httpasyncclient-cache",
+      "moduleVersion": "4.1.5",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2010-2021 The Apache Software Foundation",
+      "licenseUrl": "https://svn.apache.org/repos/asf/httpcomponents/httpasyncclient/tags/4.1.5/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.apache.httpcomponents:httpclient",
+      "moduleVersion": "4.5.14",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "1999-2021 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/httpcomponents-client/blob/rel/v4.5.14/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.apache.httpcomponents:httpclient-cache",
+      "moduleVersion": "4.5.14",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "1999-2021 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/httpcomponents-client/blob/rel/v4.5.14/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.apache.httpcomponents:httpcore",
+      "moduleVersion": "4.4.16",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "Copyright 2005-2021 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/httpcomponents-core/blob/rel/v4.4.16/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.apache.httpcomponents:httpcore-nio",
+      "moduleVersion": "4.4.16",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "Copyright 2005-2021 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/httpcomponents-core/blob/rel/v4.4.16/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.apache.httpcomponents:httpmime",
+      "moduleVersion": "4.5.14",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "1999-2021 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/apache/httpcomponents-client/blob/rel/v4.5.14/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.bouncycastle:bcpkix-jdk18on",
+      "moduleVersion": "1.79",
+      "moduleLicense": "Bouncy Castle Licence",
+      "moduleCopyright": "2000 - 2024 The Legion of the Bouncy Castle Inc",
+      "licenseUrl": "https://github.com/bcgit/bc-java/blob/r1rv79/LICENSE.md",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.bouncycastle:bcprov-jdk18on",
+      "moduleVersion": "1.79",
+      "moduleLicense": "Bouncy Castle Licence",
+      "moduleCopyright": "2000 - 2024 The Legion of the Bouncy Castle Inc",
+      "licenseUrl": "https://github.com/bcgit/bc-java/blob/r1rv79/LICENSE.md",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.bouncycastle:bcutil-jdk18on",
+      "moduleVersion": "1.79",
+      "moduleLicense": "Bouncy Castle Licence",
+      "moduleCopyright": "2000 - 2024 The Legion of the Bouncy Castle Inc",
+      "licenseUrl": "https://github.com/bcgit/bc-java/blob/r1rv79/LICENSE.md",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.checkerframework:checker-qual",
+      "moduleVersion": "2.11.1",
       "moduleLicense": "MIT",
-      "moduleCopyright": "2019 Dr. Ullrich Hafner",
-      "licenseUrl": "https://github.com/jenkinsci/forensics-api-plugin/blob/v2.4.0/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins.workflow:workflow-multibranch",
-      "moduleVersion": "773.vc4fe1378f1d5",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2015 CloudBees, Inc.",
-      "licenseUrl": "https://github.com/jenkinsci/workflow-multibranch-plugin/blob/773.vc4fe1378f1d5/pom.xml",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.plugins:branch-api",
-      "moduleVersion": "2.1169.va_f810c56e895",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2011-2013, CloudBees, Inc., Stephen Connolly",
-      "licenseUrl": "https://github.com/jenkinsci/branch-api-plugin/blob/2.1169.va_f810c56e895/pom.xml",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "io.jenkins.plugins:snakeyaml-api",
-      "moduleVersion": "2.2-111.vc6598e30cc65",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2020 CloudBees, Inc.",
-      "licenseUrl": "https://github.com/jenkinsci/snakeyaml-api-plugin/blob/2.2-111.vc6598e30cc65/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.yaml:snakeyaml",
-      "moduleVersion": "2.2",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2008, SnakeYAML",
-      "licenseUrl": "https://bitbucket.org/snakeyaml/snakeyaml/src/snakeyaml-2.2/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.main:jenkins-core",
-      "moduleVersion": "2.426.3",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2004-, Kohsuke Kawaguchi, Sun Microsystems, Inc., and a number of other of contributors",
-      "licenseUrl": "https://github.com/jenkinsci/jenkins/blob/jenkins-2.426.3/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.main:remoting",
-      "moduleVersion": "3160.vd76b_9ddd10cc",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2004-2016, Sun Microsystems, Inc., Kohsuke Kawaguchi, Daniel Dyer, Stephen Connolly, and others",
-      "licenseUrl": "https://github.com/jenkinsci/remoting/blob/3160.vd76b_9ddd10cc/LICENSE.md",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.main:cli",
-      "moduleVersion": "2.426.3",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2004-, Kohsuke Kawaguchi, Sun Microsystems, Inc., and a number of other of contributors",
-      "licenseUrl": "https://github.com/jenkinsci/jenkins/blob/stable-2.426/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "com.google.inject:guice",
-      "moduleVersion": "6.0.0",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "Google Inc.",
-      "licenseUrl": "https://github.com/google/guice/blob/6.0.0/COPYING",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "javax.inject:javax.inject",
-      "moduleVersion": "1",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2009, The JSR-330 Expert Group",
-      "licenseUrl": "https://github.com/javax-inject/javax-inject/tree/1",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.connectbot.jbcrypt:jbcrypt",
-      "moduleVersion": "1.0.0",
-      "moduleLicense": "ISC",
-      "moduleCopyright": "2006 Damien Miller",
-      "licenseUrl": "https://github.com/kruton/jbcrypt/blob/1.0.0/LICENSE",
-      "actualLicense": "ISC"
-    },
-    {
-      "moduleName": "org.antlr:antlr4-runtime",
-      "moduleVersion": "4.13.2",
-      "moduleLicense": "BSD-3-Clause",
-      "moduleCopyright": "2012-2022 The ANTLR Project",
-      "licenseUrl": "https://github.com/antlr/antlr4/blob/4.13.2/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.apache.ant:ant",
-      "moduleVersion": "1.10.14",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "1999-2023 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/ant/blob/rel/1.10.14/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.ow2.asm:asm",
-      "moduleVersion": "9.6",
-      "moduleLicense": "BSD-3-Clause",
-      "moduleCopyright": "2000-2011 INRIA, France Telecom",
-      "licenseUrl": "https://gitlab.ow2.org/asm/asm/-/blob/ASM_9_6/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.ow2.asm:asm-commons",
-      "moduleVersion": "9.6",
-      "moduleLicense": "BSD-3-Clause",
-      "moduleCopyright": "2000-2011 INRIA, France Telecom",
-      "licenseUrl": "https://gitlab.ow2.org/asm/asm/-/blob/ASM_9_6/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.ow2.asm:asm-analysis",
-      "moduleVersion": "9.6",
-      "moduleLicense": "BSD-3-Clause",
-      "moduleCopyright": "2000-2011 INRIA, France Telecom",
-      "licenseUrl": "https://gitlab.ow2.org/asm/asm/-/blob/ASM_9_6/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.ow2.asm:asm-tree",
-      "moduleVersion": "9.6",
-      "moduleLicense": "BSD-3-Clause",
-      "moduleCopyright": "2000-2011 INRIA, France Telecom",
-      "licenseUrl": "https://gitlab.ow2.org/asm/asm/-/blob/ASM_9_6/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.ow2.asm:asm-util",
-      "moduleVersion": "9.6",
-      "moduleLicense": "BSD-3-Clause",
-      "moduleCopyright": "2000-2011 INRIA, France Telecom",
-      "licenseUrl": "https://gitlab.ow2.org/asm/asm/-/blob/ASM_9_6/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "javax.annotation:javax.annotation-api",
-      "moduleVersion": "1.3.2",
-      "moduleLicense": "(CDDL-1.0 OR GPL-2.0-with-classpath-exception)",
-      "moduleCopyright": "2005-2013, Oracle and/or its affiliates.",
-      "licenseUrl": "https://github.com/javaee/javax.annotation/blob/1.3.2/LICENSE",
-      "actualLicense": "GPLv2"
-    },
-    {
-      "moduleName": "org.jvnet:tiger-types",
-      "moduleVersion": "2.2",
-      "moduleLicense": "CDDL/GPLv2 dual license",
-      "moduleCopyright": "2010, Oracle and/or its affiliates",
-      "licenseUrl": "https://github.com/kohsuke/tiger-types/blob/tiger-types-2.2",
-      "actualLicense": "GPLv2"
-    },
-    {
-      "moduleName": "org.jenkins-ci:commons-jelly",
-      "moduleVersion": "1.1-jenkins-20230713",
-      "moduleLicense": "The Apache Software License, version 2.0",
-      "moduleCopyright": "2002,2004 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/jenkinsci/jelly/blob/commons-jelly-1.1-jenkins-20230713/LICENSE.txt",
-      "actualLicense": "Apache-2.0"
-    },
-    {
-      "moduleName": "org.jvnet.hudson:commons-jelly-tags-define",
-      "moduleVersion": "1.1-jenkins-20230713",
-      "moduleLicense": "The Apache Software License, Version 2.0",
-      "moduleCopyright": "2002,2004 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/jenkinsci/jelly/blob/commons-jelly-1.1-jenkins-20230713/LICENSE.txt",
-      "actualLicense": "Apache-2.0"
-    },
-    {
-      "moduleName": "org.dom4j:dom4j",
-      "moduleVersion": "2.1.4",
-      "moduleLicense": "Plexus",
-      "moduleCopyright": " 2001-2016 (C) MetaStuff, Ltd. and DOM4J contributors",
-      "licenseUrl": "https://github.com/dom4j/dom4j/blob/version-2.1.4/LICENSE",
-      "actualLicense": "MIT"
-    },
-    {
-      "moduleName": "org.kohsuke:windows-package-checker",
-      "moduleVersion": "1.2",
-      "moduleLicense": "MIT",
-      "moduleCopyright": ".",
-      "licenseUrl": "https://github.com/kohsuke/windows-package-checker/tree/windows-package-checker-1.2",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.kohsuke.stapler:stapler-adjunct-timeline",
-      "moduleVersion": "1.5",
-      "moduleLicense": "BSD-3-Clause",
-      "moduleCopyright": ".",
-      "licenseUrl": "https://github.com/stapler/stapler-adjunct-timeline/blob/stapler-adjunct-timeline-1.5/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.kohsuke.stapler:stapler-adjunct-codemirror",
-      "moduleVersion": "1.3",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2011, Jeff Pickhardt",
-      "licenseUrl": "https://github.com/stapler/stapler-adjunct-codemirror/blob/stapler-adjunct-codemirror-1.3/src/main/resources/org/kohsuke/stapler/codemirror/mode/coffeescript/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "io.jenkins.stapler:jenkins-stapler-support",
-      "moduleVersion": "1.1",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2018, CloudBees, Inc.",
-      "licenseUrl": "https://github.com/jenkinsci/lib-jenkins-stapler-support/blob/jenkins-stapler-support-1.1",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.kohsuke.stapler:json-lib",
-      "moduleVersion": "2.4-jenkins-3",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": ".",
-      "licenseUrl": ".",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "args4j:args4j",
-      "moduleVersion": "2.33",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "Kohsuke Kawaguchi, Sun Microsystems, Inc., and a number of other of contributors(Jan Materne, Mark Sinke, Jerome Lacoste, Kohsuke Kawaguchi),2013",
-      "licenseUrl": "https://github.com/kohsuke/args4j/commit/b72102efeedc3f20ab5a998533711d042ba004a8",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci:annotation-indexer",
-      "moduleVersion": "1.17",
-      "moduleLicense": "MIT",
-      "moduleCopyright": ".",
-      "licenseUrl": "https://github.com/jenkinsci/lib-annotation-indexer/tree/annotation-indexer-1.17",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci:task-reactor",
-      "moduleVersion": "1.8",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2004-2010, Sun Microsystems, Inc.",
-      "licenseUrl": "https://github.com/jenkinsci/lib-task-reactor/tree/task-reactor-1.8",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jvnet.localizer:localizer",
-      "moduleVersion": "1.31",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2007-, the localizer project contributors",
-      "licenseUrl": "https://github.com/kohsuke/localizer/blob/localizer-parent-1.31",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "com.thoughtworks.xstream:xstream",
-      "moduleVersion": "1.4.20",
-      "moduleLicense": "BSD-3-Clause",
-      "moduleCopyright": "2003-2006, Joe Walnes - 2006-2019, XStream Committers",
-      "licenseUrl": "https://github.com/x-stream/xstream/blob/XSTREAM_1_4_20/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "io.github.x-stream:mxparser",
-      "moduleVersion": "1.2.2",
-      "moduleLicense": "Indiana University Extreme! Lab Software License",
-      "moduleCopyright": "2003 The Trustees of Indiana University",
-      "licenseUrl": "https://github.com/x-stream/mxparser/blob/v-1.2.2/LICENSE.txt",
-      "actualLicense": "Indiana University"
-    },
-    {
-      "moduleName": "xpp3:xpp3",
-      "moduleVersion": "1.1.4c",
-      "moduleLicense": "Indiana University Extreme! Lab Software License, vesion 1.1.1",
-      "moduleCopyright": "2002-2004 Extreme! Lab, Indiana University",
-      "licenseUrl": "https://github.com/codelibs/xpp3/blob/xpp3-1.1.4c.0",
-      "actualLicense": "Indiana University"
-    },
-    {
-      "moduleName": "org.jfree:jcommon",
-      "moduleVersion": "1.0.23",
-      "moduleLicense": "GNU Lesser General Public Licence",
-      "moduleCopyright": "2000-2017, by Object Refinery Limited and Contributors.",
-      "licenseUrl": "https://github.com/jfree/jcommon/blob/v1.0.24/README.md",
-      "actualLicense": "GNU LGPL"
-    },
-    {
-      "moduleName": "org.apache.ant:ant-launcher",
-      "moduleVersion": "1.10.14",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "1999-2023, The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/ant/blob/rel/1.10.14/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "commons-io:commons-io",
-      "moduleVersion": "2.13.0",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2002-2023 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/commons-io/blob/rel/commons-io-2.13.0/NOTICE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "commons-lang:commons-lang",
-      "moduleVersion": "2.6",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2001-2011, The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/commons-lang/blob/LANG_2_6/NOTICE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "commons-beanutils:commons-beanutils",
-      "moduleVersion": "1.9.4",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2000-2019, The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/commons-beanutils/blob/commons-beanutils-1.9.4/NOTICE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "jaxen:jaxen",
-      "moduleVersion": "2.0.0",
-      "moduleLicense": "BSD License 2.0",
-      "moduleCopyright": "2003-2006 The Werken Company",
-      "licenseUrl": "https://github.com/jaxen-xpath/jaxen/blob/v2.0.0/LICENSE.txt",
-      "actualLicense": "BSD-2-Clause"
-    },
-    {
-      "moduleName": "commons-jelly:commons-jelly-tags-xml",
-      "moduleVersion": "1.1",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2002,2004 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/commons-jelly/tree/commons-jelly-tags-xml-1.1",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci:commons-jexl",
-      "moduleVersion": "1.1-jenkins-20111212",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2001-2006 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/jenkinsci/jexl/blob/1.1-jenkins-20111212/NOTICE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.springframework.security:spring-security-web",
-      "moduleVersion": "5.8.7",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2004, 2005, 2006 Acegi Technology Pty Limited",
-      "licenseUrl": "https://github.com/spring-projects/spring-security/blob/5.8.7/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.springframework.security:spring-security-core",
-      "moduleVersion": "5.8.7",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2002-2017 the original author or authors",
-      "licenseUrl": "https://github.com/spring-projects/spring-security/blob/5.8.7/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.springframework.security:spring-security-crypto",
-      "moduleVersion": "5.8.7",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2011-2020 the original author or authors",
-      "licenseUrl": "https://github.com/spring-projects/spring-security/blob/5.8.7/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.springframework:spring-aop",
-      "moduleVersion": "5.3.29",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2004, 2005, 2006 Acegi Technology Pty Limited",
-      "licenseUrl": "https://github.com/spring-projects/spring-framework/blob/v5.3.29/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.springframework:spring-beans",
-      "moduleVersion": "5.3.29",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2002-2017 the original author or authors",
-      "licenseUrl": "https://github.com/spring-projects/spring-framework/blob/v5.3.29/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.springframework:spring-context",
-      "moduleVersion": "5.3.29",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2002-2016 the original author or authors",
-      "licenseUrl": "https://github.com/spring-projects/spring-framework/blob/v5.3.29/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.springframework:spring-core",
-      "moduleVersion": "5.3.29",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2002-2016 the original author or authors",
-      "licenseUrl": "https://github.com/spring-projects/spring-framework/blob/v5.3.29/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.springframework:spring-expression",
-      "moduleVersion": "5.3.29",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2002-2016 the original author or authors",
-      "licenseUrl": "https://github.com/spring-projects/spring-framework/blob/v5.3.29/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.springframework:spring-web",
-      "moduleVersion": "5.3.29",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2004, 2005, 2006 Acegi Technology Pty Limited",
-      "licenseUrl": "https://github.com/spring-projects/spring-framework/blob/v5.3.29/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "jline:jline",
-      "moduleVersion": "2.14.6",
-      "moduleLicense": "BSD-4-Clause",
-      "moduleCopyright": "2002-2016, the original author or authors",
-      "licenseUrl": "https://github.com/jline/jline2/blob/jline-2.14.6/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.fusesource.jansi:jansi",
-      "moduleVersion": "1.11",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2009, Progress Software Corporation",
-      "licenseUrl": "https://github.com/fusesource/jansi/blob/jansi-project-1.11/pom.xml",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api",
-      "moduleVersion": "1.2.7",
-      "moduleLicense": "EPL-2.0",
-      "moduleCopyright": "1989, 1991 Free Software Foundation, Inc",
-      "licenseUrl": "https://github.com/jakartaee/tags/blob/1.2.7-RELEASE/LICENSE.md",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.slf4j:jcl-over-slf4j",
-      "moduleVersion": "2.0.9",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "1999-2006, QOS.ch",
-      "licenseUrl": "https://github.com/qos-ch/slf4j/blob/v_2.0.9/jcl-over-slf4j/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.slf4j:slf4j-api",
-      "moduleVersion": "1.7.36",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2004-2022, QOS.ch Sarl (Switzerland)",
-      "licenseUrl": "https://github.com/qos-ch/slf4j/blob/v_1.7.36/LICENSE.txt",
-      "actualLicense": "§moduleLicense"
-    },
-    {
-      "moduleName": "org.slf4j:log4j-over-slf4j",
-      "moduleVersion": "2.0.9",
-      "moduleLicense": "Apache-1.0",
-      "moduleCopyright": "2001-2004 The Apache Software Foundation.",
-      "licenseUrl": "https://github.com/qos-ch/slf4j/blob/v_2.0.9/log4j-over-slf4j/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "com.sun.xml.txw2:txw2",
-      "moduleVersion": "20110809",
-      "moduleLicense": "CDDL-1.1",
-      "moduleCopyright": "2005-2011 Oracle and/or its affiliates",
-      "licenseUrl": "https://javaee.github.io/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "relaxngDatatype:relaxngDatatype",
-      "moduleVersion": "20020414",
-      "moduleLicense": "MIT",
-      "moduleCopyright": ".",
-      "licenseUrl": ".",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "commons-collections:commons-collections",
-      "moduleVersion": "3.2.2",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "The Apache Software Foundation,2001-2015",
-      "licenseUrl": "https://github.com/apache/commons-collections/blob/collections-3.2.2/NOTICE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jvnet.winp:winp",
-      "moduleVersion": "1.30",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2008-, Kohsuke Kawaguchi, Sun Microsystems, Inc., and a number of other of contributors",
-      "licenseUrl": "https://github.com/jenkinsci/winp/blob/winp-1.30/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci:memory-monitor",
-      "moduleVersion": "1.12",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2008-2011, Sun Microsystems, Inc., Kohsuke Kawaguchi",
-      "licenseUrl": "https://github.com/jenkinsci/extras-memory-monitor/tree/memory-monitor-1.12",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "net.java.dev.jna:jna",
-      "moduleVersion": "5.13.0",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "1999, 2007, 2008  Red Hat, Inc.",
-      "licenseUrl": "https://github.com/java-native-access/jna/blob/5.13.0/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "net.java.sezpoz:sezpoz",
-      "moduleVersion": "1.13",
-      "moduleLicense": "CDDL or GPL 2 with Classpath Exception",
-      "moduleCopyright": ".",
-      "licenseUrl": "https://github.com/jglick/sezpoz/issues/17",
-      "actualLicense": "CDDL-1.1"
-    },
-    {
-      "moduleName": "org.kohsuke.jinterop:j-interop",
-      "moduleVersion": "2.0.8-kohsuke-1",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2007 Free Software Foundation",
-      "licenseUrl": "https://github.com/skyghis/j-interop-ng/blob/2.0.8-kohsuke-1/j-interop/lgpl.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.samba.jcifs:jcifs",
-      "moduleVersion": "1.3.18-kohsuke-1",
-      "moduleLicense": "LGPL-2.1-only",
-      "moduleCopyright": "2003 Michael B. Allen",
-      "licenseUrl": "https://github.com/kohsuke/jcifs/blob/jcifs-1.3.18-kohsuke-1/LICENSE.txt",
-      "actualLicense": "GNU LGPL"
-    },
-    {
-      "moduleName": "org.jvnet.robust-http-client:robust-http-client",
-      "moduleVersion": "1.2",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2009, Sun Microsystems, Inc.",
-      "licenseUrl": "https://github.com/kohsuke/robust-http-client/blob/robust-http-client-1.2",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "commons-fileupload:commons-fileupload",
-      "moduleVersion": "1.5",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2002-2023 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/commons-fileupload/blob/commons-fileupload-1.5/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "com.google.guava:guava",
-      "moduleVersion": "32.1.2-jre",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "Copyright (C) 2011 The Guava Authors",
-      "licenseUrl": "https://github.com/google/guava/blob/v32.1.2/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "com.jcraft:jzlib",
-      "moduleVersion": "1.1.3-kohsuke-1",
-      "moduleLicense": "BSD-4-Clause",
-      "moduleCopyright": "2000,2001,2002,2003 ymnk, JCraft,Inc.",
-      "licenseUrl": "https://github.com/ymnk/jzlib/blob/1.1.3/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "com.github.spotbugs:spotbugs-annotations",
-      "moduleVersion": "4.8.6",
-      "moduleLicense": "LGPL-2.1-only",
-      "moduleCopyright": "2005 University of Maryland",
-      "licenseUrl": "https://github.com/spotbugs/spotbugs/blob/4.8.6/LICENSE",
-      "actualLicense": "GNU LGPL-2.1"
-    },
-    {
-      "moduleName": "net.jcip:jcip-annotations",
-      "moduleVersion": "1.0",
-      "moduleLicense": "The Apache License, Version 2.0",
-      "moduleCopyright": "2013 Stephen Connolly",
-      "licenseUrl": "https://github.com/stephenc/jcip-annotations/blob/jcip-annotations-1.0-1/LICENSE.txt",
-      "actualLicense": "Apache-2.0"
-    },
-    {
-      "moduleName": "org.kohsuke:access-modifier-annotation",
-      "moduleVersion": "1.33",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2010- Kohsuke Kawaguchi, Jenkins project and contributors",
-      "licenseUrl": "https://github.com/jenkinsci/lib-access-modifier/blob/access-modifier-1.33/LICENSE.md",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "xml-apis:xml-apis",
-      "moduleVersion": "1.4.01",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2001-2003,2006 The Apache Software Foundation",
-      "licenseUrl": "http://svn.apache.org/repos/asf/xerces/xml-commons/tags/xml-commons-external-1_4_01/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "io.jenkins.plugins:javax-activation-api",
-      "moduleVersion": "1.2.0-7",
-      "moduleLicense": "CDDL-1.1",
-      "moduleCopyright": ".",
-      "licenseUrl": "https://github.com/jenkinsci/javax-activation-api-plugin/blob/javax-activation-api-1.2.0-7/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jboss.marshalling:jboss-marshalling-river",
-      "moduleVersion": "2.1.3.Final",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2014 Red Hat, Inc., and individual contributors",
-      "licenseUrl": "https://github.com/jboss-remoting/jboss-marshalling/blob/2.1.3.Final/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jboss.marshalling:jboss-marshalling",
-      "moduleVersion": "2.1.3.Final",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2014 Red Hat, Inc., and individual contributors",
-      "licenseUrl": "https://github.com/jboss-remoting/jboss-marshalling/blob/2.1.3.Final/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "com.sun.activation:javax.activation",
-      "moduleVersion": "1.2.0",
-      "moduleLicense": "(CDDL-1.0 OR GPL-2.0-with-classpath-exception)",
-      "moduleCopyright": "1997-2017 Oracle and/or its affiliates",
-      "licenseUrl": "https://github.com/javaee/activation/blob/JAF-1_2_0/LICENSE.txt",
-      "actualLicense": "GPLv2"
-    },
-    {
-      "moduleName": "io.jenkins.plugins:jaxb",
-      "moduleVersion": "2.3.9-1",
-      "moduleLicense": "MIT",
-      "moduleCopyright": ".",
-      "licenseUrl": "https://github.com/jenkinsci/jaxb-plugin/blob/jaxb-2.3.9-1/pom.xml",
+      "moduleCopyright": "2004-present by the Checker Framework developers",
+      "licenseUrl": "https://github.com/typetools/checker-framework/blob/checker-framework-2.11.1/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -1441,35 +969,227 @@
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.jenkins-ci.plugins.workflow:workflow-api",
-      "moduleVersion": "1322.v857eeeea_9902",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2013-2021 CloudBees, Inc.",
-      "licenseUrl": "https://github.com/jenkinsci/workflow-api-plugin/blob/1322.v857eeeea_9902/LICENSE",
+      "moduleName": "org.codehaus.woodstox:stax2-api",
+      "moduleVersion": "4.2.2",
+      "moduleLicense": "BSD-2-Clause",
+      "moduleCopyright": "2010 FasterXML.com",
+      "licenseUrl": "https://github.com/FasterXML/stax2-api/blob/stax2-api-4.2.2/src/main/resources/META-INF/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "com.sun.xml.bind:jaxb-impl",
-      "moduleVersion": "2.3.9",
-      "moduleLicense": "BSD-3-Clause",
-      "moduleCopyright": "2013, 2022 Oracle and/or its affiliates",
-      "licenseUrl": "https://github.com/eclipse-ee4j/jaxb-ri/blob/2.3.9-RI/LICENSE.md",
+      "moduleName": "org.connectbot:jbcrypt",
+      "moduleVersion": "1.0.2",
+      "moduleLicense": "ISC",
+      "moduleCopyright": "2006 Damien Miller",
+      "licenseUrl": "https://github.com/kruton/jbcrypt/blob/1.0.2/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.dom4j:dom4j",
+      "moduleVersion": "2.1.4",
+      "moduleLicense": "Plexus",
+      "moduleCopyright": " 2001-2023 (C) MetaStuff, Ltd. and DOM4J contributors",
+      "licenseUrl": "https://github.com/dom4j/dom4j/blob/version-2.1.4/LICENSE",
+      "actualLicense": "MIT"
+    },
+    {
+      "moduleName": "org.eclipse.collections:eclipse-collections",
+      "moduleVersion": "9.2.0",
+      "moduleLicense": "EPL-1.0",
+      "moduleCopyright": "2007, Eclipse Foundation, Inc. and its licensors.",
+      "licenseUrl": "https://github.com/eclipse/eclipse-collections/blob/9.2.0/LICENSE-EPL-1.0.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.eclipse.collections:eclipse-collections-api",
+      "moduleVersion": "9.2.0",
+      "moduleLicense": "EPL-1.0",
+      "moduleCopyright": "2007, Eclipse Foundation, Inc. and its licensors.",
+      "licenseUrl": "https://github.com/eclipse/eclipse-collections/blob/9.2.0/LICENSE-EPL-1.0.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.eclipse.jetty.toolchain:jetty-servlet-api",
+      "moduleVersion": "4.0.6",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "",
+      "licenseUrl": "https://github.com/jetty/jetty-toolchain/blob/jetty-servlet-api-4.0.6/jetty-javax-servlet-api/src/main/resources/META-INF/LICENSE.md",
+      "actualLicense": "Apache-2.0"
+    },
+    {
+      "moduleName": "org.fusesource.jansi:jansi",
+      "moduleVersion": "1.11",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2009, Progress Software Corporation",
+      "licenseUrl": "https://github.com/fusesource/jansi/blob/jansi-project-1.11/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jboss.marshalling:jboss-marshalling",
+      "moduleVersion": "2.2.1.Final",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2014 Red Hat, Inc., and individual contributors",
+      "licenseUrl": "https://github.com/jboss-remoting/jboss-marshalling/blob/2.2.1.Final/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jboss.marshalling:jboss-marshalling-river",
+      "moduleVersion": "2.2.1.Final",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2014 Red Hat, Inc., and individual contributors",
+      "licenseUrl": "https://github.com/jboss-remoting/jboss-marshalling/blob/2.2.1.Final/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.main:cli",
+      "moduleVersion": "2.479.3",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2004-, Kohsuke Kawaguchi, Sun Microsystems, Inc., and a number of other of contributors",
+      "licenseUrl": "https://github.com/jenkinsci/jenkins/blob/stable-2.479/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.main:jenkins-core",
+      "moduleVersion": "2.479.3",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2004-, Kohsuke Kawaguchi, Sun Microsystems, Inc., and a number of other of contributors",
+      "licenseUrl": "https://github.com/jenkinsci/jenkins/blob/jenkins-2.479.3/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.main:remoting",
+      "moduleVersion": "3261.v9c670a_4748a_9",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2004-2016, Sun Microsystems, Inc., Kohsuke Kawaguchi, Daniel Dyer, Stephen Connolly, and others",
+      "licenseUrl": "https://github.com/jenkinsci/remoting/blob/3261.v9c670a_4748a_9/LICENSE.md",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.main:websocket-spi",
+      "moduleVersion": "2.479.3",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2019 CloudBees, Inc",
+      "licenseUrl": "https://github.com/jenkinsci/jenkins/blob/jenkins-2.479.3/websocket/spi/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins.workflow:workflow-api",
+      "moduleVersion": "1336.vee415d95c521",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2013-2021 CloudBees, Inc.",
+      "licenseUrl": "https://github.com/jenkinsci/workflow-api-plugin/blob/1336.vee415d95c521/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins.workflow:workflow-cps",
+      "moduleVersion": "4007.vd705fc76a_34e",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2013-2014, CloudBees, Inc.",
+      "licenseUrl": "https://github.com/jenkinsci/workflow-cps-plugin/blob/4007.vd705fc76a_34e/plugin/pom.xml",
       "actualLicense": "$moduleLicense"
     },
     {
       "moduleName": "org.jenkins-ci.plugins.workflow:workflow-job",
-      "moduleVersion": "1385.vb_58b_86ea_fff1",
+      "moduleVersion": "1476.v90f02a_225559",
       "moduleLicense": "MIT",
       "moduleCopyright": "2013-2014, CloudBees, Inc.",
-      "licenseUrl": "https://github.com/jenkinsci/workflow-job-plugin/blob/1385.vb_58b_86ea_fff1/pom.xml",
+      "licenseUrl": "https://github.com/jenkinsci/workflow-job-plugin/blob/1476.v90f02a_225559/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins.workflow:workflow-multibranch",
+      "moduleVersion": "795.ve0cb_1f45ca_9a_",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2015 CloudBees, Inc.",
+      "licenseUrl": "https://github.com/jenkinsci/workflow-multibranch-plugin/blob/795.ve0cb_1f45ca_9a_/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins.workflow:workflow-scm-step",
+      "moduleVersion": "427.v4ca_6512e7df1",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2014, Jesse Glick",
+      "licenseUrl": "https://github.com/jenkinsci/workflow-scm-step-plugin/blob/427.v4ca_6512e7df1/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins.workflow:workflow-step-api",
+      "moduleVersion": "678.v3ee58b_469476",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2019 CloudBees, Inc",
+      "licenseUrl": "https://github.com/jenkinsci/workflow-step-api-plugin/blob/678.v3ee58b_469476/pom.xml",
       "actualLicense": "$moduleLicense"
     },
     {
       "moduleName": "org.jenkins-ci.plugins.workflow:workflow-support",
-      "moduleVersion": "920.v59f71ce16f04",
+      "moduleVersion": "936.v9fa_77211ca_e1",
       "moduleLicense": "MIT",
       "moduleCopyright": "2013-2014, CloudBees, Inc.",
-      "licenseUrl": "https://github.com/jenkinsci/workflow-support-plugin/blob/920.v59f71ce16f04/pom.xml",
+      "licenseUrl": "https://github.com/jenkinsci/workflow-support-plugin/blob/936.v9fa_77211ca_e1/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins:antisamy-markup-formatter",
+      "moduleVersion": "162.v0e6ec0fcfcf6",
+      "moduleLicense": "MIT",
+      "moduleCopyright": ".",
+      "licenseUrl": "https://github.com/jenkinsci/antisamy-markup-formatter-plugin/blob/162.v0e6ec0fcfcf6/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins:apache-httpcomponents-client-4-api",
+      "moduleVersion": "4.5.14-208.v438351942757",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2009-2017, Sun Microsystems, Inc., CloudBees, Inc. and other contributors",
+      "licenseUrl": "https://github.com/jenkinsci/apache-httpcomponents-client-4-api-plugin/blob/4.5.14-208.v438351942757/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins:bouncycastle-api",
+      "moduleVersion": "2.30.1.79-254.vfdb_814e7791e",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2016-2021, CloudBees, Inc.",
+      "licenseUrl": "https://github.com/jenkinsci/bouncycastle-api-plugin/blob/2.30.1.79-254.vfdb_814e7791e/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins:branch-api",
+      "moduleVersion": "2.1206.vd9f35001c95c",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2011-2013, CloudBees, Inc., Stephen Connolly",
+      "licenseUrl": "https://github.com/jenkinsci/branch-api-plugin/blob/2.1206.vd9f35001c95c/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins:cloudbees-folder",
+      "moduleVersion": "6.976.v4dc79fb_c458d",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2013 CloudBees",
+      "licenseUrl": "https://github.com/jenkinsci/cloudbees-folder-plugin/blob/6.976.v4dc79fb_c458d/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins:credentials",
+      "moduleVersion": "1405.vb_cda_74a_f8974",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2011-2012, CloudBees, Inc., Stephen Connolly.",
+      "licenseUrl": "https://github.com/jenkinsci/credentials-plugin/blob/1405.vb_cda_74a_f8974/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins:display-url-api",
+      "moduleVersion": "2.209.v582ed814ff2f",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2016 CloudBees Inc and a number of other of contributors",
+      "licenseUrl": "https://github.com/jenkinsci/display-url-api-plugin/blob/2.209.v582ed814ff2f/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins:jackson2-api",
+      "moduleVersion": "2.17.0-379.v02de8ec9f64c",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2015, CloudBees, Inc.",
+      "licenseUrl": "https://github.com/jenkinsci/jackson2-api-plugin/blob/2.17.0-379.v02de8ec9f64c/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -1481,6 +1201,134 @@
       "actualLicense": "Apache-2.0"
     },
     {
+      "moduleName": "org.jenkins-ci.plugins:job-dsl-core",
+      "moduleVersion": "1.87",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2015 the original author or authors.",
+      "licenseUrl": "https://github.com/jenkinsci/job-dsl-plugin/blob/job-dsl-1.87/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins:jquery",
+      "moduleVersion": "1.12.4-3",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2011 - 2017 Kohsuke Kawaguchi, Kiyotaka Oku",
+      "licenseUrl": "https://github.com/jenkinsci/jquery-plugin/blob/jquery-1.12.4-3/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins:junit",
+      "moduleVersion": "1312.v1a_235a_b_94a_31",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2004-2019 Sun Microsystems, Inc., and other Jenkins contributors",
+      "licenseUrl": "https://github.com/jenkinsci/junit-plugin/blob/1312.v1a_235a_b_94a_31/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins:matrix-project",
+      "moduleVersion": "840.v812f627cb_578",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2004-2010, Sun Microsystems, Inc., Kohsuke Kawaguchi",
+      "licenseUrl": "https://github.com/jenkinsci/matrix-project-plugin/blob/840.v812f627cb_578/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins:scm-api",
+      "moduleVersion": "698.v8e3b_c788f0a_6",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2011-2016, CloudBees, Inc., Stephen Connolly",
+      "licenseUrl": "https://github.com/jenkinsci/scm-api-plugin/blob/698.v8e3b_c788f0a_6/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins:script-security",
+      "moduleVersion": "1369.v9b_98a_4e95b_2d",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2014 CloudBees, Inc.",
+      "licenseUrl": "https://github.com/jenkinsci/script-security-plugin/blob/1369.v9b_98a_4e95b_2d/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci.plugins:structs",
+      "moduleVersion": "338.v848422169819",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2019 CloudBees, Inc",
+      "licenseUrl": "https://github.com/jenkinsci/structs-plugin/blob/338.v848422169819/pom.xml",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci:annotation-indexer",
+      "moduleVersion": "1.17",
+      "moduleLicense": "MIT",
+      "moduleCopyright": ".",
+      "licenseUrl": "https://github.com/jenkinsci/lib-annotation-indexer/tree/annotation-indexer-1.17",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci:commons-jelly",
+      "moduleVersion": "1.1-jenkins-20240903",
+      "moduleLicense": "The Apache Software License, version 2.0",
+      "moduleCopyright": "2002,2004 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/jenkinsci/jelly/blob/commons-jelly-1.1-jenkins-20240903/LICENSE.txt",
+      "actualLicense": "Apache-2.0"
+    },
+    {
+      "moduleName": "org.jenkins-ci:commons-jexl",
+      "moduleVersion": "1.1-jenkins-20111212",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2001-2006 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/jenkinsci/jexl/blob/1.1-jenkins-20111212/NOTICE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci:crypto-util",
+      "moduleVersion": "1.9",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2004-2009, Sun Microsystems, Inc.",
+      "licenseUrl": "https://github.com/jenkinsci/lib-crypto-util/tree/crypto-util-1.9",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci:memory-monitor",
+      "moduleVersion": "1.12",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2008-2011, Sun Microsystems, Inc., Kohsuke Kawaguchi",
+      "licenseUrl": "https://github.com/jenkinsci/extras-memory-monitor/tree/memory-monitor-1.12",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci:symbol-annotation",
+      "moduleVersion": "1.24",
+      "moduleLicense": "MIT",
+      "moduleCopyright": ".",
+      "licenseUrl": "https://github.com/jenkinsci/lib-symbol-annotation/tree/symbol-annotation-1.24",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci:task-reactor",
+      "moduleVersion": "1.8",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2004-2010, Sun Microsystems, Inc.",
+      "licenseUrl": "https://github.com/jenkinsci/lib-task-reactor/tree/task-reactor-1.8",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jenkins-ci:version-number",
+      "moduleVersion": "1.11",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2011-, Stephen Connolly, CloudBees, Inc., and a number of other of contributors",
+      "licenseUrl": "https://github.com/jenkinsci/lib-version-number/blob/version-number-1.11/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jfree:jcommon",
+      "moduleVersion": "1.0.23",
+      "moduleLicense": "GNU Lesser General Public Licence",
+      "moduleCopyright": "2000-2017, by Object Refinery Limited and Contributors.",
+      "licenseUrl": "https://github.com/jfree/jcommon/blob/v1.0.24/README.md",
+      "actualLicense": "GNU LGPL"
+    },
+    {
       "moduleName": "org.jfree:jfreechart",
       "moduleVersion": "1.0.19",
       "moduleLicense": "GNU Lesser General Public Licence",
@@ -1489,59 +1337,195 @@
       "actualLicense": "GNU LGPL"
     },
     {
-      "moduleName": "jakarta.inject:jakarta.inject-api",
-      "moduleVersion": "2.0.1",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2009 The JSR-330 Expert Group",
-      "licenseUrl": "https://github.com/jakartaee/inject/blob/2.0.1/LICENSE.txt",
+      "moduleName": "org.json:json",
+      "moduleVersion": "20241224",
+      "moduleLicense": "Public Domain",
+      "moduleCopyright": ".",
+      "licenseUrl": "https://github.com/stleary/JSON-java/blob/20241224/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "com.google.guava:listenablefuture",
-      "moduleVersion": "9999.0-empty-to-avoid-conflict-with-guava",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2007 The Guava Authors",
-      "licenseUrl": "https://github.com/google/guava/blob/master/LICENSE",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "jakarta.annotation:jakarta.annotation-api",
-      "moduleVersion": "2.1.1",
-      "moduleLicense": "EPL-2.0",
-      "moduleCopyright": "2005, 2020 Oracle and/or its affiliates",
-      "licenseUrl": "https://github.com/jakartaee/common-annotations-api/blob/2.1.1/LICENSE.md",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "com.google.guava:failureaccess",
-      "moduleVersion": "1.0.1",
-      "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2018 The Guava Authors",
-      "licenseUrl": "https://github.com/google/guava/blob/failureaccess-v1.0.1/COPYING",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.jenkins-ci.main:websocket-spi",
-      "moduleVersion": "2.426.3",
+      "moduleName": "org.jsoup:jsoup",
+      "moduleVersion": "1.18.1",
       "moduleLicense": "MIT",
-      "moduleCopyright": "2022 CloudBees, Inc",
-      "licenseUrl": "https://github.com/jenkinsci/jenkins/blob/jenkins-2.426.3/LICENSE.txt",
+      "moduleCopyright": "2009-2024 Jonathan Hedley",
+      "licenseUrl": "https://github.com/jhy/jsoup/blob/jsoup-1.18.1/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "com.github.oowekyala.ooxml:nice-xml-messages",
-      "moduleVersion": "3.1",
+      "moduleName": "org.jvnet.hudson:commons-jelly-tags-define",
+      "moduleVersion": "1.1-jenkins-20240903",
+      "moduleLicense": "The Apache Software License, Version 2.0",
+      "moduleCopyright": "2002,2004 The Apache Software Foundation",
+      "licenseUrl": "https://github.com/jenkinsci/jelly/blob/commons-jelly-1.1-jenkins-20240903/LICENSE.txt",
+      "actualLicense": "Apache-2.0"
+    },
+    {
+      "moduleName": "org.jvnet.localizer:localizer",
+      "moduleVersion": "1.31",
       "moduleLicense": "MIT",
-      "moduleCopyright": "2022 Clément Fournier",
-      "licenseUrl": "https://github.com/oowekyala/nice-xml-messages/blob/bf8e73125d556559fbf4777339557f156d1ca422/LICENSE",
+      "moduleCopyright": "2007-, the localizer project contributors",
+      "licenseUrl": "https://github.com/kohsuke/localizer/blob/localizer-parent-1.31",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "io.jenkins.plugins:apache-httpcomponents-client-5-api",
-      "moduleVersion": "5.3.1-110.v77252fb_d4da_5",
+      "moduleName": "org.jvnet.robust-http-client:robust-http-client",
+      "moduleVersion": "1.2",
       "moduleLicense": "MIT",
-      "moduleCopyright": "2024 strangelookingnerd",
-      "licenseUrl": "https://github.com/jenkinsci/apache-httpcomponents-client-5-api-plugin/blob/5.3.1-110.v77252fb_d4da_5/LICENSE",
+      "moduleCopyright": "2009, Sun Microsystems, Inc.",
+      "licenseUrl": "https://github.com/kohsuke/robust-http-client/blob/robust-http-client-1.2",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jvnet.winp:winp",
+      "moduleVersion": "1.31",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2008-, Kohsuke Kawaguchi, Sun Microsystems, Inc., and a number of other of contributors",
+      "licenseUrl": "https://github.com/jenkinsci/winp/blob/winp-1.31/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.jvnet:tiger-types",
+      "moduleVersion": "2.2",
+      "moduleLicense": "CDDL/GPLv2 dual license",
+      "moduleCopyright": "2010, Oracle and/or its affiliates",
+      "licenseUrl": "https://github.com/kohsuke/tiger-types/blob/tiger-types-2.2",
+      "actualLicense": "GPLv2"
+    },
+    {
+      "moduleName": "org.kohsuke.jinterop:j-interop",
+      "moduleVersion": "2.0.8-kohsuke-1",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2007 Free Software Foundation",
+      "licenseUrl": "https://github.com/skyghis/j-interop-ng/blob/2.0.8-kohsuke-1/j-interop/lgpl.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.kohsuke.jinterop:j-interopdeps",
+      "moduleVersion": "2.0.8-kohsuke-1",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2007 Free Software Foundation",
+      "licenseUrl": "https://github.com/skyghis/j-interop-ng/blob/2.0.8-kohsuke-1/j-interop/lgpl.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.kohsuke.stapler:json-lib",
+      "moduleVersion": "2.4-jenkins-8",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": ".",
+      "licenseUrl": "https://github.com/jenkinsci/json-lib/blob/json-lib-2.4-jenkins-8/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.kohsuke.stapler:stapler",
+      "moduleVersion": "1903.1905.ve5a_f469356f0",
+      "moduleLicense": "BSD-2-Clause",
+      "moduleCopyright": "2009-, Kohsuke Kawaguchi and other contributors",
+      "licenseUrl": "https://github.com/jenkinsci/stapler/blob/1903.1905.ve5a_f469356f0/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.kohsuke.stapler:stapler-adjunct-codemirror",
+      "moduleVersion": "1.3",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2011, Jeff Pickhardt",
+      "licenseUrl": "https://github.com/stapler/stapler-adjunct-codemirror/blob/stapler-adjunct-codemirror-1.3/src/main/resources/org/kohsuke/stapler/codemirror/mode/coffeescript/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.kohsuke.stapler:stapler-adjunct-jquery",
+      "moduleVersion": "1.12.4-0",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "jQuery Foundation and other contributors",
+      "licenseUrl": "https://github.com/stapler/stapler-adjunct-jquery/blob/stapler-adjunct-jquery-1.12.4-0/src/main/resources/org/kohsuke/stapler/jquery/jquery.full.js",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.kohsuke.stapler:stapler-groovy",
+      "moduleVersion": "1903.1905.ve5a_f469356f0",
+      "moduleLicense": "BSD-2-Clause",
+      "moduleCopyright": "2009-, Kohsuke Kawaguchi and other contributors",
+      "licenseUrl": "https://github.com/jenkinsci/stapler/blob/1903.1905.ve5a_f469356f0/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.kohsuke.stapler:stapler-jelly",
+      "moduleVersion": "1903.1905.ve5a_f469356f0",
+      "moduleLicense": "BSD-2-Clause",
+      "moduleCopyright": "2009-, Kohsuke Kawaguchi and other contributors",
+      "licenseUrl": "https://github.com/jenkinsci/stapler/blob/1903.1905.ve5a_f469356f0/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.kohsuke:access-modifier-annotation",
+      "moduleVersion": "1.33",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2010- Kohsuke Kawaguchi, Jenkins project and contributors",
+      "licenseUrl": "https://github.com/jenkinsci/lib-access-modifier/blob/access-modifier-1.33/LICENSE.md",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.kohsuke:groovy-sandbox",
+      "moduleVersion": "1.34",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "2012-2014 Kohsuke Kawaguchi, CloudBees, Inc., other contributors",
+      "licenseUrl": "https://github.com/jenkinsci/groovy-sandbox/blob/groovy-sandbox-1.34/LICENSE.md",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.kohsuke:windows-package-checker",
+      "moduleVersion": "1.2",
+      "moduleLicense": "MIT",
+      "moduleCopyright": ".",
+      "licenseUrl": "https://github.com/kohsuke/windows-package-checker/tree/windows-package-checker-1.2",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.ow2.asm:asm",
+      "moduleVersion": "9.7.1",
+      "moduleLicense": "BSD-3-Clause",
+      "moduleCopyright": "2000-2011 INRIA, France Telecom",
+      "licenseUrl": "https://gitlab.ow2.org/asm/asm/-/blob/ASM_9_7_1/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.ow2.asm:asm-analysis",
+      "moduleVersion": "9.7.1",
+      "moduleLicense": "BSD-3-Clause",
+      "moduleCopyright": "2000-2011 INRIA, France Telecom",
+      "licenseUrl": "https://gitlab.ow2.org/asm/asm/-/blob/ASM_9_7_1/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.ow2.asm:asm-commons",
+      "moduleVersion": "9.7.1",
+      "moduleLicense": "BSD-3-Clause",
+      "moduleCopyright": "2000-2011 INRIA, France Telecom",
+      "licenseUrl": "https://gitlab.ow2.org/asm/asm/-/blob/ASM_9_7_1/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.ow2.asm:asm-tree",
+      "moduleVersion": "9.7.1",
+      "moduleLicense": "BSD-3-Clause",
+      "moduleCopyright": "2000-2011 INRIA, France Telecom",
+      "licenseUrl": "https://gitlab.ow2.org/asm/asm/-/blob/ASM_9_7_1/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.ow2.asm:asm-util",
+      "moduleVersion": "9.7.1",
+      "moduleLicense": "BSD-3-Clause",
+      "moduleCopyright": "2000-2011 INRIA, France Telecom",
+      "licenseUrl": "https://gitlab.ow2.org/asm/asm/-/blob/ASM_9_7_1/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.pcollections:pcollections",
+      "moduleVersion": "3.2.0",
+      "moduleLicense": "MIT",
+      "moduleCopyright": "Copyright 2008-2011, 2014-2020, 2022 Harold Cooper, gil cattaneo, Gleb Frank, G\u00c3\u00bcnther Grill, Ilya Gorbunov, Jirka Kremser, Jochen Theodorou, Johnny Lim, Liam Miller, Mark Perry, Matei Dragu, Mike Klein, Oleg Osipenko, Ran Ari-Gur, Shantanu Kumar, and Valeriy Vyrva",
+      "licenseUrl": "https://github.com/hrldcpr/pcollections/blob/v3.2.0/LICENSE",
       "actualLicense": "$moduleLicense"
     },
     {
@@ -1553,148 +1537,116 @@
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName" : "io.jenkins.plugins:ionicons-api",
-      "moduleVersion" : "74.v93d5eb_813d5f",
-      "moduleLicense" : "MIT",
-      "moduleCopyright" : "2022 Alexander Brandes",
-      "licenseUrl" : "https://github.com/jenkinsci/ionicons-api-plugin/blob/74.v93d5eb_813d5f/LICENSE",
-      "actualLicense" : "$moduleLicense"
+      "moduleName": "org.samba.jcifs:jcifs",
+      "moduleVersion": "1.3.18-kohsuke-1",
+      "moduleLicense": "LGPL-2.1-only",
+      "moduleCopyright": "2003 Michael B. Allen",
+      "licenseUrl": "https://github.com/kohsuke/jcifs/blob/jcifs-1.3.18-kohsuke-1/LICENSE.txt",
+      "actualLicense": "GNU LGPL"
     },
     {
-      "moduleName": "org.checkerframework:checker-qual",
-      "moduleVersion": "2.11.1",
+      "moduleName": "org.slf4j:jcl-over-slf4j",
+      "moduleVersion": "2.0.16",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "1999-2006, QOS.ch",
+      "licenseUrl": "https://github.com/qos-ch/slf4j/blob/v_2.0.16/jcl-over-slf4j/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.slf4j:log4j-over-slf4j",
+      "moduleVersion": "2.0.16",
+      "moduleLicense": "Apache-1.0",
+      "moduleCopyright": "2001-2004 The Apache Software Foundation.",
+      "licenseUrl": "https://github.com/qos-ch/slf4j/blob/v_2.0.16/log4j-over-slf4j/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.slf4j:slf4j-api",
+      "moduleVersion": "2.0.16",
       "moduleLicense": "MIT",
-      "moduleCopyright": "2004-present by the Checker Framework developers",
-      "licenseUrl": "https://github.com/typetools/checker-framework/blob/checker-framework-2.11.1/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
+      "moduleCopyright": "2004-2023, QOS.ch Sarl (Switzerland)",
+      "licenseUrl": "https://github.com/qos-ch/slf4j/blob/v_2.0.16/slf4j-api/LICENSE.txt",
+      "actualLicense": "\u00c2\u00a7moduleLicense"
     },
     {
-      "moduleName": "io.jenkins.plugins:json-path-api",
-      "moduleVersion": "2.9.0-58.v62e3e85b_a_655",
+      "moduleName": "org.springframework.security:spring-security-core",
+      "moduleVersion": "6.3.4",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "",
-      "licenseUrl": "https://github.com/jenkinsci/json-path-api-plugin/blob/2.9.0-58.v62e3e85b_a_655/LICENSE.md",
+      "moduleCopyright": "2002-2017 the original author or authors",
+      "licenseUrl": "https://github.com/spring-projects/spring-security/blob/6.3.4/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "com.jayway.jsonpath:json-path",
-      "moduleVersion": "2.9.0",
+      "moduleName": "org.springframework.security:spring-security-crypto",
+      "moduleVersion": "6.3.4",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "Copyright 2017 Jayway",
-      "licenseUrl": "https://github.com/json-path/JsonPath/blob/json-path-2.9.0/LICENSE",
+      "moduleCopyright": "2011-2020 the original author or authors",
+      "licenseUrl": "https://github.com/spring-projects/spring-security/blob/6.3.4/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.jenkins-ci.plugins:bouncycastle-api",
-      "moduleVersion": "2.30.1.78.1-248.ve27176eb_46cb_",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2016-2021, CloudBees, Inc.",
-      "licenseUrl": "https://github.com/apache/logging-log4j2/blob/rel/2.23.1/LICENSE.txt",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.bouncycastle:bcprov-jdk18on",
-      "moduleVersion": "1.78.1",
-      "moduleLicense": "Bouncy Castle Licence",
-      "moduleCopyright": "2000 - 2024 The Legion of the Bouncy Castle Inc",
-      "licenseUrl": "https://www.bouncycastle.org/licence.html",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.bouncycastle:bcutil-jdk18on",
-      "moduleVersion": "1.78.1",
-      "moduleLicense": "Bouncy Castle Licence",
-      "moduleCopyright": "2000 - 2024 The Legion of the Bouncy Castle Inc",
-      "licenseUrl": "https://www.bouncycastle.org/licence.html",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "org.bouncycastle:bcpkix-jdk18on",
-      "moduleVersion": "1.78.1",
-      "moduleLicense": "Bouncy Castle Licence",
-      "moduleCopyright": "2000 - 2024 The Legion of the Bouncy Castle Inc",
-      "licenseUrl": "https://www.bouncycastle.org/licence.html",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "io.jenkins.plugins:commons-text-api",
-      "moduleVersion": "1.12.0-119.v73ef73f2345d",
+      "moduleName": "org.springframework.security:spring-security-web",
+      "moduleVersion": "6.3.4",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "",
-      "licenseUrl": "https://github.com/jenkinsci/commons-text-api-plugin/blob/1.12.0-119.v73ef73f2345d/LICENSE",
+      "moduleCopyright": "2004, 2005, 2006 Acegi Technology Pty Limited",
+      "licenseUrl": "https://github.com/spring-projects/spring-security/blob/6.3.4/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.apache.commons:commons-text",
-      "moduleVersion": "1.12.0",
+      "moduleName": "org.springframework:spring-aop",
+      "moduleVersion": "6.1.14",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2014-2023 The Apache Software Foundation",
-      "licenseUrl": "https://github.com/apache/commons-text/blob/rel/commons-text-1.12.0/LICENSE.txt",
+      "moduleCopyright": "2004, 2005, 2006 Acegi Technology Pty Limited",
+      "licenseUrl": "https://github.com/spring-projects/spring-framework/blob/v6.1.14/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "net.bytebuddy:byte-buddy",
-      "moduleVersion": "1.14.15",
+      "moduleName": "org.springframework:spring-beans",
+      "moduleVersion": "6.1.14",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2014 - Present Rafael Winterhalter",
-      "licenseUrl": "https://github.com/raphw/byte-buddy/blob/byte-buddy-1.14.15/LICENSE",
+      "moduleCopyright": "2002-2017 the original author or authors",
+      "licenseUrl": "https://github.com/spring-projects/spring-framework/blob/v6.1.14/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "io.jenkins.plugins:commons-lang3-api",
-      "moduleVersion": "3.14.0-76.vda_5591261cfe",
+      "moduleName": "org.springframework:spring-context",
+      "moduleVersion": "6.1.14",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "",
-      "licenseUrl": "https://github.com/jenkinsci/commons-lang3-api-plugin/blob/3.14.0-76.vda_5591261cfe/LICENSE",
+      "moduleCopyright": "2002-2016 the original author or authors",
+      "licenseUrl": "https://github.com/spring-projects/spring-framework/blob/v6.1.14/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "io.jenkins.plugins:asm-api",
-      "moduleVersion": "9.7-33.v4d23ef79fcc8",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "2024 Jenkins Project",
-      "licenseUrl": "https://github.com/jenkinsci/asm-api-plugin/blob/9.7-33.v4d23ef79fcc8/LICENSE.md",
-      "actualLicense": "BSD-3-Clause"
-    },
-    {
-      "moduleName": "io.jenkins.plugins:json-api",
-      "moduleVersion": "20240303-41.v94e11e6de726",
-      "moduleLicense": "MIT No Attribution License",
-      "moduleCopyright": "2023",
-      "licenseUrl": "https://github.com/jenkinsci/json-api-plugin/blob/20240303-41.v94e11e6de726/LICENSE.md",
-      "actualLicense": "$moduleLicense"
-    },
-    {
-      "moduleName": "io.jenkins.plugins:gson-api",
-      "moduleVersion": "2.11.0-41.v019fcf6125dc",
+      "moduleName": "org.springframework:spring-core",
+      "moduleVersion": "6.1.14",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "",
-      "licenseUrl": "https://github.com/jenkinsci/gson-api-plugin/blob/2.11.0-41.v019fcf6125dc/LICENSE.md",
+      "moduleCopyright": "2002-2016 the original author or authors",
+      "licenseUrl": "https://github.com/spring-projects/spring-framework/blob/v6.1.14/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "com.github.stephenc.jcip:jcip-annotations",
-      "moduleVersion": "1.0-1",
+      "moduleName": "org.springframework:spring-expression",
+      "moduleVersion": "6.1.14",
       "moduleLicense": "Apache-2.0",
-      "moduleCopyright": "2013 Stephen Connolly",
-      "licenseUrl": "https://github.com/stephenc/jcip-annotations/blob/jcip-annotations-1.0-1/LICENSE.txt",
+      "moduleCopyright": "2002-2016 the original author or authors",
+      "licenseUrl": "https://github.com/spring-projects/spring-framework/blob/v6.1.14/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "org.pcollections:pcollections",
-      "moduleVersion": "3.2.0",
-      "moduleLicense": "MIT",
-      "moduleCopyright": "Copyright 2008-2011, 2014-2020, 2022 Harold Cooper, gil cattaneo, Gleb Frank, Günther Grill, Ilya Gorbunov, Jirka Kremser, Jochen Theodorou, Johnny Lim, Liam Miller, Mark Perry, Matei Dragu, Mike Klein, Oleg Osipenko, Ran Ari-Gur, Shantanu Kumar, and Valeriy Vyrva",
-      "licenseUrl": "https://github.com/hrldcpr/pcollections/blob/v3.2.0/LICENSE",
+      "moduleName": "org.springframework:spring-web",
+      "moduleVersion": "6.1.14",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2004, 2005, 2006 Acegi Technology Pty Limited",
+      "licenseUrl": "https://github.com/spring-projects/spring-framework/blob/v6.1.14/LICENSE.txt",
       "actualLicense": "$moduleLicense"
     },
     {
-      "moduleName": "jakarta.servlet:jakarta.servlet-api",
-      "moduleVersion": "4.0.4",
-      "moduleLicense": "EPL-2.0",
-      "moduleCopyright": "1997, 2018 Oracle and/or its affiliates",
-      "licenseUrl": "https://github.com/hrldcpr/pcollections/blob/v3.2.0/LICENSE",
-      "actualLicense": "EPL-2.0"
+      "moduleName": "org.xerial:sqlite-jdbc",
+      "moduleVersion": "3.45.3.0",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "David Crawshaw, 2006",
+      "licenseUrl": "https://github.com/xerial/sqlite-jdbc/blob/3.45.3.0/LICENSE",
+      "actualLicense": "$moduleLicense"
     },
     {
       "moduleName": "org.xmlresolver:xmlresolver",
@@ -1703,6 +1655,62 @@
       "moduleCopyright": "2015-2023 Norman Walsh and contributors",
       "licenseUrl": "https://github.com/xmlresolver/xmlresolver/blob/5.2.2/LICENSE.md",
       "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "org.yaml:snakeyaml",
+      "moduleVersion": "2.3",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2008, SnakeYAML",
+      "licenseUrl": "https://bitbucket.org/snakeyaml/snakeyaml/src/snakeyaml-2.3/LICENSE.txt",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "relaxngDatatype:relaxngDatatype",
+      "moduleVersion": "20020414",
+      "moduleLicense": "MIT",
+      "moduleCopyright": ".",
+      "licenseUrl": ".",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "se.bjurr.violations:violations-lib",
+      "moduleVersion": "1.157.1",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": ".",
+      "licenseUrl": "https://github.com/tomasbjerre/violations-lib/blob/1.157.1/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "xerces:xercesImpl",
+      "moduleVersion": "2.12.2",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": ".",
+      "licenseUrl": "https://svn.apache.org/repos/asf/xerces/java/tags/Xerces-J_2_12_2/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "xml-apis:xml-apis",
+      "moduleVersion": "1.4.01",
+      "moduleLicense": "Apache-2.0",
+      "moduleCopyright": "2001-2003,2006 The Apache Software Foundation",
+      "licenseUrl": "http://svn.apache.org/repos/asf/xerces/xml-commons/tags/xml-commons-external-1_4_01/LICENSE",
+      "actualLicense": "$moduleLicense"
+    },
+    {
+      "moduleName": "xmlunit:xmlunit",
+      "moduleVersion": "1.6",
+      "moduleLicense": "BSD-3-Clause",
+      "moduleCopyright": "2001-2014, Jeff Martin, Tim Bacon",
+      "licenseUrl": "https://sourceforge.net/p/xmlunit/code/HEAD/tree/trunk/LICENSE.txt",
+      "actualLicense": "BSD"
+    },
+    {
+      "moduleName": "xpp3:xpp3",
+      "moduleVersion": "1.1.4c",
+      "moduleLicense": "Indiana University Extreme! Lab Software License, vesion 1.1.1",
+      "moduleCopyright": "2002-2004 Extreme! Lab, Indiana University",
+      "licenseUrl": "https://github.com/codelibs/xpp3/blob/xpp3-1.1.4c.0",
+      "actualLicense": "Indiana University"
     }
   ]
 }
