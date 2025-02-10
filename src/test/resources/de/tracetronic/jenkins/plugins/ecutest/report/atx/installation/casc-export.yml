@@ -58,6 +58,10 @@ installations:
         name: "uploadThroughResourceAdapter"
         value: "0"
     - atxBooleanSetting:
+        group: CONNECTION
+        name: "uploadThroughResourceAdapterFallback"
+        value: false
+    - atxBooleanSetting:
         group: UPLOAD
         name: "uploadAsync"
         value: true
@@ -213,6 +217,10 @@ installations:
     - atxTextSetting:
         group: TCF_CONSTANTS
         name: "setAttributes"
+    - atxBooleanSetting:
+        group: REVIEW
+        name: "skipCaptureReviews"
+        value: false
     - atxTextSetting:
         group: REVIEW
         name: "setReviewTags"
@@ -278,6 +286,10 @@ installations:
     - atxBooleanSetting:
         group: SPECIAL
         name: "captureExecutionTime"
+        value: true
+    - atxBooleanSetting:
+        group: SPECIAL
+        name: "useNewUploadApi"
         value: true
   name: "test.guide"
   toolName: "ecu.test"

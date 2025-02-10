@@ -77,7 +77,7 @@ Advanced workflows integrated for:
 ### ecu.test configuration
 
 ecu.test installations are administrated in the Jenkins system configuration or starting with Jenkins 2.0 in the global tool configuration at section "ecu.test".
-An installation entry is specified by an arbitrary name and the path to the installation directory.
+An installation entry is specified by an arbitrary   name and the path to the installation directory.
 The execution on a Jenkins agent requires the adaption of the ecu.test installation directory on the agent configuration page.
 
 ![ecu.test](docs/images/ecutest.png "ecu.test")
@@ -86,7 +86,7 @@ The execution on a Jenkins agent requires the adaption of the ecu.test installat
 ### test.guide configuration
 
 test.guide is also configured in the Jenkins system configuration at section "test.guide".
-A new entry requires both an arbitrary name and the selection of a previously configured ecu.test installation.
+A new entry requires both an arbitrary   name and the selection of a previously configured ecu.test installation.
 Further settings like the server or ATX specific configuration can be found in the advanced block.
 
 ![test.guide](docs/images/testguide.png "test.guide")
@@ -130,7 +130,7 @@ The post-build actions are extended by these test report related post-build step
 
 | Environment variable | Description |
 | --- | --- |
-| TT_TOOL_NAME | Name of the selected ecu.test installation |
+| TT_TOOL_  name |   name of the selected ecu.test installation |
 | TT_TOOL_INSTALL | Full path to related ecu.test executable |
 | TT_TOOL_VERSION | Program version of selected ecu.test installation |
 | TT_TOOL_WORKSPACE | ecu.test workspace directory |
@@ -146,7 +146,7 @@ The post-build actions are extended by these test report related post-build step
 
 | Environment variable | Description |
 | --- | --- |
-| TT_TEST_NAME | Name of the executed test |
+| TT_TEST_  name |   name of the executed test |
 | TT_TEST_FILE | Full path to related test file |
 | TT_TEST_TYPE | Type of related test (PACKAGE, PROJECT) |
 | TT_TEST_DESCRIPTION | Test description |
@@ -155,7 +155,7 @@ The post-build actions are extended by these test report related post-build step
 | TT_TEST_TIMEOUT | Maximum execution time |
 | TT_TEST_RESULT | Test result (SUCCESS, INCONCLUSIVE, FAILED, ERROR, NONE) |
 | TT_TEST_REPORT | Full path to test report directory |
-| TT_TEST_RETVAL_\<VARIABLE NAME\> | Test related package output parameter (only for package execution)|
+| TT_TEST_RETVAL_\<VARIABLE   name\> | Test related package output parameter (only for package execution)|
 </details>
 
 ## Downstream report generation
@@ -215,13 +215,13 @@ node('windows') {
 node('windows') {
     deleteDir()
 
-    copyArtifacts filter: 'TestReports/**/*.trf', projectName: 'upstream', selector: lastSuccessful()
+    copyArtifacts filter: 'TestReports/**/*.trf', project  name: 'upstream', selector: lastSuccessful()
 
     // Class notation is required for publisher steps inside downstream wrapper!
     // Available: ATXPublisher, ETLogPublisher, JUnitPublisher, ReportGeneratorPublisher, TMSPublisher, TRFPublisher
     downstreamPublisher workspace: '', reportDir: 'TestReports', publishers: [
-        [$class: 'ATXPublisher', atxName: 'test.guide'],
-        [$class: 'JUnitPublisher', toolName: 'ecu.test']]
+        [$class: 'ATXPublisher', atx  name: 'test.guide'],
+        [$class: 'JUnitPublisher', tool  name: 'ecu.test']]
 }
 ```
 </details>
@@ -280,11 +280,11 @@ node('windows') {
 node('windows') {
     deleteDir()
 
-    copyArtifacts filter: 'TestReports/**/*.trf, TestReports/**/*.ajob, Packages/**, Traces/**, TraceStepTemplates/**', projectName: 'upstream', selector: lastSuccessful()
+    copyArtifacts filter: 'TestReports/**/*.trf, TestReports/**/*.ajob, Packages/**, Traces/**, TraceStepTemplates/**', project  name: 'upstream', selector: lastSuccessful()
 
     // Class notation is required for publisher steps inside downstream wrapper!
     downstreamPublisher workspace: '', reportDir: 'TestReports', publishers: [
-        [$class: 'TraceAnalysisPublisher', toolName: 'ecu.test', mergeReports: true]]
+        [$class: 'TraceAnalysisPublisher', tool  name: 'ecu.test', mergeReports: true]]
 }
 ```
 </details>
@@ -341,10 +341,10 @@ steps {
             forceReload(boolean forceReload = false)
             loadOnly(boolean loadOnly = false)
             constants {
-                constant(String name, String value)
+                constant(String   name, String   value)
                 constant {
-                    name(String name)
-                    value(String value)
+                      name(String   name)
+                      value(String   value)
                 }
             }
         }
@@ -352,10 +352,10 @@ steps {
             runTest(boolean runTest = true)
             runTraceAnalysis(boolean runTraceAnalysis = true)
             parameters {
-                parameter(String name, String value)
+                parameter(String   name, String   value)
                 parameter {
-                    name(String name)
-                    value(String value)
+                      name(String   name)
+                      value(String   value)
                 }
             }
         }
@@ -481,18 +481,18 @@ publishers {
     // Publish Report Generators
     publishGenerators(String installation) {
         generators {
-            generator(String generatorName) {
+            generator(String generator  name) {
                 settings {
-                    setting(String name, String value)
+                    setting(String   name, String   value)
                     setting {
-                        name(String name)
-                        value(String value)
+                          name(String   name)
+                          value(String   value)
                     }
                 }
             }
         }
         customGenerators {
-            customGenerator(String generatorName) { (...) }
+            customGenerator(String generator  name) { (...) }
         }
         // Archive options...
     }
@@ -537,7 +537,7 @@ node('windows') {
 ```groovy
 node('windows') {
     // ecu.test installation using global variable ET
-    def et = ET.newInstallation toolName: 'ecu.test', installPath: 'C:\\Program Files\\ECU-TEST X.Y'
+    def et = ET.newInstallation tool  name: 'ecu.test', installPath: 'C:\\Program Files\\ECU-TEST X.Y'
 
     // or getting existing installation from global tool configuration
     def et = ET.installation('ecu.test')
@@ -563,7 +563,7 @@ node('windows') {
     ...
 
     // test.guide server instantiation using global variable ATX
-    def atx = ATX.newServer atxName: 'test.guide', toolName: 'ecu.test',
+    def atx = ATX.newServer atx  name: 'test.guide', tool  name: 'ecu.test',
         fullServerURL: 'http://localhost:8085', uploadToServer: false,
         uploadAuthenticationKey: 'xxx', projectId: '1'
 
@@ -592,23 +592,23 @@ node('windows') {
     ...
 
     // dynamic test.guide server instantiation using newATXServer step
-    def atx = newAtxServer atxName: 'test.guide', toolName: 'ecu.test',
+    def atx = newAtxServer atx  name: 'test.guide', tool  name: 'ecu.test',
         config: atxConfig(
             settings: [
-                atxTextSetting(group: 'CONNECTION', name: 'serverURL', value: 'localhost'),
-                atxTextSetting(group: 'CONNECTION', name: 'serverPort', value: '8085'),
-                atxTextSetting(group: 'CONNECTION', name: 'projectId', value: '1'),
-                atxSecretSetting(group: 'CONNECTION', name: 'uploadAuthenticationKey', value: 'xxx'),
-                atxBooleanSetting(group: 'UPLOAD', name: 'uploadToServer', value: true),
+                atxTextSetting(  group: 'CONNECTION',   name: 'serverURL',   value: 'localhost'),
+                atxTextSetting(  group: 'CONNECTION',   name: 'serverPort',   value: '8085'),
+                atxTextSetting(  group: 'CONNECTION',   name: 'projectId',   value: '1'),
+                atxSecretSetting(  group: 'CONNECTION',   name: 'uploadAuthenticationKey',   value: 'xxx'),
+                atxBooleanSetting(  group: 'UPLOAD',   name: 'uploadToServer',   value: true),
             ],
             customSettings: [
-                atxCustomTextSetting(name: 'customSetting', value: 'customValue'),
-                atxCustomBooleanSetting(name: 'boolSetting', checked: true)
+                atxCustomTextSetting(  name: 'customSetting',   value: 'custom  value'),
+                atxCustomBooleanSetting(  name: 'boolSetting', checked: true)
             ]
         )
     
     // Publish ATX reports
-    publishATX atxName: atx.installation.getName(), atxInstallation: atx.installation
+    publishATX atx  name: atx.installation.get  name(), atxInstallation: atx.installation
 }
 ```
 </details>
@@ -626,9 +626,9 @@ Existing configurations of both types can be exported to according YAML file usi
 tool:
     ecu-test:
         installations:
-            - name: "ecu.test X.Y"
+            -   name: "ecu.test X.Y"
               home: "C:\\Program Files\\ECU-TEST X.Y"
-            - name: "ecu.test X2.Y2"
+            -   name: "ecu.test X2.Y2"
               home: "C:\\Program Files\\ECU-TEST X2.Y2"
               properties:
                   - ecuTestProperty:
@@ -645,8 +645,8 @@ tool:
 unclassified:
     testGuide:
         installations:
-            - name: "test.guide"
-              toolName: "ecu.test"
+            -   name: "test.guide"
+              tool  name: "ecu.test"
               config:
                   settings:
                       - atxTextSetting:
@@ -686,16 +686,23 @@ unclassified:
                             name: "uploadAuthenticationKey"
                       - atxTextSetting:
                             group: CONNECTION
+                            name: "uploadSettings"
+                      - atxTextSetting:
+                            group: CONNECTION
                             name: "useSettingsFromServer"
                             value: "Never"
                       - atxBooleanSetting:
-                            group: UPLOAD
+                            group: CONNECTION
                             name: "uploadToServer"
                             value: true
                       - atxTextSetting:
-                            group: UPLOAD
+                            group: CONNECTION
                             name: "uploadThroughResourceAdapter"
                             value: "0"
+                      - atxBooleanSetting:
+                            group: CONNECTION
+                            name: "uploadThroughResourceAdapterFallback"
+                            value: false
                       - atxBooleanSetting:
                             group: UPLOAD
                             name: "uploadAsync"
@@ -766,16 +773,14 @@ unclassified:
                       - atxTextSetting:
                             group: ARCHIVE
                             name: "archiveMiscFiles"
-                      - atxTextSetting:
-                            group: ARCHIVE
-                            name: "archiveMiscFilePrefix"
                       - atxBooleanSetting:
                             group: ARCHIVE
                             name: "archiveMiscFilesOnlyInTestReportDir"
                             value: true
-                      - atxTextSetting:
+                      - atxBooleanSetting:
                             group: ARCHIVE
-                            name: "archiveFilesPerPackage"
+                            name: "archiveFilesExcludeRecordings"
+                            value: false
                       - atxTextSetting:
                             group: ARCHIVE
                             name: "archiveBy"
@@ -798,6 +803,14 @@ unclassified:
                       - atxBooleanSetting:
                             group: ATTRIBUTE
                             name: "mapTestCaseVersionAsAttribute"
+                            value: true
+                      - atxBooleanSetting:
+                            group: ATTRIBUTE
+                            name: "mapIsStimulationAsAttribute"
+                            value: true
+                      - atxBooleanSetting:
+                            group: ATTRIBUTE
+                            name: "mapIsAnalysisAsAttribute"
                             value: true
                       - atxBooleanSetting:
                             group: ATTRIBUTE
@@ -840,6 +853,10 @@ unclassified:
                       - atxTextSetting:
                             group: TCF_CONSTANTS
                             name: "setAttributes"
+                      - atxBooleanSetting:
+                            group: REVIEW
+                            name: "skipCaptureReviews"
+                            value: false
                       - atxTextSetting:
                             group: REVIEW
                             name: "setReviewTags"
@@ -907,6 +924,10 @@ unclassified:
                             group: SPECIAL
                             name: "captureExecutionTime"
                             value: true
+                      - atxBooleanSetting:
+                            group: SPECIAL
+                            name: "useNewUploadApi"
+                            value: true
                   customSettings:
                       - atxCustomBooleanSetting:
                             name: "customOption"
@@ -931,7 +952,7 @@ or at runtime in the console under `Jenkins -> Manage Jenkins -> Script Console`
 
 `System.setProperty("ecutest.debugLog", "true")`
 
-To get a more debug output about plugin COM API communication a new log recorder with following logger instances could be created under `Manage Jenkins -> System Log -> New Log Recorder`. Set a preferable name, add loggers `de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient`, `de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComDispatch` and set the log level to at least `FINE`.
+To get a more debug output about plugin COM API communication a new log recorder with following logger instances could be created under `Manage Jenkins -> System Log -> New Log Recorder`. Set a preferable   name, add loggers `de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComClient`, `de.tracetronic.jenkins.plugins.ecutest.wrapper.com.ETComDispatch` and set the log level to at least `FINE`.
 
 ![Create new COM API log recorder](docs/images/create_new_debug_log_recorder.png "Create new COM API log recorder")
 
@@ -944,7 +965,7 @@ To report a bug or request an enhancement to this plugin please raise a new [Git
 When using the plugin in a agent-based setup (especially running the agent at command line via JNLP) you also need to restart the agent when restarting the master.
 This is due to already loaded libraries, for more information see this [blog post](http://jenkins-ci.org/content/your-java-web-start-slaves-will-be-always-clean) and related issue [JENKINS-31961](https://issues.jenkins-ci.org/browse/JENKINS-31961).
 
-Release 1.8 implemented an extension point that will workaround this issue. In order to work a new task has to be created in the Windows Task Scheduler named [RESTART_JENKINS_AGENT](docs/RESTART_JENKINS_AGENT.xml) and configured with actions how to restart the agent.
+Release 1.8 implemented an extension point that will workaround this issue. In order to work a new task has to be created in the Windows Task Scheduler   named [RESTART_JENKINS_AGENT](docs/RESTART_JENKINS_AGENT.xml) and configured with actions how to restart the agent.
 
 Please note that from [ecu.test](https://www.tracetronic.com/products/ecu-test/) Version 2022.3 on, **invalid escape 
 sequences in expressions within ecu.test are disallowed.** This means, in particular, that backslashes in Windows 
