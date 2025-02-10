@@ -343,8 +343,8 @@ steps {
             constants {
                 constant(String name, String value)
                 constant {
-                      name(String name)
-                      value(String value)
+                    name(String name)
+                    value(String value)
                 }
             }
         }
@@ -354,8 +354,8 @@ steps {
             parameters {
                 parameter(String name, String value)
                 parameter {
-                      name(String name)
-                      value(String value)
+                    name(String name)
+                    value(String value)
                 }
             }
         }
@@ -595,14 +595,14 @@ node('windows') {
     def atx = newAtxServer atxName: 'test.guide', toolName: 'ecu.test',
         config: atxConfig(
             settings: [
-                atxTextSetting(  group: 'CONNECTION', name: 'serverURL', value: 'localhost'),
-                atxTextSetting(  group: 'CONNECTION', name: 'serverPort', value: '8085'),
-                atxTextSetting(  group: 'CONNECTION', name: 'projectId', value: '1'),
-                atxSecretSetting(  group: 'CONNECTION'  name: 'uploadAuthenticationKey', value: 'xxx'),
-                atxBooleanSetting(  group: 'UPLOAD', name: 'uploadToServer', value: true),
+                atxTextSetting(group: 'CONNECTION', name: 'serverURL', value: 'localhost'),
+                atxTextSetting(group: 'CONNECTION', name: 'serverPort', value: '8085'),
+                atxTextSetting(group: 'CONNECTION', name: 'projectId', value: '1'),
+                atxSecretSetting(group: 'CONNECTION', name: 'uploadAuthenticationKey', value: 'xxx'),
+                atxBooleanSetting(group: 'UPLOAD', name: 'uploadToServer', value: true),
             ],
             customSettings: [
-                atxCustomTextSetting(name: 'customSetting',   value: 'customValue'),
+                atxCustomTextSetting(name: 'customSetting', value: 'customValue'),
                 atxCustomBooleanSetting(name: 'boolSetting', checked: true)
             ]
         )
