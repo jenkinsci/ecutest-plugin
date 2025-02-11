@@ -1023,7 +1023,7 @@ can be found in the [tracetronic Knowledge Base](https://kb.tracetronic.com/disp
  <details>
     <summary>optional: <a href="https://www.tracetronic.com/products/test-guide">test.guide</a> compat matrix (min  1.87.0) </summary>
 
-| Version |   latest - 2.44    |        2.44        |    2.43 - 2.26     |    2.25 - 2.23     |
+| Version |   latest - 2.45    |        2.44        |    2.43 - 2.26     |    2.25 - 2.23     |
 |:-------:|:------------------:|:------------------:|:------------------:|:------------------:|
 | 1.187.0 | :heavy_check_mark: |        :x:         |        :x:         |        :x:         |
 | 1.169.1 | :heavy_check_mark: | :heavy_check_mark: |        :x:         |        :x:         |
