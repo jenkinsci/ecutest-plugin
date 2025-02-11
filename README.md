@@ -773,6 +773,9 @@ unclassified:
                       - atxTextSetting:
                             group: ARCHIVE
                             name: "archiveMiscFiles"
+                      - atxTextSetting:
+                            group: ARCHIVE
+                            name: "archiveMiscFilePrefix"
                       - atxBooleanSetting:
                             group: ARCHIVE
                             name: "archiveMiscFilesOnlyInTestReportDir"

@@ -19,8 +19,7 @@
         ReportProject
     </PROJECT-TEMPLATE>
     <SETTINGS>
-        <!-- Verbindungs-Einstellungen (können nicht durch Projekt-Settings aus
-            TG überschrieben werden) -->
+        <!-- Verbindungseinstellungen -->
         <SETTING name="uploadToServer" default="False"
                  canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
