@@ -51,9 +51,13 @@ unclassified:
                 name: "uploadToServer"
                 value: true
             - atxTextSetting:
-                group: UPLOAD
+                group: CONNECTION
                 name: "uploadThroughResourceAdapter"
                 value: "0"
+            - atxBooleanSetting:
+                group: CONNECTION
+                name: "uploadThroughResourceAdapterFallback"
+                value: false
             - atxBooleanSetting:
                 group: UPLOAD
                 name: "uploadAsync"
@@ -200,6 +204,10 @@ unclassified:
             - atxTextSetting:
                 group: TCF_CONSTANTS
                 name: "setAttributes"
+            - atxBooleanSetting:
+                group: REVIEW
+                name: "skipCaptureReviews"
+                value: false
             - atxTextSetting:
                 group: REVIEW
                 name: "setReviewTags"
@@ -262,6 +270,10 @@ unclassified:
             - atxBooleanSetting:
                 group: SPECIAL
                 name: "captureExecutionTime"
+                value: true
+            - atxBooleanSetting:
+                group: SPECIAL
+                name: "useNewUploadApi"
                 value: true
           customSettings:
             - atxCustomBooleanSetting:

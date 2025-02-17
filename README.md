@@ -686,16 +686,23 @@ unclassified:
                             name: "uploadAuthenticationKey"
                       - atxTextSetting:
                             group: CONNECTION
+                            name: "uploadSettings"
+                      - atxTextSetting:
+                            group: CONNECTION
                             name: "useSettingsFromServer"
                             value: "Never"
                       - atxBooleanSetting:
-                            group: UPLOAD
+                            group: CONNECTION
                             name: "uploadToServer"
                             value: true
                       - atxTextSetting:
-                            group: UPLOAD
+                            group: CONNECTION
                             name: "uploadThroughResourceAdapter"
                             value: "0"
+                      - atxBooleanSetting:
+                            group: CONNECTION
+                            name: "uploadThroughResourceAdapterFallback"
+                            value: false
                       - atxBooleanSetting:
                             group: UPLOAD
                             name: "uploadAsync"
@@ -773,9 +780,10 @@ unclassified:
                             group: ARCHIVE
                             name: "archiveMiscFilesOnlyInTestReportDir"
                             value: true
-                      - atxTextSetting:
+                      - atxBooleanSetting:
                             group: ARCHIVE
-                            name: "archiveFilesPerPackage"
+                            name: "archiveFilesExcludeRecordings"
+                            value: false
                       - atxTextSetting:
                             group: ARCHIVE
                             name: "archiveBy"
@@ -798,6 +806,14 @@ unclassified:
                       - atxBooleanSetting:
                             group: ATTRIBUTE
                             name: "mapTestCaseVersionAsAttribute"
+                            value: true
+                      - atxBooleanSetting:
+                            group: ATTRIBUTE
+                            name: "mapIsStimulationAsAttribute"
+                            value: true
+                      - atxBooleanSetting:
+                            group: ATTRIBUTE
+                            name: "mapIsAnalysisAsAttribute"
                             value: true
                       - atxBooleanSetting:
                             group: ATTRIBUTE
@@ -840,6 +856,10 @@ unclassified:
                       - atxTextSetting:
                             group: TCF_CONSTANTS
                             name: "setAttributes"
+                      - atxBooleanSetting:
+                            group: REVIEW
+                            name: "skipCaptureReviews"
+                            value: false
                       - atxTextSetting:
                             group: REVIEW
                             name: "setReviewTags"
@@ -906,6 +926,10 @@ unclassified:
                       - atxBooleanSetting:
                             group: SPECIAL
                             name: "captureExecutionTime"
+                            value: true
+                      - atxBooleanSetting:
+                            group: SPECIAL
+                            name: "useNewUploadApi"
                             value: true
                   customSettings:
                       - atxCustomBooleanSetting:
@@ -999,16 +1023,17 @@ can be found in the [tracetronic Knowledge Base](https://kb.tracetronic.com/disp
  <details>
     <summary>optional: <a href="https://www.tracetronic.com/products/test-guide">test.guide</a> compat matrix (min  1.87.0) </summary>
 
-| Version |   latest - 2.44    |    2.43 - 2.26     |    2.25 - 2.23     |
-|:-------:|:------------------:|:------------------:|:------------------:|
-| 1.169.1 | :heavy_check_mark: |        :x:         |        :x:         |
-| 1.129.0 | :heavy_check_mark: | :heavy_check_mark: |        :x:         |
-| 1.120.0 | :heavy_check_mark: | :heavy_check_mark: |        :x:         |
-| 1.113.0 | :heavy_check_mark: | :heavy_check_mark: |        :x:         |
-| 1.104.0 | :heavy_check_mark: | :heavy_check_mark: |        :x:         |
-| 1.95.0  | :heavy_check_mark: | :heavy_check_mark: |        :x:         |
-| 1.87.0  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| 1.84.2  |        :x:         | :heavy_check_mark: | :heavy_check_mark: |
+| Version |   latest - 2.45    |        2.44        |    2.43 - 2.26     |    2.25 - 2.23     |
+|:-------:|:------------------:|:------------------:|:------------------:|:------------------:|
+| 1.187.0 | :heavy_check_mark: |        :x:         |        :x:         |        :x:         |
+| 1.169.1 | :heavy_check_mark: | :heavy_check_mark: |        :x:         |        :x:         |
+| 1.129.0 | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |        :x:         |
+| 1.120.0 | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |        :x:         |
+| 1.113.0 | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |        :x:         |
+| 1.104.0 | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |        :x:         |
+| 1.95.0  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |        :x:         |
+| 1.87.0  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| 1.84.2  |        :x:         |        :x:         | :heavy_check_mark: | :heavy_check_mark: |
 
 * Note that some lacking version incompatibilities in the test.guide - ecu.test-Plugin compatibility matrix are due 
 to configuration fields which are not natively supported. You may still add these lacking configurations via the 

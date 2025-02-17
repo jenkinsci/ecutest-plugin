@@ -45,7 +45,7 @@ public class ETPlugin {
     /**
      * Defines the test.guide version that the provided ATX configuration is based on.
      */
-    public static final ToolVersion ATX_CONFIG_VERSION = new ToolVersion(1, 169, 1);
+    public static final ToolVersion ATX_CONFIG_VERSION = new ToolVersion(1, 187, 0);
 
     /**
      * Retains backward compatibility for renamed classes.

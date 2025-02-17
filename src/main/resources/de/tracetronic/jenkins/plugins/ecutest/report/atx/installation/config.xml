@@ -75,7 +75,7 @@
             </DESCRIPTION>
         </SETTING>
         <SETTING name="uploadAuthenticationKey" default=""
-                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem" secret="true">
             <DESCRIPTION xsi:type="I18NItem">
                 <MULTILANGDATA>
                     <ELEMENT dkey="de_DE">
@@ -272,6 +272,25 @@
                             For
                             details, refer to the included sample configuration of the
                             ResourceAdapter.</DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="uploadThroughResourceAdapterFallback" default="False"
+                 canBeOverwrittenByServer="false" xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">Diese Option ist eine Ergänzung zur Option
+                            "uploadThroughResourceAdapter". Ist der ResourceAdapter nicht
+                            verfügbar wird der Upload bei "True" durch ecu.test ausgeführt.</DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">This option is an addition to the
+                            “uploadThroughResourceAdapter” option. If the ResourceAdapter is
+                            not available, the upload is executed by ecu.test if “True” is
+                            selected.</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
@@ -677,14 +696,14 @@
                             Dateien, welche pro Package-Report-Unterordner archiviert werden
                             sollen. Die Ausdrücke werden mit ';' (Semikolon) getrennt.
                             Die
-                            Suche erfolgt ausgehend vom Report-Verzeichnis. Beispiele:
+                            Suche erfolgt ausgehend vom Package-Report-Verzeichnis. Beispiele:
                             package1*.asc;zip/**/special.*</DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">Specifies the search expressions for
                             additional files that are to be archived per Package Report
                             subfolder. The expressions are separated by ';' (semicolon). The
-                            search is performed from the report directory. Examples:
+                            search is performed from the package report directory. Examples:
                             package1*.asc;zip/**/special.*</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -932,13 +951,14 @@
                         <DVALUE xsi:type="string">Die Package/Projekt-Konstanten, welche als
                             ATX-Konstante für die
                             Suche erfasst werden sollen. Getrennt durch
-                            ';'.
+                            ';'. Konstanten, die mit 'TT_' beginnen, werden immer erfasst.
                         </DVALUE>
                     </ELEMENT>
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">The package/project constants
                             which are
                             mapped to ATX constants. Separated by ';'.
+                            Constants whose name starts with 'TT_' are always included.
                         </DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
@@ -1069,6 +1089,25 @@
             </DESCRIPTION>
         </SETTING>
         <!-- Review Einstellungen -->
+        <SETTING name="skipCaptureReviews" default="False"
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">True, wenn der Generator keine test.guide
+                            Reviews auf Basis von ecu.test Report-Kommentaren und
+                            Nachbewertungen erstellen soll, andernfalls False.
+                        </DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">True if the generator should not create
+                            test.guide reviews based on ecu.test report comments and
+                            reevaluations, otherwise False.</DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
         <SETTING name="setReviewTags" default=""
                  xsi:type="reportConfigItem">
             <DESCRIPTION xsi:type="I18NItem">
@@ -1422,6 +1461,22 @@
                     <ELEMENT dkey="en_US">
                         <DVALUE xsi:type="string">True, if the package execution time should
                             be captured, otherwise False.</DVALUE>
+                    </ELEMENT>
+                </MULTILANGDATA>
+                <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
+            </DESCRIPTION>
+        </SETTING>
+        <SETTING name="useNewUploadApi" default="True"
+                 xsi:type="reportConfigItem">
+            <DESCRIPTION xsi:type="I18NItem">
+                <MULTILANGDATA>
+                    <ELEMENT dkey="de_DE">
+                        <DVALUE xsi:type="string">True, falls die neue Report-Upload-API genutzt
+                            werden soll, sonst False.</DVALUE>
+                    </ELEMENT>
+                    <ELEMENT dkey="en_US">
+                        <DVALUE xsi:type="string">True, if the new report upload API should be used,
+                            otherwise False.</DVALUE>
                     </ELEMENT>
                 </MULTILANGDATA>
                 <INITIAL-LANGUAGE xsi:type="string">de_DE</INITIAL-LANGUAGE>
