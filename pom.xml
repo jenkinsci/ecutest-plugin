@@ -130,7 +130,7 @@
             <dependency>
                 <groupId>io.jenkins.plugins</groupId>
                 <artifactId>echarts-api</artifactId>
-                <version>5.5.1-5</version>
+                <version>5.6.0-2</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
