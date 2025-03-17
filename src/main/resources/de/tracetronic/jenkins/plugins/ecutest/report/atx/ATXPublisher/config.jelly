@@ -1,11 +1,13 @@
 <!--
-  Copyright (c) 2015-2023 tracetronic GmbH
+  Copyright (c) 2015-2025 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
+    <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation"
+                page="deprecation.jelly"/>
     <f:entry title="${%atxName.title}" description="${%atxName.description}">
         <select class="setting-input" name="atxName" autocomplete="off">
             <j:forEach var="installation" items="${descriptor.installations}">
