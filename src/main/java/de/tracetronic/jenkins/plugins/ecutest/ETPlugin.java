@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2023 tracetronic GmbH
+ * Copyright (c) 2015-2025 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -46,6 +46,12 @@ public class ETPlugin {
      * Defines the test.guide version that the provided ATX configuration is based on.
      */
     public static final ToolVersion ATX_CONFIG_VERSION = new ToolVersion(1, 187, 0);
+
+    /**
+     * Defines the deprecation warning message.
+     */
+    public static final String DEPRECATION_WARNING = "This plugin is no longer supported and is deprecated. "
+        + "Ultimately, on March 31, 2026, it will be removed from the Jenkins Update-Center.";
 
     /**
      * Retains backward compatibility for renamed classes.
