@@ -3,11 +3,6 @@ name: "🚀 Feature Request"
 about: Suggest an idea for the plugin
 labels: feature
 ---
-
-<!--
-For reporting issues containing NDA relevant information please use our [tracetronic Support Center](https://support.tracetronic.com).
--->
-
 **Describe the feature request**
 A clear and concise description of the feature you have considered.
 

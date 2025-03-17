@@ -5,8 +5,8 @@ labels: bug
 ---
 
 <!--
-Never report security issues on GitHub or other public channels (Gitter/Twitter/etc.). Follow the instruction from [Jenkins Security](https://jenkins.io/security/) or use our [tracetronic Support Center](https://support.tracetronic.com).
-For reporting issues containing NDA relevant information please also use our [tracetronic Support Center](https://support.tracetronic.com).
+Never report security issues on GitHub or other public channels (Gitter/Twitter/etc.). Follow the instruction from 
+[Jenkins Security](https://jenkins.io/security/).
 -->
 
 **Describe the bug**
