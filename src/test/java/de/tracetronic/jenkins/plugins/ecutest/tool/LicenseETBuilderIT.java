@@ -5,6 +5,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import org.htmlunit.WebAssert;
 import org.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
@@ -14,6 +15,7 @@ import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import hudson.model.Result;
 import jenkins.tasks.SimpleBuildStep;
+import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.jenkinsci.plugins.workflow.steps.CoreStep;
 import org.jenkinsci.plugins.workflow.steps.StepConfigTester;
 import org.junit.Before;
@@ -62,6 +64,7 @@ public class LicenseETBuilderIT extends IntegrationTestBase {
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.LicenseETBuilder_DisplayName());
+        WebAssert.assertTextPresent(page, ETPlugin.DEPRECATION_WARNING);
         jenkins.assertXPath(page, "//select[@name='toolName']");
         jenkins.assertXPath(page, "//option[@value='ecu.test']");
     }
@@ -118,7 +121,7 @@ public class LicenseETBuilderIT extends IntegrationTestBase {
 
         final FreeStyleBuild build = project.scheduleBuild2(0).get();
         jenkins.assertBuildStatus(Result.FAILURE, build);
-        assertThat("Error message should be present in console log", build.getLog(100).toString(),
-            containsString("ecu.test executable for 'ecu.test' could not be found"));
+        jenkins.assertLogContains(ETPlugin.DEPRECATION_WARNING, build);
+        jenkins.assertLogContains("ecu.test executable for 'ecu.test' could not be found", build);
     }
 }

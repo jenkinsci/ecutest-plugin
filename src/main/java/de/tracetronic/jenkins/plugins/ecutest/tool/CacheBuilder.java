@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2015-2023 tracetronic GmbH
+ * Copyright (c) 2015-2025 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
 import de.tracetronic.jenkins.plugins.ecutest.tool.client.CacheClient;
@@ -74,6 +75,9 @@ public class CacheBuilder extends Builder implements SimpleBuildStep {
     public void perform(@Nonnull final Run<?, ?> run, @Nonnull final FilePath workspace,
                         @Nonnull final Launcher launcher, @Nonnull final TaskListener listener)
         throws InterruptedException, IOException {
+        final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        logger.logWarn(ETPlugin.DEPRECATION_WARNING);
+
         try {
             ProcessUtil.checkOS(launcher);
             if (CacheClient.isCompatible(workspace, launcher, listener)) {
@@ -85,7 +89,6 @@ public class CacheBuilder extends Builder implements SimpleBuildStep {
             Util.displayIOException(e, listener);
             throw e;
         } catch (final ETPluginException e) {
-            final TTConsoleLogger logger = new TTConsoleLogger(listener);
             logger.logError(e.getMessage());
             throw new AbortException(e.getMessage());
         }

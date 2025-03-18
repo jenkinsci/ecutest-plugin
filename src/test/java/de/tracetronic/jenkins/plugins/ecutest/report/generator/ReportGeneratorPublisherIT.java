@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2015-2024 tracetronic GmbH
+ * Copyright (c) 2015-2025 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.generator;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import org.htmlunit.WebAssert;
 import org.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
@@ -101,6 +102,7 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.ReportGeneratorPublisher_DisplayName());
+        WebAssert.assertTextPresent(page, ETPlugin.DEPRECATION_WARNING);
         jenkins.assertXPath(page, "//select[@name='toolName']");
         jenkins.assertXPath(page, "//option[@value='ecu.test']");
         jenkins.assertXPath(page, "//select[@name='_.name' and @value='HTML']");
@@ -204,14 +206,16 @@ public class ReportGeneratorPublisherIT extends IntegrationTestBase {
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
-        if (emptyResults == false) {
-            final WorkflowRun run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
+        final WorkflowRun run;
+        if (!emptyResults) {
+            run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
             jenkins.assertLogContains("Publishing generator reports...", run);
             jenkins.assertLogContains("Starting ecu.test failed.", run);
         } else {
-            final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
+            run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
             jenkins.assertLogContains("Publishing generator reports...", run);
             jenkins.assertLogContains("Empty test results are not allowed, setting build status to FAILURE!", run);
         }
+        jenkins.assertLogContains(ETPlugin.DEPRECATION_WARNING, run);
     }
 }

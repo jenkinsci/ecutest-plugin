@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2015-2024 tracetronic GmbH
+ * Copyright (c) 2015-2025 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.log;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import org.htmlunit.WebAssert;
 import org.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
@@ -85,6 +86,7 @@ public class ETLogPublisherIT extends IntegrationTestBase {
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.ETLogPublisher_DisplayName());
+        WebAssert.assertTextPresent(page, ETPlugin.DEPRECATION_WARNING);
         jenkins.assertXPath(page, "//input[@name='_.unstableOnWarning' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.failedOnError' and @checked='true']");
         jenkins.assertXPath(page, "//input[@name='_.testSpecific' and @checked='true']");
@@ -191,14 +193,16 @@ public class ETLogPublisherIT extends IntegrationTestBase {
         final WorkflowJob job = jenkins.createProject(WorkflowJob.class, "pipeline");
         job.setDefinition(new CpsFlowDefinition(script, true));
 
-        if (status == true) {
-            final WorkflowRun run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
+        final WorkflowRun run;
+        if (status) {
+            run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
             jenkins.assertLogContains("Publishing ecu.test logs...", run);
             jenkins.assertLogContains("Archiving ecu.test logs is disabled.", run);
         } else {
-            final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
+            run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
             jenkins.assertLogContains("Publishing ecu.test logs...", run);
             jenkins.assertLogContains("Empty log results are not allowed, setting build status to FAILURE!", run);
         }
+        jenkins.assertLogContains(ETPlugin.DEPRECATION_WARNING, run);
     }
 }

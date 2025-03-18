@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2015-2025 tracetronic GmbH
+  Copyright (c) 2025 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
@@ -8,5 +8,4 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
     <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation"
                 page="deprecation.jelly"/>
-    <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation" page="select.jelly"/>
 </j:jelly>

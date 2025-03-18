@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2015-2023 tracetronic GmbH
+ * Copyright (c) 2015-2025 tracetronic GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import de.tracetronic.jenkins.plugins.ecutest.ETPluginException;
 import de.tracetronic.jenkins.plugins.ecutest.env.TestEnvInvisibleAction;
 import de.tracetronic.jenkins.plugins.ecutest.log.TTConsoleLogger;
@@ -83,6 +84,8 @@ public abstract class AbstractTestBuilder extends AbstractTestHelper implements 
         throws InterruptedException, IOException {
 
         final TTConsoleLogger logger = new TTConsoleLogger(listener);
+        logger.logWarn(ETPlugin.DEPRECATION_WARNING);
+
         try {
             ProcessUtil.checkOS(launcher);
             final boolean performed = performTest(run, workspace, launcher, listener);

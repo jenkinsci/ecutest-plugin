@@ -1,11 +1,13 @@
 <!--
-  Copyright (c) 2015-2023 tracetronic GmbH
+  Copyright (c) 2015-2025 tracetronic GmbH
 
   SPDX-License-Identifier: BSD-3-Clause
   -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:st="jelly:stapler">
+    <st:include class="de.tracetronic.jenkins.plugins.ecutest.tool.installation.ETInstallation"
+                page="deprecation.jelly"/>
     <f:entry title="${%testFile.title}" description="${%testFile.description}" field="testFile">
         <f:textbox/>
     </f:entry>

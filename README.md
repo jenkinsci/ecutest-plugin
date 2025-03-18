@@ -14,7 +14,7 @@ SPDX-License-Identifier: BSD-3-Clause
 | This plugin is deprecated and the support ends at 2024-12-31.    |
 | You can migrate your test execution to [test.guide](https://www.tracetronic.com/products/test-guide/) or still use Jenkins with the [ecu.test Execution Plugin](https://github.com/jenkinsci/ecu-test-execution-plugin).    |
 | After the compatibility update for ecu.test 2024.4 at the end of 2024, there will never be an update for this plugin again - not for compatibility updates and also not for security fixes.    |
-| The plugin will be deleted from the [Update-Center](https://updates.jenkins.io/) at 2025-12-31.    |
+| The plugin will be deleted from the [Update-Center](https://updates.jenkins.io/) at 2026-03-31.    |
 
 <br/><br/>
 
