@@ -50,7 +50,7 @@ public class ETPlugin {
     /**
      * Defines the deprecation warning message.
      */
-    public static final String DEPRECATION_WARNING = "This plugin is no longer supported and is deprecated. "
+    public static final String DEPRECATION_WARNING = "This plugin is no longer supported. "
         + "Ultimately, on March 31, 2026, it will be removed from the Jenkins Update-Center.";
 
     /**
