@@ -5,6 +5,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import org.htmlunit.WebAssert;
 import org.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
@@ -82,6 +83,7 @@ public class StopETBuilderIT extends IntegrationTestBase {
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.StopETBuilder_DisplayName());
+        WebAssert.assertTextPresent(page, ETPlugin.DEPRECATION_WARNING);
         jenkins.assertXPath(page, "//select[@name='toolName']");
         jenkins.assertXPath(page, "//option[@value='ecu.test']");
         WebAssert.assertInputPresent(page, "_.timeout");
@@ -184,6 +186,7 @@ public class StopETBuilderIT extends IntegrationTestBase {
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
+        jenkins.assertLogContains(ETPlugin.DEPRECATION_WARNING, run);
         jenkins.assertLogContains("Stopping ecu.test...", run);
         jenkins.assertLogContains("No running ecu.test instance found!", run);
     }

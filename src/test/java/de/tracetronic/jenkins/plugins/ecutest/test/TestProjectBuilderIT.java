@@ -5,6 +5,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.test;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import org.htmlunit.WebAssert;
 import org.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
@@ -80,6 +81,7 @@ public class TestProjectBuilderIT extends IntegrationTestBase {
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.TestProjectBuilder_DisplayName());
+        WebAssert.assertTextPresent(page, ETPlugin.DEPRECATION_WARNING);
         WebAssert.assertInputPresent(page, "_.testFile");
         WebAssert.assertInputContainsValue(page, "_.testFile", "test.prj");
         WebAssert.assertInputPresent(page, "_.tbcFile");
@@ -146,6 +148,7 @@ public class TestProjectBuilderIT extends IntegrationTestBase {
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
+        jenkins.assertLogContains(ETPlugin.DEPRECATION_WARNING, run);
         jenkins.assertLogContains("No running ecu.test instance found, please configure one at first!", run);
     }
 }

@@ -5,6 +5,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.report.ta;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import org.htmlunit.WebAssert;
 import org.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
@@ -95,6 +96,7 @@ public class TraceAnalysisPublisherIT extends IntegrationTestBase {
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.TraceAnalysisPublisher_DisplayName());
+        WebAssert.assertTextPresent(page, ETPlugin.DEPRECATION_WARNING);
         jenkins.assertXPath(page, "//select[@name='toolName']");
         jenkins.assertXPath(page, "//option[@value='ecu.test']");
         WebAssert.assertInputPresent(page, "_.timeout");
@@ -196,6 +198,7 @@ public class TraceAnalysisPublisherIT extends IntegrationTestBase {
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
+        jenkins.assertLogContains(ETPlugin.DEPRECATION_WARNING, run);
         jenkins.assertLogContains("Publishing trace analysis...", run);
         if (emptyResults == false) {
             jenkins.assertLogContains("Starting ecu.test failed.", run);

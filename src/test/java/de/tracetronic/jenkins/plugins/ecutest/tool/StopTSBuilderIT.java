@@ -5,6 +5,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import org.htmlunit.WebAssert;
 import org.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
@@ -79,6 +80,7 @@ public class StopTSBuilderIT extends IntegrationTestBase {
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.StopTSBuilder_DisplayName());
+        WebAssert.assertTextPresent(page, ETPlugin.DEPRECATION_WARNING);
         jenkins.assertXPath(page, "//select[@name='toolName']");
         jenkins.assertXPath(page, "//option[@value='ecu.test']");
         WebAssert.assertInputPresent(page, "_.timeout");
@@ -150,6 +152,7 @@ public class StopTSBuilderIT extends IntegrationTestBase {
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
+        jenkins.assertLogContains(ETPlugin.DEPRECATION_WARNING, run);
         jenkins.assertLogContains("Stopping Tool-Server...", run);
         jenkins.assertLogContains("No running Tool-Server instance found!", run);
         jenkins.assertLogContains("Tool-Server stopped successfully.", run);

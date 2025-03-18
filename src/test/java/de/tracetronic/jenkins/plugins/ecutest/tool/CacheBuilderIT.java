@@ -5,6 +5,7 @@
  */
 package de.tracetronic.jenkins.plugins.ecutest.tool;
 
+import de.tracetronic.jenkins.plugins.ecutest.ETPlugin;
 import org.htmlunit.WebAssert;
 import org.htmlunit.html.HtmlPage;
 import de.tracetronic.jenkins.plugins.ecutest.IntegrationTestBase;
@@ -66,6 +67,7 @@ public class CacheBuilderIT extends IntegrationTestBase {
 
         final HtmlPage page = getWebClient().getPage(project, "configure");
         WebAssert.assertTextPresent(page, Messages.CacheBuilder_DisplayName());
+        WebAssert.assertTextPresent(page, ETPlugin.DEPRECATION_WARNING);
         jenkins.assertXPath(page, "//select[@name='_.type']");
         jenkins.assertXPath(page, "//option[@value='A2L']");
         WebAssert.assertInputPresent(page, "_.filePath");
@@ -109,6 +111,7 @@ public class CacheBuilderIT extends IntegrationTestBase {
         job.setDefinition(new CpsFlowDefinition(script, true));
 
         final WorkflowRun run = jenkins.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
+        jenkins.assertLogContains(ETPlugin.DEPRECATION_WARNING, run);
         jenkins.assertLogContains("No running ecu.test instance found, please configure one at first!", run);
     }
 }
